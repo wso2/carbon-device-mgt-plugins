@@ -26,9 +26,9 @@
     <artifactId>carbon-device-mgt-plugins-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.9.0-SNAPSHOT</version>
-    <name>WSO2 MDM - Parent</name>
+    <name>WSO2 Carbon - Device Management Plugins Parent</name>
     <url>http://wso2.org</url>
-    <description>WSO2 Mobile Device Manager</description>
+    <description>WSO2 Carbon - Device Management Plugins Parent</description>
 
     <parent>
         <groupId>org.wso2</groupId>
