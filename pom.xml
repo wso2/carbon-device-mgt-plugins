@@ -450,9 +450,6 @@
         <orbit.tomcat.version>7.0.52.wso2v5</orbit.tomcat.version>
         <orbit.tomcat.jdbc.pooling.version>7.0.34.wso2v2</orbit.tomcat.jdbc.pooling.version>
 
-        <!--MDM android Agent-->
-
-        <mdm.android.agent.archetype.version>1.0.0-SNAPSHOT</mdm.android.agent.archetype.version>
 
          <!--CXF properties-->
         <cxf.version>2.6.1</cxf.version>
@@ -684,17 +681,6 @@
             </releases>
         </repository>
 
-        <repository>
-            <id>nexus-releases</id>
-            <name>WSO2 Release Distribution Repository</name>
-            <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>
-        </repository>
-
-        <repository>
-            <id>nexus-service-releases</id>
-            <name>WSO2 Release Service Repository</name>
-            <url>http://maven.wso2.org/nexus/service/local/repositories/releases/content/</url>
-        </repository>
     </repositories>
 
 </project>
