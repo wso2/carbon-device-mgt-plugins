@@ -22,14 +22,14 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>device-mgt-feature</artifactId>
-        <version>1.9.1-SNAPSHOT</version>
+        <version>1.9.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.mobile.feature</artifactId>
     <packaging>pom</packaging>
-    <version>1.9.1-SNAPSHOT</version>
+    <version>1.9.0-SNAPSHOT</version>
     <name>WSO2 Carbon - Mobile Implementation of Device Management</name>
     <url>http://wso2.org</url>
     <description>This feature contains the core bundles required for Mobile Device Management functionality
