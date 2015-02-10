@@ -17,15 +17,13 @@
  ~ under the License.
  -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
     <artifactId>carbon-device-mgt-plugins-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.9.0-SNAPSHOT</version>
+    <version>1.9.0</version>
     <name>WSO2 Carbon - Device Management Plugins Parent</name>
     <url>http://wso2.org</url>
     <description>WSO2 Carbon - Device Management Plugins Parent</description>
@@ -483,7 +481,7 @@
         <carbon.device.mgt.version>0.9.0</carbon.device.mgt.version>
 
         <!-- Mobile Device Management -->
-        <carbon.mobile.device.mgt.version>1.9.0-SNAPSHOT</carbon.mobile.device.mgt.version>
+        <carbon.mobile.device.mgt.version>1.9.0</carbon.mobile.device.mgt.version>
 
         <!-- API Management -->
         <carbon.api.mgt.version>1.3.1</carbon.api.mgt.version>
@@ -500,7 +498,7 @@
         <url>https://github.com/wso2/carbon-device-mgt-plugins.git</url>
         <developerConnection>scm:git:https://github.com/wso2/carbon-device-mgt-plugins.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/carbon-device-mgt-plugins.git</connection>
-        <tag>HEAD</tag>
+        <tag>carbon-devicemgt-plugins-1.9.0</tag>
     </scm>
 
 
