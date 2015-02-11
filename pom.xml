@@ -406,6 +406,10 @@
                         <groupId>com.googlecode.json-simple.wso2</groupId>
                         <artifactId>json-simple</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.bsf</groupId>
+                        <artifactId>bsf-all</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
