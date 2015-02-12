@@ -46,8 +46,8 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
-	public boolean addMobileFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException {
-		boolean status = false;
+	public int addMobileFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException {
+		int status = 0;
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
@@ -62,7 +62,10 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 			stmt.setString(4, mobileFeature.getDeviceType());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
-				status = true;
+				ResultSet rs = stmt.getGeneratedKeys();
+				if (rs != null && rs.next()) {
+					status = rs.getInt(1);
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while adding feature code - '" +
@@ -167,17 +170,17 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID,DEVICE_TYPE, CODE, NAME, DESCRIPTION FROM MBL_FEATURE WHERE CODE = ?";
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE WHERE CODE = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, featureCode);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mobileFeature = new MobileFeature();
 				mobileFeature.setId(resultSet.getInt(1));
-				mobileFeature.setDeviceType(resultSet.getString(2));
-				mobileFeature.setCode(resultSet.getString(3));
-				mobileFeature.setName(resultSet.getString(4));
-				mobileFeature.setDescription(resultSet.getString(5));
+				mobileFeature.setCode(resultSet.getString(2));
+				mobileFeature.setName(resultSet.getString(3));
+				mobileFeature.setDescription(resultSet.getString(4));
+				mobileFeature.setDeviceType(resultSet.getString(5));
 				break;
 			}
 		} catch (SQLException e) {
@@ -200,17 +203,17 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID,DEVICE_TYPE, CODE, NAME, DESCRIPTION FROM MBL_FEATURE WHERE FEATURE_ID = ?";
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE WHERE FEATURE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setInt(1, featureID);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mobileFeature = new MobileFeature();
 				mobileFeature.setId(resultSet.getInt(1));
-				mobileFeature.setDeviceType(resultSet.getString(2));
-				mobileFeature.setCode(resultSet.getString(3));
-				mobileFeature.setName(resultSet.getString(4));
-				mobileFeature.setDescription(resultSet.getString(5));
+				mobileFeature.setCode(resultSet.getString(2));
+				mobileFeature.setName(resultSet.getString(3));
+				mobileFeature.setDescription(resultSet.getString(4));
+				mobileFeature.setDeviceType(resultSet.getString(5));
 				break;
 			}
 		} catch (SQLException e) {
@@ -233,16 +236,16 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID,DEVICE_TYPE, CODE, NAME, DESCRIPTION FROM MBL_FEATURE";
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mobileFeature = new MobileFeature();
 				mobileFeature.setId(resultSet.getInt(1));
-				mobileFeature.setDeviceType(resultSet.getString(2));
-				mobileFeature.setCode(resultSet.getString(3));
-				mobileFeature.setName(resultSet.getString(4));
-				mobileFeature.setDescription(resultSet.getString(5));
+				mobileFeature.setCode(resultSet.getString(2));
+				mobileFeature.setName(resultSet.getString(3));
+				mobileFeature.setDescription(resultSet.getString(4));
+				mobileFeature.setDeviceType(resultSet.getString(5));
 				mobileFeatures.add(mobileFeature);
 			}
 			return mobileFeatures;
@@ -264,17 +267,17 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID, DEVICE_TYPE, CODE, NAME, DESCRIPTION FROM MBL_FEATURE WHERE DEVICE_TYPE = ?";
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE WHERE DEVICE_TYPE = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, deviceType);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mobileFeature = new MobileFeature();
 				mobileFeature.setId(resultSet.getInt(1));
-				mobileFeature.setDeviceType(resultSet.getString(2));
-				mobileFeature.setCode(resultSet.getString(3));
-				mobileFeature.setName(resultSet.getString(4));
-				mobileFeature.setDescription(resultSet.getString(5));
+				mobileFeature.setCode(resultSet.getString(2));
+				mobileFeature.setName(resultSet.getString(3));
+				mobileFeature.setDescription(resultSet.getString(4));
+				mobileFeature.setDeviceType(resultSet.getString(5));
 				mobileFeatures.add(mobileFeature);
 			}
 			return mobileFeatures;

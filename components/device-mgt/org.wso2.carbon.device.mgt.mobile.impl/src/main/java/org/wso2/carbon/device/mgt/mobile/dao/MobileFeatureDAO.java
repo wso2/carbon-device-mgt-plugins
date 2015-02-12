@@ -32,10 +32,10 @@ public interface MobileFeatureDAO {
 	 * Add a new feature to feature table.
 	 *
 	 * @param mobileFeature Feature object that holds data related to the feature to be inserted.
-	 * @return The status of the operation. If the insert was successful or not.
+	 * @return The id of inserted feature.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean addMobileFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException;
+	int addMobileFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException;
 
 	/**
 	 * Update a feature in the feature table.

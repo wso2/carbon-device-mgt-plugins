@@ -249,7 +249,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 	}
 
 	@Override
-	public List<MobileDeviceOperationMapping> getAllMobileDeviceOperationNappingsOfDevice(
+	public List<MobileDeviceOperationMapping> getAllMobileDeviceOperationMappingsOfDevice(
 			String deviceId)
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;

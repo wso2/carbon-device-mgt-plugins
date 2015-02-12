@@ -36,6 +36,7 @@ import java.sql.SQLException;
  */
 public class MobileOperationDAOImpl implements MobileOperationDAO {
 
+	public static final String COLUMN_OPERATION_ID = "OPERATION_ID";
 	private DataSource dataSource;
 	private static final Log log = LogFactory.getLog(MobileOperationDAOImpl.class);
 
@@ -53,7 +54,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 			conn = this.getConnection();
 			String createDBQuery =
 					"INSERT INTO MBL_OPERATION(FEATURE_CODE, CREATED_DATE) VALUES ( ?, ?)";
-			stmt = conn.prepareStatement(createDBQuery, new String[] { "OPERATION_ID" });
+			stmt = conn.prepareStatement(createDBQuery, new String[] { COLUMN_OPERATION_ID });
 			stmt.setString(1, operation.getFeatureCode());
 			stmt.setLong(2, operation.getCreatedDate());
 			int rows = stmt.executeUpdate();
@@ -93,8 +94,9 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 				status = true;
 			}
 		} catch (SQLException e) {
-			String msg = "Error occurred while updating the MBL_OPERATION table entry with operation id - '" +
-			             operation.getOperationId() + "'";
+			String msg =
+					"Error occurred while updating the MBL_OPERATION table entry with operation id - '" +
+					operation.getOperationId() + "'";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {

@@ -53,11 +53,12 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT * FROM MBL_DEVICE WHERE MOBILE_DEVICE_ID = ?";
+					"SELECT MOBILE_DEVICE_ID, REG_ID, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
+					"LATITUDE, LONGITUDE FROM MBL_DEVICE WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, deviceId);
 			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
+			if (resultSet.next()) {
 				mobileDevice = new MobileDevice();
 				mobileDevice.setMobileDeviceId(resultSet.getString(1));
 				mobileDevice.setRegId(resultSet.getString(2));
@@ -68,7 +69,6 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 				mobileDevice.setVendor(resultSet.getString(7));
 				mobileDevice.setLatitude(resultSet.getString(8));
 				mobileDevice.setLongitude(resultSet.getString(9));
-				break;
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while fetching mobile device '" +
@@ -104,7 +104,7 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 			stmt.setString(8, mobileDevice.getLatitude());
 			stmt.setString(9, mobileDevice.getLongitude());
 			int rows = stmt.executeUpdate();
-			if(rows>0){
+			if (rows > 0) {
 				status = true;
 			}
 		} catch (SQLException e) {
@@ -140,7 +140,7 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 			stmt.setString(8, mobileDevice.getLongitude());
 			stmt.setString(9, mobileDevice.getMobileDeviceId());
 			int rows = stmt.executeUpdate();
-			if(rows>0){
+			if (rows > 0) {
 				status = true;
 			}
 		} catch (SQLException e) {
@@ -164,9 +164,9 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 			String deleteDBQuery =
 					"DELETE FROM MBL_DEVICE WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
-			stmt.setString(1,deviceId);
+			stmt.setString(1, deviceId);
 			int rows = stmt.executeUpdate();
-			if(rows>0){
+			if (rows > 0) {
 				status = true;
 			}
 		} catch (SQLException e) {
@@ -184,11 +184,12 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		MobileDevice mobileDevice;
-		List<MobileDevice> mobileDevices=new ArrayList<MobileDevice>();
+		List<MobileDevice> mobileDevices = new ArrayList<MobileDevice>();
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT * FROM MBL_DEVICE";
+					"SELECT MOBILE_DEVICE_ID, REG_ID, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR," +
+					"LATITUDE, LONGITUDE FROM MBL_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {

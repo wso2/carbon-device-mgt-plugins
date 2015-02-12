@@ -93,12 +93,12 @@ public interface MobileDeviceOperationMappingDAO {
 			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Retrieves all the of mobile device operation mappings relavent to the given mobile device.
+	 * Retrieves all the of mobile device operation mappings relevant to the given mobile device.
 	 *
 	 * @return Device operation mapping object list.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	List<MobileDeviceOperationMapping> getAllMobileDeviceOperationNappingsOfDevice(String deviceId)
+	List<MobileDeviceOperationMapping> getAllMobileDeviceOperationMappingsOfDevice(String deviceId)
 			throws MobileDeviceManagementDAOException;
 
 	/**

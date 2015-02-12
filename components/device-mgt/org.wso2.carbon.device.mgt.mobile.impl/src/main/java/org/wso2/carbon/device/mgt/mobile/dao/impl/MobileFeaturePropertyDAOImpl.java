@@ -130,6 +130,33 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 	}
 
 	@Override
+	public boolean deleteMobileFeaturePropertiesOfFeature(Integer featureId)
+			throws MobileDeviceManagementDAOException {
+		boolean status = false;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = this.getConnection();
+			String deleteDBQuery =
+					"DELETE FROM MBL_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
+			stmt = conn.prepareStatement(deleteDBQuery);
+			stmt.setInt(1, featureId);
+			int rows = stmt.executeUpdate();
+			if (rows > 0) {
+				status = true;
+			}
+		} catch (SQLException e) {
+			String msg = "Error occurred while deleting feature properties of feature - " +
+			             featureId;
+			log.error(msg, e);
+			throw new MobileDeviceManagementDAOException(msg, e);
+		} finally {
+			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+		}
+		return status;
+	}
+
+	@Override
 	public MobileFeatureProperty getMobileFeatureProperty(String property)
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
@@ -160,7 +187,7 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 	}
 
 	@Override
-	public List<MobileFeatureProperty> getFeaturePropertyOfFeature(Integer featureId)
+	public List<MobileFeatureProperty> getFeaturePropertiesOfFeature(Integer featureId)
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;

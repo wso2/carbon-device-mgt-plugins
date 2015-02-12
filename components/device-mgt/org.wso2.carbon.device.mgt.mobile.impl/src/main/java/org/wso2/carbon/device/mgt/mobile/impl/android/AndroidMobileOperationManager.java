@@ -82,7 +82,7 @@ public class AndroidMobileOperationManager extends AbstractMobileOperationManage
 		MobileOperation mobileOperation = null;
 		try {
 			mobileDeviceOperationMappings = MobileDeviceManagementDAOFactory.getMobileDeviceOperationDAO()
-			                                                         .getAllMobileDeviceOperationNappingsOfDevice(
+			                                                         .getAllMobileDeviceOperationMappingsOfDevice(
 					                                                         deviceIdentifier
 							                                                         .getId());
 			if (mobileDeviceOperationMappings.size() > 0) {
@@ -172,7 +172,7 @@ public class AndroidMobileOperationManager extends AbstractMobileOperationManage
 				feature.setDescription(mobileFeature.getDescription());
 				List<Feature.MetadataEntry> metadataEntries = new ArrayList<Feature.MetadataEntry>();
 				List<MobileFeatureProperty> properties =
-						featurePropertyDAO.getFeaturePropertyOfFeature(mobileFeature.getId());
+						featurePropertyDAO.getFeaturePropertiesOfFeature(mobileFeature.getId());
 				for (MobileFeatureProperty property : properties) {
 					Feature.MetadataEntry metaEntry = new Feature.MetadataEntry();
 					metaEntry.setId(property.getFeatureID());
