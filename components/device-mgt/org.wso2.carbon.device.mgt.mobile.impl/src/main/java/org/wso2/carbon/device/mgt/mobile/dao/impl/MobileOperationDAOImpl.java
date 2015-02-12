@@ -84,7 +84,8 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE MBL_OPERATION SET FEATURE_CODE = ?, CREATED_DATE = ? WHERE OPERATION_ID = ?";
+					"UPDATE MBL_OPERATION SET FEATURE_CODE = ?, CREATED_DATE = ? WHERE " +
+					"OPERATION_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setString(1, operation.getFeatureCode());
 			stmt.setLong(2, operation.getCreatedDate());
@@ -140,16 +141,16 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT OPERATION_ID, FEATURE_CODE, CREATED_DATE FROM MBL_OPERATION WHERE OPERATION_ID = ?";
+					"SELECT OPERATION_ID, FEATURE_CODE, CREATED_DATE FROM MBL_OPERATION WHERE " +
+					"OPERATION_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setInt(1, operationId);
 			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
+			if (resultSet.next()) {
 				operation = new MobileOperation();
 				operation.setOperationId(resultSet.getInt(1));
 				operation.setFeatureCode(resultSet.getString(2));
 				operation.setCreatedDate(resultSet.getLong(3));
-				break;
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while fetching operationId - '" +

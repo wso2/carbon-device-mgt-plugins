@@ -46,7 +46,8 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
-	public int addMobileFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException {
+	public int addMobileFeature(MobileFeature mobileFeature)
+			throws MobileDeviceManagementDAOException {
 		int status = 0;
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -87,7 +88,8 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE MBL_FEATURE SET CODE = ?, NAME = ?, DESCRIPTION = ?, DEVICE_TYPE = ? WHERE FEATURE_ID = ?";
+					"UPDATE MBL_FEATURE SET CODE = ?, NAME = ?, DESCRIPTION = ?, DEVICE_TYPE = ?" +
+					" WHERE FEATURE_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setString(1, mobileFeature.getCode());
 			stmt.setString(2, mobileFeature.getName());
@@ -170,18 +172,18 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE WHERE CODE = ?";
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE " +
+					"WHERE CODE = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, featureCode);
 			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
+			if (resultSet.next()) {
 				mobileFeature = new MobileFeature();
 				mobileFeature.setId(resultSet.getInt(1));
 				mobileFeature.setCode(resultSet.getString(2));
 				mobileFeature.setName(resultSet.getString(3));
 				mobileFeature.setDescription(resultSet.getString(4));
 				mobileFeature.setDeviceType(resultSet.getString(5));
-				break;
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while fetching feature code - '" +
@@ -203,18 +205,18 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE WHERE FEATURE_ID = ?";
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE" +
+					" WHERE FEATURE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setInt(1, featureID);
 			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
+			if (resultSet.next()) {
 				mobileFeature = new MobileFeature();
 				mobileFeature.setId(resultSet.getInt(1));
 				mobileFeature.setCode(resultSet.getString(2));
 				mobileFeature.setName(resultSet.getString(3));
 				mobileFeature.setDescription(resultSet.getString(4));
 				mobileFeature.setDeviceType(resultSet.getString(5));
-				break;
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while fetching feature id - '" +
@@ -259,7 +261,8 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
-	public List<MobileFeature> getMobileFeatureByDeviceType(String deviceType) throws MobileDeviceManagementDAOException {
+	public List<MobileFeature> getMobileFeatureByDeviceType(String deviceType) throws
+	                                                                           MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		MobileFeature mobileFeature;
@@ -267,7 +270,8 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE WHERE DEVICE_TYPE = ?";
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE" +
+					" WHERE DEVICE_TYPE = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, deviceType);
 			ResultSet resultSet = stmt.executeQuery();
@@ -285,7 +289,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 			String msg = "Error occurred while fetching all features.'";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
-		}finally {
+		} finally {
 			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
 		}
 	}

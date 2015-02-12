@@ -29,8 +29,8 @@ public interface MobileDeviceOperationMappingDAO {
 	/**
 	 * Add a new mobile device operation mapping to the table.
 	 *
-	 * @param deviceOperation MobileDeviceOperation object that holds data related to the MobileDeviceOperation
-	 *                        to be inserted.
+	 * @param deviceOperation MobileDeviceOperation object that holds data related to the
+	 *                        MobileDeviceOperation to be inserted.
 	 * @return The status of the operation. If the insert was successful or not.
 	 * @throws MobileDeviceManagementDAOException
 	 */
@@ -85,8 +85,8 @@ public interface MobileDeviceOperationMappingDAO {
 	 *
 	 * @param deviceId    Device id of the mapping to be retrieved.
 	 * @param operationId Operation id of the mapping to be retrieved.
-	 * @return MobileDeviceOperation object that holds data of the device operation mapping represented by
-	 * deviceId and operationId.
+	 * @return MobileDeviceOperation object that holds data of the device operation mapping
+	 * represented by deviceId and operationId.
 	 * @throws MobileDeviceManagementDAOException
 	 */
 	MobileDeviceOperationMapping getMobileDeviceOperationMapping(String deviceId, int operationId)

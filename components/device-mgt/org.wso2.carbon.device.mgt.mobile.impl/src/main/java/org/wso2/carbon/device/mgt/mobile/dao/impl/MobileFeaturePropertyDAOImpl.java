@@ -169,11 +169,10 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, property);
 			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
+			if (resultSet.next()) {
 				mobileFeatureProperty = new MobileFeatureProperty();
 				mobileFeatureProperty.setProperty(resultSet.getString(1));
 				mobileFeatureProperty.setFeatureID(resultSet.getInt(2));
-				break;
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while fetching property - '" +
@@ -191,7 +190,7 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		MobileFeatureProperty mobileFeatureProperty = null;
+		MobileFeatureProperty mobileFeatureProperty;
 		List<MobileFeatureProperty> FeatureProperties = new ArrayList<MobileFeatureProperty>();
 		try {
 			conn = this.getConnection();

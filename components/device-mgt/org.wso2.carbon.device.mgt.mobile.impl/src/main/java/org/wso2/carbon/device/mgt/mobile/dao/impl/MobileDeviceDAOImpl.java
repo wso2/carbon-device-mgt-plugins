@@ -128,7 +128,8 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 			conn = this.getConnection();
 			String updateDBQuery =
 					"UPDATE MBL_DEVICE SET REG_ID = ?, IMEI = ?, IMSI = ?, OS_VERSION = ?," +
-					"DEVICE_MODEL = ?, VENDOR = ? , LATITUDE = ?, LONGITUDE = ? WHERE MOBILE_DEVICE_ID = ?";
+					"DEVICE_MODEL = ?, VENDOR = ? , LATITUDE = ?, LONGITUDE = ? " +
+					"WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setString(1, mobileDevice.getRegId());
 			stmt.setString(2, mobileDevice.getImei());

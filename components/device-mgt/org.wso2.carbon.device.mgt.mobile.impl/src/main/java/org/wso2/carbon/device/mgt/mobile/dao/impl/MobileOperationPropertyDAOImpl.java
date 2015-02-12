@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileOperationPropertyDAO;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.mobile.dto.MobileOperation;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileOperationProperty;
 
 import javax.sql.DataSource;
@@ -55,8 +54,8 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 		try {
 			conn = this.getConnection();
 			String createDBQuery =
-					"INSERT INTO MBL_OPERATION_PROPERTY(OPERATION_ID, PROPERTY, VALUE) VALUES ( ?, ?, ?)";
-
+					"INSERT INTO MBL_OPERATION_PROPERTY(OPERATION_ID, PROPERTY, VALUE) " +
+					"VALUES ( ?, ?, ?)";
 			stmt = conn.prepareStatement(createDBQuery);
 			stmt.setInt(1, operationProperty.getOperationId());
 			stmt.setString(2, operationProperty.getProperty());
@@ -67,7 +66,8 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 			}
 		} catch (SQLException e) {
 			String msg =
-					"Error occurred while adding mobile operation property to MBL_OPERATION_PROPERTY table";
+					"Error occurred while adding mobile operation property to MBL_OPERATION_PROPERTY " +
+					"table";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -86,8 +86,8 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 		try {
 			conn = this.getConnection();
 			String createDBQuery =
-					"UPDATE MBL_OPERATION_PROPERTY SET VALUE = ? WHERE OPERATION_ID = ? AND PROPERTY = ?";
-
+					"UPDATE MBL_OPERATION_PROPERTY SET VALUE = ? WHERE OPERATION_ID = ? AND " +
+					"PROPERTY = ?";
 			stmt = conn.prepareStatement(createDBQuery);
 			stmt.setString(1, operationProperty.getValue());
 			stmt.setInt(2, operationProperty.getOperationId());
@@ -98,7 +98,8 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 			}
 		} catch (SQLException e) {
 			String msg =
-					"Error occurred while updating the mobile operation property in MBL_OPERATION_PROPERTY table.";
+					"Error occurred while updating the mobile operation property in" +
+					" MBL_OPERATION_PROPERTY table.";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -144,17 +145,17 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT OPERATION_ID, PROPERTY, VALUE FROM MBL_OPERATION_PROPERTY WHERE OPERATION_ID = ? AND PROPERTY = ?";
+					"SELECT OPERATION_ID, PROPERTY, VALUE FROM MBL_OPERATION_PROPERTY WHERE " +
+					"OPERATION_ID = ? AND PROPERTY = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setInt(1, operationId);
 			stmt.setString(2, property);
 			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
+			if (resultSet.next()) {
 				mobileOperationProperty = new MobileOperationProperty();
 				mobileOperationProperty.setOperationId(resultSet.getInt(1));
 				mobileOperationProperty.setProperty(resultSet.getString(2));
 				mobileOperationProperty.setValue(resultSet.getString(3));
-				break;
 			}
 		} catch (SQLException e) {
 			String msg =
@@ -173,12 +174,13 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 			int operationId) throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		MobileOperationProperty mobileOperationProperty = null;
+		MobileOperationProperty mobileOperationProperty;
 		List<MobileOperationProperty> properties = new ArrayList<MobileOperationProperty>();
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT OPERATION_ID, PROPERTY, VALUE FROM MBL_OPERATION_PROPERTY WHERE OPERATION_ID = ?";
+					"SELECT OPERATION_ID, PROPERTY, VALUE FROM MBL_OPERATION_PROPERTY WHERE " +
+					"OPERATION_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setInt(1, operationId);
 			ResultSet resultSet = stmt.executeQuery();

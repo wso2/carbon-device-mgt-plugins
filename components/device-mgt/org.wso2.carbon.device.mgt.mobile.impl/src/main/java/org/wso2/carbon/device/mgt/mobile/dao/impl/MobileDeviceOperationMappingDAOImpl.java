@@ -20,8 +20,8 @@ package org.wso2.carbon.device.mgt.mobile.dao.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceOperationMappingDAO;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceOperationMappingDAO;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDeviceOperationMapping;
 
@@ -73,7 +73,6 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			             deviceOperation.getDeviceId() + " and operation id - " +
 			             deviceOperation.getOperationId() +
 			             " to mapping table MBL_DEVICE_OPERATION";
-			;
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -91,8 +90,8 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE MBL_DEVICE_OPERATION_MAPPING SET SENT_DATE = ?, RECEIVED_DATE = ?, STATUS = ? " +
-					"WHERE DEVICE_ID = ? AND OPERATION_ID=?";
+					"UPDATE MBL_DEVICE_OPERATION_MAPPING SET SENT_DATE = ?, RECEIVED_DATE = ?, " +
+					"STATUS = ? WHERE DEVICE_ID = ? AND OPERATION_ID=?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setLong(1, deviceOperation.getSentDate());
 			stmt.setLong(2, deviceOperation.getReceivedDate());
@@ -159,7 +158,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			conn = this.getConnection();
 			String updateDBQuery =
 					"UPDATE MBL_DEVICE_OPERATION_MAPPING SET RECEIVED_DATE = ?, STATUS = ? " +
-					"WHERE DEVICE_ID = ? AND OPERATION_ID=?";
+					"WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setLong(1, new Date().getTime());
 			stmt.setString(2, MobileDeviceOperationMapping.Status.COMPLETED.name());
@@ -191,7 +190,8 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 		try {
 			conn = this.getConnection();
 			String deleteDBQuery =
-					"DELETE FROM MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID=?";
+					"DELETE FROM MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND " +
+					"OPERATION_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
 			stmt.setString(1, deviceId);
 			stmt.setInt(2, operationId);
@@ -222,19 +222,18 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			conn = this.getConnection();
 			String selectDBQuery =
 					"SELECT DEVICE_ID, OPERATION_ID, SENT_DATE, RECEIVED_DATE, STATUS FROM " +
-					"MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID=?";
+					"MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, deviceId);
 			stmt.setInt(2, operationId);
 			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
+			if (resultSet.next()) {
 				mblDeviceOperation = new MobileDeviceOperationMapping();
 				mblDeviceOperation.setDeviceId(resultSet.getString(1));
 				mblDeviceOperation.setOperationId(resultSet.getInt(2));
 				mblDeviceOperation.setSentDate(resultSet.getInt(3));
 				mblDeviceOperation.setReceivedDate(resultSet.getInt(4));
 				mblDeviceOperation.setStatus(resultSet.getString(5));
-				break;
 			}
 		} catch (SQLException e) {
 			String msg =
@@ -254,8 +253,9 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		MobileDeviceOperationMapping mblDeviceOperation = null;
-		List<MobileDeviceOperationMapping> mblDeviceOperations = new ArrayList<MobileDeviceOperationMapping>();
+		MobileDeviceOperationMapping mblDeviceOperation;
+		List<MobileDeviceOperationMapping> mblDeviceOperations =
+				new ArrayList<MobileDeviceOperationMapping>();
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
@@ -292,15 +292,17 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		MobileDeviceOperationMapping mblDeviceOperation = null;
-		List<MobileDeviceOperationMapping> mblDeviceOperations = new ArrayList<MobileDeviceOperationMapping>();
+		List<MobileDeviceOperationMapping> mblDeviceOperations =
+				new ArrayList<MobileDeviceOperationMapping>();
 		try {
 
 			conn = this.getConnection();
 			String selectDBQuery =
 					"SELECT DEVICE_ID, OPERATION_ID, SENT_DATE, RECEIVED_DATE, STATUS FROM" +
-					" MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND STATUS = 'NEW'";
+					" MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND STATUS = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, deviceId);
+			stmt.setString(2, MobileDeviceOperationMapping.Status.NEW.name());
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mblDeviceOperation = new MobileDeviceOperationMapping();

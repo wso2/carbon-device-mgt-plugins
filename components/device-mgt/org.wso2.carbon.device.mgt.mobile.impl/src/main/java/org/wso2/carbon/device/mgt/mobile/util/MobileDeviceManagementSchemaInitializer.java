@@ -26,6 +26,11 @@ import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 import javax.sql.DataSource;
 import java.io.File;
 
+/**
+ *
+ * Provides methods for initializing the database script.
+ *
+ */
 public final class MobileDeviceManagementSchemaInitializer extends DatabaseCreator {
 
 	private static final Log log = LogFactory.getLog(MobileDeviceManagementSchemaInitializer.class);

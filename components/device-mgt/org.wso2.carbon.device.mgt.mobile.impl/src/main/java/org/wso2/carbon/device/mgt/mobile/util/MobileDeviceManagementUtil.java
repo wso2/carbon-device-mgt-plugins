@@ -71,14 +71,13 @@ public class MobileDeviceManagementUtil {
 	}
 
 	private static Device.Property getProperty(String property, String value) {
-		Device.Property prop = null;
 		if (property != null) {
-			prop = new Device.Property();
+			Device.Property prop = new Device.Property();
 			prop.setName(property);
 			prop.setValue(value);
 			return prop;
 		}
-		return prop;
+		return null;
 	}
 
 	public static MobileDevice convertToMobileDevice(Device device) {
@@ -119,7 +118,7 @@ public class MobileDeviceManagementUtil {
 
 	public static MobileOperation convertToMobileOperation(org.wso2.carbon.device.mgt.common.Operation operation) {
 		MobileOperation mobileOperation = new MobileOperation();
-		MobileOperationProperty operationProperty = null;
+		MobileOperationProperty operationProperty;
 		List<MobileOperationProperty> properties = new LinkedList<MobileOperationProperty>();
 		mobileOperation.setFeatureCode(operation.getCode());
 		mobileOperation.setCreatedDate(new Date().getTime());

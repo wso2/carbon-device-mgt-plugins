@@ -23,14 +23,15 @@ import org.wso2.carbon.device.mgt.mobile.dto.MobileFeatureProperty;
 import java.util.List;
 
 /**
- * This class represents the key operations associated with persisting mobile feature property related
- * information.
+ * This class represents the key operations associated with persisting mobile feature property
+ * related information.
  */
 public interface MobileFeaturePropertyDAO {
 	/**
 	 * Add a new feature property to feature property table.
 	 *
-	 * @param mobileFeatureProperty Feature property object that holds data related to the feature property to be inserted.
+	 * @param mobileFeatureProperty Feature property object that holds data related to the feature
+	 *                                 property to be inserted.
 	 * @return The status of the operation. If the insert was successful or not.
 	 * @throws MobileDeviceManagementDAOException
 	 */
