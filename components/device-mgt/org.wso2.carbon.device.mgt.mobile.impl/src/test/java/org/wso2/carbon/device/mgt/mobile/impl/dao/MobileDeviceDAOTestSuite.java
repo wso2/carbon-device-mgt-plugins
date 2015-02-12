@@ -36,6 +36,12 @@ import org.wso2.carbon.device.mgt.mobile.impl.dao.util.MobileDatabaseUtils;
 import java.sql.*;
 import java.util.List;
 
+/**
+ *
+ * Class for holding unit-tests related to MobileDeviceDAO class.
+ *
+ */
+
 public class MobileDeviceDAOTestSuite {
 
 	private static final Log log = LogFactory.getLog(MobileDeviceDAOTestSuite.class);

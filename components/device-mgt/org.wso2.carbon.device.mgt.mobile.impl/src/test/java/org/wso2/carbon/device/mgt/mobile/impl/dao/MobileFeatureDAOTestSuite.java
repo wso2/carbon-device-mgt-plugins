@@ -37,7 +37,9 @@ import java.sql.*;
 import java.util.List;
 
 /**
- * Class for holding the units tests related to MobileFeatureDAO class.
+ *
+ * Class for holding unit-tests related to MobileFeatureDAO class.
+ *
  */
 public class MobileFeatureDAOTestSuite {
 

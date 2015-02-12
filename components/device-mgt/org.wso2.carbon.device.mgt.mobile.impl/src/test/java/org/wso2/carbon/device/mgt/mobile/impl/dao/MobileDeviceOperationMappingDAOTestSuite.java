@@ -41,6 +41,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * Class for holding unit-tests related to MobileDeviceOperationMappingDAO class.
+ *
+ */
 public class MobileDeviceOperationMappingDAOTestSuite {
 
 	private static final Log log =

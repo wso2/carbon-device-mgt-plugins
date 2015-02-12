@@ -39,6 +39,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * Class for holding unit-tests related to MobileFeaturePropertyDAO class.
+ *
+ */
 public class MobileFeaturePropertyDAOTestSuite {
 	private static final Log log = LogFactory.getLog(MobileFeaturePropertyDAOTestSuite.class);
 	public static final String MBL_FEATURE_NAME = "WIFI";

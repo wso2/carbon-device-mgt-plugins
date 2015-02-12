@@ -39,6 +39,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * Class for holding unit-tests related to MobileOperationPropertyDAO class.
+ *
+ */
 public class MobileOperationPropertyDAOTestSuite {
 
 	private static final Log log = LogFactory.getLog(MobileOperationPropertyDAOTestSuite.class);
