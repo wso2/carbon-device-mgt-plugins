@@ -70,65 +70,58 @@ public class MobileDeviceManagementConfigTests {
 		}
 	}
 
-	@Test()
-	public void testMandateManagementRepositoryElement() {
+	@Test(expectedExceptions = JAXBException.class)
+	public void testMandateManagementRepositoryElement() throws JAXBException {
 		File malformedConfig =
 				new File(
 						MobileDeviceManagementConfigTests.MALFORMED_TEST_CONFIG_LOCATION_NO_MGT_REPOSITORY);
 		this.validateMalformedConfig(malformedConfig);
 	}
 
-	@Test
-	public void testMandateDataSourceConfigurationElement() {
+	@Test(expectedExceptions = JAXBException.class)
+	public void testMandateDataSourceConfigurationElement() throws JAXBException {
 		File malformedConfig = new File(
 				MobileDeviceManagementConfigTests.MALFORMED_TEST_CONFIG_LOCATION_NO_DS_CONFIG);
 		this.validateMalformedConfig(malformedConfig);
 	}
 
-	@Test
-	public void testMandateJndiLookupDefinitionElement() {
+	@Test(expectedExceptions = JAXBException.class)
+	public void testMandateJndiLookupDefinitionElement() throws JAXBException {
 		File malformedConfig = new File(
 				MobileDeviceManagementConfigTests.MALFORMED_TEST_CONFIG_LOCATION_NO_JNDI_CONFIG);
 		this.validateMalformedConfig(malformedConfig);
 	}
 
-	@Test
-	public void testMandateAPIPublisherElement() {
+	@Test(expectedExceptions = JAXBException.class)
+	public void testMandateAPIPublisherElement() throws JAXBException {
 		File malformedConfig = new File(
 				MobileDeviceManagementConfigTests.MALFORMED_TEST_CONFIG_LOCATION_NO_API_PUBLISHER_CONFIG);
 		this.validateMalformedConfig(malformedConfig);
 	}
 
-	@Test
-	public void testMandateAPIsElement() {
+	@Test(expectedExceptions = JAXBException.class)
+	public void testMandateAPIsElement() throws JAXBException {
 		File malformedConfig = new File(
 				MobileDeviceManagementConfigTests.MALFORMED_TEST_CONFIG_LOCATION_NO_APIS_CONFIG);
 		this.validateMalformedConfig(malformedConfig);
 	}
 
-	@Test
-	public void testMandateAPIElement() {
+	@Test(expectedExceptions = JAXBException.class)
+	public void testMandateAPIElement() throws JAXBException {
 		File malformedConfig = new File(
 				MobileDeviceManagementConfigTests.MALFORMED_TEST_CONFIG_LOCATION_NO_API_CONFIG);
 		this.validateMalformedConfig(malformedConfig);
 	}
 
 	/**
-	 *
 	 * Validates a given malformed-configuration file.
-	 *
 	 */
-	private void validateMalformedConfig(File malformedConfig) {
-		try {
-			JAXBContext ctx = JAXBContext.newInstance(MobileDeviceManagementConfig.class);
-			Unmarshaller um = ctx.createUnmarshaller();
-			um.setSchema(this.getSchema());
-			um.unmarshal(malformedConfig);
-			Assert.assertTrue(false);
-		} catch (JAXBException e) {
-			log.error("Error occurred while unmarsharlling mobile device management config", e);
-			Assert.assertTrue(true);
-		}
+	private void validateMalformedConfig(File malformedConfig) throws JAXBException {
+		JAXBContext ctx = JAXBContext.newInstance(MobileDeviceManagementConfig.class);
+		Unmarshaller um = ctx.createUnmarshaller();
+		um.setSchema(this.getSchema());
+		um.unmarshal(malformedConfig);
+		Assert.assertTrue(false);
 	}
 
 	private Schema getSchema() {
