@@ -206,7 +206,7 @@ public class MobileFeaturePropertyDAOTestSuite {
 	}
 
 	@Test(dependsOnMethods = { "addMobileFeaturePropertyTest", "getMobileFeaturePropertyTest",
-	                           "getFeaturePropertyOfFeatureTest" , "updateFeaturePropertyTest",
+	                           "getFeaturePropertyOfFeatureTest" , "updateMobileFeaturePropertyTest",
 	                           "deleteMobileFeaturePropertyTest"})
 	public void deleteMobileFeaturePropertiesOfFeatureTest()
 			throws MobileDeviceManagementDAOException {
