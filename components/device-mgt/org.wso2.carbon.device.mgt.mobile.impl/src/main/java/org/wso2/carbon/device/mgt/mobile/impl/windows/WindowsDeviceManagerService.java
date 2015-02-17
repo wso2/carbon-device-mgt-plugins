@@ -49,7 +49,7 @@ public class WindowsDeviceManagerService implements DeviceManagerService {
 			status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
 					mobileDevice);
 		} catch (MobileDeviceManagementDAOException e) {
-			String msg = "Error while enrolling the Android device : " +
+			String msg = "Error while enrolling the Windows device : " +
 			             device.getDeviceIdentifier();
 			log.error(msg, e);
 			throw new DeviceManagementException(msg, e);
