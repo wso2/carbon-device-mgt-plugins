@@ -26,87 +26,93 @@ import java.util.List;
  * This class represents the mapping between mobile device and operations.
  */
 public interface MobileDeviceOperationMappingDAO {
+
 	/**
-	 * Add a new mobile device operation mapping to the table.
+	 * Adds a new mobile device operation mapping to the table.
 	 *
-	 * @param deviceOperation MobileDeviceOperation object that holds data related to the MobileDeviceOperation
-	 *                        to be inserted.
-	 * @return The status of the operation. If the insert was successful or not.
+	 * @param mblDeviceOperationMapping MobileDeviceOperationMapping object that holds data related
+	 *                                  to the MobileDeviceOperationMapping to be inserted.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean addMobileDeviceOperationMapping(MobileDeviceOperationMapping deviceOperation)
+	boolean addMobileDeviceOperationMapping(MobileDeviceOperationMapping mblDeviceOperationMapping)
 			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Updates a mobile device operation mapping.
+	 * Updates a MobileDeviceOperationMapping in MobileDeviceOperationMapping table.
 	 *
-	 * @param deviceOperation MobileDeviceOperation object that holds data has to be updated.
-	 * @return The status of the operation. If the update was successful or not.
+	 * @param mblDeviceOperation MobileDeviceOperationMapping object that holds data has to be updated.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean updateMobileDeviceOperationMapping(MobileDeviceOperationMapping deviceOperation)
+	boolean updateMobileDeviceOperationMapping(MobileDeviceOperationMapping mblDeviceOperation)
 			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Updates a mobile device operation mapping to In-Progress state.
+	 * Updates a MobileDeviceOperationMapping to In-Progress state in MobileDeviceOperationMapping
+	 * table.
 	 *
-	 * @param deviceId    Device id of the mapping to be deleted.
+	 * @param mblDeviceId MobileDevice id of the mappings to be updated.
+	 * @param operationId Operation id of the mapping to be updated.
+	 * @return The status of the operation.
+	 * @throws MobileDeviceManagementDAOException
+	 */
+	boolean updateMobileDeviceOperationMappingToInProgress(String mblDeviceId, int operationId)
+			throws MobileDeviceManagementDAOException;
+
+	/**
+	 * Updates a MobileDeviceOperationMapping to completed state in MobileDeviceOperationMapping
+	 * table.
+	 *
+	 * @param mblDeviceId MobileDevice id of the mappings to be updated.
+	 * @param operationId Operation id of the mapping to be updated.
+	 * @return The status of the operation.
+	 * @throws MobileDeviceManagementDAOException
+	 */
+	boolean updateMobileDeviceOperationMappingToCompleted(String mblDeviceId, int operationId)
+			throws MobileDeviceManagementDAOException;
+
+	/**
+	 * Delete a given MobileDeviceOperationMapping from MobileDeviceOperationMapping table.
+	 *
+	 * @param mblDeviceId MobileDevice id of the mappings to be deleted.
 	 * @param operationId Operation id of the mapping to be deleted.
-	 * @return The status of the operation. If the update was successful or not.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean updateMobileDeviceOperationMappingToInProgress(String deviceId, int operationId)
+	boolean deleteMobileDeviceOperationMapping(String mblDeviceId, int operationId)
 			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Updates a mobile device operation mapping to completed state.
+	 * Retrieves a given MobileDeviceOperationMapping object from the MobileDeviceOperationMapping
+	 * table.
 	 *
-	 * @param deviceId    Device id of the mapping to be deleted.
-	 * @param operationId Operation id of the mapping to be deleted.
-	 * @return The status of the operation. If the update was successful or not.
-	 * @throws MobileDeviceManagementDAOException
-	 */
-	boolean updateMobileDeviceOperationMappingToCompleted(String deviceId, int operationId)
-			throws MobileDeviceManagementDAOException;
-
-	/**
-	 * Delete a given mobile device operation mapping from table.
-	 *
-	 * @param deviceId    Device id of the mapping to be deleted.
-	 * @param operationId Operation id of the mapping to be deleted.
-	 * @return The status of the operation. If the deletion was successful or not.
-	 * @throws MobileDeviceManagementDAOException
-	 */
-	boolean deleteMobileDeviceOperationMapping(String deviceId, int operationId)
-			throws MobileDeviceManagementDAOException;
-
-	/**
-	 * Retrieves a given mobile device operation from the plugin database.
-	 *
-	 * @param deviceId    Device id of the mapping to be retrieved.
+	 * @param mblDeviceId Device id of the mapping to be retrieved.
 	 * @param operationId Operation id of the mapping to be retrieved.
-	 * @return MobileDeviceOperation object that holds data of the device operation mapping represented by
-	 * deviceId and operationId.
+	 * @return MobileDeviceOperation object that holds data of the device operation mapping
+	 * represented by deviceId and operationId.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	MobileDeviceOperationMapping getMobileDeviceOperationMapping(String deviceId, int operationId)
+	MobileDeviceOperationMapping getMobileDeviceOperationMapping(String mblDeviceId, int operationId)
 			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Retrieves all the of mobile device operation mappings relavent to the given mobile device.
+	 * Retrieves all the of MobileDeviceOperationMappings relevant to a given mobile device.
 	 *
-	 * @return Device operation mapping object list.
+	 * @param mblDeviceId MobileDevice id of the mappings to be retrieved.
+	 * @return MobileDeviceOperationMapping object list.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	List<MobileDeviceOperationMapping> getAllMobileDeviceOperationNappingsOfDevice(String deviceId)
+	List<MobileDeviceOperationMapping> getAllMobileDeviceOperationMappingsOfDevice(String mblDeviceId)
 			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Retrieves all the pending device operation mappings of a mobiel device.
+	 * Retrieves all the pending MobileDeviceOperationMappings of a mobile device.
 	 *
-	 * @return Device operation mapping object list.
+	 * @param mblDeviceId MobileDevice id of the mappings to be retrieved.
+	 * @return MobileDeviceOperationMapping object list.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	List<MobileDeviceOperationMapping> getAllPendingOperationMappingsOfMobileDevice(String deviceId)
+	List<MobileDeviceOperationMapping> getAllPendingOperationMappingsOfMobileDevice(String mblDeviceId)
 			throws MobileDeviceManagementDAOException;
 }

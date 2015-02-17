@@ -23,56 +23,72 @@ import org.wso2.carbon.device.mgt.mobile.dto.MobileFeatureProperty;
 import java.util.List;
 
 /**
- * This class represents the key operations associated with persisting mobile feature property related
- * information.
+ * This class represents the key operations associated with persisting mobile feature property
+ * related information.
  */
 public interface MobileFeaturePropertyDAO {
+
 	/**
-	 * Add a new feature property to feature property table.
+	 * Add a new MobileFeatureProperty to MobileFeatureProperty table.
 	 *
-	 * @param mobileFeatureProperty Feature property object that holds data related to the feature property to be inserted.
-	 * @return The status of the operation. If the insert was successful or not.
+	 * @param mblFeatureProperty MobileFeatureProperty object that holds data related to the feature
+	 *                                 property to be inserted.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean addMobileFeatureProperty(MobileFeatureProperty mobileFeatureProperty)
+	boolean addMobileFeatureProperty(MobileFeatureProperty mblFeatureProperty)
 			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Update a feature property in the feature property table.
+	 * Updates a MobileFeatureProperty in the MobileFeatureProperty table.
 	 *
-	 * @param mobileFeatureProperty Feature property object that holds data has to be updated.
-	 * @return The status of the operation. If the update was successful or not.
+	 * @param mblFeatureProperty MobileFeatureProperty object that holds data has to be updated.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean updateMobileFeatureProperty(MobileFeatureProperty mobileFeatureProperty)
+	boolean updateMobileFeatureProperty(MobileFeatureProperty mblFeatureProperty)
 			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Delete a given feature property from feature property table.
+	 * Deletes a given MobileFeatureProperty from MobileFeatureProperty table.
 	 *
-	 * @param property Property of the feature property to be deleted.
-	 * @return The status of the operation. If the operationId was successful or not.
+	 * @param property Property of the MobileFeatureProperty to be deleted.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
 	boolean deleteMobileFeatureProperty(String property) throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Retrieve a given feature property from feature property table.
+	 * Deletes MobileFeatureProperties of a given feature from MobileFeatureProperty table.
 	 *
-	 * @param property Property of the feature property to be retrieved.
-	 * @return Feature property object that holds data of the feature property represented by propertyId.
+	 * @param mblFeatureId Feature-id of the MobileFeature corresponding properties should be deleted.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	MobileFeatureProperty getMobileFeatureProperty(String property) throws MobileDeviceManagementDAOException;
+	boolean deleteMobileFeaturePropertiesOfFeature(Integer mblFeatureId)
+			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Retrieve a list of feature property corresponds to a feature id .
+	 * Retrieves a given MobileFeatureProperty from MobileFeatureProperty table.
 	 *
-	 * @param featureId feature id of the feature property to be retrieved.
-	 * @return Feature property object that holds data of the feature property represented by propertyId.
+	 * @param property Property of the feature property to be retrieved.
+	 * @return MobileFeatureProperty object that holds data of the feature property represented by
+	 * property.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	List<MobileFeatureProperty> getFeaturePropertyOfFeature(Integer featureId)
+	MobileFeatureProperty getMobileFeatureProperty(String property)
+			throws MobileDeviceManagementDAOException;
+
+	/**
+	 * Retrieves a list of MobileFeatureProperties corresponds to a given feature id from
+	 * MobileFeatureProperty table.
+	 *
+	 * @param mblFeatureId feature id of the MobileFeatureProperties to be retrieved.
+	 * @return List of MobileFeatureProperty objects that holds data of the MobileFeatureProperties
+	 * represented by featureId.
+	 * @throws MobileDeviceManagementDAOException
+	 */
+	List<MobileFeatureProperty> getFeaturePropertiesOfFeature(Integer mblFeatureId)
 			throws MobileDeviceManagementDAOException;
 
 }

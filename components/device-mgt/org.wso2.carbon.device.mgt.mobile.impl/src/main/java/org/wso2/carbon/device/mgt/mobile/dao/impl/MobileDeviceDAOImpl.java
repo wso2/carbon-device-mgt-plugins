@@ -46,18 +46,19 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 	}
 
 	@Override
-	public MobileDevice getMobileDevice(String deviceId) throws MobileDeviceManagementDAOException {
+	public MobileDevice getMobileDevice(String mblDeviceId) throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		MobileDevice mobileDevice = null;
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT * FROM MBL_DEVICE WHERE MOBILE_DEVICE_ID = ?";
+					"SELECT MOBILE_DEVICE_ID, REG_ID, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
+					"LATITUDE, LONGITUDE FROM MBL_DEVICE WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
-			stmt.setString(1, deviceId);
+			stmt.setString(1, mblDeviceId);
 			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
+			if (resultSet.next()) {
 				mobileDevice = new MobileDevice();
 				mobileDevice.setMobileDeviceId(resultSet.getString(1));
 				mobileDevice.setRegId(resultSet.getString(2));
@@ -68,11 +69,13 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 				mobileDevice.setVendor(resultSet.getString(7));
 				mobileDevice.setLatitude(resultSet.getString(8));
 				mobileDevice.setLongitude(resultSet.getString(9));
-				break;
+				if (log.isDebugEnabled()) {
+					log.debug("Mobile device " + mblDeviceId + " data has fetched from MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while fetching mobile device '" +
-			             deviceId + "'";
+			             mblDeviceId + "'";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -104,8 +107,12 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 			stmt.setString(8, mobileDevice.getLatitude());
 			stmt.setString(9, mobileDevice.getLongitude());
 			int rows = stmt.executeUpdate();
-			if(rows>0){
+			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Mobile device " + mobileDevice.getMobileDeviceId() + " data has added" +
+					          " to the MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while adding the mobile device '" +
@@ -128,7 +135,8 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 			conn = this.getConnection();
 			String updateDBQuery =
 					"UPDATE MBL_DEVICE SET REG_ID = ?, IMEI = ?, IMSI = ?, OS_VERSION = ?," +
-					"DEVICE_MODEL = ?, VENDOR = ? , LATITUDE = ?, LONGITUDE = ? WHERE MOBILE_DEVICE_ID = ?";
+					"DEVICE_MODEL = ?, VENDOR = ? , LATITUDE = ?, LONGITUDE = ? " +
+					"WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setString(1, mobileDevice.getRegId());
 			stmt.setString(2, mobileDevice.getImei());
@@ -140,8 +148,12 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 			stmt.setString(8, mobileDevice.getLongitude());
 			stmt.setString(9, mobileDevice.getMobileDeviceId());
 			int rows = stmt.executeUpdate();
-			if(rows>0){
+			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Mobile device " + mobileDevice.getMobileDeviceId() + " data has" +
+					          " updated");
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while updating the mobile device '" +
@@ -155,7 +167,7 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 	}
 
 	@Override
-	public boolean deleteMobileDevice(String deviceId) throws MobileDeviceManagementDAOException {
+	public boolean deleteMobileDevice(String mblDeviceId) throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -164,13 +176,17 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 			String deleteDBQuery =
 					"DELETE FROM MBL_DEVICE WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
-			stmt.setString(1,deviceId);
+			stmt.setString(1, mblDeviceId);
 			int rows = stmt.executeUpdate();
-			if(rows>0){
+			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Mobile device " + mblDeviceId + " data has deleted" +
+					          " from the MDM database.");
+				}
 			}
 		} catch (SQLException e) {
-			String msg = "Error occurred while deleting mobile device " + deviceId;
+			String msg = "Error occurred while deleting mobile device " + mblDeviceId;
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -184,11 +200,12 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		MobileDevice mobileDevice;
-		List<MobileDevice> mobileDevices=new ArrayList<MobileDevice>();
+		List<MobileDevice> mobileDevices = new ArrayList<MobileDevice>();
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT * FROM MBL_DEVICE";
+					"SELECT MOBILE_DEVICE_ID, REG_ID, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR," +
+					"LATITUDE, LONGITUDE FROM MBL_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
@@ -203,6 +220,9 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 				mobileDevice.setLatitude(resultSet.getString(8));
 				mobileDevice.setLongitude(resultSet.getString(9));
 				mobileDevices.add(mobileDevice);
+			}
+			if (log.isDebugEnabled()) {
+				log.debug("All Mobile device details have fetched from MDM database.");
 			}
 			return mobileDevices;
 		} catch (SQLException e) {

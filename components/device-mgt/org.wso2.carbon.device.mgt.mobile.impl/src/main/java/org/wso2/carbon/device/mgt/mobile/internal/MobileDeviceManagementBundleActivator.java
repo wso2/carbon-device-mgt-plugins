@@ -40,129 +40,136 @@ import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagerServic
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * BundleActivator of MobileDeviceManagement component.
+ */
 public class MobileDeviceManagementBundleActivator implements BundleActivator, BundleListener {
 
-    private ServiceRegistration androidServiceRegRef;
-    private ServiceRegistration iOSServiceRegRef;
-    private ServiceRegistration windowsServiceRegRef;
+	private ServiceRegistration androidServiceRegRef;
+	private ServiceRegistration iOSServiceRegRef;
+	private ServiceRegistration windowsServiceRegRef;
 
-    private static List<DataSourceListener> dataSourceListeners = new ArrayList<DataSourceListener>();
+	private static List<DataSourceListener> dataSourceListeners =
+			new ArrayList<DataSourceListener>();
 
-    private static final String SYMBOLIC_NAME_DATA_SOURCE_COMPONENT = "org.wso2.carbon.ndatasource.core";
-    private static final Log log = LogFactory.getLog(MobileDeviceManagementBundleActivator.class);
+	private static final String SYMBOLIC_NAME_DATA_SOURCE_COMPONENT =
+			"org.wso2.carbon.ndatasource.core";
+	private static final Log log = LogFactory.getLog(MobileDeviceManagementBundleActivator.class);
 
-    @Override
-    public void start(BundleContext bundleContext) throws Exception {
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug("Activating Mobile Device Management Service bundle");
-            }
-            bundleContext.addBundleListener(this);
+	@Override
+	public void start(BundleContext bundleContext) throws Exception {
+		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Activating Mobile Device Management Service bundle");
+			}
+			bundleContext.addBundleListener(this);
 
             /* Initialize the datasource configuration */
-            MobileDeviceConfigurationManager.getInstance().initConfig();
-            MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance()
-                    .getMobileDeviceManagementConfig();
-            MobileDataSourceConfig dsConfig =
-                    config.getMobileDeviceMgtRepository().getMobileDataSourceConfig();
+			MobileDeviceConfigurationManager.getInstance().initConfig();
+			MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance().
+					getMobileDeviceManagementConfig();
+			MobileDataSourceConfig dsConfig =
+					config.getMobileDeviceMgtRepository().getMobileDataSourceConfig();
 
-            MobileDeviceManagementDAOFactory.setMobileDataSourceConfig(dsConfig);
+			MobileDeviceManagementDAOFactory.setMobileDataSourceConfig(dsConfig);
 
-            androidServiceRegRef =
-                    bundleContext.registerService(DeviceManagerService.class.getName(),
-                            new AndroidDeviceManagerService(), null);
-            iOSServiceRegRef =
-                    bundleContext.registerService(DeviceManagerService.class.getName(),
-                            new IOSDeviceManagerService(), null);
-            windowsServiceRegRef =
-                    bundleContext.registerService(DeviceManagerService.class.getName(),
-                            new WindowsDeviceManagerService(), null);
+			androidServiceRegRef =
+					bundleContext.registerService(DeviceManagerService.class.getName(),
+					                              new AndroidDeviceManagerService(), null);
+			iOSServiceRegRef =
+					bundleContext.registerService(DeviceManagerService.class.getName(),
+					                              new IOSDeviceManagerService(), null);
+			windowsServiceRegRef =
+					bundleContext.registerService(DeviceManagerService.class.getName(),
+					                              new WindowsDeviceManagerService(), null);
 
             /* Initialize all API configurations with corresponding API Providers */
-            this.initAPIConfigs();
-            /* Publish all mobile device management related JAX-RS services as APIs */
-            this.publishAPIs();
+			this.initAPIConfigs();
+	        /* Publish all mobile device management related JAX-RS services as APIs */
+			this.publishAPIs();
 
-            if (log.isDebugEnabled()) {
-                log.debug("Mobile Device Management Service bundle is activated");
-            }
-        } catch (Throwable e) {
-            log.error("Error occurred while activating Mobile Device Management bundle", e);
-        }
-    }
+			if (log.isDebugEnabled()) {
+				log.debug("Mobile Device Management Service bundle is activated");
+			}
+		} catch (Throwable e) {
+			log.error("Error occurred while activating Mobile Device Management bundle", e);
+		}
+	}
 
-    @Override
-    public void stop(BundleContext bundleContext) throws Exception {
-        if (log.isDebugEnabled()) {
-            log.debug("Deactivating Mobile Device Management Service");
-        }
-        try {
-            androidServiceRegRef.unregister();
-            iOSServiceRegRef.unregister();
-            windowsServiceRegRef.unregister();
+	@Override
+	public void stop(BundleContext bundleContext) throws Exception {
+		if (log.isDebugEnabled()) {
+			log.debug("Deactivating Mobile Device Management Service");
+		}
+		try {
+			androidServiceRegRef.unregister();
+			iOSServiceRegRef.unregister();
+			windowsServiceRegRef.unregister();
 
-            bundleContext.removeBundleListener(this);
+			bundleContext.removeBundleListener(this);
 
             /* Removing all APIs published upon start-up for mobile device management related JAX-RS
                services */
-            this.removeAPIs();
-        } catch (Throwable e) {
-            log.error("Error occurred while de-activating Mobile Device Management bundle", e);
-        }
-    }
+			this.removeAPIs();
+		} catch (Throwable e) {
+			log.error("Error occurred while de-activating Mobile Device Management bundle", e);
+		}
+	}
 
-    @Override
-    public void bundleChanged(BundleEvent bundleEvent) {
-        int eventType = bundleEvent.getType();
-        String bundleSymbolicName = bundleEvent.getBundle().getSymbolicName();
+	@Override
+	public void bundleChanged(BundleEvent bundleEvent) {
+		int eventType = bundleEvent.getType();
+		String bundleSymbolicName = bundleEvent.getBundle().getSymbolicName();
 
-        if (SYMBOLIC_NAME_DATA_SOURCE_COMPONENT.equals(bundleSymbolicName) &&
-                eventType == BundleEvent.STARTED) {
-            for (DataSourceListener listener : this.getDataSourceListeners()) {
-                listener.notifyObserver();
-            }
-        }
-    }
+		if (SYMBOLIC_NAME_DATA_SOURCE_COMPONENT.equals(bundleSymbolicName) &&
+		    eventType == BundleEvent.STARTED) {
+			for (DataSourceListener listener : this.getDataSourceListeners()) {
+				listener.notifyObserver();
+			}
+		}
+	}
 
-    public static void registerDataSourceListener(DataSourceListener listener) {
-        dataSourceListeners.add(listener);
-    }
+	public static void registerDataSourceListener(DataSourceListener listener) {
+		dataSourceListeners.add(listener);
+	}
 
-    private List<DataSourceListener> getDataSourceListeners() {
-        return dataSourceListeners;
-    }
+	private List<DataSourceListener> getDataSourceListeners() {
+		return dataSourceListeners;
+	}
 
-    private void initAPIConfigs() throws DeviceManagementException {
-        List<APIConfig> apiConfigs =
-                MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
-                        getApiPublisherConfig().getAPIs();
-        for (APIConfig apiConfig : apiConfigs) {
-            try {
-                APIProvider provider = APIManagerFactory.getInstance().getAPIProvider(apiConfig.getOwner());
-                apiConfig.init(provider);
-            } catch (APIManagementException e) {
-                throw new DeviceManagementException("Error occurred while initializing API Config '" +
-                        apiConfig.getName() + "'", e);
-            }
-        }
-    }
+	private void initAPIConfigs() throws DeviceManagementException {
+		List<APIConfig> apiConfigs =
+				MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
+						getApiPublisherConfig().getAPIs();
+		for (APIConfig apiConfig : apiConfigs) {
+			try {
+				APIProvider provider =
+						APIManagerFactory.getInstance().getAPIProvider(apiConfig.getOwner());
+				apiConfig.init(provider);
+			} catch (APIManagementException e) {
+				throw new DeviceManagementException(
+						"Error occurred while initializing API Config '" +
+						apiConfig.getName() + "'", e);
+			}
+		}
+	}
 
-    private void publishAPIs() throws DeviceManagementException {
-        List<APIConfig> apiConfigs =
-                MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
-                        getApiPublisherConfig().getAPIs();
-        for (APIConfig apiConfig : apiConfigs) {
-            DeviceManagementAPIPublisherUtil.publishAPI(apiConfig);
-        }
-    }
+	private void publishAPIs() throws DeviceManagementException {
+		List<APIConfig> apiConfigs =
+				MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
+						getApiPublisherConfig().getAPIs();
+		for (APIConfig apiConfig : apiConfigs) {
+			DeviceManagementAPIPublisherUtil.publishAPI(apiConfig);
+		}
+	}
 
-    private void removeAPIs() throws DeviceManagementException {
-        List<APIConfig> apiConfigs =
-                MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
-                        getApiPublisherConfig().getAPIs();
-        for (APIConfig apiConfig : apiConfigs) {
-            DeviceManagementAPIPublisherUtil.removeAPI(apiConfig);
-        }
-    }
+	private void removeAPIs() throws DeviceManagementException {
+		List<APIConfig> apiConfigs =
+				MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
+						getApiPublisherConfig().getAPIs();
+		for (APIConfig apiConfig : apiConfigs) {
+			DeviceManagementAPIPublisherUtil.removeAPI(apiConfig);
+		}
+	}
 
 }

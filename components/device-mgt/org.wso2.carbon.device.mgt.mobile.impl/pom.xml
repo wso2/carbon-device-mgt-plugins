@@ -18,7 +18,9 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>device-mgt</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -51,9 +53,11 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Bundle-Version>${carbon.mobile.device.mgt.version}</Bundle-Version>
-                        <Bundle-Description>Device Management Mobile Impl Bundle</Bundle-Description>
+                        <Bundle-Description>Device Management Mobile Impl Bundle
+                        </Bundle-Description>
                         <!--<Bundle-Activator>org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementBundleActivator</Bundle-Activator>-->
-                        <Private-Package>org.wso2.carbon.device.mgt.mobile.internal</Private-Package>
+                        <Private-Package>org.wso2.carbon.device.mgt.mobile.internal
+                        </Private-Package>
                         <Import-Package>
                             org.osgi.framework,
                             org.osgi.service.component,
@@ -73,7 +77,8 @@
                 <version>2.18</version>
                 <configuration>
                     <systemPropertyVariables>
-                        <log4j.configuration>file:src/test/resources/log4j.properties</log4j.configuration>
+                        <log4j.configuration>file:src/test/resources/log4j.properties
+                        </log4j.configuration>
                     </systemPropertyVariables>
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>

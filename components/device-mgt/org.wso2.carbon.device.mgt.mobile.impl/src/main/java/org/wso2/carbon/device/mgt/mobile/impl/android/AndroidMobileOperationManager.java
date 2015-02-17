@@ -42,7 +42,7 @@ public class AndroidMobileOperationManager extends AbstractMobileOperationManage
 	                                                                                 OperationManagementException {
 		boolean status = false;
 		try {
-			MobileDeviceOperationMapping mobileDeviceOperationMapping = null;
+			MobileDeviceOperationMapping mobileDeviceOperationMapping;
 			MobileOperation mobileOperation =
 					MobileDeviceManagementUtil.convertToMobileOperation(operation);
 			int operationId = MobileDeviceManagementDAOFactory.getMobileOperationDAO()
@@ -77,14 +77,15 @@ public class AndroidMobileOperationManager extends AbstractMobileOperationManage
 	public List<Operation> getOperations(DeviceIdentifier deviceIdentifier)
 			throws OperationManagementException {
 		List<Operation> operations = new ArrayList<Operation>();
-		List<MobileDeviceOperationMapping> mobileDeviceOperationMappings = null;
-		List<MobileOperationProperty> operationProperties = null;
-		MobileOperation mobileOperation = null;
+		List<MobileDeviceOperationMapping> mobileDeviceOperationMappings;
+		List<MobileOperationProperty> operationProperties;
+		MobileOperation mobileOperation;
 		try {
-			mobileDeviceOperationMappings = MobileDeviceManagementDAOFactory.getMobileDeviceOperationDAO()
-			                                                         .getAllMobileDeviceOperationNappingsOfDevice(
-					                                                         deviceIdentifier
-							                                                         .getId());
+			mobileDeviceOperationMappings =
+					MobileDeviceManagementDAOFactory.getMobileDeviceOperationDAO()
+					                                .getAllMobileDeviceOperationMappingsOfDevice(
+							                                deviceIdentifier
+									                                .getId());
 			if (mobileDeviceOperationMappings.size() > 0) {
 				List<Integer> operationIds = MobileDeviceManagementUtil
 						.getMobileOperationIdsFromMobileDeviceOperations(
@@ -116,15 +117,16 @@ public class AndroidMobileOperationManager extends AbstractMobileOperationManage
 	public List<Operation> getPendingOperations(DeviceIdentifier deviceIdentifier)
 			throws OperationManagementException {
 		List<Operation> operations = new ArrayList<Operation>();
-		List<MobileDeviceOperationMapping> mobileDeviceOperationMappings = null;
-		List<MobileOperationProperty> operationProperties = null;
-		MobileOperation mobileOperation = null;
+		List<MobileDeviceOperationMapping> mobileDeviceOperationMappings;
+		List<MobileOperationProperty> operationProperties ;
+		MobileOperation mobileOperation;
 		try {
 			//Get the list of pending operations for the given device
-			mobileDeviceOperationMappings = MobileDeviceManagementDAOFactory.getMobileDeviceOperationDAO()
-			                                                         .getAllPendingOperationMappingsOfMobileDevice(
-					                                                         deviceIdentifier
-							                                                         .getId());
+			mobileDeviceOperationMappings =
+					MobileDeviceManagementDAOFactory.getMobileDeviceOperationDAO()
+					                                .getAllPendingOperationMappingsOfMobileDevice(
+							                                deviceIdentifier
+									                                .getId());
 			//Go through each operation mapping for retrieving the data corresponding to each operation
 			for (MobileDeviceOperationMapping operation : mobileDeviceOperationMappings) {
 				//Get the MobileOperation data
@@ -158,21 +160,25 @@ public class AndroidMobileOperationManager extends AbstractMobileOperationManage
 	}
 
 	@Override
-	public List<Feature> getFeaturesForDeviceType(String deviceType) throws FeatureManagementException {
+	public List<Feature> getFeaturesForDeviceType(String deviceType)
+			throws FeatureManagementException {
 		MobileFeatureDAO featureDAO = MobileDeviceManagementDAOFactory.getFeatureDAO();
-		MobileFeaturePropertyDAO featurePropertyDAO = MobileDeviceManagementDAOFactory.getFeaturePropertyDAO();
+		MobileFeaturePropertyDAO featurePropertyDAO =
+				MobileDeviceManagementDAOFactory.getFeaturePropertyDAO();
 		List<Feature> features = new ArrayList<Feature>();
 		try {
-			List<MobileFeature> mobileFeatures = featureDAO.getMobileFeatureByDeviceType(deviceType);
+			List<MobileFeature> mobileFeatures =
+					featureDAO.getMobileFeatureByDeviceType(deviceType);
 			for (MobileFeature mobileFeature : mobileFeatures) {
 				Feature feature = new Feature();
 				feature.setId(mobileFeature.getId());
 				feature.setDeviceType(mobileFeature.getDeviceType());
 				feature.setName(mobileFeature.getName());
 				feature.setDescription(mobileFeature.getDescription());
-				List<Feature.MetadataEntry> metadataEntries = new ArrayList<Feature.MetadataEntry>();
+				List<Feature.MetadataEntry> metadataEntries =
+						new ArrayList<Feature.MetadataEntry>();
 				List<MobileFeatureProperty> properties =
-						featurePropertyDAO.getFeaturePropertyOfFeature(mobileFeature.getId());
+						featurePropertyDAO.getFeaturePropertiesOfFeature(mobileFeature.getId());
 				for (MobileFeatureProperty property : properties) {
 					Feature.MetadataEntry metaEntry = new Feature.MetadataEntry();
 					metaEntry.setId(property.getFeatureID());

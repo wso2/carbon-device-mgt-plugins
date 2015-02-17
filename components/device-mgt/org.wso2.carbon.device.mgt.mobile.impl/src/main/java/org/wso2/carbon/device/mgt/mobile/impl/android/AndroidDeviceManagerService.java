@@ -52,6 +52,9 @@ public class AndroidDeviceManagerService implements DeviceManagerService {
 		boolean status;
 		MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Enrolling a new Android device : " + device.getDeviceIdentifier());
+			}
 			status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
 					mobileDevice);
 		} catch (MobileDeviceManagementDAOException e) {
@@ -68,6 +71,9 @@ public class AndroidDeviceManagerService implements DeviceManagerService {
 		boolean status;
 		MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Modifying the Android device enrollment data");
+			}
 			status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO()
 			                                         .updateMobileDevice(mobileDevice);
 		} catch (MobileDeviceManagementDAOException e) {
@@ -83,6 +89,9 @@ public class AndroidDeviceManagerService implements DeviceManagerService {
 	public boolean disenrollDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
 		boolean status;
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Dis-enrolling Android device : " + deviceId);
+			}
 			status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO()
 			                                         .deleteMobileDevice(deviceId.getId());
 		} catch (MobileDeviceManagementDAOException e) {
@@ -97,6 +106,9 @@ public class AndroidDeviceManagerService implements DeviceManagerService {
 	public boolean isEnrolled(DeviceIdentifier deviceId) throws DeviceManagementException {
 		boolean isEnrolled = false;
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Checking the enrollment of Android device : " + deviceId.getId());
+			}
 			MobileDevice mobileDevice =
 					MobileDeviceManagementDAOFactory.getMobileDeviceDAO().getMobileDevice(
 							deviceId.getId());
@@ -127,6 +139,9 @@ public class AndroidDeviceManagerService implements DeviceManagerService {
 	public Device getDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
 		Device device;
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Getting the details of Android device : " + deviceId.getId());
+			}
 			MobileDevice mobileDevice = MobileDeviceManagementDAOFactory.getMobileDeviceDAO().
 					getMobileDevice(deviceId.getId());
 			device = MobileDeviceManagementUtil.convertToDevice(mobileDevice);
@@ -149,6 +164,9 @@ public class AndroidDeviceManagerService implements DeviceManagerService {
 		boolean status;
 		MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("updating the details of Android device : " + device.getDeviceIdentifier());
+			}
 			status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO()
 			                                         .updateMobileDevice(mobileDevice);
 		} catch (MobileDeviceManagementDAOException e) {
@@ -163,6 +181,9 @@ public class AndroidDeviceManagerService implements DeviceManagerService {
 	public List<Device> getAllDevices() throws DeviceManagementException {
 		List<Device> devices = null;
 		try {
+			if (log.isDebugEnabled()) {
+				log.debug("Fetching the details of all Android devices");
+			}
 			List<MobileDevice> mobileDevices =
 					MobileDeviceManagementDAOFactory.getMobileDeviceDAO().
 							getAllMobileDevices();

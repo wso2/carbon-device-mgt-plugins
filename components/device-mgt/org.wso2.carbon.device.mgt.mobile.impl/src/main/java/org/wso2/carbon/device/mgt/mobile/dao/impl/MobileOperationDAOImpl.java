@@ -36,6 +36,7 @@ import java.sql.SQLException;
  */
 public class MobileOperationDAOImpl implements MobileOperationDAO {
 
+	public static final String COLUMN_OPERATION_ID = "OPERATION_ID";
 	private DataSource dataSource;
 	private static final Log log = LogFactory.getLog(MobileOperationDAOImpl.class);
 
@@ -44,7 +45,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 	}
 
 	@Override
-	public int addMobileOperation(MobileOperation operation)
+	public int addMobileOperation(MobileOperation mblOperation)
 			throws MobileDeviceManagementDAOException {
 		int status = -1;
 		Connection conn = null;
@@ -53,19 +54,23 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 			conn = this.getConnection();
 			String createDBQuery =
 					"INSERT INTO MBL_OPERATION(FEATURE_CODE, CREATED_DATE) VALUES ( ?, ?)";
-			stmt = conn.prepareStatement(createDBQuery, new String[] { "OPERATION_ID" });
-			stmt.setString(1, operation.getFeatureCode());
-			stmt.setLong(2, operation.getCreatedDate());
+			stmt = conn.prepareStatement(createDBQuery, new String[] { COLUMN_OPERATION_ID });
+			stmt.setString(1, mblOperation.getFeatureCode());
+			stmt.setLong(2, mblOperation.getCreatedDate());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				ResultSet rs = stmt.getGeneratedKeys();
 				if (rs != null && rs.next()) {
 					status = rs.getInt(1);
 				}
+				if (log.isDebugEnabled()) {
+					log.debug("Added a new MobileOperation " + mblOperation.getFeatureCode() +
+					          " to MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while adding the operation - '" +
-			             operation.getFeatureCode() + "' to MBL_OPERATION table";
+			             mblOperation.getFeatureCode() + "' to MBL_OPERATION table";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -75,7 +80,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 	}
 
 	@Override
-	public boolean updateMobileOperation(MobileOperation operation)
+	public boolean updateMobileOperation(MobileOperation mblOperation)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -83,18 +88,24 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE MBL_OPERATION SET FEATURE_CODE = ?, CREATED_DATE = ? WHERE OPERATION_ID = ?";
+					"UPDATE MBL_OPERATION SET FEATURE_CODE = ?, CREATED_DATE = ? WHERE " +
+					"OPERATION_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
-			stmt.setString(1, operation.getFeatureCode());
-			stmt.setLong(2, operation.getCreatedDate());
-			stmt.setInt(3, operation.getOperationId());
+			stmt.setString(1, mblOperation.getFeatureCode());
+			stmt.setLong(2, mblOperation.getCreatedDate());
+			stmt.setInt(3, mblOperation.getOperationId());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Updated MobileOperation " + mblOperation.getFeatureCode() +
+					          " to MDM database.");
+				}
 			}
 		} catch (SQLException e) {
-			String msg = "Error occurred while updating the MBL_OPERATION table entry with operation id - '" +
-			             operation.getOperationId() + "'";
+			String msg =
+					"Error occurred while updating the MBL_OPERATION table entry with operation id - '" +
+					mblOperation.getOperationId() + "'";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -104,7 +115,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 	}
 
 	@Override
-	public boolean deleteMobileOperation(int operationId)
+	public boolean deleteMobileOperation(int mblOperationId)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -114,10 +125,14 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 			String deleteDBQuery =
 					"DELETE FROM MBL_OPERATION WHERE OPERATION_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
-			stmt.setInt(1, operationId);
+			stmt.setInt(1, mblOperationId);
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Deleted a new MobileOperation " + mblOperationId +
+					          " from MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while deleting MBL_OPERATION entry with operation Id - ";
@@ -130,7 +145,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 	}
 
 	@Override
-	public MobileOperation getMobileOperation(int operationId)
+	public MobileOperation getMobileOperation(int mblOperationId)
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -138,20 +153,24 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT OPERATION_ID, FEATURE_CODE, CREATED_DATE FROM MBL_OPERATION WHERE OPERATION_ID = ?";
+					"SELECT OPERATION_ID, FEATURE_CODE, CREATED_DATE FROM MBL_OPERATION WHERE " +
+					"OPERATION_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
-			stmt.setInt(1, operationId);
+			stmt.setInt(1, mblOperationId);
 			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
+			if (resultSet.next()) {
 				operation = new MobileOperation();
 				operation.setOperationId(resultSet.getInt(1));
 				operation.setFeatureCode(resultSet.getString(2));
 				operation.setCreatedDate(resultSet.getLong(3));
-				break;
+				if (log.isDebugEnabled()) {
+					log.debug("Fetched MobileOperation " + operation.getFeatureCode() +
+					          " from MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while fetching operationId - '" +
-			             operationId + "' from MBL_OPERATION";
+			             mblOperationId + "' from MBL_OPERATION";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
