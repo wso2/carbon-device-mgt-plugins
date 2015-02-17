@@ -29,6 +29,7 @@ public interface MobileDeviceDAO {
 
 	/**
 	 * Fetches a MobileDevice from MDM database.
+	 *
 	 * @param mblDeviceId Id of the Mobile-Device.
 	 * @return MobileDevice corresponding to given device-id.
 	 * @throws MobileDeviceManagementDAOException
@@ -37,6 +38,7 @@ public interface MobileDeviceDAO {
 
 	/**
 	 * Adds a new MobileDevice to the MDM database.
+	 *
 	 * @param mobileDevice MobileDevice to be added.
 	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
@@ -45,6 +47,7 @@ public interface MobileDeviceDAO {
 
 	/**
 	 * Updates MobileDevice information in MDM database.
+	 *
 	 * @param mobileDevice MobileDevice to be updated.
 	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
@@ -53,6 +56,7 @@ public interface MobileDeviceDAO {
 
 	/**
 	 * Deletes a given MobileDevice from MDM database.
+	 *
 	 * @param mblDeviceId Id of MobileDevice to be deleted.
 	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
