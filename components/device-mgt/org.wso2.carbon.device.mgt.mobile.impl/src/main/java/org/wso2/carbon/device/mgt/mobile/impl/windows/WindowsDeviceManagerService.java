@@ -18,8 +18,14 @@
 
 package org.wso2.carbon.device.mgt.mobile.impl.windows;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagerService;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
+import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 
 import java.util.List;
 
@@ -28,65 +34,78 @@ import java.util.List;
  */
 public class WindowsDeviceManagerService implements DeviceManagerService {
 
-    @Override
-    public String getProviderType() {
-        return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS;
-    }
+	private static final Log log = LogFactory.getLog(WindowsDeviceManagerService.class);
 
-    @Override
-    public boolean enrollDevice(Device device) throws DeviceManagementException {
-        return true;
-    }
+	@Override
+	public String getProviderType() {
+		return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS;
+	}
 
-    @Override
-    public boolean modifyEnrollment(Device device) throws DeviceManagementException {
-        return true;
-    }
+	@Override
+	public boolean enrollDevice(Device device) throws DeviceManagementException {
+		boolean status;
+		MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
+		try {
+			status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
+					mobileDevice);
+		} catch (MobileDeviceManagementDAOException e) {
+			String msg = "Error while enrolling the Android device : " +
+			             device.getDeviceIdentifier();
+			log.error(msg, e);
+			throw new DeviceManagementException(msg, e);
+		}
+		return status;
+	}
 
-    @Override
-    public boolean disenrollDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return true;
-    }
+	@Override
+	public boolean modifyEnrollment(Device device) throws DeviceManagementException {
+		return true;
+	}
 
-    @Override
-    public boolean isEnrolled(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return true;
-    }
+	@Override
+	public boolean disenrollDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
+		return true;
+	}
 
-    @Override
-    public boolean isActive(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return true;
-    }
+	@Override
+	public boolean isEnrolled(DeviceIdentifier deviceId) throws DeviceManagementException {
+		return true;
+	}
 
-    @Override
-    public boolean setActive(DeviceIdentifier deviceId, boolean status)
-            throws DeviceManagementException {
-        return true;
-    }
+	@Override
+	public boolean isActive(DeviceIdentifier deviceId) throws DeviceManagementException {
+		return true;
+	}
 
-    public List<Device> getAllDevices() throws DeviceManagementException {
-        return null;
-    }
+	@Override
+	public boolean setActive(DeviceIdentifier deviceId, boolean status)
+			throws DeviceManagementException {
+		return true;
+	}
 
-    @Override
-    public Device getDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return null;
-    }
+	public List<Device> getAllDevices() throws DeviceManagementException {
+		return null;
+	}
 
-    @Override
-    public boolean setOwnership(DeviceIdentifier deviceId, String ownershipType)
-            throws DeviceManagementException {
-        return true;
-    }
+	@Override
+	public Device getDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
+		return null;
+	}
 
-    @Override
-    public OperationManager getOperationManager() throws DeviceManagementException {
-        return null;
-    }
+	@Override
+	public boolean setOwnership(DeviceIdentifier deviceId, String ownershipType)
+			throws DeviceManagementException {
+		return true;
+	}
 
-    @Override
-    public boolean updateDeviceInfo(Device device) throws DeviceManagementException {
-        return true;
-    }
+	@Override
+	public OperationManager getOperationManager() throws DeviceManagementException {
+		return null;
+	}
+
+	@Override
+	public boolean updateDeviceInfo(Device device) throws DeviceManagementException {
+		return true;
+	}
 
 }
