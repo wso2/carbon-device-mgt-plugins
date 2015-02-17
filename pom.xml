@@ -17,7 +17,9 @@
  ~ under the License.
  -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -275,17 +277,17 @@
             </dependency>
 
             <!--APIM dependencies-->
-<!--            <dependency>
-                <groupId>org.wso2.carbon.apimgt</groupId>
-                <artifactId>org.wso2.carbon.apimgt.core</artifactId>
-                <version>${carbon.api.mgt.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.wso2.carbon.mediation</groupId>
-                        <artifactId>org.wso2.carbon.mediation.initializer</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>-->
+            <!--            <dependency>
+                            <groupId>org.wso2.carbon.apimgt</groupId>
+                            <artifactId>org.wso2.carbon.apimgt.core</artifactId>
+                            <version>${carbon.api.mgt.version}</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>org.wso2.carbon.mediation</groupId>
+                                    <artifactId>org.wso2.carbon.mediation.initializer</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.apimgt</groupId>
                 <artifactId>org.wso2.carbon.apimgt.api</artifactId>
@@ -446,7 +448,7 @@
         <orbit.tomcat.jdbc.pooling.version>7.0.34.wso2v2</orbit.tomcat.jdbc.pooling.version>
 
 
-         <!--CXF properties-->
+        <!--CXF properties-->
         <cxf.version>2.6.1</cxf.version>
         <jackson.version>1.9.0</jackson.version>
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
@@ -488,7 +490,8 @@
 
     <scm>
         <url>https://github.com/wso2/carbon-device-mgt-plugins.git</url>
-        <developerConnection>scm:git:https://github.com/wso2/carbon-device-mgt-plugins.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/wso2/carbon-device-mgt-plugins.git
+        </developerConnection>
         <connection>scm:git:https://github.com/wso2/carbon-device-mgt-plugins.git</connection>
         <tag>HEAD</tag>
     </scm>

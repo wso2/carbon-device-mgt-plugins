@@ -57,101 +57,106 @@ import java.util.List;
  */
 public class MobileDeviceManagementServiceComponent {
 
-    private ServiceRegistration androidServiceRegRef;
-    private ServiceRegistration iOSServiceRegRef;
-    private ServiceRegistration windowsServiceRegRef;
-    private ServiceRegistration serverStartupObserverRef;
+	private ServiceRegistration androidServiceRegRef;
+	private ServiceRegistration iOSServiceRegRef;
+	private ServiceRegistration windowsServiceRegRef;
+	private ServiceRegistration serverStartupObserverRef;
 
-    private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
+	private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
 
-    protected void activate(ComponentContext ctx) {
-        if (log.isDebugEnabled()) {
-            log.debug("Activating Mobile Device Management Service Component");
-        }
-        try {
-            BundleContext bundleContext = ctx.getBundleContext();
+	protected void activate(ComponentContext ctx) {
+		if (log.isDebugEnabled()) {
+			log.debug("Activating Mobile Device Management Service Component");
+		}
+		try {
+			BundleContext bundleContext = ctx.getBundleContext();
 
             /* Initialize the datasource configuration */
-            MobileDeviceConfigurationManager.getInstance().initConfig();
-            MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance()
-                    .getMobileDeviceManagementConfig();
-            MobileDataSourceConfig dsConfig =
-                    config.getMobileDeviceMgtRepository().getMobileDataSourceConfig();
+			MobileDeviceConfigurationManager.getInstance().initConfig();
+			MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance()
+			                                                                      .getMobileDeviceManagementConfig();
+			MobileDataSourceConfig dsConfig =
+					config.getMobileDeviceMgtRepository().getMobileDataSourceConfig();
 
-            MobileDeviceManagementDAOFactory.setMobileDataSourceConfig(dsConfig);
-            MobileDeviceManagementDAOFactory.init();
-            String setupOption = System.getProperty("setup");
-            if (setupOption != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug(
-                            "-Dsetup is enabled. Mobile Device management repository schema initialization is about " +
-                                    "to begin");
-                }
-                try {
-                    MobileDeviceManagementDAOUtil.setupMobileDeviceManagementSchema(
-                            MobileDeviceManagementDAOFactory.getDataSource());
-                } catch (DeviceManagementException e) {
-                    log.error("Exception occurred while initializing mobile device management database schema", e);
-                }
-            }
+			MobileDeviceManagementDAOFactory.setMobileDataSourceConfig(dsConfig);
+			MobileDeviceManagementDAOFactory.init();
+			String setupOption = System.getProperty("setup");
+			if (setupOption != null) {
+				if (log.isDebugEnabled()) {
+					log.debug(
+							"-Dsetup is enabled. Mobile Device management repository schema initialization is about " +
+							"to begin");
+				}
+				try {
+					MobileDeviceManagementDAOUtil.setupMobileDeviceManagementSchema(
+							MobileDeviceManagementDAOFactory.getDataSource());
+				} catch (DeviceManagementException e) {
+					log.error(
+							"Exception occurred while initializing mobile device management database schema",
+							e);
+				}
+			}
 
-            androidServiceRegRef =
-                    bundleContext.registerService(DeviceManagerService.class.getName(),
-                            new AndroidDeviceManagerService(), null);
-            iOSServiceRegRef =
-                    bundleContext.registerService(DeviceManagerService.class.getName(),
-                            new IOSDeviceManagerService(), null);
-            windowsServiceRegRef =
-                    bundleContext.registerService(DeviceManagerService.class.getName(),
-                            new WindowsDeviceManagerService(), null);
+			androidServiceRegRef =
+					bundleContext.registerService(DeviceManagerService.class.getName(),
+					                              new AndroidDeviceManagerService(), null);
+			iOSServiceRegRef =
+					bundleContext.registerService(DeviceManagerService.class.getName(),
+					                              new IOSDeviceManagerService(), null);
+			windowsServiceRegRef =
+					bundleContext.registerService(DeviceManagerService.class.getName(),
+					                              new WindowsDeviceManagerService(), null);
 
-            serverStartupObserverRef = bundleContext.registerService(ServerStartupObserver.class,
-                    new MobileDeviceManagementStartupObserver(), null);
-            if (log.isDebugEnabled()) {
-                log.debug("Mobile Device Management Service Component has been successfully activated");
-            }
-        } catch (Throwable e) {
-            log.error("Error occurred while activating Mobile Device Management Service Component", e);
-        }
-    }
+			serverStartupObserverRef = bundleContext.registerService(ServerStartupObserver.class,
+			                                                         new MobileDeviceManagementStartupObserver(),
+			                                                         null);
+			if (log.isDebugEnabled()) {
+				log.debug(
+						"Mobile Device Management Service Component has been successfully activated");
+			}
+		} catch (Throwable e) {
+			log.error("Error occurred while activating Mobile Device Management Service Component",
+			          e);
+		}
+	}
 
-    protected void deactivate(ComponentContext ctx) {
-        if (log.isDebugEnabled()) {
-            log.debug("De-activating Mobile Device Management Service Component");
-        }
-        try {
-            androidServiceRegRef.unregister();
-            iOSServiceRegRef.unregister();
-            windowsServiceRegRef.unregister();
-            serverStartupObserverRef.unregister();
+	protected void deactivate(ComponentContext ctx) {
+		if (log.isDebugEnabled()) {
+			log.debug("De-activating Mobile Device Management Service Component");
+		}
+		try {
+			androidServiceRegRef.unregister();
+			iOSServiceRegRef.unregister();
+			windowsServiceRegRef.unregister();
+			serverStartupObserverRef.unregister();
 
             /* Removing all APIs published upon start-up for mobile device management related JAX-RS
                services */
-            this.removeAPIs();
-            if (log.isDebugEnabled()) {
-                log.debug(
-                        "Mobile Device Management Service Component has been successfully de-activated");
-            }
-        } catch (Throwable e) {
-            log.error("Error occurred while de-activating Mobile Device Management bundle", e);
-        }
-    }
+			this.removeAPIs();
+			if (log.isDebugEnabled()) {
+				log.debug(
+						"Mobile Device Management Service Component has been successfully de-activated");
+			}
+		} catch (Throwable e) {
+			log.error("Error occurred while de-activating Mobile Device Management bundle", e);
+		}
+	}
 
-    private void removeAPIs() throws DeviceManagementException {
-        List<APIConfig> apiConfigs =
-                MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
-                        getApiPublisherConfig().getAPIs();
-        for (APIConfig apiConfig : apiConfigs) {
-            DeviceManagementAPIPublisherUtil.removeAPI(apiConfig);
-        }
-    }
+	private void removeAPIs() throws DeviceManagementException {
+		List<APIConfig> apiConfigs =
+				MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
+						getApiPublisherConfig().getAPIs();
+		for (APIConfig apiConfig : apiConfigs) {
+			DeviceManagementAPIPublisherUtil.removeAPI(apiConfig);
+		}
+	}
 
-    protected void setAPIManagerConfigurationService(APIManagerConfigurationService service) {
-        //do nothing
-    }
+	protected void setAPIManagerConfigurationService(APIManagerConfigurationService service) {
+		//do nothing
+	}
 
-    protected void unsetAPIManagerConfigurationService(APIManagerConfigurationService service) {
-        //do nothing
-    }
+	protected void unsetAPIManagerConfigurationService(APIManagerConfigurationService service) {
+		//do nothing
+	}
 
 }

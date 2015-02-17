@@ -66,8 +66,8 @@ public class MobileDeviceManagementBundleActivator implements BundleActivator, B
 
             /* Initialize the datasource configuration */
 			MobileDeviceConfigurationManager.getInstance().initConfig();
-			MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance()
-			                                                                      .getMobileDeviceManagementConfig();
+			MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance().
+					getMobileDeviceManagementConfig();
 			MobileDataSourceConfig dsConfig =
 					config.getMobileDeviceMgtRepository().getMobileDataSourceConfig();
 

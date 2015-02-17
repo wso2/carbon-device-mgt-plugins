@@ -27,35 +27,36 @@ import org.wso2.carbon.device.mgt.mobile.dto.MobileOperation;
 public interface MobileOperationDAO {
 
 	/**
-	 * Add a new Mobile operation to plugin operation table.
-	 * @param operation Operation object that holds data related to the operation to be inserted.
-	 * @return The last inserted Id is returned, if the insertion was unsuccessful -1 is returned.
+	 * Adds a new Mobile operation to the MobileOperation table.
+	 * @param mblOperation MobileOperation object that holds data related to the operation to be
+	 *                        inserted.
+	 * @return The id of the inserted record, if the insertion was unsuccessful -1 is returned.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	int addMobileOperation(MobileOperation operation) throws MobileDeviceManagementDAOException;
+	int addMobileOperation(MobileOperation mblOperation) throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Update a Mobile operation in the operation table.
-	 * @param operation Operation object that holds data has to be updated.
-	 * @return The status of the operation. If the update was successful or not.
+	 * Updates a Mobile operation in the MobileOperation table.
+	 * @param mblOperation MobileOperation object that holds data has to be updated.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean updateMobileOperation(MobileOperation operation) throws MobileDeviceManagementDAOException;
+	boolean updateMobileOperation(MobileOperation mblOperation) throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Delete a given Mobile operation from plugin database.
-	 * @param operationId Operation code of the operation to be deleted.
-	 * @return The status of the operation. If the operationId was successful or not.
+	 * Deletes a given MobileOperation from MobileOperation table.
+	 * @param mblOperationId Operation code of the MobileOperation to be deleted.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean deleteMobileOperation(int operationId) throws MobileDeviceManagementDAOException;
+	boolean deleteMobileOperation(int mblOperationId) throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Retrieve a given Mobile operation from plugin database.
-	 * @param operationId Operation id of the operation to be retrieved.
-	 * @return Operation object that holds data of the feature represented by operationId.
+	 * Retrieve a MobileOperation from MobileOperation table.
+	 * @param mblOperationId Operation id of the MobileOperation to be retrieved.
+	 * @return MobileOperation object that holds data of MobileOperation represented by operationId.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	MobileOperation getMobileOperation(int operationId) throws MobileDeviceManagementDAOException;
+	MobileOperation getMobileOperation(int mblOperationId) throws MobileDeviceManagementDAOException;
 
 }

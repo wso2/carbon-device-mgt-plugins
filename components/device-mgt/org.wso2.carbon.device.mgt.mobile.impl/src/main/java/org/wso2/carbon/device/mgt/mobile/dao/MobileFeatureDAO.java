@@ -29,73 +29,73 @@ import java.util.List;
 public interface MobileFeatureDAO {
 
 	/**
-	 * Add a new feature to feature table.
+	 * Adds a new MobileFeature to Mobile-Feature table.
 	 *
-	 * @param mobileFeature Feature object that holds data related to the feature to be inserted.
-	 * @return The id of inserted feature.
+	 * @param mobileFeature MobileFeature object that holds data related to the feature to be inserted.
+	 * @return The id of inserted MobileFeature.
 	 * @throws MobileDeviceManagementDAOException
 	 */
 	int addMobileFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Update a feature in the feature table.
+	 * Updates a MobileFeature in Mobile-Feature table.
 	 *
-	 * @param mobileFeature Feature object that holds data has to be updated.
-	 * @return The status of the operation. If the update was successful or not.
+	 * @param mobileFeature MobileFeature object that holds data has to be updated.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
 	boolean updateMobileFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Delete a feature from feature table when the feature id is given.
+	 * Deletes a MobileFeature from Mobile-Feature table when the feature id is given.
 	 *
-	 * @param featureId Feature id of the feature to be deleted.
-	 * @return The status of the operation. If the operationId was successful or not.
+	 * @param mblFeatureId MobileFeature id of the MobileFeature to be deleted.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean deleteMobileFeatureById(int featureId) throws MobileDeviceManagementDAOException;
+	boolean deleteMobileFeatureById(int mblFeatureId) throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Delete a feature from feature table when the feature code is given.
+	 * Deletes a MobileFeature from Mobile-Feature table when the feature code is given.
 	 *
-	 * @param featureCode Feature code of the feature to be deleted.
-	 * @return The status of the operation. If the operationId was successful or not.
+	 * @param mblFeatureCode MobileFeature code of the feature to be deleted.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean deleteMobileFeatureByCode(String featureCode) throws MobileDeviceManagementDAOException;
+	boolean deleteMobileFeatureByCode(String mblFeatureCode) throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Retrieve a given feature from feature table when the feature id is given.
+	 * Retrieves a given MobileFeature from Mobile-Feature table when the feature id is given.
 	 *
-	 * @param featureId Feature id of the feature to be retrieved.
-	 * @return Feature object that holds data of the feature represented by featureId.
+	 * @param mblFeatureId Feature id of the feature to be retrieved.
+	 * @return MobileFeature object that holds data of the feature represented by featureId.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	MobileFeature getMobileFeatureById(int featureId) throws MobileDeviceManagementDAOException;
+	MobileFeature getMobileFeatureById(int mblFeatureId) throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Retrieve a given feature from feature table when the feature code is given.
+	 * Retrieves a given MobileFeature from Mobile-Feature table when the feature code is given.
 	 *
-	 * @param featureCode Feature code of the feature to be retrieved.
-	 * @return Feature object that holds data of the feature represented by featureCode.
+	 * @param mblFeatureCode Feature code of the feature to be retrieved.
+	 * @return MobileFeature object that holds data of the feature represented by featureCode.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	MobileFeature getMobileFeatureByCode(String featureCode) throws MobileDeviceManagementDAOException;
+	MobileFeature getMobileFeatureByCode(String mblFeatureCode) throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Retrieve all the features from plugin specific database.
+	 * Retrieves all MobileFeatures of a MobileDevice type from Mobile-Feature table.
 	 *
-	 * @return Feature object list.
-	 * @throws MobileDeviceManagementDAOException
-	 */
-
-	/**
-	 * Retrieve all the features from plugin specific database for a Device Type.
-	 * @param deviceType - Device type.
-	 * @return Feature object list.
+	 * @param deviceType MobileDevice type of the MobileFeatures to be retrieved
+	 * @return MobileFeature object list.
 	 * @throws MobileDeviceManagementDAOException
 	 */
 	List<MobileFeature> getMobileFeatureByDeviceType(String deviceType) throws MobileDeviceManagementDAOException;
 
+	/**
+	 * Retrieve all the MobileFeatures from Mobile-Feature table.
+	 *
+	 * @return MobileFeature object list.
+	 * @throws MobileDeviceManagementDAOException
+	 */
 	List<MobileFeature> getAllMobileFeatures() throws MobileDeviceManagementDAOException;
 }

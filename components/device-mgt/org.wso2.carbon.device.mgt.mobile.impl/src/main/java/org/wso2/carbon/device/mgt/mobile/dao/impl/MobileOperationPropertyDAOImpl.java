@@ -46,7 +46,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 	}
 
 	@Override
-	public boolean addMobileOperationProperty(MobileOperationProperty operationProperty)
+	public boolean addMobileOperationProperty(MobileOperationProperty mblOperationProperty)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -57,12 +57,16 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 					"INSERT INTO MBL_OPERATION_PROPERTY(OPERATION_ID, PROPERTY, VALUE) " +
 					"VALUES ( ?, ?, ?)";
 			stmt = conn.prepareStatement(createDBQuery);
-			stmt.setInt(1, operationProperty.getOperationId());
-			stmt.setString(2, operationProperty.getProperty());
-			stmt.setString(3, operationProperty.getValue());
+			stmt.setInt(1, mblOperationProperty.getOperationId());
+			stmt.setString(2, mblOperationProperty.getProperty());
+			stmt.setString(3, mblOperationProperty.getValue());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Added a new MobileOperationProperty " + mblOperationProperty.getProperty() +
+					          " to MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg =
@@ -78,7 +82,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 
 	@Override
 	public boolean updateMobileOperationProperty(
-			MobileOperationProperty operationProperty)
+			MobileOperationProperty mblOperationProperty)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -89,12 +93,16 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 					"UPDATE MBL_OPERATION_PROPERTY SET VALUE = ? WHERE OPERATION_ID = ? AND " +
 					"PROPERTY = ?";
 			stmt = conn.prepareStatement(createDBQuery);
-			stmt.setString(1, operationProperty.getValue());
-			stmt.setInt(2, operationProperty.getOperationId());
-			stmt.setString(3, operationProperty.getProperty());
+			stmt.setString(1, mblOperationProperty.getValue());
+			stmt.setInt(2, mblOperationProperty.getOperationId());
+			stmt.setString(3, mblOperationProperty.getProperty());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Updated MobileOperationProperty " + mblOperationProperty.getProperty() +
+					          " to MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg =
@@ -109,7 +117,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 	}
 
 	@Override
-	public boolean deleteMobileOperationProperties(int operationId)
+	public boolean deleteMobileOperationProperties(int mblOperationId)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -119,10 +127,15 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 			String deleteDBQuery =
 					"DELETE FROM MBL_OPERATION_PROPERTY WHERE OPERATION_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
-			stmt.setInt(1, operationId);
+			stmt.setInt(1, mblOperationId);
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Deleted MobileOperationProperties of operation-id " +
+					          mblOperationId +
+					          " from MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg =
@@ -136,7 +149,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 	}
 
 	@Override
-	public MobileOperationProperty getMobileOperationProperty(int operationId,
+	public MobileOperationProperty getMobileOperationProperty(int mblOperationId,
 	                                                          String property)
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
@@ -148,7 +161,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 					"SELECT OPERATION_ID, PROPERTY, VALUE FROM MBL_OPERATION_PROPERTY WHERE " +
 					"OPERATION_ID = ? AND PROPERTY = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
-			stmt.setInt(1, operationId);
+			stmt.setInt(1, mblOperationId);
 			stmt.setString(2, property);
 			ResultSet resultSet = stmt.executeQuery();
 			if (resultSet.next()) {
@@ -156,11 +169,16 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 				mobileOperationProperty.setOperationId(resultSet.getInt(1));
 				mobileOperationProperty.setProperty(resultSet.getString(2));
 				mobileOperationProperty.setValue(resultSet.getString(3));
+				if (log.isDebugEnabled()) {
+					log.debug("Fetched MobileOperationProperty of Operation-id : " +
+					          mblOperationId +
+					          " Property : " + property + " from MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg =
 					"Error occurred while fetching the mobile operation property of Operation_id : " +
-					operationId + " and Property : " + property;
+					mblOperationId + " and Property : " + property;
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -171,7 +189,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 
 	@Override
 	public List<MobileOperationProperty> getAllMobileOperationPropertiesOfOperation(
-			int operationId) throws MobileDeviceManagementDAOException {
+			int mblOperationId) throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		MobileOperationProperty mobileOperationProperty;
@@ -182,7 +200,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 					"SELECT OPERATION_ID, PROPERTY, VALUE FROM MBL_OPERATION_PROPERTY WHERE " +
 					"OPERATION_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
-			stmt.setInt(1, operationId);
+			stmt.setInt(1, mblOperationId);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mobileOperationProperty = new MobileOperationProperty();
@@ -191,10 +209,15 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 				mobileOperationProperty.setValue(resultSet.getString(3));
 				properties.add(mobileOperationProperty);
 			}
+			if (log.isDebugEnabled()) {
+				log.debug("Fetched all MobileOperationProperties of Operation-id : " +
+				          mblOperationId +
+				          " from MDM database.");
+			}
 		} catch (SQLException e) {
 			String msg =
 					"Error occurred while fetching the mobile operation properties of Operation_id " +
-					operationId;
+					mblOperationId;
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {

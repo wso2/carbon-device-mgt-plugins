@@ -47,7 +47,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 	}
 
 	@Override
-	public boolean addMobileDeviceOperationMapping(MobileDeviceOperationMapping deviceOperation)
+	public boolean addMobileDeviceOperationMapping(MobileDeviceOperationMapping mblDeviceOperationMapping)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -59,19 +59,24 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 					"RECEIVED_DATE, STATUS) VALUES (?, ?, ?, ?, ?)";
 
 			stmt = conn.prepareStatement(createDBQuery);
-			stmt.setString(1, deviceOperation.getDeviceId());
-			stmt.setLong(2, deviceOperation.getOperationId());
-			stmt.setLong(3, deviceOperation.getSentDate());
-			stmt.setLong(4, deviceOperation.getReceivedDate());
-			stmt.setString(5, deviceOperation.getStatus().name());
+			stmt.setString(1, mblDeviceOperationMapping.getDeviceId());
+			stmt.setLong(2, mblDeviceOperationMapping.getOperationId());
+			stmt.setLong(3, mblDeviceOperationMapping.getSentDate());
+			stmt.setLong(4, mblDeviceOperationMapping.getReceivedDate());
+			stmt.setString(5, mblDeviceOperationMapping.getStatus().name());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Added a MobileDevice-Mapping DeviceId : " + mblDeviceOperationMapping
+							.getDeviceId() + ", " +
+					          "OperationId : " + mblDeviceOperationMapping.getOperationId() + " to the MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while adding device id - '" +
-			             deviceOperation.getDeviceId() + " and operation id - " +
-			             deviceOperation.getOperationId() +
+			             mblDeviceOperationMapping.getDeviceId() + " and operation id - " +
+			             mblDeviceOperationMapping.getOperationId() +
 			             " to mapping table MBL_DEVICE_OPERATION";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
@@ -82,7 +87,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 	}
 
 	@Override
-	public boolean updateMobileDeviceOperationMapping(MobileDeviceOperationMapping deviceOperation)
+	public boolean updateMobileDeviceOperationMapping(MobileDeviceOperationMapping mblDeviceOperation)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -93,19 +98,23 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 					"UPDATE MBL_DEVICE_OPERATION_MAPPING SET SENT_DATE = ?, RECEIVED_DATE = ?, " +
 					"STATUS = ? WHERE DEVICE_ID = ? AND OPERATION_ID=?";
 			stmt = conn.prepareStatement(updateDBQuery);
-			stmt.setLong(1, deviceOperation.getSentDate());
-			stmt.setLong(2, deviceOperation.getReceivedDate());
-			stmt.setString(3, deviceOperation.getStatus().name());
-			stmt.setString(4, deviceOperation.getDeviceId());
-			stmt.setInt(5, deviceOperation.getOperationId());
+			stmt.setLong(1, mblDeviceOperation.getSentDate());
+			stmt.setLong(2, mblDeviceOperation.getReceivedDate());
+			stmt.setString(3, mblDeviceOperation.getStatus().name());
+			stmt.setString(4, mblDeviceOperation.getDeviceId());
+			stmt.setInt(5, mblDeviceOperation.getOperationId());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Updated MobileDevice-Mapping DeviceId : " + mblDeviceOperation.getDeviceId() + " , " +
+					          "OperationId : " + mblDeviceOperation.getOperationId());
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while updating device id - '" +
-			             deviceOperation.getDeviceId() + " and operation id - " +
-			             deviceOperation.getOperationId() + " in table MBL_DEVICE_OPERATION";
+			             mblDeviceOperation.getDeviceId() + " and operation id - " +
+			             mblDeviceOperation.getOperationId() + " in table MBL_DEVICE_OPERATION";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -115,7 +124,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 	}
 
 	@Override
-	public boolean updateMobileDeviceOperationMappingToInProgress(String deviceId, int operationId)
+	public boolean updateMobileDeviceOperationMappingToInProgress(String mblDeviceId, int operationId)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -128,16 +137,20 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setLong(1, new Date().getTime());
 			stmt.setString(2, MobileDeviceOperationMapping.Status.INPROGRESS.name());
-			stmt.setString(3, deviceId);
+			stmt.setString(3, mblDeviceId);
 			stmt.setInt(4, operationId);
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Updated status of MobileDevice-Mapping DeviceId : " + mblDeviceId + " , " +
+					          "OperationId : " + operationId + " to In-Progress state");
+				}
 			}
 		} catch (SQLException e) {
 			String msg =
 					"Error occurred while updating the Status of operation to in-progress of device id - '" +
-					deviceId + " and operation id - " +
+					mblDeviceId + " and operation id - " +
 					operationId + " in table MBL_DEVICE_OPERATION";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
@@ -148,7 +161,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 	}
 
 	@Override
-	public boolean updateMobileDeviceOperationMappingToCompleted(String deviceId,
+	public boolean updateMobileDeviceOperationMappingToCompleted(String mblDeviceId,
 	                                                             int operationId)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
@@ -162,16 +175,20 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setLong(1, new Date().getTime());
 			stmt.setString(2, MobileDeviceOperationMapping.Status.COMPLETED.name());
-			stmt.setString(3, deviceId);
+			stmt.setString(3, mblDeviceId);
 			stmt.setInt(4, operationId);
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Updated status of MobileDevice-Mapping DeviceId : " + mblDeviceId + " , " +
+					          "OperationId : " + operationId + " to Completed state");
+				}
 			}
 		} catch (SQLException e) {
 			String msg =
 					"Error occurred while updating the Status of operation to completed of device id - '" +
-					deviceId + " and operation id - " +
+					mblDeviceId + " and operation id - " +
 					operationId + " in table MBL_DEVICE_OPERATION";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
@@ -182,7 +199,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 	}
 
 	@Override
-	public boolean deleteMobileDeviceOperationMapping(String deviceId, int operationId)
+	public boolean deleteMobileDeviceOperationMapping(String mblDeviceId, int operationId)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -193,16 +210,20 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 					"DELETE FROM MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND " +
 					"OPERATION_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
-			stmt.setString(1, deviceId);
+			stmt.setString(1, mblDeviceId);
 			stmt.setInt(2, operationId);
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Deleted MobileDevice-Mapping DeviceId : " + mblDeviceId + " , " +
+					          "OperationId : " + operationId + "from MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg =
 					"Error occurred while deleting the table entry MBL_DEVICE_OPERATION with " +
-					" device id - '" + deviceId + " and operation id - " + operationId;
+					" device id - '" + mblDeviceId + " and operation id - " + operationId;
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -212,7 +233,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 	}
 
 	@Override
-	public MobileDeviceOperationMapping getMobileDeviceOperationMapping(String deviceId,
+	public MobileDeviceOperationMapping getMobileDeviceOperationMapping(String mblDeviceId,
 	                                                                    int operationId)
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
@@ -224,7 +245,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 					"SELECT DEVICE_ID, OPERATION_ID, SENT_DATE, RECEIVED_DATE, STATUS FROM " +
 					"MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
-			stmt.setString(1, deviceId);
+			stmt.setString(1, mblDeviceId);
 			stmt.setInt(2, operationId);
 			ResultSet resultSet = stmt.executeQuery();
 			if (resultSet.next()) {
@@ -234,11 +255,15 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 				mblDeviceOperation.setSentDate(resultSet.getInt(3));
 				mblDeviceOperation.setReceivedDate(resultSet.getInt(4));
 				mblDeviceOperation.setStatus(resultSet.getString(5));
+				if (log.isDebugEnabled()) {
+					log.debug("Fetched MobileDevice-Mapping of DeviceId : " + mblDeviceId + " , " +
+					          "OperationId : " + operationId );
+				}
 			}
 		} catch (SQLException e) {
 			String msg =
 					"Error occurred while fetching table MBL_DEVICE_OPERATION entry with device id - '" +
-					deviceId + " and operation id - " + operationId;
+					mblDeviceId + " and operation id - " + operationId;
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -249,7 +274,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 
 	@Override
 	public List<MobileDeviceOperationMapping> getAllMobileDeviceOperationMappingsOfDevice(
-			String deviceId)
+			String mblDeviceId)
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -262,7 +287,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 					"SELECT DEVICE_ID, OPERATION_ID, SENT_DATE, RECEIVED_DATE, STATUS FROM " +
 					"MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
-			stmt.setString(1, deviceId);
+			stmt.setString(1, mblDeviceId);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mblDeviceOperation = new MobileDeviceOperationMapping();
@@ -273,10 +298,13 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 				mblDeviceOperation.setStatus(resultSet.getString(5));
 				mblDeviceOperations.add(mblDeviceOperation);
 			}
+			if (log.isDebugEnabled()) {
+				log.debug("Fetched all MobileDevice-Mappings of DeviceId : " + mblDeviceId);
+			}
 		} catch (SQLException e) {
 			String msg =
 					"Error occurred while fetching mapping table MBL_DEVICE_OPERATION entries of " +
-					"device id - '" + deviceId;
+					"device id - '" + mblDeviceId;
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -287,7 +315,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 
 	@Override
 	public List<MobileDeviceOperationMapping> getAllPendingOperationMappingsOfMobileDevice(
-			String deviceId)
+			String mblDeviceId)
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -301,7 +329,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 					"SELECT DEVICE_ID, OPERATION_ID, SENT_DATE, RECEIVED_DATE, STATUS FROM" +
 					" MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND STATUS = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
-			stmt.setString(1, deviceId);
+			stmt.setString(1, mblDeviceId);
 			stmt.setString(2, MobileDeviceOperationMapping.Status.NEW.name());
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
@@ -313,10 +341,13 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 				mblDeviceOperation.setStatus(resultSet.getString(5));
 				mblDeviceOperations.add(mblDeviceOperation);
 			}
+			if (log.isDebugEnabled()) {
+				log.debug("Fetched all pending MobileDevice-Mappings of DeviceId : " + mblDeviceId);
+			}
 		} catch (SQLException e) {
 			String msg =
 					"Error occurred while fetching mapping table MBL_DEVICE_OPERATION entries of" +
-					" device id - '" + deviceId;
+					" device id - '" + mblDeviceId;
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
