@@ -53,21 +53,27 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Bundle-Version>${carbon.mobile.device.mgt.version}</Bundle-Version>
-                        <Bundle-Description>Device Management Mobile Impl Bundle
-                        </Bundle-Description>
-                        <!--<Bundle-Activator>org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementBundleActivator</Bundle-Activator>-->
-                        <Private-Package>org.wso2.carbon.device.mgt.mobile.internal
-                        </Private-Package>
+                        <Bundle-Description>Device Management Mobile Impl Bundle</Bundle-Description>
+                        <Private-Package>org.wso2.carbon.device.mgt.mobile.internal</Private-Package>
                         <Import-Package>
                             org.osgi.framework,
                             org.osgi.service.component,
                             org.apache.commons.logging,
+                            javax.xml.bind.*,
+                            javax.naming,
+                            javax.sql,
+                            javax.xml.bind.annotation,
+                            javax.xml.parsers,
+                            org.w3c.dom,
+                            org.wso2.carbon.core,
+                            org.wso2.carbon.utils.*,
+                            org.wso2.carbon.device.mgt.common.*,
+                            org.wso2.carbon.apimgt.*;
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.mobile.internal,
-                            org.wso2.carbon.device.mgt.mobile.*
+                            org.wso2.carbon.device.mgt.mobile.*,
                         </Export-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
             </plugin>

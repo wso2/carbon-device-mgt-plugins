@@ -42,12 +42,16 @@ public class MobileDeviceManagementUtil {
 	private static final Log log = LogFactory.getLog(MobileDeviceManagementUtil.class);
 	private static final String MOBILE_DEVICE_IMEI = "imei";
 	private static final String MOBILE_DEVICE_IMSI = "imsi";
-	private static final String MOBILE_DEVICE_REG_ID = "regId";
+	private static final String MOBILE_DEVICE_PUSH_TOKEN = "pushToken";
 	private static final String MOBILE_DEVICE_VENDOR = "vendor";
 	private static final String MOBILE_DEVICE_OS_VERSION = "osVersion";
 	private static final String MOBILE_DEVICE_MODEL = "model";
 	private static final String MOBILE_DEVICE_LATITUDE = "latitude";
 	private static final String MOBILE_DEVICE_LONGITUDE = "longitude";
+	private static final String MOBILE_DEVICE_TOKEN = "token";
+	private static final String MOBILE_DEVICE_SERIAL = "serial";
+	private static final String MOBILE_DEVICE_UNLOCK_TOKEN = "unlockToken";
+	private static final String MOBILE_DEVICE_CHALLENGE = "challenge";
 
 	public static Document convertToDocument(File file) throws DeviceManagementException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -87,12 +91,16 @@ public class MobileDeviceManagementUtil {
 			mobileDevice.setMobileDeviceId(device.getDeviceIdentifier());
 			mobileDevice.setImei(getPropertyValue(device, MOBILE_DEVICE_IMEI));
 			mobileDevice.setImsi(getPropertyValue(device, MOBILE_DEVICE_IMSI));
-			mobileDevice.setRegId(getPropertyValue(device, MOBILE_DEVICE_REG_ID));
+			mobileDevice.setPushToken(getPropertyValue(device, MOBILE_DEVICE_PUSH_TOKEN));
 			mobileDevice.setModel(getPropertyValue(device, MOBILE_DEVICE_MODEL));
 			mobileDevice.setOsVersion(getPropertyValue(device, MOBILE_DEVICE_OS_VERSION));
 			mobileDevice.setVendor(getPropertyValue(device, MOBILE_DEVICE_VENDOR));
 			mobileDevice.setLatitude(getPropertyValue(device, MOBILE_DEVICE_LATITUDE));
 			mobileDevice.setLongitude(getPropertyValue(device, MOBILE_DEVICE_LONGITUDE));
+			mobileDevice.setChallenge(getPropertyValue(device, MOBILE_DEVICE_CHALLENGE));
+			mobileDevice.setToken(getPropertyValue(device, MOBILE_DEVICE_TOKEN));
+			mobileDevice.setSerial(getPropertyValue(device, MOBILE_DEVICE_SERIAL));
+			mobileDevice.setUnlockToken(getPropertyValue(device, MOBILE_DEVICE_UNLOCK_TOKEN));
 		}
 		return mobileDevice;
 	}
@@ -104,12 +112,16 @@ public class MobileDeviceManagementUtil {
 			List<Device.Property> propertyList = new ArrayList<Device.Property>();
 			propertyList.add(getProperty(MOBILE_DEVICE_IMEI, mobileDevice.getImei()));
 			propertyList.add(getProperty(MOBILE_DEVICE_IMSI, mobileDevice.getImsi()));
-			propertyList.add(getProperty(MOBILE_DEVICE_REG_ID, mobileDevice.getRegId()));
+			propertyList.add(getProperty(MOBILE_DEVICE_PUSH_TOKEN, mobileDevice.getPushToken()));
 			propertyList.add(getProperty(MOBILE_DEVICE_MODEL, mobileDevice.getModel()));
 			propertyList.add(getProperty(MOBILE_DEVICE_OS_VERSION, mobileDevice.getOsVersion()));
 			propertyList.add(getProperty(MOBILE_DEVICE_VENDOR, mobileDevice.getVendor()));
 			propertyList.add(getProperty(MOBILE_DEVICE_LATITUDE, mobileDevice.getLatitude()));
 			propertyList.add(getProperty(MOBILE_DEVICE_LONGITUDE, mobileDevice.getLongitude()));
+			propertyList.add(getProperty(MOBILE_DEVICE_CHALLENGE, mobileDevice.getChallenge()));
+			propertyList.add(getProperty(MOBILE_DEVICE_TOKEN, mobileDevice.getToken()));
+			propertyList.add(getProperty(MOBILE_DEVICE_SERIAL, mobileDevice.getSerial()));
+			propertyList.add(getProperty(MOBILE_DEVICE_UNLOCK_TOKEN, mobileDevice.getUnlockToken()));
 			device.setProperties(propertyList);
 			device.setDeviceIdentifier(mobileDevice.getMobileDeviceId());
 		}

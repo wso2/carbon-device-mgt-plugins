@@ -59,6 +59,10 @@ public class MobileDeviceOperationMappingDAOTestSuite {
 	public static final String TEST_MOBILE_OS_VERSION = "5.0.0";
 	public static final String TEST_MOBILE_LATITUDE = "6.93N";
 	public static final String TEST_MOBILE_LONGITUDE = "80.60E";
+	public static final String TEST_MOBILE_TOKEN = "2412K2HKHK24K12H4";
+	public static final String TEST_MOBILE_SERIAL = "24124IIH4I2K4";
+	public static final String TEST_MOBILE_CHALLENGE = "ASFASFSAFASFATWTWQTTQWTWQTQWTQWTWQT";
+	public static final String TEST_MOBILE_UNLOCK_TOKEN = "FAFWQUWFUQWYWQYRWQURYUURUWQUWRUWRUWE";
 	public static final String TEST_MBL_OPR_FEATURE_CODE1 = "LOCK";
 	public static final String TEST_MBL_OPR_FEATURE_CODE2 = "WIPE";
 	public static final long TEST_MBL_OPR_CREATED_DATE = new java.util.Date().getTime();
@@ -112,10 +116,14 @@ public class MobileDeviceOperationMappingDAOTestSuite {
 		mobileDevice.setImsi(TEST_MOBILE_IMSI);
 		mobileDevice.setModel(TEST_MOBILE_MODEL);
 		mobileDevice.setVendor(TEST_MOBILE_VENDOR);
-		mobileDevice.setRegId(TEST_MOBILE_REG_ID);
+		mobileDevice.setPushToken(TEST_MOBILE_REG_ID);
 		mobileDevice.setOsVersion(TEST_MOBILE_OS_VERSION);
 		mobileDevice.setLatitude(TEST_MOBILE_LATITUDE);
 		mobileDevice.setLongitude(TEST_MOBILE_LONGITUDE);
+		mobileDevice.setToken(TEST_MOBILE_TOKEN);
+		mobileDevice.setSerial(TEST_MOBILE_SERIAL);
+		mobileDevice.setChallenge(TEST_MOBILE_CHALLENGE);
+		mobileDevice.setUnlockToken(TEST_MOBILE_UNLOCK_TOKEN);
 		mblDeviceDAO.addMobileDevice(mobileDevice);
 
 		//Add an Operation to the db
