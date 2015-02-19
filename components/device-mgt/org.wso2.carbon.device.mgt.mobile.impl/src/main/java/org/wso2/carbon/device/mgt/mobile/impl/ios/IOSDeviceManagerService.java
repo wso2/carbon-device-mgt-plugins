@@ -69,7 +69,24 @@ public class IOSDeviceManagerService implements DeviceManagerService {
 
     @Override
     public boolean isEnrolled(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return true;
+        boolean isEnrolled = false;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Checking the enrollment of iOS device : " + deviceId.getId());
+            }
+            MobileDevice mobileDevice =
+                    MobileDeviceManagementDAOFactory.getMobileDeviceDAO().getMobileDevice(
+                            deviceId.getId());
+            if (mobileDevice != null) {
+                isEnrolled = true;
+            }
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error while checking the enrollment status of iOS device : " +
+                    deviceId.getId();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return isEnrolled;
     }
 
     @Override
