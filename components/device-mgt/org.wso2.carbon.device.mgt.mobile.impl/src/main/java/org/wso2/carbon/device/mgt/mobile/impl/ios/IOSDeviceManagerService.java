@@ -59,7 +59,21 @@ public class IOSDeviceManagerService implements DeviceManagerService {
 
     @Override
     public boolean modifyEnrollment(Device device) throws DeviceManagementException {
-        return true;
+        boolean status;
+        MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Modifying the iOS device enrollment data");
+            }
+            status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO()
+                    .updateMobileDevice(mobileDevice);
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error while updating the enrollment of the iOS device : " +
+                    device.getDeviceIdentifier();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return status;
     }
 
     @Override
