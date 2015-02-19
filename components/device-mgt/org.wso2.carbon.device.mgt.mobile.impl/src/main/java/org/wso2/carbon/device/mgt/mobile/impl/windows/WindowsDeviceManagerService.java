@@ -59,28 +59,28 @@ public class WindowsDeviceManagerService implements DeviceManagerService {
 
 	@Override
 	public boolean modifyEnrollment(Device device) throws DeviceManagementException {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean disenrollDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean isEnrolled(DeviceIdentifier deviceId) throws DeviceManagementException {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean isActive(DeviceIdentifier deviceId) throws DeviceManagementException {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean setActive(DeviceIdentifier deviceId, boolean status)
 			throws DeviceManagementException {
-		return true;
+		return false;
 	}
 
 	public List<Device> getAllDevices() throws DeviceManagementException {
@@ -95,7 +95,7 @@ public class WindowsDeviceManagerService implements DeviceManagerService {
 	@Override
 	public boolean setOwnership(DeviceIdentifier deviceId, String ownershipType)
 			throws DeviceManagementException {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class WindowsDeviceManagerService implements DeviceManagerService {
 
 	@Override
 	public boolean updateDeviceInfo(Device device) throws DeviceManagementException {
-		return true;
+		return false;
 	}
 
 }
