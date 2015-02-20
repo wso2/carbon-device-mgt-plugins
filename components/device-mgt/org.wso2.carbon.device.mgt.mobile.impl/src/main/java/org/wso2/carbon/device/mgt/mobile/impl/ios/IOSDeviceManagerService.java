@@ -121,7 +121,20 @@ public class IOSDeviceManagerService implements DeviceManagerService {
 
     @Override
     public Device getDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return null;
+        Device device;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Getting the details of iOS device : " + deviceId.getId());
+            }
+            MobileDevice mobileDevice = MobileDeviceManagementDAOFactory.getMobileDeviceDAO().
+                    getMobileDevice(deviceId.getId());
+            device = MobileDeviceManagementUtil.convertToDevice(mobileDevice);
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error while fetching the iOS device : " + deviceId.getId();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return device;
     }
 
     @Override
