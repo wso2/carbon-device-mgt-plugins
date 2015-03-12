@@ -51,10 +51,14 @@ public class MobileDeviceDAOTestSuite {
 	public static final String TEST_MOBILE_MODEL = "S5";
 	public static final String TEST_MOBILE_VENDOR = "samsung";
 	public static final String TEST_MOBILE_UPDATED_VENDOR = "sony";
-	public static final String TEST_MOBILE_REG_ID = "2414";
+	public static final String TEST_MOBILE_PUSH_TOKEN = "2414";
 	public static final String TEST_MOBILE_OS_VERSION = "5.0.0";
 	public static final String TEST_MOBILE_LATITUDE = "6.93N";
 	public static final String TEST_MOBILE_LONGITUDE = "80.60E";
+	public static final String TEST_MOBILE_TOKEN = "2412K2HKHK24K12H4";
+	public static final String TEST_MOBILE_SERIAL = "24124IIH4I2K4";
+	public static final String TEST_MOBILE_CHALLENGE = "ASFASFSAFASFATWTWQTTQWTWQTQWTQWTWQT";
+	public static final String TEST_MOBILE_UNLOCK_TOKEN = "FAFWQUWFUQWYWQYRWQURYUURUWQUWRUWRUWE";
 	private TestDBConfiguration testDBConfiguration;
 	private MobileDeviceDAOImpl mblDeviceDAO;
 
@@ -93,23 +97,28 @@ public class MobileDeviceDAOTestSuite {
 		mobileDevice.setImsi(TEST_MOBILE_IMSI);
 		mobileDevice.setModel(TEST_MOBILE_MODEL);
 		mobileDevice.setVendor(TEST_MOBILE_VENDOR);
-		mobileDevice.setRegId(TEST_MOBILE_REG_ID);
+		mobileDevice.setPushToken(TEST_MOBILE_PUSH_TOKEN);
 		mobileDevice.setOsVersion(TEST_MOBILE_OS_VERSION);
 		mobileDevice.setLatitude(TEST_MOBILE_LATITUDE);
 		mobileDevice.setLongitude(TEST_MOBILE_LONGITUDE);
+		mobileDevice.setToken(TEST_MOBILE_TOKEN);
+		mobileDevice.setSerial(TEST_MOBILE_SERIAL);
+		mobileDevice.setChallenge(TEST_MOBILE_CHALLENGE);
+		mobileDevice.setUnlockToken(TEST_MOBILE_UNLOCK_TOKEN);
 
 		boolean added = mblDeviceDAO.addMobileDevice(mobileDevice);
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
-					"SELECT MOBILE_DEVICE_ID, REG_ID, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
-					"LATITUDE, LONGITUDE FROM MBL_DEVICE WHERE MOBILE_DEVICE_ID = ?";
+					"SELECT MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
+					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM MBL_DEVICE " +
+					"WHERE MOBILE_DEVICE_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setString(1, TEST_MOBILE_DEVICE_ID);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				testMblDevice.setMobileDeviceId(resultSet.getString(1));
-				testMblDevice.setRegId(resultSet.getString(2));
+				testMblDevice.setPushToken(resultSet.getString(2));
 				testMblDevice.setImei(resultSet.getString(3));
 				testMblDevice.setImsi(resultSet.getString(4));
 				testMblDevice.setOsVersion(resultSet.getString(5));
@@ -117,6 +126,10 @@ public class MobileDeviceDAOTestSuite {
 				testMblDevice.setVendor(resultSet.getString(7));
 				testMblDevice.setLatitude(resultSet.getString(8));
 				testMblDevice.setLongitude(resultSet.getString(9));
+				testMblDevice.setChallenge(resultSet.getString(10));
+				testMblDevice.setSerial(resultSet.getString(11));
+				testMblDevice.setToken(resultSet.getString(12));
+				testMblDevice.setUnlockToken(resultSet.getString(13));
 			}
 		} catch (SQLException e) {
 			String msg = "Error in retrieving Mobile Device data ";
@@ -140,10 +153,18 @@ public class MobileDeviceDAOTestSuite {
 		                    "MobileDevice model has persisted ");
 		Assert.assertEquals(TEST_MOBILE_OS_VERSION, testMblDevice.getOsVersion(),
 		                    "MobileDevice os-version has persisted ");
-		Assert.assertEquals(TEST_MOBILE_REG_ID, testMblDevice.getRegId(),
+		Assert.assertEquals(TEST_MOBILE_PUSH_TOKEN, testMblDevice.getPushToken(),
 		                    "MobileDevice reg-id has persisted ");
 		Assert.assertEquals(TEST_MOBILE_VENDOR, testMblDevice.getVendor(),
 		                    "MobileDevice vendor has persisted ");
+		Assert.assertEquals(TEST_MOBILE_CHALLENGE, testMblDevice.getChallenge(),
+		                    "MobileDevice challenge has persisted ");
+		Assert.assertEquals(TEST_MOBILE_SERIAL, testMblDevice.getSerial(),
+		                    "MobileDevice serial has persisted");
+		Assert.assertEquals(TEST_MOBILE_UNLOCK_TOKEN, testMblDevice.getUnlockToken(),
+		                    "MobileDevice unlock-token has persisted");
+		Assert.assertEquals(TEST_MOBILE_TOKEN, testMblDevice.getToken(),
+		                    "MobileDevice token has persisted");
 	}
 
 	@Test(dependsOnMethods = { "addMobileDeviceTest" })
@@ -164,10 +185,18 @@ public class MobileDeviceDAOTestSuite {
 		                    "MobileDevice model has persisted ");
 		Assert.assertEquals(TEST_MOBILE_OS_VERSION, testMblDevice.getOsVersion(),
 		                    "MobileDevice os-version has persisted ");
-		Assert.assertEquals(TEST_MOBILE_REG_ID, testMblDevice.getRegId(),
+		Assert.assertEquals(TEST_MOBILE_PUSH_TOKEN, testMblDevice.getPushToken(),
 		                    "MobileDevice reg-id has persisted ");
 		Assert.assertEquals(TEST_MOBILE_VENDOR, testMblDevice.getVendor(),
 		                    "MobileDevice vendor has persisted ");
+		Assert.assertEquals(TEST_MOBILE_CHALLENGE, testMblDevice.getChallenge(),
+		                    "MobileDevice challenge has persisted ");
+		Assert.assertEquals(TEST_MOBILE_SERIAL, testMblDevice.getSerial(),
+		                    "MobileDevice serial has persisted");
+		Assert.assertEquals(TEST_MOBILE_UNLOCK_TOKEN, testMblDevice.getUnlockToken(),
+		                    "MobileDevice unlock-token has persisted");
+		Assert.assertEquals(TEST_MOBILE_TOKEN, testMblDevice.getToken(),
+		                    "MobileDevice token has persisted");
 	}
 
 	@Test(dependsOnMethods = { "addMobileDeviceTest" })
@@ -192,23 +221,28 @@ public class MobileDeviceDAOTestSuite {
 		mobileDevice.setImsi(TEST_MOBILE_IMSI);
 		mobileDevice.setModel(TEST_MOBILE_MODEL);
 		mobileDevice.setVendor(TEST_MOBILE_UPDATED_VENDOR);
-		mobileDevice.setRegId(TEST_MOBILE_REG_ID);
+		mobileDevice.setPushToken(TEST_MOBILE_PUSH_TOKEN);
 		mobileDevice.setOsVersion(TEST_MOBILE_OS_VERSION);
 		mobileDevice.setLatitude(TEST_MOBILE_LATITUDE);
 		mobileDevice.setLongitude(TEST_MOBILE_LONGITUDE);
+		mobileDevice.setToken(TEST_MOBILE_TOKEN);
+		mobileDevice.setSerial(TEST_MOBILE_SERIAL);
+		mobileDevice.setChallenge(TEST_MOBILE_CHALLENGE);
+		mobileDevice.setUnlockToken(TEST_MOBILE_UNLOCK_TOKEN);
 
 		boolean updated = mblDeviceDAO.updateMobileDevice(mobileDevice);
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
-					"SELECT MOBILE_DEVICE_ID, REG_ID, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
-					"LATITUDE, LONGITUDE FROM MBL_DEVICE WHERE MOBILE_DEVICE_ID = ?";
+					"SELECT MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
+					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM MBL_DEVICE " +
+					"WHERE MOBILE_DEVICE_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setString(1, TEST_MOBILE_DEVICE_ID);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			if (resultSet.next()) {
 				testMblDevice.setMobileDeviceId(resultSet.getString(1));
-				testMblDevice.setRegId(resultSet.getString(2));
+				testMblDevice.setPushToken(resultSet.getString(2));
 				testMblDevice.setImei(resultSet.getString(3));
 				testMblDevice.setImsi(resultSet.getString(4));
 				testMblDevice.setOsVersion(resultSet.getString(5));
@@ -216,6 +250,10 @@ public class MobileDeviceDAOTestSuite {
 				testMblDevice.setVendor(resultSet.getString(7));
 				testMblDevice.setLatitude(resultSet.getString(8));
 				testMblDevice.setLongitude(resultSet.getString(9));
+				testMblDevice.setChallenge(resultSet.getString(10));
+				testMblDevice.setSerial(resultSet.getString(11));
+				testMblDevice.setToken(resultSet.getString(12));
+				testMblDevice.setUnlockToken(resultSet.getString(13));
 			}
 		} catch (SQLException e) {
 			String msg = "Error in retrieving Mobile Device data ";
@@ -240,8 +278,9 @@ public class MobileDeviceDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
-					"SELECT MOBILE_DEVICE_ID, REG_ID, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
-					"LATITUDE, LONGITUDE FROM MBL_DEVICE WHERE MOBILE_DEVICE_ID = ?";
+					"SELECT MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
+					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM MBL_DEVICE " +
+					"WHERE MOBILE_DEVICE_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setString(1, TEST_MOBILE_DEVICE_ID);
 			ResultSet resultSet = preparedStatement.executeQuery();

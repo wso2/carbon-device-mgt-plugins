@@ -53,15 +53,16 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT MOBILE_DEVICE_ID, REG_ID, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
-					"LATITUDE, LONGITUDE FROM MBL_DEVICE WHERE MOBILE_DEVICE_ID = ?";
+					"SELECT MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
+					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM MBL_DEVICE" +
+					" WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblDeviceId);
 			ResultSet resultSet = stmt.executeQuery();
 			if (resultSet.next()) {
 				mobileDevice = new MobileDevice();
 				mobileDevice.setMobileDeviceId(resultSet.getString(1));
-				mobileDevice.setRegId(resultSet.getString(2));
+				mobileDevice.setPushToken(resultSet.getString(2));
 				mobileDevice.setImei(resultSet.getString(3));
 				mobileDevice.setImsi(resultSet.getString(4));
 				mobileDevice.setOsVersion(resultSet.getString(5));
@@ -69,6 +70,10 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 				mobileDevice.setVendor(resultSet.getString(7));
 				mobileDevice.setLatitude(resultSet.getString(8));
 				mobileDevice.setLongitude(resultSet.getString(9));
+				mobileDevice.setChallenge(resultSet.getString(10));
+				mobileDevice.setSerial(resultSet.getString(11));
+				mobileDevice.setToken(resultSet.getString(12));
+				mobileDevice.setUnlockToken(resultSet.getString(13));
 				if (log.isDebugEnabled()) {
 					log.debug("Mobile device " + mblDeviceId + " data has fetched from MDM database.");
 				}
@@ -93,12 +98,13 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 		try {
 			conn = this.getConnection();
 			String createDBQuery =
-					"INSERT INTO MBL_DEVICE(MOBILE_DEVICE_ID, REG_ID, IMEI, IMSI, OS_VERSION," +
-					"DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					"INSERT INTO MBL_DEVICE(MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION," +
+					"DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, " +
+					"UNLOCK_TOKEN) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 			stmt = conn.prepareStatement(createDBQuery);
 			stmt.setString(1, mobileDevice.getMobileDeviceId());
-			stmt.setString(2, mobileDevice.getRegId());
+			stmt.setString(2, mobileDevice.getPushToken());
 			stmt.setString(3, mobileDevice.getImei());
 			stmt.setString(4, mobileDevice.getImsi());
 			stmt.setString(5, mobileDevice.getOsVersion());
@@ -106,6 +112,10 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 			stmt.setString(7, mobileDevice.getVendor());
 			stmt.setString(8, mobileDevice.getLatitude());
 			stmt.setString(9, mobileDevice.getLongitude());
+			stmt.setString(10, mobileDevice.getChallenge());
+			stmt.setString(11, mobileDevice.getSerial());
+			stmt.setString(12, mobileDevice.getToken());
+			stmt.setString(13, mobileDevice.getUnlockToken());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
@@ -134,11 +144,11 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE MBL_DEVICE SET REG_ID = ?, IMEI = ?, IMSI = ?, OS_VERSION = ?," +
-					"DEVICE_MODEL = ?, VENDOR = ? , LATITUDE = ?, LONGITUDE = ? " +
-					"WHERE MOBILE_DEVICE_ID = ?";
+					"UPDATE MBL_DEVICE SET PUSH_TOKEN = ?, IMEI = ?, IMSI = ?, OS_VERSION = ?," +
+					"DEVICE_MODEL = ?, VENDOR = ? , LATITUDE = ?, LONGITUDE = ?, CHALLENGE = ?," +
+					"SERIAL = ?, TOKEN = ?, UNLOCK_TOKEN = ? WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
-			stmt.setString(1, mobileDevice.getRegId());
+			stmt.setString(1, mobileDevice.getPushToken());
 			stmt.setString(2, mobileDevice.getImei());
 			stmt.setString(3, mobileDevice.getImsi());
 			stmt.setString(4, mobileDevice.getOsVersion());
@@ -146,7 +156,11 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 			stmt.setString(6, mobileDevice.getVendor());
 			stmt.setString(7, mobileDevice.getLatitude());
 			stmt.setString(8, mobileDevice.getLongitude());
-			stmt.setString(9, mobileDevice.getMobileDeviceId());
+			stmt.setString(9, mobileDevice.getChallenge());
+			stmt.setString(10, mobileDevice.getSerial());
+			stmt.setString(11, mobileDevice.getToken());
+			stmt.setString(12, mobileDevice.getUnlockToken());
+			stmt.setString(13, mobileDevice.getMobileDeviceId());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
@@ -204,14 +218,14 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT MOBILE_DEVICE_ID, REG_ID, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR," +
-					"LATITUDE, LONGITUDE FROM MBL_DEVICE";
+					"SELECT MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR," +
+					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM MBL_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mobileDevice = new MobileDevice();
 				mobileDevice.setMobileDeviceId(resultSet.getString(1));
-				mobileDevice.setRegId(resultSet.getString(2));
+				mobileDevice.setPushToken(resultSet.getString(2));
 				mobileDevice.setImei(resultSet.getString(3));
 				mobileDevice.setImsi(resultSet.getString(4));
 				mobileDevice.setOsVersion(resultSet.getString(5));
@@ -219,6 +233,10 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 				mobileDevice.setVendor(resultSet.getString(7));
 				mobileDevice.setLatitude(resultSet.getString(8));
 				mobileDevice.setLongitude(resultSet.getString(9));
+				mobileDevice.setChallenge(resultSet.getString(10));
+				mobileDevice.setSerial(resultSet.getString(11));
+				mobileDevice.setToken(resultSet.getString(12));
+				mobileDevice.setUnlockToken(resultSet.getString(13));
 				mobileDevices.add(mobileDevice);
 			}
 			if (log.isDebugEnabled()) {

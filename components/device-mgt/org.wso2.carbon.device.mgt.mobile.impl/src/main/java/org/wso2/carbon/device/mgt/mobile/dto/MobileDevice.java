@@ -26,7 +26,7 @@ import java.io.Serializable;
 public class MobileDevice implements Serializable {
 
 	private String mobileDeviceId;
-	private String regId;
+	private String pushToken;
 	private String imei;
 	private String imsi;
 	private String osVersion;
@@ -34,6 +34,42 @@ public class MobileDevice implements Serializable {
 	private String vendor;
 	private String latitude;
 	private String longitude;
+	private String serial;
+	private String unlockToken;
+	private String token;
+	private String challenge;
+
+	public String getUnlockToken() {
+		return unlockToken;
+	}
+
+	public void setUnlockToken(String unlockToken) {
+		this.unlockToken = unlockToken;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public String getChallenge() {
+		return challenge;
+	}
+
+	public void setChallenge(String challenge) {
+		this.challenge = challenge;
+	}
+
+	public String getSerial() {
+		return serial;
+	}
+
+	public void setSerial(String serial) {
+		this.serial = serial;
+	}
 
 	public String getMobileDeviceId() {
 		return mobileDeviceId;
@@ -43,12 +79,12 @@ public class MobileDevice implements Serializable {
 		this.mobileDeviceId = mobileDeviceId;
 	}
 
-	public String getRegId() {
-		return regId;
+	public String getPushToken() {
+		return pushToken;
 	}
 
-	public void setRegId(String regId) {
-		this.regId = regId;
+	public void setPushToken(String pushToken) {
+		this.pushToken = pushToken;
 	}
 
 	public String getImei() {

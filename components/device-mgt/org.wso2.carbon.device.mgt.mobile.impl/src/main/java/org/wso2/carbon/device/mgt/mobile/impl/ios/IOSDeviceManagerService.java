@@ -18,8 +18,14 @@
 
 package org.wso2.carbon.device.mgt.mobile.impl.ios;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagerService;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
+import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 
 import java.util.List;
 
@@ -28,6 +34,13 @@ import java.util.List;
  */
 public class IOSDeviceManagerService implements DeviceManagerService {
 
+    private static final Log log = LogFactory.getLog(IOSDeviceManagerService.class);
+    private OperationManager operationManager;
+
+    public IOSDeviceManagerService() {
+        this.operationManager = new IOSMobileOperationManager();
+    }
+
     @Override
     public String getProviderType() {
         return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS;
@@ -35,12 +48,37 @@ public class IOSDeviceManagerService implements DeviceManagerService {
 
     @Override
     public boolean enrollDevice(Device device) throws DeviceManagementException {
-        return true;
+        boolean status;
+        MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
+        try {
+            status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
+                    mobileDevice);
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error while enrolling the iOS device : " +
+                    device.getDeviceIdentifier();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return status;
     }
 
     @Override
     public boolean modifyEnrollment(Device device) throws DeviceManagementException {
-        return true;
+        boolean status;
+        MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Modifying the iOS device enrollment data");
+            }
+            status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO()
+                    .updateMobileDevice(mobileDevice);
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error while updating the enrollment of the iOS device : " +
+                    device.getDeviceIdentifier();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return status;
     }
 
     @Override
@@ -50,7 +88,24 @@ public class IOSDeviceManagerService implements DeviceManagerService {
 
     @Override
     public boolean isEnrolled(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return true;
+        boolean isEnrolled = false;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Checking the enrollment of iOS device : " + deviceId.getId());
+            }
+            MobileDevice mobileDevice =
+                    MobileDeviceManagementDAOFactory.getMobileDeviceDAO().getMobileDevice(
+                            deviceId.getId());
+            if (mobileDevice != null) {
+                isEnrolled = true;
+            }
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error while checking the enrollment status of iOS device : " +
+                    deviceId.getId();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return isEnrolled;
     }
 
     @Override
@@ -71,7 +126,20 @@ public class IOSDeviceManagerService implements DeviceManagerService {
 
     @Override
     public Device getDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return null;
+        Device device;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Getting the details of iOS device : " + deviceId.getId());
+            }
+            MobileDevice mobileDevice = MobileDeviceManagementDAOFactory.getMobileDeviceDAO().
+                    getMobileDevice(deviceId.getId());
+            device = MobileDeviceManagementUtil.convertToDevice(mobileDevice);
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error while fetching the iOS device : " + deviceId.getId();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return device;
     }
 
     @Override
@@ -82,7 +150,7 @@ public class IOSDeviceManagerService implements DeviceManagerService {
 
     @Override
     public OperationManager getOperationManager() throws DeviceManagementException {
-        return null;
+        return operationManager;
     }
 
     @Override
