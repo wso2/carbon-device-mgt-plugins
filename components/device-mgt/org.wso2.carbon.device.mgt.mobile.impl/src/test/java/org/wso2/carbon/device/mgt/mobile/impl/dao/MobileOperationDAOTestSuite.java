@@ -36,9 +36,7 @@ import org.wso2.carbon.device.mgt.mobile.impl.dao.util.MobileDatabaseUtils;
 import java.sql.*;
 
 /**
- *
  * Class for holding unit-tests related to MobileOperationDAO class.
- *
  */
 public class MobileOperationDAOTestSuite {
 
@@ -101,7 +99,7 @@ public class MobileOperationDAOTestSuite {
 		} finally {
 			MobileDatabaseUtils.cleanupResources(conn, preparedStatement, null);
 		}
-		Assert.assertTrue(mblOperationId > 0 , "MobileOperation has added ");
+		Assert.assertTrue(mblOperationId > 0, "MobileOperation has added ");
 		Assert.assertEquals(TEST_MBL_OPR_FEATURE_CODE, testMblOperation.getFeatureCode(),
 		                    "MobileOperation feature code has persisted ");
 		Assert.assertEquals(TEST_MBL_OPR_CREATED_DATE, testMblOperation.getCreatedDate(),
@@ -119,7 +117,7 @@ public class MobileOperationDAOTestSuite {
 		                    "MobileOperation feature-code has retrieved ");
 	}
 
-	@Test(dependsOnMethods = { "addMobileOperationTest" , "getMobileOperationTest"})
+	@Test(dependsOnMethods = { "addMobileOperationTest", "getMobileOperationTest" })
 	public void updateMobileOperationTest()
 			throws MobileDeviceManagementDAOException {
 
@@ -151,14 +149,14 @@ public class MobileOperationDAOTestSuite {
 		} finally {
 			MobileDatabaseUtils.cleanupResources(conn, preparedStatement, null);
 		}
-		Assert.assertTrue(status , "MobileOperation has updated ");
+		Assert.assertTrue(status, "MobileOperation has updated ");
 		Assert.assertEquals(TEST_MBL_OPR_UPDATED_FEATURE_CODE, testMblOperation.getFeatureCode(),
 		                    "MobileOperation feature code has updated ");
 		Assert.assertEquals(updatedDate, testMblOperation.getCreatedDate(),
 		                    "MobileOperation created-date has updated ");
 	}
 
-	@Test(dependsOnMethods = { "addMobileOperationTest" , "getMobileOperationTest",
+	@Test(dependsOnMethods = { "addMobileOperationTest", "getMobileOperationTest",
 	                           "updateMobileOperationTest" })
 	public void deleteMobileDeviceTest()
 			throws MobileDeviceManagementDAOException {

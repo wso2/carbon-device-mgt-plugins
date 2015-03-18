@@ -57,19 +57,19 @@ import java.util.List;
  */
 public class MobileDeviceManagementServiceComponent {
 
-    private ServiceRegistration androidServiceRegRef;
-    private ServiceRegistration iOSServiceRegRef;
-    private ServiceRegistration windowsServiceRegRef;
-    private ServiceRegistration serverStartupObserverRef;
+	private ServiceRegistration androidServiceRegRef;
+	private ServiceRegistration iOSServiceRegRef;
+	private ServiceRegistration windowsServiceRegRef;
+	private ServiceRegistration serverStartupObserverRef;
 
-    private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
+	private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
 
-    protected void activate(ComponentContext ctx) {
-        if (log.isDebugEnabled()) {
-            log.debug("Activating Mobile Device Management Service Component");
-        }
-        try {
-            BundleContext bundleContext = ctx.getBundleContext();
+	protected void activate(ComponentContext ctx) {
+		if (log.isDebugEnabled()) {
+			log.debug("Activating Mobile Device Management Service Component");
+		}
+		try {
+			BundleContext bundleContext = ctx.getBundleContext();
 
             /* Initialize the datasource configuration */
             MobileDeviceConfigurationManager.getInstance().initConfig();
@@ -127,31 +127,31 @@ public class MobileDeviceManagementServiceComponent {
 
             /* Removing all APIs published upon start-up for mobile device management related JAX-RS
                services */
-            this.removeAPIs();
-            if (log.isDebugEnabled()) {
-                log.debug(
-                        "Mobile Device Management Service Component has been successfully de-activated");
-            }
-        } catch (Throwable e) {
-            log.error("Error occurred while de-activating Mobile Device Management bundle", e);
-        }
-    }
+			this.removeAPIs();
+			if (log.isDebugEnabled()) {
+				log.debug(
+						"Mobile Device Management Service Component has been successfully de-activated");
+			}
+		} catch (Throwable e) {
+			log.error("Error occurred while de-activating Mobile Device Management bundle", e);
+		}
+	}
 
-    private void removeAPIs() throws DeviceManagementException {
-        List<APIConfig> apiConfigs =
-                MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
-                        getApiPublisherConfig().getAPIs();
-        for (APIConfig apiConfig : apiConfigs) {
-            DeviceManagementAPIPublisherUtil.removeAPI(apiConfig);
-        }
-    }
+	private void removeAPIs() throws DeviceManagementException {
+		List<APIConfig> apiConfigs =
+				MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
+						getApiPublisherConfig().getAPIs();
+		for (APIConfig apiConfig : apiConfigs) {
+			DeviceManagementAPIPublisherUtil.removeAPI(apiConfig);
+		}
+	}
 
-    protected void setAPIManagerConfigurationService(APIManagerConfigurationService service) {
-        //do nothing
-    }
+	protected void setAPIManagerConfigurationService(APIManagerConfigurationService service) {
+		//do nothing
+	}
 
-    protected void unsetAPIManagerConfigurationService(APIManagerConfigurationService service) {
-        //do nothing
-    }
+	protected void unsetAPIManagerConfigurationService(APIManagerConfigurationService service) {
+		//do nothing
+	}
 
 }

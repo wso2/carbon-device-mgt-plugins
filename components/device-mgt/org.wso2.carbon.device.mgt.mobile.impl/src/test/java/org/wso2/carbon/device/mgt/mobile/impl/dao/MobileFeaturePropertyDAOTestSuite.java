@@ -168,7 +168,7 @@ public class MobileFeaturePropertyDAOTestSuite {
 
 	@Test(dependsOnMethods = { "addMobileFeaturePropertyTest", "getMobileFeaturePropertyTest",
 	                           "getFeaturePropertyOfFeatureTest" }, expectedExceptions = MobileDeviceManagementDAOException.class)
-	public void updateFeaturePropertyTest() throws MobileDeviceManagementDAOException {
+	public void updateMobileFeaturePropertyTest() throws MobileDeviceManagementDAOException {
 		//Update 1st property to a non-exist feature
 		MobileFeatureProperty mobileFeatureProperty = new MobileFeatureProperty();
 		mobileFeatureProperty.setFeatureID(2);
@@ -206,7 +206,7 @@ public class MobileFeaturePropertyDAOTestSuite {
 	}
 
 	@Test(dependsOnMethods = { "addMobileFeaturePropertyTest", "getMobileFeaturePropertyTest",
-	                           "getFeaturePropertyOfFeatureTest" , "updateFeaturePropertyTest",
+	                           "getFeaturePropertyOfFeatureTest" , "updateMobileFeaturePropertyTest",
 	                           "deleteMobileFeaturePropertyTest"})
 	public void deleteMobileFeaturePropertiesOfFeatureTest()
 			throws MobileDeviceManagementDAOException {

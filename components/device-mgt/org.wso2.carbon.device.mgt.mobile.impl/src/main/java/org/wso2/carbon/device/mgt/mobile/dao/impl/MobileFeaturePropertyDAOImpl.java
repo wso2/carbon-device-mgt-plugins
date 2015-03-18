@@ -46,7 +46,7 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 	}
 
 	@Override
-	public boolean addMobileFeatureProperty(MobileFeatureProperty mobileFeatureProperty)
+	public boolean addMobileFeatureProperty(MobileFeatureProperty mblFeatureProperty)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -57,15 +57,19 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 					"INSERT INTO MBL_FEATURE_PROPERTY(PROPERTY, FEATURE_ID) VALUES (?, ?)";
 
 			stmt = conn.prepareStatement(createDBQuery);
-			stmt.setString(1, mobileFeatureProperty.getProperty());
-			stmt.setInt(2, mobileFeatureProperty.getFeatureID());
+			stmt.setString(1, mblFeatureProperty.getProperty());
+			stmt.setInt(2, mblFeatureProperty.getFeatureID());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Added MobileFeatureProperty " + mblFeatureProperty.getProperty() +
+					          " to the MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while adding property id - '" +
-			             mobileFeatureProperty.getFeatureID() + "'";
+			             mblFeatureProperty.getFeatureID() + "'";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -75,7 +79,7 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 	}
 
 	@Override
-	public boolean updateMobileFeatureProperty(MobileFeatureProperty mobileFeatureProperty)
+	public boolean updateMobileFeatureProperty(MobileFeatureProperty mblFeatureProperty)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -85,15 +89,18 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 			String updateDBQuery =
 					"UPDATE MBL_FEATURE_PROPERTY SET FEATURE_ID = ? WHERE PROPERTY = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
-			stmt.setInt(1, mobileFeatureProperty.getFeatureID());
-			stmt.setString(2, mobileFeatureProperty.getProperty());
+			stmt.setInt(1, mblFeatureProperty.getFeatureID());
+			stmt.setString(2, mblFeatureProperty.getProperty());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Updated MobileFeatureProperty " + mblFeatureProperty.getProperty());
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while updating the feature property with property - '" +
-			             mobileFeatureProperty.getProperty() + "'";
+			             mblFeatureProperty.getProperty() + "'";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -117,6 +124,9 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Deleted MobileFeatureProperty " + property + " from MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while deleting feature property with property - " +
@@ -130,7 +140,7 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 	}
 
 	@Override
-	public boolean deleteMobileFeaturePropertiesOfFeature(Integer featureId)
+	public boolean deleteMobileFeaturePropertiesOfFeature(Integer mblFeatureId)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -140,14 +150,18 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 			String deleteDBQuery =
 					"DELETE FROM MBL_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
-			stmt.setInt(1, featureId);
+			stmt.setInt(1, mblFeatureId);
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Deleted all MobileFeatureProperties of FeatureId " + mblFeatureId +
+					          " from MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while deleting feature properties of feature - " +
-			             featureId;
+			             mblFeatureId;
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -169,11 +183,14 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, property);
 			ResultSet resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
+			if (resultSet.next()) {
 				mobileFeatureProperty = new MobileFeatureProperty();
 				mobileFeatureProperty.setProperty(resultSet.getString(1));
 				mobileFeatureProperty.setFeatureID(resultSet.getInt(2));
-				break;
+				if (log.isDebugEnabled()) {
+					log.debug("Fetched MobileFeatureProperty " + mobileFeatureProperty.getProperty() +
+					          " from MDM database.");
+				}
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while fetching property - '" +
@@ -187,24 +204,28 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 	}
 
 	@Override
-	public List<MobileFeatureProperty> getFeaturePropertiesOfFeature(Integer featureId)
+	public List<MobileFeatureProperty> getFeaturePropertiesOfFeature(Integer mblFeatureId)
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
-		MobileFeatureProperty mobileFeatureProperty = null;
+		MobileFeatureProperty mobileFeatureProperty;
 		List<MobileFeatureProperty> FeatureProperties = new ArrayList<MobileFeatureProperty>();
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
 					"SELECT PROPERTY, FEATURE_ID FROM MBL_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
-			stmt.setInt(1, featureId);
+			stmt.setInt(1, mblFeatureId);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mobileFeatureProperty = new MobileFeatureProperty();
 				mobileFeatureProperty.setProperty(resultSet.getString(1));
 				mobileFeatureProperty.setFeatureID(resultSet.getInt(2));
 				FeatureProperties.add(mobileFeatureProperty);
+			}
+			if (log.isDebugEnabled()) {
+				log.debug("Fetched all MobileFeatureProperties of featureId " + mblFeatureId +
+				          " from MDM database.");
 			}
 			return FeatureProperties;
 		} catch (SQLException e) {

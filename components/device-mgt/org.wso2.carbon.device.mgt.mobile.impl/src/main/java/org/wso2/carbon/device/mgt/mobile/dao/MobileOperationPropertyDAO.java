@@ -23,60 +23,65 @@ import org.wso2.carbon.device.mgt.mobile.dto.MobileOperationProperty;
 import java.util.List;
 
 /**
- * This class represents the key operations associated with persisting mobile operation property related
- * information.
+ *
+ * This class represents the key operations associated with persisting mobile operation property
+ * related information.
+ *
  */
 public interface MobileOperationPropertyDAO {
+
 	/**
-	 * Add a new mapping to plugin operation property table.
+	 * Add a new MobileOperationProperty to MobileOperationProperty table.
 	 *
-	 * @param operationProperty OperationProperty object that holds data related to the operation
-	 *       property to be inserted.
-	 * @return The status of the operation. If the insert was successful or not.
+	 * @param mblOperationProperty MobileOperationProperty object that holds data related to the
+	 *                              operation property to be inserted.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean addMobileOperationProperty(MobileOperationProperty operationProperty)
+	boolean addMobileOperationProperty(MobileOperationProperty mblOperationProperty)
 			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Update a feature in the feature table.
+	 * Update a MobileOperationProperty in the MobileOperationProperty table.
 	 *
-	 * @param operationProperty DeviceOperation object that holds data has to be updated.
-	 * @return The status of the operation. If the update was successful or not.
+	 * @param mblOperationProperty MobileOperationProperty object that holds data has to be updated.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean updateMobileOperationProperty(MobileOperationProperty operationProperty)
+	boolean updateMobileOperationProperty(MobileOperationProperty mblOperationProperty)
 			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Deletes mobile operation properties of a given operation id from the plugin database.
+	 * Deletes MobileOperationProperties of a given operation id from the MobileOperationProperty
+	 * table.
 	 *
-	 * @param operationId Operation id of the mapping to be deleted.
-	 * @return The status of the operation. If the deletion was successful or not.
+	 * @param mblOperationId Operation id of the MobileOperationProperty to be deleted.
+	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean deleteMobileOperationProperties(int operationId)
+	boolean deleteMobileOperationProperties(int mblOperationId)
 			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Retrieve a given mobile operation property from plugin database.
+	 * Retrieve a given MobileOperationProperty from MobileOperationProperty table.
 	 *
-	 * @param operationId Operation id of the mapping to be retrieved.
+	 * @param mblOperationId Operation id of the mapping to be retrieved.
 	 * @param property    Property of the mapping to be retrieved.
-	 * @return DeviceOperation object that holds data of the device operation mapping represented by
-	 *         deviceId and operationId.
+	 * @return MobileOperationProperty object that holds data of the MobileOperationProperty
+	 * represented by mblOperationId and property.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	MobileOperationProperty getMobileOperationProperty(int operationId, String property)
+	MobileOperationProperty getMobileOperationProperty(int mblOperationId, String property)
 			throws MobileDeviceManagementDAOException;
 
 	/**
-	 * Retrieve all the mobile operation properties related to the a operation id.
+	 * Retrieve all the MobileOperationProperties related to the a operation id from
+	 * MobileOperationProperty table.
 	 *
-	 * @param operationId Operation id of the mapping to be retrieved.
-	 * @return Device operation mapping object list.
+	 * @param mblOperationId Operation id of the MobileOperationProperty to be retrieved.
+	 * @return List of MobileOperationProperty objects.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	List<MobileOperationProperty> getAllMobileOperationPropertiesOfOperation(int operationId)
+	List<MobileOperationProperty> getAllMobileOperationPropertiesOfOperation(int mblOperationId)
 			throws MobileDeviceManagementDAOException;
 }

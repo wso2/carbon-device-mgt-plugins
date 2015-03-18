@@ -22,14 +22,14 @@
     <parent>
         <artifactId>device-mgt</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>1.9.1-SNAPSHOT</version>
+        <version>1.9.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
     <artifactId>org.wso2.carbon.device.mgt.mobile.impl</artifactId>
-    <version>1.9.1-SNAPSHOT</version>
+    <version>1.9.2-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Mobile Device Management Impl</name>
     <description>WSO2 Carbon - Mobile Device Management Impl</description>
@@ -52,18 +52,26 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Bundle-Version>${carbon.mobile.device.mgt.version}</Bundle-Version>
                         <Bundle-Description>Device Management Mobile Impl Bundle</Bundle-Description>
-                        <!--<Bundle-Activator>org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementBundleActivator</Bundle-Activator>-->
                         <Private-Package>org.wso2.carbon.device.mgt.mobile.internal</Private-Package>
                         <Import-Package>
                             org.osgi.framework,
                             org.osgi.service.component,
                             org.apache.commons.logging,
+                            javax.xml.bind.*,
+                            javax.naming,
+                            javax.sql,
+                            javax.xml.bind.annotation,
+                            javax.xml.parsers,
+                            org.w3c.dom,
+                            org.wso2.carbon.core,
+                            org.wso2.carbon.utils.*,
+                            org.wso2.carbon.device.mgt.common.*,
+                            org.wso2.carbon.apimgt.*;
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.mobile.internal,
-                            org.wso2.carbon.device.mgt.mobile.*
+                            org.wso2.carbon.device.mgt.mobile.*,
                         </Export-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
             </plugin>
@@ -73,7 +81,8 @@
                 <version>2.18</version>
                 <configuration>
                     <systemPropertyVariables>
-                        <log4j.configuration>file:src/test/resources/log4j.properties</log4j.configuration>
+                        <log4j.configuration>file:src/test/resources/log4j.properties
+                        </log4j.configuration>
                     </systemPropertyVariables>
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>

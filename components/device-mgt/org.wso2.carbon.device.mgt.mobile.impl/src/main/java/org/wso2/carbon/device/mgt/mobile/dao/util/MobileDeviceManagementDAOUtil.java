@@ -21,8 +21,6 @@ package org.wso2.carbon.device.mgt.mobile.dao.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.mobile.config.datasource.JNDILookupDefinition;
-import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementSchemaInitializer;
 
 import javax.naming.InitialContext;
@@ -32,7 +30,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Hashtable;
-import java.util.List;
 
 /**
  * Utility method required by MobileDeviceManagement DAO classes.
@@ -94,8 +91,8 @@ public class MobileDeviceManagementDAOUtil {
         try {
             initializer.createRegistryDatabase();
         } catch (Exception e) {
-            throw new DeviceManagementException("Error occurred while initializing Mobile Device Management " +
-                    "database schema", e);
+            throw new DeviceManagementException("Error occurred while initializing Mobile Device " +
+                                                "Management database schema", e);
         }
     }
 

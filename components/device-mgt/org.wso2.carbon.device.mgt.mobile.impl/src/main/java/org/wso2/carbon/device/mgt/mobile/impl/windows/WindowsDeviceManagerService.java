@@ -18,8 +18,14 @@
 
 package org.wso2.carbon.device.mgt.mobile.impl.windows;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
+import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 
 import java.util.List;
 
@@ -27,6 +33,8 @@ import java.util.List;
  * This represents the Windows implementation of DeviceManagerService.
  */
 public class WindowsDeviceManagerService implements DeviceManager {
+
+    private static final Log log = LogFactory.getLog(WindowsDeviceManagerService.class);
 
     @Override
     public String getProviderType() {
@@ -36,11 +44,6 @@ public class WindowsDeviceManagerService implements DeviceManager {
     @Override
     public FeatureManager getFeatureManager() {
         return null;
-    }
-
-    @Override
-    public boolean enrollDevice(Device device) throws DeviceManagementException {
-        return true;
     }
 
     @Override
@@ -88,5 +91,21 @@ public class WindowsDeviceManagerService implements DeviceManager {
     public boolean updateDeviceInfo(Device device) throws DeviceManagementException {
         return true;
     }
+
+	@Override
+	public boolean enrollDevice(Device device) throws DeviceManagementException {
+		boolean status;
+		MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
+		try {
+			status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
+					mobileDevice);
+		} catch (MobileDeviceManagementDAOException e) {
+			String msg = "Error while enrolling the Windows device : " +
+			             device.getDeviceIdentifier();
+			log.error(msg, e);
+			throw new DeviceManagementException(msg, e);
+		}
+		return status;
+	}
 
 }

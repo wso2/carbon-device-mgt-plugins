@@ -25,6 +25,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -70,7 +71,7 @@ public class MobileDeviceManagementConfigTests {
 		}
 	}
 
-	@Test()
+	@Test
 	public void testMandateManagementRepositoryElement() {
 		File malformedConfig =
 				new File(
@@ -114,9 +115,7 @@ public class MobileDeviceManagementConfigTests {
 	}
 
 	/**
-	 *
 	 * Validates a given malformed-configuration file.
-	 *
 	 */
 	private void validateMalformedConfig(File malformedConfig) {
 		try {
@@ -126,7 +125,11 @@ public class MobileDeviceManagementConfigTests {
 			um.unmarshal(malformedConfig);
 			Assert.assertTrue(false);
 		} catch (JAXBException e) {
-			log.error("Error occurred while unmarsharlling mobile device management config", e);
+			Throwable linkedException = e.getLinkedException();
+			if (!(linkedException instanceof SAXParseException)) {
+				log.error("Unexpected error occurred while unmarshalling mobile device management config", e);
+				Assert.assertTrue(false);
+			}
 			Assert.assertTrue(true);
 		}
 	}

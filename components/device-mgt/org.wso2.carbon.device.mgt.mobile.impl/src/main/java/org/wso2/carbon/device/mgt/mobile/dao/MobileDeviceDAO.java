@@ -27,14 +27,48 @@ import java.util.List;
  */
 public interface MobileDeviceDAO {
 
-	MobileDevice getMobileDevice(String deviceId) throws MobileDeviceManagementDAOException;
+	/**
+	 * Fetches a MobileDevice from MDM database.
+	 *
+	 * @param mblDeviceId Id of the Mobile-Device.
+	 * @return MobileDevice corresponding to given device-id.
+	 * @throws MobileDeviceManagementDAOException
+	 */
+	MobileDevice getMobileDevice(String mblDeviceId) throws MobileDeviceManagementDAOException;
 
+	/**
+	 * Adds a new MobileDevice to the MDM database.
+	 *
+	 * @param mobileDevice MobileDevice to be added.
+	 * @return The status of the operation.
+	 * @throws MobileDeviceManagementDAOException
+	 */
 	boolean addMobileDevice(MobileDevice mobileDevice) throws MobileDeviceManagementDAOException;
 
+	/**
+	 * Updates MobileDevice information in MDM database.
+	 *
+	 * @param mobileDevice MobileDevice to be updated.
+	 * @return The status of the operation.
+	 * @throws MobileDeviceManagementDAOException
+	 */
 	boolean updateMobileDevice(MobileDevice mobileDevice) throws MobileDeviceManagementDAOException;
 
-	boolean deleteMobileDevice(String deviceId) throws MobileDeviceManagementDAOException;
+	/**
+	 * Deletes a given MobileDevice from MDM database.
+	 *
+	 * @param mblDeviceId Id of MobileDevice to be deleted.
+	 * @return The status of the operation.
+	 * @throws MobileDeviceManagementDAOException
+	 */
+	boolean deleteMobileDevice(String mblDeviceId) throws MobileDeviceManagementDAOException;
 
+	/**
+	 * Fetches all MobileDevices from MDM database.
+	 *
+	 * @return List of MobileDevices.
+	 * @throws MobileDeviceManagementDAOException
+	 */
 	List<MobileDevice> getAllMobileDevices() throws MobileDeviceManagementDAOException;
 
 }
