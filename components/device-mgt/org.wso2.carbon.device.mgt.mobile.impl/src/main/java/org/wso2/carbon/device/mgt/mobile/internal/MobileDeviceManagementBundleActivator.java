@@ -25,17 +25,17 @@ import org.wso2.carbon.apimgt.api.APIManagementException;
 import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.impl.APIManagerFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.spi.DeviceManagerService;
+import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
 import org.wso2.carbon.device.mgt.mobile.DataSourceListener;
-import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagerService;
 import org.wso2.carbon.device.mgt.mobile.config.APIConfig;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagerService;
 import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManagerService;
-import org.wso2.carbon.device.mgt.mobile.util.DeviceManagementAPIPublisherUtil;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagerService;
+import org.wso2.carbon.device.mgt.mobile.util.DeviceManagementAPIPublisherUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,13 +69,13 @@ public class MobileDeviceManagementBundleActivator implements BundleActivator, B
             MobileDeviceManagementDAOFactory.setMobileDataSourceConfig(dsConfig);
 
             androidServiceRegRef =
-                    bundleContext.registerService(DeviceManagerService.class.getName(),
+                    bundleContext.registerService(DeviceManager.class.getName(),
                             new AndroidDeviceManagerService(), null);
             iOSServiceRegRef =
-                    bundleContext.registerService(DeviceManagerService.class.getName(),
+                    bundleContext.registerService(DeviceManager.class.getName(),
                             new IOSDeviceManagerService(), null);
             windowsServiceRegRef =
-                    bundleContext.registerService(DeviceManagerService.class.getName(),
+                    bundleContext.registerService(DeviceManager.class.getName(),
                             new WindowsDeviceManagerService(), null);
 
             /* Initialize all API configurations with corresponding API Providers */

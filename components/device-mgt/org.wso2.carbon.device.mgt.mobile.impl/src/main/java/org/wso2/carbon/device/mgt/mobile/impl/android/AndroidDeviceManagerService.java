@@ -20,12 +20,12 @@ package org.wso2.carbon.device.mgt.mobile.impl.android;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.common.*;
-import org.wso2.carbon.device.mgt.common.spi.DeviceManagerService;
+import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
+import org.wso2.carbon.device.mgt.common.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,21 +33,21 @@ import java.util.List;
 /**
  * This represents the Android implementation of DeviceManagerService.
  */
-public class AndroidDeviceManagerService implements DeviceManagerService {
+public class AndroidDeviceManagerService implements DeviceManager {
 
 	private static final Log log = LogFactory.getLog(AndroidDeviceManagerService.class);
-	private OperationManager operationManager;
-
-	public AndroidDeviceManagerService() {
-		this.operationManager = new AndroidMobileOperationManager();
-	}
 
 	@Override
 	public String getProviderType() {
 		return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID;
 	}
 
-	@Override
+    @Override
+    public FeatureManager getFeatureManager() {
+        return null;
+    }
+
+    @Override
 	public boolean enrollDevice(Device device) throws DeviceManagementException {
 		boolean status;
 		MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
@@ -178,11 +178,6 @@ public class AndroidDeviceManagerService implements DeviceManagerService {
 			throw new DeviceManagementException(msg, e);
 		}
 		return devices;
-	}
-
-	@Override
-	public OperationManager getOperationManager() throws DeviceManagementException {
-		return operationManager;
 	}
 
 }

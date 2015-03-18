@@ -19,18 +19,23 @@
 package org.wso2.carbon.device.mgt.mobile.impl.ios;
 
 import org.wso2.carbon.device.mgt.common.*;
-import org.wso2.carbon.device.mgt.common.spi.DeviceManagerService;
+import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
 
 import java.util.List;
 
 /**
  * This represents the iOS implementation of DeviceManagerService.
  */
-public class IOSDeviceManagerService implements DeviceManagerService {
+public class IOSDeviceManagerService implements DeviceManager {
 
     @Override
     public String getProviderType() {
         return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS;
+    }
+
+    @Override
+    public FeatureManager getFeatureManager() {
+        return null;
     }
 
     @Override
@@ -78,11 +83,6 @@ public class IOSDeviceManagerService implements DeviceManagerService {
     public boolean setOwnership(DeviceIdentifier deviceId, String ownershipType)
             throws DeviceManagementException {
         return true;
-    }
-
-    @Override
-    public OperationManager getOperationManager() throws DeviceManagementException {
-        return null;
     }
 
     @Override

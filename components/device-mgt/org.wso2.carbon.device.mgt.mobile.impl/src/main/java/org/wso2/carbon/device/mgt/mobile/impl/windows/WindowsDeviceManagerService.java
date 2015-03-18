@@ -19,18 +19,23 @@
 package org.wso2.carbon.device.mgt.mobile.impl.windows;
 
 import org.wso2.carbon.device.mgt.common.*;
-import org.wso2.carbon.device.mgt.common.spi.DeviceManagerService;
+import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
 
 import java.util.List;
 
 /**
  * This represents the Windows implementation of DeviceManagerService.
  */
-public class WindowsDeviceManagerService implements DeviceManagerService {
+public class WindowsDeviceManagerService implements DeviceManager {
 
     @Override
     public String getProviderType() {
         return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS;
+    }
+
+    @Override
+    public FeatureManager getFeatureManager() {
+        return null;
     }
 
     @Override
@@ -77,11 +82,6 @@ public class WindowsDeviceManagerService implements DeviceManagerService {
     public boolean setOwnership(DeviceIdentifier deviceId, String ownershipType)
             throws DeviceManagementException {
         return true;
-    }
-
-    @Override
-    public OperationManager getOperationManager() throws DeviceManagementException {
-        return null;
     }
 
     @Override

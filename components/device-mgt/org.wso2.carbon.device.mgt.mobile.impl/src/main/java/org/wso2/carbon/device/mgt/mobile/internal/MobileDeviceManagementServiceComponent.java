@@ -23,14 +23,10 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.apimgt.api.APIManagementException;
-import org.wso2.carbon.apimgt.api.APIProvider;
 import org.wso2.carbon.apimgt.impl.APIManagerConfigurationService;
-import org.wso2.carbon.apimgt.impl.APIManagerFactory;
-import org.wso2.carbon.apimgt.impl.utils.APIMgtDBUtil;
 import org.wso2.carbon.core.ServerStartupObserver;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.spi.DeviceManagerService;
+import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
 import org.wso2.carbon.device.mgt.mobile.MobileDeviceManagementStartupObserver;
 import org.wso2.carbon.device.mgt.mobile.config.APIConfig;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
@@ -100,13 +96,13 @@ public class MobileDeviceManagementServiceComponent {
             }
 
             androidServiceRegRef =
-                    bundleContext.registerService(DeviceManagerService.class.getName(),
+                    bundleContext.registerService(DeviceManager.class.getName(),
                             new AndroidDeviceManagerService(), null);
             iOSServiceRegRef =
-                    bundleContext.registerService(DeviceManagerService.class.getName(),
+                    bundleContext.registerService(DeviceManager.class.getName(),
                             new IOSDeviceManagerService(), null);
             windowsServiceRegRef =
-                    bundleContext.registerService(DeviceManagerService.class.getName(),
+                    bundleContext.registerService(DeviceManager.class.getName(),
                             new WindowsDeviceManagerService(), null);
 
             serverStartupObserverRef = bundleContext.registerService(ServerStartupObserver.class,

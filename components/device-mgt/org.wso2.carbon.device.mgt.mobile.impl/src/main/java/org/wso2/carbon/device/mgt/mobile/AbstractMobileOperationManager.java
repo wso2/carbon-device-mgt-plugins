@@ -19,6 +19,9 @@
 package org.wso2.carbon.device.mgt.mobile;
 
 import org.wso2.carbon.device.mgt.common.*;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManager;
 
 import java.util.List;
 

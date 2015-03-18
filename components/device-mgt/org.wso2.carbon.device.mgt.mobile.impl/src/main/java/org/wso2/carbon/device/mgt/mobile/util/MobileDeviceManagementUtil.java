@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.Operation;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDeviceOperationMapping;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileOperation;
@@ -117,7 +117,7 @@ public class MobileDeviceManagementUtil {
 		return device;
 	}
 
-	public static MobileOperation convertToMobileOperation(org.wso2.carbon.device.mgt.common.Operation operation) {
+	public static MobileOperation convertToMobileOperation(Operation operation) {
 		MobileOperation mobileOperation = new MobileOperation();
 		MobileOperationProperty operationProperty = null;
 		List<MobileOperationProperty> properties = new LinkedList<MobileOperationProperty>();
