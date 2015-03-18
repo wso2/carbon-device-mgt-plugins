@@ -34,9 +34,9 @@ import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagerService;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManagerService;
-import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagerService;
+import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManager;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManager;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
 import org.wso2.carbon.device.mgt.mobile.util.DeviceManagementAPIPublisherUtil;
 
 import java.util.List;
@@ -96,14 +96,11 @@ public class MobileDeviceManagementServiceComponent {
             }
 
             androidServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(),
-                            new AndroidDeviceManagerService(), null);
+                    bundleContext.registerService(DeviceManager.class.getName(), new AndroidDeviceManager(), null);
             iOSServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(),
-                            new IOSDeviceManagerService(), null);
+                    bundleContext.registerService(DeviceManager.class.getName(), new IOSDeviceManager(), null);
             windowsServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(),
-                            new WindowsDeviceManagerService(), null);
+                    bundleContext.registerService(DeviceManager.class.getName(), new WindowsDeviceManager(), null);
 
             serverStartupObserverRef = bundleContext.registerService(ServerStartupObserver.class,
                     new MobileDeviceManagementStartupObserver(), null);

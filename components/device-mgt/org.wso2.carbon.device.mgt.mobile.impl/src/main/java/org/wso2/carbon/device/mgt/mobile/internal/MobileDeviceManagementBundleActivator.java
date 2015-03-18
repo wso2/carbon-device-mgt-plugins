@@ -32,9 +32,9 @@ import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagerService;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManagerService;
-import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagerService;
+import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManager;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManager;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
 import org.wso2.carbon.device.mgt.mobile.util.DeviceManagementAPIPublisherUtil;
 
 import java.util.ArrayList;
@@ -75,13 +75,13 @@ public class MobileDeviceManagementBundleActivator implements BundleActivator, B
 
             androidServiceRegRef =
                     bundleContext.registerService(DeviceManager.class.getName(),
-                            new AndroidDeviceManagerService(), null);
+                            new AndroidDeviceManager(), null);
             iOSServiceRegRef =
                     bundleContext.registerService(DeviceManager.class.getName(),
-                            new IOSDeviceManagerService(), null);
+                            new IOSDeviceManager(), null);
             windowsServiceRegRef =
                     bundleContext.registerService(DeviceManager.class.getName(),
-                            new WindowsDeviceManagerService(), null);
+                            new WindowsDeviceManager(), null);
 
             /* Initialize all API configurations with corresponding API Providers */
 			this.initAPIConfigs();

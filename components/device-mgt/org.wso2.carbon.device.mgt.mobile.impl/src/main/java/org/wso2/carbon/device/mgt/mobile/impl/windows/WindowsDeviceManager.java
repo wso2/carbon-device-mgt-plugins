@@ -32,9 +32,9 @@ import java.util.List;
 /**
  * This represents the Windows implementation of DeviceManagerService.
  */
-public class WindowsDeviceManagerService implements DeviceManager {
+public class WindowsDeviceManager implements DeviceManager {
 
-    private static final Log log = LogFactory.getLog(WindowsDeviceManagerService.class);
+    private static final Log log = LogFactory.getLog(WindowsDeviceManager.class);
 
     @Override
     public String getProviderType() {

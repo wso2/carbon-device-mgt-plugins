@@ -32,9 +32,9 @@ import java.util.List;
 /**
  * This represents the iOS implementation of DeviceManagerService.
  */
-public class IOSDeviceManagerService implements DeviceManager {
+public class IOSDeviceManager implements DeviceManager {
 
-    private static final Log log = LogFactory.getLog(IOSDeviceManagerService.class);
+    private static final Log log = LogFactory.getLog(IOSDeviceManager.class);
 
     @Override
     public String getProviderType() {
