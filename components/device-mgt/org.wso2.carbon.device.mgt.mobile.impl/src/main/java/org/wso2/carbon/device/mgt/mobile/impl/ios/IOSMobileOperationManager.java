@@ -118,9 +118,4 @@ public class IOSMobileOperationManager extends AbstractMobileOperationManager  {
         return operations;
     }
 
-    @Override
-    public List<Feature> getFeatures(String type) throws FeatureManagementException {
-        return null;
-    }
-
 }
