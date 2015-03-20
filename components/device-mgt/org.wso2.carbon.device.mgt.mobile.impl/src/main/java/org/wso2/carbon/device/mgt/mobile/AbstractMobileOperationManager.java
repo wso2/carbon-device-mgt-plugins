@@ -28,15 +28,13 @@ import java.util.List;
 public abstract class AbstractMobileOperationManager implements OperationManager {
 
 	@Override
-	public List<Operation> getOperations(DeviceIdentifier deviceIdentifier)
-			throws OperationManagementException {
+	public List<Operation> getOperations(DeviceIdentifier deviceIdentifier) throws OperationManagementException {
 		return null;
 	}
 
 	@Override
 	public boolean addOperation(Operation operation,
-	                            List<DeviceIdentifier> devices)
-			throws OperationManagementException {
+	                            List<DeviceIdentifier> devices) throws OperationManagementException {
 		return true;
 	}
 

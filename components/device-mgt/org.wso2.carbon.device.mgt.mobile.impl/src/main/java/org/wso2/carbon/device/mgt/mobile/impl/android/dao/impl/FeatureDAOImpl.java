@@ -19,31 +19,110 @@
 package org.wso2.carbon.device.mgt.mobile.impl.android.dao.impl;
 
 import org.wso2.carbon.device.mgt.common.Feature;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.FeatureDAO;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.FeatureManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.impl.android.dao.FeatureManagementDAOFactory;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FeatureDAOImpl implements FeatureDAO {
 
     @Override
     public void addFeature(Feature feature) throws FeatureManagementDAOException {
-
+        PreparedStatement stmt = null;
+        try {
+            Connection conn = FeatureManagementDAOFactory.getConnection();
+            String sql = "INSERT INTO MBL_FEATURE(CODE, NAME, DESCRIPTION) VALUES (?, ?, ?)";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, feature.getCode());
+            stmt.setString(2, feature.getName());
+            stmt.setString(3, feature.getDescription());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new FeatureManagementDAOException("Error occurred while adding feature '" +
+                    feature.getName() + "' into the metadata repository", e);
+        } finally {
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
+        }
     }
 
     @Override
-    public void removeFeature(String name) throws FeatureManagementDAOException {
-
+    public void removeFeature(String code) throws FeatureManagementDAOException {
+        PreparedStatement stmt = null;
+        try {
+            Connection conn = FeatureManagementDAOFactory.getConnection();
+            String sql = "DELETE FROM MBL_FEATURE WHERE CODE = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, code);
+            stmt.execute();
+        } catch (SQLException e) {
+            throw new FeatureManagementDAOException("Error occurred while adding feature '" +
+                    code + "' into the metadata repository", e);
+        } finally {
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
+        }
     }
 
     @Override
-    public Feature getFeature(String name) throws FeatureManagementDAOException {
-        return null;
+    public Feature getFeature(String code) throws FeatureManagementDAOException {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            Connection conn = FeatureManagementDAOFactory.getConnection();
+            String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM AD_FEATURE WHERE CODE = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, code);
+            rs = stmt.executeQuery();
+
+            Feature feature = null;
+            if (rs.next()) {
+                feature = new Feature();
+                feature.setId(rs.getInt("ID"));
+                feature.setCode(rs.getString("CODE"));
+                feature.setName(rs.getString("NAME"));
+                feature.setDescription(rs.getString("DESCRIPTION"));
+            }
+            return feature;
+        } catch (SQLException e) {
+            throw new FeatureManagementDAOException("Error occurred while retrieving feature metadata '" +
+                    code + "' from the feature metadata repository", e);
+        } finally {
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
+        }
     }
 
     @Override
     public List<Feature> getFeatures() throws FeatureManagementDAOException {
-        return null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        List<Feature> features = new ArrayList<Feature>();
+        try {
+            Connection conn = FeatureManagementDAOFactory.getConnection();
+            String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM AD_FEATURE";
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Feature feature = new Feature();
+                feature.setId(rs.getInt("ID"));
+                feature.setCode(rs.getString("CODE"));
+                feature.setName(rs.getString("NAME"));
+                feature.setDescription(rs.getString("DESCRIPTION"));
+            }
+            return features;
+        } catch (SQLException e) {
+            throw new FeatureManagementDAOException("Error occurred while retrieving all feature metadata from the " +
+                    "feature metadata repository", e);
+        } finally {
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
+        }
     }
 
 }

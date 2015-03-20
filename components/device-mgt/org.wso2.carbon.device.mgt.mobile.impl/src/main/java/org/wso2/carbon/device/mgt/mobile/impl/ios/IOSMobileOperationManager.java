@@ -20,8 +20,6 @@ package org.wso2.carbon.device.mgt.mobile.impl.ios;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.Feature;
-import org.wso2.carbon.device.mgt.common.FeatureManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.mobile.AbstractMobileOperationManager;
@@ -116,6 +114,11 @@ public class IOSMobileOperationManager extends AbstractMobileOperationManager  {
             throw new OperationManagementException(msg, e);
         }
         return operations;
+    }
+
+    @Override
+    public Operation getPendingOperation(DeviceIdentifier deviceIdentifier) throws OperationManagementException {
+        return null;
     }
 
 }

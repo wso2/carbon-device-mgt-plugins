@@ -144,6 +144,11 @@ public class AndroidMobileOperationManager extends AbstractMobileOperationManage
         return operations;
     }
 
+    @Override
+    public Operation getPendingOperation(DeviceIdentifier deviceIdentifier) throws OperationManagementException {
+        return null;
+    }
+
     public List<Feature> getFeatures(String deviceType) throws FeatureManagementException {
         MobileFeatureDAO featureDAO = MobileDeviceManagementDAOFactory.getFeatureDAO();
         MobileFeaturePropertyDAO featurePropertyDAO =

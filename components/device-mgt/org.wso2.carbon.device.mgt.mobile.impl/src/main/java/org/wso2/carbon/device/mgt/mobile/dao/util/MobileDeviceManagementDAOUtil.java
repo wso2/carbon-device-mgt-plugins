@@ -78,6 +78,10 @@ public class MobileDeviceManagementDAOUtil {
         }
     }
 
+    public static void cleanupResources(PreparedStatement stmt, ResultSet rs) {
+        cleanupResources(null, stmt, rs);
+    }
+
     /**
      * Creates the mobile device management schema.
      *

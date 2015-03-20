@@ -85,8 +85,7 @@ public class MobileDeviceDAOTestSuite {
 	}
 
 	@Test
-	public void addMobileDeviceTest()
-			throws MobileDeviceManagementDAOException {
+	public void addMobileDeviceTest() throws MobileDeviceManagementDAOException {
 
 		Connection conn = null;
 		PreparedStatement preparedStatement = null;
@@ -111,7 +110,7 @@ public class MobileDeviceDAOTestSuite {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
 					"SELECT MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
-					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM MBL_DEVICE " +
+					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM AD_DEVICE " +
 					"WHERE MOBILE_DEVICE_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setString(1, TEST_MOBILE_DEVICE_ID);
@@ -209,8 +208,7 @@ public class MobileDeviceDAOTestSuite {
 
 	@Test(dependsOnMethods = { "addMobileDeviceTest", "getMobileDeviceTest",
 			"getAllMobileDevicesTest" })
-	public void updateMobileDeviceTest()
-			throws MobileDeviceManagementDAOException {
+	public void updateMobileDeviceTest() throws MobileDeviceManagementDAOException {
 
 		Connection conn = null;
 		PreparedStatement preparedStatement = null;
@@ -235,7 +233,7 @@ public class MobileDeviceDAOTestSuite {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
 					"SELECT MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
-					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM MBL_DEVICE " +
+					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM AD_DEVICE " +
 					"WHERE MOBILE_DEVICE_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setString(1, TEST_MOBILE_DEVICE_ID);
@@ -279,7 +277,7 @@ public class MobileDeviceDAOTestSuite {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
 					"SELECT MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
-					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM MBL_DEVICE " +
+					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM AD_DEVICE " +
 					"WHERE MOBILE_DEVICE_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setString(1, TEST_MOBILE_DEVICE_ID);
@@ -296,4 +294,5 @@ public class MobileDeviceDAOTestSuite {
 		}
 		Assert.assertTrue(deleted, "MobileDevice has deleted ");
 	}
+
 }

@@ -55,7 +55,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 		try {
 			conn = this.getConnection();
 			String createDBQuery =
-					"INSERT INTO MBL_DEVICE_OPERATION_MAPPING (DEVICE_ID, OPERATION_ID, SENT_DATE, " +
+					"INSERT INTO AD_DEVICE_OPERATION_MAPPING (DEVICE_ID, OPERATION_ID, SENT_DATE, " +
 					"RECEIVED_DATE, STATUS) VALUES (?, ?, ?, ?, ?)";
 
 			stmt = conn.prepareStatement(createDBQuery);
@@ -77,7 +77,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			String msg = "Error occurred while adding device id - '" +
 			             mblDeviceOperationMapping.getDeviceId() + " and operation id - " +
 			             mblDeviceOperationMapping.getOperationId() +
-			             " to mapping table MBL_DEVICE_OPERATION";
+			             " to mapping table AD_DEVICE_OPERATION";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -95,7 +95,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE MBL_DEVICE_OPERATION_MAPPING SET SENT_DATE = ?, RECEIVED_DATE = ?, " +
+					"UPDATE AD_DEVICE_OPERATION_MAPPING SET SENT_DATE = ?, RECEIVED_DATE = ?, " +
 					"STATUS = ? WHERE DEVICE_ID = ? AND OPERATION_ID=?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setLong(1, mblDeviceOperation.getSentDate());
@@ -132,7 +132,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE MBL_DEVICE_OPERATION_MAPPING SET SENT_DATE = ?, STATUS = ? " +
+					"UPDATE AD_DEVICE_OPERATION_MAPPING SET SENT_DATE = ?, STATUS = ? " +
 					"WHERE DEVICE_ID = ? AND OPERATION_ID=?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setLong(1, new Date().getTime());
@@ -170,7 +170,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE MBL_DEVICE_OPERATION_MAPPING SET RECEIVED_DATE = ?, STATUS = ? " +
+					"UPDATE AD_DEVICE_OPERATION_MAPPING SET RECEIVED_DATE = ?, STATUS = ? " +
 					"WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setLong(1, new Date().getTime());
@@ -207,7 +207,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 		try {
 			conn = this.getConnection();
 			String deleteDBQuery =
-					"DELETE FROM MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND " +
+					"DELETE FROM AD_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND " +
 					"OPERATION_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
 			stmt.setString(1, mblDeviceId);
@@ -222,7 +222,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			}
 		} catch (SQLException e) {
 			String msg =
-					"Error occurred while deleting the table entry MBL_DEVICE_OPERATION with " +
+					"Error occurred while deleting the table entry AD_DEVICE_OPERATION with " +
 					" device id - '" + mblDeviceId + " and operation id - " + operationId;
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
@@ -243,7 +243,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			conn = this.getConnection();
 			String selectDBQuery =
 					"SELECT DEVICE_ID, OPERATION_ID, SENT_DATE, RECEIVED_DATE, STATUS FROM " +
-					"MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
+					"AD_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblDeviceId);
 			stmt.setInt(2, operationId);
@@ -285,7 +285,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			conn = this.getConnection();
 			String selectDBQuery =
 					"SELECT DEVICE_ID, OPERATION_ID, SENT_DATE, RECEIVED_DATE, STATUS FROM " +
-					"MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ?";
+					"AD_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblDeviceId);
 			ResultSet resultSet = stmt.executeQuery();
@@ -327,7 +327,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			conn = this.getConnection();
 			String selectDBQuery =
 					"SELECT DEVICE_ID, OPERATION_ID, SENT_DATE, RECEIVED_DATE, STATUS FROM" +
-					" MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND STATUS = ?";
+					" AD_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND STATUS = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblDeviceId);
 			stmt.setString(2, MobileDeviceOperationMapping.Status.NEW.name());

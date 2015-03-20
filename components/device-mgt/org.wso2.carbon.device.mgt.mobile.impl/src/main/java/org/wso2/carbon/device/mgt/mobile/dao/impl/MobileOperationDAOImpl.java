@@ -53,7 +53,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 		try {
 			conn = this.getConnection();
 			String createDBQuery =
-					"INSERT INTO MBL_OPERATION(FEATURE_CODE, CREATED_DATE) VALUES ( ?, ?)";
+					"INSERT INTO AD_OPERATION(FEATURE_CODE, CREATED_DATE) VALUES ( ?, ?)";
 			stmt = conn.prepareStatement(createDBQuery, new String[] { COLUMN_OPERATION_ID });
 			stmt.setString(1, mblOperation.getFeatureCode());
 			stmt.setLong(2, mblOperation.getCreatedDate());
@@ -88,7 +88,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE MBL_OPERATION SET FEATURE_CODE = ?, CREATED_DATE = ? WHERE " +
+					"UPDATE AD_OPERATION SET FEATURE_CODE = ?, CREATED_DATE = ? WHERE " +
 					"OPERATION_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setString(1, mblOperation.getFeatureCode());
@@ -123,7 +123,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 		try {
 			conn = this.getConnection();
 			String deleteDBQuery =
-					"DELETE FROM MBL_OPERATION WHERE OPERATION_ID = ?";
+					"DELETE FROM AD_OPERATION WHERE OPERATION_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
 			stmt.setInt(1, mblOperationId);
 			int rows = stmt.executeUpdate();
@@ -153,7 +153,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT OPERATION_ID, FEATURE_CODE, CREATED_DATE FROM MBL_OPERATION WHERE " +
+					"SELECT OPERATION_ID, FEATURE_CODE, CREATED_DATE FROM AD_OPERATION WHERE " +
 					"OPERATION_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setInt(1, mblOperationId);

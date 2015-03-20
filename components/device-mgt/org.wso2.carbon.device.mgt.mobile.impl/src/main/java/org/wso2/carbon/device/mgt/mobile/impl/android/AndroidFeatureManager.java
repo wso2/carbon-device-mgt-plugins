@@ -18,6 +18,8 @@
  */
 package org.wso2.carbon.device.mgt.mobile.impl.android;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManagementException;
@@ -31,6 +33,7 @@ import java.util.List;
 public class AndroidFeatureManager implements FeatureManager {
 
     private FeatureDAO featureDAO;
+    private static final Log log = LogFactory.getLog(AndroidFeatureManager.class);
 
     public AndroidFeatureManager() {
         this.featureDAO = FeatureManagementDAOFactory.getFeatureDAO();
@@ -39,9 +42,16 @@ public class AndroidFeatureManager implements FeatureManager {
     @Override
     public boolean addFeature(Feature feature) throws DeviceManagementException {
         try {
+            FeatureManagementDAOFactory.beginTransaction();
             featureDAO.addFeature(feature);
+            FeatureManagementDAOFactory.commitTransaction();
             return true;
         } catch (FeatureManagementDAOException e) {
+            try {
+                FeatureManagementDAOFactory.rollbackTransaction();
+            } catch (FeatureManagementDAOException e1) {
+                log.warn("Error occurred while roll-backing the transaction", e);
+            }
             throw new DeviceManagementException("Error occurred while adding the feature", e);
         }
     }
@@ -49,8 +59,16 @@ public class AndroidFeatureManager implements FeatureManager {
     @Override
     public Feature getFeature(String name) throws DeviceManagementException {
         try {
-            return featureDAO.getFeature(name);
+            FeatureManagementDAOFactory.beginTransaction();
+            Feature feature = featureDAO.getFeature(name);
+            FeatureManagementDAOFactory.commitTransaction();
+            return feature;
         } catch (FeatureManagementDAOException e) {
+            try {
+                FeatureManagementDAOFactory.rollbackTransaction();
+            } catch (FeatureManagementDAOException e1) {
+                log.warn("Error occurred while roll-backing the transaction", e);
+            }
             throw new DeviceManagementException("Error occurred while retrieving the feature", e);
         }
     }

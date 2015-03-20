@@ -103,7 +103,7 @@ public class MobileDatabaseUtils {
 			Class.forName(testDBConf.getDriverClassName());
 			conn = DriverManager.getConnection(testDBConf.getConnectionURL());
 			stmt = conn.createStatement();
-			stmt.executeUpdate("RUNSCRIPT FROM './src/test/resources/sql/CreateH2TestDB.sql'");
+			stmt.executeUpdate("RUNSCRIPT FROM './src/test/resources/sql/h2.sql'");
 		} finally {
 			cleanupResources(conn, stmt, null);
 		}

@@ -19,7 +19,6 @@
 package org.wso2.carbon.device.mgt.mobile.impl.android.dao;
 
 import org.wso2.carbon.device.mgt.common.Feature;
-import org.wso2.carbon.device.mgt.common.FeatureManagementException;
 
 import java.util.List;
 

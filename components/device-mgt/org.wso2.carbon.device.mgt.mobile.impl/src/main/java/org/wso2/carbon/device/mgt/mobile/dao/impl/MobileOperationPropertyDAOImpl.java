@@ -54,7 +54,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 		try {
 			conn = this.getConnection();
 			String createDBQuery =
-					"INSERT INTO MBL_OPERATION_PROPERTY(OPERATION_ID, PROPERTY, VALUE) " +
+					"INSERT INTO AD_OPERATION_PROPERTY(OPERATION_ID, PROPERTY, VALUE) " +
 					"VALUES ( ?, ?, ?)";
 			stmt = conn.prepareStatement(createDBQuery);
 			stmt.setInt(1, mblOperationProperty.getOperationId());
@@ -90,7 +90,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 		try {
 			conn = this.getConnection();
 			String createDBQuery =
-					"UPDATE MBL_OPERATION_PROPERTY SET VALUE = ? WHERE OPERATION_ID = ? AND " +
+					"UPDATE AD_OPERATION_PROPERTY SET VALUE = ? WHERE OPERATION_ID = ? AND " +
 					"PROPERTY = ?";
 			stmt = conn.prepareStatement(createDBQuery);
 			stmt.setString(1, mblOperationProperty.getValue());
@@ -125,7 +125,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 		try {
 			conn = this.getConnection();
 			String deleteDBQuery =
-					"DELETE FROM MBL_OPERATION_PROPERTY WHERE OPERATION_ID = ?";
+					"DELETE FROM AD_OPERATION_PROPERTY WHERE OPERATION_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
 			stmt.setInt(1, mblOperationId);
 			int rows = stmt.executeUpdate();
@@ -158,7 +158,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT OPERATION_ID, PROPERTY, VALUE FROM MBL_OPERATION_PROPERTY WHERE " +
+					"SELECT OPERATION_ID, PROPERTY, VALUE FROM AD_OPERATION_PROPERTY WHERE " +
 					"OPERATION_ID = ? AND PROPERTY = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setInt(1, mblOperationId);
@@ -197,7 +197,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT OPERATION_ID, PROPERTY, VALUE FROM MBL_OPERATION_PROPERTY WHERE " +
+					"SELECT OPERATION_ID, PROPERTY, VALUE FROM AD_OPERATION_PROPERTY WHERE " +
 					"OPERATION_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setInt(1, mblOperationId);
