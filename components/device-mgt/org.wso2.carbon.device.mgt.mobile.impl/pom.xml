@@ -66,7 +66,6 @@
                             org.wso2.carbon.core,
                             org.wso2.carbon.utils.*,
                             org.wso2.carbon.device.mgt.common.*,
-                            org.wso2.carbon.apimgt.*;
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.mobile.internal,
@@ -116,14 +115,6 @@
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
             <artifactId>org.wso2.carbon.device.mgt.common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.apimgt</groupId>
-            <artifactId>org.wso2.carbon.apimgt.api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.apimgt</groupId>
-            <artifactId>org.wso2.carbon.apimgt.impl</artifactId>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
