@@ -29,25 +29,34 @@ import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import javax.sql.DataSource;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Factory class used to create MobileDeviceManagement related DAO objects.
  */
 public class MobileDeviceManagementDAOFactory {
 
-	private static DataSource dataSource;
-	private static MobileDataSourceConfig mobileDataSourceConfig;
 	private static final Log log = LogFactory.getLog(MobileDeviceManagementDAOFactory.class);
+    private static Map<String,MobileDataSourceConfig> mobileDataSourceConfigMap;
+    private static Map<String,DataSource> dataSourceMap;
+    private String pluginProvider;
+    private DataSource dataSource;
 
-	public MobileDeviceManagementDAOFactory() {
-
+	public MobileDeviceManagementDAOFactory(String pluginProvider) {
+        this.pluginProvider = pluginProvider;
+        this.dataSource = dataSourceMap.get(pluginProvider);
 	}
 
 	public static void init() {
 		try {
-			dataSource = MobileDeviceManagementDAOFactory.resolveDataSource(mobileDataSourceConfig);
+            DataSource dataSource;
+            for(String pluginType:mobileDataSourceConfigMap.keySet()){
+                dataSource =  MobileDeviceManagementDAOFactory.resolveDataSource(mobileDataSourceConfigMap.get
+                        (pluginType));
+                dataSourceMap.put(pluginType,dataSource);
+            }
 		} catch (DeviceManagementException e) {
-			log.error("Exception occurred while initializing the mobile datasource.",e);
+			log.error("Exception occurred while initializing the mobile data source.",e);
 		}
 	}
 
@@ -88,41 +97,47 @@ public class MobileDeviceManagementDAOFactory {
 		return dataSource;
 	}
 
-	public static MobileDeviceDAO getMobileDeviceDAO() {
+	public MobileDeviceDAO getMobileDeviceDAO() {
 		return new MobileDeviceDAOImpl(dataSource);
 	}
 
-	public static MobileOperationDAO getMobileOperationDAO() {
+	public MobileOperationDAO getMobileOperationDAO() {
 		return new MobileOperationDAOImpl(dataSource);
 	}
 
-	public static MobileOperationPropertyDAO getMobileOperationPropertyDAO() {
+	public MobileOperationPropertyDAO getMobileOperationPropertyDAO() {
 		return new MobileOperationPropertyDAOImpl(dataSource);
 	}
 
-	public static MobileDeviceOperationMappingDAO getMobileDeviceOperationDAO() {
+	public MobileDeviceOperationMappingDAO getMobileDeviceOperationDAO() {
 		return new MobileDeviceOperationMappingDAOImpl(dataSource);
 	}
 
-	public static MobileFeatureDAO getFeatureDAO() {
+	public MobileFeatureDAO getFeatureDAO() {
 		return new MobileFeatureDAOImpl(dataSource);
 	}
 
-	public static MobileFeaturePropertyDAO getFeaturePropertyDAO() {
+	public MobileFeaturePropertyDAO getFeaturePropertyDAO() {
 		return new MobileFeaturePropertyDAOImpl(dataSource);
 	}
 
-	public static MobileDataSourceConfig getMobileDeviceManagementConfig() {
-		return mobileDataSourceConfig;
+	public MobileDataSourceConfig getMobileDeviceManagementConfig(String pluginType) {
+		return mobileDataSourceConfigMap.get(pluginType);
 	}
 
-	public static void setMobileDataSourceConfig(
-			MobileDataSourceConfig mobileDataSourceConfig) {
-		MobileDeviceManagementDAOFactory.mobileDataSourceConfig =
-				mobileDataSourceConfig;
+    public static Map<String, MobileDataSourceConfig> getMobileDataSourceConfigMap() {
+        return mobileDataSourceConfigMap;
+    }
+
+    public static void setMobileDataSourceConfigMap(Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap) {
+        MobileDeviceManagementDAOFactory.mobileDataSourceConfigMap = mobileDataSourceConfigMap;
+    }
+
+	public DataSource getDataSource(String type) {
+		return dataSourceMap.get(type);
 	}
 
-	public static DataSource getDataSource() {
-		return dataSource;
-	}
+    public static Map<String, DataSource> getDataSourceMap() {
+        return dataSourceMap;
+    }
 }

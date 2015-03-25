@@ -18,10 +18,14 @@
 
 package org.wso2.carbon.device.mgt.mobile.config;
 
+import org.wso2.carbon.device.mgt.mobile.common.PluginTypeEnum;
+import org.wso2.carbon.device.mgt.mobile.config.datasource.DataSourceConfigAdapter;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Map;
 
 /**
  * Class for holding management repository data.
@@ -29,15 +33,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "ManagementRepository")
 public class MobileDeviceManagementRepository {
 
-	private MobileDataSourceConfig mobileDataSourceConfig;
+    private Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap;
 
-	@XmlElement(name = "DataSourceConfiguration", nillable = false)
-	public MobileDataSourceConfig getMobileDataSourceConfig() {
-		return mobileDataSourceConfig;
+	public MobileDataSourceConfig getMobileDataSourceConfig(PluginTypeEnum type) {
+		return mobileDataSourceConfigMap.get(type.toString());
 	}
 
-	public void setMobileDataSourceConfig(MobileDataSourceConfig mobileDataSourceConfig) {
-		this.mobileDataSourceConfig = mobileDataSourceConfig;
-	}
+    @XmlElement(name="DataSourceConfigurations")
+    @XmlJavaTypeAdapter(DataSourceConfigAdapter.class)
+    public Map<String, MobileDataSourceConfig> getMobileDataSourceConfigMap() {
+        return mobileDataSourceConfigMap;
+    }
 
+    public void setMobileDataSourceConfigMap(Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap) {
+        this.mobileDataSourceConfigMap = mobileDataSourceConfigMap;
+    }
 }

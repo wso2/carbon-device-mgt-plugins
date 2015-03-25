@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.mobile.config.datasource;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -27,6 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "DataSourceConfiguration") public class MobileDataSourceConfig {
 
 	private JNDILookupDefinition jndiLookupDefinition;
+    private String type;
 
 	@XmlElement(name = "JndiLookupDefinition", nillable = true)
 	public JNDILookupDefinition getJndiLookupDefinition() {
@@ -37,4 +39,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 		this.jndiLookupDefinition = jndiLookupDefinition;
 	}
 
+    @XmlAttribute(name = "type")
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

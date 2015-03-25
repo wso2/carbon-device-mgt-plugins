@@ -35,6 +35,12 @@ import java.util.List;
 public class WindowsDeviceManagerService implements DeviceManager {
 
     private static final Log log = LogFactory.getLog(WindowsDeviceManagerService.class);
+    private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
+
+    public WindowsDeviceManagerService() {
+        mobileDeviceManagementDAOFactory = new MobileDeviceManagementDAOFactory(DeviceManagementConstants
+                .MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+    }
 
     @Override
     public String getProviderType() {
@@ -97,7 +103,7 @@ public class WindowsDeviceManagerService implements DeviceManager {
 		boolean status;
 		MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
 		try {
-			status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
+			status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
 					mobileDevice);
 		} catch (MobileDeviceManagementDAOException e) {
 			String msg = "Error while enrolling the Windows device : " +

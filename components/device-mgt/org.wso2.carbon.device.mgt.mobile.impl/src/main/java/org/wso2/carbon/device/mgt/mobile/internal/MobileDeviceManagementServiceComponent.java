@@ -39,7 +39,9 @@ import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManagerService;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagerService;
 import org.wso2.carbon.device.mgt.mobile.util.DeviceManagementAPIPublisherUtil;
 
+import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.mobile.impl.internal.MobileDeviceManagementServiceComponent"
@@ -71,14 +73,14 @@ public class MobileDeviceManagementServiceComponent {
 		try {
 			BundleContext bundleContext = ctx.getBundleContext();
 
-            /* Initialize the datasource configuration */
+            /* Initialize the data source configuration */
             MobileDeviceConfigurationManager.getInstance().initConfig();
             MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance()
                     .getMobileDeviceManagementConfig();
-            MobileDataSourceConfig dsConfig =
-                    config.getMobileDeviceMgtRepository().getMobileDataSourceConfig();
+            Map<String,MobileDataSourceConfig> dsConfigMap =
+                    config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
 
-            MobileDeviceManagementDAOFactory.setMobileDataSourceConfig(dsConfig);
+            MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(dsConfigMap);
             MobileDeviceManagementDAOFactory.init();
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
@@ -88,8 +90,11 @@ public class MobileDeviceManagementServiceComponent {
                                     "to begin");
                 }
                 try {
-                    MobileDeviceManagementDAOUtil.setupMobileDeviceManagementSchema(
-                            MobileDeviceManagementDAOFactory.getDataSource());
+                    Map<String,DataSource> dataSourceMap = MobileDeviceManagementDAOFactory.getDataSourceMap();
+                    for(DataSource dataSource:dataSourceMap.values()) {
+                        MobileDeviceManagementDAOUtil
+                                .setupMobileDeviceManagementSchema(dataSource);
+                    }
                 } catch (DeviceManagementException e) {
                     log.error("Exception occurred while initializing mobile device management database schema", e);
                 }
