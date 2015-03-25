@@ -111,7 +111,7 @@ public class MobileOperationPropertyDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
-					"SELECT OPERATION_ID, PROPERTY, VALUE FROM MBL_OPERATION_PROPERTY WHERE OPERATION_ID = ?";
+					"SELECT OPERATION_ID, PROPERTY, VALUE FROM AD_OPERATION_PROPERTY WHERE OPERATION_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setInt(1, mblOperationId);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -181,7 +181,7 @@ public class MobileOperationPropertyDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
-					"SELECT OPERATION_ID, PROPERTY, VALUE FROM MBL_OPERATION_PROPERTY WHERE" +
+					"SELECT OPERATION_ID, PROPERTY, VALUE FROM AD_OPERATION_PROPERTY WHERE" +
 					" OPERATION_ID = ? AND PROPERTY = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setInt(1, mblOperationId);
@@ -217,7 +217,7 @@ public class MobileOperationPropertyDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
-					"SELECT OPERATION_ID, PROPERTY, VALUE FROM MBL_OPERATION_PROPERTY WHERE" +
+					"SELECT OPERATION_ID, PROPERTY, VALUE FROM AD_OPERATION_PROPERTY WHERE" +
 					" OPERATION_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setInt(1, mblOperationId);

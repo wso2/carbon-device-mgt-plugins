@@ -32,17 +32,17 @@ import java.util.List;
 /**
  * This represents the iOS implementation of DeviceManagerService.
  */
-public class IOSDeviceManagerService implements DeviceManager {
+public class IOSDeviceManager implements DeviceManager {
 
-    private static final Log log = LogFactory.getLog(IOSDeviceManagerService.class);
-    private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
+     private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
+     private static final Log log = LogFactory.getLog(IOSDeviceManager.class);
 
     @Override
     public String getProviderType() {
         return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS;
     }
 
-    public IOSDeviceManagerService() {
+    public IOSDeviceManager() {
         mobileDeviceManagementDAOFactory = new MobileDeviceManagementDAOFactory(DeviceManagementConstants
                 .MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS);
     }

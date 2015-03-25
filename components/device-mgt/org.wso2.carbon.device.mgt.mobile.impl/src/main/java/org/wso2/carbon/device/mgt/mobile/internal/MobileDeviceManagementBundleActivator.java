@@ -21,21 +21,15 @@ package org.wso2.carbon.device.mgt.mobile.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.*;
-import org.wso2.carbon.apimgt.api.APIManagementException;
-import org.wso2.carbon.apimgt.api.APIProvider;
-import org.wso2.carbon.apimgt.impl.APIManagerFactory;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
 import org.wso2.carbon.device.mgt.mobile.DataSourceListener;
-import org.wso2.carbon.device.mgt.mobile.config.APIConfig;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagerService;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManagerService;
-import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagerService;
-import org.wso2.carbon.device.mgt.mobile.util.DeviceManagementAPIPublisherUtil;
+import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManager;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManager;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,18 +70,13 @@ public class MobileDeviceManagementBundleActivator implements BundleActivator, B
 
             androidServiceRegRef =
                     bundleContext.registerService(DeviceManager.class.getName(),
-                            new AndroidDeviceManagerService(), null);
+                            new AndroidDeviceManager(), null);
             iOSServiceRegRef =
                     bundleContext.registerService(DeviceManager.class.getName(),
-                            new IOSDeviceManagerService(), null);
+                            new IOSDeviceManager(), null);
             windowsServiceRegRef =
                     bundleContext.registerService(DeviceManager.class.getName(),
-                            new WindowsDeviceManagerService(), null);
-
-            /* Initialize all API configurations with corresponding API Providers */
-			this.initAPIConfigs();
-	        /* Publish all mobile device management related JAX-RS services as APIs */
-			this.publishAPIs();
+                            new WindowsDeviceManager(), null);
 
 			if (log.isDebugEnabled()) {
 				log.debug("Mobile Device Management Service bundle is activated");
@@ -108,10 +97,6 @@ public class MobileDeviceManagementBundleActivator implements BundleActivator, B
 			windowsServiceRegRef.unregister();
 
 			bundleContext.removeBundleListener(this);
-
-            /* Removing all APIs published upon start-up for mobile device management related JAX-RS
-               services */
-			this.removeAPIs();
 		} catch (Throwable e) {
 			log.error("Error occurred while de-activating Mobile Device Management bundle", e);
 		}
@@ -138,39 +123,5 @@ public class MobileDeviceManagementBundleActivator implements BundleActivator, B
 		return dataSourceListeners;
 	}
 
-	private void initAPIConfigs() throws DeviceManagementException {
-		List<APIConfig> apiConfigs =
-				MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
-						getApiPublisherConfig().getAPIs();
-		for (APIConfig apiConfig : apiConfigs) {
-			try {
-				APIProvider provider =
-						APIManagerFactory.getInstance().getAPIProvider(apiConfig.getOwner());
-				apiConfig.init(provider);
-			} catch (APIManagementException e) {
-				throw new DeviceManagementException(
-						"Error occurred while initializing API Config '" +
-						apiConfig.getName() + "'", e);
-			}
-		}
-	}
-
-	private void publishAPIs() throws DeviceManagementException {
-		List<APIConfig> apiConfigs =
-				MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
-						getApiPublisherConfig().getAPIs();
-		for (APIConfig apiConfig : apiConfigs) {
-			DeviceManagementAPIPublisherUtil.publishAPI(apiConfig);
-		}
-	}
-
-	private void removeAPIs() throws DeviceManagementException {
-		List<APIConfig> apiConfigs =
-				MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
-						getApiPublisherConfig().getAPIs();
-		for (APIConfig apiConfig : apiConfigs) {
-			DeviceManagementAPIPublisherUtil.removeAPI(apiConfig);
-		}
-	}
 
 }

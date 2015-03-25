@@ -91,7 +91,7 @@ public class MobileFeatureDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String query =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE WHERE CODE = ?";
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE WHERE CODE = ?";
 			preparedStatement = conn.prepareStatement(query);
 			preparedStatement.setString(1, MBL_FEATURE_CODE);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -174,7 +174,7 @@ public class MobileFeatureDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String query =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM MBL_FEATURE WHERE CODE = ?";
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM AD_FEATURE WHERE CODE = ?";
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, MBL_FEATURE_UPDATED_CODE);
 			ResultSet resultSet = stmt.executeQuery();
@@ -207,7 +207,7 @@ public class MobileFeatureDAOTestSuite {
 		boolean status = mblFeatureDAO.deleteMobileFeatureById(mblFeatureId);
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
-			String query = "SELECT FEATURE_ID, CODE FROM MBL_FEATURE WHERE FEATURE_ID = ?";
+			String query = "SELECT FEATURE_ID, CODE FROM AD_FEATURE WHERE FEATURE_ID = ?";
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, mblFeatureId);
 			ResultSet resultSet = stmt.executeQuery();
@@ -240,7 +240,7 @@ public class MobileFeatureDAOTestSuite {
 		boolean status = mblFeatureDAO.deleteMobileFeatureByCode(MBL_FEATURE_CODE);
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
-			String query = "SELECT FEATURE_ID, CODE FROM MBL_FEATURE WHERE CODE = ?";
+			String query = "SELECT FEATURE_ID, CODE FROM AD_FEATURE WHERE CODE = ?";
 			preparedStatement = conn.prepareStatement(query);
 			preparedStatement.setString(1, MBL_FEATURE_CODE);
 			ResultSet resultSet = preparedStatement.executeQuery();

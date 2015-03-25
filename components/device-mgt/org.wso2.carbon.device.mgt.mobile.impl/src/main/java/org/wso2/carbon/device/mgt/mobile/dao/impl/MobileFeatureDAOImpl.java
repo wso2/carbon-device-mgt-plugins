@@ -54,7 +54,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String createDBQuery =
-					"INSERT INTO MBL_FEATURE(CODE, NAME, DESCRIPTION, DEVICE_TYPE) VALUES (?, ?, ?, ?)";
+					"INSERT INTO AD_FEATURE(CODE, NAME, DESCRIPTION, DEVICE_TYPE) VALUES (?, ?, ?, ?)";
 
 			stmt = conn.prepareStatement(createDBQuery);
 			stmt.setString(1, mobileFeature.getCode());
@@ -67,7 +67,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 				if (rs != null && rs.next()) {
 					status = rs.getInt(1);
 				}
-				if (log.isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
 					log.debug("Added a new MobileFeature " + mobileFeature.getCode() + " to the" +
 					          " MDM database.");
 				}
@@ -92,7 +92,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE MBL_FEATURE SET CODE = ?, NAME = ?, DESCRIPTION = ?, DEVICE_TYPE = ?" +
+					"UPDATE AD_FEATURE SET CODE = ?, NAME = ?, DESCRIPTION = ?, DEVICE_TYPE = ?" +
 					" WHERE FEATURE_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setString(1, mobileFeature.getCode());
@@ -127,7 +127,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String deleteDBQuery =
-					"DELETE FROM MBL_FEATURE WHERE CODE = ?";
+					"DELETE FROM AD_FEATURE WHERE CODE = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
 			stmt.setString(1, mblFeatureCode);
 			int rows = stmt.executeUpdate();
@@ -157,7 +157,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String deleteDBQuery =
-					"DELETE FROM MBL_FEATURE WHERE FEATURE_ID = ?";
+					"DELETE FROM AD_FEATURE WHERE FEATURE_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
 			stmt.setInt(1, mblFeatureId);
 			int rows = stmt.executeUpdate();
@@ -187,7 +187,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE " +
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE " +
 					"WHERE CODE = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblFeatureCode);
@@ -224,7 +224,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE" +
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE" +
 					" WHERE FEATURE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setInt(1, mblFeatureId);
@@ -261,7 +261,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE";
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
@@ -296,7 +296,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM MBL_FEATURE" +
+					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE" +
 					" WHERE DEVICE_TYPE = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, deviceType);

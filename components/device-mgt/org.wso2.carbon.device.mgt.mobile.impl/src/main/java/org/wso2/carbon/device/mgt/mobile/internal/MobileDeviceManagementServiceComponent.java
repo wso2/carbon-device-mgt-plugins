@@ -23,35 +23,23 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.apimgt.impl.APIManagerConfigurationService;
-import org.wso2.carbon.core.ServerStartupObserver;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
-import org.wso2.carbon.device.mgt.mobile.MobileDeviceManagementStartupObserver;
-import org.wso2.carbon.device.mgt.mobile.config.APIConfig;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagerService;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManagerService;
-import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagerService;
-import org.wso2.carbon.device.mgt.mobile.util.DeviceManagementAPIPublisherUtil;
+import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManager;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManager;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
 
 import javax.sql.DataSource;
-import java.util.List;
 import java.util.Map;
 
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.mobile.impl.internal.MobileDeviceManagementServiceComponent"
  * immediate="true"
- * @scr.reference name="api.manager.config.service"
- * interface="org.wso2.carbon.apimgt.impl.APIManagerConfigurationService"
- * cardinality="1..1"
- * policy="dynamic"
- * bind="setAPIManagerConfigurationService"
- * unbind="unsetAPIManagerConfigurationService"
  * <p/>
  * Adding reference to API Manager Configuration service is an unavoidable hack to get rid of NPEs thrown while
  * initializing APIMgtDAOs attempting to register APIs programmatically. APIMgtDAO needs to be proper cleaned up
@@ -59,25 +47,25 @@ import java.util.Map;
  */
 public class MobileDeviceManagementServiceComponent {
 
-	private ServiceRegistration androidServiceRegRef;
-	private ServiceRegistration iOSServiceRegRef;
-	private ServiceRegistration windowsServiceRegRef;
-	private ServiceRegistration serverStartupObserverRef;
+    private ServiceRegistration androidServiceRegRef;
+    private ServiceRegistration iOSServiceRegRef;
+    private ServiceRegistration windowsServiceRegRef;
+    private ServiceRegistration serverStartupObserverRef;
 
-	private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
+    private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
 
-	protected void activate(ComponentContext ctx) {
-		if (log.isDebugEnabled()) {
-			log.debug("Activating Mobile Device Management Service Component");
-		}
-		try {
-			BundleContext bundleContext = ctx.getBundleContext();
+    protected void activate(ComponentContext ctx) {
+        if (log.isDebugEnabled()) {
+            log.debug("Activating Mobile Device Management Service Component");
+        }
+        try {
+            BundleContext bundleContext = ctx.getBundleContext();
 
             /* Initialize the data source configuration */
             MobileDeviceConfigurationManager.getInstance().initConfig();
             MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance()
                     .getMobileDeviceManagementConfig();
-            Map<String,MobileDataSourceConfig> dsConfigMap =
+            Map<String, MobileDataSourceConfig> dsConfigMap =
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
 
             MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(dsConfigMap);
@@ -90,8 +78,8 @@ public class MobileDeviceManagementServiceComponent {
                                     "to begin");
                 }
                 try {
-                    Map<String,DataSource> dataSourceMap = MobileDeviceManagementDAOFactory.getDataSourceMap();
-                    for(DataSource dataSource:dataSourceMap.values()) {
+                    Map<String, DataSource> dataSourceMap = MobileDeviceManagementDAOFactory.getDataSourceMap();
+                    for (DataSource dataSource : dataSourceMap.values()) {
                         MobileDeviceManagementDAOUtil
                                 .setupMobileDeviceManagementSchema(dataSource);
                     }
@@ -101,17 +89,12 @@ public class MobileDeviceManagementServiceComponent {
             }
 
             androidServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(),
-                            new AndroidDeviceManagerService(), null);
+                    bundleContext.registerService(DeviceManager.class.getName(), new AndroidDeviceManager(), null);
             iOSServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(),
-                            new IOSDeviceManagerService(), null);
+                    bundleContext.registerService(DeviceManager.class.getName(), new IOSDeviceManager(), null);
             windowsServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(),
-                            new WindowsDeviceManagerService(), null);
+                    bundleContext.registerService(DeviceManager.class.getName(), new WindowsDeviceManager(), null);
 
-            serverStartupObserverRef = bundleContext.registerService(ServerStartupObserver.class,
-                    new MobileDeviceManagementStartupObserver(), null);
             if (log.isDebugEnabled()) {
                 log.debug("Mobile Device Management Service Component has been successfully activated");
             }
@@ -130,33 +113,13 @@ public class MobileDeviceManagementServiceComponent {
             windowsServiceRegRef.unregister();
             serverStartupObserverRef.unregister();
 
-            /* Removing all APIs published upon start-up for mobile device management related JAX-RS
-               services */
-			this.removeAPIs();
-			if (log.isDebugEnabled()) {
-				log.debug(
-						"Mobile Device Management Service Component has been successfully de-activated");
-			}
-		} catch (Throwable e) {
-			log.error("Error occurred while de-activating Mobile Device Management bundle", e);
-		}
-	}
-
-	private void removeAPIs() throws DeviceManagementException {
-		List<APIConfig> apiConfigs =
-				MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig().
-						getApiPublisherConfig().getAPIs();
-		for (APIConfig apiConfig : apiConfigs) {
-			DeviceManagementAPIPublisherUtil.removeAPI(apiConfig);
-		}
-	}
-
-	protected void setAPIManagerConfigurationService(APIManagerConfigurationService service) {
-		//do nothing
-	}
-
-	protected void unsetAPIManagerConfigurationService(APIManagerConfigurationService service) {
-		//do nothing
-	}
+            if (log.isDebugEnabled()) {
+                log.debug(
+                        "Mobile Device Management Service Component has been successfully de-activated");
+            }
+        } catch (Throwable e) {
+            log.error("Error occurred while de-activating Mobile Device Management bundle", e);
+        }
+    }
 
 }

@@ -155,7 +155,7 @@ public class MobileDeviceOperationMappingDAOTestSuite {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
 					"SELECT DEVICE_ID, OPERATION_ID, SENT_DATE, RECEIVED_DATE, STATUS FROM " +
-					"MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ?";
+					"AD_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setString(1, TEST_MOBILE_DEVICE_ID);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -252,7 +252,7 @@ public class MobileDeviceOperationMappingDAOTestSuite {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
 					"SELECT DEVICE_ID, OPERATION_ID, SENT_DATE, STATUS FROM " +
-					"MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
+					"AD_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setString(1, TEST_MOBILE_DEVICE_ID);
 			preparedStatement.setInt(2, mblOperationId1);
@@ -296,7 +296,7 @@ public class MobileDeviceOperationMappingDAOTestSuite {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
 					"SELECT DEVICE_ID, OPERATION_ID, RECEIVED_DATE, STATUS FROM " +
-					"MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
+					"AD_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setString(1, TEST_MOBILE_DEVICE_ID);
 			preparedStatement.setInt(2, mblOperationId1);
@@ -348,7 +348,7 @@ public class MobileDeviceOperationMappingDAOTestSuite {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
 					"SELECT DEVICE_ID, OPERATION_ID, RECEIVED_DATE, SENT_DATE, STATUS FROM " +
-					"MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
+					"AD_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setString(1, TEST_MOBILE_DEVICE_ID);
 			preparedStatement.setInt(2, mblOperationId1);
@@ -422,7 +422,7 @@ public class MobileDeviceOperationMappingDAOTestSuite {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
 					"SELECT DEVICE_ID, OPERATION_ID, RECEIVED_DATE, SENT_DATE, STATUS FROM " +
-					"MBL_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
+					"AD_DEVICE_OPERATION_MAPPING WHERE DEVICE_ID = ? AND OPERATION_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setString(1, TEST_MOBILE_DEVICE_ID);
 			preparedStatement.setInt(2, mblOperationId1);

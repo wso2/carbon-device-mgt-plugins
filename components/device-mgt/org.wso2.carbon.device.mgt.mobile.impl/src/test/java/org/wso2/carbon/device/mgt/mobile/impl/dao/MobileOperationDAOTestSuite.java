@@ -83,7 +83,7 @@ public class MobileOperationDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
-					"SELECT OPERATION_ID, FEATURE_CODE, CREATED_DATE FROM MBL_OPERATION WHERE OPERATION_ID = ?";
+					"SELECT OPERATION_ID, FEATURE_CODE, CREATED_DATE FROM AD_OPERATION WHERE OPERATION_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setInt(1, mblOperationId);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -133,7 +133,7 @@ public class MobileOperationDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
-					"SELECT OPERATION_ID, FEATURE_CODE, CREATED_DATE FROM MBL_OPERATION WHERE OPERATION_ID = ?";
+					"SELECT OPERATION_ID, FEATURE_CODE, CREATED_DATE FROM AD_OPERATION WHERE OPERATION_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setInt(1, mblOperationId);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -167,7 +167,7 @@ public class MobileOperationDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String selectDBQuery =
-					"SELECT OPERATION_ID, FEATURE_CODE, CREATED_DATE FROM MBL_OPERATION WHERE OPERATION_ID = ?";
+					"SELECT OPERATION_ID, FEATURE_CODE, CREATED_DATE FROM AD_OPERATION WHERE OPERATION_ID = ?";
 			preparedStatement = conn.prepareStatement(selectDBQuery);
 			preparedStatement.setInt(1, mblOperationId);
 			ResultSet resultSet = preparedStatement.executeQuery();

@@ -107,7 +107,7 @@ public class MobileFeaturePropertyDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String query =
-					"SELECT FEATURE_ID, PROPERTY FROM MBL_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
+					"SELECT FEATURE_ID, PROPERTY FROM AD_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
 			preparedStatement = conn.prepareStatement(query);
 			preparedStatement.setInt(1, mblFeatureId);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -187,7 +187,7 @@ public class MobileFeaturePropertyDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String query =
-					"SELECT PROPERTY, FEATURE_ID FROM MBL_FEATURE_PROPERTY WHERE PROPERTY = ?";
+					"SELECT PROPERTY, FEATURE_ID FROM AD_FEATURE_PROPERTY WHERE PROPERTY = ?";
 			preparedStatement = conn.prepareStatement(query);
 			preparedStatement.setString(1, MBL_FEATURE_PROP_2);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -217,7 +217,7 @@ public class MobileFeaturePropertyDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String query =
-					"SELECT PROPERTY, FEATURE_ID FROM MBL_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
+					"SELECT PROPERTY, FEATURE_ID FROM AD_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
 			preparedStatement = conn.prepareStatement(query);
 			preparedStatement.setInt(1, mblFeatureId);
 			ResultSet resultSet = preparedStatement.executeQuery();

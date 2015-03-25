@@ -54,7 +54,7 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 		try {
 			conn = this.getConnection();
 			String createDBQuery =
-					"INSERT INTO MBL_FEATURE_PROPERTY(PROPERTY, FEATURE_ID) VALUES (?, ?)";
+					"INSERT INTO AD_FEATURE_PROPERTY(PROPERTY, FEATURE_ID) VALUES (?, ?)";
 
 			stmt = conn.prepareStatement(createDBQuery);
 			stmt.setString(1, mblFeatureProperty.getProperty());
@@ -87,7 +87,7 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE MBL_FEATURE_PROPERTY SET FEATURE_ID = ? WHERE PROPERTY = ?";
+					"UPDATE AD_FEATURE_PROPERTY SET FEATURE_ID = ? WHERE PROPERTY = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setInt(1, mblFeatureProperty.getFeatureID());
 			stmt.setString(2, mblFeatureProperty.getProperty());
@@ -118,7 +118,7 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 		try {
 			conn = this.getConnection();
 			String deleteDBQuery =
-					"DELETE FROM MBL_FEATURE_PROPERTY WHERE PROPERTY = ?";
+					"DELETE FROM AD_FEATURE_PROPERTY WHERE PROPERTY = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
 			stmt.setString(1, property);
 			int rows = stmt.executeUpdate();
@@ -148,7 +148,7 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 		try {
 			conn = this.getConnection();
 			String deleteDBQuery =
-					"DELETE FROM MBL_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
+					"DELETE FROM AD_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
 			stmt.setInt(1, mblFeatureId);
 			int rows = stmt.executeUpdate();
@@ -179,7 +179,7 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT PROPERTY, FEATURE_ID FROM MBL_FEATURE_PROPERTY WHERE PROPERTY = ?";
+					"SELECT PROPERTY, FEATURE_ID FROM AD_FEATURE_PROPERTY WHERE PROPERTY = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, property);
 			ResultSet resultSet = stmt.executeQuery();
@@ -213,7 +213,7 @@ public class MobileFeaturePropertyDAOImpl implements MobileFeaturePropertyDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT PROPERTY, FEATURE_ID FROM MBL_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
+					"SELECT PROPERTY, FEATURE_ID FROM AD_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setInt(1, mblFeatureId);
 			ResultSet resultSet = stmt.executeQuery();

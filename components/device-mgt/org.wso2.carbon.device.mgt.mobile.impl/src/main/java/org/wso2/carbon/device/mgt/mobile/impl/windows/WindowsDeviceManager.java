@@ -32,8 +32,9 @@ import java.util.List;
 /**
  * This represents the Windows implementation of DeviceManagerService.
  */
-public class WindowsDeviceManagerService implements DeviceManager {
+public class WindowsDeviceManager implements DeviceManager {
 
+<<<<<<< HEAD:components/device-mgt/org.wso2.carbon.device.mgt.mobile.impl/src/main/java/org/wso2/carbon/device/mgt/mobile/impl/windows/WindowsDeviceManagerService.java
     private static final Log log = LogFactory.getLog(WindowsDeviceManagerService.class);
     private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
 
@@ -41,6 +42,9 @@ public class WindowsDeviceManagerService implements DeviceManager {
         mobileDeviceManagementDAOFactory = new MobileDeviceManagementDAOFactory(DeviceManagementConstants
                 .MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
     }
+=======
+    private static final Log log = LogFactory.getLog(WindowsDeviceManager.class);
+>>>>>>> 2c5cc4c28de5586b7450887d02c49a4c9973b40a:components/device-mgt/org.wso2.carbon.device.mgt.mobile.impl/src/main/java/org/wso2/carbon/device/mgt/mobile/impl/windows/WindowsDeviceManager.java
 
     @Override
     public String getProviderType() {

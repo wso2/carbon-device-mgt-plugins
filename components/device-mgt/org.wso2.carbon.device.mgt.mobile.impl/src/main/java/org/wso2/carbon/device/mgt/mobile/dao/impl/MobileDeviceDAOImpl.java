@@ -54,7 +54,7 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 			conn = this.getConnection();
 			String selectDBQuery =
 					"SELECT MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR, " +
-					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM MBL_DEVICE" +
+					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM AD_DEVICE" +
 					" WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblDeviceId);
@@ -98,7 +98,7 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 		try {
 			conn = this.getConnection();
 			String createDBQuery =
-					"INSERT INTO MBL_DEVICE(MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION," +
+					"INSERT INTO AD_DEVICE(MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION," +
 					"DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, " +
 					"UNLOCK_TOKEN) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -144,7 +144,7 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE MBL_DEVICE SET PUSH_TOKEN = ?, IMEI = ?, IMSI = ?, OS_VERSION = ?," +
+					"UPDATE AD_DEVICE SET PUSH_TOKEN = ?, IMEI = ?, IMSI = ?, OS_VERSION = ?," +
 					"DEVICE_MODEL = ?, VENDOR = ? , LATITUDE = ?, LONGITUDE = ?, CHALLENGE = ?," +
 					"SERIAL = ?, TOKEN = ?, UNLOCK_TOKEN = ? WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
@@ -188,7 +188,7 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 		try {
 			conn = this.getConnection();
 			String deleteDBQuery =
-					"DELETE FROM MBL_DEVICE WHERE MOBILE_DEVICE_ID = ?";
+					"DELETE FROM AD_DEVICE WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
 			stmt.setString(1, mblDeviceId);
 			int rows = stmt.executeUpdate();
@@ -219,7 +219,7 @@ public class MobileDeviceDAOImpl implements MobileDeviceDAO {
 			conn = this.getConnection();
 			String selectDBQuery =
 					"SELECT MOBILE_DEVICE_ID, PUSH_TOKEN, IMEI, IMSI, OS_VERSION,DEVICE_MODEL, VENDOR," +
-					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM MBL_DEVICE";
+					"LATITUDE, LONGITUDE, CHALLENGE, SERIAL, TOKEN, UNLOCK_TOKEN FROM AD_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {

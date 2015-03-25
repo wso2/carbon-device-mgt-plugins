@@ -33,12 +33,12 @@ import java.util.List;
 /**
  * This represents the Android implementation of DeviceManagerService.
  */
-public class AndroidDeviceManagerService implements DeviceManager {
+public class AndroidDeviceManager implements DeviceManager {
 
-    private static final Log log = LogFactory.getLog(AndroidDeviceManagerService.class);
     private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
+	private static final Log log = LogFactory.getLog(AndroidDeviceManager.class);
 
-    public AndroidDeviceManagerService() {
+    public AndroidDeviceManager() {
         mobileDeviceManagementDAOFactory = new MobileDeviceManagementDAOFactory(
                 DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
     }
@@ -50,7 +50,7 @@ public class AndroidDeviceManagerService implements DeviceManager {
 
     @Override
     public FeatureManager getFeatureManager() {
-        return null;
+        return new AndroidFeatureManager();
     }
 
     @Override
