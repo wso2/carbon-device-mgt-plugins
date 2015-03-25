@@ -102,10 +102,15 @@ public class MobileDeviceManagementServiceComponent {
             log.debug("De-activating Mobile Device Management Service Component");
         }
         try {
-            androidServiceRegRef.unregister();
-            iOSServiceRegRef.unregister();
-            windowsServiceRegRef.unregister();
-            serverStartupObserverRef.unregister();
+            if (androidServiceRegRef != null) {
+                androidServiceRegRef.unregister();
+            }
+            if (iOSServiceRegRef != null) {
+                iOSServiceRegRef.unregister();
+            }
+            if (windowsServiceRegRef != null) {
+                windowsServiceRegRef.unregister();
+            }
 
 			if (log.isDebugEnabled()) {
 				log.debug(
