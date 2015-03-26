@@ -19,7 +19,6 @@
 
 <MobileDeviceMgtConfiguration>
     <ManagementRepository>
-
     <DataSourceConfigurations>
         <DataSourceConfiguration type="ios">
             <JndiLookupDefinition>

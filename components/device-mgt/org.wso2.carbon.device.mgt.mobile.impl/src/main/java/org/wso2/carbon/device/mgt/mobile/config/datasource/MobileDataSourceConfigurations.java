@@ -1,9 +1,3 @@
-package org.wso2.carbon.device.mgt.mobile.config.datasource;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.util.List;
-
 /*
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
@@ -21,10 +15,19 @@ import java.util.List;
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.wso2.carbon.device.mgt.mobile.config.datasource;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
+
 @XmlRootElement(name = "DataSourceConfigurations")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class MobileDataSourceConfigurations {
 
-    @XmlElement(name = "DataSourceConfigurations", nillable = true)
+    @XmlElement(name = "DataSourceConfiguration", nillable = true)
     private List<MobileDataSourceConfig> mobileDataSourceConfigs;
 
     public List<MobileDataSourceConfig> getMobileDataSourceConfigs() {

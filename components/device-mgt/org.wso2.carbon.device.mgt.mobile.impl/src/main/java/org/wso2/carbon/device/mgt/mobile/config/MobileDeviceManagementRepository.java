@@ -18,13 +18,13 @@
 
 package org.wso2.carbon.device.mgt.mobile.config;
 
-import org.wso2.carbon.device.mgt.mobile.common.PluginTypeEnum;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.DataSourceConfigAdapter;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,12 +34,13 @@ import java.util.Map;
 public class MobileDeviceManagementRepository {
 
     private Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap;
+    private List<MobileDataSourceConfig> mobileDataSourceConfigs;
 
-	public MobileDataSourceConfig getMobileDataSourceConfig(PluginTypeEnum type) {
-		return mobileDataSourceConfigMap.get(type.toString());
-	}
+    public MobileDataSourceConfig getMobileDataSourceConfig(String provider) {
+        return mobileDataSourceConfigMap.get(provider);
+    }
 
-    @XmlElement(name="DataSourceConfigurations")
+    @XmlElement(name = "DataSourceConfigurations")
     @XmlJavaTypeAdapter(DataSourceConfigAdapter.class)
     public Map<String, MobileDataSourceConfig> getMobileDataSourceConfigMap() {
         return mobileDataSourceConfigMap;
@@ -48,4 +49,9 @@ public class MobileDeviceManagementRepository {
     public void setMobileDataSourceConfigMap(Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap) {
         this.mobileDataSourceConfigMap = mobileDataSourceConfigMap;
     }
+
+    public List<MobileDataSourceConfig> getMobileDataSourceConfigs() {
+        return (List<MobileDataSourceConfig>) mobileDataSourceConfigMap.values();
+    }
+
 }
