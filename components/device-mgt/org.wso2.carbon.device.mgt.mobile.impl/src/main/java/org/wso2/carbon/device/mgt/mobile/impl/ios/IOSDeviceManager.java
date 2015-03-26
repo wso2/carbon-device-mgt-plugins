@@ -34,11 +34,17 @@ import java.util.List;
  */
 public class IOSDeviceManager implements DeviceManager {
 
-    private static final Log log = LogFactory.getLog(IOSDeviceManager.class);
+     private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
+     private static final Log log = LogFactory.getLog(IOSDeviceManager.class);
 
     @Override
     public String getProviderType() {
         return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS;
+    }
+
+    public IOSDeviceManager() {
+        mobileDeviceManagementDAOFactory = new MobileDeviceManagementDAOFactory(DeviceManagementConstants
+                .MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS);
     }
 
     @Override
@@ -51,7 +57,7 @@ public class IOSDeviceManager implements DeviceManager {
         boolean status;
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
         try {
-            status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
+            status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
                     mobileDevice);
         } catch (MobileDeviceManagementDAOException e) {
             String msg = "Error while enrolling the iOS device : " +
@@ -70,7 +76,7 @@ public class IOSDeviceManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Modifying the iOS device enrollment data");
             }
-            status = MobileDeviceManagementDAOFactory.getMobileDeviceDAO()
+            status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO()
                     .updateMobileDevice(mobileDevice);
         } catch (MobileDeviceManagementDAOException e) {
             String msg = "Error while updating the enrollment of the iOS device : " +
@@ -94,7 +100,7 @@ public class IOSDeviceManager implements DeviceManager {
                 log.debug("Checking the enrollment of iOS device : " + deviceId.getId());
             }
             MobileDevice mobileDevice =
-                    MobileDeviceManagementDAOFactory.getMobileDeviceDAO().getMobileDevice(
+                    mobileDeviceManagementDAOFactory.getMobileDeviceDAO().getMobileDevice(
                             deviceId.getId());
             if (mobileDevice != null) {
                 isEnrolled = true;
@@ -131,7 +137,7 @@ public class IOSDeviceManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Getting the details of iOS device : " + deviceId.getId());
             }
-            MobileDevice mobileDevice = MobileDeviceManagementDAOFactory.getMobileDeviceDAO().
+            MobileDevice mobileDevice = mobileDeviceManagementDAOFactory.getMobileDeviceDAO().
                     getMobileDevice(deviceId.getId());
             device = MobileDeviceManagementUtil.convertToDevice(mobileDevice);
         } catch (MobileDeviceManagementDAOException e) {

@@ -60,7 +60,7 @@
                             javax.xml.bind.*,
                             javax.naming,
                             javax.sql,
-                            javax.xml.bind.annotation,
+                            javax.xml.bind.annotation.*,
                             javax.xml.parsers,
                             org.w3c.dom,
                             org.wso2.carbon.core,

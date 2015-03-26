@@ -75,8 +75,5 @@ public class MobileDeviceConfigurationManager {
 		return currentMobileDeviceConfig;
 	}
 
-	public MobileDataSourceConfig getMobileDataSourceConfig() {
-		return currentMobileDeviceConfig.getMobileDeviceMgtRepository().getMobileDataSourceConfig();
-	}
 
 }

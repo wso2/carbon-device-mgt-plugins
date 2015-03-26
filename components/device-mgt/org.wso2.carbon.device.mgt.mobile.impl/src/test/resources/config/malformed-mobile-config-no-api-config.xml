@@ -19,24 +19,23 @@
 
 <MobileDeviceMgtConfiguration>
     <ManagementRepository>
-        <DataSourceConfiguration>
-            <JndiLookupDefinition>
-                <Name>jdbc/MobileDM_DS</Name>
-            </JndiLookupDefinition>
-        </DataSourceConfiguration>
+        <DataSourceConfigurations>
+            <DataSourceConfiguration type="ios">
+                <JndiLookupDefinition>
+                    <Name>jdbc/MobileIOSDM_DS</Name>
+                </JndiLookupDefinition>
+            </DataSourceConfiguration>
+            <DataSourceConfiguration type="android">
+                <JndiLookupDefinition>
+                    <Name>jdbc/MobileAndroidDM_DS</Name>
+                </JndiLookupDefinition>
+            </DataSourceConfiguration>
+            <DataSourceConfiguration type="windows">
+                <JndiLookupDefinition>
+                    <Name>jdbc/MobileWindowsDM_DS</Name>
+                </JndiLookupDefinition>
+            </DataSourceConfiguration>
+        </DataSourceConfigurations>
     </ManagementRepository>
-
-    <APIPublisher>
-        <APIs>
-            <MalformedAPI>
-                <Name>enrollment</Name>
-                <Owner>admin</Owner>
-                <Context>enrollment</Context>
-                <Version>1.0.0</Version>
-                <Endpoint>http://localhost:9763/</Endpoint>
-                <Transports>http,https</Transports>
-            </MalformedAPI>
-        </APIs>
-    </APIPublisher>
 </MobileDeviceMgtConfiguration>
 

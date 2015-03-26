@@ -33,6 +33,7 @@ import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * BundleActivator of MobileDeviceManagement component.
@@ -58,14 +59,13 @@ public class MobileDeviceManagementBundleActivator implements BundleActivator, B
 			}
 			bundleContext.addBundleListener(this);
 
-            /* Initialize the datasource configuration */
+            /* Initialize the data source configuration */
             MobileDeviceConfigurationManager.getInstance().initConfig();
             MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance()
                     .getMobileDeviceManagementConfig();
-            MobileDataSourceConfig dsConfig =
-                    config.getMobileDeviceMgtRepository().getMobileDataSourceConfig();
-
-            MobileDeviceManagementDAOFactory.setDatSourceConfig(dsConfig);
+            Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap =
+                    config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
+            MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(mobileDataSourceConfigMap);
 
             androidServiceRegRef =
                     bundleContext.registerService(DeviceManager.class.getName(),

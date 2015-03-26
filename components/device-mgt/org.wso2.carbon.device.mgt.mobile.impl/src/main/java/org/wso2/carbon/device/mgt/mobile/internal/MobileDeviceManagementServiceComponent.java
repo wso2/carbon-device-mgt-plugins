@@ -35,6 +35,9 @@ import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManager;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 
+import javax.sql.DataSource;
+import java.util.Map;
+
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.mobile.impl.internal.MobileDeviceManagementServiceComponent"
  * immediate="true"
@@ -51,18 +54,28 @@ import org.wso2.carbon.ndatasource.core.DataSourceService;
  */
 public class MobileDeviceManagementServiceComponent {
 
-	private ServiceRegistration androidServiceRegRef;
-	private ServiceRegistration iOSServiceRegRef;
-	private ServiceRegistration windowsServiceRegRef;
+    private ServiceRegistration serverStartupObserverRef;
+    private ServiceRegistration androidServiceRegRef;
+    private ServiceRegistration iOSServiceRegRef;
+    private ServiceRegistration windowsServiceRegRef;
 
-	private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
+    private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
 
-	protected void activate(ComponentContext ctx) {
-		if (log.isDebugEnabled()) {
-			log.debug("Activating Mobile Device Management Service Component");
-		}
-		try {
-			BundleContext bundleContext = ctx.getBundleContext();
+    protected void activate(ComponentContext ctx) {
+        if (log.isDebugEnabled()) {
+            log.debug("Activating Mobile Device Management Service Component");
+        }
+        try {
+            BundleContext bundleContext = ctx.getBundleContext();
+
+            /* Initialize the data source configuration */
+            MobileDeviceConfigurationManager.getInstance().initConfig();
+            MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance()
+                    .getMobileDeviceManagementConfig();
+            Map<String, MobileDataSourceConfig> dsConfigMap =
+                    config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
+            MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(dsConfigMap);
+            MobileDeviceManagementDAOFactory.init();
 
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
@@ -72,8 +85,11 @@ public class MobileDeviceManagementServiceComponent {
                                     "to begin");
                 }
                 try {
-                    MobileDeviceManagementDAOUtil.setupMobileDeviceManagementSchema(
-                            MobileDeviceManagementDAOFactory.getDataSource());
+                    Map<String, DataSource> dataSourceMap = MobileDeviceManagementDAOFactory.getDataSourceMap();
+                    for (DataSource dataSource : dataSourceMap.values()) {
+                        MobileDeviceManagementDAOUtil
+                                .setupMobileDeviceManagementSchema(dataSource);
+                    }
                 } catch (DeviceManagementException e) {
                     log.error("Exception occurred while initializing mobile device management database schema", e);
                 }
@@ -108,41 +124,24 @@ public class MobileDeviceManagementServiceComponent {
             if (windowsServiceRegRef != null) {
                 windowsServiceRegRef.unregister();
             }
-
-			if (log.isDebugEnabled()) {
-				log.debug(
-						"Mobile Device Management Service Component has been successfully de-activated");
-			}
-		} catch (Throwable e) {
-			log.error("Error occurred while de-activating Mobile Device Management bundle", e);
-		}
-	}
+            if (log.isDebugEnabled()) {
+                log.debug(
+                        "Mobile Device Management Service Component has been successfully de-activated");
+            }
+        } catch (Throwable e) {
+            log.error("Error occurred while de-activating Mobile Device Management bundle", e);
+        }
+    }
 
     protected void setDataSourceService(DataSourceService dataSourceService) {
         /* This is to avoid mobile device management component getting initialized before the underlying datasources
         are registered */
-        try {
-            initConfigs();
-        } catch (DeviceManagementException e) {
-            log.error("Error occurred while initializing mobile device management repository datasource", e);
+        if (log.isDebugEnabled()) {
+            log.debug("Data source service set to mobile service component");
         }
-    }
-
-    private void initConfigs() throws DeviceManagementException {
-        /* Initialize the datasource configuration */
-        MobileDeviceConfigurationManager.getInstance().initConfig();
-
-        MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance()
-                .getMobileDeviceManagementConfig();
-        MobileDataSourceConfig dsConfig =
-                config.getMobileDeviceMgtRepository().getMobileDataSourceConfig();
-
-        MobileDeviceManagementDAOFactory.setDatSourceConfig(dsConfig);
-        MobileDeviceManagementDAOFactory.init();
     }
 
     protected void unsetDataSourceService(DataSourceService dataSourceService) {
         //do nothing
     }
-
 }
