@@ -25,7 +25,6 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
-import org.wso2.carbon.device.mgt.mobile.DataSourceListener;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
@@ -65,14 +64,6 @@ public class MobileDeviceManagementServiceComponent {
 		try {
 			BundleContext bundleContext = ctx.getBundleContext();
 
-            /* Initialize the datasource configuration */
-            MobileDeviceConfigurationManager.getInstance().initConfig();
-            MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance()
-                    .getMobileDeviceManagementConfig();
-            MobileDataSourceConfig dsConfig =
-                    config.getMobileDeviceMgtRepository().getMobileDataSourceConfig();
-
-            MobileDeviceManagementDAOFactory.setDatSourceConfig(dsConfig);
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
                 if (log.isDebugEnabled()) {
@@ -131,10 +122,23 @@ public class MobileDeviceManagementServiceComponent {
         /* This is to avoid mobile device management component getting initialized before the underlying datasources
         are registered */
         try {
-            MobileDeviceManagementDAOFactory.init();
+            initConfigs();
         } catch (DeviceManagementException e) {
             log.error("Error occurred while initializing mobile device management repository datasource", e);
         }
+    }
+
+    private void initConfigs() throws DeviceManagementException {
+        /* Initialize the datasource configuration */
+        MobileDeviceConfigurationManager.getInstance().initConfig();
+
+        MobileDeviceManagementConfig config = MobileDeviceConfigurationManager.getInstance()
+                .getMobileDeviceManagementConfig();
+        MobileDataSourceConfig dsConfig =
+                config.getMobileDeviceMgtRepository().getMobileDataSourceConfig();
+
+        MobileDeviceManagementDAOFactory.setDatSourceConfig(dsConfig);
+        MobileDeviceManagementDAOFactory.init();
     }
 
     protected void unsetDataSourceService(DataSourceService dataSourceService) {
