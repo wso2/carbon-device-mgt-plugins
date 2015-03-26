@@ -25,7 +25,6 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
-import org.wso2.carbon.device.mgt.mobile.DataSourceListener;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
@@ -56,9 +55,9 @@ import java.util.Map;
 public class MobileDeviceManagementServiceComponent {
 
     private ServiceRegistration serverStartupObserverRef;
-	private ServiceRegistration androidServiceRegRef;
-	private ServiceRegistration iOSServiceRegRef;
-	private ServiceRegistration windowsServiceRegRef;
+    private ServiceRegistration androidServiceRegRef;
+    private ServiceRegistration iOSServiceRegRef;
+    private ServiceRegistration windowsServiceRegRef;
 
     private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
 
@@ -136,11 +135,9 @@ public class MobileDeviceManagementServiceComponent {
     protected void setDataSourceService(DataSourceService dataSourceService) {
         /* This is to avoid mobile device management component getting initialized before the underlying datasources
         are registered */
-        try {
-            MobileDeviceManagementDAOFactory.init();
-        } catch (DeviceManagementException e) {
-            log.error("Error occurred while initializing mobile device management repository datasource", e);
-        }
+           if (log.isDebugEnabled()){
+               log.debug("Data source service set to mobile service component");
+           }
     }
 
     protected void unsetDataSourceService(DataSourceService dataSourceService) {

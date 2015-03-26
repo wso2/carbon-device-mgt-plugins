@@ -28,6 +28,7 @@ import org.wso2.carbon.device.mgt.mobile.dao.impl.*;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class MobileDeviceManagementDAOFactory {
 
     public static void init() throws DeviceManagementException {
 
+        dataSourceMap = new HashMap<String, DataSource>();
         DataSource dataSource;
         for (String pluginType : mobileDataSourceConfigMap.keySet()) {
             dataSource = MobileDeviceManagementDAOFactory.resolveDataSource(mobileDataSourceConfigMap.get
