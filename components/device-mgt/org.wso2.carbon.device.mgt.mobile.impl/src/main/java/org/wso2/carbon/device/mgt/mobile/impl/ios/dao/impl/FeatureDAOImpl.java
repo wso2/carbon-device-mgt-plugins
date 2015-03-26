@@ -16,14 +16,13 @@
  *   under the License.
  *
  */
-package org.wso2.carbon.device.mgt.mobile.impl.android.dao.impl;
+package org.wso2.carbon.device.mgt.mobile.impl.ios.dao.impl;
 
 import org.wso2.carbon.device.mgt.common.Feature;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.mobile.impl.android.dao.FeatureDAO;
-import org.wso2.carbon.device.mgt.mobile.impl.android.dao.FeatureManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.impl.android.dao.FeatureManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.FeatureDAO;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.FeatureManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.FeatureManagementDAOFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,7 +38,7 @@ public class FeatureDAOImpl implements FeatureDAO {
         PreparedStatement stmt = null;
         try {
             Connection conn = FeatureManagementDAOFactory.getConnection();
-            String sql = "INSERT INTO AD_FEATURE(CODE, NAME, DESCRIPTION) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO IOS_FEATURE(CODE, NAME, DESCRIPTION) VALUES (?, ?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, feature.getCode());
             stmt.setString(2, feature.getName());
@@ -58,7 +57,7 @@ public class FeatureDAOImpl implements FeatureDAO {
         PreparedStatement stmt = null;
         try {
             Connection conn = FeatureManagementDAOFactory.getConnection();
-            String sql = "DELETE FROM AD_FEATURE WHERE CODE = ?";
+            String sql = "DELETE FROM IOS_FEATURE WHERE CODE = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, code);
             stmt.execute();
@@ -76,7 +75,7 @@ public class FeatureDAOImpl implements FeatureDAO {
         ResultSet rs = null;
         try {
             Connection conn = FeatureManagementDAOFactory.getConnection();
-            String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM AD_FEATURE WHERE CODE = ?";
+            String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM IOS_FEATURE WHERE CODE = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, code);
             rs = stmt.executeQuery();
@@ -105,7 +104,7 @@ public class FeatureDAOImpl implements FeatureDAO {
         List<Feature> features = new ArrayList<Feature>();
         try {
             Connection conn = FeatureManagementDAOFactory.getConnection();
-            String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM AD_FEATURE";
+            String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM IOS_FEATURE";
             stmt = conn.prepareStatement(sql);
             rs = stmt.executeQuery();
 
