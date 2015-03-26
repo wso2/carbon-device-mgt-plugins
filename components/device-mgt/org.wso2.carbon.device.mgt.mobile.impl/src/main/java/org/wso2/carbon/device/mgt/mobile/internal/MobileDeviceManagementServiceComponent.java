@@ -140,7 +140,7 @@ public class MobileDeviceManagementServiceComponent {
             log.debug("Data source service set to mobile service component");
         }
     }
-    
+
     protected void unsetDataSourceService(DataSourceService dataSourceService) {
         //do nothing
     }
