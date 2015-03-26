@@ -76,6 +76,7 @@ public class MobileDeviceManagementServiceComponent {
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
             MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(dsConfigMap);
             MobileDeviceManagementDAOFactory.init();
+
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
                 if (log.isDebugEnabled()) {
@@ -135,11 +136,11 @@ public class MobileDeviceManagementServiceComponent {
     protected void setDataSourceService(DataSourceService dataSourceService) {
         /* This is to avoid mobile device management component getting initialized before the underlying datasources
         are registered */
-           if (log.isDebugEnabled()){
-               log.debug("Data source service set to mobile service component");
-           }
+        if (log.isDebugEnabled()) {
+            log.debug("Data source service set to mobile service component");
+        }
     }
-
+    
     protected void unsetDataSourceService(DataSourceService dataSourceService) {
         //do nothing
     }
