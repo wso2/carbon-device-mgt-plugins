@@ -25,6 +25,7 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
+import org.wso2.carbon.device.mgt.mobile.DataSourceListener;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
@@ -33,6 +34,7 @@ import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManager;
 import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManager;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 
 import javax.sql.DataSource;
 import java.util.Map;
@@ -40,6 +42,12 @@ import java.util.Map;
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.mobile.impl.internal.MobileDeviceManagementServiceComponent"
  * immediate="true"
+ * @scr.reference name="org.wso2.carbon.ndatasource"
+ * interface="org.wso2.carbon.ndatasource.core.DataSourceService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setDataSourceService"
+ * unbind="unsetDataSourceService"
  * <p/>
  * Adding reference to API Manager Configuration service is an unavoidable hack to get rid of NPEs thrown while
  * initializing APIMgtDAOs attempting to register APIs programmatically. APIMgtDAO needs to be proper cleaned up
@@ -47,10 +55,10 @@ import java.util.Map;
  */
 public class MobileDeviceManagementServiceComponent {
 
-    private ServiceRegistration androidServiceRegRef;
-    private ServiceRegistration iOSServiceRegRef;
-    private ServiceRegistration windowsServiceRegRef;
     private ServiceRegistration serverStartupObserverRef;
+	private ServiceRegistration androidServiceRegRef;
+	private ServiceRegistration iOSServiceRegRef;
+	private ServiceRegistration windowsServiceRegRef;
 
     private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
 
@@ -67,7 +75,6 @@ public class MobileDeviceManagementServiceComponent {
                     .getMobileDeviceManagementConfig();
             Map<String, MobileDataSourceConfig> dsConfigMap =
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
-
             MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(dsConfigMap);
             MobileDeviceManagementDAOFactory.init();
             String setupOption = System.getProperty("setup");
@@ -108,11 +115,15 @@ public class MobileDeviceManagementServiceComponent {
             log.debug("De-activating Mobile Device Management Service Component");
         }
         try {
-            androidServiceRegRef.unregister();
-            iOSServiceRegRef.unregister();
-            windowsServiceRegRef.unregister();
-            serverStartupObserverRef.unregister();
-
+            if (androidServiceRegRef != null) {
+                androidServiceRegRef.unregister();
+            }
+            if (iOSServiceRegRef != null) {
+                iOSServiceRegRef.unregister();
+            }
+            if (windowsServiceRegRef != null) {
+                windowsServiceRegRef.unregister();
+            }
             if (log.isDebugEnabled()) {
                 log.debug(
                         "Mobile Device Management Service Component has been successfully de-activated");
@@ -122,4 +133,17 @@ public class MobileDeviceManagementServiceComponent {
         }
     }
 
+    protected void setDataSourceService(DataSourceService dataSourceService) {
+        /* This is to avoid mobile device management component getting initialized before the underlying datasources
+        are registered */
+        try {
+            MobileDeviceManagementDAOFactory.init();
+        } catch (DeviceManagementException e) {
+            log.error("Error occurred while initializing mobile device management repository datasource", e);
+        }
+    }
+
+    protected void unsetDataSourceService(DataSourceService dataSourceService) {
+        //do nothing
+    }
 }

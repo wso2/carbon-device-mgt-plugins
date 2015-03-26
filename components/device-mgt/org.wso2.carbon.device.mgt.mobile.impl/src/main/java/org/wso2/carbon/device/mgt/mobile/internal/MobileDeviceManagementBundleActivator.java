@@ -65,7 +65,6 @@ public class MobileDeviceManagementBundleActivator implements BundleActivator, B
                     .getMobileDeviceManagementConfig();
             Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap =
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
-
             MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(mobileDataSourceConfigMap);
 
             androidServiceRegRef =

@@ -21,6 +21,7 @@ package org.wso2.carbon.device.mgt.mobile.dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.mobile.DataSourceNotAvailableException;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.JNDILookupDefinition;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.impl.*;
@@ -36,94 +37,93 @@ import java.util.Map;
  */
 public class MobileDeviceManagementDAOFactory {
 
-	private static final Log log = LogFactory.getLog(MobileDeviceManagementDAOFactory.class);
-    private static Map<String,MobileDataSourceConfig> mobileDataSourceConfigMap;
-    private static Map<String,DataSource> dataSourceMap;
+    private static final Log log = LogFactory.getLog(MobileDeviceManagementDAOFactory.class);
+    private static Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap;
+    private static Map<String, DataSource> dataSourceMap;
     private String pluginProvider;
     private DataSource dataSource;
+    private static boolean isInitialized;
 
-	public MobileDeviceManagementDAOFactory(String pluginProvider) {
+    public MobileDeviceManagementDAOFactory(String pluginProvider) {
         this.pluginProvider = pluginProvider;
         this.dataSource = dataSourceMap.get(pluginProvider);
-	}
+    }
 
-	public static void init() {
-		try {
-            DataSource dataSource;
-            for(String pluginType:mobileDataSourceConfigMap.keySet()){
-                dataSource =  MobileDeviceManagementDAOFactory.resolveDataSource(mobileDataSourceConfigMap.get
-                        (pluginType));
-                dataSourceMap.put(pluginType,dataSource);
+    public static void init() throws DeviceManagementException {
+
+        DataSource dataSource;
+        for (String pluginType : mobileDataSourceConfigMap.keySet()) {
+            dataSource = MobileDeviceManagementDAOFactory.resolveDataSource(mobileDataSourceConfigMap.get
+                    (pluginType));
+            dataSourceMap.put(pluginType, dataSource);
+        }
+        isInitialized = true;
+    }
+
+    /**
+     * Resolve data source from the data source definition.
+     *
+     * @param config Mobile data source configuration
+     * @return data source resolved from the data source definition
+     */
+    private static DataSource resolveDataSource(MobileDataSourceConfig config)
+            throws DeviceManagementException {
+        DataSource dataSource = null;
+        if (config == null) {
+            throw new RuntimeException("Device Management Repository data source configuration " +
+                    "is null and thus, is not initialized");
+        }
+        JNDILookupDefinition jndiConfig = config.getJndiLookupDefinition();
+        if (jndiConfig != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Initializing Device Management Repository data source using the JNDI " +
+                        "Lookup Definition");
             }
-		} catch (DeviceManagementException e) {
-			log.error("Exception occurred while initializing the mobile data source.",e);
-		}
-	}
+            List<JNDILookupDefinition.JNDIProperty> jndiPropertyList =
+                    jndiConfig.getJndiProperties();
+            if (jndiPropertyList != null) {
+                Hashtable<Object, Object> jndiProperties = new Hashtable<Object, Object>();
+                for (JNDILookupDefinition.JNDIProperty prop : jndiPropertyList) {
+                    jndiProperties.put(prop.getName(), prop.getValue());
+                }
+                dataSource =
+                        MobileDeviceManagementDAOUtil
+                                .lookupDataSource(jndiConfig.getJndiName(), jndiProperties);
+            } else {
+                dataSource = MobileDeviceManagementDAOUtil
+                        .lookupDataSource(jndiConfig.getJndiName(), null);
+            }
+        }
+        return dataSource;
+    }
 
-	/**
-	 * Resolve data source from the data source definition.
-	 *
-	 * @param config Mobile data source configuration
-	 * @return data source resolved from the data source definition
-	 */
-	private static DataSource resolveDataSource(MobileDataSourceConfig config)
-			throws DeviceManagementException {
-		DataSource dataSource = null;
-		if (config == null) {
-			throw new RuntimeException("Device Management Repository data source configuration " +
-			                           "is null and thus, is not initialized");
-		}
-		JNDILookupDefinition jndiConfig = config.getJndiLookupDefinition();
-		if (jndiConfig != null) {
-			if (log.isDebugEnabled()) {
-				log.debug("Initializing Device Management Repository data source using the JNDI " +
-				          "Lookup Definition");
-			}
-			List<JNDILookupDefinition.JNDIProperty> jndiPropertyList =
-					jndiConfig.getJndiProperties();
-			if (jndiPropertyList != null) {
-				Hashtable<Object, Object> jndiProperties = new Hashtable<Object, Object>();
-				for (JNDILookupDefinition.JNDIProperty prop : jndiPropertyList) {
-					jndiProperties.put(prop.getName(), prop.getValue());
-				}
-				dataSource =
-						MobileDeviceManagementDAOUtil
-								.lookupDataSource(jndiConfig.getJndiName(), jndiProperties);
-			} else {
-				dataSource = MobileDeviceManagementDAOUtil
-						.lookupDataSource(jndiConfig.getJndiName(), null);
-			}
-		}
-		return dataSource;
-	}
+    public MobileDeviceDAO getMobileDeviceDAO() {
+        return new MobileDeviceDAOImpl(dataSource);
+    }
 
-	public MobileDeviceDAO getMobileDeviceDAO() {
-		return new MobileDeviceDAOImpl(dataSource);
-	}
+    public MobileOperationDAO getMobileOperationDAO() {
+        return new MobileOperationDAOImpl(dataSource);
+    }
 
-	public MobileOperationDAO getMobileOperationDAO() {
-		return new MobileOperationDAOImpl(dataSource);
-	}
+    public MobileOperationPropertyDAO getMobileOperationPropertyDAO() {
+        return new MobileOperationPropertyDAOImpl(dataSource);
+    }
 
-	public MobileOperationPropertyDAO getMobileOperationPropertyDAO() {
-		return new MobileOperationPropertyDAOImpl(dataSource);
-	}
+    public MobileDeviceOperationMappingDAO getMobileDeviceOperationDAO() {
+        return new MobileDeviceOperationMappingDAOImpl(dataSource);
+    }
 
-	public MobileDeviceOperationMappingDAO getMobileDeviceOperationDAO() {
-		return new MobileDeviceOperationMappingDAOImpl(dataSource);
-	}
+    public MobileFeatureDAO getFeatureDAO() {
+        return new MobileFeatureDAOImpl(dataSource);
+    }
 
-	public MobileFeatureDAO getFeatureDAO() {
-		return new MobileFeatureDAOImpl(dataSource);
-	}
+    public MobileFeaturePropertyDAO getFeaturePropertyDAO() {
+        return new MobileFeaturePropertyDAOImpl(dataSource);
+    }
 
-	public MobileFeaturePropertyDAO getFeaturePropertyDAO() {
-		return new MobileFeaturePropertyDAOImpl(dataSource);
-	}
-
-	public MobileDataSourceConfig getMobileDeviceManagementConfig(String pluginType) {
-		return mobileDataSourceConfigMap.get(pluginType);
-	}
+    public MobileDataSourceConfig getMobileDeviceManagementConfig(String pluginType) {
+        return mobileDataSourceConfigMap.get(pluginType);
+    }
 
     public static Map<String, MobileDataSourceConfig> getMobileDataSourceConfigMap() {
         return mobileDataSourceConfigMap;
@@ -133,11 +133,18 @@ public class MobileDeviceManagementDAOFactory {
         MobileDeviceManagementDAOFactory.mobileDataSourceConfigMap = mobileDataSourceConfigMap;
     }
 
-	public DataSource getDataSource(String type) {
-		return dataSourceMap.get(type);
-	}
+    public DataSource getDataSource(String type) {
+        return dataSourceMap.get(type);
+    }
 
     public static Map<String, DataSource> getDataSourceMap() {
         return dataSourceMap;
+    }
+
+    private static void assertDataSourceInitialization() {
+        if (!isInitialized) {
+            throw new DataSourceNotAvailableException("Mobile device management metadata repository datasource " +
+                    "is not initialized");
+        }
     }
 }
