@@ -196,8 +196,13 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
 
-            <!--CDM core dependencies-->
+            <!-- Device Management Core dependencies -->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.core</artifactId>

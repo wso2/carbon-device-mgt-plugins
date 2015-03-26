@@ -65,7 +65,7 @@ public class MobileDeviceManagementBundleActivator implements BundleActivator, B
             MobileDataSourceConfig dsConfig =
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfig();
 
-            MobileDeviceManagementDAOFactory.setMobileDataSourceConfig(dsConfig);
+            MobileDeviceManagementDAOFactory.setDatSourceConfig(dsConfig);
 
             androidServiceRegRef =
                     bundleContext.registerService(DeviceManager.class.getName(),

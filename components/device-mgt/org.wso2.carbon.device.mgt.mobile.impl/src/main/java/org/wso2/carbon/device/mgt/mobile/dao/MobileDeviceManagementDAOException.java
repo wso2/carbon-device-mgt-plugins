@@ -76,4 +76,5 @@ public class MobileDeviceManagementDAOException extends Exception {
 	public void setErrorMessage(String errorMessage) {
 		this.message = errorMessage;
 	}
+
 }
