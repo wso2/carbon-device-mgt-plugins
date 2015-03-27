@@ -76,8 +76,16 @@ public class AndroidFeatureManager implements FeatureManager {
     @Override
     public List<Feature> getFeatures() throws DeviceManagementException {
         try {
-            return featureDAO.getFeatures();
+            FeatureManagementDAOFactory.beginTransaction();
+            List<Feature> features = featureDAO.getFeatures();
+            FeatureManagementDAOFactory.commitTransaction();
+            return features;
         } catch (FeatureManagementDAOException e) {
+            try {
+                FeatureManagementDAOFactory.rollbackTransaction();
+            } catch (FeatureManagementDAOException e1) {
+                log.warn("Error occurred while roll-backing the transaction", e);
+            }
             throw new DeviceManagementException("Error occurred while retrieving the list of features registered " +
                     "for Android platform", e);
         }
@@ -86,9 +94,16 @@ public class AndroidFeatureManager implements FeatureManager {
     @Override
     public boolean removeFeature(String name) throws DeviceManagementException {
         try {
+            FeatureManagementDAOFactory.beginTransaction();
             featureDAO.removeFeature(name);
+            FeatureManagementDAOFactory.commitTransaction();
             return true;
         } catch (FeatureManagementDAOException e) {
+            try {
+                FeatureManagementDAOFactory.rollbackTransaction();
+            } catch (FeatureManagementDAOException e1) {
+                log.warn("Error occurred while roll-backing the transaction", e);
+            }
             throw new DeviceManagementException("Error occurred while removing the feature", e);
         }
     }
