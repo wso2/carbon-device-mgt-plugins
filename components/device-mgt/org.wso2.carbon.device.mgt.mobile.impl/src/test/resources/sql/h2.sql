@@ -1,6 +1,6 @@
 
 -- -----------------------------------------------------
--- Table `MBL_DEVICE`
+-- Table `AD_DEVICE`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `AD_DEVICE` (
   `MOBILE_DEVICE_ID` VARCHAR(45) NOT NULL ,
