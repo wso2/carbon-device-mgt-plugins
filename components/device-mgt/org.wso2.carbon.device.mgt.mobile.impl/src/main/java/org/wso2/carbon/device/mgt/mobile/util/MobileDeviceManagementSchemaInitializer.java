@@ -20,6 +20,7 @@ package org.wso2.carbon.device.mgt.mobile.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 
@@ -33,21 +34,22 @@ import java.io.File;
  */
 public final class MobileDeviceManagementSchemaInitializer extends DatabaseCreator {
 
-	private static final Log log = LogFactory.getLog(MobileDeviceManagementSchemaInitializer.class);
-	private static final String setupSQLScriptBaseLocation =
-			CarbonUtils.getCarbonHome() + File.separator + "dbscripts" + File.separator + "cdm" +
-			File.separator + "plugins" + File.separator ;
+    private static final Log log = LogFactory.getLog(MobileDeviceManagementSchemaInitializer.class);
+    private static final String setupSQLScriptBaseLocation =
+            CarbonUtils.getCarbonHome() + File.separator + "dbscripts" + File.separator
+                    + MobilePluginConstants.MOBILE_DB_SCRIPTS_FOLDER +
+                    File.separator + "plugins" + File.separator;
 
-	public MobileDeviceManagementSchemaInitializer(DataSource dataSource) {
-		super(dataSource);
-	}
+    public MobileDeviceManagementSchemaInitializer(DataSource dataSource) {
+        super(dataSource);
+    }
 
-	protected String getDbScriptLocation(String databaseType) {
-		String scriptName = databaseType + ".sql";
-		if (log.isDebugEnabled()) {
-			log.debug("Loading database script from :" + scriptName);
-		}
-		return setupSQLScriptBaseLocation.replaceFirst("DBTYPE", databaseType) + scriptName;
-	}
+    protected String getDbScriptLocation(String databaseType) {
+        String scriptName = databaseType + ".sql";
+        if (log.isDebugEnabled()) {
+            log.debug("Loading database script from :" + scriptName);
+        }
+        return setupSQLScriptBaseLocation.replaceFirst("DBTYPE", databaseType) + scriptName;
+    }
 
 }
