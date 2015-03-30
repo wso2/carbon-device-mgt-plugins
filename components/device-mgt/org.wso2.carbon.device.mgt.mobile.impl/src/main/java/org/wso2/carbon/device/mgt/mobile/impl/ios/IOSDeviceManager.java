@@ -34,8 +34,9 @@ import java.util.List;
  */
 public class IOSDeviceManager implements DeviceManager {
 
-     private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
-     private static final Log log = LogFactory.getLog(IOSDeviceManager.class);
+    private static final Log log = LogFactory.getLog(IOSDeviceManager.class);
+    private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
+    private IOSFeatureManager iosFeatureManager;
 
     @Override
     public String getProviderType() {
@@ -45,11 +46,12 @@ public class IOSDeviceManager implements DeviceManager {
     public IOSDeviceManager() {
         mobileDeviceManagementDAOFactory = new MobileDeviceManagementDAOFactory(DeviceManagementConstants
                 .MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS);
+        iosFeatureManager = new IOSFeatureManager();
     }
 
     @Override
     public FeatureManager getFeatureManager() {
-        return null;
+        return iosFeatureManager;
     }
 
     @Override
