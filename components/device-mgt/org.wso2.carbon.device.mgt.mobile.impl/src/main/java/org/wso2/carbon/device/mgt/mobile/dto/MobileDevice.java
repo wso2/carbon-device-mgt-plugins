@@ -19,127 +19,101 @@
 package org.wso2.carbon.device.mgt.mobile.dto;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * DTO of MobileDevice.
  */
 public class MobileDevice implements Serializable {
 
-	private String mobileDeviceId;
-	private String pushToken;
-	private String imei;
-	private String imsi;
-	private String osVersion;
-	private String model;
-	private String vendor;
-	private String latitude;
-	private String longitude;
-	private String serial;
-	private String unlockToken;
-	private String token;
-	private String challenge;
+    private String mobileDeviceId;
+    private String osVersion;
+    private String model;
+    private String vendor;
+    private String latitude;
+    private String longitude;
+    private String imei;
+    private String imsi;
+    private String serial;
+    private Map<String, String> deviceProperties;
 
-	public String getUnlockToken() {
-		return unlockToken;
-	}
+    public String getMobileDeviceId() {
+        return mobileDeviceId;
+    }
 
-	public void setUnlockToken(String unlockToken) {
-		this.unlockToken = unlockToken;
-	}
+    public void setMobileDeviceId(String mobileDeviceId) {
+        this.mobileDeviceId = mobileDeviceId;
+    }
 
-	public String getToken() {
-		return token;
-	}
+    public String getOsVersion() {
+        return osVersion;
+    }
 
-	public void setToken(String token) {
-		this.token = token;
-	}
+    public void setOsVersion(String osVersion) {
+        this.osVersion = osVersion;
+    }
 
-	public String getChallenge() {
-		return challenge;
-	}
+    public String getModel() {
+        return model;
+    }
 
-	public void setChallenge(String challenge) {
-		this.challenge = challenge;
-	}
+    public void setModel(String model) {
+        this.model = model;
+    }
 
-	public String getSerial() {
-		return serial;
-	}
+    public String getVendor() {
+        return vendor;
+    }
 
-	public void setSerial(String serial) {
-		this.serial = serial;
-	}
+    public void setVendor(String vendor) {
+        this.vendor = vendor;
+    }
 
-	public String getMobileDeviceId() {
-		return mobileDeviceId;
-	}
+    public String getLatitude() {
+        return latitude;
+    }
 
-	public void setMobileDeviceId(String mobileDeviceId) {
-		this.mobileDeviceId = mobileDeviceId;
-	}
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
 
-	public String getPushToken() {
-		return pushToken;
-	}
+    public String getLongitude() {
+        return longitude;
+    }
 
-	public void setPushToken(String pushToken) {
-		this.pushToken = pushToken;
-	}
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
 
-	public String getImei() {
-		return imei;
-	}
+    public String getImei() {
+        return imei;
+    }
 
-	public void setImei(String imei) {
-		this.imei = imei;
-	}
+    public void setImei(String imei) {
+        this.imei = imei;
+    }
 
-	public String getImsi() {
-		return imsi;
-	}
+    public String getImsi() {
+        return imsi;
+    }
 
-	public void setImsi(String imsi) {
-		this.imsi = imsi;
-	}
+    public void setImsi(String imsi) {
+        this.imsi = imsi;
+    }
 
-	public String getOsVersion() {
-		return osVersion;
-	}
+    public String getSerial() {
+        return serial;
+    }
 
-	public void setOsVersion(String osVersion) {
-		this.osVersion = osVersion;
-	}
+    public void setSerial(String serial) {
+        this.serial = serial;
+    }
 
-	public String getModel() {
-		return model;
-	}
+    public Map<String, String> getDeviceProperties() {
+        return deviceProperties;
+    }
 
-	public void setModel(String model) {
-		this.model = model;
-	}
-
-	public String getVendor() {
-		return vendor;
-	}
-
-	public void setVendor(String vendor) {
-		this.vendor = vendor;
-	}
-
-	public String getLatitude() {
-		return latitude;
-	}
-
-	public void setLatitude(String latitude) {
-		this.latitude = latitude;
-	}
-
-	public String getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(String longitude) {
-		this.longitude = longitude;
-	}
+    public void setDeviceProperties(Map<String, String> deviceProperties) {
+        this.deviceProperties = deviceProperties;
+    }
 }

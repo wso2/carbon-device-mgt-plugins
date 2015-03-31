@@ -21,6 +21,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.*;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.impl.FeatureDAOImpl;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.impl.IOSDeviceDAOImpl;
 
 public class IOSDAOFactory extends MobileDeviceManagementDAOFactory {
 
@@ -32,7 +34,7 @@ public class IOSDAOFactory extends MobileDeviceManagementDAOFactory {
 
     @Override
     public MobileDeviceDAO getMobileDeviceDAO() {
-        return null;
+        return new IOSDeviceDAOImpl(dataSource);
     }
 
     @Override
@@ -52,7 +54,7 @@ public class IOSDAOFactory extends MobileDeviceManagementDAOFactory {
 
     @Override
     public MobileFeatureDAO getMobileFeatureDao() {
-        return null;
+        return new FeatureDAOImpl();
     }
 
     public MobileFeaturePropertyDAO getFeaturePropertyDAO() {
