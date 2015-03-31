@@ -23,11 +23,9 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
-import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
-import org.wso2.carbon.device.mgt.mobile.dto.MobileDeviceOperationMapping;
-import org.wso2.carbon.device.mgt.mobile.dto.MobileOperation;
-import org.wso2.carbon.device.mgt.mobile.dto.MobileOperationProperty;
+import org.wso2.carbon.device.mgt.mobile.dto.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -164,4 +162,24 @@ public class MobileDeviceManagementUtil {
 		operation.setProperties(properties);
 		return operation;
 	}
+
+    public static MobileFeature convertToMobileFeature(Feature feature) {
+        MobileFeature mobileFeature = new MobileFeature();
+        mobileFeature.setName(feature.getName());
+        mobileFeature.setCode(feature.getCode());
+        mobileFeature.setDescription(feature.getDescription());
+        mobileFeature.setDeviceType(feature.getDeviceType());
+
+        return mobileFeature;
+    }
+
+    public static Feature convertToFeature(MobileFeature mobileFeature) {
+        Feature feature = new Feature();
+        feature.setDescription(mobileFeature.getDescription());
+        feature.setDeviceType(mobileFeature.getDeviceType());
+        feature.setCode(mobileFeature.getCode());
+        feature.setName(mobileFeature.getName());
+
+        return feature;
+    }
 }

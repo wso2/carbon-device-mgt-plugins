@@ -20,14 +20,16 @@ package org.wso2.carbon.device.mgt.mobile.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.mobile.DataSourceNotAvailableException;
+import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.JNDILookupDefinition;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
-import org.wso2.carbon.device.mgt.mobile.dao.impl.*;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.FeatureManagementDAOException;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -36,21 +38,16 @@ import java.util.Map;
 /**
  * Factory class used to create MobileDeviceManagement related DAO objects.
  */
-public class MobileDeviceManagementDAOFactory {
+public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceManagementDAOFactoryInterface {
 
     private static final Log log = LogFactory.getLog(MobileDeviceManagementDAOFactory.class);
     private static Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap;
     private static Map<String, DataSource> dataSourceMap;
-    private String pluginProvider;
-    private DataSource dataSource;
     private static boolean isInitialized;
+    private static ThreadLocal<Connection> currentConnection = new ThreadLocal<Connection>();
+    protected static DataSource dataSource;
 
-    public MobileDeviceManagementDAOFactory(String pluginProvider) {
-        this.pluginProvider = pluginProvider;
-        this.dataSource = dataSourceMap.get(pluginProvider);
-    }
-
-    public static void init() throws DeviceManagementException {
+    public static void init() throws MobileDeviceMgtPluginException {
 
         dataSourceMap = new HashMap<String, DataSource>();
         DataSource dataSource;
@@ -68,8 +65,7 @@ public class MobileDeviceManagementDAOFactory {
      * @param config Mobile data source configuration
      * @return data source resolved from the data source definition
      */
-    private static DataSource resolveDataSource(MobileDataSourceConfig config)
-            throws DeviceManagementException {
+    protected static DataSource resolveDataSource(MobileDataSourceConfig config) {
         DataSource dataSource = null;
         if (config == null) {
             throw new RuntimeException("Device Management Repository data source configuration " +
@@ -99,34 +95,6 @@ public class MobileDeviceManagementDAOFactory {
         return dataSource;
     }
 
-    public MobileDeviceDAO getMobileDeviceDAO() {
-        return new MobileDeviceDAOImpl(dataSource);
-    }
-
-    public MobileOperationDAO getMobileOperationDAO() {
-        return new MobileOperationDAOImpl(dataSource);
-    }
-
-    public MobileOperationPropertyDAO getMobileOperationPropertyDAO() {
-        return new MobileOperationPropertyDAOImpl(dataSource);
-    }
-
-    public MobileDeviceOperationMappingDAO getMobileDeviceOperationDAO() {
-        return new MobileDeviceOperationMappingDAOImpl(dataSource);
-    }
-
-    public MobileFeatureDAO getFeatureDAO() {
-        return new MobileFeatureDAOImpl(dataSource);
-    }
-
-    public MobileFeaturePropertyDAO getFeaturePropertyDAO() {
-        return new MobileFeaturePropertyDAOImpl(dataSource);
-    }
-
-    public MobileDataSourceConfig getMobileDeviceManagementConfig(String pluginType) {
-        return mobileDataSourceConfigMap.get(pluginType);
-    }
-
     public static Map<String, MobileDataSourceConfig> getMobileDataSourceConfigMap() {
         return mobileDataSourceConfigMap;
     }
@@ -135,12 +103,8 @@ public class MobileDeviceManagementDAOFactory {
         MobileDeviceManagementDAOFactory.mobileDataSourceConfigMap = mobileDataSourceConfigMap;
     }
 
-    public DataSource getDataSource(String type) {
+    public static DataSource getDataSource(String type) {
         return dataSourceMap.get(type);
-    }
-
-    public DataSource getDataSource() {
-        return dataSource;
     }
 
     public static Map<String, DataSource> getDataSourceMap() {
@@ -153,4 +117,51 @@ public class MobileDeviceManagementDAOFactory {
                     "is not initialized");
         }
     }
+
+    public static void beginTransaction() throws MobileDeviceManagementDAOException {
+        try {
+            Connection conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            currentConnection.set(conn);
+        } catch (SQLException e) {
+            throw new MobileDeviceManagementDAOException("Error occurred while retrieving datasource connection", e);
+        }
+    }
+
+    public static Connection getConnection() {
+        return currentConnection.get();
+    }
+
+    public static void commitTransaction() throws MobileDeviceManagementDAOException {
+        try {
+            Connection conn = currentConnection.get();
+            if (conn != null) {
+                conn.commit();
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("Datasource connection associated with the current thread is null, hence commit " +
+                            "has not been attempted");
+                }
+            }
+        } catch (SQLException e) {
+            throw new MobileDeviceManagementDAOException("Error occurred while committing the transaction", e);
+        }
+    }
+
+    public static void rollbackTransaction() throws MobileDeviceManagementDAOException {
+        try {
+            Connection conn = currentConnection.get();
+            if (conn != null) {
+                conn.rollback();
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("Datasource connection associated with the current thread is null, hence rollback " +
+                            "has not been attempted");
+                }
+            }
+        } catch (SQLException e) {
+            throw new MobileDeviceManagementDAOException("Error occurred while rollbacking the transaction", e);
+        }
+    }
+
 }

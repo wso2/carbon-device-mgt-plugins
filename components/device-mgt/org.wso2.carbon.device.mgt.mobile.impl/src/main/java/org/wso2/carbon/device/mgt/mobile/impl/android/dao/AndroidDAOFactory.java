@@ -20,24 +20,48 @@ package org.wso2.carbon.device.mgt.mobile.impl.android.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
+import org.wso2.carbon.device.mgt.mobile.dao.*;
+import org.wso2.carbon.device.mgt.mobile.impl.android.dao.impl.FeatureDAOImpl;
 
 import javax.sql.DataSource;
 
-public class AndroidDAOFactory {
+public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
+        implements MobileDeviceManagementDAOFactoryInterface {
 
     private static final Log log = LogFactory.getLog(AndroidDAOFactory.class);
     private static DataSource dataSource;
-    private static boolean isInitialized;
-    private static MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
 
-    public static void init() {
-        mobileDeviceManagementDAOFactory = new MobileDeviceManagementDAOFactory(DeviceManagementConstants
-                .MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+    public static void init(MobileDataSourceConfig config) {
+        dataSource = resolveDataSource(config);
     }
 
-    public static DataSource getDataSource() {
-        return mobileDeviceManagementDAOFactory.getDataSource();
+    @Override
+    public MobileDeviceDAO getMobileDeviceDAO() {
+        return null;
     }
+
+    @Override
+    public MobileOperationDAO getMobileOperationDAO() {
+        return null;
+    }
+
+    @Override
+    public MobileOperationPropertyDAO getMobileOperationPropertyDAO() {
+        return null;
+    }
+
+    @Override
+    public MobileDeviceOperationMappingDAO getMobileDeviceOperationDAO() {
+        return null;
+    }
+
+    @Override public MobileFeatureDAO getMobileFeatureDao() {
+        return new FeatureDAOImpl();
+    }
+
+    public MobileFeaturePropertyDAO getFeaturePropertyDAO() {
+        return null;
+    }
+
 }

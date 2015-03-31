@@ -87,7 +87,8 @@ public class MobileFeatureDAOTestSuite {
 		mobileFeature.setDescription(MBL_FEATURE_DESCRIPTION);
 		mobileFeature.setName(MBL_FEATURE_NAME);
 		mobileFeature.setDeviceType(MBL_FEATURE_DEVICE_TYPE);
-		int id = mblFeatureDAO.addMobileFeature(mobileFeature);
+		mblFeatureDAO.addFeature(mobileFeature);
+
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String query =
@@ -110,7 +111,7 @@ public class MobileFeatureDAOTestSuite {
 			MobileDatabaseUtils.cleanupResources(conn, preparedStatement, null);
 		}
 		mblFeatureId = testMblFeature.getId();
-		Assert.assertTrue(id > 0, "MobileFeature has added ");
+		Assert.assertTrue(mblFeatureId > 0, "MobileFeature has added ");
 		Assert.assertEquals(MBL_FEATURE_CODE, testMblFeature.getCode(),
 		                    "MobileFeature code has persisted ");
 		Assert.assertEquals(MBL_FEATURE_NAME, testMblFeature.getName(),
@@ -125,7 +126,7 @@ public class MobileFeatureDAOTestSuite {
 	public void getMobileFeatureByCodeTest()
 			throws MobileDeviceManagementDAOException {
 
-		MobileFeature mobileFeature = mblFeatureDAO.getMobileFeatureByCode(MBL_FEATURE_CODE);
+		MobileFeature mobileFeature = mblFeatureDAO.getFeatureByCode(MBL_FEATURE_CODE);
 		Assert.assertEquals(MBL_FEATURE_CODE, mobileFeature.getCode(),
 		                    "MobileFeature code has retrieved ");
 		Assert.assertEquals(MBL_FEATURE_NAME, mobileFeature.getName(),
@@ -138,7 +139,7 @@ public class MobileFeatureDAOTestSuite {
 	public void getMobileFeatureByIdTest()
 			throws MobileDeviceManagementDAOException {
 
-		MobileFeature mobileFeature = mblFeatureDAO.getMobileFeatureById(mblFeatureId);
+		MobileFeature mobileFeature = mblFeatureDAO.getFeatureById(mblFeatureId);
 		Assert.assertEquals(MBL_FEATURE_CODE, mobileFeature.getCode(),
 		                    "MobileFeature code has retrieved ");
 		Assert.assertEquals(MBL_FEATURE_NAME, mobileFeature.getName(),
@@ -151,7 +152,7 @@ public class MobileFeatureDAOTestSuite {
 	public void getAllMobileFeaturesTest()
 			throws MobileDeviceManagementDAOException {
 
-		List<MobileFeature> mobileFeatures = mblFeatureDAO.getAllMobileFeatures();
+		List<MobileFeature> mobileFeatures = mblFeatureDAO.getAllFeatures();
 		Assert.assertNotNull(mobileFeatures, "MobileFeature list is not null");
 		Assert.assertTrue(mobileFeatures.size() > 0, "MobileFeature list has 1 MobileFeature");
 	}
@@ -170,7 +171,7 @@ public class MobileFeatureDAOTestSuite {
 		mobileFeature.setDescription(MBL_FEATURE_DESCRIPTION);
 		mobileFeature.setName(MBL_FEATURE_NAME);
 		mobileFeature.setId(mblFeatureId);
-		boolean updated = mblFeatureDAO.updateMobileFeature(mobileFeature);
+		boolean updated = mblFeatureDAO.updateFeature(mobileFeature);
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String query =
@@ -204,7 +205,7 @@ public class MobileFeatureDAOTestSuite {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 
-		boolean status = mblFeatureDAO.deleteMobileFeatureById(mblFeatureId);
+		boolean status = mblFeatureDAO.deleteFeatureById(mblFeatureId);
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String query = "SELECT FEATURE_ID, CODE FROM AD_FEATURE WHERE FEATURE_ID = ?";
@@ -236,8 +237,8 @@ public class MobileFeatureDAOTestSuite {
 		mobileFeature.setDescription(MBL_FEATURE_DESCRIPTION);
 		mobileFeature.setName(MBL_FEATURE_NAME);
 		mobileFeature.setDeviceType(MBL_FEATURE_DEVICE_TYPE);
-		mblFeatureDAO.addMobileFeature(mobileFeature);
-		boolean status = mblFeatureDAO.deleteMobileFeatureByCode(MBL_FEATURE_CODE);
+		mblFeatureDAO.addFeature(mobileFeature);
+		boolean status = mblFeatureDAO.deleteFeatureByCode(MBL_FEATURE_CODE);
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String query = "SELECT FEATURE_ID, CODE FROM AD_FEATURE WHERE CODE = ?";

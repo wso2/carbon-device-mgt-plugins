@@ -45,194 +45,197 @@ import java.util.List;
  *
  */
 public class MobileFeaturePropertyDAOTestSuite {
-	private static final Log log = LogFactory.getLog(MobileFeaturePropertyDAOTestSuite.class);
-	public static final String MBL_FEATURE_NAME = "WIFI";
-	private static final String MBL_FEATURE_CODE = "500A";
-	public static final String MBL_FEATURE_DESCRIPTION = "Wifi config";
-	public static final String MBL_FEATURE_DEVICE_TYPE = "Android";
-	public static final String MBL_FEATURE_PROP_1 = "SSID";
-	public static final String MBL_FEATURE_PROP_2 = "PASSWORD";
-	private TestDBConfiguration testDBConfiguration;
-	private MobileFeatureDAOImpl mblFeatureDAO;
-	private MobileFeaturePropertyDAOImpl mobileFeaturePropertyDAO;
-	private int mblFeatureId;
 
-	@BeforeClass
-	@Parameters("dbType")
-	public void setUpDB(String dbTypeStr) throws Exception {
+    private static final Log log = LogFactory.getLog(MobileFeaturePropertyDAOTestSuite.class);
+    public static final String MBL_FEATURE_NAME = "WIFI";
+    private static final String MBL_FEATURE_CODE = "500A";
+    public static final String MBL_FEATURE_DESCRIPTION = "Wifi config";
+    public static final String MBL_FEATURE_DEVICE_TYPE = "Android";
+    public static final String MBL_FEATURE_PROP_1 = "SSID";
+    public static final String MBL_FEATURE_PROP_2 = "PASSWORD";
+    private TestDBConfiguration testDBConfiguration;
+    private MobileFeatureDAOImpl mblFeatureDAO;
+    private MobileFeaturePropertyDAOImpl mobileFeaturePropertyDAO;
+    private int mblFeatureId;
 
-		DBTypes dbType = DBTypes.valueOf(dbTypeStr);
-		testDBConfiguration = MobileDatabaseUtils.getTestDBConfiguration(dbType);
+    @BeforeClass
+    @Parameters("dbType")
+    public void setUpDB(String dbTypeStr) throws Exception {
 
-		switch (dbType) {
-			case H2:
-				MobileDatabaseUtils.createH2DB(testDBConfiguration);
-				DataSource testDataSource = new org.apache.tomcat.jdbc.pool.DataSource();
-				PoolProperties properties = new PoolProperties();
-				properties.setUrl(testDBConfiguration.getConnectionURL());
-				properties.setDriverClassName(testDBConfiguration.getDriverClassName());
-				properties.setUsername(testDBConfiguration.getUsername());
-				properties.setPassword(testDBConfiguration.getPassword());
-				testDataSource.setPoolProperties(properties);
-				mblFeatureDAO = new MobileFeatureDAOImpl(testDataSource);
-				mobileFeaturePropertyDAO = new MobileFeaturePropertyDAOImpl(testDataSource);
-			default:
-		}
-	}
+        DBTypes dbType = DBTypes.valueOf(dbTypeStr);
+        testDBConfiguration = MobileDatabaseUtils.getTestDBConfiguration(dbType);
 
-	@Test
-	public void addMobileFeaturePropertyTest()
-			throws MobileDeviceManagementDAOException {
+        switch (dbType) {
+        case H2:
+            MobileDatabaseUtils.createH2DB(testDBConfiguration);
+            DataSource testDataSource = new org.apache.tomcat.jdbc.pool.DataSource();
+            PoolProperties properties = new PoolProperties();
+            properties.setUrl(testDBConfiguration.getConnectionURL());
+            properties.setDriverClassName(testDBConfiguration.getDriverClassName());
+            properties.setUsername(testDBConfiguration.getUsername());
+            properties.setPassword(testDBConfiguration.getPassword());
+            testDataSource.setPoolProperties(properties);
+            mblFeatureDAO = new MobileFeatureDAOImpl(testDataSource);
+            mobileFeaturePropertyDAO = new MobileFeaturePropertyDAOImpl(testDataSource);
+        default:
+        }
+    }
 
-		Connection conn = null;
-		PreparedStatement preparedStatement = null;
-		List<MobileFeatureProperty> propertyList = new ArrayList<MobileFeatureProperty>();
-		//Add a new MobileFeature to the database
-		MobileFeature mobileFeature = new MobileFeature();
-		mobileFeature.setCode(MBL_FEATURE_CODE);
-		mobileFeature.setDescription(MBL_FEATURE_DESCRIPTION);
-		mobileFeature.setName(MBL_FEATURE_NAME);
-		mobileFeature.setDeviceType(MBL_FEATURE_DEVICE_TYPE);
-		mblFeatureId = mblFeatureDAO.addMobileFeature(mobileFeature);
+    @Test
+    public void addMobileFeaturePropertyTest()
+            throws MobileDeviceManagementDAOException {
 
-		//Add 1st property to the feature
-		MobileFeatureProperty mobileFeatureProperty = new MobileFeatureProperty();
-		mobileFeatureProperty.setFeatureID(mblFeatureId);
-		mobileFeatureProperty.setProperty(MBL_FEATURE_PROP_1);
-		boolean status1 = mobileFeaturePropertyDAO.addMobileFeatureProperty(mobileFeatureProperty);
+        Connection conn = null;
+        PreparedStatement preparedStatement = null;
+        List<MobileFeatureProperty> propertyList = new ArrayList<MobileFeatureProperty>();
+        //Add a new MobileFeature to the database
+        MobileFeature mobileFeature = new MobileFeature();
+        mobileFeature.setCode(MBL_FEATURE_CODE);
+        mobileFeature.setDescription(MBL_FEATURE_DESCRIPTION);
+        mobileFeature.setName(MBL_FEATURE_NAME);
+        mobileFeature.setDeviceType(MBL_FEATURE_DEVICE_TYPE);
+        mblFeatureDAO.addFeature(mobileFeature);
 
-		//Add 2nd property to the feature
-		mobileFeatureProperty.setProperty(MBL_FEATURE_PROP_2);
-		boolean status2 = mobileFeaturePropertyDAO.addMobileFeatureProperty(mobileFeatureProperty);
-		try {
-			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
-			String query =
-					"SELECT FEATURE_ID, PROPERTY FROM AD_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
-			preparedStatement = conn.prepareStatement(query);
-			preparedStatement.setInt(1, mblFeatureId);
-			ResultSet resultSet = preparedStatement.executeQuery();
+        MobileFeature persistMblFeature =  mblFeatureDAO.getFeatureByCode(MBL_FEATURE_CODE);
+        mblFeatureId = persistMblFeature.getId();
+        //Add 1st property to the feature
+        MobileFeatureProperty mobileFeatureProperty = new MobileFeatureProperty();
+        mobileFeatureProperty.setFeatureID(mblFeatureId);
+        mobileFeatureProperty.setProperty(MBL_FEATURE_PROP_1);
+        boolean status1 = mobileFeaturePropertyDAO.addMobileFeatureProperty(mobileFeatureProperty);
 
-			while (resultSet.next()) {
-				mobileFeatureProperty = new MobileFeatureProperty();
-				mobileFeatureProperty.setFeatureID(resultSet.getInt(1));
-				mobileFeatureProperty.setProperty(resultSet.getString(2));
-				propertyList.add(mobileFeatureProperty);
-			}
-		} catch (SQLException e) {
-			String msg = "Error in retrieving Mobile Feature data ";
-			log.error(msg, e);
-			throw new MobileDeviceManagementDAOException(msg, e);
-		} finally {
-			MobileDatabaseUtils.cleanupResources(conn, preparedStatement, null);
-		}
-		Assert.assertTrue(status1, "MobileFeatureProperty1 has added ");
-		Assert.assertTrue(status2, "MobileFeatureProperty2 has added ");
-		Assert.assertTrue(propertyList.size() == 2, "MobileFeatureProperties have retrieved ");
+        //Add 2nd property to the feature
+        mobileFeatureProperty.setProperty(MBL_FEATURE_PROP_2);
+        boolean status2 = mobileFeaturePropertyDAO.addMobileFeatureProperty(mobileFeatureProperty);
+        try {
+            conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
+            String query =
+                    "SELECT FEATURE_ID, PROPERTY FROM AD_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
+            preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1, mblFeatureId);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-		for (MobileFeatureProperty mblFeatureProperty : propertyList) {
-			Assert.assertNotNull(mblFeatureProperty.getProperty(),
-			                     "MobileFeatureProperty property has persisted ");
-			Assert.assertNotNull(mblFeatureProperty.getFeatureID(),
-			                     "MobileFeatureProperty feature-id has persisted ");
-		}
+            while (resultSet.next()) {
+                mobileFeatureProperty = new MobileFeatureProperty();
+                mobileFeatureProperty.setFeatureID(resultSet.getInt(1));
+                mobileFeatureProperty.setProperty(resultSet.getString(2));
+                propertyList.add(mobileFeatureProperty);
+            }
+        } catch (SQLException e) {
+            String msg = "Error in retrieving Mobile Feature data ";
+            log.error(msg, e);
+            throw new MobileDeviceManagementDAOException(msg, e);
+        } finally {
+            MobileDatabaseUtils.cleanupResources(conn, preparedStatement, null);
+        }
+        Assert.assertTrue(status1, "MobileFeatureProperty1 has added ");
+        Assert.assertTrue(status2, "MobileFeatureProperty2 has added ");
+        Assert.assertTrue(propertyList.size() == 2, "MobileFeatureProperties have retrieved ");
 
-	}
+        for (MobileFeatureProperty mblFeatureProperty : propertyList) {
+            Assert.assertNotNull(mblFeatureProperty.getProperty(),
+                    "MobileFeatureProperty property has persisted ");
+            Assert.assertNotNull(mblFeatureProperty.getFeatureID(),
+                    "MobileFeatureProperty feature-id has persisted ");
+        }
 
-	@Test(dependsOnMethods = { "addMobileFeaturePropertyTest" })
-	public void getMobileFeaturePropertyTest()
-			throws MobileDeviceManagementDAOException {
-		MobileFeatureProperty mobileFeatureProperty =
-				mobileFeaturePropertyDAO.getMobileFeatureProperty(MBL_FEATURE_PROP_1);
-		Assert.assertNotNull(mobileFeatureProperty, "MobileFeatureProperty has retrieved ");
-		Assert.assertEquals(MBL_FEATURE_PROP_1, mobileFeatureProperty.getProperty(),
-		                    "MobileFeatureProperty property has retrieved ");
-		Assert.assertTrue(mblFeatureId == mobileFeatureProperty.getFeatureID(),
-		                  "MobileFeatureProperty featureId has retrieved ");
-	}
+    }
 
-	@Test(dependsOnMethods = { "addMobileFeaturePropertyTest" })
-	public void getFeaturePropertyOfFeatureTest()
-			throws MobileDeviceManagementDAOException {
-		List<MobileFeatureProperty> mobileFeatureProperties =
-				mobileFeaturePropertyDAO.getFeaturePropertiesOfFeature(mblFeatureId);
-		Assert.assertNotNull(mobileFeatureProperties, "MobileFeatureProperty list has retrieved ");
-		Assert.assertTrue(mobileFeatureProperties.size() == 2,
-		                  "MobileFeatureProperties have fetched ");
-		for (MobileFeatureProperty mblFeatureProperty : mobileFeatureProperties) {
-			Assert.assertNotNull(mblFeatureProperty.getProperty(),
-			                     "MobileFeatureProperty property has fetched ");
-			Assert.assertNotNull(mblFeatureProperty.getFeatureID(),
-			                     "MobileFeatureProperty feature-id has fetched ");
-		}
-	}
+    @Test(dependsOnMethods = { "addMobileFeaturePropertyTest" })
+    public void getMobileFeaturePropertyTest()
+            throws MobileDeviceManagementDAOException {
+        MobileFeatureProperty mobileFeatureProperty =
+                mobileFeaturePropertyDAO.getMobileFeatureProperty(MBL_FEATURE_PROP_1);
+        Assert.assertNotNull(mobileFeatureProperty, "MobileFeatureProperty has retrieved ");
+        Assert.assertEquals(MBL_FEATURE_PROP_1, mobileFeatureProperty.getProperty(),
+                "MobileFeatureProperty property has retrieved ");
+        Assert.assertTrue(mblFeatureId == mobileFeatureProperty.getFeatureID(),
+                "MobileFeatureProperty featureId has retrieved ");
+    }
 
-	@Test(dependsOnMethods = { "addMobileFeaturePropertyTest", "getMobileFeaturePropertyTest",
-	                           "getFeaturePropertyOfFeatureTest" }, expectedExceptions = MobileDeviceManagementDAOException.class)
-	public void updateMobileFeaturePropertyTest() throws MobileDeviceManagementDAOException {
-		//Update 1st property to a non-exist feature
-		MobileFeatureProperty mobileFeatureProperty = new MobileFeatureProperty();
-		mobileFeatureProperty.setFeatureID(2);
-		mobileFeatureProperty.setProperty(MBL_FEATURE_PROP_1);
-		mobileFeaturePropertyDAO.updateMobileFeatureProperty(mobileFeatureProperty);
-	}
+    @Test(dependsOnMethods = { "addMobileFeaturePropertyTest" })
+    public void getFeaturePropertyOfFeatureTest()
+            throws MobileDeviceManagementDAOException {
+        List<MobileFeatureProperty> mobileFeatureProperties =
+                mobileFeaturePropertyDAO.getFeaturePropertiesOfFeature(mblFeatureId);
+        Assert.assertNotNull(mobileFeatureProperties, "MobileFeatureProperty list has retrieved ");
+        Assert.assertTrue(mobileFeatureProperties.size() == 2,
+                "MobileFeatureProperties have fetched ");
+        for (MobileFeatureProperty mblFeatureProperty : mobileFeatureProperties) {
+            Assert.assertNotNull(mblFeatureProperty.getProperty(),
+                    "MobileFeatureProperty property has fetched ");
+            Assert.assertNotNull(mblFeatureProperty.getFeatureID(),
+                    "MobileFeatureProperty feature-id has fetched ");
+        }
+    }
 
-	@Test(dependsOnMethods = { "addMobileFeaturePropertyTest", "getMobileFeaturePropertyTest",
-	                           "getFeaturePropertyOfFeatureTest" })
-	public void deleteMobileFeaturePropertyTest()
-			throws MobileDeviceManagementDAOException {
-		Connection conn = null;
-		PreparedStatement preparedStatement = null;
-		boolean status =
-				mobileFeaturePropertyDAO.deleteMobileFeatureProperty(MBL_FEATURE_PROP_2);
-		try {
-			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
-			String query =
-					"SELECT PROPERTY, FEATURE_ID FROM AD_FEATURE_PROPERTY WHERE PROPERTY = ?";
-			preparedStatement = conn.prepareStatement(query);
-			preparedStatement.setString(1, MBL_FEATURE_PROP_2);
-			ResultSet resultSet = preparedStatement.executeQuery();
+    @Test(dependsOnMethods = { "addMobileFeaturePropertyTest", "getMobileFeaturePropertyTest",
+            "getFeaturePropertyOfFeatureTest" }, expectedExceptions = MobileDeviceManagementDAOException.class)
+    public void updateMobileFeaturePropertyTest() throws MobileDeviceManagementDAOException {
+        //Update 1st property to a non-exist feature
+        MobileFeatureProperty mobileFeatureProperty = new MobileFeatureProperty();
+        mobileFeatureProperty.setFeatureID(2);
+        mobileFeatureProperty.setProperty(MBL_FEATURE_PROP_1);
+        mobileFeaturePropertyDAO.updateMobileFeatureProperty(mobileFeatureProperty);
+    }
 
-			if (resultSet.next()) {
-				status = false;
-			}
-		} catch (SQLException e) {
-			String msg = "Error in retrieving MobileFeatureProperty data ";
-			log.error(msg, e);
-			throw new MobileDeviceManagementDAOException(msg, e);
-		} finally {
-			MobileDatabaseUtils.cleanupResources(conn, preparedStatement, null);
-		}
-		Assert.assertTrue(status, "MobileFeatureProperty has deleted ");
-	}
+    @Test(dependsOnMethods = { "addMobileFeaturePropertyTest", "getMobileFeaturePropertyTest",
+            "getFeaturePropertyOfFeatureTest" })
+    public void deleteMobileFeaturePropertyTest()
+            throws MobileDeviceManagementDAOException {
+        Connection conn = null;
+        PreparedStatement preparedStatement = null;
+        boolean status =
+                mobileFeaturePropertyDAO.deleteMobileFeatureProperty(MBL_FEATURE_PROP_2);
+        try {
+            conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
+            String query =
+                    "SELECT PROPERTY, FEATURE_ID FROM AD_FEATURE_PROPERTY WHERE PROPERTY = ?";
+            preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, MBL_FEATURE_PROP_2);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-	@Test(dependsOnMethods = { "addMobileFeaturePropertyTest", "getMobileFeaturePropertyTest",
-	                           "getFeaturePropertyOfFeatureTest" , "updateMobileFeaturePropertyTest",
-	                           "deleteMobileFeaturePropertyTest"})
-	public void deleteMobileFeaturePropertiesOfFeatureTest()
-			throws MobileDeviceManagementDAOException {
-		Connection conn = null;
-		PreparedStatement preparedStatement = null;
-		boolean status =
-				mobileFeaturePropertyDAO.deleteMobileFeaturePropertiesOfFeature(mblFeatureId);
-		try {
-			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
-			String query =
-					"SELECT PROPERTY, FEATURE_ID FROM AD_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
-			preparedStatement = conn.prepareStatement(query);
-			preparedStatement.setInt(1, mblFeatureId);
-			ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                status = false;
+            }
+        } catch (SQLException e) {
+            String msg = "Error in retrieving MobileFeatureProperty data ";
+            log.error(msg, e);
+            throw new MobileDeviceManagementDAOException(msg, e);
+        } finally {
+            MobileDatabaseUtils.cleanupResources(conn, preparedStatement, null);
+        }
+        Assert.assertTrue(status, "MobileFeatureProperty has deleted ");
+    }
 
-			if (resultSet.next()) {
-				status = false;
-			}
-		} catch (SQLException e) {
-			String msg = "Error in retrieving MobileFeatureProperty data ";
-			log.error(msg, e);
-			throw new MobileDeviceManagementDAOException(msg, e);
-		} finally {
-			MobileDatabaseUtils.cleanupResources(conn, preparedStatement, null);
-		}
-		Assert.assertTrue(status, "MobileFeatureProperties has deleted ");
-	}
+    @Test(dependsOnMethods = { "addMobileFeaturePropertyTest", "getMobileFeaturePropertyTest",
+            "getFeaturePropertyOfFeatureTest", "updateMobileFeaturePropertyTest",
+            "deleteMobileFeaturePropertyTest" })
+    public void deleteMobileFeaturePropertiesOfFeatureTest()
+            throws MobileDeviceManagementDAOException {
+        Connection conn = null;
+        PreparedStatement preparedStatement = null;
+        boolean status =
+                mobileFeaturePropertyDAO.deleteMobileFeaturePropertiesOfFeature(mblFeatureId);
+        try {
+            conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
+            String query =
+                    "SELECT PROPERTY, FEATURE_ID FROM AD_FEATURE_PROPERTY WHERE FEATURE_ID = ?";
+            preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1, mblFeatureId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                status = false;
+            }
+        } catch (SQLException e) {
+            String msg = "Error in retrieving MobileFeatureProperty data ";
+            log.error(msg, e);
+            throw new MobileDeviceManagementDAOException(msg, e);
+        } finally {
+            MobileDatabaseUtils.cleanupResources(conn, preparedStatement, null);
+        }
+        Assert.assertTrue(status, "MobileFeatureProperties has deleted ");
+    }
 
 }

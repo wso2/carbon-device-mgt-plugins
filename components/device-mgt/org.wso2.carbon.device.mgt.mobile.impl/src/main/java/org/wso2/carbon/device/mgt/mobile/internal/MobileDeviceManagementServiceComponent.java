@@ -32,6 +32,7 @@ import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfi
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManager;
+import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManager;
 import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.IOSDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
@@ -77,8 +78,9 @@ public class MobileDeviceManagementServiceComponent {
             Map<String, MobileDataSourceConfig> dsConfigMap =
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
             MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(dsConfigMap);
-            MobileDeviceManagementDAOFactory.init();
-            IOSDAOFactory.init();
+            IOSDAOFactory.init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS));
+            AndroidDAOFactory
+                    .init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID));
 
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {

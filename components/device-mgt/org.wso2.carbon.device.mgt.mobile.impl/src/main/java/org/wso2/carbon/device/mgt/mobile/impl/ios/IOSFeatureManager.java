@@ -23,69 +23,75 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.FeatureDAO;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.FeatureManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.FeatureManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
+import org.wso2.carbon.device.mgt.mobile.dto.MobileFeature;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.IOSDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class IOSFeatureManager implements FeatureManager {
 
     private static final Log log = LogFactory.getLog(IOSFeatureManager.class);
+    private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
 
-    private FeatureDAO featureDAO;
+    private MobileFeatureDAO featureDAO;
 
     public IOSFeatureManager() {
-        this.featureDAO = FeatureManagementDAOFactory.getFeatureDAO();
+        mobileDeviceManagementDAOFactory = new IOSDAOFactory();
+        this.featureDAO = mobileDeviceManagementDAOFactory.getMobileFeatureDao();
     }
 
     @Override
     public boolean addFeature(Feature feature) throws DeviceManagementException {
         try {
-            FeatureManagementDAOFactory.beginTransaction();
-            featureDAO.addFeature(feature);
-            FeatureManagementDAOFactory.commitTransaction();
-            return true;
-        } catch (FeatureManagementDAOException e) {
+            mobileDeviceManagementDAOFactory.beginTransaction();
+            MobileFeature mobileFeature = MobileDeviceManagementUtil.convertToMobileFeature(feature);
+
             try {
-                FeatureManagementDAOFactory.rollbackTransaction();
-            } catch (FeatureManagementDAOException e1) {
+                featureDAO.addFeature(mobileFeature);
+            } catch (MobileDeviceManagementDAOException e) {
+                log.error("error in feature add ", e);
+                throw new DeviceManagementException("error in feature add", e);
+            }
+            mobileDeviceManagementDAOFactory.commitTransaction();
+            return true;
+        } catch (MobileDeviceManagementDAOException e) {
+            try {
+                mobileDeviceManagementDAOFactory.rollbackTransaction();
+            } catch (MobileDeviceManagementDAOException e1) {
                 log.warn("Error occurred while roll-backing the transaction", e);
             }
-            throw new DeviceManagementException("Error occurred while adding the feature", e);
+            throw new DeviceManagementException("DB transaction error occurred while add the feature", e);
         }
     }
 
     @Override
-    public Feature getFeature(String name) throws DeviceManagementException {
+    public Feature getFeature(String code) throws DeviceManagementException {
         try {
-            FeatureManagementDAOFactory.beginTransaction();
-            Feature feature = featureDAO.getFeature(name);
-            FeatureManagementDAOFactory.commitTransaction();
+            MobileFeature mobileFeature = featureDAO.getFeatureByCode(code);
+            Feature feature = MobileDeviceManagementUtil.convertToFeature(mobileFeature);
             return feature;
-        } catch (FeatureManagementDAOException e) {
-            try {
-                FeatureManagementDAOFactory.rollbackTransaction();
-            } catch (FeatureManagementDAOException e1) {
-                log.warn("Error occurred while roll-backing the transaction", e);
-            }
+        } catch (MobileDeviceManagementDAOException e) {
             throw new DeviceManagementException("Error occurred while retrieving the feature", e);
         }
     }
 
     @Override
     public List<Feature> getFeatures() throws DeviceManagementException {
+
+        List<Feature> featureList = new ArrayList<Feature>();
         try {
-            FeatureManagementDAOFactory.beginTransaction();
-            List<Feature> features = featureDAO.getFeatures();
-            FeatureManagementDAOFactory.commitTransaction();
-            return features;
-        } catch (FeatureManagementDAOException e) {
-            try {
-                FeatureManagementDAOFactory.rollbackTransaction();
-            } catch (FeatureManagementDAOException e1) {
-                log.warn("Error occurred while roll-backing the transaction", e);
+            List<MobileFeature> mobileFeatures = featureDAO.getAllFeatures();
+
+            for (MobileFeature mobileFeature : mobileFeatures) {
+                featureList.add(MobileDeviceManagementUtil.convertToFeature(mobileFeature));
             }
+            return featureList;
+        } catch (MobileDeviceManagementDAOException e) {
             throw new DeviceManagementException("Error occurred while retrieving the list of features registered " +
                     "for Android platform", e);
         }
@@ -94,14 +100,14 @@ public class IOSFeatureManager implements FeatureManager {
     @Override
     public boolean removeFeature(String name) throws DeviceManagementException {
         try {
-            FeatureManagementDAOFactory.beginTransaction();
-            featureDAO.removeFeature(name);
-            FeatureManagementDAOFactory.commitTransaction();
+            mobileDeviceManagementDAOFactory.beginTransaction();
+            featureDAO.deleteFeatureByCode(name);
+            mobileDeviceManagementDAOFactory.commitTransaction();
             return true;
-        } catch (FeatureManagementDAOException e) {
+        } catch (MobileDeviceManagementDAOException e) {
             try {
-                FeatureManagementDAOFactory.rollbackTransaction();
-            } catch (FeatureManagementDAOException e1) {
+                mobileDeviceManagementDAOFactory.rollbackTransaction();
+            } catch (MobileDeviceManagementDAOException e1) {
                 log.warn("Error occurred while roll-backing the transaction", e);
             }
             throw new DeviceManagementException("Error occurred while removing the feature", e);

@@ -35,7 +35,7 @@ public interface MobileFeatureDAO {
 	 * @return The id of inserted MobileFeature.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	int addMobileFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException;
+	boolean addFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException;
 
 	/**
 	 * Updates a MobileFeature in Mobile-Feature table.
@@ -44,7 +44,7 @@ public interface MobileFeatureDAO {
 	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean updateMobileFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException;
+	boolean updateFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException;
 
 	/**
 	 * Deletes a MobileFeature from Mobile-Feature table when the feature id is given.
@@ -53,7 +53,7 @@ public interface MobileFeatureDAO {
 	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean deleteMobileFeatureById(int mblFeatureId) throws MobileDeviceManagementDAOException;
+	boolean deleteFeatureById(int mblFeatureId) throws MobileDeviceManagementDAOException;
 
 	/**
 	 * Deletes a MobileFeature from Mobile-Feature table when the feature code is given.
@@ -62,7 +62,7 @@ public interface MobileFeatureDAO {
 	 * @return The status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	boolean deleteMobileFeatureByCode(String mblFeatureCode) throws MobileDeviceManagementDAOException;
+	boolean deleteFeatureByCode(String mblFeatureCode) throws MobileDeviceManagementDAOException;
 
 	/**
 	 * Retrieves a given MobileFeature from Mobile-Feature table when the feature id is given.
@@ -71,7 +71,7 @@ public interface MobileFeatureDAO {
 	 * @return MobileFeature object that holds data of the feature represented by featureId.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	MobileFeature getMobileFeatureById(int mblFeatureId) throws MobileDeviceManagementDAOException;
+	MobileFeature getFeatureById(int mblFeatureId) throws MobileDeviceManagementDAOException;
 
 	/**
 	 * Retrieves a given MobileFeature from Mobile-Feature table when the feature code is given.
@@ -80,7 +80,7 @@ public interface MobileFeatureDAO {
 	 * @return MobileFeature object that holds data of the feature represented by featureCode.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	MobileFeature getMobileFeatureByCode(String mblFeatureCode) throws MobileDeviceManagementDAOException;
+	MobileFeature getFeatureByCode(String mblFeatureCode) throws MobileDeviceManagementDAOException;
 
 	/**
 	 * Retrieves all MobileFeatures of a MobileDevice type from Mobile-Feature table.
@@ -89,7 +89,7 @@ public interface MobileFeatureDAO {
 	 * @return MobileFeature object list.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	List<MobileFeature> getMobileFeatureByDeviceType(String deviceType) throws MobileDeviceManagementDAOException;
+	List<MobileFeature> getFeatureByDeviceType(String deviceType) throws MobileDeviceManagementDAOException;
 
 	/**
 	 * Retrieve all the MobileFeatures from Mobile-Feature table.
@@ -97,5 +97,5 @@ public interface MobileFeatureDAO {
 	 * @return MobileFeature object list.
 	 * @throws MobileDeviceManagementDAOException
 	 */
-	List<MobileFeature> getAllMobileFeatures() throws MobileDeviceManagementDAOException;
+	List<MobileFeature> getAllFeatures() throws MobileDeviceManagementDAOException;
 }

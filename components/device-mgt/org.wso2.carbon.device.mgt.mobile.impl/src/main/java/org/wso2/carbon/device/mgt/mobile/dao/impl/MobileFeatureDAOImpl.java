@@ -46,9 +46,9 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
-	public int addMobileFeature(MobileFeature mobileFeature)
+	public boolean addFeature(MobileFeature mobileFeature)
 			throws MobileDeviceManagementDAOException {
-		int status = 0;
+		boolean status = false;
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
@@ -63,15 +63,13 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 			stmt.setString(4, mobileFeature.getDeviceType());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
-				ResultSet rs = stmt.getGeneratedKeys();
-				if (rs != null && rs.next()) {
-					status = rs.getInt(1);
-				}
                 if (log.isDebugEnabled()) {
 					log.debug("Added a new MobileFeature " + mobileFeature.getCode() + " to the" +
 					          " MDM database.");
 				}
+                status = true;
 			}
+
 		} catch (SQLException e) {
 			String msg = "Error occurred while adding feature code - '" +
 			             mobileFeature.getCode() + "' to feature table";
@@ -84,7 +82,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
-	public boolean updateMobileFeature(MobileFeature mobileFeature)
+	public boolean updateFeature(MobileFeature mobileFeature)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -119,7 +117,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
-	public boolean deleteMobileFeatureByCode(String mblFeatureCode)
+	public boolean deleteFeatureByCode(String mblFeatureCode)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -149,7 +147,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
-	public boolean deleteMobileFeatureById(int mblFeatureId)
+	public boolean deleteFeatureById(int mblFeatureId)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
 		Connection conn = null;
@@ -179,7 +177,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
-	public MobileFeature getMobileFeatureByCode(String mblFeatureCode)
+	public MobileFeature getFeatureByCode(String mblFeatureCode)
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -216,7 +214,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
-	public MobileFeature getMobileFeatureById(int mblFeatureId)
+	public MobileFeature getFeatureById(int mblFeatureId)
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
@@ -253,7 +251,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
-	public List<MobileFeature> getAllMobileFeatures() throws MobileDeviceManagementDAOException {
+	public List<MobileFeature> getAllFeatures() throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		MobileFeature mobileFeature;
@@ -287,7 +285,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
-	public List<MobileFeature> getMobileFeatureByDeviceType(String deviceType) throws
+	public List<MobileFeature> getFeatureByDeviceType(String deviceType) throws
 	                                                                           MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;

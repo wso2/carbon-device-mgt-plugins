@@ -25,6 +25,7 @@ import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.IOSDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 
 import java.util.List;
@@ -44,8 +45,7 @@ public class IOSDeviceManager implements DeviceManager {
     }
 
     public IOSDeviceManager() {
-        mobileDeviceManagementDAOFactory = new MobileDeviceManagementDAOFactory(DeviceManagementConstants
-                .MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS);
+        mobileDeviceManagementDAOFactory = new IOSDAOFactory();
         iosFeatureManager = new IOSFeatureManager();
     }
 

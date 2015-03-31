@@ -19,17 +19,18 @@
 package org.wso2.carbon.device.mgt.mobile.impl.android.dao;
 
 import org.wso2.carbon.device.mgt.common.Feature;
+import org.wso2.carbon.device.mgt.mobile.dto.MobileFeature;
 
 import java.util.List;
 
 public interface FeatureDAO {
 
-    void addFeature(Feature feature) throws FeatureManagementDAOException;
+    void addFeature(MobileFeature feature) throws FeatureManagementDAOException;
 
     void removeFeature(String name) throws FeatureManagementDAOException;
 
-    Feature getFeature(String name) throws FeatureManagementDAOException;
+    MobileFeature getFeature(String name) throws FeatureManagementDAOException;
 
-    List<Feature> getFeatures() throws FeatureManagementDAOException;
+    List<MobileFeature> getFeatures() throws FeatureManagementDAOException;
 
 }

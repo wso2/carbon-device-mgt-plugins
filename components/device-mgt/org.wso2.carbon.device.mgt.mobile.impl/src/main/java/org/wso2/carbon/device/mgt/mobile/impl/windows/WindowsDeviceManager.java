@@ -25,6 +25,7 @@ import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.WindowsDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 
 import java.util.List;
@@ -37,8 +38,7 @@ public class WindowsDeviceManager implements DeviceManager {
      private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
 
     public WindowsDeviceManager() {
-        mobileDeviceManagementDAOFactory = new MobileDeviceManagementDAOFactory(DeviceManagementConstants
-                .MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+        mobileDeviceManagementDAOFactory = new WindowsDAOFactory();
     }
     private static final Log log = LogFactory.getLog(WindowsDeviceManager.class);
 

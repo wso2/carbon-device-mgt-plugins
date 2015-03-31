@@ -18,7 +18,9 @@
  */
 package org.wso2.carbon.device.mgt.mobile.impl.android.dao;
 
-public class FeatureManagementDAOException extends Exception {
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
+
+public class FeatureManagementDAOException extends MobileDeviceManagementDAOException {
 
     private String message;
     private static final long serialVersionUID = 2021891706072918865L;
