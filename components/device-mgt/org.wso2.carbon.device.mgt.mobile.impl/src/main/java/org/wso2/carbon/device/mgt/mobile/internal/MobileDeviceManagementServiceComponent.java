@@ -23,8 +23,9 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
+import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
@@ -32,6 +33,7 @@ import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManager;
 import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManager;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.IOSDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 
@@ -76,6 +78,7 @@ public class MobileDeviceManagementServiceComponent {
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
             MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(dsConfigMap);
             MobileDeviceManagementDAOFactory.init();
+            IOSDAOFactory.init();
 
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
@@ -90,7 +93,7 @@ public class MobileDeviceManagementServiceComponent {
                         MobileDeviceManagementDAOUtil
                                 .setupMobileDeviceManagementSchema(dataSource);
                     }
-                } catch (DeviceManagementException e) {
+                } catch (MobileDeviceMgtPluginException e) {
                     log.error("Exception occurred while initializing mobile device management database schema", e);
                 }
             }

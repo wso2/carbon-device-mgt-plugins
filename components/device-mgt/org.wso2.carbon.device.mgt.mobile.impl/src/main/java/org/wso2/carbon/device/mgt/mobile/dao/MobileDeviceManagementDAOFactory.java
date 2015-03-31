@@ -139,6 +139,10 @@ public class MobileDeviceManagementDAOFactory {
         return dataSourceMap.get(type);
     }
 
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
     public static Map<String, DataSource> getDataSourceMap() {
         return dataSourceMap;
     }
