@@ -24,6 +24,8 @@ import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceDAO;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.util.IOSPluginConstants;
+import org.wso2.carbon.device.mgt.mobile.impl.ios.util.IOSUtils;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -44,14 +46,6 @@ public class IOSDeviceDAOImpl implements MobileDeviceDAO {
 		this.dataSource = dataSource;
 	}
 
-    public static final String SERIAL = "SERIAL";
-    public static final String PRODUCT = "PRODUCT";
-    public static final String MAC_ADDRESS = "MAC_ADDRESS";
-    public static final String DEVICE_NAME = "DEVICE_NAME";
-    public static final String ICCID = "ICCID";
-    public static final String LATITUDE = "LATITUDE";
-    public static final String LONGITUDE = "LONGITUDE";
-
 	@Override
 	public MobileDevice getMobileDevice(String deviceID) throws MobileDeviceManagementDAOException {
 		Connection conn = null;
@@ -62,7 +56,7 @@ public class IOSDeviceDAOImpl implements MobileDeviceDAO {
 			String selectDBQuery =
 					"SELECT MOBILE_DEVICE_ID, APNS_PUSH_TOKEN, MAGIC_TOKEN, MDM_TOKEN, UNLOCK_TOKEN, " +
                             "CHALLENGE_TOKEN, DEVICE_INFO, SERIAL, PRODUCT, MAC_ADDRESS, DEVICE_NAME, ICCID," +
-                            "LATITUDE, LONGITUDE FROM IOS_DEVICE WHERE MOBILE_DEVICE_ID = ?";
+                            "LATITUDE, LONGITUDE, IMEI, VERSION FROM IOS_DEVICE WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, deviceID);
 			ResultSet resultSet = stmt.executeQuery();
@@ -87,6 +81,8 @@ public class IOSDeviceDAOImpl implements MobileDeviceDAO {
                 tokenMap.put(IOSPluginConstants.ICCID, resultSet.getString(IOSPluginConstants.ICCID));
                 tokenMap.put(IOSPluginConstants.LATITUDE, resultSet.getString(IOSPluginConstants.LATITUDE));
                 tokenMap.put(IOSPluginConstants.LONGITUDE, resultSet.getString(IOSPluginConstants.LONGITUDE));
+                tokenMap.put(IOSPluginConstants.IMEI, resultSet.getString(IOSPluginConstants.IMEI));
+                tokenMap.put(IOSPluginConstants.VERSION, resultSet.getString(IOSPluginConstants.VERSION));
 
                 mobileDevice.setDeviceProperties(tokenMap);
 
@@ -105,6 +101,10 @@ public class IOSDeviceDAOImpl implements MobileDeviceDAO {
 		return mobileDevice;
 	}
 
+    public static final String IMEI = "IMEI";
+    public static final String VERSION = "VERSION";
+    public static final String MAC_ADDRESS = "MAC_ADDRESS";
+    public static final String ICCID = "ICCID";
 	@Override
 	public boolean addMobileDevice(MobileDevice mobileDevice)
 			throws MobileDeviceManagementDAOException {
@@ -116,7 +116,8 @@ public class IOSDeviceDAOImpl implements MobileDeviceDAO {
 			String createDBQuery =
 					"INSERT INTO IOS_DEVICE(MOBILE_DEVICE_ID, APNS_PUSH_TOKEN, MAGIC_TOKEN, MDM_TOKEN, UNLOCK_TOKEN, " +
                             "CHALLENGE_TOKEN, DEVICE_INFO, SERIAL, PRODUCT, MAC_ADDRESS, DEVICE_NAME, ICCID, " +
-                            "LATITUDE, LONGITUDE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            "LATITUDE, LONGITUDE, IMEI, VERSION) VALUES " +
+                            "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 			stmt = conn.prepareStatement(createDBQuery);
 			stmt.setString(1, mobileDevice.getMobileDeviceId());
@@ -125,19 +126,36 @@ public class IOSDeviceDAOImpl implements MobileDeviceDAO {
                 mobileDevice.setDeviceProperties(new HashMap<String, String>());
             }
 
-			stmt.setString(2, mobileDevice.getDeviceProperties().get(IOSPluginConstants.APNS_PUSH_TOKEN));
-			stmt.setString(3, mobileDevice.getDeviceProperties().get(IOSPluginConstants.MAGIC_TOKEN));
-			stmt.setString(4, mobileDevice.getDeviceProperties().get(IOSPluginConstants.MDM_TOKEN));
-			stmt.setString(5, mobileDevice.getDeviceProperties().get(IOSPluginConstants.UNLOCK_TOKEN));
-			stmt.setString(6, mobileDevice.getDeviceProperties().get(IOSPluginConstants.CHALLENGE_TOKEN));
-			stmt.setString(7, mobileDevice.getDeviceProperties().get(IOSPluginConstants.DEVICE_INFO));
-            stmt.setString(8, mobileDevice.getDeviceProperties().get(IOSPluginConstants.SERIAL));
-            stmt.setString(9, mobileDevice.getDeviceProperties().get(IOSPluginConstants.PRODUCT));
-            stmt.setString(10, mobileDevice.getDeviceProperties().get(IOSPluginConstants.MAC_ADDRESS));
-            stmt.setString(11, mobileDevice.getDeviceProperties().get(IOSPluginConstants.DEVICE_NAME));
-            stmt.setString(12, mobileDevice.getDeviceProperties().get(IOSPluginConstants.ICCID));
-            stmt.setString(13, mobileDevice.getDeviceProperties().get(IOSPluginConstants.LATITUDE));
-            stmt.setString(14, mobileDevice.getDeviceProperties().get(IOSPluginConstants.LONGITUDE));
+			stmt.setString(2, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.APNS_PUSH_TOKEN));
+            stmt.setString(3, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.MAGIC_TOKEN));
+            stmt.setString(4, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.MDM_TOKEN));
+            stmt.setString(5, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.UNLOCK_TOKEN));
+            stmt.setString(6, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.CHALLENGE_TOKEN));
+            stmt.setString(7, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.DEVICE_INFO));
+            stmt.setString(8, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.SERIAL));
+            stmt.setString(9, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.PRODUCT));
+            stmt.setString(10, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.MAC_ADDRESS));
+            stmt.setString(11, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.DEVICE_NAME));
+            stmt.setString(12, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.ICCID));
+            stmt.setString(13, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.LATITUDE));
+            stmt.setString(14, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.LONGITUDE));
+            stmt.setString(15, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.IMEI));
+            stmt.setString(16, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.VERSION));
 
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
@@ -169,22 +187,41 @@ public class IOSDeviceDAOImpl implements MobileDeviceDAO {
 			String updateDBQuery =
 					"UPDATE IOS_DEVICE SET APNS_PUSH_TOKEN = ?, MAGIC_TOKEN = ?, MDM_TOKEN = ?, UNLOCK_TOKEN = ?, " +
 					"CHALLENGE_TOKEN = ?, DEVICE_INFO = ?, SERIAL = ?, PRODUCT = ?, MAC_ADDRESS = ?, " +
-                    "DEVICE_NAME = ?, ICCID = ?, LATITUDE = ?, LONGITUDE = ? WHERE MOBILE_DEVICE_ID = ?";
+                    "DEVICE_NAME = ?, ICCID = ?, LATITUDE = ?, LONGITUDE = ?, IMEI = ?, VERSION = ? " +
+                    "WHERE MOBILE_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
-            stmt.setString(1, mobileDevice.getDeviceProperties().get(IOSPluginConstants.APNS_PUSH_TOKEN));
-            stmt.setString(2, mobileDevice.getDeviceProperties().get(IOSPluginConstants.MAGIC_TOKEN));
-            stmt.setString(3, mobileDevice.getDeviceProperties().get(IOSPluginConstants.MDM_TOKEN));
-            stmt.setString(4, mobileDevice.getDeviceProperties().get(IOSPluginConstants.UNLOCK_TOKEN));
-            stmt.setString(5, mobileDevice.getDeviceProperties().get(IOSPluginConstants.CHALLENGE_TOKEN));
-            stmt.setString(6, mobileDevice.getDeviceProperties().get(IOSPluginConstants.DEVICE_INFO));
-            stmt.setString(7, mobileDevice.getDeviceProperties().get(IOSPluginConstants.SERIAL));
-            stmt.setString(8, mobileDevice.getDeviceProperties().get(IOSPluginConstants.PRODUCT));
-            stmt.setString(9, mobileDevice.getDeviceProperties().get(IOSPluginConstants.MAC_ADDRESS));
-            stmt.setString(10, mobileDevice.getDeviceProperties().get(IOSPluginConstants.DEVICE_NAME));
-            stmt.setString(11, mobileDevice.getDeviceProperties().get(IOSPluginConstants.ICCID));
-            stmt.setString(12, mobileDevice.getDeviceProperties().get(IOSPluginConstants.LATITUDE));
-            stmt.setString(13, mobileDevice.getDeviceProperties().get(IOSPluginConstants.LONGITUDE));
-            stmt.setString(14, mobileDevice.getDeviceProperties().get(IOSPluginConstants.MOBILE_DEVICE_ID));
+
+            stmt.setString(1, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.APNS_PUSH_TOKEN));
+            stmt.setString(2, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.MAGIC_TOKEN));
+            stmt.setString(3, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.MDM_TOKEN));
+            stmt.setString(4, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.UNLOCK_TOKEN));
+            stmt.setString(5, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.CHALLENGE_TOKEN));
+            stmt.setString(6, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.DEVICE_INFO));
+            stmt.setString(7, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.SERIAL));
+            stmt.setString(8, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.PRODUCT));
+            stmt.setString(9, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.MAC_ADDRESS));
+            stmt.setString(10, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.DEVICE_NAME));
+            stmt.setString(11, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.ICCID));
+            stmt.setString(12, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.LATITUDE));
+            stmt.setString(13, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.LONGITUDE));
+            stmt.setString(14, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.IMEI));
+            stmt.setString(15, IOSUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+                    IOSPluginConstants.VERSION));
+            stmt.setString(16, mobileDevice.getMobileDeviceId());
 
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
@@ -245,7 +282,7 @@ public class IOSDeviceDAOImpl implements MobileDeviceDAO {
             String selectDBQuery =
                     "SELECT MOBILE_DEVICE_ID, APNS_PUSH_TOKEN, MAGIC_TOKEN, MDM_TOKEN, UNLOCK_TOKEN, " +
                             "CHALLENGE_TOKEN, DEVICE_INFO, SERIAL, PRODUCT, MAC_ADDRESS, DEVICE_NAME, ICCID," +
-                            "LATITUDE, LONGITUDE FROM IOS_DEVICE";
+                            "LATITUDE, LONGITUDE, IMEI, VERSION FROM IOS_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
@@ -269,6 +306,8 @@ public class IOSDeviceDAOImpl implements MobileDeviceDAO {
                 tokenMap.put(IOSPluginConstants.ICCID, resultSet.getString(IOSPluginConstants.ICCID));
                 tokenMap.put(IOSPluginConstants.LATITUDE, resultSet.getString(IOSPluginConstants.LATITUDE));
                 tokenMap.put(IOSPluginConstants.LONGITUDE, resultSet.getString(IOSPluginConstants.LONGITUDE));
+                tokenMap.put(IOSPluginConstants.IMEI, resultSet.getString(IOSPluginConstants.IMEI));
+                tokenMap.put(IOSPluginConstants.VERSION, resultSet.getString(IOSPluginConstants.VERSION));
 
                 mobileDevice.setDeviceProperties(tokenMap);
 

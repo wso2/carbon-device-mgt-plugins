@@ -90,6 +90,17 @@ public class MobileDeviceManagementUtil {
 			mobileDevice.setVendor(getPropertyValue(device, MOBILE_DEVICE_VENDOR));
 			mobileDevice.setLatitude(getPropertyValue(device, MOBILE_DEVICE_LATITUDE));
 			mobileDevice.setLongitude(getPropertyValue(device, MOBILE_DEVICE_LONGITUDE));
+
+            if (device.getProperties() != null) {
+                Map<String, String> deviceProperties = new HashMap<String, String>();
+                for (Device.Property deviceProperty : device.getProperties()) {
+                    deviceProperties.put(deviceProperty.getName(), deviceProperty.getValue());
+                }
+
+                mobileDevice.setDeviceProperties(deviceProperties);
+            } else {
+                mobileDevice.setDeviceProperties(new HashMap<String, String>());
+            }
 		}
 		return mobileDevice;
 	}
@@ -107,7 +118,14 @@ public class MobileDeviceManagementUtil {
 			propertyList.add(getProperty(MOBILE_DEVICE_LATITUDE, mobileDevice.getLatitude()));
 			propertyList.add(getProperty(MOBILE_DEVICE_LONGITUDE, mobileDevice.getLongitude()));
 			propertyList.add(getProperty(MOBILE_DEVICE_SERIAL, mobileDevice.getSerial()));
-			device.setProperties(propertyList);
+
+            if (mobileDevice.getDeviceProperties() != null) {
+                for (Map.Entry<String, String> deviceProperty : mobileDevice.getDeviceProperties().entrySet()) {
+                    propertyList.add(getProperty(deviceProperty.getKey(), deviceProperty.getValue()));
+                }
+            }
+
+            device.setProperties(propertyList);
 			device.setDeviceIdentifier(mobileDevice.getMobileDeviceId());
 		}
 		return device;

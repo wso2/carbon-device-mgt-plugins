@@ -1,4 +1,4 @@
-package org.wso2.carbon.device.mgt.mobile.impl.ios.dao.impl;
+package org.wso2.carbon.device.mgt.mobile.impl.ios.util;
 
 public class IOSPluginConstants {
 
@@ -11,10 +11,12 @@ public class IOSPluginConstants {
     public static final String DEVICE_INFO = "DEVICE_INFO";
     public static final String SERIAL = "SERIAL";
     public static final String PRODUCT = "PRODUCT";
-    public static final String MAC_ADDRESS = "MAC_ADDRESS";
     public static final String DEVICE_NAME = "DEVICE_NAME";
-    public static final String ICCID = "ICCID";
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
+    public static final String IMEI = "IMEI";
+    public static final String VERSION = "VERSION";
+    public static final String MAC_ADDRESS = "MAC_ADDRESS";
+    public static final String ICCID = "ICCID";
 
 }
