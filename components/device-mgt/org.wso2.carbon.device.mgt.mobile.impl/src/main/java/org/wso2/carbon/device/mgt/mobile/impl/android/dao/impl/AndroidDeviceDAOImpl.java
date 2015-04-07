@@ -60,7 +60,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			String selectDBQuery =
 					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, SERIAL, VENDOR, MAC_ADDRESS, " +
 					"DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, 0S_VERSION FROM AD_DEVICE WHERE" +
-					" MOBILE_DEVICE_ID = ?";
+					" ANDROID_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblDeviceId);
 			ResultSet resultSet = stmt.executeQuery();
@@ -186,35 +186,35 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 					"WHERE ANDROID_DEVICE_ID = ?";
 
 			stmt = conn.prepareStatement(updateDBQuery);
-			stmt.setString(1, mobileDevice.getMobileDeviceId());
 
 			if (mobileDevice.getDeviceProperties() == null) {
 				mobileDevice.setDeviceProperties(new HashMap<String, String>());
 			}
 
-			stmt.setString(2, AndroidUtils.getDeviceProperty(
+			stmt.setString(1, AndroidUtils.getDeviceProperty(
 					mobileDevice.getDeviceProperties(),
 					AndroidPluginConstants.GCM_TOKEN));
-			stmt.setString(3, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+			stmt.setString(2, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                 AndroidPluginConstants.DEVICE_INFO));
-			stmt.setString(4, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+			stmt.setString(3, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                 AndroidPluginConstants.SERIAL));
-			stmt.setString(5, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+			stmt.setString(4, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                 AndroidPluginConstants.VENDOR));
-			stmt.setString(6, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+			stmt.setString(5, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                 AndroidPluginConstants.MAC_ADDRESS));
-			stmt.setString(7, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+			stmt.setString(6, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                 AndroidPluginConstants.DEVICE_NAME));
-			stmt.setString(8, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+			stmt.setString(7, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                 AndroidPluginConstants.LATITUDE));
-			stmt.setString(9, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+			stmt.setString(8, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                 AndroidPluginConstants.LONGITUDE));
-			stmt.setString(10, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+			stmt.setString(9, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                  AndroidPluginConstants.IMEI));
-			stmt.setString(11, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+			stmt.setString(10, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                  AndroidPluginConstants.IMSI));
-			stmt.setString(12, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+			stmt.setString(11, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                  AndroidPluginConstants.OS_VERSION));
+			stmt.setString(12, mobileDevice.getMobileDeviceId());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
