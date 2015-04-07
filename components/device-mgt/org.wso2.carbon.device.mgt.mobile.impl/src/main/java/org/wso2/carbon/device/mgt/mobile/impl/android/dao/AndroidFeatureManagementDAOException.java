@@ -20,7 +20,7 @@ package org.wso2.carbon.device.mgt.mobile.impl.android.dao;
 
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 
-public class FeatureManagementDAOException extends MobileDeviceManagementDAOException {
+public class AndroidFeatureManagementDAOException extends MobileDeviceManagementDAOException {
 
     private String message;
     private static final long serialVersionUID = 2021891706072918865L;
@@ -32,7 +32,7 @@ public class FeatureManagementDAOException extends MobileDeviceManagementDAOExce
      * @param message         error message
      * @param nestedException exception
      */
-    public FeatureManagementDAOException(String message, Exception nestedException) {
+    public AndroidFeatureManagementDAOException(String message, Exception nestedException) {
         super(message, nestedException);
         setErrorMessage(message);
     }
@@ -44,7 +44,7 @@ public class FeatureManagementDAOException extends MobileDeviceManagementDAOExce
      * @param message the detail message.
      * @param cause   the cause of this exception.
      */
-    public FeatureManagementDAOException(String message, Throwable cause) {
+    public AndroidFeatureManagementDAOException(String message, Throwable cause) {
         super(message, cause);
         setErrorMessage(message);
     }
@@ -54,7 +54,7 @@ public class FeatureManagementDAOException extends MobileDeviceManagementDAOExce
      *
      * @param message the detail message.
      */
-    public FeatureManagementDAOException(String message) {
+    public AndroidFeatureManagementDAOException(String message) {
         super(message);
         setErrorMessage(message);
     }
@@ -64,7 +64,7 @@ public class FeatureManagementDAOException extends MobileDeviceManagementDAOExce
      *
      * @param cause the cause of this exception.
      */
-    public FeatureManagementDAOException(Throwable cause) {
+    public AndroidFeatureManagementDAOException(Throwable cause) {
         super(cause);
     }
 

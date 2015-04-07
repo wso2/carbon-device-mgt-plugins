@@ -174,7 +174,6 @@ public class MobileDeviceManagementUtil {
         mobileFeature.setCode(feature.getCode());
         mobileFeature.setDescription(feature.getDescription());
         mobileFeature.setDeviceType(feature.getDeviceType());
-
         return mobileFeature;
     }
 
@@ -184,7 +183,6 @@ public class MobileDeviceManagementUtil {
         feature.setDeviceType(mobileFeature.getDeviceType());
         feature.setCode(mobileFeature.getCode());
         feature.setName(mobileFeature.getName());
-
         return feature;
     }
 }
