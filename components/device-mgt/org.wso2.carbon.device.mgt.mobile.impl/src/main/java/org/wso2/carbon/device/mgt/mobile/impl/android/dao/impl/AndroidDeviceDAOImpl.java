@@ -59,7 +59,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			conn = this.getConnection();
 			String selectDBQuery =
 					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, VENDOR, MAC_ADDRESS, " +
-					"DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, 0S_VERSION FROM AD_DEVICE WHERE" +
+					"DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION FROM AD_DEVICE WHERE" +
 					" ANDROID_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblDeviceId);
@@ -68,32 +68,22 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			if (resultSet.next()) {
 				mobileDevice = new MobileDevice();
 				mobileDevice.setMobileDeviceId(resultSet.getString(AndroidPluginConstants.ANDROID_DEVICE_ID));
+				mobileDevice.setModel(resultSet.getString(AndroidPluginConstants.DEVICE_MODEL));
+				mobileDevice.setSerial(resultSet.getString(AndroidPluginConstants.SERIAL));
+				mobileDevice.setVendor(resultSet.getString(AndroidPluginConstants.VENDOR));
+				mobileDevice.setLatitude(resultSet.getString(AndroidPluginConstants.LATITUDE));
+				mobileDevice.setLongitude(resultSet.getString(AndroidPluginConstants.LONGITUDE));
+				mobileDevice.setImei(resultSet.getString(AndroidPluginConstants.IMEI));
+				mobileDevice.setImsi(resultSet.getString(AndroidPluginConstants.IMSI));
+				mobileDevice.setOsVersion(resultSet.getString(AndroidPluginConstants.OS_VERSION));
 
 				Map<String, String> propertyMap = new HashMap<String, String>();
 				propertyMap.put(AndroidPluginConstants.GCM_TOKEN,
 				             resultSet.getString(AndroidPluginConstants.GCM_TOKEN));
 				propertyMap.put(AndroidPluginConstants.DEVICE_INFO,
 				             resultSet.getString(AndroidPluginConstants.DEVICE_INFO));
-				propertyMap.put(AndroidPluginConstants.DEVICE_MODEL,
-				                resultSet.getString(AndroidPluginConstants.DEVICE_MODEL));
-				propertyMap.put(AndroidPluginConstants.SERIAL,
-				             resultSet.getString(AndroidPluginConstants.SERIAL));
-				propertyMap.put(AndroidPluginConstants.VENDOR,
-				             resultSet.getString(AndroidPluginConstants.VENDOR));
-				propertyMap.put(AndroidPluginConstants.MAC_ADDRESS,
-				             resultSet.getString(AndroidPluginConstants.MAC_ADDRESS));
 				propertyMap.put(AndroidPluginConstants.DEVICE_NAME,
 				             resultSet.getString(AndroidPluginConstants.DEVICE_NAME));
-				propertyMap.put(AndroidPluginConstants.LATITUDE,
-				             resultSet.getString(AndroidPluginConstants.LATITUDE));
-				propertyMap.put(AndroidPluginConstants.LONGITUDE,
-				             resultSet.getString(AndroidPluginConstants.LONGITUDE));
-				propertyMap.put(AndroidPluginConstants.IMEI,
-				             resultSet.getString(AndroidPluginConstants.IMEI));
-				propertyMap.put(AndroidPluginConstants.IMSI,
-				                resultSet.getString(AndroidPluginConstants.IMSI));
-				propertyMap.put(AndroidPluginConstants.OS_VERSION,
-				             resultSet.getString(AndroidPluginConstants.OS_VERSION));
 
 				mobileDevice.setDeviceProperties(propertyMap);
 
@@ -137,26 +127,17 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 					AndroidPluginConstants.GCM_TOKEN));
 			stmt.setString(3, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                             AndroidPluginConstants.DEVICE_INFO));
-			stmt.setString(4, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                             AndroidPluginConstants.SERIAL));
-			stmt.setString(5, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                             AndroidPluginConstants.VENDOR));
-			stmt.setString(6, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                             AndroidPluginConstants.MAC_ADDRESS));
+			stmt.setString(4, mobileDevice.getSerial());
+			stmt.setString(5, mobileDevice.getVendor());
+			stmt.setString(6, mobileDevice.getMobileDeviceId());
 			stmt.setString(7, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                             AndroidPluginConstants.DEVICE_NAME));
-			stmt.setString(8, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                             AndroidPluginConstants.LATITUDE));
-			stmt.setString(9, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                             AndroidPluginConstants.LONGITUDE));
-			stmt.setString(10, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                              AndroidPluginConstants.IMEI));
-			stmt.setString(11, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                              AndroidPluginConstants.IMSI));
-			stmt.setString(12, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                              AndroidPluginConstants.OS_VERSION));
-			stmt.setString(13, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                                  AndroidPluginConstants.DEVICE_MODEL));
+			stmt.setString(8, mobileDevice.getLongitude());
+			stmt.setString(9, mobileDevice.getLongitude());
+			stmt.setString(10, mobileDevice.getImsi());
+			stmt.setString(11, mobileDevice.getImsi());
+			stmt.setString(12, mobileDevice.getOsVersion());
+			stmt.setString(13, mobileDevice.getModel());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
@@ -200,26 +181,17 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 					AndroidPluginConstants.GCM_TOKEN));
 			stmt.setString(2, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                 AndroidPluginConstants.DEVICE_INFO));
-			stmt.setString(3, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                                 AndroidPluginConstants.SERIAL));
-			stmt.setString(4, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                                 AndroidPluginConstants.VENDOR));
-			stmt.setString(5, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                                 AndroidPluginConstants.MAC_ADDRESS));
+			stmt.setString(3, mobileDevice.getSerial());
+			stmt.setString(4, mobileDevice.getVendor());
+			stmt.setString(5, mobileDevice.getMobileDeviceId());
 			stmt.setString(6, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                 AndroidPluginConstants.DEVICE_NAME));
-			stmt.setString(7, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                                 AndroidPluginConstants.LATITUDE));
-			stmt.setString(8, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                                 AndroidPluginConstants.LONGITUDE));
-			stmt.setString(9, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                                  AndroidPluginConstants.IMEI));
-			stmt.setString(10, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                                  AndroidPluginConstants.IMSI));
-			stmt.setString(11, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                                  AndroidPluginConstants.OS_VERSION));
-			stmt.setString(12, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                                  AndroidPluginConstants.DEVICE_MODEL));
+			stmt.setString(7, mobileDevice.getLatitude());
+			stmt.setString(8, mobileDevice.getLongitude());
+			stmt.setString(9, mobileDevice.getImei());
+			stmt.setString(10, mobileDevice.getImsi());
+			stmt.setString(11, mobileDevice.getOsVersion());
+			stmt.setString(12, mobileDevice.getModel());
 			stmt.setString(13, mobileDevice.getMobileDeviceId());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
@@ -275,7 +247,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
-
+		MobileDevice mobileDevice;
 		List<MobileDevice> mobileDevices = new ArrayList<MobileDevice>();
 		try {
 			conn = this.getConnection();
@@ -285,39 +257,26 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			stmt = conn.prepareStatement(selectDBQuery);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
-
-				MobileDevice mobileDevice = new MobileDevice();
-				mobileDevice.setMobileDeviceId
-						(resultSet.getString(AndroidPluginConstants.ANDROID_DEVICE_ID));
+				mobileDevice = new MobileDevice();
+				mobileDevice.setMobileDeviceId(resultSet.getString(AndroidPluginConstants.ANDROID_DEVICE_ID));
+				mobileDevice.setModel(resultSet.getString(AndroidPluginConstants.DEVICE_MODEL));
+				mobileDevice.setSerial(resultSet.getString(AndroidPluginConstants.SERIAL));
+				mobileDevice.setVendor(resultSet.getString(AndroidPluginConstants.VENDOR));
+				mobileDevice.setLatitude(resultSet.getString(AndroidPluginConstants.LATITUDE));
+				mobileDevice.setLongitude(resultSet.getString(AndroidPluginConstants.LONGITUDE));
+				mobileDevice.setImei(resultSet.getString(AndroidPluginConstants.IMEI));
+				mobileDevice.setImsi(resultSet.getString(AndroidPluginConstants.IMSI));
+				mobileDevice.setOsVersion(resultSet.getString(AndroidPluginConstants.OS_VERSION));
 
 				Map<String, String> propertyMap = new HashMap<String, String>();
 				propertyMap.put(AndroidPluginConstants.GCM_TOKEN,
 				                resultSet.getString(AndroidPluginConstants.GCM_TOKEN));
 				propertyMap.put(AndroidPluginConstants.DEVICE_INFO,
 				                resultSet.getString(AndroidPluginConstants.DEVICE_INFO));
-				propertyMap.put(AndroidPluginConstants.DEVICE_MODEL,
-				                resultSet.getString(AndroidPluginConstants.DEVICE_MODEL));
-				propertyMap.put(AndroidPluginConstants.SERIAL,
-				                resultSet.getString(AndroidPluginConstants.SERIAL));
-				propertyMap.put(AndroidPluginConstants.VENDOR,
-				                resultSet.getString(AndroidPluginConstants.VENDOR));
-				propertyMap.put(AndroidPluginConstants.MAC_ADDRESS,
-				                resultSet.getString(AndroidPluginConstants.MAC_ADDRESS));
 				propertyMap.put(AndroidPluginConstants.DEVICE_NAME,
 				                resultSet.getString(AndroidPluginConstants.DEVICE_NAME));
-				propertyMap.put(AndroidPluginConstants.LATITUDE,
-				                resultSet.getString(AndroidPluginConstants.LATITUDE));
-				propertyMap.put(AndroidPluginConstants.LONGITUDE,
-				                resultSet.getString(AndroidPluginConstants.LONGITUDE));
-				propertyMap.put(AndroidPluginConstants.IMEI,
-				                resultSet.getString(AndroidPluginConstants.IMEI));
-				propertyMap.put(AndroidPluginConstants.IMSI,
-				                resultSet.getString(AndroidPluginConstants.IMSI));
-				propertyMap.put(AndroidPluginConstants.OS_VERSION,
-				                resultSet.getString(AndroidPluginConstants.OS_VERSION));
 
 				mobileDevice.setDeviceProperties(propertyMap);
-
 				mobileDevices.add(mobileDevice);
 			}
 			if (log.isDebugEnabled()) {
