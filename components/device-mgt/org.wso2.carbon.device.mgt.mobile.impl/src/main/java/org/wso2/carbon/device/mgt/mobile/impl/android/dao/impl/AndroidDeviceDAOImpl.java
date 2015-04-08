@@ -58,7 +58,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, SERIAL, VENDOR, MAC_ADDRESS, " +
+					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, VENDOR, MAC_ADDRESS, " +
 					"DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, 0S_VERSION FROM AD_DEVICE WHERE" +
 					" ANDROID_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
@@ -74,6 +74,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 				             resultSet.getString(AndroidPluginConstants.GCM_TOKEN));
 				propertyMap.put(AndroidPluginConstants.DEVICE_INFO,
 				             resultSet.getString(AndroidPluginConstants.DEVICE_INFO));
+				propertyMap.put(AndroidPluginConstants.DEVICE_MODEL,
+				                resultSet.getString(AndroidPluginConstants.DEVICE_MODEL));
 				propertyMap.put(AndroidPluginConstants.SERIAL,
 				             resultSet.getString(AndroidPluginConstants.SERIAL));
 				propertyMap.put(AndroidPluginConstants.VENDOR,
@@ -120,8 +122,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			conn = this.getConnection();
 			String createDBQuery =
 					"INSERT INTO AD_DEVICE(ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, SERIAL, " +
-					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION)" +
-					" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION, DEVICE_MODEL)" +
+					" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 			stmt = conn.prepareStatement(createDBQuery);
 			stmt.setString(1, mobileDevice.getMobileDeviceId());
@@ -153,6 +155,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			                                              AndroidPluginConstants.IMSI));
 			stmt.setString(12, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                              AndroidPluginConstants.OS_VERSION));
+			stmt.setString(13, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+			                                                  AndroidPluginConstants.DEVICE_MODEL));
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
@@ -182,7 +186,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			conn = this.getConnection();
 			String updateDBQuery =
 					"UPDATE AD_DEVICE SET GCM_TOKEN = ?, DEVICE_INFO = ?, SERIAL = ?, VENDOR = ?, MAC_ADDRESS = ?, " +
-					"DEVICE_NAME = ?, LATITUDE = ?, LONGITUDE = ?, IMEI = ?, IMSI = ?, OS_VERSION = ? " +
+					"DEVICE_NAME = ?, LATITUDE = ?, LONGITUDE = ?, IMEI = ?, IMSI = ?, OS_VERSION = ?, DEVICE_MODEL = ? " +
 					"WHERE ANDROID_DEVICE_ID = ?";
 
 			stmt = conn.prepareStatement(updateDBQuery);
@@ -214,7 +218,9 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			                                                  AndroidPluginConstants.IMSI));
 			stmt.setString(11, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 			                                                  AndroidPluginConstants.OS_VERSION));
-			stmt.setString(12, mobileDevice.getMobileDeviceId());
+			stmt.setString(12, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
+			                                                  AndroidPluginConstants.DEVICE_MODEL));
+			stmt.setString(13, mobileDevice.getMobileDeviceId());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
@@ -274,7 +280,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, SERIAL, VENDOR, MAC_ADDRESS," +
+					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, VENDOR, MAC_ADDRESS," +
 					"DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, 0S_VERSION FROM AD_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			ResultSet resultSet = stmt.executeQuery();
@@ -289,6 +295,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 				                resultSet.getString(AndroidPluginConstants.GCM_TOKEN));
 				propertyMap.put(AndroidPluginConstants.DEVICE_INFO,
 				                resultSet.getString(AndroidPluginConstants.DEVICE_INFO));
+				propertyMap.put(AndroidPluginConstants.DEVICE_MODEL,
+				                resultSet.getString(AndroidPluginConstants.DEVICE_MODEL));
 				propertyMap.put(AndroidPluginConstants.SERIAL,
 				                resultSet.getString(AndroidPluginConstants.SERIAL));
 				propertyMap.put(AndroidPluginConstants.VENDOR,
