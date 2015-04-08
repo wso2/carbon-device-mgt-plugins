@@ -280,8 +280,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, VENDOR, MAC_ADDRESS," +
-					"DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, 0S_VERSION FROM AD_DEVICE";
+					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, VENDOR, " +
+					"MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, 0S_VERSION FROM AD_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
