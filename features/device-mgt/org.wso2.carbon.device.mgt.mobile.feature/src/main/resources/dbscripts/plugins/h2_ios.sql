@@ -31,3 +31,22 @@ CREATE TABLE IF NOT EXISTS `IOS_FEATURE` (
   `LATITUDE` VARCHAR(45) NULL DEFAULT NULL,
   `LONGITUDE` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`MOBILE_DEVICE_ID`) );
+
+
+-- -----------------------------------------------------
+-- TODO remove this later
+-- -----------------------------------------------------
+
+INSERT INTO IOS_FEATURE (CODE, NAME, DESCRIPTION)
+VALUES
+  ('INSTALL_ENTERPRISE_APPLICATION', 'INSTALL_ENTERPRISE_APPLICATION', 'Enterprise application installation'),
+ ('INSTALL_STORE_APPLICATION', 'INSTALL_STORE_APPLICATION', 'Store application installation'),  
+('REMOVE_APPLICATION', 'REMOVE_APPLICATION', 'Application removal'),
+ ('DEVICE_LOCK', 'DEVICE_LOCK', 'Lock device'),
+ ('CELLULAR', 'CELLULAR', 'Cellular operation'),
+ ('RESTRICTION', 'RESTRICTION', 'Restriction operation'),
+ ('WIFI', 'WIFI', 'WIFI operation'),
+ ('DEVICE_INFO', 'DEVICE_INFO', 'Device info operation'),  
+('AIR_PLAY', 'AIR_PLAY', 'AirPlay operation'),  
+('LOCATION', 'LOCATION', 'Fetch location'),  
+('ALARM', 'ALARM', 'Alarm device');
