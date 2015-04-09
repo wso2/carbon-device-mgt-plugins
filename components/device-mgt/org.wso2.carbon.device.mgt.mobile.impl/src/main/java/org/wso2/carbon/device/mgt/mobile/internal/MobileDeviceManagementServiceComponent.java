@@ -78,9 +78,11 @@ public class MobileDeviceManagementServiceComponent {
             Map<String, MobileDataSourceConfig> dsConfigMap =
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
             MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(dsConfigMap);
-            IOSDAOFactory.init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS));
+            IOSDAOFactory.init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.
+                                                       MOBILE_DEVICE_TYPE_IOS));
             AndroidDAOFactory
-                    .init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID));
+                    .init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.
+                                                  MOBILE_DEVICE_TYPE_ANDROID));
 
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
@@ -90,7 +92,8 @@ public class MobileDeviceManagementServiceComponent {
                                     "to begin");
                 }
                 try {
-                    Map<String, DataSource> dataSourceMap = MobileDeviceManagementDAOFactory.getDataSourceMap();
+                    Map<String, DataSource> dataSourceMap = MobileDeviceManagementDAOFactory.
+                                                                               getDataSourceMap();
                     for (DataSource dataSource : dataSourceMap.values()) {
                         MobileDeviceManagementDAOUtil
                                 .setupMobileDeviceManagementSchema(dataSource);

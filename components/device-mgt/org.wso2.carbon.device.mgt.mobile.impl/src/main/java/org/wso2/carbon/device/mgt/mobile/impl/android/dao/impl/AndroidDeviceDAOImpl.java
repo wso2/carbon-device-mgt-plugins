@@ -58,16 +58,17 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, VENDOR, MAC_ADDRESS, " +
-					"DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION FROM AD_DEVICE WHERE" +
-					" ANDROID_DEVICE_ID = ?";
+					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, " +
+					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION" +
+					" FROM AD_DEVICE WHERE ANDROID_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblDeviceId);
 			ResultSet resultSet = stmt.executeQuery();
 
 			if (resultSet.next()) {
 				mobileDevice = new MobileDevice();
-				mobileDevice.setMobileDeviceId(resultSet.getString(AndroidPluginConstants.ANDROID_DEVICE_ID));
+				mobileDevice.setMobileDeviceId(resultSet.getString(AndroidPluginConstants.
+						                                                   ANDROID_DEVICE_ID));
 				mobileDevice.setModel(resultSet.getString(AndroidPluginConstants.DEVICE_MODEL));
 				mobileDevice.setSerial(resultSet.getString(AndroidPluginConstants.SERIAL));
 				mobileDevice.setVendor(resultSet.getString(AndroidPluginConstants.VENDOR));
@@ -88,7 +89,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 				mobileDevice.setDeviceProperties(propertyMap);
 
 				if (log.isDebugEnabled()) {
-					log.debug("Android device " + mblDeviceId + " data has been fetched from Android database.");
+					log.debug("Android device " + mblDeviceId + " data has been fetched from " +
+					          "Android database.");
 				}
 			}
 		} catch (SQLException e) {
@@ -112,8 +114,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			conn = this.getConnection();
 			String createDBQuery =
 					"INSERT INTO AD_DEVICE(ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, SERIAL, " +
-					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION, DEVICE_MODEL)" +
-					" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, " +
+					"OS_VERSION, DEVICE_MODEL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 			stmt = conn.prepareStatement(createDBQuery);
 			stmt.setString(1, mobileDevice.getMobileDeviceId());
@@ -142,8 +144,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			if (rows > 0) {
 				status = true;
 				if (log.isDebugEnabled()) {
-					log.debug("Android device " + mobileDevice.getMobileDeviceId() + " data has been added" +
-					          " to the Android database.");
+					log.debug("Android device " + mobileDevice.getMobileDeviceId() + " data has been" +
+					          " added to the Android database.");
 				}
 			}
 		} catch (SQLException e) {
@@ -166,9 +168,9 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		try {
 			conn = this.getConnection();
 			String updateDBQuery =
-					"UPDATE AD_DEVICE SET GCM_TOKEN = ?, DEVICE_INFO = ?, SERIAL = ?, VENDOR = ?, MAC_ADDRESS = ?, " +
-					"DEVICE_NAME = ?, LATITUDE = ?, LONGITUDE = ?, IMEI = ?, IMSI = ?, OS_VERSION = ?, DEVICE_MODEL = ? " +
-					"WHERE ANDROID_DEVICE_ID = ?";
+					"UPDATE AD_DEVICE SET GCM_TOKEN = ?, DEVICE_INFO = ?, SERIAL = ?, VENDOR = ?, " +
+					"MAC_ADDRESS = ?, DEVICE_NAME = ?, LATITUDE = ?, LONGITUDE = ?, IMEI = ?, " +
+					"IMSI = ?, OS_VERSION = ?, DEVICE_MODEL = ? WHERE ANDROID_DEVICE_ID = ?";
 
 			stmt = conn.prepareStatement(updateDBQuery);
 
@@ -252,13 +254,15 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, VENDOR, " +
-					"MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, 0S_VERSION FROM AD_DEVICE";
+					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, " +
+					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION " +
+					"FROM AD_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mobileDevice = new MobileDevice();
-				mobileDevice.setMobileDeviceId(resultSet.getString(AndroidPluginConstants.ANDROID_DEVICE_ID));
+				mobileDevice.setMobileDeviceId(resultSet.getString(AndroidPluginConstants.
+						                                                   ANDROID_DEVICE_ID));
 				mobileDevice.setModel(resultSet.getString(AndroidPluginConstants.DEVICE_MODEL));
 				mobileDevice.setSerial(resultSet.getString(AndroidPluginConstants.SERIAL));
 				mobileDevice.setVendor(resultSet.getString(AndroidPluginConstants.VENDOR));

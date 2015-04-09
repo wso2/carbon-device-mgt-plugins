@@ -95,8 +95,8 @@ public class AndroidFeatureManager implements FeatureManager {
             } catch (MobileDeviceManagementDAOException e1) {
                 log.warn("Error occurred while roll-backing the transaction", e);
             }
-            throw new DeviceManagementException("Error occurred while retrieving the list of features registered " +
-                    "for Android platform", e);
+            throw new DeviceManagementException("Error occurred while retrieving the list of " +
+                                                "features registered for Android platform", e);
         }
     }
 

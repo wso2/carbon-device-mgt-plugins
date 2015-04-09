@@ -46,7 +46,8 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
     }
 
     @Override
-    public boolean addFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException {
+    public boolean addFeature(MobileFeature mobileFeature) throws
+                                                           MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         boolean status = false;
         try {
@@ -70,7 +71,8 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
     }
 
     @Override
-    public boolean updateFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException {
+    public boolean updateFeature(MobileFeature mobileFeature) throws
+                                                              MobileDeviceManagementDAOException {
         boolean status = false;
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -89,7 +91,8 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
             if (rows > 0) {
                 status = true;
                 if (log.isDebugEnabled()) {
-                    log.debug("Android Feature " + mobileFeature.getCode() + " data has been modified.");
+                    log.debug("Android Feature " + mobileFeature.getCode() + " data has been " +
+                              "modified.");
                 }
             }
         } catch (SQLException e) {
@@ -125,7 +128,8 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
     }
 
     @Override
-    public boolean deleteFeatureByCode(String mblFeatureCode) throws MobileDeviceManagementDAOException {
+    public boolean deleteFeatureByCode(String mblFeatureCode) throws
+                                                              MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         boolean status = false;
         try {
@@ -146,7 +150,8 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
     }
 
     @Override
-    public MobileFeature getFeatureById(int mblFeatureId) throws MobileDeviceManagementDAOException {
+    public MobileFeature getFeatureById(int mblFeatureId) throws
+                                                          MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
@@ -162,7 +167,8 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                 mobileFeature.setId(rs.getInt(AndroidPluginConstants.ANDROID_FEATURE_ID));
                 mobileFeature.setCode(rs.getString(AndroidPluginConstants.ANDROID_FEATURE_CODE));
                 mobileFeature.setName(rs.getString(AndroidPluginConstants.ANDROID_FEATURE_NAME));
-                mobileFeature.setDescription(rs.getString(AndroidPluginConstants.ANDROID_FEATURE_DESCRIPTION));
+                mobileFeature.setDescription(rs.getString(AndroidPluginConstants.
+                                                                  ANDROID_FEATURE_DESCRIPTION));
                 mobileFeature.setDeviceType(
                         DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
             }
@@ -177,7 +183,8 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
     }
 
     @Override
-    public MobileFeature getFeatureByCode(String mblFeatureCode) throws MobileDeviceManagementDAOException {
+    public MobileFeature getFeatureByCode(String mblFeatureCode) throws
+                                                                 MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
@@ -193,7 +200,8 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                 mobileFeature.setId(rs.getInt(AndroidPluginConstants.ANDROID_FEATURE_ID));
                 mobileFeature.setCode(rs.getString(AndroidPluginConstants.ANDROID_FEATURE_CODE));
                 mobileFeature.setName(rs.getString(AndroidPluginConstants.ANDROID_FEATURE_NAME));
-                mobileFeature.setDescription(rs.getString(AndroidPluginConstants.ANDROID_FEATURE_DESCRIPTION));
+                mobileFeature.setDescription(rs.getString(AndroidPluginConstants.
+                                                                  ANDROID_FEATURE_DESCRIPTION));
                 mobileFeature.setDeviceType(
                         DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
             }
@@ -231,15 +239,16 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                 mobileFeature.setId(rs.getInt(AndroidPluginConstants.ANDROID_FEATURE_ID));
                 mobileFeature.setCode(rs.getString(AndroidPluginConstants.ANDROID_FEATURE_CODE));
                 mobileFeature.setName(rs.getString(AndroidPluginConstants.ANDROID_FEATURE_NAME));
-                mobileFeature.setDescription(rs.getString(AndroidPluginConstants.ANDROID_FEATURE_DESCRIPTION));
+                mobileFeature.setDescription(rs.getString(AndroidPluginConstants.
+                                                                  ANDROID_FEATURE_DESCRIPTION));
                 mobileFeature.setDeviceType(
                         DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
                 features.add(mobileFeature);
             }
             return features;
         } catch (SQLException e) {
-            throw new AndroidFeatureManagementDAOException("Error occurred while retrieving all android " +
-                                                    "features from the android database.", e);
+            throw new AndroidFeatureManagementDAOException("Error occurred while retrieving all " +
+                                                 "android features from the android database.", e);
         } finally {
             MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
         }
