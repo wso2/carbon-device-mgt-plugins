@@ -128,10 +128,17 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
         }
     }
 
-    public static Connection getConnection() {
+    public static Connection getConnection() throws MobileDeviceManagementDAOException {
+        if (currentConnection.get() == null) {
+            try {
+                currentConnection.set(dataSource.getConnection());
+            } catch (SQLException e) {
+                throw new MobileDeviceManagementDAOException("Error occurred while retrieving data source connection",
+                        e);
+            }
+        }
         return currentConnection.get();
     }
-
     public static void commitTransaction() throws MobileDeviceManagementDAOException {
         try {
             Connection conn = currentConnection.get();
@@ -145,7 +152,20 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
             }
         } catch (SQLException e) {
             throw new MobileDeviceManagementDAOException("Error occurred while committing the transaction", e);
+        } finally {
+          closeConnection();
         }
+    }
+
+    public static void closeConnection() throws MobileDeviceManagementDAOException {
+
+        Connection con = currentConnection.get();
+        try {
+            con.close();
+        } catch (SQLException e) {
+            log.error("Error occurred while close the connection");
+        }
+        currentConnection.remove();
     }
 
     public static void rollbackTransaction() throws MobileDeviceManagementDAOException {
@@ -161,6 +181,8 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
             }
         } catch (SQLException e) {
             throw new MobileDeviceManagementDAOException("Error occurred while rollbacking the transaction", e);
+        } finally {
+            closeConnection();
         }
     }
 
