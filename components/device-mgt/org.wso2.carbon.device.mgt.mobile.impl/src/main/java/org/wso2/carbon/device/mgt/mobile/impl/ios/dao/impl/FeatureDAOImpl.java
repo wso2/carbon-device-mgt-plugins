@@ -34,7 +34,7 @@ import java.util.List;
 public class FeatureDAOImpl implements MobileFeatureDAO {
 
 
-    public boolean addFeature(MobileFeature feature) throws FeatureManagementDAOException {
+    public boolean addFeature(MobileFeature feature) throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         boolean status = false;
         try {
