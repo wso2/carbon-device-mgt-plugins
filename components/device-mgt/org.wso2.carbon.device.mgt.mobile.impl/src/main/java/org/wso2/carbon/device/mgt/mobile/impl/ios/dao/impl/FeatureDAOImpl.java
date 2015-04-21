@@ -96,7 +96,7 @@ public class FeatureDAOImpl implements MobileFeatureDAO {
         ResultSet rs = null;
         try {
             Connection conn = MobileDeviceManagementDAOFactory.getConnection();
-            String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM IOS_FEATURE WHERE CODE = ?";
+            String sql = "SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM IOS_FEATURE WHERE CODE = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, mblFeatureCode);
             rs = stmt.executeQuery();
@@ -130,16 +130,17 @@ public class FeatureDAOImpl implements MobileFeatureDAO {
         List<MobileFeature> features = new ArrayList<MobileFeature>();
         try {
             Connection conn = MobileDeviceManagementDAOFactory.getConnection();
-            String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM IOS_FEATURE";
+            String sql = "SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM IOS_FEATURE";
             stmt = conn.prepareStatement(sql);
             rs = stmt.executeQuery();
 
             while (rs.next()) {
                 MobileFeature feature = new MobileFeature();
-                feature.setId(rs.getInt("ID"));
+                feature.setId(rs.getInt("FEATURE_ID"));
                 feature.setCode(rs.getString("CODE"));
                 feature.setName(rs.getString("NAME"));
                 feature.setDescription(rs.getString("DESCRIPTION"));
+                features.add(feature);
             }
             return features;
         } catch (SQLException e) {
