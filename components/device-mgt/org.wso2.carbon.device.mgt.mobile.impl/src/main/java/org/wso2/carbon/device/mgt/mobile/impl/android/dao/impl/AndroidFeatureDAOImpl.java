@@ -50,8 +50,10 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                                                            MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         boolean status = false;
+        Connection conn = null;
+
         try {
-            Connection conn = this.getConnection();
+            conn = this.getConnection();
             String sql = "INSERT INTO AD_FEATURE(CODE, NAME, DESCRIPTION) VALUES (?, ?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, mobileFeature.getCode());
@@ -65,7 +67,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                     "Error occurred while adding android feature '" +
                             mobileFeature.getName() + "' into the metadata repository", e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
+            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
         }
         return status;
     }
@@ -110,8 +112,9 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
     public boolean deleteFeatureById(int mblFeatureId) throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         boolean status = false;
+        Connection conn = null;
         try {
-            Connection conn = this.getConnection();
+            conn = this.getConnection();
             String sql = "DELETE FROM AD_FEATURE WHERE ID = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, mblFeatureId);
@@ -122,7 +125,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                     "Error occurred while deleting android feature '" +
                     mblFeatureId + "' from Android database.", e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
+            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
         }
         return status;
     }
@@ -132,8 +135,9 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                                                               MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         boolean status = false;
+        Connection conn = null;
         try {
-            Connection conn = this.getConnection();
+            conn = this.getConnection();
             String sql = "DELETE FROM AD_FEATURE WHERE CODE = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, mblFeatureCode);
@@ -144,7 +148,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                     "Error occurred while deleting android feature '" +
                             mblFeatureCode + "' from Android database.", e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
+            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
         }
         return status;
     }
@@ -154,8 +158,9 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                                                           MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
+        Connection conn = null;
         try {
-            Connection conn = this.getConnection();
+            conn = this.getConnection();
             String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM AD_FEATURE WHERE ID = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, mblFeatureId);
@@ -178,7 +183,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                     "Error occurred while retrieving android feature '" +
                     mblFeatureId + "' from the Android database.", e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
+            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, rs);
         }
     }
 
@@ -187,8 +192,10 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                                                                  MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
+        Connection conn = null;
+
         try {
-            Connection conn = this.getConnection();
+            conn = this.getConnection();
             String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM AD_FEATURE WHERE CODE = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, mblFeatureCode);
@@ -211,7 +218,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                     "Error occurred while retrieving android feature '" +
                             mblFeatureCode + "' from the Android database.", e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
+            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, rs);
         }
     }
 
@@ -225,10 +232,11 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
     public List<MobileFeature> getAllFeatures() throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
+        Connection conn = null;
         List<MobileFeature> features = new ArrayList<MobileFeature>();
 
         try {
-            Connection conn = this.getConnection();
+            conn = this.getConnection();
             String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM AD_FEATURE";
             stmt = conn.prepareStatement(sql);
             rs = stmt.executeQuery();
@@ -250,7 +258,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
             throw new AndroidFeatureManagementDAOException("Error occurred while retrieving all " +
                                                  "android features from the android database.", e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
+            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, rs);
         }
     }
 
