@@ -25,6 +25,7 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
+import org.wso2.carbon.device.mgt.common.spi.DeviceMgtService;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
@@ -100,9 +101,9 @@ public class MobileDeviceManagementServiceComponent {
             }
 
             androidServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(), new AndroidDeviceManager(), null);
+                    bundleContext.registerService(DeviceMgtService.class.getName(), new AndroidDeviceManager(), null);
             windowsServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(), new WindowsDeviceManager(), null);
+                    bundleContext.registerService(DeviceMgtService.class.getName(), new WindowsDeviceManager(), null);
 
             if (log.isDebugEnabled()) {
                 log.debug("Mobile Device Management Service Component has been successfully activated");
