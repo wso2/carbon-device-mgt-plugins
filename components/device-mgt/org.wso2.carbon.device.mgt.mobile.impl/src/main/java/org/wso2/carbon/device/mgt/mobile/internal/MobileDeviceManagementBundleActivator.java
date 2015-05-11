@@ -28,7 +28,6 @@ import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManager;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManager;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
 
 import java.util.ArrayList;
@@ -41,7 +40,6 @@ import java.util.Map;
 public class MobileDeviceManagementBundleActivator implements BundleActivator, BundleListener {
 
 	private ServiceRegistration androidServiceRegRef;
-	private ServiceRegistration iOSServiceRegRef;
 	private ServiceRegistration windowsServiceRegRef;
 
 	private static List<DataSourceListener> dataSourceListeners =
@@ -70,9 +68,6 @@ public class MobileDeviceManagementBundleActivator implements BundleActivator, B
             androidServiceRegRef =
                     bundleContext.registerService(DeviceManager.class.getName(),
                             new AndroidDeviceManager(), null);
-            iOSServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(),
-                            new IOSDeviceManager(), null);
             windowsServiceRegRef =
                     bundleContext.registerService(DeviceManager.class.getName(),
                             new WindowsDeviceManager(), null);
@@ -92,7 +87,6 @@ public class MobileDeviceManagementBundleActivator implements BundleActivator, B
 		}
 		try {
 			androidServiceRegRef.unregister();
-			iOSServiceRegRef.unregister();
 			windowsServiceRegRef.unregister();
 
 			bundleContext.removeBundleListener(this);

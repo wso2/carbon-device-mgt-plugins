@@ -33,8 +33,6 @@ import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManager;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManager;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.IOSDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 
@@ -59,7 +57,6 @@ public class MobileDeviceManagementServiceComponent {
 
     private ServiceRegistration serverStartupObserverRef;
     private ServiceRegistration androidServiceRegRef;
-    private ServiceRegistration iOSServiceRegRef;
     private ServiceRegistration windowsServiceRegRef;
 
     private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
@@ -78,8 +75,7 @@ public class MobileDeviceManagementServiceComponent {
             Map<String, MobileDataSourceConfig> dsConfigMap =
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
             MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(dsConfigMap);
-            IOSDAOFactory.init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.
-                                                       MOBILE_DEVICE_TYPE_IOS));
+
             AndroidDAOFactory
                     .init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.
                                                   MOBILE_DEVICE_TYPE_ANDROID));
@@ -105,8 +101,6 @@ public class MobileDeviceManagementServiceComponent {
 
             androidServiceRegRef =
                     bundleContext.registerService(DeviceManager.class.getName(), new AndroidDeviceManager(), null);
-            iOSServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(), new IOSDeviceManager(), null);
             windowsServiceRegRef =
                     bundleContext.registerService(DeviceManager.class.getName(), new WindowsDeviceManager(), null);
 
@@ -125,9 +119,6 @@ public class MobileDeviceManagementServiceComponent {
         try {
             if (androidServiceRegRef != null) {
                 androidServiceRegRef.unregister();
-            }
-            if (iOSServiceRegRef != null) {
-                iOSServiceRegRef.unregister();
             }
             if (windowsServiceRegRef != null) {
                 windowsServiceRegRef.unregister();

@@ -21,7 +21,10 @@ package org.wso2.carbon.device.mgt.mobile.impl.android;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
+import org.wso2.carbon.device.mgt.common.app.mgt.AppManagerConnectorException;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
+import org.wso2.carbon.device.mgt.common.spi.DeviceMgtService;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
@@ -34,7 +37,7 @@ import java.util.List;
 /**
  * This represents the Android implementation of DeviceManagerService.
  */
-public class AndroidDeviceManager implements DeviceManager {
+public class AndroidDeviceManager implements DeviceMgtService {
 
     private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
     private static final Log log = LogFactory.getLog(AndroidDeviceManager.class);
@@ -209,4 +212,9 @@ public class AndroidDeviceManager implements DeviceManager {
         return devices;
     }
 
+    @Override
+    public void installApplication(Operation operation, List<DeviceIdentifier> deviceIdentifiers)
+            throws AppManagerConnectorException {
+
+    }
 }

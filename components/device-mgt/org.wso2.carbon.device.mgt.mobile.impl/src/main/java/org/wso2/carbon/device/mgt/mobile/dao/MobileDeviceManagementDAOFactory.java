@@ -25,8 +25,6 @@ import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.JNDILookupDefinition;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.FeatureManagementDAOException;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;

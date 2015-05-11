@@ -46,8 +46,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
     }
 
     @Override
-    public boolean addFeature(MobileFeature mobileFeature) throws
-                                                           MobileDeviceManagementDAOException {
+    public boolean addFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         boolean status = false;
         Connection conn = null;
@@ -73,8 +72,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
     }
 
     @Override
-    public boolean updateFeature(MobileFeature mobileFeature) throws
-                                                              MobileDeviceManagementDAOException {
+    public boolean updateFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException {
         boolean status = false;
         Connection conn = null;
         PreparedStatement stmt = null;
