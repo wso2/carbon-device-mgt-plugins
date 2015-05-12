@@ -24,7 +24,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
 import org.wso2.carbon.device.mgt.common.spi.DeviceMgtService;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
@@ -76,10 +75,9 @@ public class MobileDeviceManagementServiceComponent {
             Map<String, MobileDataSourceConfig> dsConfigMap =
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
             MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(dsConfigMap);
+            MobileDeviceManagementDAOFactory.init();
 
-            AndroidDAOFactory
-                    .init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.
-                                                  MOBILE_DEVICE_TYPE_ANDROID));
+            AndroidDAOFactory.init();
 
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
@@ -89,8 +87,7 @@ public class MobileDeviceManagementServiceComponent {
                                     "to begin");
                 }
                 try {
-                    Map<String, DataSource> dataSourceMap = MobileDeviceManagementDAOFactory.
-                                                                               getDataSourceMap();
+                    Map<String, DataSource> dataSourceMap = MobileDeviceManagementDAOFactory.getDataSourceMap();
                     for (DataSource dataSource : dataSourceMap.values()) {
                         MobileDeviceManagementDAOUtil
                                 .setupMobileDeviceManagementSchema(dataSource);

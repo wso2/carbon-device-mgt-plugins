@@ -63,7 +63,7 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
      * @param config Mobile data source configuration
      * @return data source resolved from the data source definition
      */
-    protected static DataSource resolveDataSource(MobileDataSourceConfig config) {
+    public static DataSource resolveDataSource(MobileDataSourceConfig config) {
         DataSource dataSource = null;
         if (config == null) {
             throw new RuntimeException("Device Management Repository data source configuration " +
@@ -111,7 +111,7 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
 
     private static void assertDataSourceInitialization() {
         if (!isInitialized) {
-            throw new DataSourceNotAvailableException("Mobile device management metadata repository datasource " +
+            throw new DataSourceNotAvailableException("Mobile device management metadata repository data source " +
                     "is not initialized");
         }
     }
@@ -178,7 +178,7 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
                 }
             }
         } catch (SQLException e) {
-            throw new MobileDeviceManagementDAOException("Error occurred while rollbacking the transaction", e);
+            throw new MobileDeviceManagementDAOException("Error occurred while rollback the transaction", e);
         } finally {
             closeConnection();
         }
