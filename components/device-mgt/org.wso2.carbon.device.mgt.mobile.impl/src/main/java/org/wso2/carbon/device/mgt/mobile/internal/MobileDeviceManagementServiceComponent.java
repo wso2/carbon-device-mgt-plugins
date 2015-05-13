@@ -24,7 +24,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
+import org.wso2.carbon.device.mgt.common.spi.DeviceMgtService;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
@@ -33,8 +33,6 @@ import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManager;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.IOSDeviceManager;
-import org.wso2.carbon.device.mgt.mobile.impl.ios.dao.IOSDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 
@@ -59,7 +57,6 @@ public class MobileDeviceManagementServiceComponent {
 
     private ServiceRegistration serverStartupObserverRef;
     private ServiceRegistration androidServiceRegRef;
-    private ServiceRegistration iOSServiceRegRef;
     private ServiceRegistration windowsServiceRegRef;
 
     private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
@@ -78,11 +75,9 @@ public class MobileDeviceManagementServiceComponent {
             Map<String, MobileDataSourceConfig> dsConfigMap =
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
             MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(dsConfigMap);
-            IOSDAOFactory.init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.
-                                                       MOBILE_DEVICE_TYPE_IOS));
-            AndroidDAOFactory
-                    .init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.
-                                                  MOBILE_DEVICE_TYPE_ANDROID));
+            MobileDeviceManagementDAOFactory.init();
+
+            AndroidDAOFactory.init();
 
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
@@ -92,8 +87,7 @@ public class MobileDeviceManagementServiceComponent {
                                     "to begin");
                 }
                 try {
-                    Map<String, DataSource> dataSourceMap = MobileDeviceManagementDAOFactory.
-                                                                               getDataSourceMap();
+                    Map<String, DataSource> dataSourceMap = MobileDeviceManagementDAOFactory.getDataSourceMap();
                     for (DataSource dataSource : dataSourceMap.values()) {
                         MobileDeviceManagementDAOUtil
                                 .setupMobileDeviceManagementSchema(dataSource);
@@ -104,11 +98,9 @@ public class MobileDeviceManagementServiceComponent {
             }
 
             androidServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(), new AndroidDeviceManager(), null);
-            iOSServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(), new IOSDeviceManager(), null);
+                    bundleContext.registerService(DeviceMgtService.class.getName(), new AndroidDeviceManager(), null);
             windowsServiceRegRef =
-                    bundleContext.registerService(DeviceManager.class.getName(), new WindowsDeviceManager(), null);
+                    bundleContext.registerService(DeviceMgtService.class.getName(), new WindowsDeviceManager(), null);
 
             if (log.isDebugEnabled()) {
                 log.debug("Mobile Device Management Service Component has been successfully activated");
@@ -125,9 +117,6 @@ public class MobileDeviceManagementServiceComponent {
         try {
             if (androidServiceRegRef != null) {
                 androidServiceRegRef.unregister();
-            }
-            if (iOSServiceRegRef != null) {
-                iOSServiceRegRef.unregister();
             }
             if (windowsServiceRegRef != null) {
                 windowsServiceRegRef.unregister();

@@ -20,11 +20,6 @@
 <MobileDeviceMgtConfiguration>
     <ManagementRepository>
     <DataSourceConfigurations>
-        <DataSourceConfiguration type="ios">
-            <JndiLookupDefinition>
-                <Name>jdbc/MobileIOSDM_DS</Name>
-            </JndiLookupDefinition>
-        </DataSourceConfiguration>
         <DataSourceConfiguration type="android">
             <JndiLookupDefinition>
                 <Name>jdbc/MobileAndroidDM_DS</Name>

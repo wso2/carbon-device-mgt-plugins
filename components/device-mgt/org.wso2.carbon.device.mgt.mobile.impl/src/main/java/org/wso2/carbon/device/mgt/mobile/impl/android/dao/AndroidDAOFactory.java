@@ -20,6 +20,7 @@ package org.wso2.carbon.device.mgt.mobile.impl.android.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.*;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.impl.AndroidDeviceDAOImpl;
@@ -33,8 +34,9 @@ public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
     private static final Log log = LogFactory.getLog(AndroidDAOFactory.class);
     private static DataSource dataSource;
 
-    public static void init(MobileDataSourceConfig config) {
-        dataSource = resolveDataSource(config);
+    public static void init() {
+        dataSource = MobileDeviceManagementDAOFactory.getDataSource(DeviceManagementConstants.MobileDeviceTypes.
+                MOBILE_DEVICE_TYPE_ANDROID);
     }
 
     @Override
