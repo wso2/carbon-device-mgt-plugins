@@ -78,9 +78,7 @@ public class MobileDeviceManagementServiceComponent {
             Map<String, MobileDataSourceConfig> dsConfigMap =
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
 
-            AndroidDAOFactory.init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes
-                    .MOBILE_DEVICE_TYPE_ANDROID));
-            WindowsDAOFactory.init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS));
+            MobileDeviceManagementDAOFactory.init(dsConfigMap);
 
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
@@ -90,11 +88,10 @@ public class MobileDeviceManagementServiceComponent {
                                     "to begin");
                 }
                 try {
-                    DataSource dataSource;
-                    for (MobileDataSourceConfig dataSourceConfig : dsConfigMap.values()) {
-                        dataSource = MobileDeviceManagementDAOFactory.resolveDataSource(dataSourceConfig);
+                    for (String pluginType : dsConfigMap.keySet()){
                         MobileDeviceManagementDAOUtil
-                                .setupMobileDeviceManagementSchema(dataSource);
+                                .setupMobileDeviceManagementSchema(MobileDeviceManagementDAOFactory.getDataSourceMap
+                                        ().get(pluginType));
                     }
                 } catch (MobileDeviceMgtPluginException e) {
                     log.error("Exception occurred while initializing mobile device management database schema", e);

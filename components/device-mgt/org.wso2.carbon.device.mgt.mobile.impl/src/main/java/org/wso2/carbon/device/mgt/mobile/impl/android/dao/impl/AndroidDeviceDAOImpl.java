@@ -25,6 +25,7 @@ import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
+import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.android.util.AndroidPluginConstants;
 import org.wso2.carbon.device.mgt.mobile.impl.android.util.AndroidUtils;
 
@@ -53,7 +54,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		MobileDevice mobileDevice = null;
         ResultSet resultSet = null;
 		try {
-			conn = MobileDeviceManagementDAOFactory.getConnection();
+			conn = AndroidDAOFactory.getConnection();
 			String selectDBQuery =
 					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, " +
 					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION" +
@@ -96,7 +97,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
 			MobileDeviceManagementDAOUtil.cleanupResources(stmt, resultSet);
-            MobileDeviceManagementDAOFactory.closeConnection();
+            AndroidDAOFactory.closeConnection();
 		}
 
 		return mobileDevice;
@@ -109,7 +110,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = MobileDeviceManagementDAOFactory.getConnection();
+			conn = AndroidDAOFactory.getConnection();
 			String createDBQuery =
 					"INSERT INTO AD_DEVICE(ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, SERIAL, " +
 					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, " +
@@ -164,7 +165,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = MobileDeviceManagementDAOFactory.getConnection();
+			conn = AndroidDAOFactory.getConnection();
 			String updateDBQuery =
 					"UPDATE AD_DEVICE SET GCM_TOKEN = ?, DEVICE_INFO = ?, SERIAL = ?, VENDOR = ?, " +
 					"MAC_ADDRESS = ?, DEVICE_NAME = ?, LATITUDE = ?, LONGITUDE = ?, IMEI = ?, " +
@@ -219,7 +220,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = MobileDeviceManagementDAOFactory.getConnection();
+			conn = AndroidDAOFactory.getConnection();
 			String deleteDBQuery =
 					"DELETE FROM AD_DEVICE WHERE ANDROID_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
@@ -253,7 +254,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		List<MobileDevice> mobileDevices = new ArrayList<MobileDevice>();
 
 		try {
-			conn = MobileDeviceManagementDAOFactory.getConnection();
+			conn = AndroidDAOFactory.getConnection();
 			String selectDBQuery =
 					"SELECT ANDROID_DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, " +
 					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION " +
@@ -294,7 +295,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
 			MobileDeviceManagementDAOUtil.cleanupResources(stmt, resultSet);
-            MobileDeviceManagementDAOFactory.closeConnection();
+            AndroidDAOFactory.closeConnection();
 		}
 	}
 
