@@ -64,11 +64,18 @@ public class AndroidDeviceManager implements DeviceMgtService {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new Android device : " + device.getDeviceIdentifier());
             }
+            MobileDeviceManagementDAOFactory.beginTransaction();
             status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
                     mobileDevice);
+            MobileDeviceManagementDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
-            String msg = "Error while enrolling the Android device : " +
-                    device.getDeviceIdentifier();
+            try {
+                MobileDeviceManagementDAOFactory.rollbackTransaction();
+            } catch (MobileDeviceManagementDAOException mobileDAOEx) {
+                String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
+                log.warn(msg, mobileDAOEx);
+            }
+            String msg = "Error while enrolling the Android device : " + device.getDeviceIdentifier();
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);
         }
@@ -83,9 +90,17 @@ public class AndroidDeviceManager implements DeviceMgtService {
             if (log.isDebugEnabled()) {
                 log.debug("Modifying the Android device enrollment data");
             }
+            MobileDeviceManagementDAOFactory.beginTransaction();
             status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO()
                     .updateMobileDevice(mobileDevice);
+            MobileDeviceManagementDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
+            try {
+                MobileDeviceManagementDAOFactory.rollbackTransaction();
+            } catch (MobileDeviceManagementDAOException mobileDAOEx) {
+                String msg = "Error occurred while roll back the update device transaction :" + device.toString();
+                log.warn(msg, mobileDAOEx);
+            }
             String msg = "Error while updating the enrollment of the Android device : " +
                     device.getDeviceIdentifier();
             log.error(msg, e);
@@ -101,9 +116,17 @@ public class AndroidDeviceManager implements DeviceMgtService {
             if (log.isDebugEnabled()) {
                 log.debug("Dis-enrolling Android device : " + deviceId);
             }
+            MobileDeviceManagementDAOFactory.beginTransaction();
             status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO()
                     .deleteMobileDevice(deviceId.getId());
+            MobileDeviceManagementDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
+            try {
+                MobileDeviceManagementDAOFactory.rollbackTransaction();
+            } catch (MobileDeviceManagementDAOException mobileDAOEx) {
+                String msg = "Error occurred while roll back the device dis enrol transaction :" + deviceId.toString();
+                log.warn(msg, mobileDAOEx);
+            }
             String msg = "Error while removing the Android device : " + deviceId.getId();
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);
@@ -177,9 +200,17 @@ public class AndroidDeviceManager implements DeviceMgtService {
                 log.debug(
                         "updating the details of Android device : " + device.getDeviceIdentifier());
             }
+            MobileDeviceManagementDAOFactory.beginTransaction();
             status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO()
                     .updateMobileDevice(mobileDevice);
+            MobileDeviceManagementDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
+            try {
+                MobileDeviceManagementDAOFactory.rollbackTransaction();
+            } catch (MobileDeviceManagementDAOException mobileDAOEx) {
+                String msg = "Error occurred while roll back the update device info transaction :" + device.toString();
+                log.warn(msg, mobileDAOEx);
+            }
             String msg =
                     "Error while updating the Android device : " + device.getDeviceIdentifier();
             log.error(msg, e);

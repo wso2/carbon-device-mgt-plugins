@@ -24,9 +24,6 @@ import org.wso2.carbon.device.mgt.mobile.dao.*;
 public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
         implements MobileDeviceManagementDAOFactoryInterface {
 
-    public static void init(MobileDataSourceConfig config) {
-        dataSource = resolveDataSource(config);
-    }
 
     @Override
     public MobileDeviceDAO getMobileDeviceDAO() {

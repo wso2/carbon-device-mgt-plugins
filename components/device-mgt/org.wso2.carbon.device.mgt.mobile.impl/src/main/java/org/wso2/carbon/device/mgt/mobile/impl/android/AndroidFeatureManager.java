@@ -70,11 +70,6 @@ public class AndroidFeatureManager implements FeatureManager {
             Feature feature =  MobileDeviceManagementUtil.convertToFeature(mobileFeature);
             return feature;
         } catch (MobileDeviceManagementDAOException e) {
-            try {
-                mobileDeviceManagementDAOFactory.rollbackTransaction();
-            } catch (MobileDeviceManagementDAOException e1) {
-                log.warn("Error occurred while roll-backing the transaction", e);
-            }
             throw new DeviceManagementException("Error occurred while retrieving the feature", e);
         }
     }
@@ -90,13 +85,8 @@ public class AndroidFeatureManager implements FeatureManager {
             }
             return featureList;
         } catch (MobileDeviceManagementDAOException e) {
-            try {
-                mobileDeviceManagementDAOFactory.rollbackTransaction();
-            } catch (MobileDeviceManagementDAOException e1) {
-                log.warn("Error occurred while roll-backing the transaction", e);
-            }
-            throw new DeviceManagementException("Error occurred while retrieving the list of " +
-                                                "features registered for Android platform", e);
+            throw new DeviceManagementException("Error occurred while retrieving the list of features registered for " +
+                    "Android platform", e);
         }
     }
 

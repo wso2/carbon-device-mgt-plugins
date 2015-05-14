@@ -32,16 +32,10 @@ public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
         implements MobileDeviceManagementDAOFactoryInterface {
 
     private static final Log log = LogFactory.getLog(AndroidDAOFactory.class);
-    private static DataSource dataSource;
-
-    public static void init() {
-        dataSource = MobileDeviceManagementDAOFactory.getDataSource(DeviceManagementConstants.MobileDeviceTypes.
-                MOBILE_DEVICE_TYPE_ANDROID);
-    }
 
     @Override
     public MobileDeviceDAO getMobileDeviceDAO() {
-        return new AndroidDeviceDAOImpl(dataSource);
+        return new AndroidDeviceDAOImpl();
     }
 
     @Override
@@ -60,7 +54,7 @@ public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
     }
 
     @Override public MobileFeatureDAO getMobileFeatureDao() {
-        return new AndroidFeatureDAOImpl(dataSource);
+        return new AndroidFeatureDAOImpl();
     }
 
     public MobileFeaturePropertyDAO getFeaturePropertyDAO() {

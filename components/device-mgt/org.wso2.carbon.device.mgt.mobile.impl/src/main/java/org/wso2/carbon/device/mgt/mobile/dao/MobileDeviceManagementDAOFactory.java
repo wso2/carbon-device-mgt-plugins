@@ -20,18 +20,16 @@ package org.wso2.carbon.device.mgt.mobile.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.mobile.DataSourceNotAvailableException;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.JNDILookupDefinition;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Factory class used to create MobileDeviceManagement related DAO objects.
@@ -39,22 +37,11 @@ import java.util.Map;
 public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceManagementDAOFactoryInterface {
 
     private static final Log log = LogFactory.getLog(MobileDeviceManagementDAOFactory.class);
-    private static Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap;
-    private static Map<String, DataSource> dataSourceMap;
-    private static boolean isInitialized;
     private static ThreadLocal<Connection> currentConnection = new ThreadLocal<Connection>();
-    protected static DataSource dataSource;
+    private static DataSource dataSource;
 
-    public static void init() throws MobileDeviceMgtPluginException {
-
-        dataSourceMap = new HashMap<String, DataSource>();
-        DataSource dataSource;
-        for (String pluginType : mobileDataSourceConfigMap.keySet()) {
-            dataSource = MobileDeviceManagementDAOFactory.resolveDataSource(mobileDataSourceConfigMap.get
-                    (pluginType));
-            dataSourceMap.put(pluginType, dataSource);
-        }
-        isInitialized = true;
+    public static void init(MobileDataSourceConfig mobileDataSourceConfig) throws MobileDeviceMgtPluginException {
+        dataSource = resolveDataSource(mobileDataSourceConfig);
     }
 
     /**
@@ -93,29 +80,6 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
         return dataSource;
     }
 
-    public static Map<String, MobileDataSourceConfig> getMobileDataSourceConfigMap() {
-        return mobileDataSourceConfigMap;
-    }
-
-    public static void setMobileDataSourceConfigMap(Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap) {
-        MobileDeviceManagementDAOFactory.mobileDataSourceConfigMap = mobileDataSourceConfigMap;
-    }
-
-    public static DataSource getDataSource(String type) {
-        return dataSourceMap.get(type);
-    }
-
-    public static Map<String, DataSource> getDataSourceMap() {
-        return dataSourceMap;
-    }
-
-    private static void assertDataSourceInitialization() {
-        if (!isInitialized) {
-            throw new DataSourceNotAvailableException("Mobile device management metadata repository data source " +
-                    "is not initialized");
-        }
-    }
-
     public static void beginTransaction() throws MobileDeviceManagementDAOException {
         try {
             Connection conn = dataSource.getConnection();
@@ -137,6 +101,7 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
         }
         return currentConnection.get();
     }
+
     public static void commitTransaction() throws MobileDeviceManagementDAOException {
         try {
             Connection conn = currentConnection.get();
@@ -151,7 +116,7 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
         } catch (SQLException e) {
             throw new MobileDeviceManagementDAOException("Error occurred while committing the transaction", e);
         } finally {
-          closeConnection();
+            closeConnection();
         }
     }
 

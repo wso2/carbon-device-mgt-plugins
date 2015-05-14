@@ -26,6 +26,7 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.spi.DeviceMgtService;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
@@ -34,6 +35,7 @@ import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManager;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.WindowsDAOFactory;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 
 import javax.sql.DataSource;
@@ -62,6 +64,7 @@ public class MobileDeviceManagementServiceComponent {
     private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
 
     protected void activate(ComponentContext ctx) {
+
         if (log.isDebugEnabled()) {
             log.debug("Activating Mobile Device Management Service Component");
         }
@@ -74,10 +77,10 @@ public class MobileDeviceManagementServiceComponent {
                     .getMobileDeviceManagementConfig();
             Map<String, MobileDataSourceConfig> dsConfigMap =
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
-            MobileDeviceManagementDAOFactory.setMobileDataSourceConfigMap(dsConfigMap);
-            MobileDeviceManagementDAOFactory.init();
 
-            AndroidDAOFactory.init();
+            AndroidDAOFactory.init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes
+                    .MOBILE_DEVICE_TYPE_ANDROID));
+            WindowsDAOFactory.init(dsConfigMap.get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS));
 
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
@@ -87,8 +90,9 @@ public class MobileDeviceManagementServiceComponent {
                                     "to begin");
                 }
                 try {
-                    Map<String, DataSource> dataSourceMap = MobileDeviceManagementDAOFactory.getDataSourceMap();
-                    for (DataSource dataSource : dataSourceMap.values()) {
+                    DataSource dataSource;
+                    for (MobileDataSourceConfig dataSourceConfig : dsConfigMap.values()) {
+                        dataSource = MobileDeviceManagementDAOFactory.resolveDataSource(dataSourceConfig);
                         MobileDeviceManagementDAOUtil
                                 .setupMobileDeviceManagementSchema(dataSource);
                     }
