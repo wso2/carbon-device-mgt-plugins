@@ -51,6 +51,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		MobileDevice mobileDevice = null;
+        ResultSet resultSet = null;
 		try {
 			conn = MobileDeviceManagementDAOFactory.getConnection();
 			String selectDBQuery =
@@ -59,7 +60,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 					" FROM AD_DEVICE WHERE ANDROID_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblDeviceId);
-			ResultSet resultSet = stmt.executeQuery();
+			resultSet = stmt.executeQuery();
 
 			if (resultSet.next()) {
 				mobileDevice = new MobileDevice();
@@ -94,7 +95,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
-			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+			MobileDeviceManagementDAOUtil.cleanupResources(stmt, resultSet);
+            MobileDeviceManagementDAOFactory.closeConnection();
 		}
 
 		return mobileDevice;
@@ -150,7 +152,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
-			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+			MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
 		}
 		return status;
 	}
@@ -205,7 +207,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
-			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+			MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
 		}
 		return status;
 	}
@@ -235,7 +237,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
-			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+			MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
 		}
 		return status;
 	}
@@ -243,10 +245,13 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 	@Override
 	public List<MobileDevice> getAllMobileDevices()
 			throws MobileDeviceManagementDAOException {
+
 		Connection conn = null;
 		PreparedStatement stmt = null;
+        ResultSet resultSet = null;
 		MobileDevice mobileDevice;
 		List<MobileDevice> mobileDevices = new ArrayList<MobileDevice>();
+
 		try {
 			conn = MobileDeviceManagementDAOFactory.getConnection();
 			String selectDBQuery =
@@ -254,7 +259,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION " +
 					"FROM AD_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
-			ResultSet resultSet = stmt.executeQuery();
+			resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mobileDevice = new MobileDevice();
 				mobileDevice.setMobileDeviceId(resultSet.getString(AndroidPluginConstants.
@@ -288,7 +293,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
-			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+			MobileDeviceManagementDAOUtil.cleanupResources(stmt, resultSet);
+            MobileDeviceManagementDAOFactory.closeConnection();
 		}
 	}
 

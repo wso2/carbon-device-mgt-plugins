@@ -46,10 +46,10 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
 
     @Override
     public boolean addFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException {
+
         PreparedStatement stmt = null;
         boolean status = false;
         Connection conn = null;
-
         try {
             conn = MobileDeviceManagementDAOFactory.getConnection();
             String sql = "INSERT INTO AD_FEATURE(CODE, NAME, DESCRIPTION) VALUES (?, ?, ?)";
@@ -65,7 +65,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                     "Error occurred while adding android feature '" +
                             mobileFeature.getName() + "' into the metadata repository", e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
         }
         return status;
     }
@@ -100,13 +100,14 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
             log.error(msg, e);
             throw new AndroidFeatureManagementDAOException(msg, e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
         }
         return status;
     }
 
     @Override
     public boolean deleteFeatureById(int mblFeatureId) throws MobileDeviceManagementDAOException {
+
         PreparedStatement stmt = null;
         boolean status = false;
         Connection conn = null;
@@ -122,7 +123,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                     "Error occurred while deleting android feature '" +
                     mblFeatureId + "' from Android database.", e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
         }
         return status;
     }
@@ -145,7 +146,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                     "Error occurred while deleting android feature '" +
                             mblFeatureCode + "' from Android database.", e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
         }
         return status;
     }
@@ -180,7 +181,8 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                     "Error occurred while retrieving android feature '" +
                     mblFeatureId + "' from the Android database.", e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, rs);
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
+            MobileDeviceManagementDAOFactory.closeConnection();
         }
     }
 
@@ -215,7 +217,8 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                     "Error occurred while retrieving android feature '" +
                             mblFeatureCode + "' from the Android database.", e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, rs);
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
+            MobileDeviceManagementDAOFactory.closeConnection();
         }
     }
 
@@ -227,6 +230,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
 
     @Override
     public List<MobileFeature> getAllFeatures() throws MobileDeviceManagementDAOException {
+        
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Connection conn = null;
@@ -255,7 +259,8 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
             throw new AndroidFeatureManagementDAOException("Error occurred while retrieving all " +
                                                  "android features from the android database.", e);
         } finally {
-            MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, rs);
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
+            MobileDeviceManagementDAOFactory.closeConnection();
         }
     }
 }
