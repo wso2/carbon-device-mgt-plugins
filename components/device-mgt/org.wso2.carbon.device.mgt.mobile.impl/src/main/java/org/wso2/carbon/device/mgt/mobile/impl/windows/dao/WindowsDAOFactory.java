@@ -18,12 +18,27 @@
  */
 package org.wso2.carbon.device.mgt.mobile.impl.windows.dao;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.*;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
         implements MobileDeviceManagementDAOFactoryInterface {
 
+    private static final Log log = LogFactory.getLog(WindowsDAOFactory.class);
+    protected static DataSource dataSource;
+    private static ThreadLocal<Connection> currentConnection = new ThreadLocal<Connection>();
+
+    public WindowsDAOFactory() {
+        this.dataSource = getDataSourceMap().get(DeviceManagementConstants.MobileDeviceTypes
+                .MOBILE_DEVICE_TYPE_WINDOWS);
+    }
 
     @Override
     public MobileDeviceDAO getMobileDeviceDAO() {
@@ -53,5 +68,74 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
     @Override
     public MobileFeaturePropertyDAO getFeaturePropertyDAO() {
         return null;
+    }
+
+    public static void beginTransaction() throws MobileDeviceManagementDAOException {
+        try {
+            Connection conn = dataSource.getConnection();
+            conn.setAutoCommit(false);
+            currentConnection.set(conn);
+        } catch (SQLException e) {
+            throw new MobileDeviceManagementDAOException("Error occurred while retrieving datasource connection", e);
+        }
+    }
+
+    public static Connection getConnection() throws MobileDeviceManagementDAOException {
+        if (currentConnection.get() == null) {
+            try {
+                currentConnection.set(dataSource.getConnection());
+            } catch (SQLException e) {
+                throw new MobileDeviceManagementDAOException("Error occurred while retrieving data source connection",
+                        e);
+            }
+        }
+        return currentConnection.get();
+    }
+
+    public static void commitTransaction() throws MobileDeviceManagementDAOException {
+        try {
+            Connection conn = currentConnection.get();
+            if (conn != null) {
+                conn.commit();
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("Datasource connection associated with the current thread is null, hence commit " +
+                            "has not been attempted");
+                }
+            }
+        } catch (SQLException e) {
+            throw new MobileDeviceManagementDAOException("Error occurred while committing the transaction", e);
+        } finally {
+            closeConnection();
+        }
+    }
+
+    public static void closeConnection() throws MobileDeviceManagementDAOException {
+
+        Connection con = currentConnection.get();
+        try {
+            con.close();
+        } catch (SQLException e) {
+            log.error("Error occurred while close the connection");
+        }
+        currentConnection.remove();
+    }
+
+    public static void rollbackTransaction() throws MobileDeviceManagementDAOException {
+        try {
+            Connection conn = currentConnection.get();
+            if (conn != null) {
+                conn.rollback();
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("Datasource connection associated with the current thread is null, hence rollback " +
+                            "has not been attempted");
+                }
+            }
+        } catch (SQLException e) {
+            throw new MobileDeviceManagementDAOException("Error occurred while rollback the transaction", e);
+        } finally {
+            closeConnection();
+        }
     }
 }

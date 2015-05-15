@@ -64,13 +64,13 @@ public class AndroidDeviceManager implements DeviceMgtService {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new Android device : " + device.getDeviceIdentifier());
             }
-            MobileDeviceManagementDAOFactory.beginTransaction();
+            AndroidDAOFactory.beginTransaction();
             status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
                     mobileDevice);
-            MobileDeviceManagementDAOFactory.commitTransaction();
+            AndroidDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
             try {
-                MobileDeviceManagementDAOFactory.rollbackTransaction();
+                AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException mobileDAOEx) {
                 String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
                 log.warn(msg, mobileDAOEx);
@@ -90,13 +90,13 @@ public class AndroidDeviceManager implements DeviceMgtService {
             if (log.isDebugEnabled()) {
                 log.debug("Modifying the Android device enrollment data");
             }
-            MobileDeviceManagementDAOFactory.beginTransaction();
+            AndroidDAOFactory.beginTransaction();
             status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO()
                     .updateMobileDevice(mobileDevice);
-            MobileDeviceManagementDAOFactory.commitTransaction();
+            AndroidDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
             try {
-                MobileDeviceManagementDAOFactory.rollbackTransaction();
+                AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException mobileDAOEx) {
                 String msg = "Error occurred while roll back the update device transaction :" + device.toString();
                 log.warn(msg, mobileDAOEx);
@@ -116,13 +116,13 @@ public class AndroidDeviceManager implements DeviceMgtService {
             if (log.isDebugEnabled()) {
                 log.debug("Dis-enrolling Android device : " + deviceId);
             }
-            MobileDeviceManagementDAOFactory.beginTransaction();
+            AndroidDAOFactory.beginTransaction();
             status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO()
                     .deleteMobileDevice(deviceId.getId());
-            MobileDeviceManagementDAOFactory.commitTransaction();
+            AndroidDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
             try {
-                MobileDeviceManagementDAOFactory.rollbackTransaction();
+                AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException mobileDAOEx) {
                 String msg = "Error occurred while roll back the device dis enrol transaction :" + deviceId.toString();
                 log.warn(msg, mobileDAOEx);
@@ -200,13 +200,13 @@ public class AndroidDeviceManager implements DeviceMgtService {
                 log.debug(
                         "updating the details of Android device : " + device.getDeviceIdentifier());
             }
-            MobileDeviceManagementDAOFactory.beginTransaction();
+            AndroidDAOFactory.beginTransaction();
             status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO()
                     .updateMobileDevice(mobileDevice);
-            MobileDeviceManagementDAOFactory.commitTransaction();
+            AndroidDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
             try {
-                MobileDeviceManagementDAOFactory.rollbackTransaction();
+                AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException mobileDAOEx) {
                 String msg = "Error occurred while roll back the update device info transaction :" + device.toString();
                 log.warn(msg, mobileDAOEx);

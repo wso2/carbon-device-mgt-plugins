@@ -48,14 +48,14 @@ public class AndroidFeatureManager implements FeatureManager {
     public boolean addFeature(Feature feature) throws DeviceManagementException {
 
         try {
-            mobileDeviceManagementDAOFactory.beginTransaction();
+            AndroidDAOFactory.beginTransaction();
             MobileFeature mobileFeature = MobileDeviceManagementUtil.convertToMobileFeature(feature);
             featureDAO.addFeature(mobileFeature);
-            mobileDeviceManagementDAOFactory.commitTransaction();
+            AndroidDAOFactory.commitTransaction();
             return true;
         } catch (MobileDeviceManagementDAOException e) {
             try {
-                mobileDeviceManagementDAOFactory.rollbackTransaction();
+                AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException e1) {
                 log.warn("Error occurred while roll-backing the transaction", e);
             }
@@ -94,13 +94,13 @@ public class AndroidFeatureManager implements FeatureManager {
     public boolean removeFeature(String code) throws DeviceManagementException {
         boolean status = false;
         try {
-            mobileDeviceManagementDAOFactory.beginTransaction();
+            AndroidDAOFactory.beginTransaction();
             featureDAO.deleteFeatureByCode(code);
-            mobileDeviceManagementDAOFactory.commitTransaction();
+            AndroidDAOFactory.commitTransaction();
             status = true;
         } catch (MobileDeviceManagementDAOException e) {
             try {
-                mobileDeviceManagementDAOFactory.rollbackTransaction();
+                AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException e1) {
                 log.warn("Error occurred while roll-backing the transaction", e);
             }
