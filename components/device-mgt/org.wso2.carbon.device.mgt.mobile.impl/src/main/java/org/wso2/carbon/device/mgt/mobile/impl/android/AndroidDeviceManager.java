@@ -192,7 +192,7 @@ public class AndroidDeviceManager implements DeviceMgtService {
     }
 
     @Override
-    public boolean updateDeviceInfo(Device device) throws DeviceManagementException {
+    public boolean updateDeviceInfo(Device device, List<Application> applicationList) throws DeviceManagementException {
         boolean status;
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
         try {
