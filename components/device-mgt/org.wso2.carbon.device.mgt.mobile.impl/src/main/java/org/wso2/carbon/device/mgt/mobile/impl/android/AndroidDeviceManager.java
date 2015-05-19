@@ -196,7 +196,7 @@ public class AndroidDeviceManager implements DeviceMgtService {
         boolean status;
 		Device deviceDB = this.getDevice(deviceIdentifier);
 		// This object holds the current persisted device object
-        MobileDevice mobileDeviceDB = MobileDeviceManagementUtil.convertToMobileDevice(deviceDB);
+		MobileDevice mobileDeviceDB = MobileDeviceManagementUtil.convertToMobileDevice(deviceDB);
 
 		// This object holds the newly received device object from response
 		MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
