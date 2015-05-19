@@ -28,7 +28,6 @@ public class AndroidUtils {
 	public static String getDeviceProperty(Map<String, String> deviceProperties, String property) {
 
 		String deviceProperty = deviceProperties.get(property);
-
 		if (deviceProperty == null) {
 			return "";
 		}

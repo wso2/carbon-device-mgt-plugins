@@ -33,7 +33,7 @@ public class AndroidPluginConstants {
 	public static final String LATITUDE = "LATITUDE";
 	public static final String LONGITUDE = "LONGITUDE";
 	public static final String IMEI = "IMEI";
-	public static final String IMSI = "IMEI";
+	public static final String IMSI = "IMSI";
 	public static final String VENDOR = "VENDOR";
 	public static final String OS_VERSION = "OS_VERSION";
 	public static final String MAC_ADDRESS = "MAC_ADDRESS";

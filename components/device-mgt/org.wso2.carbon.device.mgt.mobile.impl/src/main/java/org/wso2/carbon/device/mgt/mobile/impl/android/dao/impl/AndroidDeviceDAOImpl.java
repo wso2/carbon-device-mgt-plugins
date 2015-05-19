@@ -123,11 +123,10 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 				mobileDevice.setDeviceProperties(new HashMap<String, String>());
 			}
 
-			stmt.setString(2, AndroidUtils.getDeviceProperty(
-					mobileDevice.getDeviceProperties(),
+			stmt.setString(2, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
 					AndroidPluginConstants.GCM_TOKEN));
 			stmt.setString(3, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                             AndroidPluginConstants.DEVICE_INFO));
+					AndroidPluginConstants.DEVICE_INFO));
 			stmt.setString(4, mobileDevice.getSerial());
 			stmt.setString(5, mobileDevice.getVendor());
 			stmt.setString(6, mobileDevice.getMobileDeviceId());
@@ -135,7 +134,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			                                             AndroidPluginConstants.DEVICE_NAME));
 			stmt.setString(8, mobileDevice.getLongitude());
 			stmt.setString(9, mobileDevice.getLongitude());
-			stmt.setString(10, mobileDevice.getImsi());
+			stmt.setString(10, mobileDevice.getImei());
 			stmt.setString(11, mobileDevice.getImsi());
 			stmt.setString(12, mobileDevice.getOsVersion());
 			stmt.setString(13, mobileDevice.getModel());
