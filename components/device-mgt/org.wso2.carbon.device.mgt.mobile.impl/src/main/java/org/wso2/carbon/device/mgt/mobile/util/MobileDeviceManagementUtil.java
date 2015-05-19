@@ -38,14 +38,14 @@ import java.util.*;
 public class MobileDeviceManagementUtil {
 
 	private static final Log log = LogFactory.getLog(MobileDeviceManagementUtil.class);
-	private static final String MOBILE_DEVICE_IMEI = "imei";
-	private static final String MOBILE_DEVICE_IMSI = "imsi";
-	private static final String MOBILE_DEVICE_VENDOR = "vendor";
-	private static final String MOBILE_DEVICE_OS_VERSION = "osVersion";
-	private static final String MOBILE_DEVICE_MODEL = "model";
-	private static final String MOBILE_DEVICE_LATITUDE = "latitude";
-	private static final String MOBILE_DEVICE_LONGITUDE = "longitude";
-	private static final String MOBILE_DEVICE_SERIAL = "serial";
+	private static final String MOBILE_DEVICE_IMEI = "IMEI";
+	private static final String MOBILE_DEVICE_IMSI = "IMSI";
+	private static final String MOBILE_DEVICE_VENDOR = "VENDOR";
+	private static final String MOBILE_DEVICE_OS_VERSION = "OS_VERSION";
+	private static final String MOBILE_DEVICE_MODEL = "DEVICE_MODEL";
+	private static final String MOBILE_DEVICE_LATITUDE = "LATITUDE";
+	private static final String MOBILE_DEVICE_LONGITUDE = "LONGITUDE";
+	private static final String MOBILE_DEVICE_SERIAL = "SERIAL";
 
 	public static Document convertToDocument(File file) throws DeviceManagementException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
