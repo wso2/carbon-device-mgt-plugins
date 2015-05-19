@@ -476,9 +476,6 @@
         <!-- Mobile Device Management -->
         <carbon.mobile.device.mgt.version>1.9.2-SNAPSHOT</carbon.mobile.device.mgt.version>
 
-        <!-- API Management -->
-        <carbon.api.mgt.version>1.4.0</carbon.api.mgt.version>
-
         <!-- Third Party Dependencies-->
         <spongycastle.version>1.51.0.0</spongycastle.version>
         <bouncycastle.version>1.49</bouncycastle.version>
@@ -611,7 +608,6 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </pluginRepository>
-
         <pluginRepository>
             <id>wso2.snapshots</id>
             <name>Apache Snapshot Repository</name>
@@ -653,7 +649,6 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
-
         <repository>
             <id>wso2.releases</id>
             <name>WSO2 internal Repository</name>
@@ -664,7 +659,6 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
-
         <repository>
             <id>wso2.snapshots</id>
             <name>WSO2 Snapshot Repository</name>
@@ -677,6 +671,5 @@
                 <enabled>false</enabled>
             </releases>
         </repository>
-    </repositories>
-
+	</repositories>
 </project>

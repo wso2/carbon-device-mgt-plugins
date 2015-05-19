@@ -21,7 +21,6 @@ package org.wso2.carbon.device.mgt.mobile.impl.android.dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.*;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.impl.AndroidDeviceDAOImpl;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.impl.AndroidFeatureDAOImpl;
