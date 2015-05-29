@@ -116,4 +116,5 @@ public class MobileDevice implements Serializable {
     public void setDeviceProperties(Map<String, String> deviceProperties) {
         this.deviceProperties = deviceProperties;
     }
+
 }
