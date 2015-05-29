@@ -192,6 +192,12 @@ public class AndroidDeviceManager implements DeviceMgtService {
     }
 
     @Override
+    public boolean isClaimable(DeviceIdentifier deviceIdentifier)
+            throws DeviceManagementException {
+        return false;
+    }
+
+    @Override
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device) throws DeviceManagementException {
         boolean status;
 		Device deviceDB = this.getDevice(deviceIdentifier);
