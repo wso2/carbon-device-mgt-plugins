@@ -23,22 +23,17 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.common.spi.DeviceMgtService;
+import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManager;
-import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManager;
-import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.WindowsDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagementService;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagementService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 
-import javax.sql.DataSource;
 import java.util.Map;
 
 /**
@@ -99,9 +94,11 @@ public class MobileDeviceManagementServiceComponent {
             }
 
             androidServiceRegRef =
-                    bundleContext.registerService(DeviceMgtService.class.getName(), new AndroidDeviceManager(), null);
+                    bundleContext.registerService(DeviceManagementService.class.getName(),
+                            new AndroidDeviceManagementService(), null);
             windowsServiceRegRef =
-                    bundleContext.registerService(DeviceMgtService.class.getName(), new WindowsDeviceManager(), null);
+                    bundleContext.registerService(DeviceManagementService.class.getName(),
+                            new WindowsDeviceManagementService(), null);
 
             if (log.isDebugEnabled()) {
                 log.debug("Mobile Device Management Service Component has been successfully activated");

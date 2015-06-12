@@ -21,10 +21,10 @@ package org.wso2.carbon.device.mgt.mobile.impl.windows;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
-import org.wso2.carbon.device.mgt.common.app.mgt.AppManagerConnectorException;
+import org.wso2.carbon.device.mgt.common.app.mgt.Application;
+import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
-import org.wso2.carbon.device.mgt.common.spi.DeviceManager;
-import org.wso2.carbon.device.mgt.common.spi.DeviceMgtService;
+import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
@@ -36,14 +36,14 @@ import java.util.List;
 /**
  * This represents the Windows implementation of DeviceManagerService.
  */
-public class WindowsDeviceManager implements DeviceMgtService {
+public class WindowsDeviceManagementService implements DeviceManagementService {
 
      private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
 
-    public WindowsDeviceManager() {
+    public WindowsDeviceManagementService() {
         mobileDeviceManagementDAOFactory = new WindowsDAOFactory();
     }
-    private static final Log log = LogFactory.getLog(WindowsDeviceManager.class);
+    private static final Log log = LogFactory.getLog(WindowsDeviceManagementService.class);
 
     @Override
     public String getProviderType() {
@@ -123,8 +123,26 @@ public class WindowsDeviceManager implements DeviceMgtService {
 	}
 
     @Override
-    public void installApplication(Operation operation, List<DeviceIdentifier> deviceIdentifiers)
-            throws AppManagerConnectorException {
+    public Application[] getApplications(String s, int i, int i2) throws ApplicationManagementException {
+        return new Application[0];
+    }
+
+    @Override
+    public void updateApplicationStatus(DeviceIdentifier deviceIdentifier,
+                                        Application application, String s) throws ApplicationManagementException {
 
     }
+
+    @Override
+    public String getApplicationStatus(DeviceIdentifier deviceIdentifier,
+                                       Application application) throws ApplicationManagementException {
+        return null;
+    }
+
+    @Override
+    public void installApplication(Operation operation,
+                                   List<DeviceIdentifier> deviceIdentifiers) throws ApplicationManagementException {
+
+    }
+
 }
