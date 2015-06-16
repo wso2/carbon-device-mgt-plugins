@@ -197,6 +197,12 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
     }
 
     @Override
+    public boolean setStatus(DeviceIdentifier deviceIdentifier, String currentUser,
+                             EnrollmentStatus enrollmentStatus) throws DeviceManagementException {
+        return false;
+    }
+
+    @Override
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device) throws DeviceManagementException {
         boolean status;
 		Device deviceDB = this.getDevice(deviceIdentifier);
