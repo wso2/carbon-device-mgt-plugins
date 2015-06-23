@@ -65,4 +65,5 @@ VALUES
 ('PER_APP_VPN', 'Per App VPN', 'Per app VPN operation'),
 ('APP_TO_PER_APP_VPN_MAPPING', 'VPN App mapping', 'App to per app VPN mapping operation'),
 ('ENTERPRISE_WIPE', 'Enterprise Wipe', 'Enterprise wipe operation'),
-('APP_LOCK', 'App lock', 'App lock operation');
+('APP_LOCK', 'App lock', 'App lock operation'),
+('GET_RESTRICTIONS', 'Get restrictions', 'Get restrictions operation');
