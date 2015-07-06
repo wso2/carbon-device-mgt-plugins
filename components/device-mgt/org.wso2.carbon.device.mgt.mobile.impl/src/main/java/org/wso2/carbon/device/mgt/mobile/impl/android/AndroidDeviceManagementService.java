@@ -198,7 +198,7 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
 
     @Override
     public boolean setStatus(DeviceIdentifier deviceIdentifier, String currentUser,
-                             EnrollmentStatus enrollmentStatus) throws DeviceManagementException {
+                             EnrolmentInfo.Status status) throws DeviceManagementException {
         return false;
     }
 
