@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
+import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
@@ -38,95 +39,27 @@ import java.util.List;
  */
 public class WindowsDeviceManagementService implements DeviceManagementService {
 
-     private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
-
-    public WindowsDeviceManagementService() {
-        mobileDeviceManagementDAOFactory = new WindowsDAOFactory();
-    }
-    private static final Log log = LogFactory.getLog(WindowsDeviceManagementService.class);
+    private DeviceManager deviceManager;
 
     @Override
-    public String getProviderType() {
+    public String getType() {
         return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS;
     }
 
     @Override
-    public FeatureManager getFeatureManager() {
+    public void init() throws DeviceManagementException {
+        this.deviceManager = new WindowsDeviceManager();
+    }
+
+    @Override
+    public DeviceManager getDeviceManager() {
+        return deviceManager;
+    }
+
+    @Override
+    public ApplicationManager getApplicationManager() {
         return null;
     }
-
-    @Override
-    public boolean modifyEnrollment(Device device) throws DeviceManagementException {
-        return true;
-    }
-
-    @Override
-    public boolean disenrollDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return true;
-    }
-
-    @Override
-    public boolean isEnrolled(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return true;
-    }
-
-    @Override
-    public boolean isActive(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return true;
-    }
-
-    @Override
-    public boolean setActive(DeviceIdentifier deviceId, boolean status)
-            throws DeviceManagementException {
-        return true;
-    }
-
-    public List<Device> getAllDevices() throws DeviceManagementException {
-        return null;
-    }
-
-    @Override
-    public Device getDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return null;
-    }
-
-    @Override
-    public boolean setOwnership(DeviceIdentifier deviceId, String ownershipType)
-            throws DeviceManagementException {
-        return true;
-    }
-
-    @Override
-    public boolean isClaimable(DeviceIdentifier deviceIdentifier) throws DeviceManagementException {
-        return false;
-    }
-
-    @Override
-    public boolean setStatus(DeviceIdentifier deviceIdentifier, String currentUser,
-                             EnrolmentInfo.Status status) throws DeviceManagementException {
-        return false;
-    }
-
-    @Override
-    public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device) throws DeviceManagementException {
-        return true;
-    }
-
-	@Override
-	public boolean enrollDevice(Device device) throws DeviceManagementException {
-		boolean status;
-		MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
-		try {
-			status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
-					mobileDevice);
-		} catch (MobileDeviceManagementDAOException e) {
-			String msg = "Error while enrolling the Windows device : " +
-			             device.getDeviceIdentifier();
-			log.error(msg, e);
-			throw new DeviceManagementException(msg, e);
-		}
-		return status;
-	}
 
     @Override
     public Application[] getApplications(String s, int i, int i2) throws ApplicationManagementException {
@@ -134,8 +67,8 @@ public class WindowsDeviceManagementService implements DeviceManagementService {
     }
 
     @Override
-    public void updateApplicationStatus(DeviceIdentifier deviceIdentifier,
-                                        Application application, String s) throws ApplicationManagementException {
+    public void updateApplicationStatus(DeviceIdentifier deviceIdentifier, Application application,
+                                        String s) throws ApplicationManagementException {
 
     }
 
@@ -148,7 +81,6 @@ public class WindowsDeviceManagementService implements DeviceManagementService {
     @Override
     public void installApplication(Operation operation,
                                    List<DeviceIdentifier> deviceIdentifiers) throws ApplicationManagementException {
-
     }
 
 }

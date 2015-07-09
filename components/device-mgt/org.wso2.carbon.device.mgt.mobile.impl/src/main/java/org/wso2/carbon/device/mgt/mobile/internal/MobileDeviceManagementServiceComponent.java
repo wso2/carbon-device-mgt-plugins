@@ -52,7 +52,6 @@ import java.util.Map;
  */
 public class MobileDeviceManagementServiceComponent {
 
-    private ServiceRegistration serverStartupObserverRef;
     private ServiceRegistration androidServiceRegRef;
     private ServiceRegistration windowsServiceRegRef;
 
@@ -139,4 +138,5 @@ public class MobileDeviceManagementServiceComponent {
     protected void unsetDataSourceService(DataSourceService dataSourceService) {
         //do nothing
     }
+
 }
