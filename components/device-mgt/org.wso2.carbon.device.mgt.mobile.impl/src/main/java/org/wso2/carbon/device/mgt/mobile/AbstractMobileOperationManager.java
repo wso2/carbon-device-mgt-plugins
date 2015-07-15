@@ -33,9 +33,9 @@ public abstract class AbstractMobileOperationManager implements OperationManager
 	}
 
 	@Override
-	public boolean addOperation(Operation operation, List<DeviceIdentifier> devices) throws
+	public int addOperation(Operation operation, List<DeviceIdentifier> devices) throws
             OperationManagementException {
-		return true;
+		return 1;
 	}
 
 }
