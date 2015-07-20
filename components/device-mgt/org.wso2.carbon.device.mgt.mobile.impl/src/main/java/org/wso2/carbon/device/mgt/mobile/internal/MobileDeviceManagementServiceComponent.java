@@ -31,8 +31,11 @@ import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfi
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagementService;
+import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidPolicyMonitoringService;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagementService;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsPolicyMonitoringService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
+import org.wso2.carbon.policy.mgt.common.spi.PolicyMonitoringService;
 
 import java.util.Map;
 
@@ -82,7 +85,7 @@ public class MobileDeviceManagementServiceComponent {
                                     "to begin");
                 }
                 try {
-                    for (String pluginType : dsConfigMap.keySet()){
+                    for (String pluginType : dsConfigMap.keySet()) {
                         MobileDeviceManagementDAOUtil
                                 .setupMobileDeviceManagementSchema(MobileDeviceManagementDAOFactory.getDataSourceMap
                                         ().get(pluginType));
@@ -98,6 +101,13 @@ public class MobileDeviceManagementServiceComponent {
             windowsServiceRegRef =
                     bundleContext.registerService(DeviceManagementService.class.getName(),
                             new WindowsDeviceManagementService(), null);
+
+            // Policy management service
+
+            bundleContext.registerService(PolicyMonitoringService.class,
+                    new AndroidPolicyMonitoringService(), null);
+            bundleContext.registerService(PolicyMonitoringService.class,
+                    new WindowsPolicyMonitoringService(), null);
 
             if (log.isDebugEnabled()) {
                 log.debug("Mobile Device Management Service Component has been successfully activated");
