@@ -21,6 +21,7 @@ package org.wso2.carbon.device.mgt.mobile.impl.android;
 
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.policy.mgt.common.Policy;
 import org.wso2.carbon.policy.mgt.common.monitor.ComplianceData;
 import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
@@ -37,5 +38,10 @@ public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
     @Override
     public ComplianceData checkPolicyCompliance(DeviceIdentifier deviceIdentifier, Policy policy, Object o) throws PolicyComplianceException {
         return null;
+    }
+
+    @Override
+    public String getType() {
+        return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID;
     }
 }
