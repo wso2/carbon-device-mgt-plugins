@@ -21,11 +21,19 @@ package org.wso2.carbon.device.mgt.mobile.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
 import org.wso2.carbon.device.mgt.mobile.dto.*;
+import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementServiceDataHolder;
+import org.wso2.carbon.registry.api.RegistryException;
+import org.wso2.carbon.registry.api.Resource;
+import org.wso2.carbon.registry.core.Registry;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -54,8 +62,9 @@ public class MobileDeviceManagementUtil {
 			DocumentBuilder docBuilder = factory.newDocumentBuilder();
 			return docBuilder.parse(file);
 		} catch (Exception e) {
-			throw new DeviceManagementException("Error occurred while parsing file, while converting " +
-			                                    "to a org.w3c.dom.Document : " + e.getMessage(), e);
+			throw new DeviceManagementException(
+					"Error occurred while parsing file, while converting " +
+					"to a org.w3c.dom.Document : " + e.getMessage(), e);
 		}
 	}
 
@@ -91,16 +100,16 @@ public class MobileDeviceManagementUtil {
 			mobileDevice.setLatitude(getPropertyValue(device, MOBILE_DEVICE_LATITUDE));
 			mobileDevice.setLongitude(getPropertyValue(device, MOBILE_DEVICE_LONGITUDE));
 
-            if (device.getProperties() != null) {
-                Map<String, String> deviceProperties = new HashMap<String, String>();
-                for (Device.Property deviceProperty : device.getProperties()) {
-                    deviceProperties.put(deviceProperty.getName(), deviceProperty.getValue());
-                }
+			if (device.getProperties() != null) {
+				Map<String, String> deviceProperties = new HashMap<String, String>();
+				for (Device.Property deviceProperty : device.getProperties()) {
+					deviceProperties.put(deviceProperty.getName(), deviceProperty.getValue());
+				}
 
-                mobileDevice.setDeviceProperties(deviceProperties);
-            } else {
-                mobileDevice.setDeviceProperties(new HashMap<String, String>());
-            }
+				mobileDevice.setDeviceProperties(deviceProperties);
+			} else {
+				mobileDevice.setDeviceProperties(new HashMap<String, String>());
+			}
 		}
 		return mobileDevice;
 	}
@@ -119,13 +128,15 @@ public class MobileDeviceManagementUtil {
 			propertyList.add(getProperty(MOBILE_DEVICE_LONGITUDE, mobileDevice.getLongitude()));
 			propertyList.add(getProperty(MOBILE_DEVICE_SERIAL, mobileDevice.getSerial()));
 
-            if (mobileDevice.getDeviceProperties() != null) {
-                for (Map.Entry<String, String> deviceProperty : mobileDevice.getDeviceProperties().entrySet()) {
-                    propertyList.add(getProperty(deviceProperty.getKey(), deviceProperty.getValue()));
-                }
-            }
+			if (mobileDevice.getDeviceProperties() != null) {
+				for (Map.Entry<String, String> deviceProperty : mobileDevice.getDeviceProperties()
+				                                                            .entrySet()) {
+					propertyList
+							.add(getProperty(deviceProperty.getKey(), deviceProperty.getValue()));
+				}
+			}
 
-            device.setProperties(propertyList);
+			device.setProperties(propertyList);
 			device.setDeviceIdentifier(mobileDevice.getMobileDeviceId());
 		}
 		return device;
@@ -162,27 +173,121 @@ public class MobileDeviceManagementUtil {
 		Properties properties = new Properties();
 		operation.setCode(mobileOperation.getFeatureCode());
 		for (MobileOperationProperty mobileOperationProperty : mobileOperation.getProperties()) {
-			properties.put(mobileOperationProperty.getProperty(), mobileOperationProperty.getValue());
+			properties
+					.put(mobileOperationProperty.getProperty(), mobileOperationProperty.getValue());
 		}
 		operation.setProperties(properties);
 		return operation;
 	}
 
-    public static MobileFeature convertToMobileFeature(Feature feature) {
-        MobileFeature mobileFeature = new MobileFeature();
-        mobileFeature.setName(feature.getName());
-        mobileFeature.setCode(feature.getCode());
-        mobileFeature.setDescription(feature.getDescription());
-        mobileFeature.setDeviceType(feature.getDeviceType());
-        return mobileFeature;
-    }
+	public static MobileFeature convertToMobileFeature(Feature feature) {
+		MobileFeature mobileFeature = new MobileFeature();
+		mobileFeature.setName(feature.getName());
+		mobileFeature.setCode(feature.getCode());
+		mobileFeature.setDescription(feature.getDescription());
+		mobileFeature.setDeviceType(feature.getDeviceType());
+		return mobileFeature;
+	}
 
-    public static Feature convertToFeature(MobileFeature mobileFeature) {
-        Feature feature = new Feature();
-        feature.setDescription(mobileFeature.getDescription());
-        feature.setDeviceType(mobileFeature.getDeviceType());
-        feature.setCode(mobileFeature.getCode());
-        feature.setName(mobileFeature.getName());
-        return feature;
-    }
+	public static Feature convertToFeature(MobileFeature mobileFeature) {
+		Feature feature = new Feature();
+		feature.setDescription(mobileFeature.getDescription());
+		feature.setDeviceType(mobileFeature.getDeviceType());
+		feature.setCode(mobileFeature.getCode());
+		feature.setName(mobileFeature.getName());
+		return feature;
+	}
+
+	public static Registry getRegistry() throws MobileDeviceMgtPluginException {
+		try {
+			int tenantId = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
+			return MobileDeviceManagementServiceDataHolder.getInstance().getRegistryService()
+			                                              .getConfigSystemRegistry(
+					                                              tenantId);
+		} catch (RegistryException e) {
+			throw new MobileDeviceMgtPluginException(
+					"Error in retrieving conf registry instance: " +
+					e.getMessage(), e);
+		}
+	}
+
+	public static Resource getRegistryResource(String path) throws MobileDeviceMgtPluginException {
+		try {
+			return MobileDeviceManagementUtil.getRegistry().get(path);
+
+		} catch (RegistryException e) {
+			throw new MobileDeviceMgtPluginException("Error in retrieving registry resource : " +
+			                                         e.getMessage(), e);
+		}
+	}
+
+	public static boolean putRegistryResource(String path,
+	                                          Resource resource)
+			throws MobileDeviceMgtPluginException {
+		boolean status = false;
+		try {
+			MobileDeviceManagementUtil.getRegistry().beginTransaction();
+			MobileDeviceManagementUtil.getRegistry().put(path, resource);
+			MobileDeviceManagementUtil.getRegistry().commitTransaction();
+			status = true;
+		} catch (RegistryException e) {
+			throw new MobileDeviceMgtPluginException(
+					"Error occurred while persisting registry resource : " +
+					e.getMessage(), e);
+		}
+		return status;
+	}
+
+	public static String getResourcePath(String resourceName, String platform) {
+		String regPath = "";
+		switch (platform) {
+			case DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID:
+				regPath = MobilePluginConstants.MOBILE_CONFIG_REGISTRY_ROOT + "/" +
+				          DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID +
+				          "/" + resourceName;
+				break;
+			case DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS:
+				regPath = MobilePluginConstants.MOBILE_CONFIG_REGISTRY_ROOT + "/" +
+				          DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS +
+				          "/" + resourceName;
+				break;
+		}
+		return regPath;
+	}
+
+	public static String getPlatformConfigPath(String platform) {
+		String regPath = "";
+		switch (platform) {
+			case DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID:
+				regPath = MobilePluginConstants.MOBILE_CONFIG_REGISTRY_ROOT + "/" +
+				          DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID;
+				break;
+			case DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS:
+				regPath = MobilePluginConstants.MOBILE_CONFIG_REGISTRY_ROOT + "/" +
+				          DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS;
+				break;
+		}
+		return regPath;
+	}
+
+	public static boolean createRegistryCollection(String path)
+			throws MobileDeviceMgtPluginException {
+		try {
+			if (! MobileDeviceManagementUtil.getRegistry().resourceExists(path)) {
+				Resource resource = MobileDeviceManagementUtil.getRegistry().newCollection();
+				MobileDeviceManagementUtil.getRegistry().beginTransaction();
+				MobileDeviceManagementUtil.getRegistry().put(path, resource);
+				MobileDeviceManagementUtil.getRegistry().commitTransaction();
+			}
+			return true;
+		} catch (MobileDeviceMgtPluginException e) {
+			throw new MobileDeviceMgtPluginException(
+					"Error occurred while creating a registry collection : " +
+					e.getMessage(), e);
+		} catch (RegistryException e) {
+			throw new MobileDeviceMgtPluginException(
+					"Error occurred while creating a registry collection : " +
+					e.getMessage(), e);
+		}
+	}
 }

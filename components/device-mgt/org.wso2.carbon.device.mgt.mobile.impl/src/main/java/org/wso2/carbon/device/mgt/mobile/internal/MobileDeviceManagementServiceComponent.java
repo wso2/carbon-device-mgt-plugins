@@ -36,6 +36,7 @@ import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagementSer
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsPolicyMonitoringService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.policy.mgt.common.spi.PolicyMonitoringService;
+import org.wso2.carbon.registry.core.service.RegistryService;
 
 import java.util.Map;
 
@@ -48,6 +49,9 @@ import java.util.Map;
  * policy="dynamic"
  * bind="setDataSourceService"
  * unbind="unsetDataSourceService"
+ * @scr.reference name="registry.service"
+ * interface="org.wso2.carbon.registry.core.service.RegistryService" cardinality="0..1"
+ * policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
  * <p/>
  * Adding reference to API Manager Configuration service is an unavoidable hack to get rid of NPEs thrown while
  * initializing APIMgtDAOs attempting to register APIs programmatically. APIMgtDAO needs to be proper cleaned up
@@ -147,6 +151,17 @@ public class MobileDeviceManagementServiceComponent {
 
     protected void unsetDataSourceService(DataSourceService dataSourceService) {
         //do nothing
+    }
+
+    protected void setRegistryService(RegistryService registryService) {
+        if (log.isDebugEnabled()) {
+            log.debug("RegistryService acquired");
+        }
+        MobileDeviceManagementServiceDataHolder.getInstance().setRegistryService(registryService);
+    }
+
+    protected void unsetRegistryService(RegistryService registryService) {
+        MobileDeviceManagementServiceDataHolder.getInstance().setRegistryService(null);
     }
 
 }
