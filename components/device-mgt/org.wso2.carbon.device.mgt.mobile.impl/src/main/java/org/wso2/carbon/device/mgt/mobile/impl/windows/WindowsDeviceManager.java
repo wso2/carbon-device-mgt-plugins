@@ -21,6 +21,10 @@ package org.wso2.carbon.device.mgt.mobile.impl.windows;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
+<<<<<<< HEAD
+=======
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
+>>>>>>> d07c226dd52d29fbc7ee2993ecf0f9700aa43ece
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
@@ -29,6 +33,7 @@ import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.WindowsDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 
 import java.util.List;
+import java.util.Map;
 
 public class WindowsDeviceManager implements DeviceManager {
 
@@ -44,6 +49,7 @@ public class WindowsDeviceManager implements DeviceManager {
         return null;
     }
 
+<<<<<<< HEAD
 	@Override
 	public boolean saveConfiguration(TenantConfiguration tenantConfiguration) throws DeviceManagementException {
 		return false;
@@ -55,6 +61,20 @@ public class WindowsDeviceManager implements DeviceManager {
 	}
 
 	@Override
+=======
+    @Override
+    public boolean saveConfiguration(TenantConfiguration tenantConfiguration)
+            throws DeviceManagementException {
+        return false;
+    }
+
+    @Override
+    public TenantConfiguration getConfiguration() throws DeviceManagementException {
+        return null;
+    }
+
+    @Override
+>>>>>>> d07c226dd52d29fbc7ee2993ecf0f9700aa43ece
     public boolean modifyEnrollment(Device device) throws DeviceManagementException {
         return true;
     }
