@@ -76,6 +76,7 @@
                             org.wso2.carbon.registry.core.service,
                             org.wso2.carbon.registry.core.session,
                             org.wso2.carbon.registry.api,
+                            org.wso2.carbon.device.mgt.extensions.license.mgt
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.mobile.internal,
@@ -126,6 +127,10 @@
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
             <artifactId>org.wso2.carbon.device.mgt.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.extensions</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>

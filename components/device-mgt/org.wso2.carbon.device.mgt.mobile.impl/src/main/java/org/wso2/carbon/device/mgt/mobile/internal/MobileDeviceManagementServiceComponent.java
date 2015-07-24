@@ -157,11 +157,11 @@ public class MobileDeviceManagementServiceComponent {
         if (log.isDebugEnabled()) {
             log.debug("RegistryService acquired");
         }
-        MobileDeviceManagementServiceDataHolder.getInstance().setRegistryService(registryService);
+        MobileDeviceManagementDataHolder.getInstance().setRegistryService(registryService);
     }
 
     protected void unsetRegistryService(RegistryService registryService) {
-        MobileDeviceManagementServiceDataHolder.getInstance().setRegistryService(null);
+        MobileDeviceManagementDataHolder.getInstance().setRegistryService(null);
     }
 
 }

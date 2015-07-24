@@ -23,16 +23,16 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 /**
  * DataHolder class of Mobile plugins component.
  */
-public class MobileDeviceManagementServiceDataHolder {
+public class MobileDeviceManagementDataHolder {
 
 	private RegistryService registryService;
 
-	private static MobileDeviceManagementServiceDataHolder thisInstance = new MobileDeviceManagementServiceDataHolder();
+	private static MobileDeviceManagementDataHolder thisInstance = new MobileDeviceManagementDataHolder();
 
-	private MobileDeviceManagementServiceDataHolder() {
+	private MobileDeviceManagementDataHolder() {
 	}
 
-	public static MobileDeviceManagementServiceDataHolder getInstance() {
+	public static MobileDeviceManagementDataHolder getInstance() {
 		return thisInstance;
 	}
 
