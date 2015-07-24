@@ -21,6 +21,7 @@ package org.wso2.carbon.device.mgt.mobile.impl.android;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
@@ -47,18 +48,33 @@ public class AndroidDeviceManager implements DeviceManager {
         return featureManager;
     }
 
-    @Override
+	@Override
+	public boolean saveConfiguration(TenantConfiguration tenantConfiguration) throws DeviceManagementException {
+		return false;
+	}
+
+	@Override
+	public TenantConfiguration getConfiguration() throws DeviceManagementException {
+		return null;
+	}
+
+	@Override
     public boolean enrollDevice(Device device) throws DeviceManagementException {
-        boolean status;
+        boolean status = false;
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new Android device : " + device.getDeviceIdentifier());
             }
-            AndroidDAOFactory.beginTransaction();
-            status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
-                    mobileDevice);
-            AndroidDAOFactory.commitTransaction();
+			boolean isEnrolled = this.isEnrolled(new DeviceIdentifier(device.getDeviceIdentifier(), device.getType()));
+			if (isEnrolled) {
+				this.modifyEnrollment(device);
+			} else {
+				AndroidDAOFactory.beginTransaction();
+				status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
+						mobileDevice);
+				AndroidDAOFactory.commitTransaction();
+			}
         } catch (MobileDeviceManagementDAOException e) {
             try {
                 AndroidDAOFactory.rollbackTransaction();

@@ -21,6 +21,7 @@ package org.wso2.carbon.device.mgt.mobile.impl.windows;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
@@ -43,7 +44,17 @@ public class WindowsDeviceManager implements DeviceManager {
         return null;
     }
 
-    @Override
+	@Override
+	public boolean saveConfiguration(TenantConfiguration tenantConfiguration) throws DeviceManagementException {
+		return false;
+	}
+
+	@Override
+	public TenantConfiguration getConfiguration() throws DeviceManagementException {
+		return null;
+	}
+
+	@Override
     public boolean modifyEnrollment(Device device) throws DeviceManagementException {
         return true;
     }
