@@ -21,12 +21,23 @@ package org.wso2.carbon.device.mgt.mobile.impl.android;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
+import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
+import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
+import org.wso2.carbon.device.mgt.extensions.license.mgt.RegistryBasedLicenseManager;
+import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
+import org.wso2.carbon.registry.api.Collection;
+import org.wso2.carbon.registry.api.Registry;
+import org.wso2.carbon.registry.api.Resource;
+import org.wso2.carbon.registry.api.RegistryException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,15 +47,87 @@ public class AndroidDeviceManager implements DeviceManager {
     private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
     private static final Log log = LogFactory.getLog(AndroidDeviceManagementService.class);
     private FeatureManager featureManager = new AndroidFeatureManager();
-    private License license;
+    private LicenseManager licenseManager;
 
     public AndroidDeviceManager() {
-        mobileDeviceManagementDAOFactory = new AndroidDAOFactory();
+        this.mobileDeviceManagementDAOFactory = new AndroidDAOFactory();
+        try {
+            Registry registry =
+                    MobileDeviceManagementDataHolder.getInstance().getRegistryService().getConfigSystemRegistry();
+            this.licenseManager = new RegistryBasedLicenseManager(registry);
+        } catch (org.wso2.carbon.registry.core.exceptions.RegistryException e) {
+            throw new IllegalStateException("Error occurred while retrieving config system registry of the tenant, " +
+                    "which in turns fails the initialization of Android Device Manager", e);
+        }
     }
 
     @Override
     public FeatureManager getFeatureManager() {
         return featureManager;
+    }
+
+    @Override
+    public boolean saveConfiguration(TenantConfiguration tenantConfiguration)
+            throws DeviceManagementException {
+        boolean status = false;
+        Resource resource;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Persisting android configurations in Registry");
+            }
+            String resourcePath = MobileDeviceManagementUtil.getPlatformConfigPath(
+                    DeviceManagementConstants.
+                            MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+            MobileDeviceManagementUtil.createRegistryCollection(resourcePath);
+            for (ConfigurationEntry configEntry : tenantConfiguration.getConfiguration()) {
+                resource = MobileDeviceManagementUtil.getRegistry().newResource();
+                resource.setContent(configEntry.getValue());
+                MobileDeviceManagementUtil.putRegistryResource(resourcePath + "/" + configEntry.getName(), resource);
+            }
+            status = true;
+        } catch (MobileDeviceMgtPluginException e) {
+            throw new DeviceManagementException(
+                    "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
+        } catch (RegistryException e) {
+            throw new DeviceManagementException(
+                    "Error occurred while persisting the Registry resource : " + e.getMessage(), e);
+        }
+        return status;
+    }
+
+    @Override
+    public TenantConfiguration getConfiguration() throws DeviceManagementException {
+        Collection dsCollection = null;
+        TenantConfiguration tenantConfiguration;
+        List<ConfigurationEntry> configs = new ArrayList<ConfigurationEntry>();
+        ConfigurationEntry entry;
+        Resource resource;
+        try {
+            String androidRegPath =
+                    MobileDeviceManagementUtil.getPlatformConfigPath(DeviceManagementConstants.
+                    MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+            dsCollection =
+                    (Collection) MobileDeviceManagementUtil.getRegistryResource(androidRegPath);
+            String[] dsmPaths = dsCollection.getChildren();
+            for (String dsmPath : dsmPaths) {
+                entry = new ConfigurationEntry();
+                resource = MobileDeviceManagementUtil.getRegistryResource(dsmPath);
+                entry.setValue(resource.getContent());
+                entry.setName(resource.getId());
+                configs.add(entry);
+            }
+            tenantConfiguration = new TenantConfiguration();
+            tenantConfiguration.setConfiguration(configs);
+            tenantConfiguration.setType(DeviceManagementConstants.
+                    MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+        } catch (MobileDeviceMgtPluginException e) {
+            throw new DeviceManagementException(
+                    "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
+        } catch (RegistryException e) {
+            throw new DeviceManagementException(
+                    "Error occurred while retrieving the Registry data : " + e.getMessage(), e);
+        }
+        return tenantConfiguration;
     }
 
     @Override
@@ -63,10 +146,12 @@ public class AndroidDeviceManager implements DeviceManager {
             try {
                 AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException mobileDAOEx) {
-                String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
+                String msg = "Error occurred while roll back the device enrol transaction :" +
+                        device.toString();
                 log.warn(msg, mobileDAOEx);
             }
-            String msg = "Error while enrolling the Android device : " + device.getDeviceIdentifier();
+            String msg =
+                    "Error while enrolling the Android device : " + device.getDeviceIdentifier();
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);
         }
@@ -82,14 +167,14 @@ public class AndroidDeviceManager implements DeviceManager {
                 log.debug("Modifying the Android device enrollment data");
             }
             AndroidDAOFactory.beginTransaction();
-            status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO()
-                    .updateMobileDevice(mobileDevice);
+            status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO().updateMobileDevice(mobileDevice);
             AndroidDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
             try {
                 AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException mobileDAOEx) {
-                String msg = "Error occurred while roll back the update device transaction :" + device.toString();
+                String msg = "Error occurred while roll back the update device transaction :" +
+                        device.toString();
                 log.warn(msg, mobileDAOEx);
             }
             String msg = "Error while updating the enrollment of the Android device : " +
@@ -115,7 +200,8 @@ public class AndroidDeviceManager implements DeviceManager {
             try {
                 AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException mobileDAOEx) {
-                String msg = "Error occurred while roll back the device dis enrol transaction :" + deviceId.toString();
+                String msg = "Error occurred while roll back the device dis enrol transaction :" +
+                        deviceId.toString();
                 log.warn(msg, mobileDAOEx);
             }
             String msg = "Error while removing the Android device : " + deviceId.getId();
@@ -194,7 +280,18 @@ public class AndroidDeviceManager implements DeviceManager {
     }
 
     @Override
-    public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device) throws DeviceManagementException {
+    public License getLicense(String languageCode) throws LicenseManagementException {
+        return licenseManager.getLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, languageCode);
+    }
+
+    @Override
+    public void addLicense(License license) throws LicenseManagementException {
+        licenseManager.addLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, license);
+    }
+
+    @Override
+    public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device)
+            throws DeviceManagementException {
         boolean status;
         Device deviceDB = this.getDevice(deviceIdentifier);
         // This object holds the current persisted device object
@@ -221,7 +318,8 @@ public class AndroidDeviceManager implements DeviceManager {
             try {
                 AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException mobileDAOEx) {
-                String msg = "Error occurred while roll back the update device info transaction :" + device.toString();
+                String msg = "Error occurred while roll back the update device info transaction :" +
+                        device.toString();
                 log.warn(msg, mobileDAOEx);
             }
             String msg =

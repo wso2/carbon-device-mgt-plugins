@@ -18,7 +18,8 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>device-mgt</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -64,9 +65,18 @@
                             javax.xml.parsers,
                             org.w3c.dom,
                             org.wso2.carbon.core,
+                            org.wso2.carbon.context,
                             org.wso2.carbon.utils.*,
                             org.wso2.carbon.device.mgt.common.*,
-                            org.wso2.carbon.ndatasource.core
+                            org.wso2.carbon.ndatasource.core,
+                            org.wso2.carbon.policy.mgt.common.*,
+                            org.wso2.carbon.policy.mgt.core.*,
+                            org.wso2.carbon.registry.core,
+                            org.wso2.carbon.registry.core.exceptions,
+                            org.wso2.carbon.registry.core.service,
+                            org.wso2.carbon.registry.core.session,
+                            org.wso2.carbon.registry.api,
+                            org.wso2.carbon.device.mgt.extensions.license.mgt
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.mobile.internal,
@@ -119,8 +129,28 @@
             <artifactId>org.wso2.carbon.device.mgt.common</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.extensions</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.policy.mgt.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.policy.mgt.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.registry.api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.registry.core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>

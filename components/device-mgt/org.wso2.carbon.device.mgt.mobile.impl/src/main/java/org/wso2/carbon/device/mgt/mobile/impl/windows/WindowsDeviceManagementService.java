@@ -40,10 +40,11 @@ import java.util.List;
 public class WindowsDeviceManagementService implements DeviceManagementService {
 
     private DeviceManager deviceManager;
+    public static final String DEVICE_TYPE_WINDOWS = "windows";
 
     @Override
     public String getType() {
-        return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS;
+        return WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS;
     }
 
     @Override

@@ -43,10 +43,11 @@ import java.util.List;
 public class AndroidDeviceManagementService implements DeviceManagementService {
 
     private DeviceManager deviceManager;
+    public static final String DEVICE_TYPE_ANDROID = "android";
 
     @Override
     public String getType() {
-        return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID;
+        return AndroidDeviceManagementService.DEVICE_TYPE_ANDROID;
     }
 
     @Override

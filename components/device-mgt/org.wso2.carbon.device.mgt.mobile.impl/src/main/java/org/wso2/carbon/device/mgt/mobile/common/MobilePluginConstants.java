@@ -19,5 +19,6 @@ package org.wso2.carbon.device.mgt.mobile.common;
 
 public class MobilePluginConstants {
     public static final String MOBILE_DB_SCRIPTS_FOLDER = "cdm";
+    public static final String MOBILE_CONFIG_REGISTRY_ROOT = "/_system/config";
 
 }

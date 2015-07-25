@@ -31,8 +31,12 @@ import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfi
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagementService;
+import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidPolicyMonitoringService;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagementService;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsPolicyMonitoringService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
+import org.wso2.carbon.policy.mgt.common.spi.PolicyMonitoringService;
+import org.wso2.carbon.registry.core.service.RegistryService;
 
 import java.util.Map;
 
@@ -45,6 +49,9 @@ import java.util.Map;
  * policy="dynamic"
  * bind="setDataSourceService"
  * unbind="unsetDataSourceService"
+ * @scr.reference name="registry.service"
+ * interface="org.wso2.carbon.registry.core.service.RegistryService" cardinality="0..1"
+ * policy="dynamic" bind="setRegistryService" unbind="unsetRegistryService"
  * <p/>
  * Adding reference to API Manager Configuration service is an unavoidable hack to get rid of NPEs thrown while
  * initializing APIMgtDAOs attempting to register APIs programmatically. APIMgtDAO needs to be proper cleaned up
@@ -82,7 +89,7 @@ public class MobileDeviceManagementServiceComponent {
                                     "to begin");
                 }
                 try {
-                    for (String pluginType : dsConfigMap.keySet()){
+                    for (String pluginType : dsConfigMap.keySet()) {
                         MobileDeviceManagementDAOUtil
                                 .setupMobileDeviceManagementSchema(MobileDeviceManagementDAOFactory.getDataSourceMap
                                         ().get(pluginType));
@@ -98,6 +105,13 @@ public class MobileDeviceManagementServiceComponent {
             windowsServiceRegRef =
                     bundleContext.registerService(DeviceManagementService.class.getName(),
                             new WindowsDeviceManagementService(), null);
+
+            // Policy management service
+
+            bundleContext.registerService(PolicyMonitoringService.class,
+                    new AndroidPolicyMonitoringService(), null);
+            bundleContext.registerService(PolicyMonitoringService.class,
+                    new WindowsPolicyMonitoringService(), null);
 
             if (log.isDebugEnabled()) {
                 log.debug("Mobile Device Management Service Component has been successfully activated");
@@ -137,6 +151,17 @@ public class MobileDeviceManagementServiceComponent {
 
     protected void unsetDataSourceService(DataSourceService dataSourceService) {
         //do nothing
+    }
+
+    protected void setRegistryService(RegistryService registryService) {
+        if (log.isDebugEnabled()) {
+            log.debug("RegistryService acquired");
+        }
+        MobileDeviceManagementDataHolder.getInstance().setRegistryService(registryService);
+    }
+
+    protected void unsetRegistryService(RegistryService registryService) {
+        MobileDeviceManagementDataHolder.getInstance().setRegistryService(null);
     }
 
 }

@@ -216,12 +216,29 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.extensions</artifactId>
+                <version>${carbon.device.mgt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt</groupId>
                 <artifactId>org.wso2.carbon.policy.mgt.common</artifactId>
                 <version>${carbon.device.mgt.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt</groupId>
                 <artifactId>org.wso2.carbon.policy.mgt.core</artifactId>
+                <version>${carbon.device.mgt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.server.feature</artifactId>
+                <type>zip</type>
+                <version>${carbon.device.mgt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.extensions.feature</artifactId>
+                <type>zip</type>
                 <version>${carbon.device.mgt.version}</version>
             </dependency>
 
@@ -419,6 +436,72 @@
                 </exclusions>
             </dependency>
 
+            <!-- Governance dependencies -->
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.registry.api</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.registry.core</artifactId>
+                <version>${carbon.kernel.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-io.wso2</groupId>
+                        <artifactId>commons-io</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>net.sourceforge.findbugs</groupId>
+                        <artifactId>annotations</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.eclipse.osgi</groupId>
+                        <artifactId>org.eclipse.osgi.services</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.ws.commons.schema.wso2</groupId>
+                        <artifactId>XmlSchema</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon</groupId>
+                        <artifactId>javax.cache.wso2</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon</groupId>
+                        <artifactId>org.wso2.carbon.registry.xboot</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.securevault</groupId>
+                        <artifactId>org.wso2.securevault</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.compass-project.wso2</groupId>
+                        <artifactId>compass</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.abdera.wso2</groupId>
+                        <artifactId>abdera</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon</groupId>
+                        <artifactId>org.wso2.carbon.ndatasource.rdbms</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.poi.wso2</groupId>
+                        <artifactId>poi-scratchpad</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-httpclient.wso2</groupId>
+                        <artifactId>commons-httpclient</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-pool.wso2</groupId>
+                        <artifactId>commons-pool</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -521,8 +604,8 @@
                 <version>2.3.1</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
