@@ -38,16 +38,20 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
 
     private static final Log log = LogFactory.getLog(MobileDeviceManagementDAOFactory.class);
     private static Map<String, DataSource> dataSourceMap = new HashMap<String, DataSource>();
+    private static Map<String, Boolean> dataSourceXAEnabledMap = new HashMap<String, Boolean>();
     private static boolean isInitialized;
+    private static boolean isXAEnabled;
 
     public static void init(Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap)
             throws MobileDeviceMgtPluginException {
         DataSource dataSource;
         for (String pluginType : mobileDataSourceConfigMap.keySet()) {
             if (dataSourceMap.get(pluginType) == null) {
+                MobileDataSourceConfig mobileDataSourceConfig = mobileDataSourceConfigMap.get(pluginType);
                 dataSource = MobileDeviceManagementDAOFactory.resolveDataSource(mobileDataSourceConfigMap.get
                         (pluginType));
                 dataSourceMap.put(pluginType, dataSource);
+                dataSourceXAEnabledMap.put(pluginType,mobileDataSourceConfig.isXAEnabled());
             }
         }
         isInitialized = true;
@@ -97,5 +101,9 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
 
     public static Map<String, DataSource> getDataSourceMap() {
         return dataSourceMap;
+    }
+
+    public boolean isXAEnabledDataSource(String pluginType){
+        return dataSourceXAEnabledMap.get(pluginType);
     }
 }

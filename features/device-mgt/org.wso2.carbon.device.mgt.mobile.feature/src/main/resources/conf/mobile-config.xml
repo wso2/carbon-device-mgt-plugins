@@ -24,6 +24,7 @@
             <JndiLookupDefinition>
                 <Name>jdbc/MobileAndroidDM_DS</Name>
             </JndiLookupDefinition>
+            <isXA>true</isXA>
         </DataSourceConfiguration>
         <DataSourceConfiguration type="windows">
             <JndiLookupDefinition>

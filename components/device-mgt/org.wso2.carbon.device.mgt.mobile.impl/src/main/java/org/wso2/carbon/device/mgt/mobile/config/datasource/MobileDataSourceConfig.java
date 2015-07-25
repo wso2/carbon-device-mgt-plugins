@@ -48,4 +48,16 @@ public class MobileDataSourceConfig {
     public void setType(String type) {
         this.type = type;
     }
+
+
+    @XmlElement(name="isXA", required = true)
+    public boolean isXAEnabled() {
+        return isXAEnabled;
+    }
+
+    public void setXAEnabled(boolean isXAEnabled) {
+        this.isXAEnabled = isXAEnabled;
+    }
+
+    private boolean isXAEnabled;
 }

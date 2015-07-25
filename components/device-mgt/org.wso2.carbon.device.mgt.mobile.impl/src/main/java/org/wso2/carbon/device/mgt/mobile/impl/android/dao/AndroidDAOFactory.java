@@ -26,6 +26,8 @@ import org.wso2.carbon.device.mgt.mobile.impl.android.dao.impl.AndroidDeviceDAOI
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.impl.AndroidFeatureDAOImpl;
 
 import javax.sql.DataSource;
+import javax.sql.XAConnection;
+import javax.transaction.xa.XAResource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -35,9 +37,11 @@ public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
     private static final Log log = LogFactory.getLog(AndroidDAOFactory.class);
     protected static DataSource dataSource;
     private static ThreadLocal<Connection> currentConnection = new ThreadLocal<Connection>();
+    private static boolean isXAEnabled;
 
     public AndroidDAOFactory() {
         this.dataSource = getDataSourceMap().get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+        isXAEnabled = isXAEnabledDataSource(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
     }
 
     @Override
@@ -86,24 +90,32 @@ public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
                 throw new MobileDeviceManagementDAOException("Error occurred while retrieving data source connection",
                         e);
             }
+
+            if (isXAEnabled && currentTransaction.get() != null && currentResource.get() == null) {
+                XAResource resource = ((XAConnection) currentConnection.get()).getXAResource();
         }
         return currentConnection.get();
     }
 
     public static void commitTransaction() throws MobileDeviceManagementDAOException {
-        try {
-            Connection conn = currentConnection.get();
-            if (conn != null) {
-                conn.commit();
-            } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("Datasource connection associated with the current thread is null, hence commit " +
-                            "has not been attempted");
+
+        if (!isXAEnabled) {
+            try {
+                Connection conn = currentConnection.get();
+                if (conn != null) {
+                    conn.commit();
+                } else {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Datasource connection associated with the current thread is null, hence commit " +
+                                "has not been attempted");
+                    }
                 }
+            } catch (SQLException e) {
+                throw new MobileDeviceManagementDAOException("Error occurred while committing the transaction", e);
+            } finally {
+                closeConnection();
             }
-        } catch (SQLException e) {
-            throw new MobileDeviceManagementDAOException("Error occurred while committing the transaction", e);
-        } finally {
+        }else{
             closeConnection();
         }
     }
@@ -120,19 +132,24 @@ public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
     }
 
     public static void rollbackTransaction() throws MobileDeviceManagementDAOException {
-        try {
-            Connection conn = currentConnection.get();
-            if (conn != null) {
-                conn.rollback();
-            } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("Datasource connection associated with the current thread is null, hence rollback " +
-                            "has not been attempted");
+
+        if (!isXAEnabled) {
+            try {
+                Connection conn = currentConnection.get();
+                if (conn != null) {
+                    conn.rollback();
+                } else {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Datasource connection associated with the current thread is null, hence rollback " +
+                                "has not been attempted");
+                    }
                 }
+            } catch (SQLException e) {
+                throw new MobileDeviceManagementDAOException("Error occurred while rollback the transaction", e);
+            } finally {
+                closeConnection();
             }
-        } catch (SQLException e) {
-            throw new MobileDeviceManagementDAOException("Error occurred while rollback the transaction", e);
-        } finally {
+        }else{
             closeConnection();
         }
     }
