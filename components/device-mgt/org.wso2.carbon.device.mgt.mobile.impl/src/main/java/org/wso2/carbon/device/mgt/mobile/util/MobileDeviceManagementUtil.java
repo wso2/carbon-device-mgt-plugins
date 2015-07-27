@@ -30,7 +30,8 @@ import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
 import org.wso2.carbon.device.mgt.mobile.dto.*;
-import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementServiceDataHolder;
+import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
+import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.core.Registry;
@@ -201,7 +202,7 @@ public class MobileDeviceManagementUtil {
 	public static Registry getRegistry() throws MobileDeviceMgtPluginException {
 		try {
 			int tenantId = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
-			return MobileDeviceManagementServiceDataHolder.getInstance().getRegistryService()
+			return MobileDeviceManagementDataHolder.getInstance().getRegistryService()
 			                                              .getConfigSystemRegistry(
 					                                              tenantId);
 		} catch (RegistryException e) {

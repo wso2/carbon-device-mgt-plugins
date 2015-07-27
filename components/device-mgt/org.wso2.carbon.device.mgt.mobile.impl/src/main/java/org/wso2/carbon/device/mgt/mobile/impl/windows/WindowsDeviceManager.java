@@ -21,24 +21,38 @@ package org.wso2.carbon.device.mgt.mobile.impl.windows;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
-import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
+import org.wso2.carbon.device.mgt.common.license.mgt.License;
+import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
+import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
+import org.wso2.carbon.device.mgt.extensions.license.mgt.RegistryBasedLicenseManager;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.WindowsDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
+import org.wso2.carbon.registry.api.Registry;
 
 import java.util.List;
-import java.util.Map;
 
 public class WindowsDeviceManager implements DeviceManager {
 
-    private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
+    private MobileDeviceManagementDAOFactory daoFactory;
+    private LicenseManager licenseManager;
+
     private static final Log log = LogFactory.getLog(WindowsDeviceManagementService.class);
 
     public WindowsDeviceManager() {
-        mobileDeviceManagementDAOFactory = new WindowsDAOFactory();
+        daoFactory = new WindowsDAOFactory();
+        try {
+            Registry registry =
+                    MobileDeviceManagementDataHolder.getInstance().getRegistryService().getConfigSystemRegistry();
+            this.licenseManager = new RegistryBasedLicenseManager(registry);
+        } catch (org.wso2.carbon.registry.core.exceptions.RegistryException e) {
+            throw new IllegalStateException("Error occurred while retrieving config system registry of the tenant, " +
+                    "which in turns fails the initialization of Android Device Manager", e);
+        }
     }
 
     @Override
@@ -110,7 +124,18 @@ public class WindowsDeviceManager implements DeviceManager {
     }
 
     @Override
-    public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device) throws DeviceManagementException {
+    public License getLicense(String languageCode) throws LicenseManagementException {
+        return licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, languageCode);
+    }
+
+    @Override
+    public void addLicense(License license) throws LicenseManagementException {
+        licenseManager.addLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, license);
+    }
+
+    @Override
+    public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier,
+                                    Device device) throws DeviceManagementException {
         return true;
     }
 
@@ -119,13 +144,10 @@ public class WindowsDeviceManager implements DeviceManager {
         boolean status;
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
         try {
-            status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO().addMobileDevice(
-                    mobileDevice);
+            status = daoFactory.getMobileDeviceDAO().addMobileDevice(mobileDevice);
         } catch (MobileDeviceManagementDAOException e) {
-            String msg = "Error while enrolling the Windows device : " +
-                    device.getDeviceIdentifier();
-            log.error(msg, e);
-            throw new DeviceManagementException(msg, e);
+            throw new DeviceManagementException("Error while enrolling the Windows device '" +
+                    device.getDeviceIdentifier() + "'", e);
         }
         return status;
     }
