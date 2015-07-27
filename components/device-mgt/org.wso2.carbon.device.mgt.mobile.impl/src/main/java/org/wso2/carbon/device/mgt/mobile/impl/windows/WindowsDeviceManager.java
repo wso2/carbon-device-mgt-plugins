@@ -34,6 +34,7 @@ import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHold
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 import org.wso2.carbon.registry.api.Registry;
 
+import javax.transaction.Transaction;
 import java.util.List;
 
 public class WindowsDeviceManager implements DeviceManager {
@@ -131,6 +132,11 @@ public class WindowsDeviceManager implements DeviceManager {
     @Override
     public void addLicense(License license) throws LicenseManagementException {
         licenseManager.addLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, license);
+    }
+
+    @Override
+    public void setCurrentTransaction(Transaction currentTransaction) throws DeviceManagementException {
+
     }
 
     @Override

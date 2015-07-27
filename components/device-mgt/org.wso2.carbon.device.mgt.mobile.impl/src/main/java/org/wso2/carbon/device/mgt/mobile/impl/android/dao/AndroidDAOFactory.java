@@ -86,13 +86,21 @@ public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
         if (currentConnection.get() == null) {
             try {
                 currentConnection.set(dataSource.getConnection());
+                XAResource resource = ((XAConnection) currentConnection.get()).getXAResource();
+                try {
+                    getCurrentTransaction().enlistResource(resource);
+                }catch(Exception ex){ //catch generic exception.common action perform for all thrown exceptions.
+                    String errorMsg = "Resource enlist error";
+                    log.error(errorMsg, ex);
+                    throw new MobileDeviceManagementDAOException(errorMsg, ex);
+                }
             } catch (SQLException e) {
                 throw new MobileDeviceManagementDAOException("Error occurred while retrieving data source connection",
                         e);
             }
-
+/*
             if (isXAEnabled && currentTransaction.get() != null && currentResource.get() == null) {
-                XAResource resource = ((XAConnection) currentConnection.get()).getXAResource();
+                XAResource resource = ((XAConnection) currentConnection.get()).getXAResource();*/
         }
         return currentConnection.get();
     }
@@ -153,4 +161,5 @@ public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
             closeConnection();
         }
     }
+
 }

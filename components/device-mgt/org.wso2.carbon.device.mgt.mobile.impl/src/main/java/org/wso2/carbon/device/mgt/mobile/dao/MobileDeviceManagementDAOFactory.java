@@ -26,6 +26,7 @@ import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfi
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 
 import javax.sql.DataSource;
+import javax.transaction.Transaction;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -41,6 +42,7 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
     private static Map<String, Boolean> dataSourceXAEnabledMap = new HashMap<String, Boolean>();
     private static boolean isInitialized;
     private static boolean isXAEnabled;
+    private static Transaction currentTransaction;
 
     public static void init(Map<String, MobileDataSourceConfig> mobileDataSourceConfigMap)
             throws MobileDeviceMgtPluginException {
@@ -101,6 +103,14 @@ public abstract class MobileDeviceManagementDAOFactory implements MobileDeviceMa
 
     public static Map<String, DataSource> getDataSourceMap() {
         return dataSourceMap;
+    }
+
+    public static void setCurrentTransaction(Transaction transaction) {
+        currentTransaction = transaction;
+    }
+
+    public static Transaction getCurrentTransaction() {
+        return currentTransaction;
     }
 
     public boolean isXAEnabledDataSource(String pluginType){

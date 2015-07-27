@@ -39,6 +39,7 @@ import org.wso2.carbon.registry.api.Registry;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.api.RegistryException;
 
+import javax.transaction.Transaction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -287,6 +288,11 @@ public class AndroidDeviceManager implements DeviceManager {
     @Override
     public void addLicense(License license) throws LicenseManagementException {
         licenseManager.addLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, license);
+    }
+
+    @Override
+    public void setCurrentTransaction(Transaction transaction) throws DeviceManagementException {
+        AndroidDAOFactory.setCurrentTransaction(transaction);
     }
 
     @Override

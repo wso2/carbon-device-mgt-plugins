@@ -76,7 +76,8 @@
                             org.wso2.carbon.registry.core.service,
                             org.wso2.carbon.registry.core.session,
                             org.wso2.carbon.registry.api,
-                            org.wso2.carbon.device.mgt.extensions.license.mgt
+                            org.wso2.carbon.device.mgt.extensions.license.mgt,
+                            javax.transaction.*,
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.mobile.internal,
