@@ -297,17 +297,17 @@ public class AndroidDeviceManager implements DeviceManager {
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device)
             throws DeviceManagementException {
         boolean status;
-        Device deviceDB = this.getDevice(deviceIdentifier);
+        Device existingDevice = this.getDevice(deviceIdentifier);
         // This object holds the current persisted device object
-        MobileDevice mobileDeviceDB = MobileDeviceManagementUtil.convertToMobileDevice(deviceDB);
+        MobileDevice existingMobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(existingDevice);
 
         // This object holds the newly received device object from response
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
 
         // Updating current object features using newer ones
-        mobileDeviceDB.setLatitude(mobileDevice.getLatitude());
-        mobileDeviceDB.setLongitude(mobileDevice.getLongitude());
-        mobileDeviceDB.setDeviceProperties(mobileDevice.getDeviceProperties());
+		existingMobileDevice.setLatitude(mobileDevice.getLatitude());
+		existingMobileDevice.setLongitude(mobileDevice.getLongitude());
+		existingMobileDevice.setDeviceProperties(mobileDevice.getDeviceProperties());
 
         try {
             if (log.isDebugEnabled()) {
@@ -316,7 +316,7 @@ public class AndroidDeviceManager implements DeviceManager {
             }
             AndroidDAOFactory.beginTransaction();
             status = mobileDeviceManagementDAOFactory.getMobileDeviceDAO()
-                    .updateMobileDevice(mobileDeviceDB);
+                    .updateMobileDevice(existingMobileDevice);
             AndroidDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
             try {
