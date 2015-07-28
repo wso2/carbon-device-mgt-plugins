@@ -32,12 +32,10 @@ import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 import org.wso2.carbon.registry.api.Collection;
-import org.wso2.carbon.registry.api.Registry;
-import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.api.RegistryException;
+import org.wso2.carbon.registry.api.Resource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,14 +49,7 @@ public class AndroidDeviceManager implements DeviceManager {
 
     public AndroidDeviceManager() {
         this.mobileDeviceManagementDAOFactory = new AndroidDAOFactory();
-        try {
-            Registry registry =
-                    MobileDeviceManagementDataHolder.getInstance().getRegistryService().getConfigSystemRegistry();
-            this.licenseManager = new RegistryBasedLicenseManager(registry);
-        } catch (org.wso2.carbon.registry.core.exceptions.RegistryException e) {
-            throw new IllegalStateException("Error occurred while retrieving config system registry of the tenant, " +
-                    "which in turns fails the initialization of Android Device Manager", e);
-        }
+        this.licenseManager = new RegistryBasedLicenseManager();
     }
 
     @Override
@@ -69,7 +60,7 @@ public class AndroidDeviceManager implements DeviceManager {
     @Override
     public boolean saveConfiguration(TenantConfiguration tenantConfiguration)
             throws DeviceManagementException {
-        boolean status = false;
+        boolean status;
         Resource resource;
         try {
             if (log.isDebugEnabled()) {
@@ -105,7 +96,7 @@ public class AndroidDeviceManager implements DeviceManager {
         try {
             String androidRegPath =
                     MobileDeviceManagementUtil.getPlatformConfigPath(DeviceManagementConstants.
-                    MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+                            MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
             dsCollection =
                     (Collection) MobileDeviceManagementUtil.getRegistryResource(androidRegPath);
             String[] dsmPaths = dsCollection.getChildren();

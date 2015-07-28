@@ -30,9 +30,7 @@ import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.WindowsDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
-import org.wso2.carbon.registry.api.Registry;
 
 import java.util.List;
 
@@ -44,15 +42,8 @@ public class WindowsDeviceManager implements DeviceManager {
     private static final Log log = LogFactory.getLog(WindowsDeviceManagementService.class);
 
     public WindowsDeviceManager() {
-        daoFactory = new WindowsDAOFactory();
-        try {
-            Registry registry =
-                    MobileDeviceManagementDataHolder.getInstance().getRegistryService().getConfigSystemRegistry();
-            this.licenseManager = new RegistryBasedLicenseManager(registry);
-        } catch (org.wso2.carbon.registry.core.exceptions.RegistryException e) {
-            throw new IllegalStateException("Error occurred while retrieving config system registry of the tenant, " +
-                    "which in turns fails the initialization of Android Device Manager", e);
-        }
+        this.daoFactory = new WindowsDAOFactory();
+        this.licenseManager = new RegistryBasedLicenseManager();
     }
 
     @Override
