@@ -19,6 +19,7 @@
 package org.wso2.carbon.device.mgt.mobile.dto;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,6 +37,10 @@ public class MobileDevice implements Serializable {
     private String imsi;
     private String serial;
     private Map<String, String> deviceProperties;
+
+    public MobileDevice() {
+        this.deviceProperties = new HashMap<>();
+    }
 
     public String getMobileDeviceId() {
         return mobileDeviceId;
