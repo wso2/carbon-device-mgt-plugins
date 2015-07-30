@@ -26,7 +26,7 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
-import org.wso2.carbon.device.mgt.extensions.license.mgt.RegistryBasedLicenseManager;
+import org.wso2.carbon.device.mgt.extensions.license.mgt.registry.RegistryBasedLicenseManager;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
