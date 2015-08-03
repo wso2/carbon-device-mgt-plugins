@@ -22,14 +22,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceDAO;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.android.util.AndroidPluginConstants;
-import org.wso2.carbon.device.mgt.mobile.impl.android.util.AndroidUtils;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,12 +44,11 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 	private static final Log log = LogFactory.getLog(AndroidDeviceDAOImpl.class);
 
 	@Override
-	public MobileDevice getMobileDevice(String mblDeviceId)
-			throws MobileDeviceManagementDAOException {
-		Connection conn = null;
+	public MobileDevice getMobileDevice(String mblDeviceId) throws MobileDeviceManagementDAOException {
+		Connection conn;
 		PreparedStatement stmt = null;
 		MobileDevice mobileDevice = null;
-        ResultSet resultSet = null;
+        ResultSet rs = null;
 		try {
 			conn = AndroidDAOFactory.getConnection();
 			String selectDBQuery =
@@ -61,29 +57,25 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 					" FROM AD_DEVICE WHERE ANDROID_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblDeviceId);
-			resultSet = stmt.executeQuery();
+			rs = stmt.executeQuery();
 
-			if (resultSet.next()) {
+			if (rs.next()) {
 				mobileDevice = new MobileDevice();
-				mobileDevice.setMobileDeviceId(resultSet.getString(AndroidPluginConstants.
+				mobileDevice.setMobileDeviceId(rs.getString(AndroidPluginConstants.
 						                                                   ANDROID_DEVICE_ID));
-				mobileDevice.setModel(resultSet.getString(AndroidPluginConstants.DEVICE_MODEL));
-				mobileDevice.setSerial(resultSet.getString(AndroidPluginConstants.SERIAL));
-				mobileDevice.setVendor(resultSet.getString(AndroidPluginConstants.VENDOR));
-				mobileDevice.setLatitude(resultSet.getString(AndroidPluginConstants.LATITUDE));
-				mobileDevice.setLongitude(resultSet.getString(AndroidPluginConstants.LONGITUDE));
-				mobileDevice.setImei(resultSet.getString(AndroidPluginConstants.IMEI));
-				mobileDevice.setImsi(resultSet.getString(AndroidPluginConstants.IMSI));
-				mobileDevice.setOsVersion(resultSet.getString(AndroidPluginConstants.OS_VERSION));
+				mobileDevice.setModel(rs.getString(AndroidPluginConstants.DEVICE_MODEL));
+				mobileDevice.setSerial(rs.getString(AndroidPluginConstants.SERIAL));
+				mobileDevice.setVendor(rs.getString(AndroidPluginConstants.VENDOR));
+				mobileDevice.setLatitude(rs.getString(AndroidPluginConstants.LATITUDE));
+				mobileDevice.setLongitude(rs.getString(AndroidPluginConstants.LONGITUDE));
+				mobileDevice.setImei(rs.getString(AndroidPluginConstants.IMEI));
+				mobileDevice.setImsi(rs.getString(AndroidPluginConstants.IMSI));
+				mobileDevice.setOsVersion(rs.getString(AndroidPluginConstants.OS_VERSION));
 
 				Map<String, String> propertyMap = new HashMap<String, String>();
-				propertyMap.put(AndroidPluginConstants.GCM_TOKEN,
-				             resultSet.getString(AndroidPluginConstants.GCM_TOKEN));
-				propertyMap.put(AndroidPluginConstants.DEVICE_INFO,
-				             resultSet.getString(AndroidPluginConstants.DEVICE_INFO));
-				propertyMap.put(AndroidPluginConstants.DEVICE_NAME,
-				             resultSet.getString(AndroidPluginConstants.DEVICE_NAME));
-
+				propertyMap.put(AndroidPluginConstants.GCM_TOKEN, rs.getString(AndroidPluginConstants.GCM_TOKEN));
+				propertyMap.put(AndroidPluginConstants.DEVICE_INFO, rs.getString(AndroidPluginConstants.DEVICE_INFO));
+				propertyMap.put(AndroidPluginConstants.DEVICE_NAME, rs.getString(AndroidPluginConstants.DEVICE_NAME));
 				mobileDevice.setDeviceProperties(propertyMap);
 
 				if (log.isDebugEnabled()) {
@@ -96,7 +88,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
-			MobileDeviceManagementDAOUtil.cleanupResources(stmt, resultSet);
+			MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
             AndroidDAOFactory.closeConnection();
 		}
 
@@ -104,10 +96,9 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 	}
 
 	@Override
-	public boolean addMobileDevice(MobileDevice mobileDevice)
-			throws MobileDeviceManagementDAOException {
+	public boolean addMobileDevice(MobileDevice mobileDevice) throws MobileDeviceManagementDAOException {
 		boolean status = false;
-		Connection conn = null;
+		Connection conn;
 		PreparedStatement stmt = null;
 		try {
 			conn = AndroidDAOFactory.getConnection();
@@ -119,19 +110,13 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			stmt = conn.prepareStatement(createDBQuery);
 			stmt.setString(1, mobileDevice.getMobileDeviceId());
 
-			if (mobileDevice.getDeviceProperties() == null) {
-				mobileDevice.setDeviceProperties(new HashMap<String, String>());
-			}
-
-			stmt.setString(2, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-					AndroidPluginConstants.GCM_TOKEN));
-			stmt.setString(3, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-					AndroidPluginConstants.DEVICE_INFO));
+            Map<String, String> properties = mobileDevice.getDeviceProperties();
+			stmt.setString(2, properties.get(AndroidPluginConstants.GCM_TOKEN));
+			stmt.setString(3, properties.get(AndroidPluginConstants.DEVICE_INFO));
 			stmt.setString(4, mobileDevice.getSerial());
 			stmt.setString(5, mobileDevice.getVendor());
 			stmt.setString(6, mobileDevice.getMobileDeviceId());
-			stmt.setString(7, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                             AndroidPluginConstants.DEVICE_NAME));
+			stmt.setString(7, properties.get(AndroidPluginConstants.DEVICE_NAME));
 			stmt.setString(8, mobileDevice.getLongitude());
 			stmt.setString(9, mobileDevice.getLongitude());
 			stmt.setString(10, mobileDevice.getImei());
@@ -147,10 +132,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 				}
 			}
 		} catch (SQLException e) {
-			String msg = "Error occurred while adding the Android device '" +
-			             mobileDevice.getMobileDeviceId() + "' to the Android db.";
-			log.error(msg, e);
-			throw new MobileDeviceManagementDAOException(msg, e);
+			throw new MobileDeviceManagementDAOException("Error occurred while adding the Android device '" +
+                    mobileDevice.getMobileDeviceId() + "' information to the Android plugin data store.", e);
 		} finally {
 			MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
 		}
@@ -158,10 +141,9 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 	}
 
 	@Override
-	public boolean updateMobileDevice(MobileDevice mobileDevice)
-			throws MobileDeviceManagementDAOException {
+	public boolean updateMobileDevice(MobileDevice mobileDevice) throws MobileDeviceManagementDAOException {
 		boolean status = false;
-		Connection conn = null;
+		Connection conn;
 		PreparedStatement stmt = null;
 		try {
 			conn = AndroidDAOFactory.getConnection();
@@ -169,23 +151,15 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 					"UPDATE AD_DEVICE SET GCM_TOKEN = ?, DEVICE_INFO = ?, SERIAL = ?, VENDOR = ?, " +
 					"MAC_ADDRESS = ?, DEVICE_NAME = ?, LATITUDE = ?, LONGITUDE = ?, IMEI = ?, " +
 					"IMSI = ?, OS_VERSION = ?, DEVICE_MODEL = ? WHERE ANDROID_DEVICE_ID = ?";
-
 			stmt = conn.prepareStatement(updateDBQuery);
 
-			if (mobileDevice.getDeviceProperties() == null) {
-				mobileDevice.setDeviceProperties(new HashMap<String, String>());
-			}
-
-			stmt.setString(1, AndroidUtils.getDeviceProperty(
-					mobileDevice.getDeviceProperties(),
-					AndroidPluginConstants.GCM_TOKEN));
-			stmt.setString(2, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                                 AndroidPluginConstants.DEVICE_INFO));
+			Map<String, String> properties = mobileDevice.getDeviceProperties();
+			stmt.setString(1, properties.get(AndroidPluginConstants.GCM_TOKEN));
+			stmt.setString(2, properties.get(AndroidPluginConstants.DEVICE_INFO));
 			stmt.setString(3, mobileDevice.getSerial());
 			stmt.setString(4, mobileDevice.getVendor());
 			stmt.setString(5, mobileDevice.getMobileDeviceId());
-			stmt.setString(6, AndroidUtils.getDeviceProperty(mobileDevice.getDeviceProperties(),
-			                                                 AndroidPluginConstants.DEVICE_NAME));
+			stmt.setString(6, properties.get(AndroidPluginConstants.DEVICE_NAME));
 			stmt.setString(7, mobileDevice.getLatitude());
 			stmt.setString(8, mobileDevice.getLongitude());
 			stmt.setString(9, mobileDevice.getImei());
@@ -216,7 +190,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 	public boolean deleteMobileDevice(String mblDeviceId)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;
-		Connection conn = null;
+		Connection conn;
 		PreparedStatement stmt = null;
 		try {
 			conn = AndroidDAOFactory.getConnection();
@@ -233,9 +207,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 				}
 			}
 		} catch (SQLException e) {
-			String msg = "Error occurred while deleting android device " + mblDeviceId;
-			log.error(msg, e);
-			throw new MobileDeviceManagementDAOException(msg, e);
+			throw new MobileDeviceManagementDAOException("Error occurred while deleting android device '" +
+                    mblDeviceId + "'", e);
 		} finally {
 			MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
 		}
@@ -243,15 +216,12 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 	}
 
 	@Override
-	public List<MobileDevice> getAllMobileDevices()
-			throws MobileDeviceManagementDAOException {
-
-		Connection conn = null;
+	public List<MobileDevice> getAllMobileDevices() throws MobileDeviceManagementDAOException {
+		Connection conn;
 		PreparedStatement stmt = null;
-        ResultSet resultSet = null;
+        ResultSet rs = null;
 		MobileDevice mobileDevice;
 		List<MobileDevice> mobileDevices = new ArrayList<MobileDevice>();
-
 		try {
 			conn = AndroidDAOFactory.getConnection();
 			String selectDBQuery =
@@ -259,29 +229,27 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION " +
 					"FROM AD_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
-			resultSet = stmt.executeQuery();
-			while (resultSet.next()) {
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
 				mobileDevice = new MobileDevice();
-				mobileDevice.setMobileDeviceId(resultSet.getString(AndroidPluginConstants.
+				mobileDevice.setMobileDeviceId(rs.getString(AndroidPluginConstants.
 						                                                   ANDROID_DEVICE_ID));
-				mobileDevice.setModel(resultSet.getString(AndroidPluginConstants.DEVICE_MODEL));
-				mobileDevice.setSerial(resultSet.getString(AndroidPluginConstants.SERIAL));
-				mobileDevice.setVendor(resultSet.getString(AndroidPluginConstants.VENDOR));
-				mobileDevice.setLatitude(resultSet.getString(AndroidPluginConstants.LATITUDE));
-				mobileDevice.setLongitude(resultSet.getString(AndroidPluginConstants.LONGITUDE));
-				mobileDevice.setImei(resultSet.getString(AndroidPluginConstants.IMEI));
-				mobileDevice.setImsi(resultSet.getString(AndroidPluginConstants.IMSI));
-				mobileDevice.setOsVersion(resultSet.getString(AndroidPluginConstants.OS_VERSION));
+				mobileDevice.setModel(rs.getString(AndroidPluginConstants.DEVICE_MODEL));
+				mobileDevice.setSerial(rs.getString(AndroidPluginConstants.SERIAL));
+				mobileDevice.setVendor(rs.getString(AndroidPluginConstants.VENDOR));
+				mobileDevice.setLatitude(rs.getString(AndroidPluginConstants.LATITUDE));
+				mobileDevice.setLongitude(rs.getString(AndroidPluginConstants.LONGITUDE));
+				mobileDevice.setImei(rs.getString(AndroidPluginConstants.IMEI));
+				mobileDevice.setImsi(rs.getString(AndroidPluginConstants.IMSI));
+				mobileDevice.setOsVersion(rs.getString(AndroidPluginConstants.OS_VERSION));
 
 				Map<String, String> propertyMap = new HashMap<String, String>();
-				propertyMap.put(AndroidPluginConstants.GCM_TOKEN,
-				                resultSet.getString(AndroidPluginConstants.GCM_TOKEN));
-				propertyMap.put(AndroidPluginConstants.DEVICE_INFO,
-				                resultSet.getString(AndroidPluginConstants.DEVICE_INFO));
-				propertyMap.put(AndroidPluginConstants.DEVICE_NAME,
-				                resultSet.getString(AndroidPluginConstants.DEVICE_NAME));
-
+				propertyMap.put(AndroidPluginConstants.GCM_TOKEN, rs.getString(AndroidPluginConstants.GCM_TOKEN));
+				propertyMap.put(AndroidPluginConstants.DEVICE_INFO, rs.getString(AndroidPluginConstants.DEVICE_INFO));
+				propertyMap.put(AndroidPluginConstants.DEVICE_NAME, rs.getString(AndroidPluginConstants.DEVICE_NAME));
 				mobileDevice.setDeviceProperties(propertyMap);
+
 				mobileDevices.add(mobileDevice);
 			}
 			if (log.isDebugEnabled()) {
@@ -289,11 +257,9 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			}
 			return mobileDevices;
 		} catch (SQLException e) {
-			String msg = "Error occurred while fetching all Android device data'";
-			log.error(msg, e);
-			throw new MobileDeviceManagementDAOException(msg, e);
+			throw new MobileDeviceManagementDAOException("Error occurred while fetching all Android device data", e);
 		} finally {
-			MobileDeviceManagementDAOUtil.cleanupResources(stmt, resultSet);
+			MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
             AndroidDAOFactory.closeConnection();
 		}
 	}
