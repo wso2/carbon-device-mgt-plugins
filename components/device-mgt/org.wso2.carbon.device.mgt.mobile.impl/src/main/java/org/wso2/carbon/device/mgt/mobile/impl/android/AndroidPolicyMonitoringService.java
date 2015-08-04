@@ -46,13 +46,12 @@ public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
 	public ComplianceData checkPolicyCompliance(DeviceIdentifier deviceIdentifier, Policy policy, Object o) throws PolicyComplianceException {
 		ComplianceData complianceData = new ComplianceData();
 		if (log.isDebugEnabled()) {
-			log.info("Checking policy compliance status of device '" + deviceIdentifier.getId() + "'");
+			log.debug("Checking policy compliance status of device '" + deviceIdentifier.getId() + "'");
 		}
 		if (o == null || policy == null) {
 			return null;
 		}
 		List<ComplianceFeature> complianceFeatures = (List<ComplianceFeature>) o;
-		log.info("size of list: " + complianceFeatures.size());
 		complianceData.setComplianceFeatures(complianceFeatures);
 
 		for (ComplianceFeature cf : complianceFeatures) {
