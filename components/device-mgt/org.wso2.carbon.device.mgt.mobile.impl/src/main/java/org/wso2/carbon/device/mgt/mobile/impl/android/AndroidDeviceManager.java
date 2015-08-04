@@ -21,6 +21,7 @@ package org.wso2.carbon.device.mgt.mobile.impl.android;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
+
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
@@ -131,26 +132,30 @@ public class AndroidDeviceManager implements DeviceManager {
 
     @Override
     public boolean enrollDevice(Device device) throws DeviceManagementException {
-        boolean status;
+        boolean status = false;
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new Android device : " + device.getDeviceIdentifier());
             }
-            AndroidDAOFactory.beginTransaction();
-            status = daoFactory.getMobileDeviceDAO().addMobileDevice(
-                    mobileDevice);
-            AndroidDAOFactory.commitTransaction();
+            boolean isEnrolled = this.isEnrolled(new DeviceIdentifier(device.getDeviceIdentifier(), device.getType()));
+            if (isEnrolled) {
+                this.modifyEnrollment(device);
+            } else {
+                AndroidDAOFactory.beginTransaction();
+                status = daoFactory.getMobileDeviceDAO().addMobileDevice(mobileDevice);
+                AndroidDAOFactory.commitTransaction();
+            }
         } catch (MobileDeviceManagementDAOException e) {
             try {
                 AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException mobileDAOEx) {
-                String msg = "Error occurred while roll back the device enrol transaction :" +
-                        device.toString();
+                String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
                 log.warn(msg, mobileDAOEx);
             }
-            throw new DeviceManagementException("Error while enrolling the Android device: '" +
-                    device.getDeviceIdentifier() + "'", e);
+            String msg = "Error while enrolling the Android device : " + device.getDeviceIdentifier();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
         }
         return status;
     }
@@ -174,8 +179,10 @@ public class AndroidDeviceManager implements DeviceManager {
                         device.toString();
                 log.warn(msg, mobileDAOEx);
             }
-            throw new DeviceManagementException("Error while updating the enrollment of the Android device: '" +
-                    device.getDeviceIdentifier() + "'", e);
+            String msg = "Error while updating the enrollment of the Android device : " +
+                    device.getDeviceIdentifier();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
         }
         return status;
     }
@@ -185,22 +192,22 @@ public class AndroidDeviceManager implements DeviceManager {
         boolean status;
         try {
             if (log.isDebugEnabled()) {
-                log.debug("Dis-enrolling Android device: " + deviceId);
+                log.debug("Dis-enrolling Android device : " + deviceId);
             }
             AndroidDAOFactory.beginTransaction();
-            status = daoFactory.getMobileDeviceDAO()
-                    .deleteMobileDevice(deviceId.getId());
+            status = daoFactory.getMobileDeviceDAO().deleteMobileDevice(deviceId.getId());
             AndroidDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
             try {
                 AndroidDAOFactory.rollbackTransaction();
-            } catch (MobileDeviceManagementDAOException e1) {
+            } catch (MobileDeviceManagementDAOException mobileDAOEx) {
                 String msg = "Error occurred while roll back the device dis enrol transaction :" +
                         deviceId.toString();
-                log.warn(msg, e1);
+                log.warn(msg, mobileDAOEx);
             }
-            throw new DeviceManagementException("Error occurred while removing the Android device: '" +
-                    deviceId.getId() + "'", e);
+            String msg = "Error while removing the Android device : " + deviceId.getId();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
         }
         return status;
     }
@@ -213,14 +220,15 @@ public class AndroidDeviceManager implements DeviceManager {
                 log.debug("Checking the enrollment of Android device : " + deviceId.getId());
             }
             MobileDevice mobileDevice =
-                    daoFactory.getMobileDeviceDAO().getMobileDevice(
-                            deviceId.getId());
+                    daoFactory.getMobileDeviceDAO().getMobileDevice(deviceId.getId());
             if (mobileDevice != null) {
                 isEnrolled = true;
             }
         } catch (MobileDeviceManagementDAOException e) {
-            throw new DeviceManagementException("Error occurred while checking the enrollment status of Android " +
-                    "device: '" + deviceId.getId() + "'", e);
+            String msg = "Error while checking the enrollment status of Android device : " +
+                    deviceId.getId();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
         }
         return isEnrolled;
     }
@@ -270,6 +278,7 @@ public class AndroidDeviceManager implements DeviceManager {
         return false;
     }
 
+
     @Override
     public License getLicense(String languageCode) throws LicenseManagementException {
         return licenseManager.getLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, languageCode);
@@ -284,17 +293,17 @@ public class AndroidDeviceManager implements DeviceManager {
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device)
             throws DeviceManagementException {
         boolean status;
-        Device deviceDB = this.getDevice(deviceIdentifier);
+        Device existingDevice = this.getDevice(deviceIdentifier);
         // This object holds the current persisted device object
-        MobileDevice mobileDeviceDB = MobileDeviceManagementUtil.convertToMobileDevice(deviceDB);
+        MobileDevice existingMobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(existingDevice);
 
         // This object holds the newly received device object from response
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
 
         // Updating current object features using newer ones
-        mobileDeviceDB.setLatitude(mobileDevice.getLatitude());
-        mobileDeviceDB.setLongitude(mobileDevice.getLongitude());
-        mobileDeviceDB.setDeviceProperties(mobileDevice.getDeviceProperties());
+        existingMobileDevice.setLatitude(mobileDevice.getLatitude());
+        existingMobileDevice.setLongitude(mobileDevice.getLongitude());
+        existingMobileDevice.setDeviceProperties(mobileDevice.getDeviceProperties());
 
         try {
             if (log.isDebugEnabled()) {
@@ -302,7 +311,7 @@ public class AndroidDeviceManager implements DeviceManager {
             }
             AndroidDAOFactory.beginTransaction();
             status = daoFactory.getMobileDeviceDAO()
-                    .updateMobileDevice(mobileDeviceDB);
+                    .updateMobileDevice(existingMobileDevice);
             AndroidDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
             try {
