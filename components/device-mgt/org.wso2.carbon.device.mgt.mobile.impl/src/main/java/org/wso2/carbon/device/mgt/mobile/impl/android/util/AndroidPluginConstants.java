@@ -44,4 +44,6 @@ public class AndroidPluginConstants {
 	public static final String ANDROID_FEATURE_NAME = "NAME";
 	public static final String ANDROID_FEATURE_DESCRIPTION = "DESCRIPTION";
 
+	public static final String MEDIA_TYPE_XML = "application/xml";
+
 }

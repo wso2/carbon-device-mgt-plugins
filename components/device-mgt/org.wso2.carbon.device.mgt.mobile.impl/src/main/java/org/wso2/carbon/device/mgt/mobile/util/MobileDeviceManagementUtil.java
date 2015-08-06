@@ -31,7 +31,6 @@ import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
 import org.wso2.carbon.device.mgt.mobile.dto.*;
 import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
-import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.core.Registry;
@@ -260,12 +259,10 @@ public class MobileDeviceManagementUtil {
 		String regPath = "";
 		switch (platform) {
 			case DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID:
-				regPath = MobilePluginConstants.MOBILE_CONFIG_REGISTRY_ROOT + "/" +
-				          DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID;
+				regPath = DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID;
 				break;
 			case DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS:
-				regPath = MobilePluginConstants.MOBILE_CONFIG_REGISTRY_ROOT + "/" +
-				          DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS;
+				regPath = DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS;
 				break;
 		}
 		return regPath;
