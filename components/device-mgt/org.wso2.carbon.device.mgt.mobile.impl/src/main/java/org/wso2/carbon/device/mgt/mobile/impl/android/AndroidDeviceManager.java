@@ -27,11 +27,11 @@ import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
 import org.wso2.carbon.device.mgt.extensions.license.mgt.registry.RegistryBasedLicenseManager;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.impl.android.util.AndroidPluginConstants;
 import org.wso2.carbon.device.mgt.mobile.impl.android.util.AndroidPluginUtils;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 import org.wso2.carbon.registry.api.RegistryException;
@@ -91,7 +91,7 @@ public class AndroidDeviceManager implements DeviceManager {
 
 			resource = MobileDeviceManagementUtil.getRegistry().newResource();
 			resource.setContent(writer.toString());
-			resource.setMediaType(AndroidPluginConstants.MEDIA_TYPE_XML);
+			resource.setMediaType(MobilePluginConstants.MEDIA_TYPE_XML);
 			MobileDeviceManagementUtil.putRegistryResource(resourcePath, resource);
 			status = true;
 		} catch (MobileDeviceMgtPluginException e) {
@@ -99,10 +99,10 @@ public class AndroidDeviceManager implements DeviceManager {
 					"Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
 		} catch (RegistryException e) {
 			throw new DeviceManagementException(
-					"Error occurred while persisting the Registry resource : " + e.getMessage(), e);
+					"Error occurred while persisting the Registry resource of Android Configuration : " + e.getMessage(), e);
 		} catch (JAXBException e) {
 			throw new DeviceManagementException(
-					"Error occurred while parsing the configuration : " + e.getMessage(), e);
+					"Error occurred while parsing the Android configuration : " + e.getMessage(), e);
 		}
 		return status;
 	}
@@ -119,17 +119,17 @@ public class AndroidDeviceManager implements DeviceManager {
 			Unmarshaller unmarshaller = context.createUnmarshaller();
 			return (TenantConfiguration) unmarshaller.unmarshal(
 					new StringReader(new String((byte[]) resource.getContent(), Charset
-							.forName("UTF8"))));
+							.forName(MobilePluginConstants.CHARSET_UTF8))));
 
 		} catch (MobileDeviceMgtPluginException e) {
 			throw new DeviceManagementException(
 					"Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
 		} catch (JAXBException e) {
 			throw new DeviceManagementException(
-					"Error occurred while parsing the configuration : " + e.getMessage(), e);
+					"Error occurred while parsing the Android configuration : " + e.getMessage(), e);
 		} catch (RegistryException e) {
 			throw new DeviceManagementException(
-					"Error occurred while retrieving the Registry resource : " + e.getMessage(), e);
+					"Error occurred while retrieving the Registry resource of Android Configuration : " + e.getMessage(), e);
 		}
 	}
 

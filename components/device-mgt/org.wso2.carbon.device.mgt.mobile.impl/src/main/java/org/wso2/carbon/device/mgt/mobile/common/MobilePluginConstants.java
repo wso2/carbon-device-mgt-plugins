@@ -21,4 +21,7 @@ public class MobilePluginConstants {
     public static final String MOBILE_DB_SCRIPTS_FOLDER = "cdm";
     public static final String MOBILE_CONFIG_REGISTRY_ROOT = "/_system/config";
 
+    public static final String MEDIA_TYPE_XML = "application/xml";
+    public static final String CHARSET_UTF8 = "UTF8";
+
 }

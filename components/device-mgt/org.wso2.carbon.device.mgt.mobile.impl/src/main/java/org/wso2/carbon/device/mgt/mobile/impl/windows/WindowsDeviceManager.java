@@ -26,12 +26,23 @@ import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
 import org.wso2.carbon.device.mgt.extensions.license.mgt.registry.RegistryBasedLicenseManager;
+import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.WindowsDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
+import org.wso2.carbon.registry.api.RegistryException;
+import org.wso2.carbon.registry.api.Resource;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.List;
 
 public class WindowsDeviceManager implements DeviceManager {
@@ -54,12 +65,62 @@ public class WindowsDeviceManager implements DeviceManager {
     @Override
     public boolean saveConfiguration(TenantConfiguration tenantConfiguration)
             throws DeviceManagementException {
-        return false;
+        boolean status = false;
+        Resource resource;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Persisting windows configurations in Registry");
+            }
+            String resourcePath = MobileDeviceManagementUtil.getPlatformConfigPath(
+                    DeviceManagementConstants.
+                            MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+            StringWriter writer = new StringWriter();
+            JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.marshal(tenantConfiguration, writer);
+
+            resource = MobileDeviceManagementUtil.getRegistry().newResource();
+            resource.setContent(writer.toString());
+            resource.setMediaType(MobilePluginConstants.MEDIA_TYPE_XML);
+            MobileDeviceManagementUtil.putRegistryResource(resourcePath, resource);
+            status = true;
+        } catch (MobileDeviceMgtPluginException e) {
+            throw new DeviceManagementException(
+                    "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
+        } catch (RegistryException e) {
+            throw new DeviceManagementException(
+                    "Error occurred while persisting the Registry resource of Windows configuration : " + e.getMessage(), e);
+        } catch (JAXBException e) {
+            throw new DeviceManagementException(
+                    "Error occurred while parsing the Windows configuration : " + e.getMessage(), e);
+        }
+        return status;
     }
 
     @Override
     public TenantConfiguration getConfiguration() throws DeviceManagementException {
-        return null;
+        Resource resource;
+        try {
+            String androidRegPath =
+                    MobileDeviceManagementUtil.getPlatformConfigPath(DeviceManagementConstants.
+                                                                             MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+            resource = MobileDeviceManagementUtil.getRegistryResource(androidRegPath);
+            JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            return (TenantConfiguration) unmarshaller.unmarshal(
+                    new StringReader(new String((byte[]) resource.getContent(), Charset
+                            .forName(MobilePluginConstants.CHARSET_UTF8))));
+
+        } catch (MobileDeviceMgtPluginException e) {
+            throw new DeviceManagementException(
+                    "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
+        } catch (JAXBException e) {
+            throw new DeviceManagementException(
+                    "Error occurred while parsing the Windows configuration : " + e.getMessage(), e);
+        } catch (RegistryException e) {
+            throw new DeviceManagementException(
+                    "Error occurred while retrieving the Registry resource of Windows configuration : " + e.getMessage(), e);
+        }
     }
 
     @Override
