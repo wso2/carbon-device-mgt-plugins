@@ -251,6 +251,11 @@ public class MobileDeviceManagementUtil {
 				          DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS +
 				          "/" + resourceName;
 				break;
+			case DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS:
+				regPath = MobilePluginConstants.MOBILE_CONFIG_REGISTRY_ROOT + "/" +
+						DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS +
+						"/" + resourceName;
+				break;
 		}
 		return regPath;
 	}
@@ -263,6 +268,9 @@ public class MobileDeviceManagementUtil {
 				break;
 			case DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS:
 				regPath = DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS;
+				break;
+			case DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS:
+				regPath = DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_IOS;
 				break;
 		}
 		return regPath;
