@@ -39,27 +39,27 @@ import java.util.List;
 
 public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
 
-	private static Log log = LogFactory.getLog(AndroidPolicyMonitoringService.class);
+    private static Log log = LogFactory.getLog(AndroidPolicyMonitoringService.class);
 
-	@Override
-	public void notifyDevices(List<Device> list) throws PolicyComplianceException {
+    @Override
+    public void notifyDevices(List<Device> list) throws PolicyComplianceException {
 
-	}
+    }
 
-	@Override
-	public ComplianceData checkPolicyCompliance(DeviceIdentifier deviceIdentifier, Policy policy, Object o)
-            throws PolicyComplianceException {
+    @Override
+    public ComplianceData checkPolicyCompliance(DeviceIdentifier deviceIdentifier, Policy policy,
+                                                Object compliancePayload) throws PolicyComplianceException {
         if (log.isDebugEnabled()) {
-			log.debug("Checking policy compliance status of device '" + deviceIdentifier.getId() + "'");
-		}
-		if (o == null || policy == null) {
-			return null;
-		}
+            log.debug("Checking policy compliance status of device '" + deviceIdentifier.getId() + "'");
+        }
+        if (compliancePayload == null || policy == null) {
+            return null;
+        }
         ComplianceData complianceData = new ComplianceData();
         List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>();
 
         // Parsing json string to get compliance features.
-        JsonElement jsonElement = new JsonParser().parse((String) o);
+        JsonElement jsonElement = new JsonParser().parse((String) compliancePayload);
         JsonArray jsonArray = jsonElement.getAsJsonArray();
         Gson gson = new Gson();
         ComplianceFeature complianceFeature;
@@ -69,19 +69,19 @@ public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
             complianceFeatures.add(complianceFeature);
         }
 
-		complianceData.setComplianceFeatures(complianceFeatures);
+        complianceData.setComplianceFeatures(complianceFeatures);
 
-		for (ComplianceFeature cf : complianceFeatures) {
-			if(!cf.isCompliance()){
-				complianceData.setStatus(false);
-				break;
-			}
-		}
-		return complianceData;
-	}
+        for (ComplianceFeature cf : complianceFeatures) {
+            if (!cf.isCompliance()) {
+                complianceData.setStatus(false);
+                break;
+            }
+        }
+        return complianceData;
+    }
 
-	@Override
-	public String getType() {
-		return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID;
-	}
+    @Override
+    public String getType() {
+        return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID;
+    }
 }
