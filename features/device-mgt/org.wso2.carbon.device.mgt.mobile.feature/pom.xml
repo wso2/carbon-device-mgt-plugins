@@ -58,6 +58,10 @@
             <artifactId>org.wso2.carbon.device.mgt.extensions.feature</artifactId>
             <type>zip</type>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
