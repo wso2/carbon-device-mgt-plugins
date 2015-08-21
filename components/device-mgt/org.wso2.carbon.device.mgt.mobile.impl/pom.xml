@@ -76,7 +76,8 @@
                             org.wso2.carbon.registry.core.service,
                             org.wso2.carbon.registry.core.session,
                             org.wso2.carbon.registry.api,
-                            org.wso2.carbon.device.mgt.extensions.license.mgt.registry
+                            org.wso2.carbon.device.mgt.extensions.license.mgt.registry,
+                            com.google.gson.*
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.mobile.internal,
@@ -164,6 +165,10 @@
             <groupId>com.h2database.wso2</groupId>
             <artifactId>h2-database-engine</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
         </dependency>
     </dependencies>
 </project>

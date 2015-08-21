@@ -511,6 +511,11 @@
                 <artifactId>axis2</artifactId>
                 <version>${axis2.orbit.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${google.gson.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -577,6 +582,7 @@
         <bouncycastle.version>1.49</bouncycastle.version>
         <apache.wss4j.version>2.0.0</apache.wss4j.version>
         <codehaus.plexus.version>3.0.21</codehaus.plexus.version>
+        <google.gson.version>2.2.4</google.gson.version>
 
     </properties>
 

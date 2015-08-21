@@ -19,6 +19,10 @@
 
 package org.wso2.carbon.device.mgt.mobile.impl.android;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.Device;
@@ -43,15 +47,28 @@ public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
 	}
 
 	@Override
-	public ComplianceData checkPolicyCompliance(DeviceIdentifier deviceIdentifier, Policy policy, Object o) throws PolicyComplianceException {
-		ComplianceData complianceData = new ComplianceData();
-		if (log.isDebugEnabled()) {
+	public ComplianceData checkPolicyCompliance(DeviceIdentifier deviceIdentifier, Policy policy, Object o)
+            throws PolicyComplianceException {
+        if (log.isDebugEnabled()) {
 			log.debug("Checking policy compliance status of device '" + deviceIdentifier.getId() + "'");
 		}
 		if (o == null || policy == null) {
 			return null;
 		}
-		List<ComplianceFeature> complianceFeatures = (List<ComplianceFeature>) o;
+        ComplianceData complianceData = new ComplianceData();
+        List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>();
+
+        // Parsing json string to get compliance features.
+        JsonElement jsonElement = new JsonParser().parse((String) o);
+        JsonArray jsonArray = jsonElement.getAsJsonArray();
+        Gson gson = new Gson();
+        ComplianceFeature complianceFeature;
+
+        for (int i = 0; i < jsonArray.size(); i++) {
+            complianceFeature = gson.fromJson(jsonArray.get(i), ComplianceFeature.class);
+            complianceFeatures.add(complianceFeature);
+        }
+
 		complianceData.setComplianceFeatures(complianceFeatures);
 
 		for (ComplianceFeature cf : complianceFeatures) {
