@@ -21,8 +21,8 @@ package org.wso2.carbon.device.mgt.mobile.impl.windows.dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.*;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.impl.WindowsDeviceDAOImpl;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -41,14 +41,10 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
     }
 
     @Override
-    public MobileDeviceDAO getMobileDeviceDAO() {
-        return null;
-    }
+    public MobileDeviceDAO getMobileDeviceDAO() {return new WindowsDeviceDAOImpl();}
 
     @Override
-    public MobileOperationDAO getMobileOperationDAO() {
-        return null;
-    }
+    public MobileOperationDAO getMobileOperationDAO() {return null;}
 
     @Override
     public MobileOperationPropertyDAO getMobileOperationPropertyDAO() {

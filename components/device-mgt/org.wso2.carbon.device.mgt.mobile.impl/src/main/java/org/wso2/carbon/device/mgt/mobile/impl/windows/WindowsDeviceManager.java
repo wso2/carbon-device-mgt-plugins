@@ -125,7 +125,29 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public boolean modifyEnrollment(Device device) throws DeviceManagementException {
-        return true;
+        boolean status;
+        MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Modifying the Windows device enrollment data");
+            }
+            WindowsDAOFactory.beginTransaction();
+            status = daoFactory.getMobileDeviceDAO()
+                    .updateMobileDevice(mobileDevice);
+            WindowsDAOFactory.commitTransaction();
+        } catch (MobileDeviceManagementDAOException e) {
+            try {
+                WindowsDAOFactory.rollbackTransaction();
+            } catch (MobileDeviceManagementDAOException mobileDAOEx) {
+                String msg = "Error occurred while roll back the update device transaction :" + device.toString();
+                log.warn(msg, mobileDAOEx);
+            }
+            String msg = "Error while updating the enrollment of the Windows device : " +
+                    device.getDeviceIdentifier();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return status;
     }
 
     @Override
