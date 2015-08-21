@@ -18,19 +18,14 @@
 
 package org.wso2.carbon.device.mgt.mobile.impl.windows;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.common.*;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.DeviceManager;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
-import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.WindowsDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 
 import java.util.List;
 

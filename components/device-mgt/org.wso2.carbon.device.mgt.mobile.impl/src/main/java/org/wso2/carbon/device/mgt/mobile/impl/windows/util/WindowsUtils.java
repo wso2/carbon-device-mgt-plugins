@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  *
- * Contains utility methods used by Android plugin.
+ * Contains utility methods used by Windows plugin.
  */
 public class WindowsUtils {
     public static String getDeviceProperty(Map<String, String> deviceProperties, String property) {

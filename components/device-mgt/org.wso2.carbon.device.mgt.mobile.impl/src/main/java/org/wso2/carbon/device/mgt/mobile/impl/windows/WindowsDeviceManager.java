@@ -101,10 +101,10 @@ public class WindowsDeviceManager implements DeviceManager {
     public TenantConfiguration getConfiguration() throws DeviceManagementException {
         Resource resource;
         try {
-            String androidRegPath =
+            String windowsRegPath =
                     MobileDeviceManagementUtil.getPlatformConfigPath(DeviceManagementConstants.
                                                                              MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
-            resource = MobileDeviceManagementUtil.getRegistryResource(androidRegPath);
+            resource = MobileDeviceManagementUtil.getRegistryResource(windowsRegPath);
             JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             return (TenantConfiguration) unmarshaller.unmarshal(
@@ -152,7 +152,27 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public boolean disenrollDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return true;
+        boolean status;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Dis-enrolling windows device : " + deviceId);
+            }
+            WindowsDAOFactory.beginTransaction();
+            status = daoFactory.getMobileDeviceDAO().deleteMobileDevice(deviceId.getId());
+            WindowsDAOFactory.commitTransaction();
+        } catch (MobileDeviceManagementDAOException e) {
+            try {
+                WindowsDAOFactory.rollbackTransaction();
+            } catch (MobileDeviceManagementDAOException mobileDAOEx) {
+                String msg = "Error occurred while roll back the device dis enrol transaction :" +
+                        deviceId.toString();
+                log.warn(msg, mobileDAOEx);
+            }
+            String msg = "Error while removing the Windows device : " + deviceId.getId();
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return status;
     }
 
     @Override

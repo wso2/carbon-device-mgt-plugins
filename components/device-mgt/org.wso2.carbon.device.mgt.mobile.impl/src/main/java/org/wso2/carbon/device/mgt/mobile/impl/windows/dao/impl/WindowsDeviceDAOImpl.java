@@ -156,7 +156,30 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
 
     @Override
     public boolean deleteMobileDevice(String mblDeviceId) throws MobileDeviceManagementDAOException {
-        return false;
+        boolean status = false;
+        Connection conn;
+        PreparedStatement stmt = null;
+        try {
+            conn = WindowsDAOFactory.getConnection();
+            String deleteDBQuery =
+                    "DELETE FROM WINDOWS_DEVICE WHERE MOBILE_DEVICE_ID = ?";
+            stmt = conn.prepareStatement(deleteDBQuery);
+            stmt.setString(1, mblDeviceId);
+            int rows = stmt.executeUpdate();
+            if (rows > 0) {
+                status = true;
+                if (log.isDebugEnabled()) {
+                    log.debug("Windows device " + mblDeviceId + " data has deleted" +
+                            " from the windows database.");
+                }
+            }
+        } catch (SQLException e) {
+            throw new MobileDeviceManagementDAOException("Error occurred while deleting windows device '" +
+                    mblDeviceId + "'", e);
+        } finally {
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
+        }
+        return status;
     }
 
     @Override
