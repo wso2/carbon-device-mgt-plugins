@@ -52,10 +52,10 @@ public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
         if (log.isDebugEnabled()) {
             log.debug("Checking policy compliance status of device '" + deviceIdentifier.getId() + "'");
         }
-        if (compliancePayload == null || policy == null) {
-            return null;
-        }
         ComplianceData complianceData = new ComplianceData();
+        if (compliancePayload == null || policy == null) {
+            return complianceData;
+        }
         List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>();
 
         // Parsing json string to get compliance features.
