@@ -75,8 +75,7 @@ public class AndroidDeviceManager implements DeviceManager {
 	@Override
 	public boolean saveConfiguration(TenantConfiguration tenantConfiguration)
 			throws DeviceManagementException {
-		boolean status = false;
-		Resource resource;
+		boolean status;
 		try {
 			if (log.isDebugEnabled()) {
 				log.debug("Persisting android configurations in Registry");
@@ -89,7 +88,7 @@ public class AndroidDeviceManager implements DeviceManager {
 			Marshaller marshaller = context.createMarshaller();
 			marshaller.marshal(tenantConfiguration, writer);
 
-			resource = MobileDeviceManagementUtil.getRegistry().newResource();
+			Resource resource = MobileDeviceManagementUtil.getConfigurationRegistry().newResource();
 			resource.setContent(writer.toString());
 			resource.setMediaType(MobilePluginConstants.MEDIA_TYPE_XML);
 			MobileDeviceManagementUtil.putRegistryResource(resourcePath, resource);
@@ -115,12 +114,14 @@ public class AndroidDeviceManager implements DeviceManager {
 					MobileDeviceManagementUtil.getPlatformConfigPath(DeviceManagementConstants.
 							                                                 MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
 			resource = MobileDeviceManagementUtil.getRegistryResource(androidRegPath);
-			JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
-			Unmarshaller unmarshaller = context.createUnmarshaller();
-			return (TenantConfiguration) unmarshaller.unmarshal(
-					new StringReader(new String((byte[]) resource.getContent(), Charset
-							.forName(MobilePluginConstants.CHARSET_UTF8))));
-
+			if(resource != null){
+				JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
+				Unmarshaller unmarshaller = context.createUnmarshaller();
+				return (TenantConfiguration) unmarshaller.unmarshal(
+						new StringReader(new String((byte[]) resource.getContent(), Charset
+								.forName(MobilePluginConstants.CHARSET_UTF8))));
+			}
+			return new TenantConfiguration();
 		} catch (MobileDeviceMgtPluginException e) {
 			throw new DeviceManagementException(
 					"Error occurred while retrieving the Registry instance : " + e.getMessage(), e);

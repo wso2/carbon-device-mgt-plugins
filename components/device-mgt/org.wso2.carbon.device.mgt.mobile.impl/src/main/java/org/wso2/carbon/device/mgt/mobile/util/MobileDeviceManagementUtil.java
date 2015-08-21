@@ -198,7 +198,7 @@ public class MobileDeviceManagementUtil {
 		return feature;
 	}
 
-	public static Registry getRegistry() throws MobileDeviceMgtPluginException {
+	public static Registry getConfigurationRegistry() throws MobileDeviceMgtPluginException {
 		try {
 			int tenantId = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
 			return MobileDeviceManagementDataHolder.getInstance().getRegistryService()
@@ -213,8 +213,10 @@ public class MobileDeviceManagementUtil {
 
 	public static Resource getRegistryResource(String path) throws MobileDeviceMgtPluginException {
 		try {
-			return MobileDeviceManagementUtil.getRegistry().get(path);
-
+			if(MobileDeviceManagementUtil.getConfigurationRegistry().resourceExists(path)){
+				return MobileDeviceManagementUtil.getConfigurationRegistry().get(path);
+			}
+			return null;
 		} catch (RegistryException e) {
 			throw new MobileDeviceMgtPluginException("Error in retrieving registry resource : " +
 			                                         e.getMessage(), e);
@@ -224,11 +226,11 @@ public class MobileDeviceManagementUtil {
 	public static boolean putRegistryResource(String path,
 	                                          Resource resource)
 			throws MobileDeviceMgtPluginException {
-		boolean status = false;
+		boolean status;
 		try {
-			MobileDeviceManagementUtil.getRegistry().beginTransaction();
-			MobileDeviceManagementUtil.getRegistry().put(path, resource);
-			MobileDeviceManagementUtil.getRegistry().commitTransaction();
+			MobileDeviceManagementUtil.getConfigurationRegistry().beginTransaction();
+			MobileDeviceManagementUtil.getConfigurationRegistry().put(path, resource);
+			MobileDeviceManagementUtil.getConfigurationRegistry().commitTransaction();
 			status = true;
 		} catch (RegistryException e) {
 			throw new MobileDeviceMgtPluginException(
@@ -279,11 +281,11 @@ public class MobileDeviceManagementUtil {
 	public static boolean createRegistryCollection(String path)
 			throws MobileDeviceMgtPluginException {
 		try {
-			if (! MobileDeviceManagementUtil.getRegistry().resourceExists(path)) {
-				Resource resource = MobileDeviceManagementUtil.getRegistry().newCollection();
-				MobileDeviceManagementUtil.getRegistry().beginTransaction();
-				MobileDeviceManagementUtil.getRegistry().put(path, resource);
-				MobileDeviceManagementUtil.getRegistry().commitTransaction();
+			if (! MobileDeviceManagementUtil.getConfigurationRegistry().resourceExists(path)) {
+				Resource resource = MobileDeviceManagementUtil.getConfigurationRegistry().newCollection();
+				MobileDeviceManagementUtil.getConfigurationRegistry().beginTransaction();
+				MobileDeviceManagementUtil.getConfigurationRegistry().put(path, resource);
+				MobileDeviceManagementUtil.getConfigurationRegistry().commitTransaction();
 			}
 			return true;
 		} catch (MobileDeviceMgtPluginException e) {
