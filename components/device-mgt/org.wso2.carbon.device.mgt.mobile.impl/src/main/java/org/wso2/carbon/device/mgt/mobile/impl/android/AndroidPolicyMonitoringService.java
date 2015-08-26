@@ -19,6 +19,10 @@
 
 package org.wso2.carbon.device.mgt.mobile.impl.android;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.Device;
@@ -35,36 +39,49 @@ import java.util.List;
 
 public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
 
-	private static Log log = LogFactory.getLog(AndroidPolicyMonitoringService.class);
+    private static Log log = LogFactory.getLog(AndroidPolicyMonitoringService.class);
 
-	@Override
-	public void notifyDevices(List<Device> list) throws PolicyComplianceException {
+    @Override
+    public void notifyDevices(List<Device> list) throws PolicyComplianceException {
 
-	}
+    }
 
-	@Override
-	public ComplianceData checkPolicyCompliance(DeviceIdentifier deviceIdentifier, Policy policy, Object o) throws PolicyComplianceException {
-		ComplianceData complianceData = new ComplianceData();
-		if (log.isDebugEnabled()) {
-			log.debug("Checking policy compliance status of device '" + deviceIdentifier.getId() + "'");
-		}
-		if (o == null || policy == null) {
-			return null;
-		}
-		List<ComplianceFeature> complianceFeatures = (List<ComplianceFeature>) o;
-		complianceData.setComplianceFeatures(complianceFeatures);
+    @Override
+    public ComplianceData checkPolicyCompliance(DeviceIdentifier deviceIdentifier, Policy policy,
+                                                Object compliancePayload) throws PolicyComplianceException {
+        if (log.isDebugEnabled()) {
+            log.debug("Checking policy compliance status of device '" + deviceIdentifier.getId() + "'");
+        }
+        ComplianceData complianceData = new ComplianceData();
+        if (compliancePayload == null || policy == null) {
+            return complianceData;
+        }
+        List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>();
 
-		for (ComplianceFeature cf : complianceFeatures) {
-			if(!cf.isCompliance()){
-				complianceData.setStatus(false);
-				break;
-			}
-		}
-		return complianceData;
-	}
+        // Parsing json string to get compliance features.
+        JsonElement jsonElement = new JsonParser().parse((String) compliancePayload);
+        JsonArray jsonArray = jsonElement.getAsJsonArray();
+        Gson gson = new Gson();
+        ComplianceFeature complianceFeature;
 
-	@Override
-	public String getType() {
-		return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID;
-	}
+        for (int i = 0; i < jsonArray.size(); i++) {
+            complianceFeature = gson.fromJson(jsonArray.get(i), ComplianceFeature.class);
+            complianceFeatures.add(complianceFeature);
+        }
+
+        complianceData.setComplianceFeatures(complianceFeatures);
+
+        for (ComplianceFeature cf : complianceFeatures) {
+            if (!cf.isCompliance()) {
+                complianceData.setStatus(false);
+                break;
+            }
+        }
+        return complianceData;
+    }
+
+    @Override
+    public String getType() {
+        return DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID;
+    }
 }

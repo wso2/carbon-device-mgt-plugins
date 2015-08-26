@@ -79,7 +79,7 @@ public class WindowsDeviceManager implements DeviceManager {
             Marshaller marshaller = context.createMarshaller();
             marshaller.marshal(tenantConfiguration, writer);
 
-            resource = MobileDeviceManagementUtil.getRegistry().newResource();
+            resource = MobileDeviceManagementUtil.getConfigurationRegistry().newResource();
             resource.setContent(writer.toString());
             resource.setMediaType(MobilePluginConstants.MEDIA_TYPE_XML);
             MobileDeviceManagementUtil.putRegistryResource(resourcePath, resource);
