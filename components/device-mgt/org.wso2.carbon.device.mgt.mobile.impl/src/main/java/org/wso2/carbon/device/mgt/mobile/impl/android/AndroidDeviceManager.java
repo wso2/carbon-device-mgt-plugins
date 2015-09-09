@@ -161,7 +161,6 @@ public class AndroidDeviceManager implements DeviceManager {
 			}
 			String msg =
 					"Error while enrolling the Android device : " + device.getDeviceIdentifier();
-			log.error(msg, e);
 			throw new DeviceManagementException(msg, e);
 		}
 		return status;
@@ -188,7 +187,6 @@ public class AndroidDeviceManager implements DeviceManager {
 			}
 			String msg = "Error while updating the enrollment of the Android device : " +
 			             device.getDeviceIdentifier();
-			log.error(msg, e);
 			throw new DeviceManagementException(msg, e);
 		}
 		return status;
@@ -213,7 +211,6 @@ public class AndroidDeviceManager implements DeviceManager {
 				log.warn(msg, mobileDAOEx);
 			}
 			String msg = "Error while removing the Android device : " + deviceId.getId();
-			log.error(msg, e);
 			throw new DeviceManagementException(msg, e);
 		}
 		return status;
@@ -234,7 +231,6 @@ public class AndroidDeviceManager implements DeviceManager {
 		} catch (MobileDeviceManagementDAOException e) {
 			String msg = "Error while checking the enrollment status of Android device : " +
 			             deviceId.getId();
-			log.error(msg, e);
 			throw new DeviceManagementException(msg, e);
 		}
 		return isEnrolled;
