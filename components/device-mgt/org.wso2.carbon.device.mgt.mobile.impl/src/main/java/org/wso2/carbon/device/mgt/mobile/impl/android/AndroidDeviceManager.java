@@ -118,8 +118,8 @@ public class AndroidDeviceManager implements DeviceManager {
 				JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
 				Unmarshaller unmarshaller = context.createUnmarshaller();
 				return (TenantConfiguration) unmarshaller.unmarshal(
-						new StringReader(new String((byte[]) resource.getContent(), Charset
-								.forName(MobilePluginConstants.CHARSET_UTF8))));
+						new StringReader(new String((byte[]) resource.getContent(), Charset.
+								forName(MobilePluginConstants.CHARSET_UTF8))));
 			}
 			return new TenantConfiguration();
 		} catch (MobileDeviceMgtPluginException e) {
@@ -288,8 +288,8 @@ public class AndroidDeviceManager implements DeviceManager {
 
 	@Override
 	public License getLicense(String languageCode) throws LicenseManagementException {
-		return licenseManager
-				.getLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, languageCode);
+		return licenseManager.
+				getLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, languageCode);
 	}
 
 	@Override
@@ -320,8 +320,7 @@ public class AndroidDeviceManager implements DeviceManager {
 						"updating the details of Android device : " + device.getDeviceIdentifier());
 			}
 			AndroidDAOFactory.beginTransaction();
-			status = daoFactory.getMobileDeviceDAO()
-			                   .updateMobileDevice(existingMobileDevice);
+			status = daoFactory.getMobileDeviceDAO().updateMobileDevice(existingMobileDevice);
 			AndroidDAOFactory.commitTransaction();
 		} catch (MobileDeviceManagementDAOException e) {
 			try {
