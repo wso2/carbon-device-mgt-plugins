@@ -72,7 +72,7 @@ public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
         complianceData.setComplianceFeatures(complianceFeatures);
 
         for (ComplianceFeature cf : complianceFeatures) {
-            if (!cf.isCompliance()) {
+            if (!cf.isCompliant()) {
                 complianceData.setStatus(false);
                 break;
             }

@@ -118,8 +118,8 @@ public class AndroidDeviceManager implements DeviceManager {
 				JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
 				Unmarshaller unmarshaller = context.createUnmarshaller();
 				return (TenantConfiguration) unmarshaller.unmarshal(
-						new StringReader(new String((byte[]) resource.getContent(), Charset
-								.forName(MobilePluginConstants.CHARSET_UTF8))));
+						new StringReader(new String((byte[]) resource.getContent(), Charset.
+								forName(MobilePluginConstants.CHARSET_UTF8))));
 			}
 			return new TenantConfiguration();
 		} catch (MobileDeviceMgtPluginException e) {
@@ -161,7 +161,6 @@ public class AndroidDeviceManager implements DeviceManager {
 			}
 			String msg =
 					"Error while enrolling the Android device : " + device.getDeviceIdentifier();
-			log.error(msg, e);
 			throw new DeviceManagementException(msg, e);
 		}
 		return status;
@@ -188,7 +187,6 @@ public class AndroidDeviceManager implements DeviceManager {
 			}
 			String msg = "Error while updating the enrollment of the Android device : " +
 			             device.getDeviceIdentifier();
-			log.error(msg, e);
 			throw new DeviceManagementException(msg, e);
 		}
 		return status;
@@ -213,7 +211,6 @@ public class AndroidDeviceManager implements DeviceManager {
 				log.warn(msg, mobileDAOEx);
 			}
 			String msg = "Error while removing the Android device : " + deviceId.getId();
-			log.error(msg, e);
 			throw new DeviceManagementException(msg, e);
 		}
 		return status;
@@ -234,7 +231,6 @@ public class AndroidDeviceManager implements DeviceManager {
 		} catch (MobileDeviceManagementDAOException e) {
 			String msg = "Error while checking the enrollment status of Android device : " +
 			             deviceId.getId();
-			log.error(msg, e);
 			throw new DeviceManagementException(msg, e);
 		}
 		return isEnrolled;
@@ -288,8 +284,8 @@ public class AndroidDeviceManager implements DeviceManager {
 
 	@Override
 	public License getLicense(String languageCode) throws LicenseManagementException {
-		return licenseManager
-				.getLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, languageCode);
+		return licenseManager.
+				getLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, languageCode);
 	}
 
 	@Override
@@ -320,8 +316,7 @@ public class AndroidDeviceManager implements DeviceManager {
 						"updating the details of Android device : " + device.getDeviceIdentifier());
 			}
 			AndroidDAOFactory.beginTransaction();
-			status = daoFactory.getMobileDeviceDAO()
-			                   .updateMobileDevice(existingMobileDevice);
+			status = daoFactory.getMobileDeviceDAO().updateMobileDevice(existingMobileDevice);
 			AndroidDAOFactory.commitTransaction();
 		} catch (MobileDeviceManagementDAOException e) {
 			try {
