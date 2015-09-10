@@ -1,21 +1,18 @@
 /*
- *   Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *   WSO2 Inc. licenses this file to you under the Apache License,
- *   Version 2.0 (the "License"); you may not use this file except
- *   in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing,
- *   software distributed under the License is distributed on an
- *   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *   KIND, either express or implied.  See the License for the
- *   specific language governing permissions and limitations
- *   under the License.
- *
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * you may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
+
 package org.wso2.carbon.device.mgt.mobile.impl.windows.dao;
 
 import org.apache.commons.logging.Log;
@@ -41,10 +38,14 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
     }
 
     @Override
-    public MobileDeviceDAO getMobileDeviceDAO() {return new WindowsDeviceDAOImpl();}
+    public MobileDeviceDAO getMobileDeviceDAO() {
+        return new WindowsDeviceDAOImpl();
+    }
 
     @Override
-    public MobileOperationDAO getMobileOperationDAO() {return null;}
+    public MobileOperationDAO getMobileOperationDAO() {
+        return null;
+    }
 
     @Override
     public MobileOperationPropertyDAO getMobileOperationPropertyDAO() {
@@ -88,7 +89,7 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
         return currentConnection.get();
     }
 
-    public static void commitTransaction() throws MobileDeviceManagementDAOException {
+    public static void commitTransaction() {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -100,13 +101,13 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
                 }
             }
         } catch (SQLException e) {
-            throw new MobileDeviceManagementDAOException("Error occurred while committing the transaction", e);
+            log.error("Error occurred while committing the transaction", e);
         } finally {
             closeConnection();
         }
     }
 
-    public static void closeConnection() throws MobileDeviceManagementDAOException {
+    public static void closeConnection() {
 
         Connection con = currentConnection.get();
         try {
@@ -117,7 +118,7 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
         currentConnection.remove();
     }
 
-    public static void rollbackTransaction() throws MobileDeviceManagementDAOException {
+    public static void rollbackTransaction() {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -129,7 +130,8 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
                 }
             }
         } catch (SQLException e) {
-            throw new MobileDeviceManagementDAOException("Error occurred while rollback the transaction", e);
+            log.warn("Error occurred while roll-backing the transaction", e);
+
         } finally {
             closeConnection();
         }

@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  * WSO2 Inc. licenses this file to you under the Apache License,
@@ -28,9 +27,12 @@ import org.wso2.carbon.device.mgt.mobile.impl.windows.util.WindowsUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implements MobileDeviceDAO for Windows Devices.
@@ -41,7 +43,49 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
 
     @Override
     public MobileDevice getMobileDevice(String mblDeviceId) throws MobileDeviceManagementDAOException {
-        return null;
+        Connection conn;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        MobileDevice mobileDevice = null;
+        List<MobileDevice> mobileDevices = new ArrayList<MobileDevice>();
+        try {
+            conn = WindowsDAOFactory.getConnection();
+            String selectDBQuery =
+                    "SELECT MOBILE_DEVICE_ID, CHANNEL_URI, DEVICE_INFO, IMEI, IMSI, " +
+                            "OS_VERSION, DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE, SERIAL, MAC_ADDRESS, OS_VERSION, DEVICE_NAME " +
+                            "FROM WINDOWS_DEVICE WHERE MOBILE_DEVICE_ID = ?";
+            stmt = conn.prepareStatement(selectDBQuery);
+            stmt.setString(1, mblDeviceId);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                mobileDevice = new MobileDevice();
+                mobileDevice.setMobileDeviceId(rs.getString(WindowsPluginConstants.MOBILE_DEVICE_ID));
+                mobileDevice.setVendor(rs.getString(WindowsPluginConstants.IMEI));
+                mobileDevice.setLatitude(rs.getString(WindowsPluginConstants.IMSI));
+                mobileDevice.setLongitude(rs.getString(WindowsPluginConstants.OS_VERSION));
+                mobileDevice.setImei(rs.getString(WindowsPluginConstants.DEVICE_MODEL));
+                mobileDevice.setImsi(rs.getString(WindowsPluginConstants.VENDOR));
+                mobileDevice.setOsVersion(rs.getString(WindowsPluginConstants.LATITUDE));
+
+                Map<String, String> propertyMap = new HashMap<String, String>();
+                propertyMap.put(WindowsPluginConstants.CHANNEL_URI, rs.getString(WindowsPluginConstants.CHANNEL_URI));
+                propertyMap.put(WindowsPluginConstants.DEVICE_INFO, rs.getString(WindowsPluginConstants.DEVICE_INFO));
+                propertyMap.put(WindowsPluginConstants.DEVICE_NAME, rs.getString(WindowsPluginConstants.DEVICE_NAME));
+                mobileDevice.setDeviceProperties(propertyMap);
+
+                mobileDevices.add(mobileDevice);
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("All Windows device details have fetched from Windows database.");
+            }
+            return mobileDevice;
+        } catch (SQLException e) {
+            throw new MobileDeviceManagementDAOException("Error occurred while fetching all Windows device data", e);
+        } finally {
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
+            WindowsDAOFactory.closeConnection();
+        }
     }
 
     @Override
@@ -88,10 +132,8 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
                 }
             }
         } catch (SQLException e) {
-            String msg = "Error occurred while adding the Windows device '" +
-                    mobileDevice.getMobileDeviceId() + "' to the Windows db.";
-            log.error(msg, e);
-            throw new MobileDeviceManagementDAOException(msg, e);
+            throw new MobileDeviceManagementDAOException("Error occurred while adding the Windows device '" +
+                    mobileDevice.getMobileDeviceId() + "' to the Windows db.", e);
         } finally {
             MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
         }
@@ -124,7 +166,7 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
                     WindowsPluginConstants.DEVICE_INFO));
             stmt.setString(3, mobileDevice.getImei());
             stmt.setString(4, mobileDevice.getImsi());
-            stmt.setString(5, mobileDevice.getOsVersion() );
+            stmt.setString(5, mobileDevice.getOsVersion());
             stmt.setString(6, mobileDevice.getModel());
             stmt.setString(7, mobileDevice.getVendor());
             stmt.setString(8, mobileDevice.getLatitude());
@@ -144,10 +186,8 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
                 }
             }
         } catch (SQLException e) {
-            String msg = "Error occurred while modifying the Windows device '" +
-                    mobileDevice.getMobileDeviceId() + "' data.";
-            log.error(msg, e);
-            throw new MobileDeviceManagementDAOException(msg, e);
+            throw new MobileDeviceManagementDAOException("Error occurred while modifying the Windows device '" +
+                    mobileDevice.getMobileDeviceId() + "' data.", e);
         } finally {
             MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
         }
@@ -184,6 +224,47 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
 
     @Override
     public List<MobileDevice> getAllMobileDevices() throws MobileDeviceManagementDAOException {
-        return null;
+        Connection conn;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        MobileDevice mobileDevice;
+        List<MobileDevice> mobileDevices = new ArrayList<MobileDevice>();
+        try {
+            conn = WindowsDAOFactory.getConnection();
+            String selectDBQuery =
+                    "SELECT MOBILE_DEVICE_ID, CHANNEL_URI, DEVICE_INFO, IMEI, IMSI, " +
+                            "OS_VERSION, DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE, SERIAL, MAC_ADDRESS, OS_VERSION, DEVICE_NAME " +
+                            "FROM WINDOWS_DEVICE";
+            stmt = conn.prepareStatement(selectDBQuery);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                mobileDevice = new MobileDevice();
+                mobileDevice.setMobileDeviceId(rs.getString(WindowsPluginConstants.MOBILE_DEVICE_ID));
+                mobileDevice.setVendor(rs.getString(WindowsPluginConstants.IMEI));
+                mobileDevice.setLatitude(rs.getString(WindowsPluginConstants.IMSI));
+                mobileDevice.setLongitude(rs.getString(WindowsPluginConstants.OS_VERSION));
+                mobileDevice.setImei(rs.getString(WindowsPluginConstants.DEVICE_MODEL));
+                mobileDevice.setImsi(rs.getString(WindowsPluginConstants.VENDOR));
+                mobileDevice.setOsVersion(rs.getString(WindowsPluginConstants.LATITUDE));
+
+                Map<String, String> propertyMap = new HashMap<String, String>();
+                propertyMap.put(WindowsPluginConstants.CHANNEL_URI, rs.getString(WindowsPluginConstants.CHANNEL_URI));
+                propertyMap.put(WindowsPluginConstants.DEVICE_INFO, rs.getString(WindowsPluginConstants.DEVICE_INFO));
+                propertyMap.put(WindowsPluginConstants.DEVICE_NAME, rs.getString(WindowsPluginConstants.DEVICE_NAME));
+                mobileDevice.setDeviceProperties(propertyMap);
+
+                mobileDevices.add(mobileDevice);
+            }
+            if (log.isDebugEnabled()) {
+                log.debug("All Windows device details have fetched from Windows database.");
+            }
+            return mobileDevices;
+        } catch (SQLException e) {
+            throw new MobileDeviceManagementDAOException("Error occurred while fetching all Windows device data", e);
+        } finally {
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
+            WindowsDAOFactory.closeConnection();
+        }
     }
 }

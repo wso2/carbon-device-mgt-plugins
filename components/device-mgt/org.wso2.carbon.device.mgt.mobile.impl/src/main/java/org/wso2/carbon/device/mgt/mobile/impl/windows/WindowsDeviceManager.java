@@ -1,21 +1,18 @@
 /*
- *   Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *   WSO2 Inc. licenses this file to you under the Apache License,
- *   Version 2.0 (the "License"); you may not use this file except
- *   in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing,
- *   software distributed under the License is distributed on an
- *   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *   KIND, either express or implied.  See the License for the
- *   specific language governing permissions and limitations
- *   under the License.
- *
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * you may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
+
 package org.wso2.carbon.device.mgt.mobile.impl.windows;
 
 import org.apache.commons.logging.Log;
@@ -101,16 +98,15 @@ public class WindowsDeviceManager implements DeviceManager {
     public TenantConfiguration getConfiguration() throws DeviceManagementException {
         Resource resource;
         try {
-            String windowsRegPath =
+            String windowsTenantRegistryPath =
                     MobileDeviceManagementUtil.getPlatformConfigPath(DeviceManagementConstants.
-                                                                             MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
-            resource = MobileDeviceManagementUtil.getRegistryResource(windowsRegPath);
+                            MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+            resource = MobileDeviceManagementUtil.getRegistryResource(windowsTenantRegistryPath);
             JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             return (TenantConfiguration) unmarshaller.unmarshal(
                     new StringReader(new String((byte[]) resource.getContent(), Charset
                             .forName(MobilePluginConstants.CHARSET_UTF8))));
-
         } catch (MobileDeviceMgtPluginException e) {
             throw new DeviceManagementException(
                     "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
@@ -132,20 +128,12 @@ public class WindowsDeviceManager implements DeviceManager {
                 log.debug("Modifying the Windows device enrollment data");
             }
             WindowsDAOFactory.beginTransaction();
-            status = daoFactory.getMobileDeviceDAO()
-                    .updateMobileDevice(mobileDevice);
+            status = daoFactory.getMobileDeviceDAO().updateMobileDevice(mobileDevice);
             WindowsDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
-            try {
-                WindowsDAOFactory.rollbackTransaction();
-            } catch (MobileDeviceManagementDAOException mobileDAOEx) {
-                String msg = "Error occurred while roll back the update device transaction :" + device.toString();
-                log.warn(msg, mobileDAOEx);
-            }
-            String msg = "Error while updating the enrollment of the Windows device : " +
-                    device.getDeviceIdentifier();
-            log.error(msg, e);
-            throw new DeviceManagementException(msg, e);
+            WindowsDAOFactory.rollbackTransaction();
+            throw new DeviceManagementException("Error while updating the enrollment of the Windows device : " +
+                    device.getDeviceIdentifier(), e);
         }
         return status;
     }
@@ -161,16 +149,8 @@ public class WindowsDeviceManager implements DeviceManager {
             status = daoFactory.getMobileDeviceDAO().deleteMobileDevice(deviceId.getId());
             WindowsDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
-            try {
-                WindowsDAOFactory.rollbackTransaction();
-            } catch (MobileDeviceManagementDAOException mobileDAOEx) {
-                String msg = "Error occurred while roll back the device dis enrol transaction :" +
-                        deviceId.toString();
-                log.warn(msg, mobileDAOEx);
-            }
-            String msg = "Error while removing the Windows device : " + deviceId.getId();
-            log.error(msg, e);
-            throw new DeviceManagementException(msg, e);
+            WindowsDAOFactory.rollbackTransaction();
+            throw new DeviceManagementException("Error while removing the Windows device : " + deviceId.getId(), e);
         }
         return status;
     }

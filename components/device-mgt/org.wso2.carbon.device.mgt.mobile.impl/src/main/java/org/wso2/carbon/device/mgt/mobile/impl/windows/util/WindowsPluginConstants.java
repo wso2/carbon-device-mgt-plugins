@@ -32,7 +32,7 @@ public class WindowsPluginConstants {
     public static final String LATITUDE = "LATITUDE";
     public static final String LONGITUDE = "LONGITUDE";
     public static final String SERIAL = "SERIAL";
-    public static final String MAC_ADDRESS ="MAC_ADDRESS";
-    public static final String DEVICE_NAME ="DEVICE_NAME";
+    public static final String MAC_ADDRESS = "MAC_ADDRESS";
+    public static final String DEVICE_NAME = "DEVICE_NAME";
 
 }

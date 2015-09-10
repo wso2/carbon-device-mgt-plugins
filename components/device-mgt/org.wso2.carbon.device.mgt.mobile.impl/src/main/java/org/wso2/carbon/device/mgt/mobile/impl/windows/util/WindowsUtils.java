@@ -18,7 +18,6 @@ package org.wso2.carbon.device.mgt.mobile.impl.windows.util;
 import java.util.Map;
 
 /**
- *
  * Contains utility methods used by Windows plugin.
  */
 public class WindowsUtils {
@@ -26,9 +25,8 @@ public class WindowsUtils {
 
         String deviceProperty = deviceProperties.get(property);
         if (deviceProperty == null) {
-            return "";
+            return null;
         }
-
         return deviceProperty;
     }
 }
