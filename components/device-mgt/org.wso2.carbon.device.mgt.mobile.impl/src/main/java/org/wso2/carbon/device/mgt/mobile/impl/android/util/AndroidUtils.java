@@ -26,8 +26,6 @@ import java.util.Map;
 public class AndroidUtils {
 
 	public static String getDeviceProperty(Map<String, String> deviceProperties, String property) {
-
-		String deviceProperty = deviceProperties.get(property);
-		return deviceProperty;
+		return deviceProperties.get(property);
 	}
 }
