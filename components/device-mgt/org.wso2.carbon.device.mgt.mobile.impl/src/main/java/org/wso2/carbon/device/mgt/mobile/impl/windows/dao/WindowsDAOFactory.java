@@ -111,7 +111,6 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
     }
 
     public static void closeConnection() {
-
         Connection con = currentConnection.get();
         try {
             con.close();
@@ -134,7 +133,6 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
             }
         } catch (SQLException e) {
             log.warn("Error occurred while roll-backing the transaction", e);
-
         } finally {
             closeConnection();
         }
