@@ -1,21 +1,21 @@
 /*
- *   Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *   WSO2 Inc. licenses this file to you under the Apache License,
- *   Version 2.0 (the "License"); you may not use this file except
- *   in compliance with the License.
- *   You may obtain a copy of the License at
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *   Unless required by applicable law or agreed to in writing,
- *   software distributed under the License is distributed on an
- *   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *   KIND, either express or implied.  See the License for the
- *   specific language governing permissions and limitations
- *   under the License.
- *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
+
 package org.wso2.carbon.device.mgt.mobile.impl.windows;
 
 import org.apache.commons.logging.Log;
@@ -43,6 +43,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WindowsDeviceManager implements DeviceManager {
@@ -101,19 +102,15 @@ public class WindowsDeviceManager implements DeviceManager {
     public TenantConfiguration getConfiguration() throws DeviceManagementException {
         Resource resource;
         try {
-            String androidRegPath =
+            String windowsTenantRegistryPath =
                     MobileDeviceManagementUtil.getPlatformConfigPath(DeviceManagementConstants.
-                                                                             MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
-            resource = MobileDeviceManagementUtil.getRegistryResource(androidRegPath);
-            if(resource != null){
-                JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
-                Unmarshaller unmarshaller = context.createUnmarshaller();
-                return (TenantConfiguration) unmarshaller.unmarshal(
-                        new StringReader(new String((byte[]) resource.getContent(), Charset
-                                .forName(MobilePluginConstants.CHARSET_UTF8))));
-            }
-            return new TenantConfiguration();
-
+                            MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+            resource = MobileDeviceManagementUtil.getRegistryResource(windowsTenantRegistryPath);
+            JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            return (TenantConfiguration) unmarshaller.unmarshal(
+                    new StringReader(new String((byte[]) resource.getContent(), Charset
+                            .forName(MobilePluginConstants.CHARSET_UTF8))));
         } catch (MobileDeviceMgtPluginException e) {
             throw new DeviceManagementException(
                     "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
@@ -128,12 +125,42 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public boolean modifyEnrollment(Device device) throws DeviceManagementException {
-        return true;
+        boolean status;
+        MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Modifying the Windows device enrollment data");
+            }
+            WindowsDAOFactory.beginTransaction();
+            status = daoFactory.getMobileDeviceDAO().updateMobileDevice(mobileDevice);
+            WindowsDAOFactory.commitTransaction();
+        } catch (MobileDeviceManagementDAOException e) {
+            WindowsDAOFactory.rollbackTransaction();
+            throw new DeviceManagementException("Error while updating the enrollment of the Windows device : " +
+                    device.getDeviceIdentifier(), e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
+        }
+        return status;
     }
 
     @Override
     public boolean disenrollDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return true;
+        boolean status;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Dis-enrolling windows device : " + deviceId);
+            }
+            WindowsDAOFactory.beginTransaction();
+            status = daoFactory.getMobileDeviceDAO().deleteMobileDevice(deviceId.getId());
+            WindowsDAOFactory.commitTransaction();
+        } catch (MobileDeviceManagementDAOException e) {
+            WindowsDAOFactory.rollbackTransaction();
+            throw new DeviceManagementException("Error while removing the Windows device : " + deviceId.getId(), e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
+        }
+        return status;
     }
 
     @Override
@@ -153,12 +180,45 @@ public class WindowsDeviceManager implements DeviceManager {
     }
 
     public List<Device> getAllDevices() throws DeviceManagementException {
-        return null;
+        List<Device> devices = null;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Fetching the details of all Windows devices");
+            }
+            WindowsDAOFactory.openConnection();
+            List<MobileDevice> mobileDevices = daoFactory.getMobileDeviceDAO().getAllMobileDevices();
+            if (mobileDevices != null) {
+                devices = new ArrayList<>();
+                for (MobileDevice mobileDevice : mobileDevices) {
+                    devices.add(MobileDeviceManagementUtil.convertToDevice(mobileDevice));
+                }
+            }
+        } catch (MobileDeviceManagementDAOException e) {
+            throw new DeviceManagementException("Error occurred while fetching all Windows devices", e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
+        }
+        return devices;
     }
 
     @Override
     public Device getDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return null;
+        Device device = null;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Getting the details of Windows device : '" + deviceId.getId() + "'");
+            }
+            WindowsDAOFactory.openConnection();
+            MobileDevice mobileDevice = daoFactory.getMobileDeviceDAO().
+                    getMobileDevice(deviceId.getId());
+            device = MobileDeviceManagementUtil.convertToDevice(mobileDevice);
+        } catch (MobileDeviceManagementDAOException e) {
+            throw new DeviceManagementException(
+                    "Error occurred while fetching the Windows device: '" + deviceId.getId() + "'", e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
+        }
+        return device;
     }
 
     @Override
@@ -199,10 +259,15 @@ public class WindowsDeviceManager implements DeviceManager {
         boolean status;
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
         try {
+            WindowsDAOFactory.beginTransaction();
             status = daoFactory.getMobileDeviceDAO().addMobileDevice(mobileDevice);
+            WindowsDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
+            WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error while enrolling the Windows device '" +
                     device.getDeviceIdentifier() + "'", e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
         }
         return status;
     }

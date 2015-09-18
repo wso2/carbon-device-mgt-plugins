@@ -1,28 +1,28 @@
 /*
- *   Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *   WSO2 Inc. licenses this file to you under the Apache License,
- *   Version 2.0 (the "License"); you may not use this file except
- *   in compliance with the License.
- *   You may obtain a copy of the License at
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
- *   Unless required by applicable law or agreed to in writing,
- *   software distributed under the License is distributed on an
- *   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *   KIND, either express or implied.  See the License for the
- *   specific language governing permissions and limitations
- *   under the License.
- *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
+
 package org.wso2.carbon.device.mgt.mobile.impl.windows.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.*;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.impl.WindowsDeviceDAOImpl;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -36,13 +36,12 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
     private static ThreadLocal<Connection> currentConnection = new ThreadLocal<Connection>();
 
     public WindowsDAOFactory() {
-        this.dataSource = getDataSourceMap().get(DeviceManagementConstants.MobileDeviceTypes
-                .MOBILE_DEVICE_TYPE_WINDOWS);
+        this.dataSource = getDataSourceMap().get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
     }
 
     @Override
     public MobileDeviceDAO getMobileDeviceDAO() {
-        return null;
+        return new WindowsDeviceDAOImpl();
     }
 
     @Override
@@ -80,19 +79,32 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
         }
     }
 
+    public static void openConnection() throws MobileDeviceManagementDAOException {
+        if (currentConnection.get() == null) {
+            Connection conn;
+            try {
+                conn = dataSource.getConnection();
+                currentConnection.set(conn);
+            } catch (SQLException e) {
+                throw new MobileDeviceManagementDAOException
+                        ("Error occurred while retrieving data source connection", e);
+            }
+        }
+    }
+
     public static Connection getConnection() throws MobileDeviceManagementDAOException {
         if (currentConnection.get() == null) {
             try {
                 currentConnection.set(dataSource.getConnection());
             } catch (SQLException e) {
-                throw new MobileDeviceManagementDAOException("Error occurred while retrieving data source connection",
-                        e);
+                throw new MobileDeviceManagementDAOException
+                        ("Error occurred while retrieving data source connection", e);
             }
         }
         return currentConnection.get();
     }
 
-    public static void commitTransaction() throws MobileDeviceManagementDAOException {
+    public static void commitTransaction() {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -104,14 +116,13 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
                 }
             }
         } catch (SQLException e) {
-            throw new MobileDeviceManagementDAOException("Error occurred while committing the transaction", e);
+            log.error("Error occurred while committing the transaction", e);
         } finally {
             closeConnection();
         }
     }
 
-    public static void closeConnection() throws MobileDeviceManagementDAOException {
-
+    public static void closeConnection() {
         Connection con = currentConnection.get();
         try {
             con.close();
@@ -121,7 +132,7 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
         currentConnection.remove();
     }
 
-    public static void rollbackTransaction() throws MobileDeviceManagementDAOException {
+    public static void rollbackTransaction() {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -133,7 +144,7 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
                 }
             }
         } catch (SQLException e) {
-            throw new MobileDeviceManagementDAOException("Error occurred while rollback the transaction", e);
+            log.warn("Error occurred while roll-backing the transaction", e);
         } finally {
             closeConnection();
         }

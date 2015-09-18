@@ -16,7 +16,6 @@
  * under the License.
  */
 
-
 package org.wso2.carbon.device.mgt.mobile.impl.windows;
 
 import org.wso2.carbon.device.mgt.common.Device;
