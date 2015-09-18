@@ -117,8 +117,6 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
             }
         } catch (SQLException e) {
             log.error("Error occurred while committing the transaction", e);
-        } finally {
-            closeConnection();
         }
     }
 
@@ -145,8 +143,6 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
             }
         } catch (SQLException e) {
             log.warn("Error occurred while roll-backing the transaction", e);
-        } finally {
-            closeConnection();
         }
     }
 }
