@@ -259,10 +259,11 @@ public class WindowsDeviceManager implements DeviceManager {
         boolean status;
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
         try {
-            WindowsDAOFactory.getConnection();
+            WindowsDAOFactory.beginTransaction();
             status = daoFactory.getMobileDeviceDAO().addMobileDevice(mobileDevice);
             WindowsDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
+            WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error while enrolling the Windows device '" +
                     device.getDeviceIdentifier() + "'", e);
         } finally {
