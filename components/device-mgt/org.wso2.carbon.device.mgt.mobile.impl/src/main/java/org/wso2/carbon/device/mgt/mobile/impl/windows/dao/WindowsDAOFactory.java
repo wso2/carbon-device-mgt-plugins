@@ -36,8 +36,7 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
     private static ThreadLocal<Connection> currentConnection = new ThreadLocal<Connection>();
 
     public WindowsDAOFactory() {
-        this.dataSource = getDataSourceMap().get(DeviceManagementConstants.MobileDeviceTypes
-                .MOBILE_DEVICE_TYPE_WINDOWS);
+        this.dataSource = getDataSourceMap().get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
     }
 
     @Override
@@ -80,13 +79,26 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
         }
     }
 
+    public static void openConnection() throws MobileDeviceManagementDAOException {
+        if (currentConnection.get() == null) {
+            Connection conn;
+            try {
+                conn = dataSource.getConnection();
+                currentConnection.set(conn);
+            } catch (SQLException e) {
+                throw new MobileDeviceManagementDAOException
+                        ("Error occurred while retrieving data source connection", e);
+            }
+        }
+    }
+
     public static Connection getConnection() throws MobileDeviceManagementDAOException {
         if (currentConnection.get() == null) {
             try {
                 currentConnection.set(dataSource.getConnection());
             } catch (SQLException e) {
-                throw new MobileDeviceManagementDAOException("Error occurred while retrieving data source connection",
-                        e);
+                throw new MobileDeviceManagementDAOException
+                        ("Error occurred while retrieving data source connection", e);
             }
         }
         return currentConnection.get();

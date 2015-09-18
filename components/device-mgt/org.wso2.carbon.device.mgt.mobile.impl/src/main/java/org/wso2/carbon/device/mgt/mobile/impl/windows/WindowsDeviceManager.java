@@ -43,6 +43,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 public class WindowsDeviceManager implements DeviceManager {
@@ -137,6 +138,8 @@ public class WindowsDeviceManager implements DeviceManager {
             WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error while updating the enrollment of the Windows device : " +
                     device.getDeviceIdentifier(), e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
         }
         return status;
     }
@@ -154,6 +157,8 @@ public class WindowsDeviceManager implements DeviceManager {
         } catch (MobileDeviceManagementDAOException e) {
             WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error while removing the Windows device : " + deviceId.getId(), e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
         }
         return status;
     }
@@ -175,12 +180,45 @@ public class WindowsDeviceManager implements DeviceManager {
     }
 
     public List<Device> getAllDevices() throws DeviceManagementException {
-        return null;
+        List<Device> devices = null;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Fetching the details of all Windows devices");
+            }
+            WindowsDAOFactory.openConnection();
+            List<MobileDevice> mobileDevices = daoFactory.getMobileDeviceDAO().getAllMobileDevices();
+            if (mobileDevices != null) {
+                devices = new ArrayList<>();
+                for (MobileDevice mobileDevice : mobileDevices) {
+                    devices.add(MobileDeviceManagementUtil.convertToDevice(mobileDevice));
+                }
+            }
+        } catch (MobileDeviceManagementDAOException e) {
+            throw new DeviceManagementException("Error occurred while fetching all Windows devices", e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
+        }
+        return devices;
     }
 
     @Override
     public Device getDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return null;
+        Device device = null;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Getting the details of Windows device : '" + deviceId.getId() + "'");
+            }
+            WindowsDAOFactory.openConnection();
+            MobileDevice mobileDevice = daoFactory.getMobileDeviceDAO().
+                    getMobileDevice(deviceId.getId());
+            device = MobileDeviceManagementUtil.convertToDevice(mobileDevice);
+        } catch (MobileDeviceManagementDAOException e) {
+            throw new DeviceManagementException(
+                    "Error occurred while fetching the Windows device: '" + deviceId.getId() + "'", e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
+        }
+        return device;
     }
 
     @Override
@@ -221,10 +259,14 @@ public class WindowsDeviceManager implements DeviceManager {
         boolean status;
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
         try {
+            WindowsDAOFactory.getConnection();
             status = daoFactory.getMobileDeviceDAO().addMobileDevice(mobileDevice);
+            WindowsDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
             throw new DeviceManagementException("Error while enrolling the Windows device '" +
                     device.getDeviceIdentifier() + "'", e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
         }
         return status;
     }
