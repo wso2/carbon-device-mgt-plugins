@@ -59,7 +59,12 @@ public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
         List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>();
 
         // Parsing json string to get compliance features.
-        JsonElement jsonElement = new JsonParser().parse((String) compliancePayload);
+        JsonElement jsonElement;
+        if (compliancePayload instanceof String) {
+            jsonElement = new JsonParser().parse((String) compliancePayload);
+        } else {
+            throw new PolicyComplianceException("Invalid policy compliance payload");
+        }
         JsonArray jsonArray = jsonElement.getAsJsonArray();
         Gson gson = new Gson();
         ComplianceFeature complianceFeature;
