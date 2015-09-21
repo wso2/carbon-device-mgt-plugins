@@ -69,8 +69,8 @@ public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
         Gson gson = new Gson();
         ComplianceFeature complianceFeature;
 
-        for (int i = 0; i < jsonArray.size(); i++) {
-            complianceFeature = gson.fromJson(jsonArray.get(i), ComplianceFeature.class);
+        for (JsonElement element : jsonArray) {
+            complianceFeature = gson.fromJson(element, ComplianceFeature.class);
             complianceFeatures.add(complianceFeature);
         }
 
