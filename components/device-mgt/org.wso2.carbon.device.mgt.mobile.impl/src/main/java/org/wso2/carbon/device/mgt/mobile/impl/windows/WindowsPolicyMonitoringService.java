@@ -18,17 +18,27 @@
 
 package org.wso2.carbon.device.mgt.mobile.impl.windows;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.policy.mgt.common.Policy;
 import org.wso2.carbon.policy.mgt.common.monitor.ComplianceData;
+import org.wso2.carbon.policy.mgt.common.monitor.ComplianceFeature;
 import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.common.spi.PolicyMonitoringService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WindowsPolicyMonitoringService implements PolicyMonitoringService {
+
+    private static Log log = LogFactory.getLog(WindowsPolicyMonitoringService.class);
 
     @Override
     public void notifyDevices(List<Device> list) throws PolicyComplianceException {
@@ -36,8 +46,34 @@ public class WindowsPolicyMonitoringService implements PolicyMonitoringService {
     }
 
     @Override
-    public ComplianceData checkPolicyCompliance(DeviceIdentifier deviceIdentifier, Policy policy, Object o) throws PolicyComplianceException {
-        return null;
+    public ComplianceData checkPolicyCompliance(DeviceIdentifier deviceIdentifier, Policy policy, Object compliancePayload)
+            throws PolicyComplianceException {
+        if (log.isDebugEnabled()) {
+            log.debug("checking policy compliance status of device '" + deviceIdentifier.getId() + "'");
+        }
+        ComplianceData complianceData = new ComplianceData();
+        if (policy == null || compliancePayload == null) {
+            return complianceData;
+        }
+        List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>();
+
+        JsonElement jsonElement = new JsonParser().parse(compliancePayload.toString());
+        JsonArray jsonArray = jsonElement.getAsJsonArray();
+        Gson gson = new Gson();
+        ComplianceFeature complianceFeature;
+        for (int x = 0; x < jsonArray.size(); x++) {
+            complianceFeature = gson.fromJson(jsonArray.get(x), ComplianceFeature.class);
+            complianceFeatures.add(complianceFeature);
+        }
+        complianceData.setComplianceFeatures(complianceFeatures);
+
+        for (ComplianceFeature cf : complianceFeatures) {
+            if (!cf.isCompliant()) {
+                complianceData.setStatus(false);
+                break;
+            }
+        }
+        return complianceData;
     }
 
     @Override
