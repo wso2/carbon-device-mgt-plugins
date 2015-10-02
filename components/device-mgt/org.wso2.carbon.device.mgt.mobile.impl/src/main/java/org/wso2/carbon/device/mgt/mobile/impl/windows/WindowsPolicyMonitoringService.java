@@ -18,10 +18,6 @@
 
 package org.wso2.carbon.device.mgt.mobile.impl.windows;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.Device;
@@ -56,16 +52,7 @@ public class WindowsPolicyMonitoringService implements PolicyMonitoringService {
             return complianceData;
         }
         List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>();
-
-        JsonElement jsonElement = new JsonParser().parse(compliancePayload.toString());
-        JsonArray jsonArray = jsonElement.getAsJsonArray();
-        Gson gson = new Gson();
-        ComplianceFeature complianceFeature;
-        for (int x = 0; x < jsonArray.size(); x++) {
-            complianceFeature = gson.fromJson(jsonArray.get(x), ComplianceFeature.class);
-            complianceFeatures.add(complianceFeature);
-        }
-        complianceData.setComplianceFeatures(complianceFeatures);
+        complianceData.setComplianceFeatures((List<ComplianceFeature>) compliancePayload);
 
         for (ComplianceFeature cf : complianceFeatures) {
             if (!cf.isCompliant()) {
