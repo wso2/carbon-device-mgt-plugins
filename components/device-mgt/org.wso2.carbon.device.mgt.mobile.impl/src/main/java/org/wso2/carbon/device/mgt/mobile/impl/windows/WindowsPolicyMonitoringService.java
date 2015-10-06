@@ -47,19 +47,22 @@ public class WindowsPolicyMonitoringService implements PolicyMonitoringService {
         if (log.isDebugEnabled()) {
             log.debug("checking policy compliance status of device '" + deviceIdentifier.getId() + "'");
         }
+        List<ComplianceFeature> complianceFeatures = (List<ComplianceFeature>) compliancePayload;
+        List<ComplianceFeature> nonComplianceFeatures = new ArrayList<>();
         ComplianceData complianceData = new ComplianceData();
+
         if (policy == null || compliancePayload == null) {
             return complianceData;
         }
-        List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>();
-        complianceData.setComplianceFeatures((List<ComplianceFeature>) compliancePayload);
 
         for (ComplianceFeature cf : complianceFeatures) {
             if (!cf.isCompliant()) {
                 complianceData.setStatus(false);
+                nonComplianceFeatures.add(cf);
                 break;
             }
         }
+        complianceData.setComplianceFeatures(nonComplianceFeatures);
         return complianceData;
     }
 
