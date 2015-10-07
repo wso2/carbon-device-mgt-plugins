@@ -548,7 +548,7 @@
         <orbit.tomcat.jdbc.pooling.version>7.0.34.wso2v2</orbit.tomcat.jdbc.pooling.version>
 
         <!-- CXF version -->
-        <cxf.version>2.6.1</cxf.version>
+        <cxf.version>2.7.16</cxf.version>
         <jackson.version>1.9.0</jackson.version>
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
