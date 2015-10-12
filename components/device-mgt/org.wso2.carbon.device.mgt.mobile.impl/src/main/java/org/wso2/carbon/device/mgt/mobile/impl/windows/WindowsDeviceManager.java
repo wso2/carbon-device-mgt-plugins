@@ -25,7 +25,6 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
-import org.wso2.carbon.device.mgt.extensions.license.mgt.registry.RegistryBasedLicenseManager;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
@@ -55,7 +54,13 @@ public class WindowsDeviceManager implements DeviceManager {
 
     public WindowsDeviceManager() {
         this.daoFactory = new WindowsDAOFactory();
-        this.licenseManager = new RegistryBasedLicenseManager();
+        //this.licenseManager = new RegistryBasedLicenseManager();
+//        License defaultLicense = WindowsPluginUtils.getDefaultLicense();
+//        try {
+//            licenseManager.addLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, defaultLicense);
+//        } catch (LicenseManagementException e) {
+//            log.error("Error occurred while adding default license for Windows devices", e);
+//        }
     }
 
     @Override
@@ -66,7 +71,7 @@ public class WindowsDeviceManager implements DeviceManager {
     @Override
     public boolean saveConfiguration(TenantConfiguration tenantConfiguration)
             throws DeviceManagementException {
-        boolean status = false;
+        boolean status;
         Resource resource;
         try {
             if (log.isDebugEnabled()) {
@@ -240,7 +245,8 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public License getLicense(String languageCode) throws LicenseManagementException {
-        return licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, languageCode);
+       // return licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, languageCode);
+        return null;
     }
 
     @Override

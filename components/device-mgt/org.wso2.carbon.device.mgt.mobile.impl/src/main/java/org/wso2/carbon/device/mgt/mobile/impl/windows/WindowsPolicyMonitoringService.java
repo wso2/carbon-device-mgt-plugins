@@ -55,10 +55,10 @@ public class WindowsPolicyMonitoringService implements PolicyMonitoringService {
             return complianceData;
         }
 
-        for (ComplianceFeature cf : complianceFeatures) {
-            if (!cf.isCompliant()) {
+        for (ComplianceFeature complianceFeature : complianceFeatures) {
+            if (!complianceFeature.isCompliant()) {
                 complianceData.setStatus(false);
-                nonComplianceFeatures.add(cf);
+                nonComplianceFeatures.add(complianceFeature);
                 break;
             }
         }
