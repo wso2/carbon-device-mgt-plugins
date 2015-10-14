@@ -53,7 +53,8 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
             conn = WindowsDAOFactory.getConnection();
             String selectDBQuery =
                     "SELECT MOBILE_DEVICE_ID, CHANNEL_URI, DEVICE_INFO, IMEI, IMSI, " +
-                            "OS_VERSION, DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE, SERIAL, MAC_ADDRESS, OS_VERSION, DEVICE_NAME " +
+                            "OS_VERSION, DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE, SERIAL, MAC_ADDRESS," +
+                            " OS_VERSION, DEVICE_NAME " +
                             "FROM WINDOWS_DEVICE WHERE MOBILE_DEVICE_ID = ?";
             stmt = conn.prepareStatement(selectDBQuery);
             stmt.setString(1, mblDeviceId);
@@ -214,7 +215,8 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
             conn = WindowsDAOFactory.getConnection();
             String selectDBQuery =
                     "SELECT MOBILE_DEVICE_ID, CHANNEL_URI, DEVICE_INFO, IMEI, IMSI, " +
-                            "OS_VERSION, DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE, SERIAL, MAC_ADDRESS, OS_VERSION, DEVICE_NAME " +
+                            "OS_VERSION, DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE, SERIAL, MAC_ADDRESS," +
+                            " OS_VERSION, DEVICE_NAME " +
                             "FROM WINDOWS_DEVICE";
             stmt = conn.prepareStatement(selectDBQuery);
             rs = stmt.executeQuery();

@@ -25,12 +25,14 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
+import org.wso2.carbon.device.mgt.extensions.license.mgt.registry.RegistryBasedLicenseManager;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.WindowsDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.util.WindowsPluginUtils;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
@@ -54,13 +56,13 @@ public class WindowsDeviceManager implements DeviceManager {
 
     public WindowsDeviceManager() {
         this.daoFactory = new WindowsDAOFactory();
-        //this.licenseManager = new RegistryBasedLicenseManager();
-//        License defaultLicense = WindowsPluginUtils.getDefaultLicense();
-//        try {
-//            licenseManager.addLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, defaultLicense);
-//        } catch (LicenseManagementException e) {
-//            log.error("Error occurred while adding default license for Windows devices", e);
-//        }
+        this.licenseManager = new RegistryBasedLicenseManager();
+        License defaultLicense = WindowsPluginUtils.getDefaultLicense();
+        try {
+            licenseManager.addLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, defaultLicense);
+        } catch (LicenseManagementException e) {
+            log.error("Error occurred while adding default license for Windows devices", e);
+        }
     }
 
     @Override
@@ -245,8 +247,7 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public License getLicense(String languageCode) throws LicenseManagementException {
-       // return licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, languageCode);
-        return null;
+       return licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, languageCode);
     }
 
     @Override
