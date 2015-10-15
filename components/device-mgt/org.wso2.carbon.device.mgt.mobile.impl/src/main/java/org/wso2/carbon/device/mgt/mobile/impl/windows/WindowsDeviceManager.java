@@ -106,11 +106,14 @@ public class WindowsDeviceManager implements DeviceManager {
                     MobileDeviceManagementUtil.getPlatformConfigPath(DeviceManagementConstants.
                             MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
             resource = MobileDeviceManagementUtil.getRegistryResource(windowsTenantRegistryPath);
-            JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
-            Unmarshaller unmarshaller = context.createUnmarshaller();
-            return (TenantConfiguration) unmarshaller.unmarshal(
-                    new StringReader(new String((byte[]) resource.getContent(), Charset
-                            .forName(MobilePluginConstants.CHARSET_UTF8))));
+            if(resource != null){
+                JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
+                Unmarshaller unmarshaller = context.createUnmarshaller();
+                return (TenantConfiguration) unmarshaller.unmarshal(
+                        new StringReader(new String((byte[]) resource.getContent(), Charset.
+                                                                         forName(MobilePluginConstants.CHARSET_UTF8))));
+            }
+            return null;
         } catch (MobileDeviceMgtPluginException e) {
             throw new DeviceManagementException(
                     "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);

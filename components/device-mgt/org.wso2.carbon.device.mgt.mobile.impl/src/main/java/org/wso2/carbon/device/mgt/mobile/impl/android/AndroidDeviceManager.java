@@ -121,7 +121,7 @@ public class AndroidDeviceManager implements DeviceManager {
 						new StringReader(new String((byte[]) resource.getContent(), Charset.
 								forName(MobilePluginConstants.CHARSET_UTF8))));
 			}
-			return new TenantConfiguration();
+			return null;
 		} catch (MobileDeviceMgtPluginException e) {
 			throw new DeviceManagementException(
 					"Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
