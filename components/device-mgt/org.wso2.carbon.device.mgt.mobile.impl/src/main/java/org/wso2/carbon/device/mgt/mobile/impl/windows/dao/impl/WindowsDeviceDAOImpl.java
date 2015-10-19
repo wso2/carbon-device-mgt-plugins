@@ -53,7 +53,8 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
             conn = WindowsDAOFactory.getConnection();
             String selectDBQuery =
                     "SELECT MOBILE_DEVICE_ID, CHANNEL_URI, DEVICE_INFO, IMEI, IMSI, " +
-                            "OS_VERSION, DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE, SERIAL, MAC_ADDRESS, OS_VERSION, DEVICE_NAME " +
+                            "OS_VERSION, DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE, SERIAL, MAC_ADDRESS," +
+                            " OS_VERSION, DEVICE_NAME " +
                             "FROM WINDOWS_DEVICE WHERE MOBILE_DEVICE_ID = ?";
             stmt = conn.prepareStatement(selectDBQuery);
             stmt.setString(1, mblDeviceId);
@@ -62,17 +63,21 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
             while (rs.next()) {
                 mobileDevice = new MobileDevice();
                 mobileDevice.setMobileDeviceId(rs.getString(WindowsPluginConstants.MOBILE_DEVICE_ID));
-                mobileDevice.setVendor(rs.getString(WindowsPluginConstants.IMEI));
-                mobileDevice.setLatitude(rs.getString(WindowsPluginConstants.IMSI));
-                mobileDevice.setLongitude(rs.getString(WindowsPluginConstants.OS_VERSION));
-                mobileDevice.setImei(rs.getString(WindowsPluginConstants.DEVICE_MODEL));
-                mobileDevice.setImsi(rs.getString(WindowsPluginConstants.VENDOR));
+                mobileDevice.setImei(rs.getString(WindowsPluginConstants.IMEI));
+                mobileDevice.setImsi(rs.getString(WindowsPluginConstants.IMSI));
+                mobileDevice.setModel(rs.getString(WindowsPluginConstants.DEVICE_MODEL));
+                mobileDevice.setVendor(rs.getString(WindowsPluginConstants.VENDOR));
+                mobileDevice.setLatitude(rs.getString(WindowsPluginConstants.LATITUDE));
+                mobileDevice.setLongitude(rs.getString(WindowsPluginConstants.LONGITUDE));
+                mobileDevice.setSerial(rs.getString(WindowsPluginConstants.SERIAL));
                 mobileDevice.setOsVersion(rs.getString(WindowsPluginConstants.LATITUDE));
 
                 Map<String, String> propertyMap = new HashMap<String, String>();
                 propertyMap.put(WindowsPluginConstants.CHANNEL_URI, rs.getString(WindowsPluginConstants.CHANNEL_URI));
                 propertyMap.put(WindowsPluginConstants.DEVICE_INFO, rs.getString(WindowsPluginConstants.DEVICE_INFO));
+                propertyMap.put(WindowsPluginConstants.MAC_ADDRESS, rs.getString(WindowsPluginConstants.MAC_ADDRESS));
                 propertyMap.put(WindowsPluginConstants.DEVICE_NAME, rs.getString(WindowsPluginConstants.DEVICE_NAME));
+
                 mobileDevice.setDeviceProperties(propertyMap);
             }
             if (log.isDebugEnabled()) {
@@ -214,7 +219,8 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
             conn = WindowsDAOFactory.getConnection();
             String selectDBQuery =
                     "SELECT MOBILE_DEVICE_ID, CHANNEL_URI, DEVICE_INFO, IMEI, IMSI, " +
-                            "OS_VERSION, DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE, SERIAL, MAC_ADDRESS, OS_VERSION, DEVICE_NAME " +
+                            "OS_VERSION, DEVICE_MODEL, VENDOR, LATITUDE, LONGITUDE, SERIAL, MAC_ADDRESS," +
+                            " OS_VERSION, DEVICE_NAME " +
                             "FROM WINDOWS_DEVICE";
             stmt = conn.prepareStatement(selectDBQuery);
             rs = stmt.executeQuery();
