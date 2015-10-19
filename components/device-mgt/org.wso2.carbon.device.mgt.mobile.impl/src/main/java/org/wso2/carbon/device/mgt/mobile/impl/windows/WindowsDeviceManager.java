@@ -51,7 +51,7 @@ public class WindowsDeviceManager implements DeviceManager {
 
     private MobileDeviceManagementDAOFactory daoFactory;
     private LicenseManager licenseManager;
-
+	private FeatureManager featureManager = new WindowsFeatureManager();
     private static final Log log = LogFactory.getLog(WindowsDeviceManagementService.class);
 
     public WindowsDeviceManager() {
@@ -67,7 +67,7 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public FeatureManager getFeatureManager() {
-        return null;
+        return featureManager;
     }
 
     @Override
