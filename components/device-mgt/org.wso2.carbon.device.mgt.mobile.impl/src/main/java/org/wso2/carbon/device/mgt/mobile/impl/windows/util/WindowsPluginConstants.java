@@ -38,4 +38,11 @@ public class WindowsPluginConstants {
     public static final String MAC_ADDRESS = "MAC_ADDRESS";
     public static final String DEVICE_NAME = "DEVICE_NAME";
 
+    //Properties related to AD_FEATURE table
+    public static final String WINDOWS_FEATURE_ID = "FEATURE_ID";
+    public static final String WINDOWS_FEATURE_CODE = "CODE";
+    public static final String WINDOWS_FEATURE_NAME = "NAME";
+    public static final String WINDOWS_FEATURE_DESCRIPTION = "DESCRIPTION";
+
+
 }
