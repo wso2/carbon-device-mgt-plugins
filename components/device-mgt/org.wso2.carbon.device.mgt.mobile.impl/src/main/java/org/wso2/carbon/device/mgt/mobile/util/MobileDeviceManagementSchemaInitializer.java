@@ -39,13 +39,23 @@ public final class MobileDeviceManagementSchemaInitializer extends DatabaseCreat
             CarbonUtils.getCarbonHome() + File.separator + "dbscripts" + File.separator
                     + MobilePluginConstants.MOBILE_DB_SCRIPTS_FOLDER +
                     File.separator + "plugins" + File.separator;
+    private String pluginType;
 
-    public MobileDeviceManagementSchemaInitializer(DataSource dataSource) {
+    public String getPluginType() {
+        return pluginType;
+    }
+
+    public void setPluginType(String pluginType) {
+        this.pluginType = pluginType;
+    }
+
+    public MobileDeviceManagementSchemaInitializer(DataSource dataSource, String pType) {
         super(dataSource);
+        this.pluginType = pType;
     }
 
     protected String getDbScriptLocation(String databaseType) {
-        String scriptName = databaseType + ".sql";
+        String scriptName = databaseType + "_" + getPluginType() + ".sql";
         if (log.isDebugEnabled()) {
             log.debug("Loading database script from :" + scriptName);
         }
