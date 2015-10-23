@@ -187,7 +187,7 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
     public MobileFeature getFeatureByCode(String mblFeatureCode) throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
+        Connection conn;
 
         try {
             conn = WindowsDAOFactory.getConnection();
@@ -226,15 +226,15 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
     public List<MobileFeature> getAllFeatures() throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
-        List<MobileFeature> features = new ArrayList<MobileFeature>();
+        Connection conn;
+        List<MobileFeature> features = new ArrayList<>();
 
         try {
             conn = WindowsDAOFactory.getConnection();
             String sql = "SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM WINDOWS_FEATURE";
             stmt = conn.prepareStatement(sql);
             rs = stmt.executeQuery();
-            MobileFeature mobileFeature = null;
+            MobileFeature mobileFeature;
 
             while (rs.next()) {
                 mobileFeature = new MobileFeature();

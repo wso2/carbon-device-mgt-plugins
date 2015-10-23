@@ -40,6 +40,9 @@ VALUES
  ('INSTALL_STORE_APPLICATION', 'Install Public App', 'Install Public App'),  
 ('REMOVE_APPLICATION', 'Uninstall App', 'Uninstall App'),
  ('DEVICE_LOCK', 'Device Lock', 'Device Lock'),
+('DEVICE_RING', 'Ring', 'Ring the device'),
+('DISENROLL', 'DisEnroll', 'DisEnroll the device'),
+('LOCKRESET', 'LockReset', 'Lock Reset device'),
  ('CELLULAR', 'Cellular', 'Cellular'),
  ('APN', 'APN', 'APN'),
  ('RESTRICTION', 'Restrictions', 'Restrictions operation'),
@@ -61,5 +64,5 @@ VALUES
 ('VPN', 'VPN', 'VPN operation'),
 ('PER_APP_VPN', 'Per App VPN', 'Per app VPN operation'),
 ('APP_TO_PER_APP_VPN_MAPPING', 'VPN App mapping', 'App to per app VPN mapping operation'),
-('ENTERPRISE_WIPE', 'Enterprise Wipe', 'Enterprise wipe operation'),
+('WIPE_DATA', 'Enterprise Wipe', 'Enterprise wipe operation'),
 ('APP_LOCK', 'App lock', 'App lock operation');

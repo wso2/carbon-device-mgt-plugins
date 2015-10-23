@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.mobile.dao.*;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.impl.WindowsDeviceDAOImpl;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.impl.WindowsFeatureDAOImpl;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -61,7 +62,7 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
 
     @Override
     public MobileFeatureDAO getMobileFeatureDao() {
-        return null;
+        return new WindowsFeatureDAOImpl();
     }
 
     @Override
