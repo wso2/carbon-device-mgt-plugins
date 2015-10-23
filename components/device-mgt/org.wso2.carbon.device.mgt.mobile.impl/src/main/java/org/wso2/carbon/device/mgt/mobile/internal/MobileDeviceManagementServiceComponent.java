@@ -92,7 +92,7 @@ public class MobileDeviceManagementServiceComponent {
                     for (String pluginType : dsConfigMap.keySet()) {
                         MobileDeviceManagementDAOUtil
                                 .setupMobileDeviceManagementSchema(MobileDeviceManagementDAOFactory.getDataSourceMap
-                                        ().get(pluginType));
+                                        ().get(pluginType), pluginType);
                     }
                 } catch (MobileDeviceMgtPluginException e) {
                     log.error("Exception occurred while initializing mobile device management database schema", e);
