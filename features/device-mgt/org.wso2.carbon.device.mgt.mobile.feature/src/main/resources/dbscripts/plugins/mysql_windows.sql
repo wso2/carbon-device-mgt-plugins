@@ -1,9 +1,24 @@
 -- -----------------------------------------------------
--- Table `MBL_DEVICE`
+-- Table `WINDOWS_FEATURE`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `MBL_DEVICE` (
+CREATE TABLE IF NOT EXISTS `WINDOWS_FEATURE` (
+  `FEATURE_ID` INT NOT NULL AUTO_INCREMENT,
+  `CODE` VARCHAR(45) NOT NULL,
+  `NAME` VARCHAR(100) NULL,
+  `DESCRIPTION` VARCHAR(200) NULL,
+  PRIMARY KEY (`FEATURE_ID`))
+  ENGINE = InnoDB;
+
+
+
+-- -----------------------------------------------------
+-- Table `WINDOWS_DEVICE`
+-- -----------------------------------------------------
+
+  CREATE  TABLE IF NOT EXISTS `WINDOWS_DEVICE` (
   `MOBILE_DEVICE_ID` VARCHAR(45) NOT NULL,
-  `PUSH_TOKEN` VARCHAR(45) NULL DEFAULT NULL,
+  `CHANNEL_URI` VARCHAR(100) NULL DEFAULT NULL,
+  `DEVICE_INFO` VARCHAR(8000) NULL DEFAULT NULL,
   `IMEI` VARCHAR(45) NULL DEFAULT NULL,
   `IMSI` VARCHAR(45) NULL DEFAULT NULL,
   `OS_VERSION` VARCHAR(45) NULL DEFAULT NULL,
@@ -11,42 +26,43 @@ CREATE TABLE IF NOT EXISTS `MBL_DEVICE` (
   `VENDOR` VARCHAR(45) NULL DEFAULT NULL,
   `LATITUDE` VARCHAR(45) NULL DEFAULT NULL,
   `LONGITUDE` VARCHAR(45) NULL DEFAULT NULL,
-  `CHALLENGE` VARCHAR(45) NULL DEFAULT NULL,
-  `TOKEN` VARCHAR(50) NULL DEFAULT NULL,
-  `UNLOCK_TOKEN` VARCHAR(2000) NULL DEFAULT NULL,
   `SERIAL` VARCHAR(45) NULL DEFAULT NULL,
+  `MAC_ADDRESS` VARCHAR(45) NULL DEFAULT NULL,
+  `DEVICE_NAME` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`MOBILE_DEVICE_ID`))
-ENGINE = InnoDB;
+    ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `MBL_FEATURE`
+-- TODO remove this later
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `MBL_FEATURE` (
-  `FEATURE_ID` INT NOT NULL AUTO_INCREMENT,
-  `DEVICE_TYPE` VARCHAR(45) NOT NULL,
-  `CODE` VARCHAR(45) NULL,
-  `NAME` VARCHAR(100) NULL,
-  `DESCRIPTION` VARCHAR(200) NULL,
-  PRIMARY KEY (`FEATURE_ID`))
-ENGINE = InnoDB;
 
--- -----------------------------------------------------
--- Table `MBL_FEATURE_PROPERTY`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `MBL_FEATURE_PROPERTY` (
-  `PROPERTY` VARCHAR(45) NOT NULL ,
-  `FEATURE_ID` INT NOT NULL ,
-  PRIMARY KEY (`PROPERTY`),
-  CONSTRAINT `fk_MBL_FEATURE_PROPERTY_MBL_FEATURE1`
-    FOREIGN KEY (`FEATURE_ID`)
-    REFERENCES `MBL_FEATURE` (`FEATURE_ID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Inserts
--- -----------------------------------------------------
-INSERT INTO MBL_FEATURE (DEVICE_TYPE,NAME,CODE, DESCRIPTION)  VALUES ('android','DEVICE_LOCK','503A','Device Lock'),('android','WIPE','504A','Device Wipe'),('android','CLEARPASSCODE','505A','Clear Passcode'),('android','APPLIST','502A','Get All Applications'),('android','LOCATION','501A','Location'),('android','INFO','500A','Device Information'),('android','NOTIFICATION','506A','Message'),('android','WIFI','507A','Setup Wifi'),('android','CAMERA','508A','Camera Control'),('android','MUTE','513A','Mute Device'),('android','INSTALLAPP','509A','Install Application'),('android','UNINSTALLAPP','510A','Uninstall Application'),('android','ENCRYPT','511A','Encrypt Storage'),('android','APN','512A','APN'),('android','WEBCLIP','518A','Create Webclips'),('android','PASSWORDPOLICY','519A','Passcode Policy'),('android','EMAIL','520A','Email Configuration'),('android','GOOGLECALENDAR','521A','Calender Subscription'),('android','VPN','523A','VPN'),('android','LDAP','524A','LDAP'),('android','CHANGEPASSWORD','526A','Set Passcode'),('android','ENTERPRISEWIPE','527A','Enterprise Wipe'),('android','POLICY','500P','Policy Enforcement'),('android','MONITORING','501P','Policy Monitoring '),('android','BLACKLISTAPPS','528B','Blacklist Apps'),('android','REVOKEPOLICY','502P','Revoke Policy');
-
+INSERT INTO WINDOWS_FEATURE (CODE, NAME, DESCRIPTION)
+VALUES
+('INSTALL_ENTERPRISE_APPLICATION', 'Install Enterprise App', 'Install Enterprise App'),
+ ('INSTALL_STORE_APPLICATION', 'Install Public App', 'Install Public App'),  
+('REMOVE_APPLICATION', 'Uninstall App', 'Uninstall App'),
+ ('DEVICE_LOCK', 'Device Lock', 'Device Lock'),
+ ('CELLULAR', 'Cellular', 'Cellular'),
+ ('APN', 'APN', 'APN'),
+ ('RESTRICTION', 'Restrictions', 'Restrictions operation'),
+ ('WIFI', 'Wifi', 'Wifi'),
+ ('DEVICE_INFO', 'Device Info', 'Device info operation'),  
+('AIR_PLAY', 'Air Play', 'AirPlay operation'),  
+('LOCATION', 'Location', 'Fetch location'),  
+('ALARM', 'Alarm', 'Alarm device'),
+('APPLICATION_LIST', 'Application list', 'Application list'),
+('PROFILE_LIST', 'Profile List', 'Profile list'),
+('REMOVE_PROFILE', 'Remove Profile', 'Remove profile'),
+('CLEAR_PASSCODE', 'Clear Passcode', 'Clear passcode'),
+('CALDAV', 'CalDev', 'Setup CalDav'),
+('CALENDAR_SUBSCRIPTION', 'Calendar Subscriptions', 'Calendar subscription'),
+('PASSCODE_POLICY', 'Passcode Policy', 'Passcode policy'),
+('EMAIL', 'Email', 'Email operation'),
+('LDAP', 'LDAP', 'LDAP operation'),
+('WEB_CLIP', 'Web Clip', 'Web clip operation'),
+('VPN', 'VPN', 'VPN operation'),
+('PER_APP_VPN', 'Per App VPN', 'Per app VPN operation'),
+('APP_TO_PER_APP_VPN_MAPPING', 'VPN App mapping', 'App to per app VPN mapping operation'),
+('ENTERPRISE_WIPE', 'Enterprise Wipe', 'Enterprise wipe operation'),
+('APP_LOCK', 'App lock', 'App lock operation');
