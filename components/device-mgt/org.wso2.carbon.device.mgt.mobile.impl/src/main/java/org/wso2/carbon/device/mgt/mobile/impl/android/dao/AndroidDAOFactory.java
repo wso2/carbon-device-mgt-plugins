@@ -60,7 +60,8 @@ public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
         return null;
     }
 
-    @Override public MobileFeatureDAO getMobileFeatureDao() {
+    @Override
+    public MobileFeatureDAO getMobileFeatureDAO() {
         return new AndroidFeatureDAOImpl();
     }
 

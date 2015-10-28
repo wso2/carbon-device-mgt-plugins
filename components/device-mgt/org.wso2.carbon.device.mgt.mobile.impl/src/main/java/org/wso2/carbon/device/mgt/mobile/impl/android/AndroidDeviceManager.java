@@ -62,10 +62,13 @@ public class AndroidDeviceManager implements DeviceManager {
 		try {
 			licenseManager
 					.addLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, defaultLicense);
+			featureManager.addSupportedFeaturesToDB();
 		} catch (LicenseManagementException e) {
 			log.error("Error occurred while adding default license for Android devices", e);
-		}
-	}
+		} catch (DeviceManagementException e) {
+            log.error("Error occurred while adding supported device features for Android platform", e);
+        }
+    }
 
 	@Override
 	public FeatureManager getFeatureManager() {

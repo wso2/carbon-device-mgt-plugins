@@ -41,7 +41,7 @@ public class WindowsFeatureManager implements FeatureManager {
 
     public WindowsFeatureManager() {
         mobileDeviceManagementDAOFactory = new WindowsDAOFactory();
-        this.featureDAO = mobileDeviceManagementDAOFactory.getMobileFeatureDao();
+        this.featureDAO = mobileDeviceManagementDAOFactory.getMobileFeatureDAO();
     }
 
     @Override
@@ -57,6 +57,11 @@ public class WindowsFeatureManager implements FeatureManager {
 	        WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error occurred while adding the feature", e);
         }
+    }
+
+    @Override
+    public boolean addFeatures(List<Feature> list) throws DeviceManagementException {
+        return false;
     }
 
     @Override
@@ -88,7 +93,7 @@ public class WindowsFeatureManager implements FeatureManager {
 
     @Override
     public boolean removeFeature(String code) throws DeviceManagementException {
-        boolean status = false;
+        boolean status;
         try {
 	        WindowsDAOFactory.beginTransaction();
             featureDAO.deleteFeatureByCode(code);
@@ -99,6 +104,11 @@ public class WindowsFeatureManager implements FeatureManager {
             throw new DeviceManagementException("Error occurred while removing the feature", e);
         }
         return status;
+    }
+
+    @Override
+    public boolean addSupportedFeaturesToDB() throws DeviceManagementException {
+        return false;
     }
 
 }

@@ -82,6 +82,11 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
+	public boolean addFeatures(List<MobileFeature> mobileFeatures) throws MobileDeviceManagementDAOException {
+		return false;
+	}
+
+	@Override
 	public boolean updateFeature(MobileFeature mobileFeature)
 			throws MobileDeviceManagementDAOException {
 		boolean status = false;

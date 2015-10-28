@@ -30,7 +30,7 @@ public interface MobileDeviceManagementDAOFactoryInterface {
 
     public MobileDeviceOperationMappingDAO getMobileDeviceOperationDAO();
 
-    public MobileFeatureDAO getMobileFeatureDao();
+    public MobileFeatureDAO getMobileFeatureDAO();
 
     public MobileFeaturePropertyDAO getFeaturePropertyDAO();
 

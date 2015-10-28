@@ -60,7 +60,7 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
     }
 
     @Override
-    public MobileFeatureDAO getMobileFeatureDao() {
+    public MobileFeatureDAO getMobileFeatureDAO() {
         return null;
     }
 
