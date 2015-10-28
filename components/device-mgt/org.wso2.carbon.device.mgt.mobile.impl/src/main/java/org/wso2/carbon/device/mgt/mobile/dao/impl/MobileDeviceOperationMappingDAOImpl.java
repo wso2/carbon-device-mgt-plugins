@@ -77,7 +77,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			String msg = "Error occurred while adding device id - '" +
 			             mblDeviceOperationMapping.getDeviceId() + " and operation id - " +
 			             mblDeviceOperationMapping.getOperationId() +
-			             " to mapping table AD_DEVICE_OPERATION";
+			             " to mapping table AD_DEVICE_OPERATION_MAPPING";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -114,7 +114,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 		} catch (SQLException e) {
 			String msg = "Error occurred while updating device id - '" +
 			             mblDeviceOperation.getDeviceId() + " and operation id - " +
-			             mblDeviceOperation.getOperationId() + " in table MBL_DEVICE_OPERATION";
+			             mblDeviceOperation.getOperationId() + " in table AD_DEVICE_OPERATION_MAPPING";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -151,7 +151,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			String msg =
 					"Error occurred while updating the Status of operation to in-progress of device id - '" +
 					mblDeviceId + " and operation id - " +
-					operationId + " in table MBL_DEVICE_OPERATION";
+					operationId + " in table AD_DEVICE_OPERATION_MAPPING";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -189,7 +189,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			String msg =
 					"Error occurred while updating the Status of operation to completed of device id - '" +
 					mblDeviceId + " and operation id - " +
-					operationId + " in table MBL_DEVICE_OPERATION";
+					operationId + " in table AD_DEVICE_OPERATION_MAPPING";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -280,7 +280,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 		PreparedStatement stmt = null;
 		MobileDeviceOperationMapping mblDeviceOperation;
 		List<MobileDeviceOperationMapping> mblDeviceOperations =
-				new ArrayList<MobileDeviceOperationMapping>();
+				new ArrayList<>();
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
@@ -303,7 +303,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 			}
 		} catch (SQLException e) {
 			String msg =
-					"Error occurred while fetching mapping table MBL_DEVICE_OPERATION entries of " +
+					"Error occurred while fetching mapping table AD_DEVICE_OPERATION_MAPPING entries of " +
 					"device id - '" + mblDeviceId;
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
@@ -321,7 +321,7 @@ public class MobileDeviceOperationMappingDAOImpl implements MobileDeviceOperatio
 		PreparedStatement stmt = null;
 		MobileDeviceOperationMapping mblDeviceOperation = null;
 		List<MobileDeviceOperationMapping> mblDeviceOperations =
-				new ArrayList<MobileDeviceOperationMapping>();
+				new ArrayList<>();
 		try {
 
 			conn = this.getConnection();

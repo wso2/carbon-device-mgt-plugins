@@ -70,7 +70,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 			}
 		} catch (SQLException e) {
 			String msg =
-					"Error occurred while adding mobile operation property to MBL_OPERATION_PROPERTY " +
+					"Error occurred while adding mobile operation property to AD_OPERATION_PROPERTY " +
 					"table";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
@@ -107,7 +107,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 		} catch (SQLException e) {
 			String msg =
 					"Error occurred while updating the mobile operation property in" +
-					" MBL_OPERATION_PROPERTY table.";
+					" AD_OPERATION_PROPERTY table.";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -139,7 +139,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 			}
 		} catch (SQLException e) {
 			String msg =
-					"Error occurred while deleting MBL_OPERATION_PROPERTY entry with operation Id - ";
+					"Error occurred while deleting AD_OPERATION_PROPERTY entry with operation Id - ";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -193,7 +193,7 @@ public class MobileOperationPropertyDAOImpl implements MobileOperationPropertyDA
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		MobileOperationProperty mobileOperationProperty;
-		List<MobileOperationProperty> properties = new ArrayList<MobileOperationProperty>();
+		List<MobileOperationProperty> properties = new ArrayList<>();
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =

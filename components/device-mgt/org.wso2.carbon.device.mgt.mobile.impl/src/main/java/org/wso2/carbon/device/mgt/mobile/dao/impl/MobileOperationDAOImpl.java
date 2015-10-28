@@ -36,7 +36,6 @@ import java.sql.SQLException;
  */
 public class MobileOperationDAOImpl implements MobileOperationDAO {
 
-	public static final String COLUMN_OPERATION_ID = "OPERATION_ID";
 	private DataSource dataSource;
 	private static final Log log = LogFactory.getLog(MobileOperationDAOImpl.class);
 
@@ -54,7 +53,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 			conn = this.getConnection();
 			String createDBQuery =
 					"INSERT INTO AD_OPERATION(FEATURE_CODE, CREATED_DATE) VALUES ( ?, ?)";
-			stmt = conn.prepareStatement(createDBQuery, new String[] { COLUMN_OPERATION_ID });
+			stmt = conn.prepareStatement(createDBQuery, new String[] { "OPERATION_ID" });
 			stmt.setString(1, mblOperation.getFeatureCode());
 			stmt.setLong(2, mblOperation.getCreatedDate());
 			int rows = stmt.executeUpdate();
@@ -70,7 +69,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while adding the operation - '" +
-			             mblOperation.getFeatureCode() + "' to MBL_OPERATION table";
+			             mblOperation.getFeatureCode() + "' to AD_OPERATION table";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -104,7 +103,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 			}
 		} catch (SQLException e) {
 			String msg =
-					"Error occurred while updating the MBL_OPERATION table entry with operation id - '" +
+					"Error occurred while updating the AD_OPERATION table entry with operation id - '" +
 					mblOperation.getOperationId() + "'";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
@@ -135,7 +134,7 @@ public class MobileOperationDAOImpl implements MobileOperationDAO {
 				}
 			}
 		} catch (SQLException e) {
-			String msg = "Error occurred while deleting MBL_OPERATION entry with operation Id - ";
+			String msg = "Error occurred while deleting AD_OPERATION entry with operation Id - ";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
