@@ -28,12 +28,11 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
-        implements MobileDeviceManagementDAOFactoryInterface {
+public class WindowsDAOFactory extends AbstractMobileDeviceManagementDAOFactory {
 
     private static final Log log = LogFactory.getLog(WindowsDAOFactory.class);
     protected static DataSource dataSource;
-    private static ThreadLocal<Connection> currentConnection = new ThreadLocal<Connection>();
+    private static ThreadLocal<Connection> currentConnection = new ThreadLocal<>();
 
     public WindowsDAOFactory() {
         this.dataSource = getDataSourceMap().get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
@@ -45,27 +44,7 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
     }
 
     @Override
-    public MobileOperationDAO getMobileOperationDAO() {
-        return null;
-    }
-
-    @Override
-    public MobileOperationPropertyDAO getMobileOperationPropertyDAO() {
-        return null;
-    }
-
-    @Override
-    public MobileDeviceOperationMappingDAO getMobileDeviceOperationDAO() {
-        return null;
-    }
-
-    @Override
     public MobileFeatureDAO getMobileFeatureDAO() {
-        return null;
-    }
-
-    @Override
-    public MobileFeaturePropertyDAO getFeaturePropertyDAO() {
         return null;
     }
 
@@ -145,4 +124,5 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
             log.warn("Error occurred while roll-backing the transaction", e);
         }
     }
+
 }

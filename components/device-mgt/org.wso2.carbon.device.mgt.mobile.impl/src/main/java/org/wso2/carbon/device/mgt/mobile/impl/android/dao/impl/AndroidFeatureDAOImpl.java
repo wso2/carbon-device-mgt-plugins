@@ -22,7 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileFeature;
@@ -30,7 +29,6 @@ import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidFeatureManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.impl.android.util.AndroidPluginConstants;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -156,8 +154,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
     }
 
     @Override
-    public boolean deleteFeatureByCode(String mblFeatureCode) throws
-                                                              MobileDeviceManagementDAOException {
+    public boolean deleteFeatureByCode(String mblFeatureCode) throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         boolean status = false;
         Connection conn;
@@ -179,8 +176,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
     }
 
     @Override
-    public MobileFeature getFeatureById(int mblFeatureId) throws
-                                                          MobileDeviceManagementDAOException {
+    public MobileFeature getFeatureById(int mblFeatureId) throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Connection conn;
@@ -214,8 +210,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
     }
 
     @Override
-    public MobileFeature getFeatureByCode(String mblFeatureCode) throws
-                                                                 MobileDeviceManagementDAOException {
+    public MobileFeature getFeatureByCode(String mblFeatureCode) throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Connection conn;
@@ -257,12 +252,10 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
 
     @Override
     public List<MobileFeature> getAllFeatures() throws MobileDeviceManagementDAOException {
-
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        Connection conn;
-        List<MobileFeature> features = new ArrayList<MobileFeature>();
-
+        Connection conn = null;
+        List<MobileFeature> features = new ArrayList<>();
         try {
             conn = AndroidDAOFactory.getConnection();
             String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM AD_FEATURE";
@@ -275,8 +268,7 @@ public class AndroidFeatureDAOImpl implements MobileFeatureDAO {
                 mobileFeature.setId(rs.getInt(AndroidPluginConstants.ANDROID_FEATURE_ID));
                 mobileFeature.setCode(rs.getString(AndroidPluginConstants.ANDROID_FEATURE_CODE));
                 mobileFeature.setName(rs.getString(AndroidPluginConstants.ANDROID_FEATURE_NAME));
-                mobileFeature.setDescription(rs.getString(AndroidPluginConstants.
-                                                                  ANDROID_FEATURE_DESCRIPTION));
+                mobileFeature.setDescription(rs.getString(AndroidPluginConstants.ANDROID_FEATURE_DESCRIPTION));
                 mobileFeature.setDeviceType(
                         DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
                 features.add(mobileFeature);

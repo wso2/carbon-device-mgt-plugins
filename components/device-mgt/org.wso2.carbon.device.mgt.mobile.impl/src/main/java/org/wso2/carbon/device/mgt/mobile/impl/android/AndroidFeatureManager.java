@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
+import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
@@ -37,11 +38,10 @@ public class AndroidFeatureManager implements FeatureManager {
 
     private MobileFeatureDAO featureDAO;
     private static final Log log = LogFactory.getLog(AndroidFeatureManager.class);
-    private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
 
     public AndroidFeatureManager() {
-        mobileDeviceManagementDAOFactory = new AndroidDAOFactory();
-        this.featureDAO = mobileDeviceManagementDAOFactory.getMobileFeatureDAO();
+        MobileDeviceManagementDAOFactory daoFactory = new AndroidDAOFactory();
+        this.featureDAO = daoFactory.getMobileFeatureDAO();
     }
 
     @Override

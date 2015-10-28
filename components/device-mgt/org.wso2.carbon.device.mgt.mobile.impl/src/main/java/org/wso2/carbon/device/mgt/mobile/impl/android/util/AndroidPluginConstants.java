@@ -24,7 +24,7 @@ package org.wso2.carbon.device.mgt.mobile.impl.android.util;
 public class AndroidPluginConstants {
 
 	//Properties related to AD_DEVICE table
-	public static final String ANDROID_DEVICE_ID = "ANDROID_DEVICE_ID";
+	public static final String DEVICE_ID = "DEVICE_ID";
 	public static final String GCM_TOKEN = "GCM_TOKEN";
 	public static final String DEVICE_INFO = "DEVICE_INFO";
 	public static final String SERIAL = "SERIAL";

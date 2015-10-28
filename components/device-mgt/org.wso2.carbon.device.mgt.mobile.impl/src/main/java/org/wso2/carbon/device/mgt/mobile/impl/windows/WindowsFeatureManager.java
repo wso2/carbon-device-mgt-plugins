@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
+import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
@@ -37,16 +38,14 @@ public class WindowsFeatureManager implements FeatureManager {
 
     private MobileFeatureDAO featureDAO;
     private static final Log log = LogFactory.getLog(WindowsFeatureManager.class);
-    private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
 
     public WindowsFeatureManager() {
-        mobileDeviceManagementDAOFactory = new WindowsDAOFactory();
-        this.featureDAO = mobileDeviceManagementDAOFactory.getMobileFeatureDAO();
+        MobileDeviceManagementDAOFactory daoFactory = new WindowsDAOFactory();
+        this.featureDAO = daoFactory.getMobileFeatureDAO();
     }
 
     @Override
     public boolean addFeature(Feature feature) throws DeviceManagementException {
-
         try {
 	        WindowsDAOFactory.beginTransaction();
             MobileFeature mobileFeature = MobileDeviceManagementUtil.convertToMobileFeature(feature);

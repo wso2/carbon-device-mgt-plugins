@@ -28,7 +28,7 @@ import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidPolicyMonitoringService;
@@ -79,7 +79,7 @@ public class MobileDeviceManagementServiceComponent {
             Map<String, MobileDataSourceConfig> dsConfigMap =
                     config.getMobileDeviceMgtRepository().getMobileDataSourceConfigMap();
 
-            MobileDeviceManagementDAOFactory.init(dsConfigMap);
+            AbstractMobileDeviceManagementDAOFactory.init(dsConfigMap);
 
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
@@ -91,7 +91,7 @@ public class MobileDeviceManagementServiceComponent {
                 try {
                     for (String pluginType : dsConfigMap.keySet()) {
                         MobileDeviceManagementDAOUtil
-                                .setupMobileDeviceManagementSchema(MobileDeviceManagementDAOFactory.getDataSourceMap
+                                .setupMobileDeviceManagementSchema(AbstractMobileDeviceManagementDAOFactory.getDataSourceMap
                                         ().get(pluginType), pluginType);
                     }
                 } catch (MobileDeviceMgtPluginException e) {

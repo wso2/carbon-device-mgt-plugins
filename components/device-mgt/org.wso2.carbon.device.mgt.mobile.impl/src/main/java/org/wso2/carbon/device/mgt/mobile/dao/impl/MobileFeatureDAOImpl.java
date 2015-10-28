@@ -64,12 +64,10 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
                 if (log.isDebugEnabled()) {
-					log.debug("Added a new MobileFeature " + mobileFeature.getCode() + " to the" +
-					          " MDM database.");
+					log.debug("Added a new MobileFeature " + mobileFeature.getCode() + " to the MDM database.");
 				}
                 status = true;
 			}
-
 		} catch (SQLException e) {
 			String msg = "Error occurred while adding feature code - '" +
 			             mobileFeature.getCode() + "' to feature table";
@@ -96,7 +94,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 			conn = this.getConnection();
 			String updateDBQuery =
 					"UPDATE AD_FEATURE SET CODE = ?, NAME = ?, DESCRIPTION = ?, DEVICE_TYPE = ?" +
-					" WHERE FEATURE_ID = ?";
+					" WHERE ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setString(1, mobileFeature.getCode());
 			stmt.setString(2, mobileFeature.getName());
@@ -137,8 +135,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 			if (rows > 0) {
 				status = true;
 				if (log.isDebugEnabled()) {
-					log.debug("Deleted MobileFeature code " + mblFeatureCode + " from the" +
-					          " MDM database.");
+					log.debug("Deleted MobileFeature code " + mblFeatureCode + " from the MDM database.");
 				}
 			}
 		} catch (SQLException e) {
@@ -160,15 +157,14 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String deleteDBQuery =
-					"DELETE FROM AD_FEATURE WHERE FEATURE_ID = ?";
+					"DELETE FROM AD_FEATURE WHERE ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
 			stmt.setInt(1, mblFeatureId);
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
 				if (log.isDebugEnabled()) {
-					log.debug("Deleted MobileFeature id " + mblFeatureId + " from the" +
-					          " MDM database.");
+					log.debug("Deleted MobileFeature id " + mblFeatureId + " from the MDM database.");
 				}
 			}
 		} catch (SQLException e) {
@@ -190,7 +186,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE " +
+					"SELECT ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE " +
 					"WHERE CODE = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblFeatureCode);
@@ -203,13 +199,11 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 				mobileFeature.setDescription(resultSet.getString(4));
 				mobileFeature.setDeviceType(resultSet.getString(5));
 				if (log.isDebugEnabled()) {
-					log.debug("Fetched MobileFeature " + mblFeatureCode + " from the" +
-					          " MDM database.");
+					log.debug("Fetched MobileFeature " + mblFeatureCode + " from the MDM database.");
 				}
 			}
 		} catch (SQLException e) {
-			String msg = "Error occurred while fetching feature code - '" +
-			             mblFeatureCode + "'";
+			String msg = "Error occurred while fetching feature code - '" + mblFeatureCode + "'";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -227,8 +221,8 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE" +
-					" WHERE FEATURE_ID = ?";
+					"SELECT ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE" +
+					" WHERE ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setInt(1, mblFeatureId);
 			ResultSet resultSet = stmt.executeQuery();
@@ -240,13 +234,11 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 				mobileFeature.setDescription(resultSet.getString(4));
 				mobileFeature.setDeviceType(resultSet.getString(5));
 				if (log.isDebugEnabled()) {
-					log.debug("Fetched MobileFeatureId" + mblFeatureId + " from the" +
-					          " MDM database.");
+					log.debug("Fetched MobileFeatureId" + mblFeatureId + " from the MDM database.");
 				}
 			}
 		} catch (SQLException e) {
-			String msg = "Error occurred while fetching feature id - '" +
-			             mblFeatureId + "'";
+			String msg = "Error occurred while fetching feature id - '" + mblFeatureId + "'";
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
@@ -264,7 +256,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE";
+					"SELECT ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			ResultSet resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
@@ -290,16 +282,15 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 	}
 
 	@Override
-	public List<MobileFeature> getFeatureByDeviceType(String deviceType) throws
-	                                                                           MobileDeviceManagementDAOException {
+	public List<MobileFeature> getFeatureByDeviceType(String deviceType) throws MobileDeviceManagementDAOException {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		MobileFeature mobileFeature;
-		List<MobileFeature> mobileFeatures = new ArrayList<MobileFeature>();
+		List<MobileFeature> mobileFeatures = new ArrayList<>();
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE" +
+					"SELECT ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE" +
 					" WHERE DEVICE_TYPE = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, deviceType);
@@ -337,4 +328,5 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 			throw new MobileDeviceManagementDAOException(msg, e);
 		}
 	}
+
 }

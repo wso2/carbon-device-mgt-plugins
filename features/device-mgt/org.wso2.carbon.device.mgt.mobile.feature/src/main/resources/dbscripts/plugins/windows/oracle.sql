@@ -1,0 +1,64 @@
+-- -----------------------------------------------------
+-- Table `WIN_DEVICE`
+-- -----------------------------------------------------
+CREATE TABLE WIN_DEVICE (
+  DEVICE_ID VARCHAR(45) NOT NULL,
+  PUSH_TOKEN VARCHAR(45) DEFAULT NULL,
+  IMEI VARCHAR(45) DEFAULT NULL,
+  IMSI VARCHAR(45) DEFAULT NULL,
+  OS_VERSION VARCHAR(45) DEFAULT NULL,
+  DEVICE_MODEL VARCHAR(45) DEFAULT NULL,
+  VENDOR VARCHAR(45) DEFAULT NULL,
+  LATITUDE VARCHAR(45) DEFAULT NULL,
+  LONGITUDE VARCHAR(45) DEFAULT NULL,
+  CHALLENGE VARCHAR(45) DEFAULT NULL,
+  TOKEN VARCHAR(50) DEFAULT NULL,
+  UNLOCK_TOKEN VARCHAR(2000) DEFAULT NULL,
+  SERIAL VARCHAR(45) DEFAULT NULL,
+  PRIMARY KEY (DEVICE_ID)
+);
+/
+
+-- -----------------------------------------------------
+-- Table `WIN_FEATURE`
+-- -----------------------------------------------------
+CREATE TABLE WIN_FEATURE (
+  ID INT NOT NULL,
+  DEVICE_TYPE VARCHAR(45) NOT NULL,
+  CODE VARCHAR(45) NOT NULL,
+  NAME VARCHAR(100) NOT NULL,
+  DESCRIPTION VARCHAR(200) NULL,
+  PRIMARY KEY (ID)
+);
+/
+
+-- -----------------------------------------------------
+-- Table `WIN_FEATURE_PROPERTY`
+-- -----------------------------------------------------
+CREATE TABLE WIN_FEATURE_PROPERTY (
+  PROPERTY VARCHAR(45) NOT NULL,
+  FEATURE_ID INT NOT NULL,
+  PRIMARY KEY (PROPERTY),
+  CONSTRAINT fk_WIN_FEATURE_PROPERTY_WIN_FEATURE1
+    FOREIGN KEY (FEATURE_ID)
+    REFERENCES WIN_FEATURE (ID)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+/
+
+-- -----------------------------------------------------
+-- Sequence `WIN_FEATURE_ID_INC_SEQ`
+-- -----------------------------------------------------
+CREATE SEQUENCE WIN_FEATURE_ID_INC_SEQ START WITH 1 INCREMENT BY 1 NOCACHE;
+/
+
+-- -----------------------------------------------------
+-- Trigger `WIN_FEATURE_ID_INC_TRIG`
+-- -----------------------------------------------------
+CREATE OR REPLACE TRIGGER WIN_FEATURE_ID_INC_TRIG
+BEFORE INSERT ON WIN_FEATURE
+FOR EACH ROW
+BEGIN
+    SELECT WIN_FEATURE_ID_INC_SEQ.NEXTVAL INTO :NEW.ID FROM DUAL;
+END;
+/

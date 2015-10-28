@@ -1,21 +1,8 @@
 -- -----------------------------------------------------
--- Table `IOS_FEATURE`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `IOS_FEATURE` (
-  `FEATURE_ID` INT NOT NULL AUTO_INCREMENT,
-  `CODE` VARCHAR(45) NOT NULL,
-  `NAME` VARCHAR(100) NULL,
-  `DESCRIPTION` VARCHAR(200) NULL,
-  PRIMARY KEY (`FEATURE_ID`) )
-  ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `IOS_DEVICE`
 -- -----------------------------------------------------
-
-  CREATE  TABLE IF NOT EXISTS `IOS_DEVICE` (
-  `MOBILE_DEVICE_ID` VARCHAR(45) NOT NULL,
+CREATE TABLE IF NOT EXISTS `IOS_DEVICE` (
+  `DEVICE_ID` VARCHAR(45) NOT NULL,
   `APNS_PUSH_TOKEN` VARCHAR(100) NULL DEFAULT NULL,
   `MAGIC_TOKEN` VARCHAR(100) NULL DEFAULT NULL,
   `MDM_TOKEN` VARCHAR(100) NULL DEFAULT NULL,
@@ -31,8 +18,16 @@ CREATE TABLE IF NOT EXISTS `IOS_FEATURE` (
   `ICCID` VARCHAR(45) NULL DEFAULT NULL,
   `LATITUDE` VARCHAR(45) NULL DEFAULT NULL,
   `LONGITUDE` VARCHAR(45) NULL DEFAULT NULL,
-  PRIMARY KEY (`MOBILE_DEVICE_ID`) )
-  ENGINE = InnoDB;
+  PRIMARY KEY (`DEVICE_ID`) 
+) ENGINE = InnoDB;
 
-
-long
+-- -----------------------------------------------------
+-- Table `IOS_FEATURE`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `IOS_FEATURE` (
+  `FEATURE_ID` INT NOT NULL AUTO_INCREMENT,
+  `CODE` VARCHAR(45) NOT NULL,
+  `NAME` VARCHAR(100) NULL,
+  `DESCRIPTION` VARCHAR(200) NULL,
+  PRIMARY KEY (`FEATURE_ID`) 
+) ENGINE = InnoDB;
