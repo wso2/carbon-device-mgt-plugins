@@ -92,7 +92,7 @@ public class MobileFeatureDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String query =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE WHERE CODE = ?";
+					"SELECT ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE WHERE CODE = ?";
 			preparedStatement = conn.prepareStatement(query);
 			preparedStatement.setString(1, MBL_FEATURE_CODE);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -175,7 +175,7 @@ public class MobileFeatureDAOTestSuite {
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
 			String query =
-					"SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM AD_FEATURE WHERE CODE = ?";
+					"SELECT ID, CODE, NAME, DESCRIPTION FROM AD_FEATURE WHERE CODE = ?";
 			stmt = conn.prepareStatement(query);
 			stmt.setString(1, MBL_FEATURE_UPDATED_CODE);
 			ResultSet resultSet = stmt.executeQuery();
@@ -208,7 +208,7 @@ public class MobileFeatureDAOTestSuite {
 		boolean status = mblFeatureDAO.deleteFeatureById(mblFeatureId);
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
-			String query = "SELECT FEATURE_ID, CODE FROM AD_FEATURE WHERE FEATURE_ID = ?";
+			String query = "SELECT ID, CODE FROM AD_FEATURE WHERE ID = ?";
 			stmt = conn.prepareStatement(query);
 			stmt.setInt(1, mblFeatureId);
 			ResultSet resultSet = stmt.executeQuery();
@@ -241,7 +241,7 @@ public class MobileFeatureDAOTestSuite {
 		boolean status = mblFeatureDAO.deleteFeatureByCode(MBL_FEATURE_CODE);
 		try {
 			conn = DriverManager.getConnection(testDBConfiguration.getConnectionURL());
-			String query = "SELECT FEATURE_ID, CODE FROM AD_FEATURE WHERE CODE = ?";
+			String query = "SELECT ID, CODE FROM AD_FEATURE WHERE CODE = ?";
 			preparedStatement = conn.prepareStatement(query);
 			preparedStatement.setString(1, MBL_FEATURE_CODE);
 			ResultSet resultSet = preparedStatement.executeQuery();

@@ -251,4 +251,5 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
             MobileDeviceManagementDAOUtil.cleanupResources(stmt, rs);
         }
     }
+
 }

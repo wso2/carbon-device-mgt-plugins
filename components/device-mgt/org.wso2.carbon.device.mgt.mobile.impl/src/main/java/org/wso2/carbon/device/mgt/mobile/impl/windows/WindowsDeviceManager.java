@@ -28,8 +28,8 @@ import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
 import org.wso2.carbon.device.mgt.extensions.license.mgt.registry.RegistryBasedLicenseManager;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
+import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.WindowsDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.util.WindowsPluginUtils;
@@ -49,7 +49,7 @@ import java.util.List;
 
 public class WindowsDeviceManager implements DeviceManager {
 
-    private MobileDeviceManagementDAOFactory daoFactory;
+    private AbstractMobileDeviceManagementDAOFactory daoFactory;
     private LicenseManager licenseManager;
 	private FeatureManager featureManager = new WindowsFeatureManager();
     private static final Log log = LogFactory.getLog(WindowsDeviceManagementService.class);

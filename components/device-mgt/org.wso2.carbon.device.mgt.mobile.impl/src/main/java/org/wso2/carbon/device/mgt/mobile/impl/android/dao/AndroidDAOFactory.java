@@ -29,12 +29,11 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
-        implements MobileDeviceManagementDAOFactoryInterface {
+public class AndroidDAOFactory extends AbstractMobileDeviceManagementDAOFactory {
 
     private static final Log log = LogFactory.getLog(AndroidDAOFactory.class);
     protected static DataSource dataSource;
-    private static ThreadLocal<Connection> currentConnection = new ThreadLocal<Connection>();
+    private static ThreadLocal<Connection> currentConnection = new ThreadLocal<>();
 
     public AndroidDAOFactory() {
         this.dataSource = getDataSourceMap().get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
@@ -46,21 +45,7 @@ public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
     }
 
     @Override
-    public MobileOperationDAO getMobileOperationDAO() {
-        return null;
-    }
-
-    @Override
-    public MobileOperationPropertyDAO getMobileOperationPropertyDAO() {
-        return null;
-    }
-
-    @Override
-    public MobileDeviceOperationMappingDAO getMobileDeviceOperationDAO() {
-        return null;
-    }
-
-    @Override public MobileFeatureDAO getMobileFeatureDao() {
+    public MobileFeatureDAO getMobileFeatureDAO() {
         return new AndroidFeatureDAOImpl();
     }
 
@@ -136,4 +121,5 @@ public class AndroidDAOFactory extends MobileDeviceManagementDAOFactory
             closeConnection();
         }
     }
+
 }
