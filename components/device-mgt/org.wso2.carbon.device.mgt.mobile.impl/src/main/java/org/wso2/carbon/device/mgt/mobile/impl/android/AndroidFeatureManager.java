@@ -65,7 +65,7 @@ public class AndroidFeatureManager implements FeatureManager {
     @Override
     public boolean addFeatures(List<Feature> features) throws DeviceManagementException {
         List<MobileFeature> mobileFeatures = new ArrayList<MobileFeature>();
-        for (Feature feature:features) {
+        for (Feature feature : features) {
             mobileFeatures.add(MobileDeviceManagementUtil.convertToMobileFeature(feature));
         }
         try {
@@ -134,8 +134,11 @@ public class AndroidFeatureManager implements FeatureManager {
             List<Feature> supportedFeatures = getSupportedFeatures();
             List<Feature> existingFeatures = this.getFeatures();
             List<Feature> missingFeatures = MobileDeviceManagementUtil.
-                                                       getMissingFeatures(supportedFeatures, existingFeatures);
-            return this.addFeatures(missingFeatures);
+                                                           getMissingFeatures(supportedFeatures, existingFeatures);
+            if (missingFeatures.size() > 0) {
+                return this.addFeatures(missingFeatures);
+            }
+            return true;
         }
     }
 
