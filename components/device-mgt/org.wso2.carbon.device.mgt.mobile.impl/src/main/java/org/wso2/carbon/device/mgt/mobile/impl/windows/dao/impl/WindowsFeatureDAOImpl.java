@@ -46,6 +46,7 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
     public WindowsFeatureDAOImpl() {
 
     }
+
     @Override
     public boolean addFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
@@ -53,7 +54,7 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
         Connection conn;
         try {
             conn = WindowsDAOFactory.getConnection();
-            String sql = "INSERT INTO WINDOWS_FEATURE(CODE, NAME, DESCRIPTION) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO WIN_FEATURE(CODE, NAME, DESCRIPTION) VALUES (?, ?, ?)";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, mobileFeature.getCode());
             stmt.setString(2, mobileFeature.getName());
@@ -72,6 +73,31 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
     }
 
     @Override
+    public boolean addFeatures(List<MobileFeature> mobileFeatures) throws MobileDeviceManagementDAOException {
+        PreparedStatement stmt = null;
+        boolean status = false;
+        Connection conn;
+        try {
+            conn = WindowsDAOFactory.getConnection();
+            stmt = conn.prepareStatement("INSERT INTO WIN_FEATURE(CODE, NAME, DESCRIPTION) VALUES (?, ?, ?)");
+            for (MobileFeature mobileFeature : mobileFeatures) {
+                stmt.setString(1, mobileFeature.getCode());
+                stmt.setString(2, mobileFeature.getName());
+                stmt.setString(3, mobileFeature.getDescription());
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+            status = true;
+        } catch (SQLException e) {
+            throw new WindowsFeatureManagementDAOException(
+                    "Error occurred while adding windows features into the metadata repository", e);
+        } finally {
+            MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
+        }
+        return status;
+    }
+
+    @Override
     public boolean updateFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException {
         boolean status = false;
         Connection conn;
@@ -79,7 +105,7 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
         try {
             conn = WindowsDAOFactory.getConnection();
             String updateDBQuery =
-                    "UPDATE WINDOWS_FEATURE SET NAME = ?, DESCRIPTION = ?" +
+                    "UPDATE WIN_FEATURE SET NAME = ?, DESCRIPTION = ?" +
                             "WHERE CODE = ?";
 
             stmt = conn.prepareStatement(updateDBQuery);
@@ -110,10 +136,10 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
     public boolean deleteFeatureById(int mblFeatureId) throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         boolean status = false;
-        Connection conn = null;
+        Connection conn;
         try {
             conn = WindowsDAOFactory.getConnection();
-            String sql = "DELETE FROM WINDOWS_FEATURE WHERE FEATURE_ID = ?";
+            String sql = "DELETE FROM WIN_FEATURE WHERE FEATURE_ID = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, mblFeatureId);
             stmt.execute();
@@ -132,10 +158,10 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
     public boolean deleteFeatureByCode(String mblFeatureCode) throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         boolean status = false;
-        Connection conn = null;
+        Connection conn;
         try {
             conn = WindowsDAOFactory.getConnection();
-            String sql = "DELETE FROM WINDOWS_FEATURE WHERE CODE = ?";
+            String sql = "DELETE FROM WIN_FEATURE WHERE CODE = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, mblFeatureCode);
             stmt.execute();
@@ -154,10 +180,10 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
     public MobileFeature getFeatureById(int mblFeatureId) throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
+        Connection conn;
         try {
             conn = WindowsDAOFactory.getConnection();
-            String sql = "SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM WINDOWS_FEATURE WHERE ID = ?";
+            String sql = "SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM WIN_FEATURE WHERE ID = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, mblFeatureId);
             rs = stmt.executeQuery();
@@ -191,7 +217,7 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
 
         try {
             conn = WindowsDAOFactory.getConnection();
-            String sql = "SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM WINDOWS_FEATURE WHERE CODE = ?";
+            String sql = "SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM WIN_FEATURE WHERE CODE = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, mblFeatureCode);
             rs = stmt.executeQuery();
@@ -231,7 +257,7 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
 
         try {
             conn = WindowsDAOFactory.getConnection();
-            String sql = "SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM WINDOWS_FEATURE";
+            String sql = "SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM WIN_FEATURE";
             stmt = conn.prepareStatement(sql);
             rs = stmt.executeQuery();
             MobileFeature mobileFeature;

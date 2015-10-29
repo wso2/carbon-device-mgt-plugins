@@ -18,12 +18,9 @@
  */
 package org.wso2.carbon.device.mgt.mobile.impl.windows;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
-import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
@@ -37,7 +34,6 @@ import java.util.List;
 public class WindowsFeatureManager implements FeatureManager {
 
     private MobileFeatureDAO featureDAO;
-    private static final Log log = LogFactory.getLog(WindowsFeatureManager.class);
 
     public WindowsFeatureManager() {
         MobileDeviceManagementDAOFactory daoFactory = new WindowsDAOFactory();
@@ -47,27 +43,39 @@ public class WindowsFeatureManager implements FeatureManager {
     @Override
     public boolean addFeature(Feature feature) throws DeviceManagementException {
         try {
-	        WindowsDAOFactory.beginTransaction();
+            WindowsDAOFactory.beginTransaction();
             MobileFeature mobileFeature = MobileDeviceManagementUtil.convertToMobileFeature(feature);
             featureDAO.addFeature(mobileFeature);
-	        WindowsDAOFactory.commitTransaction();
+            WindowsDAOFactory.commitTransaction();
             return true;
         } catch (MobileDeviceManagementDAOException e) {
-	        WindowsDAOFactory.rollbackTransaction();
+            WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error occurred while adding the feature", e);
         }
     }
 
     @Override
-    public boolean addFeatures(List<Feature> list) throws DeviceManagementException {
-        return false;
+    public boolean addFeatures(List<Feature> features) throws DeviceManagementException {
+        List<MobileFeature> mobileFeatures = new ArrayList<MobileFeature>();
+        for (Feature feature : features) {
+            mobileFeatures.add(MobileDeviceManagementUtil.convertToMobileFeature(feature));
+        }
+        try {
+            WindowsDAOFactory.beginTransaction();
+            featureDAO.addFeatures(mobileFeatures);
+            WindowsDAOFactory.commitTransaction();
+            return true;
+        } catch (MobileDeviceManagementDAOException e) {
+            WindowsDAOFactory.rollbackTransaction();
+            throw new DeviceManagementException("Error occurred while adding the features", e);
+        }
     }
 
     @Override
     public Feature getFeature(String name) throws DeviceManagementException {
         try {
             MobileFeature mobileFeature = featureDAO.getFeatureByCode(name);
-            Feature feature =  MobileDeviceManagementUtil.convertToFeature(mobileFeature);
+            Feature feature = MobileDeviceManagementUtil.convertToFeature(mobileFeature);
             return feature;
         } catch (MobileDeviceManagementDAOException e) {
             throw new DeviceManagementException("Error occurred while retrieving the feature", e);
@@ -86,7 +94,7 @@ public class WindowsFeatureManager implements FeatureManager {
             return featureList;
         } catch (MobileDeviceManagementDAOException e) {
             throw new DeviceManagementException("Error occurred while retrieving the list of features registered for " +
-                    "Android platform", e);
+                    "Windows platform", e);
         }
     }
 
@@ -94,12 +102,12 @@ public class WindowsFeatureManager implements FeatureManager {
     public boolean removeFeature(String code) throws DeviceManagementException {
         boolean status;
         try {
-	        WindowsDAOFactory.beginTransaction();
+            WindowsDAOFactory.beginTransaction();
             featureDAO.deleteFeatureByCode(code);
-	        WindowsDAOFactory.commitTransaction();
+            WindowsDAOFactory.commitTransaction();
             status = true;
         } catch (MobileDeviceManagementDAOException e) {
-	        WindowsDAOFactory.rollbackTransaction();
+            WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error occurred while removing the feature", e);
         }
         return status;
@@ -107,7 +115,64 @@ public class WindowsFeatureManager implements FeatureManager {
 
     @Override
     public boolean addSupportedFeaturesToDB() throws DeviceManagementException {
-        return false;
+        synchronized (this) {
+            List<Feature> supportedFeatures = getSupportedFeatures();
+            List<Feature> existingFeatures = this.getFeatures();
+            List<Feature> missingFeatures = MobileDeviceManagementUtil.
+                    getMissingFeatures(supportedFeatures, existingFeatures);
+            if (missingFeatures.size() > 0) {
+                return this.addFeatures(missingFeatures);
+            }
+            return true;
+        }
     }
 
+    public static List<Feature> getSupportedFeatures() {
+        List<Feature> supportedFeatures = new ArrayList<Feature>();
+        Feature feature = new Feature();
+        feature.setCode("DEVICE_LOCK");
+        feature.setName("Device Lock");
+        feature.setDescription("Lock the device");
+        supportedFeatures.add(feature);
+        feature = new Feature();
+        feature.setCode("CAMERA");
+        feature.setName("camera");
+        feature.setDescription("Enable or disable camera");
+        supportedFeatures.add(feature);
+        feature = new Feature();
+        feature.setCode("DEVICE_INFO");
+        feature.setName("Device info");
+        feature.setDescription("Request device information");
+        supportedFeatures.add(feature);
+        feature = new Feature();
+        feature.setCode("WIPE_DATA");
+        feature.setName("Wipe Data");
+        feature.setDescription("Factory reset the device");
+        supportedFeatures.add(feature);
+        feature = new Feature();
+        feature.setCode("ENCRYPT_STORAGE");
+        feature.setName("Encrypt storage");
+        feature.setDescription("Encrypt storage");
+        supportedFeatures.add(feature);
+        feature = new Feature();
+        feature.setCode("DEVICE_RING");
+        feature.setName("Ring");
+        feature.setDescription("Ring the device");
+        supportedFeatures.add(feature);
+        feature = new Feature();
+        feature.setCode("PASSCODE_POLICY");
+        feature.setName("Password Policy");
+        feature.setDescription("Set passcode policy");
+        supportedFeatures.add(feature);
+        feature = new Feature();
+        feature.setCode("DISENROLL");
+        feature.setName("DisEnroll");
+        feature.setDescription("DisEnroll the device");
+        supportedFeatures.add(feature);
+        feature = new Feature();
+        feature.setCode("LOCK_RESET");
+        feature.setName("LockReset");
+        feature.setDescription("Lock Reset device");
+        return supportedFeatures;
+    }
 }
