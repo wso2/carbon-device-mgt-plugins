@@ -1,8 +1,7 @@
 -- -----------------------------------------------------
 -- Table IOS_FEATURE
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS IOS_FEATURE;
-CREATE TABLE IOS_FEATURE (
+CREATE TABLE IF NOT EXISTS IOS_FEATURE (
   ID SERIAL NOT NULL,
   CODE VARCHAR(45) NOT NULL,
   NAME VARCHAR(100) NULL,
@@ -13,8 +12,7 @@ CREATE TABLE IOS_FEATURE (
 -- -----------------------------------------------------
 -- Table IOS_DEVICE
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS IOS_DEVICE;
-CREATE  TABLE IF NOT EXISTS IOS_DEVICE (
+CREATE TABLE IF NOT EXISTS IOS_DEVICE (
   DEVICE_ID VARCHAR(45) NOT NULL,
   APNS_PUSH_TOKEN VARCHAR(100) NULL DEFAULT NULL,
   MAGIC_TOKEN VARCHAR(100) NULL DEFAULT NULL,

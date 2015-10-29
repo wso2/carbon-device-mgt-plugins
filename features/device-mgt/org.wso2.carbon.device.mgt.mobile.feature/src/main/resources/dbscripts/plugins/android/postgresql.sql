@@ -1,8 +1,7 @@
 -- -----------------------------------------------------
 -- Table AD_DEVICE
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS AD_DEVICE;
-CREATE TABLE AD_DEVICE (
+CREATE TABLE IF NOT EXISTS AD_DEVICE (
   DEVICE_ID VARCHAR(45) NOT NULL ,
   DEVICE_INFO VARCHAR(500) NULL DEFAULT NULL,
   GCM_TOKEN VARCHAR(45) NULL DEFAULT NULL,
@@ -22,8 +21,7 @@ CREATE TABLE AD_DEVICE (
 -- -----------------------------------------------------
 -- Table AD_FEATURE
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS AD_FEATURE;
-CREATE TABLE AD_FEATURE (
+CREATE TABLE IF NOT EXISTS AD_FEATURE (
   ID BIGSERIAL NOT NULL PRIMARY KEY,
   CODE VARCHAR(45) NOT NULL,
   NAME VARCHAR(100) NULL,
