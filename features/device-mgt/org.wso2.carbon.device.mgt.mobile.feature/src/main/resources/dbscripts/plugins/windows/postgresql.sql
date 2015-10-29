@@ -1,7 +1,8 @@
 -- -----------------------------------------------------
 -- Table WIN_DEVICE
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS WIN_DEVICE (
+DROP TABLE IF EXISTS WIN_DEVICE;
+CREATE TABLE WIN_DEVICE (
   DEVICE_ID VARCHAR(45) NOT NULL,
   PUSH_TOKEN VARCHAR(45) NULL DEFAULT NULL,
   IMEI VARCHAR(45) NULL DEFAULT NULL,
@@ -21,7 +22,8 @@ CREATE TABLE IF NOT EXISTS WIN_DEVICE (
 -- -----------------------------------------------------
 -- Table WIN_FEATURE
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS WIN_FEATURE (
+DROP TABLE IF EXISTS WIN_FEATURE;
+CREATE TABLE WIN_FEATURE (
   ID SERIAL NOT NULL,
   DEVICE_TYPE VARCHAR(45) NOT NULL,
   CODE VARCHAR(45) NULL,
