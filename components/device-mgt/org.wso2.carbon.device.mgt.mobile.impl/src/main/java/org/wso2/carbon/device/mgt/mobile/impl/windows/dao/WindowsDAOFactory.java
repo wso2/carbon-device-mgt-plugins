@@ -21,20 +21,21 @@ package org.wso2.carbon.device.mgt.mobile.impl.windows.dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.mobile.dao.*;
+import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceDAO;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.impl.WindowsDeviceDAOImpl;
-import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.impl.WindowsFeatureDAOImpl;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
-        implements MobileDeviceManagementDAOFactoryInterface {
+public class WindowsDAOFactory extends AbstractMobileDeviceManagementDAOFactory {
 
     private static final Log log = LogFactory.getLog(WindowsDAOFactory.class);
     protected static DataSource dataSource;
-    private static ThreadLocal<Connection> currentConnection = new ThreadLocal<Connection>();
+    private static ThreadLocal<Connection> currentConnection = new ThreadLocal<>();
 
     public WindowsDAOFactory() {
         this.dataSource = getDataSourceMap().get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
@@ -46,27 +47,7 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
     }
 
     @Override
-    public MobileOperationDAO getMobileOperationDAO() {
-        return null;
-    }
-
-    @Override
-    public MobileOperationPropertyDAO getMobileOperationPropertyDAO() {
-        return null;
-    }
-
-    @Override
-    public MobileDeviceOperationMappingDAO getMobileDeviceOperationDAO() {
-        return null;
-    }
-
-    @Override
-    public MobileFeatureDAO getMobileFeatureDao() {
-        return new WindowsFeatureDAOImpl();
-    }
-
-    @Override
-    public MobileFeaturePropertyDAO getFeaturePropertyDAO() {
+    public MobileFeatureDAO getMobileFeatureDAO() {
         return null;
     }
 
@@ -146,4 +127,5 @@ public class WindowsDAOFactory extends MobileDeviceManagementDAOFactory
             log.warn("Error occurred while roll-backing the transaction", e);
         }
     }
+
 }

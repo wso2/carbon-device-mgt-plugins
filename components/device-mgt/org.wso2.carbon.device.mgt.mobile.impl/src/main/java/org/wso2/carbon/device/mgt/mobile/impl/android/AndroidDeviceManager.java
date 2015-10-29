@@ -28,8 +28,8 @@ import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
 import org.wso2.carbon.device.mgt.extensions.license.mgt.registry.RegistryBasedLicenseManager;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
+import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.android.util.AndroidPluginUtils;
@@ -49,7 +49,7 @@ import java.util.List;
 
 public class AndroidDeviceManager implements DeviceManager {
 
-	private MobileDeviceManagementDAOFactory daoFactory;
+	private AbstractMobileDeviceManagementDAOFactory daoFactory;
 	private static final Log log = LogFactory.getLog(AndroidDeviceManagementService.class);
 	private FeatureManager featureManager = new AndroidFeatureManager();
 	private LicenseManager licenseManager;
@@ -62,10 +62,13 @@ public class AndroidDeviceManager implements DeviceManager {
 		try {
 			licenseManager
 					.addLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, defaultLicense);
+			featureManager.addSupportedFeaturesToDB();
 		} catch (LicenseManagementException e) {
 			log.error("Error occurred while adding default license for Android devices", e);
-		}
-	}
+		} catch (DeviceManagementException e) {
+            log.error("Error occurred while adding supported device features for Android platform", e);
+        }
+    }
 
 	@Override
 	public FeatureManager getFeatureManager() {

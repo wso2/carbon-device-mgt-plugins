@@ -298,4 +298,19 @@ public class MobileDeviceManagementUtil {
 					e.getMessage(), e);
 		}
 	}
+
+	public static List<Feature> getMissingFeatures(List<Feature> supportedFeatures, List<Feature> existingFeatures) {
+        HashMap<String,Feature> featureHashMap = new HashMap();
+        for (Feature feature: existingFeatures) {
+            featureHashMap.put(feature.getCode(),feature);
+        }
+        List<Feature> missingFeatures = new ArrayList<Feature>();
+        for (Feature supportedFeature : supportedFeatures) {
+            if (featureHashMap.get(supportedFeature.getCode()) != null) {
+                continue;
+            }
+            missingFeatures.add(supportedFeature);
+        }
+        return missingFeatures;
+    }
 }

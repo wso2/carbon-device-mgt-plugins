@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
+import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
@@ -37,16 +38,14 @@ public class WindowsFeatureManager implements FeatureManager {
 
     private MobileFeatureDAO featureDAO;
     private static final Log log = LogFactory.getLog(WindowsFeatureManager.class);
-    private MobileDeviceManagementDAOFactory mobileDeviceManagementDAOFactory;
 
     public WindowsFeatureManager() {
-        mobileDeviceManagementDAOFactory = new WindowsDAOFactory();
-        this.featureDAO = mobileDeviceManagementDAOFactory.getMobileFeatureDao();
+        MobileDeviceManagementDAOFactory daoFactory = new WindowsDAOFactory();
+        this.featureDAO = daoFactory.getMobileFeatureDAO();
     }
 
     @Override
     public boolean addFeature(Feature feature) throws DeviceManagementException {
-
         try {
 	        WindowsDAOFactory.beginTransaction();
             MobileFeature mobileFeature = MobileDeviceManagementUtil.convertToMobileFeature(feature);
@@ -57,6 +56,11 @@ public class WindowsFeatureManager implements FeatureManager {
 	        WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error occurred while adding the feature", e);
         }
+    }
+
+    @Override
+    public boolean addFeatures(List<Feature> list) throws DeviceManagementException {
+        return false;
     }
 
     @Override
@@ -88,7 +92,7 @@ public class WindowsFeatureManager implements FeatureManager {
 
     @Override
     public boolean removeFeature(String code) throws DeviceManagementException {
-        boolean status = false;
+        boolean status;
         try {
 	        WindowsDAOFactory.beginTransaction();
             featureDAO.deleteFeatureByCode(code);
@@ -99,6 +103,11 @@ public class WindowsFeatureManager implements FeatureManager {
             throw new DeviceManagementException("Error occurred while removing the feature", e);
         }
         return status;
+    }
+
+    @Override
+    public boolean addSupportedFeaturesToDB() throws DeviceManagementException {
+        return false;
     }
 
 }
