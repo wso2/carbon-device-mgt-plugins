@@ -128,5 +128,4 @@ public class WindowsDAOFactory extends AbstractMobileDeviceManagementDAOFactory 
             log.warn("Error occurred while roll-backing the transaction", e);
         }
     }
-
 }
