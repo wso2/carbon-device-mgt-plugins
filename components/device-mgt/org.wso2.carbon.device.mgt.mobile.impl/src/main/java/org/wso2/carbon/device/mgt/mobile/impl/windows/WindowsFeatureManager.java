@@ -177,6 +177,7 @@ public class WindowsFeatureManager implements FeatureManager {
         feature.setCode("LOCK_RESET");
         feature.setName("LockReset");
         feature.setDescription("Lock Reset device");
+        supportedFeatures.add(feature);
         return supportedFeatures;
     }
 }
