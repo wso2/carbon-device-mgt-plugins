@@ -51,6 +51,8 @@ public class WindowsFeatureManager implements FeatureManager {
         } catch (MobileDeviceManagementDAOException e) {
             WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error occurred while adding the feature", e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
         }
     }
 
@@ -68,17 +70,22 @@ public class WindowsFeatureManager implements FeatureManager {
         } catch (MobileDeviceManagementDAOException e) {
             WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error occurred while adding the features", e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
         }
     }
 
     @Override
     public Feature getFeature(String name) throws DeviceManagementException {
         try {
+            WindowsDAOFactory.openConnection();
             MobileFeature mobileFeature = featureDAO.getFeatureByCode(name);
             Feature feature = MobileDeviceManagementUtil.convertToFeature(mobileFeature);
             return feature;
         } catch (MobileDeviceManagementDAOException e) {
             throw new DeviceManagementException("Error occurred while retrieving the feature", e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
         }
     }
 
@@ -87,6 +94,7 @@ public class WindowsFeatureManager implements FeatureManager {
 
         List<Feature> featureList = new ArrayList<Feature>();
         try {
+            WindowsDAOFactory.openConnection();
             List<MobileFeature> mobileFeatures = featureDAO.getAllFeatures();
             for (MobileFeature mobileFeature : mobileFeatures) {
                 featureList.add(MobileDeviceManagementUtil.convertToFeature(mobileFeature));
@@ -95,6 +103,8 @@ public class WindowsFeatureManager implements FeatureManager {
         } catch (MobileDeviceManagementDAOException e) {
             throw new DeviceManagementException("Error occurred while retrieving the list of features registered for " +
                     "Windows platform", e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
         }
     }
 
@@ -109,6 +119,8 @@ public class WindowsFeatureManager implements FeatureManager {
         } catch (MobileDeviceManagementDAOException e) {
             WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error occurred while removing the feature", e);
+        } finally {
+            WindowsDAOFactory.closeConnection();
         }
         return status;
     }
@@ -129,6 +141,7 @@ public class WindowsFeatureManager implements FeatureManager {
 
     /**
      * Get supported Windows features.
+     *
      * @return Supported features.
      */
     public static List<Feature> getSupportedFeatures() {
