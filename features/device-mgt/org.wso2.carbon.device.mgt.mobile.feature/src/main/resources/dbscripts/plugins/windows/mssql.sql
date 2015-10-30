@@ -1,7 +1,7 @@
 -- -----------------------------------------------------
 -- Table `WINDOWS_FEATURE`
 -- -----------------------------------------------------
-CREATE TABLE WINDOWS_FEATURE (
+CREATE TABLE WIN_FEATURE (
   ID INT NOT NULL IDENTITY,
   CODE VARCHAR(45) NOT NULL,
   NAME VARCHAR(100) NULL,
@@ -12,7 +12,7 @@ CREATE TABLE WINDOWS_FEATURE (
 -- -----------------------------------------------------
 -- Table `WINDOWS_DEVICE`
 -- -----------------------------------------------------
-  CREATE  TABLE WINDOWS_DEVICE (
+  CREATE  TABLE WIN_DEVICE (
   DEVICE_ID VARCHAR(45) NOT NULL,
   CHANNEL_URI VARCHAR(100) NULL DEFAULT NULL,
   DEVICE_INFO VARCHAR(8000) NULL DEFAULT NULL,
