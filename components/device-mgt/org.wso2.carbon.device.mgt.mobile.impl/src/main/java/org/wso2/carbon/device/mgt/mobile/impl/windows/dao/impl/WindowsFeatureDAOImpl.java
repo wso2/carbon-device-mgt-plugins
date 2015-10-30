@@ -120,10 +120,8 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
                 }
             }
         } catch (SQLException e) {
-            String msg = "Error occurred while updating the Windows Feature '" +
-                    mobileFeature.getCode() + "' to the Android db.";
-            log.error(msg, e);
-            throw new WindowsFeatureManagementDAOException(msg, e);
+            throw new WindowsFeatureManagementDAOException("Error occurred while updating the Windows Feature '" +
+                    mobileFeature.getCode() + "' to the Windows db.", e);
         } finally {
             MobileDeviceManagementDAOUtil.cleanupResources(stmt, null);
         }
