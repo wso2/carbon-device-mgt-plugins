@@ -47,7 +47,7 @@ public class AndroidDAOFactory extends AbstractMobileDeviceManagementDAOFactory 
     public MobileFeatureDAO getMobileFeatureDAO() {
         return new AndroidFeatureDAOImpl();
     }
-    
+
     public static void beginTransaction() throws MobileDeviceManagementDAOException {
         try {
             Connection conn = dataSource.getConnection();
