@@ -24,16 +24,4 @@
             <class name="org.wso2.carbon.device.mgt.mobile.impl.MobileDeviceManagementConfigTests"/>
         </classes>
     </test>
-
-    <test name="DAO Unit Tests" preserve-order="true">
-        <parameter name="dbType" value="H2"/>
-        <classes>
-            <class name="org.wso2.carbon.device.mgt.mobile.impl.dao.MobileFeatureDAOTestSuite"/>
-            <class name="org.wso2.carbon.device.mgt.mobile.impl.dao.MobileOperationDAOTestSuite"/>
-            <class name="org.wso2.carbon.device.mgt.mobile.impl.dao.MobileOperationPropertyDAOTestSuite"/>
-            <class name="org.wso2.carbon.device.mgt.mobile.impl.dao.MobileFeaturePropertyDAOTestSuite"/>
-            <class name="org.wso2.carbon.device.mgt.mobile.impl.dao.MobileDeviceOperationMappingDAOTestSuite"/>
-        </classes>
-    </test>
-
 </suite>

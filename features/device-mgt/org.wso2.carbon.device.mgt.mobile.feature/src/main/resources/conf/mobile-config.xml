@@ -19,53 +19,17 @@
 
 <MobileDeviceMgtConfiguration>
     <ManagementRepository>
-    <DataSourceConfigurations>
-        <DataSourceConfiguration type="android">
-            <JndiLookupDefinition>
-                <Name>jdbc/MobileAndroidDM_DS</Name>
-            </JndiLookupDefinition>
-        </DataSourceConfiguration>
-        <DataSourceConfiguration type="windows">
-            <JndiLookupDefinition>
-                <Name>jdbc/MobileWindowsDM_DS</Name>
-            </JndiLookupDefinition>
-        </DataSourceConfiguration>
-    </DataSourceConfigurations>
+        <DataSourceConfigurations>
+            <DataSourceConfiguration type="android">
+                <JndiLookupDefinition>
+                    <Name>jdbc/MobileAndroidDM_DS</Name>
+                </JndiLookupDefinition>
+            </DataSourceConfiguration>
+            <DataSourceConfiguration type="windows">
+                <JndiLookupDefinition>
+                    <Name>jdbc/MobileWindowsDM_DS</Name>
+                </JndiLookupDefinition>
+            </DataSourceConfiguration>
+        </DataSourceConfigurations>
     </ManagementRepository>
-    <APIPublisher>
-	<APIs>
-        <API>
-            <Name>appmanager</Name>
-            <Owner>admin</Owner>
-            <Context>/devices</Context>
-            <Version>1.0.0</Version>
-            <Endpoint>http://localhost:9763/test/app</Endpoint>
-            <Transports>http,https</Transports>
-        </API>
-        <API>
-            <Name>enrol</Name>
-            <Owner>admin</Owner>
-            <Context>/enroll</Context>
-            <Version>1.0.0</Version>
-            <Endpoint>http://localhost:9763/mdm-android-agent/enrollment</Endpoint>
-            <Transports>http,https</Transports>
-        </API>
-        <API>
-            <Name>license</Name>
-            <Owner>admin</Owner>
-            <Context>/license</Context>
-            <Version>1.0.0</Version>
-            <Endpoint>http://localhost:9763/mdm-android-agent/devices/license</Endpoint>
-            <Transports>http,https</Transports>
-        </API>
-        <API>
-            <Name>operation</Name>
-            <Owner>admin</Owner>
-            <Context>/operation</Context>
-            <Version>1.0.0</Version>
-            <Endpoint>http://localhost:9763/mdm-android-agent/operations</Endpoint>
-            <Transports>http,https</Transports>
-        </API>
-	</APIs>
-    </APIPublisher>
 </MobileDeviceMgtConfiguration>

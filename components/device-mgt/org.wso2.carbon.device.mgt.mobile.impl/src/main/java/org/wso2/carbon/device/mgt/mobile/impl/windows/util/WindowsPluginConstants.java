@@ -24,7 +24,7 @@ package org.wso2.carbon.device.mgt.mobile.impl.windows.util;
 public class WindowsPluginConstants {
 
     //properties related to database table WINDOWS_DEVICE
-    public static final String MOBILE_DEVICE_ID = "MOBILE_DEVICE_ID";
+    public static final String DEVICE_ID = "DEVICE_ID";
     public static final String CHANNEL_URI = "CHANNEL_URI";
     public static final String DEVICE_INFO = "DEVICE_INFO";
     public static final String IMEI = "IMEI";
@@ -37,5 +37,12 @@ public class WindowsPluginConstants {
     public static final String SERIAL = "SERIAL";
     public static final String MAC_ADDRESS = "MAC_ADDRESS";
     public static final String DEVICE_NAME = "DEVICE_NAME";
+
+    //Properties related to WIN_FEATURE table
+    public static final String WINDOWS_FEATURE_ID = "FEATURE_ID";
+    public static final String WINDOWS_FEATURE_CODE = "CODE";
+    public static final String WINDOWS_FEATURE_NAME = "NAME";
+    public static final String WINDOWS_FEATURE_DESCRIPTION = "DESCRIPTION";
+
 
 }

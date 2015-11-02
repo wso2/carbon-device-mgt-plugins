@@ -45,21 +45,18 @@ public final class MobileDeviceManagementSchemaInitializer extends DatabaseCreat
         return pluginType;
     }
 
-    public void setPluginType(String pluginType) {
-        this.pluginType = pluginType;
-    }
-
     public MobileDeviceManagementSchemaInitializer(DataSource dataSource, String pType) {
         super(dataSource);
         this.pluginType = pType;
     }
 
     protected String getDbScriptLocation(String databaseType) {
-        String scriptName = databaseType + "_" + getPluginType() + ".sql";
+        String scriptName = databaseType + ".sql";
+        String scriptLocation = setupSQLScriptBaseLocation + this.getPluginType() + File.separator + scriptName;
         if (log.isDebugEnabled()) {
-            log.debug("Loading database script from :" + scriptName);
+            log.debug("Loading database script from :" + scriptLocation);
         }
-        return setupSQLScriptBaseLocation.replaceFirst("DBTYPE", databaseType) + scriptName;
+        return scriptLocation;
     }
 
 }

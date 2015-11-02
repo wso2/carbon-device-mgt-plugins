@@ -32,10 +32,19 @@ public interface MobileFeatureDAO {
 	 * Adds a new MobileFeature to Mobile-Feature table.
 	 *
 	 * @param mobileFeature MobileFeature object that holds data related to the feature to be inserted.
-	 * @return The id of inserted MobileFeature.
+	 * @return boolean status of the operation.
 	 * @throws MobileDeviceManagementDAOException
 	 */
 	boolean addFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException;
+
+	/**
+	 * Adda a list of MobileFeatures to Mobile-Feature table.
+	 *
+	 * @param mobileFeatures List of MobileFeature objects.
+	 * @return boolean status of the operation.
+	 * @throws MobileDeviceManagementDAOException
+	 */
+	boolean addFeatures(List<MobileFeature> mobileFeatures) throws MobileDeviceManagementDAOException;
 
 	/**
 	 * Updates a MobileFeature in Mobile-Feature table.
