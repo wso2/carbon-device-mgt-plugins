@@ -33,20 +33,6 @@ CREATE TABLE WIN_FEATURE (
 /
 
 -- -----------------------------------------------------
--- Table `WIN_FEATURE_PROPERTY`
--- -----------------------------------------------------
-CREATE TABLE WIN_FEATURE_PROPERTY (
-  PROPERTY VARCHAR(45) NOT NULL,
-  FEATURE_ID INT NOT NULL,
-  PRIMARY KEY (PROPERTY),
-  CONSTRAINT fk_WIN_FEATURE_PROPERTY_WIN_FEATURE1
-    FOREIGN KEY (FEATURE_ID)
-    REFERENCES WIN_FEATURE (ID)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
-/
-
--- -----------------------------------------------------
 -- Sequence `WIN_FEATURE_ID_INC_SEQ`
 -- -----------------------------------------------------
 CREATE SEQUENCE WIN_FEATURE_ID_INC_SEQ START WITH 1 INCREMENT BY 1 NOCACHE;

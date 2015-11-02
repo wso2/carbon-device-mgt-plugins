@@ -57,11 +57,16 @@ public class WindowsDeviceManager implements DeviceManager {
     public WindowsDeviceManager() {
         this.daoFactory = new WindowsDAOFactory();
         this.licenseManager = new RegistryBasedLicenseManager();
+
         License defaultLicense = WindowsPluginUtils.getDefaultLicense();
+
         try {
             licenseManager.addLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, defaultLicense);
+            featureManager.addSupportedFeaturesToDB();
         } catch (LicenseManagementException e) {
             log.error("Error occurred while adding default license for Windows devices", e);
+        } catch (DeviceManagementException e) {
+            log.error("Error occurred while adding supported device features for Windows platform", e);
         }
     }
 

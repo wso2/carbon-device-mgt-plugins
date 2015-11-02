@@ -21,8 +21,12 @@ package org.wso2.carbon.device.mgt.mobile.impl.windows.dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.mobile.dao.*;
+import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceDAO;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.impl.WindowsDeviceDAOImpl;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.impl.WindowsFeatureDAOImpl;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -45,7 +49,7 @@ public class WindowsDAOFactory extends AbstractMobileDeviceManagementDAOFactory 
 
     @Override
     public MobileFeatureDAO getMobileFeatureDAO() {
-        return null;
+        return new WindowsFeatureDAOImpl();
     }
 
     public static void beginTransaction() throws MobileDeviceManagementDAOException {
@@ -124,5 +128,4 @@ public class WindowsDAOFactory extends AbstractMobileDeviceManagementDAOFactory 
             log.warn("Error occurred while roll-backing the transaction", e);
         }
     }
-
 }
