@@ -61,7 +61,6 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
             stmt.setString(3, mobileFeature.getDescription());
             stmt.executeUpdate();
             status = true;
-            status = true;
         } catch (SQLException e) {
             throw new WindowsFeatureManagementDAOException(
                     "Error occurred while adding windows feature '" +
@@ -135,7 +134,7 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
         Connection conn;
         try {
             conn = WindowsDAOFactory.getConnection();
-            String sql = "DELETE FROM WIN_FEATURE WHERE FEATURE_ID = ?";
+            String sql = "DELETE FROM WIN_FEATURE WHERE ID = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, mblFeatureId);
             stmt.execute();
@@ -179,7 +178,7 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
         Connection conn;
         try {
             conn = WindowsDAOFactory.getConnection();
-            String sql = "SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM WIN_FEATURE WHERE ID = ?";
+            String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM WIN_FEATURE WHERE ID = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setInt(1, mblFeatureId);
             rs = stmt.executeQuery();
@@ -210,7 +209,7 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
         Connection conn;
         try {
             conn = WindowsDAOFactory.getConnection();
-            String sql = "SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM WIN_FEATURE WHERE CODE = ?";
+            String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM WIN_FEATURE WHERE CODE = ?";
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, mblFeatureCode);
             rs = stmt.executeQuery();
@@ -247,7 +246,7 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
         List<MobileFeature> features = new ArrayList<>();
         try {
             conn = WindowsDAOFactory.getConnection();
-            String sql = "SELECT FEATURE_ID, CODE, NAME, DESCRIPTION FROM WIN_FEATURE";
+            String sql = "SELECT ID, CODE, NAME, DESCRIPTION FROM WIN_FEATURE";
             stmt = conn.prepareStatement(sql);
             rs = stmt.executeQuery();
             MobileFeature mobileFeature;
