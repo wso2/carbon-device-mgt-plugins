@@ -39,7 +39,7 @@ public class WindowsPluginConstants {
     public static final String DEVICE_NAME = "DEVICE_NAME";
 
     //Properties related to WIN_FEATURE table
-    public static final String WINDOWS_FEATURE_ID = "FEATURE_ID";
+    public static final String WINDOWS_FEATURE_ID = "ID";
     public static final String WINDOWS_FEATURE_CODE = "CODE";
     public static final String WINDOWS_FEATURE_NAME = "NAME";
     public static final String WINDOWS_FEATURE_DESCRIPTION = "DESCRIPTION";
