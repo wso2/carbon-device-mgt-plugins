@@ -37,7 +37,9 @@
 
     <modules>
         <module>components/device-mgt</module>
+        <module>components/device-mgt-mdm-android</module>
         <module>features/device-mgt</module>
+        <module>features/device-mgt-mdm-android</module>
     </modules>
 
     <dependencyManagement>
@@ -251,6 +253,13 @@
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.mobile.url.printer</artifactId>
+                <version>${carbon.mobile.device.mgt.version}</version>
+            </dependency>
+
+            <!--Android dependencies-->
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.mobile.android.impl</artifactId>
                 <version>${carbon.mobile.device.mgt.version}</version>
             </dependency>
 
