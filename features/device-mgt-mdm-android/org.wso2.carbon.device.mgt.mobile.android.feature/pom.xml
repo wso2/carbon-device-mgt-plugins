@@ -30,7 +30,7 @@
     <artifactId>org.wso2.carbon.device.mgt.mobile.android.feature</artifactId>
     <packaging>pom</packaging>
     <version>1.9.2-SNAPSHOT</version>
-    <name>WSO2 Carbon - Android Device Management</name>
+    <name>WSO2 Carbon - Android Device Management Server Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the core bundles required for Android Device Management functionality
     </description>
@@ -81,7 +81,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.device.mgt.mobile</id>
+                            <id>org.wso2.carbon.device.mgt.mobile.android</id>
                             <propertiesFile>../../../features/etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -91,7 +91,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.mobile.impl:${carbon.mobile.device.mgt.version}
+                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.mobile.android.impl:${carbon.mobile.device.mgt.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>

@@ -16,14 +16,17 @@
  * under the License.
 */
 
-package org.wso2.carbon.device.mgt.mobile.impl.android.dao;
+package org.wso2.carbon.device.mgt.mobile.android.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.mobile.dao.*;
-import org.wso2.carbon.device.mgt.mobile.impl.android.dao.impl.AndroidDeviceDAOImpl;
-import org.wso2.carbon.device.mgt.mobile.impl.android.dao.impl.AndroidFeatureDAOImpl;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dao.impl.AndroidDeviceDAOImpl;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dao.impl.AndroidFeatureDAOImpl;
+import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceDAO;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

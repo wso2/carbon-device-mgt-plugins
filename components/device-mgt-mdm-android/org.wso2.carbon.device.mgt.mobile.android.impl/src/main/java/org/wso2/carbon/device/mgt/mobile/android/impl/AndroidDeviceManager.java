@@ -16,23 +16,29 @@
  *   under the License.
  *
  */
-package org.wso2.carbon.device.mgt.mobile.impl.android;
+package org.wso2.carbon.device.mgt.mobile.android.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.common.*;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.DeviceManager;
+import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
+import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
 import org.wso2.carbon.device.mgt.extensions.license.mgt.registry.RegistryBasedLicenseManager;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dao.AndroidDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.android.impl.util.AndroidPluginUtils;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
 import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
-import org.wso2.carbon.device.mgt.mobile.impl.android.dao.AndroidDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.impl.android.util.AndroidPluginUtils;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;

@@ -16,10 +16,10 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.mobile.impl.android.util;
+package org.wso2.carbon.device.mgt.mobile.android.impl.util;
 
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
-import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagementService;
+import org.wso2.carbon.device.mgt.mobile.android.impl.AndroidDeviceManagementService;
 
 /**
  * Contains utility methods used by Android plugin.

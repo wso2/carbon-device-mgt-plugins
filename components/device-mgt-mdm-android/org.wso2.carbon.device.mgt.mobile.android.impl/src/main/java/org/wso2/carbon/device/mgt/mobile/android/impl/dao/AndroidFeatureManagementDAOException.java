@@ -16,7 +16,7 @@
  *   under the License.
  *
  */
-package org.wso2.carbon.device.mgt.mobile.impl.android.dao;
+package org.wso2.carbon.device.mgt.mobile.android.impl.dao;
 
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 

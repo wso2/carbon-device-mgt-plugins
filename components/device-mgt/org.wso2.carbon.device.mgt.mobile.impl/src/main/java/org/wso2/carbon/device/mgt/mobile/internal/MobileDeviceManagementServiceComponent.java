@@ -30,8 +30,6 @@ import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagementService;
-import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidPolicyMonitoringService;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsPolicyMonitoringService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
@@ -59,7 +57,6 @@ import java.util.Map;
  */
 public class MobileDeviceManagementServiceComponent {
 
-    private ServiceRegistration androidServiceRegRef;
     private ServiceRegistration windowsServiceRegRef;
 
     private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
@@ -99,17 +96,12 @@ public class MobileDeviceManagementServiceComponent {
                 }
             }
 
-            androidServiceRegRef =
-                    bundleContext.registerService(DeviceManagementService.class.getName(),
-                            new AndroidDeviceManagementService(), null);
             windowsServiceRegRef =
                     bundleContext.registerService(DeviceManagementService.class.getName(),
                             new WindowsDeviceManagementService(), null);
 
             // Policy management service
 
-            bundleContext.registerService(PolicyMonitoringService.class,
-                    new AndroidPolicyMonitoringService(), null);
             bundleContext.registerService(PolicyMonitoringService.class,
                     new WindowsPolicyMonitoringService(), null);
 
@@ -126,9 +118,6 @@ public class MobileDeviceManagementServiceComponent {
             log.debug("De-activating Mobile Device Management Service Component");
         }
         try {
-            if (androidServiceRegRef != null) {
-                androidServiceRegRef.unregister();
-            }
             if (windowsServiceRegRef != null) {
                 windowsServiceRegRef.unregister();
             }

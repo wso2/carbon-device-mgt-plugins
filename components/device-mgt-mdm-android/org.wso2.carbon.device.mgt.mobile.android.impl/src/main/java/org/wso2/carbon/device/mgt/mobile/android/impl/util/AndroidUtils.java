@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.mobile.impl.android.util;
+package org.wso2.carbon.device.mgt.mobile.android.impl.util;
 
 import java.util.Map;
 

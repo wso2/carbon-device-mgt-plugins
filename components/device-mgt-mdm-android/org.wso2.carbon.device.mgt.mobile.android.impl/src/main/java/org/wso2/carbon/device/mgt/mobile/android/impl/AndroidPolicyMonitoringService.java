@@ -17,7 +17,7 @@
  */
 
 
-package org.wso2.carbon.device.mgt.mobile.impl.android;
+package org.wso2.carbon.device.mgt.mobile.android.impl;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

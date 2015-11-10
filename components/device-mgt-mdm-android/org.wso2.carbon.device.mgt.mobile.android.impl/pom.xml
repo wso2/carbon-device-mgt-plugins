@@ -51,8 +51,8 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Bundle-Version>${carbon.mobile.device.mgt.version}</Bundle-Version>
-                        <Bundle-Description>Device Management Mobile Impl Bundle</Bundle-Description>
-                        <Private-Package>org.wso2.carbon.device.mgt.mobile.internal</Private-Package>
+                        <Bundle-Description>Device Management Mobile Android Impl Bundle</Bundle-Description>
+                        <Private-Package>org.wso2.carbon.device.mgt.mobile.android.internal</Private-Package>
                         <Import-Package>
                             org.osgi.framework,
                             org.osgi.service.component,
@@ -67,6 +67,7 @@
                             org.wso2.carbon.context,
                             org.wso2.carbon.utils.*,
                             org.wso2.carbon.device.mgt.common.*,
+                            org.wso2.carbon.device.mgt.mobile.*,
                             org.wso2.carbon.ndatasource.core,
                             org.wso2.carbon.policy.mgt.common.*,
                             org.wso2.carbon.policy.mgt.core.*,
@@ -79,9 +80,8 @@
                             com.google.gson.*
                         </Import-Package>
                         <Export-Package>
-                            !org.wso2.carbon.device.mgt.mobile.internal,
-                            !org.wso2.carbon.device.mgt.mobile.impl,
-                            org.wso2.carbon.device.mgt.mobile.*,
+                            !org.wso2.carbon.device.mgt.mobile.android.internal,
+                            org.wso2.carbon.device.mgt.mobile.android.*
                         </Export-Package>
                     </instructions>
                 </configuration>
@@ -104,6 +104,10 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.mobile.impl</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi</artifactId>
