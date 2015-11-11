@@ -23,17 +23,13 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagementService;
-import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsPolicyMonitoringService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
-import org.wso2.carbon.policy.mgt.common.spi.PolicyMonitoringService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 import java.util.Map;
@@ -67,7 +63,6 @@ public class MobileDeviceManagementServiceComponent {
             log.debug("Activating Mobile Device Management Service Component");
         }
         try {
-            BundleContext bundleContext = ctx.getBundleContext();
 
             /* Initialize the data source configuration */
             MobileDeviceConfigurationManager.getInstance().initConfig();
@@ -95,15 +90,6 @@ public class MobileDeviceManagementServiceComponent {
                     log.error("Exception occurred while initializing mobile device management database schema", e);
                 }
             }
-
-            windowsServiceRegRef =
-                    bundleContext.registerService(DeviceManagementService.class.getName(),
-                            new WindowsDeviceManagementService(), null);
-
-            // Policy management service
-
-            bundleContext.registerService(PolicyMonitoringService.class,
-                    new WindowsPolicyMonitoringService(), null);
 
             if (log.isDebugEnabled()) {
                 log.debug("Mobile Device Management Service Component has been successfully activated");

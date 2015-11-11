@@ -1,3 +1,3 @@
 instructions.configure = \
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/conf/mobile-config.xml,target:${installFolder}/../../conf/mobile-config.xml,overwrite:true);\
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/dbscripts/plugins/,target:${installFolder}/../../../dbscripts/cdm/plugins,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/dbscripts/plugins/,target:${installFolder}/../../../dbscripts/cdm/plugins/android,overwrite:true);\

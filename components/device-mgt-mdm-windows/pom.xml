@@ -27,16 +27,14 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>device-mgt</artifactId>
+    <artifactId>device-mgt-mdm-windows</artifactId>
     <version>1.9.2-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Mobile Device Management Component</name>
+    <name>WSO2 Carbon - Mobile Device Management Windows Component</name>
     <url>http://wso2.org</url>
 
     <modules>
-        <!--<module>org.wso2.carbon.device.mgt.mobile.api</module>-->
-        <module>org.wso2.carbon.device.mgt.mobile.impl</module>
-        <module>org.wso2.carbon.device.mgt.mobile.url.printer</module>
+        <module>org.wso2.carbon.device.mgt.mobile.windows.impl</module>
     </modules>
 
     <build>

@@ -1,0 +1,2 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.windows_${feature.version}/dbscripts/plugins/,target:${installFolder}/../../../dbscripts/cdm/plugins/windows,overwrite:true);\
