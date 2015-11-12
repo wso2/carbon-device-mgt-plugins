@@ -29,7 +29,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.mobile.api</artifactId>
     <version>1.9.2-SNAPSHOT</version>
-    <packaging>bundle</packaging>
+    <packaging>war</packaging>
     <name>WSO2 Carbon - Mobile Device Management API</name>
     <description>WSO2 Carbon - Mobile Device Management API</description>
     <url>http://wso2.org</url>
@@ -190,7 +190,7 @@
             <artifactId>gson</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-codec.wso2</groupId>
+            <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
     </dependencies>
