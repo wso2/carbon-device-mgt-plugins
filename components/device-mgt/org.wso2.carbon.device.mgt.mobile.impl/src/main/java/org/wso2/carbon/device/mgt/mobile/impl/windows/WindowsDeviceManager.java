@@ -264,6 +264,11 @@ public class WindowsDeviceManager implements DeviceManager {
     }
 
     @Override
+    public boolean requireDeviceAuthorization() {
+        return false;
+    }
+
+    @Override
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier,
                                     Device device) throws DeviceManagementException {
         return true;
