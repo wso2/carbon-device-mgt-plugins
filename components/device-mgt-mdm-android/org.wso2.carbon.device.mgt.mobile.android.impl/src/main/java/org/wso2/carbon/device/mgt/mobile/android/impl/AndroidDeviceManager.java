@@ -303,6 +303,11 @@ public class AndroidDeviceManager implements DeviceManager {
 	}
 
 	@Override
+	public boolean requireDeviceAuthorization() {
+		return true;
+	}
+
+	@Override
 	public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device)
 			throws DeviceManagementException {
 		boolean status;
