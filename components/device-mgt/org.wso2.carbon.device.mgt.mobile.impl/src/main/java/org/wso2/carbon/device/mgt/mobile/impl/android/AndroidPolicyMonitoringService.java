@@ -28,6 +28,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
+import org.wso2.carbon.device.mgt.mobile.impl.android.gcm.GCMService;
+import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
 import org.wso2.carbon.policy.mgt.common.Policy;
 import org.wso2.carbon.policy.mgt.common.monitor.ComplianceData;
 import org.wso2.carbon.policy.mgt.common.monitor.ComplianceFeature;
@@ -43,7 +45,10 @@ public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
 
     @Override
     public void notifyDevices(List<Device> list) throws PolicyComplianceException {
-
+        GCMService gcmService = MobileDeviceManagementDataHolder.getInstance().getGCMService();
+        if (gcmService.isGCMEnabled()) {
+            gcmService.sendNotification("POLICY_BUNDLE", list);
+        }
     }
 
     @Override

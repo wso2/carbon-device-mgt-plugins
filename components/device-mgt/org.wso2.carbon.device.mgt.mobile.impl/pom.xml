@@ -61,28 +61,28 @@
                             javax.xml.bind.*,
                             javax.naming,
                             javax.sql,
-                            javax.xml.bind.annotation.*,
                             javax.xml.parsers,
                             org.w3c.dom,
-                            org.wso2.carbon.core,
                             org.wso2.carbon.context,
                             org.wso2.carbon.utils.*,
                             org.wso2.carbon.device.mgt.common.*,
                             org.wso2.carbon.ndatasource.core,
                             org.wso2.carbon.policy.mgt.common.*,
-                            org.wso2.carbon.policy.mgt.core.*,
                             org.wso2.carbon.registry.core,
-                            org.wso2.carbon.registry.core.exceptions,
                             org.wso2.carbon.registry.core.service,
                             org.wso2.carbon.registry.core.session,
                             org.wso2.carbon.registry.api,
                             org.wso2.carbon.device.mgt.extensions.license.mgt.registry,
-                            com.google.gson.*
+                            com.google.android.gcm.*,
+                            com.google.gson,
+                            org.json.simple,
+                            org.json.simple.parser
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.mobile.internal,
                             !org.wso2.carbon.device.mgt.mobile.impl,
                             org.wso2.carbon.device.mgt.mobile.*,
+                            com.google.android.gcm.*,
                         </Export-Package>
                     </instructions>
                 </configuration>
@@ -169,6 +169,10 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android.gcm</groupId>
+            <artifactId>gcm-server</artifactId>
         </dependency>
     </dependencies>
 </project>

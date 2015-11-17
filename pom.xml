@@ -528,6 +528,11 @@
                 <artifactId>gson</artifactId>
                 <version>${google.gson.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.android.gcm</groupId>
+                <artifactId>gcm-server</artifactId>
+                <version>${gcm.server.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -595,7 +600,7 @@
         <apache.wss4j.version>2.0.0</apache.wss4j.version>
         <codehaus.plexus.version>3.0.21</codehaus.plexus.version>
         <google.gson.version>2.2.4</google.gson.version>
-
+        <gcm.server.version>1.0.2</gcm.server.version>
     </properties>
 
     <scm>
@@ -784,6 +789,11 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
+        </repository>
+        <repository>
+            <id>gcm-server-repository</id>
+            <name>GCM Server repository - GitHub</name>
+            <url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
         </repository>
 	</repositories>
 </project>
