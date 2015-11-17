@@ -37,6 +37,7 @@ public class WindowsPluginConstants {
     public static final String SERIAL = "SERIAL";
     public static final String MAC_ADDRESS = "MAC_ADDRESS";
     public static final String DEVICE_NAME = "DEVICE_NAME";
+    public static final String RESOLUTION = "RESOLUTION";
 
     //Properties related to WIN_FEATURE table
     public static final String WINDOWS_FEATURE_ID = "ID";
