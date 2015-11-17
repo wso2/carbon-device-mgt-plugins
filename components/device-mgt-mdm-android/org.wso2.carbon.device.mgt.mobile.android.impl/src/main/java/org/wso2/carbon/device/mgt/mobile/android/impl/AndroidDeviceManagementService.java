@@ -43,6 +43,21 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
     }
 
     @Override
+    public String getProviderTenantDomain() {
+        return null;
+    }
+
+    @Override
+    public boolean isSharedWithAllTenants() {
+        return false;
+    }
+
+    @Override
+    public String[] getSharedTenantsDomain() {
+        return new String[0];
+    }
+
+    @Override
     public void init() throws DeviceManagementException {
         this.deviceManager = new AndroidDeviceManager();
     }
