@@ -32,6 +32,7 @@ import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFa
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidPolicyMonitoringService;
+import org.wso2.carbon.device.mgt.mobile.impl.android.gcm.GCMService;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsPolicyMonitoringService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
@@ -61,6 +62,7 @@ public class MobileDeviceManagementServiceComponent {
 
     private ServiceRegistration androidServiceRegRef;
     private ServiceRegistration windowsServiceRegRef;
+    private ServiceRegistration gcmServiceRegRef;
 
     private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
 
@@ -98,13 +100,19 @@ public class MobileDeviceManagementServiceComponent {
                     log.error("Exception occurred while initializing mobile device management database schema", e);
                 }
             }
+            DeviceManagementService androidDeviceManagementService = new AndroidDeviceManagementService();
+            GCMService gcmService = new GCMService();
 
             androidServiceRegRef =
                     bundleContext.registerService(DeviceManagementService.class.getName(),
-                            new AndroidDeviceManagementService(), null);
+                                                  androidDeviceManagementService, null);
             windowsServiceRegRef =
                     bundleContext.registerService(DeviceManagementService.class.getName(),
                             new WindowsDeviceManagementService(), null);
+
+            gcmServiceRegRef =
+                    bundleContext.registerService(GCMService.class.getName(), gcmService, null);
+
 
             // Policy management service
 
@@ -113,6 +121,9 @@ public class MobileDeviceManagementServiceComponent {
             bundleContext.registerService(PolicyMonitoringService.class,
                     new WindowsPolicyMonitoringService(), null);
 
+            MobileDeviceManagementDataHolder.getInstance().setAndroidDeviceManagementService(
+                    androidDeviceManagementService);
+            MobileDeviceManagementDataHolder.getInstance().setGCMService(gcmService);
             if (log.isDebugEnabled()) {
                 log.debug("Mobile Device Management Service Component has been successfully activated");
             }
@@ -131,6 +142,9 @@ public class MobileDeviceManagementServiceComponent {
             }
             if (windowsServiceRegRef != null) {
                 windowsServiceRegRef.unregister();
+            }
+            if (gcmServiceRegRef != null) {
+                gcmServiceRegRef.unregister();
             }
             if (log.isDebugEnabled()) {
                 log.debug(
