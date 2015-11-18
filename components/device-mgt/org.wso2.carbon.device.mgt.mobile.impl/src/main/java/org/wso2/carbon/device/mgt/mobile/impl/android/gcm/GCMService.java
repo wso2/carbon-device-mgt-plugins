@@ -19,6 +19,8 @@
 package org.wso2.carbon.device.mgt.mobile.impl.android.gcm;
 
 import com.google.android.gcm.server.Message;
+import com.google.android.gcm.server.MulticastResult;
+import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +63,10 @@ public class GCMService {
         Message message =
                 new Message.Builder().timeToLive(seconds).delayWhileIdle(false).addData("data", messageData).build();
         try {
-            sender.send(message, getGCMToken(device.getProperties()), 5);
+            Result result = sender.send(message, getGCMToken(device.getProperties()), 5);
+            if (result.getErrorCodeName() != null) {
+                log.error("Unable to send notification via GCM : " + result.getErrorCodeName());
+            }
         } catch (IOException e) {
             log.error("Exception occurred while sending the GCM notification.",e);
         }
@@ -73,7 +78,16 @@ public class GCMService {
         Message message =
                 new Message.Builder().timeToLive(seconds).delayWhileIdle(false).addData("data", messageData).build();
         try {
-            sender.send(message, getGCMTokens(devices), 5);
+            MulticastResult result = sender.send(message, getGCMTokens(devices), 5);
+            if (result.getFailure() == 1) {
+                List<Result> resultList = result.getResults();
+                if (resultList != null && resultList.size() > 0) {
+                    Result error = resultList.get(0);
+                    log.error("Unable to send notification via GCM : " + error.getErrorCodeName());
+                } else {
+                    log.error("Unable to send notification via GCM.");
+                }
+            }
         } catch (IOException e) {
             log.error("Exception occurred while sending the GCM notification.",e);
         }
