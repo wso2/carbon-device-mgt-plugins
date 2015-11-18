@@ -61,7 +61,7 @@
                             javax.naming,
                             javax.sql,
                             javax.xml.bind.annotation.*,
-                            javax.xml.parsers,
+                            javax.xml.parsers.*;resolution:=optional,
                             org.w3c.dom,
                             org.wso2.carbon.core,
                             org.wso2.carbon.context,
