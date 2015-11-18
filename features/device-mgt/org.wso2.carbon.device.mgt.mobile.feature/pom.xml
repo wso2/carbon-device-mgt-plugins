@@ -107,7 +107,7 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/src/main/resources/webapps/
                                     </outputDirectory>
-                                    <destFileName>mdm_admin.war</destFileName>
+                                    <destFileName>mdm-admin.war</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
