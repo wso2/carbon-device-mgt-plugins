@@ -46,7 +46,7 @@ public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
     @Override
     public void notifyDevices(List<Device> list) throws PolicyComplianceException {
         GCMService gcmService = MobileDeviceManagementDataHolder.getInstance().getGCMService();
-        if (gcmService.isGCMEnabled()) {
+        if (gcmService.isGCMEnabled() && !list.isEmpty()) {
             gcmService.sendNotification("POLICY_BUNDLE", list);
         }
     }
