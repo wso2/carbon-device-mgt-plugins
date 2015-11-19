@@ -243,6 +243,11 @@
                 <artifactId>org.wso2.carbon.policy.mgt.core</artifactId>
                 <version>${carbon.device.mgt.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt</groupId>
+                <artifactId>org.wso2.carbon.certificate.mgt.core</artifactId>
+                <version>${carbon.device.mgt.version}</version>
+            </dependency>
 
             <!--MDM dependencies-->
             <dependency>
@@ -277,6 +282,11 @@
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.mobile.windows.impl</artifactId>
+                <version>${carbon.mobile.device.mgt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.mobile.windows.api</artifactId>
                 <version>${carbon.mobile.device.mgt.version}</version>
             </dependency>
 
@@ -847,6 +857,7 @@
 
         <!-- CXF version -->
         <cxf.version>2.7.16</cxf.version>
+        <cxf.bindings.version>2.5.11</cxf.bindings.version>
         <jackson.version>1.9.0</jackson.version>
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
