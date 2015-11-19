@@ -74,9 +74,19 @@ public class WindowsDeviceManagementService implements DeviceManagementService {
         return null;
     }
 
-    @Override
-    public void installApplication(Operation operation,
-                                   List<DeviceIdentifier> deviceIdentifiers) throws ApplicationManagementException {
+    @Override public void installApplicationForDevices(Operation operation, List<DeviceIdentifier> deviceIdentifiers)
+            throws ApplicationManagementException {
+
+    }
+
+    @Override public void installApplicationForUsers(Operation operation, List<String> strings)
+            throws ApplicationManagementException {
+
+    }
+
+    @Override public void installApplicationForUserRoles(Operation operation, List<String> strings)
+            throws ApplicationManagementException {
+
     }
 
 }
