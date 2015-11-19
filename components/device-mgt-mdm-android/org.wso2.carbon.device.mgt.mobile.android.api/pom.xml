@@ -38,8 +38,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
                 <version>2.3.2</version>
             </plugin>
@@ -110,6 +110,7 @@
     </profiles>
 
     <dependencies>
+        <!--project dependancies-->
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>

@@ -47,7 +47,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <packagingExcludes>WEB-INF/lib/*cxf*.jar</packagingExcludes>
+                    <!--<packagingExcludes>WEB-INF/lib/*cxf*.jar</packagingExcludes>-->
                     <warName>${project.artifactId}</warName>
                 </configuration>
             </plugin>
