@@ -56,6 +56,12 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
     }
 
     @Override
+    public void notifyOperationToDevices(Operation operation, List<DeviceIdentifier> deviceIdentifiers)
+            throws DeviceManagementException {
+
+    }
+
+    @Override
     public Application[] getApplications(String s, int i, int i2) throws ApplicationManagementException {
         return new Application[0];
     }
