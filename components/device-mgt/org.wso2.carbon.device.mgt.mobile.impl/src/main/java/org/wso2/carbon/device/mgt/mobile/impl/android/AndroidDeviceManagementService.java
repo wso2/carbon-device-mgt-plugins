@@ -56,6 +56,12 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
     }
 
     @Override
+    public void notifyOperationToDevices(Operation operation, List<DeviceIdentifier> deviceIdentifiers)
+            throws DeviceManagementException {
+
+    }
+
+    @Override
     public Application[] getApplications(String s, int i, int i2) throws ApplicationManagementException {
         return new Application[0];
     }
@@ -72,9 +78,18 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
         return null;
     }
 
-    @Override
-    public void installApplication(Operation operation,
-                                   List<DeviceIdentifier> deviceIdentifiers) throws ApplicationManagementException {
+    @Override public void installApplicationForDevices(Operation operation, List<DeviceIdentifier> deviceIdentifiers)
+            throws ApplicationManagementException {
+
+    }
+
+    @Override public void installApplicationForUsers(Operation operation, List<String> strings)
+            throws ApplicationManagementException {
+
+    }
+
+    @Override public void installApplicationForUserRoles(Operation operation, List<String> strings)
+            throws ApplicationManagementException {
 
     }
 

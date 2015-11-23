@@ -73,16 +73,12 @@
                             org.wso2.carbon.registry.core.session,
                             org.wso2.carbon.registry.api,
                             org.wso2.carbon.device.mgt.extensions.license.mgt.registry,
-                            com.google.android.gcm.*,
-                            com.google.gson,
-                            org.json.simple,
-                            org.json.simple.parser
+                            com.google.gson.*,
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.mobile.internal,
                             !org.wso2.carbon.device.mgt.mobile.impl,
                             org.wso2.carbon.device.mgt.mobile.*,
-                            com.google.android.gcm.*,
                         </Export-Package>
                     </instructions>
                 </configuration>
