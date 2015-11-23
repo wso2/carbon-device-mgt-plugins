@@ -17,6 +17,7 @@
   ~ under the License.
   -->
 
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
@@ -143,6 +144,10 @@
                     <exclusion>
                         <groupId>org.wso2.carbon</groupId>
                         <artifactId>org.wso2.carbon.registry.api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xerces.wso2</groupId>
+                        <artifactId>xercesImpl</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -366,8 +371,24 @@
                 <artifactId>h2-database-engine</artifactId>
                 <version>${orbit.h2.engine.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.wso2</groupId>
+                <artifactId>jdbc-pool</artifactId>
+                <version>${orbit.tomcat.jdbc.pooling.version}</version>
+            </dependency>
 
             <!--APIM dependencies-->
+            <!--            <dependency>
+                            <groupId>org.wso2.carbon.apimgt</groupId>
+                            <artifactId>org.wso2.carbon.apimgt.core</artifactId>
+                            <version>${carbon.api.mgt.version}</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>org.wso2.carbon.mediation</groupId>
+                                    <artifactId>org.wso2.carbon.mediation.initializer</artifactId>
+                                </exclusion>
+                            </exclusions>
+                        </dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.apimgt</groupId>
                 <artifactId>org.wso2.carbon.apimgt.core</artifactId>
@@ -498,6 +519,14 @@
                     <exclusion>
                         <groupId>com.googlecode.json-simple.wso2</groupId>
                         <artifactId>json-simple</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.bsf</groupId>
+                        <artifactId>bsf-all</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xerces</groupId>
+                        <artifactId>xercesImpl</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -817,6 +846,11 @@
                 <artifactId>gson</artifactId>
                 <version>${google.gson.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.android.gcm</groupId>
+                <artifactId>gcm-server</artifactId>
+                <version>${gcm.server.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -849,9 +883,7 @@
 
         <!--Orbit versions-->
         <orbit.h2.engine.version>1.2.140.wso2v3</orbit.h2.engine.version>
-
-        <!-- Tomcat -->
-        <orbit.tomcat.version>7.0.59.wso2v1</orbit.tomcat.version>
+        <orbit.tomcat.version>7.0.52.wso2v5</orbit.tomcat.version>
         <orbit.tomcat.jdbc.pooling.version>7.0.34.wso2v2</orbit.tomcat.jdbc.pooling.version>
         <orbit.version.tomcat-servlet-api>7.0.59.wso2v1</orbit.version.tomcat-servlet-api>
 
@@ -865,7 +897,7 @@
         <carbon.commons.version>4.4.8</carbon.commons.version>
 
         <!-- Carbon API Management -->
-        <carbon.api.mgt.version>4.3.0-SNAPSHOT</carbon.api.mgt.version>
+        <carbon.api.mgt.version>4.3.0</carbon.api.mgt.version>
 
         <!-- Carbon Deployment -->
         <carbon.deployment.version>4.6.0</carbon.deployment.version>
@@ -908,6 +940,11 @@
         <commons-io.version>2.4</commons-io.version>
         <jsr311-api.version>1.1.1</jsr311-api.version>
         <google.gson.version>2.3.1</google.gson.version>
+        <google.gson.version>2.2.4</google.gson.version>
+        <gcm.server.version>1.0.2</gcm.server.version>
+
+	<!-- Release plugin ID for github-->
+	<project.scm.id>github-scm</project.scm.id>
     </properties>
 
     <scm>
@@ -1096,6 +1133,11 @@
             <releases>
                 <enabled>false</enabled>
             </releases>
+        </repository>
+        <repository>
+            <id>gcm-server-repository</id>
+            <name>GCM Server repository - GitHub</name>
+            <url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
         </repository>
 	</repositories>
 </project>
