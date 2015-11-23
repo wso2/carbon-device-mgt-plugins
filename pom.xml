@@ -371,11 +371,6 @@
                 <artifactId>h2-database-engine</artifactId>
                 <version>${orbit.h2.engine.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat.wso2</groupId>
-                <artifactId>jdbc-pool</artifactId>
-                <version>${orbit.tomcat.jdbc.pooling.version}</version>
-            </dependency>
 
             <!--APIM dependencies-->
             <!--            <dependency>
@@ -683,6 +678,12 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity</groupId>
+                <artifactId>org.wso2.carbon.identity.oauth</artifactId>
+                <version>${carbon.identity.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <scope>test</scope>
@@ -883,7 +884,7 @@
 
         <!--Orbit versions-->
         <orbit.h2.engine.version>1.2.140.wso2v3</orbit.h2.engine.version>
-        <orbit.tomcat.version>7.0.52.wso2v5</orbit.tomcat.version>
+        <orbit.tomcat.version>7.0.59.wso2v1</orbit.tomcat.version>
         <orbit.tomcat.jdbc.pooling.version>7.0.34.wso2v2</orbit.tomcat.jdbc.pooling.version>
         <orbit.version.tomcat-servlet-api>7.0.59.wso2v1</orbit.version.tomcat-servlet-api>
 

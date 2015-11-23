@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.mobile.impl.android.gcm;
+package org.wso2.carbon.device.mgt.mobile.android.impl.gcm;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

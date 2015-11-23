@@ -65,6 +65,7 @@ public final class PluginConstants {
     //Message handler constants
     public static final String CONTENT_LENGTH = "Content-Length";
     public static final String SECURITY = "Security";
+    public static final String CXF_REQUEST_URI = "org.apache.cxf.request.uri";
 
     //Web services media types
     public static final String SYNCML_MEDIA_TYPE = "application/vnd.syncml.dm+xml;charset=utf-8";
@@ -182,9 +183,10 @@ public final class PluginConstants {
         public static final int IMSI_POSITION = 1;
         public static final int IMEI_POSITION = 2;
         public static final int VENDER_POSITION = 4;
-        public static final int MACADDRESS_POSITION = 6;
-        public static final int RESOLUTION_POSITION = 7;
-        public static final int DEVICE_NAME_POSITION = 8;
+        public static final int MODEL_POSITION = 5;
+        public static final int MACADDRESS_POSITION = 7;
+        public static final int RESOLUTION_POSITION = 8;
+        public static final int DEVICE_NAME_POSITION = 9;
         public static final String SYNCML_DATA_ONE = "1";
         public static final String SYNCML_DATA_ZERO = "0";
         public static final String OS_VERSION = "OS_VERSION";
@@ -272,6 +274,7 @@ public final class PluginConstants {
         public static final String LANGUAGE_US = "en_US";
         public static final String CONTENT_TYPE_TEXT = "text";
         public static final String NOTIFIER_FREQUENCY = "notifierFrequency";
+        public static final String DEFAULT_FREQUENCY = "8";
 
     }
 

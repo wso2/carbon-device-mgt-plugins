@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.mobile.impl.android.gcm;
+package org.wso2.carbon.device.mgt.mobile.android.impl.gcm;
 
 /**
  * Represents model object for holding GCM response data.

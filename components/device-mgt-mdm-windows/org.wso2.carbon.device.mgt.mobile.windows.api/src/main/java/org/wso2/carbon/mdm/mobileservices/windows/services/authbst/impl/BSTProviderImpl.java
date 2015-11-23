@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.authbst.impl;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
@@ -57,21 +58,24 @@ public class BSTProviderImpl implements BSTProvider {
 
         String domainUser = credentials.getUsername();
         String userToken = credentials.getUsertoken();
+        String encodedToken;
         try {
             Token tokenBean = new Token();
             tokenBean.setChallengeToken(userToken);
-            DeviceUtil.persistChallengeToken(tokenBean.getChallengeToken(), "", domainUser);
+            Base64 base64 = new Base64();
+            encodedToken = base64.encodeToString(userToken.getBytes());
+            DeviceUtil.persistChallengeToken(encodedToken, null, domainUser);
             JSONObject tokenContent = new JSONObject();
             tokenContent.put("UserToken", userToken);
             return Response.ok().entity(tokenContent.toString()).build();
         } catch (DeviceManagementException e) {
             String msg = "Failure occurred in generating challenge token.";
-            log.error(msg);
-            throw new WindowsDeviceEnrolmentException(msg);
+            log.error(msg, e);
+            throw new WindowsDeviceEnrolmentException(msg, e);
         } catch (JSONException e) {
             String msg = "Failure occurred in generating challenge token Json.";
-            log.error(msg);
-            throw new WindowsDeviceEnrolmentException(msg);
+            log.error(msg, e);
+            throw new WindowsDeviceEnrolmentException(msg, e);
         }
     }
 

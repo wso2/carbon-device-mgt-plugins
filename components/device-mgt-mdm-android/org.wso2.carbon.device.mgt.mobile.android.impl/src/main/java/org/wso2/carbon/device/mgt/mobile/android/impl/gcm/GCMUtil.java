@@ -16,9 +16,11 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.mobile.impl.android.gcm;
+package org.wso2.carbon.device.mgt.mobile.android.impl.gcm;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
@@ -27,10 +29,14 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
-import org.wso2.carbon.device.mgt.mobile.impl.android.util.AndroidPluginConstants;
-import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
+import org.wso2.carbon.device.mgt.mobile.android.impl.util.AndroidPluginConstants;
+import org.wso2.carbon.device.mgt.mobile.android.internal.AndroidDeviceManagementDataHolder;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -150,7 +156,7 @@ public class GCMUtil {
     }
 
     public static String getConfigurationProperty(String property) {
-        DeviceManagementService androidDMService = MobileDeviceManagementDataHolder.getInstance().
+        DeviceManagementService androidDMService = AndroidDeviceManagementDataHolder.getInstance().
                 getAndroidDeviceManagementService();
         try {
             //Get the TenantConfiguration from cache if not we'll get it from DM service
