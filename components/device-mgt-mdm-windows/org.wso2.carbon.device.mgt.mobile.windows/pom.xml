@@ -21,19 +21,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>device-mgt</artifactId>
+        <artifactId>device-mgt-mdm-windows</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <version>1.9.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-    <artifactId>org.wso2.carbon.device.mgt.mobile.impl</artifactId>
+    <artifactId>org.wso2.carbon.device.mgt.mobile.windows</artifactId>
     <version>1.9.2-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - Mobile Device Management Impl</name>
-    <description>WSO2 Carbon - Mobile Device Management Impl</description>
+    <name>WSO2 Carbon - Mobile Device Management Windows Impl</name>
+    <description>WSO2 Carbon - Mobile Device Management Windows Implementation</description>
     <url>http://wso2.org</url>
 
     <build>
@@ -52,8 +51,8 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Bundle-Version>${carbon.mobile.device.mgt.version}</Bundle-Version>
-                        <Bundle-Description>Device Management Mobile Impl Bundle</Bundle-Description>
-                        <Private-Package>org.wso2.carbon.device.mgt.mobile.internal</Private-Package>
+                        <Bundle-Description>Device Management Mobile Windows Impl Bundle</Bundle-Description>
+                        <Private-Package>org.wso2.carbon.device.mgt.mobile.windows.internal</Private-Package>
                         <Import-Package>
                             org.osgi.framework,
                             org.osgi.service.component,
@@ -61,14 +60,19 @@
                             javax.xml.bind.*,
                             javax.naming,
                             javax.sql,
-                            javax.xml.parsers,
+                            javax.xml.bind.annotation.*,
+                            javax.xml.parsers.*;resolution:=optional,
                             org.w3c.dom,
+                            org.wso2.carbon.core,
                             org.wso2.carbon.context,
                             org.wso2.carbon.utils.*,
                             org.wso2.carbon.device.mgt.common.*,
+                            org.wso2.carbon.device.mgt.mobile.*,
                             org.wso2.carbon.ndatasource.core,
                             org.wso2.carbon.policy.mgt.common.*,
+                            org.wso2.carbon.policy.mgt.core.*,
                             org.wso2.carbon.registry.core,
+                            org.wso2.carbon.registry.core.exceptions,
                             org.wso2.carbon.registry.core.service,
                             org.wso2.carbon.registry.core.session,
                             org.wso2.carbon.registry.api,
@@ -76,31 +80,34 @@
                             com.google.gson.*
                         </Import-Package>
                         <Export-Package>
-                            !org.wso2.carbon.device.mgt.mobile.internal,
-                            !org.wso2.carbon.device.mgt.mobile.impl,
-                            org.wso2.carbon.device.mgt.mobile.*,
+                            !org.wso2.carbon.device.mgt.mobile.windows.internal,
+                            org.wso2.carbon.device.mgt.mobile.windows.*
                         </Export-Package>
                     </instructions>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18</version>
-                <configuration>
-                    <systemPropertyVariables>
-                        <log4j.configuration>file:src/test/resources/log4j.properties
-                        </log4j.configuration>
-                    </systemPropertyVariables>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-surefire-plugin</artifactId>-->
+                <!--<version>2.18</version>-->
+                <!--<configuration>-->
+                    <!--<systemPropertyVariables>-->
+                        <!--<log4j.configuration>file:src/test/resources/log4j.properties-->
+                        <!--</log4j.configuration>-->
+                    <!--</systemPropertyVariables>-->
+                    <!--<suiteXmlFiles>-->
+                        <!--<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>-->
+                    <!--</suiteXmlFiles>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.mobile</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi</artifactId>
@@ -165,10 +172,6 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.android.gcm</groupId>
-            <artifactId>gcm-server</artifactId>
         </dependency>
     </dependencies>
 </project>

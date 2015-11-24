@@ -162,7 +162,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.mobile.android.impl</artifactId>
+            <artifactId>org.wso2.carbon.device.mgt.mobile.android</artifactId>
             <scope>provided</scope>
         </dependency>
 

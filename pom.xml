@@ -37,10 +37,10 @@
     </parent>
 
     <modules>
-        <module>components/device-mgt</module>
+        <module>components/device-mgt-mdm</module>
         <module>components/device-mgt-mdm-android</module>
         <module>components/device-mgt-mdm-windows</module>
-        <module>features/device-mgt</module>
+        <module>features/device-mgt-mdm</module>
         <module>features/device-mgt-mdm-android</module>
         <module>features/device-mgt-mdm-windows</module>
     </modules>
@@ -262,7 +262,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.mobile.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.mobile</artifactId>
                 <version>${carbon.mobile.device.mgt.version}</version>
             </dependency>
             <dependency>
@@ -274,7 +274,7 @@
             <!--Android dependencies-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.mobile.android.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.mobile.android</artifactId>
                 <version>${carbon.mobile.device.mgt.version}</version>
             </dependency>
             <dependency>
@@ -286,7 +286,7 @@
             <!--Windows dependencies-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.mobile.windows.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.mobile.windows</artifactId>
                 <version>${carbon.mobile.device.mgt.version}</version>
             </dependency>
             <dependency>

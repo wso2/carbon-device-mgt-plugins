@@ -20,7 +20,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <artifactId>device-mgt</artifactId>
+        <artifactId>device-mgt-mdm</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <version>1.9.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>

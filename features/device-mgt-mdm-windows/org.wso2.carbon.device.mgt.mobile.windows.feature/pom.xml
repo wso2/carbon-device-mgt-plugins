@@ -41,7 +41,7 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.mobile.windows.impl</artifactId>
+            <artifactId>org.wso2.carbon.device.mgt.mobile.windows</artifactId>
         </dependency>
     </dependencies>
 
@@ -123,7 +123,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.mobile.windows.impl:${carbon.mobile.device.mgt.version}
+                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.mobile.windows:${carbon.mobile.device.mgt.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>

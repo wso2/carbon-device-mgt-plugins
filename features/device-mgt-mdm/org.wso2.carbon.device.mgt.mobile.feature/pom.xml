@@ -41,7 +41,7 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.mobile.impl</artifactId>
+            <artifactId>org.wso2.carbon.device.mgt.mobile</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
@@ -139,7 +139,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.mobile.impl:${carbon.mobile.device.mgt.version}
+                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.mobile:${carbon.mobile.device.mgt.version}
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.mobile.url.printer:${carbon.mobile.device.mgt.version}
