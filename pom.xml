@@ -41,7 +41,7 @@
         <module>components/device-mgt-mdm</module>
         <module>components/device-mgt-mdm-android</module>
         <module>components/device-mgt-mdm-windows</module>
-        <module>features/device-mgt-iot-feature</module>
+        <module>features/device-mgt-iot</module>
         <module>features/device-mgt-mdm</module>
         <module>features/device-mgt-mdm-android</module>
         <module>features/device-mgt-mdm-windows</module>
