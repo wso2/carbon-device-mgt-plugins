@@ -1,0 +1,114 @@
+/*
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+.wr-asset-type-switcher {
+    float: left;
+    padding-right: 0;
+    /*position: absolute;*/
+    top: 0;
+    left: 0;
+    height: auto;
+    width:auto;
+}
+
+.wr-asset-type-switcher span.btn-asset{
+    margin-right: 0px;
+}
+
+.wr-asset-type-switcher a.switcher-link{
+    color:#fff;
+    height: 54px;
+    line-height: 50px;
+    font-size:18px;
+    font-weight: 100;
+    padding-left:15px;
+    padding-right:20px;
+    background-color:#2374c8;
+    border-right:1px solid #3084db;
+}
+
+.wr-asset-type-switcher a.switcher-link:hover {
+    background-color:#1965b2;
+    text-decoration: none;
+}
+
+.navbar-nav > li > a {
+    height: 54px;
+    padding: 0 20px 0 0;
+    line-height: 54px;
+    color: #fff;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.wr-action-btn-bar{
+    background-color: #2374c8;
+    height: auto;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.switcher-link{
+    text-transform: uppercase;
+}
+
+.wr-content {
+    padding-top: 30px;
+}
+
+.wr-content-alt {
+    padding-top:30px;
+}
+
+.wr-title {
+    font-family: 'Open Sans';
+    font-weight: 400;
+    font-size: 26px;
+}
+
+@media (max-width:500px){
+    .wr-content {
+        padding: 0;
+    }
+}
+
+.wr-asset-type-switcher {
+    float:left;
+    height:54px;
+}
+
+a.ctrl-asset-type-switcher {
+    display:inline-block;
+    padding:0;
+    font-size:18px;
+    color:#fff;
+    text-decoration: none;
+    font-weight:100;
+}
+
+a.ctrl-asset-type-switcher:hover {
+    color:#fff;
+}
+
+.wr-asset-type-switcher span {
+    float:left;
+}
+
+.wr-asset-type-switcher span.btn-text {
+    padding-top:14px;
+}

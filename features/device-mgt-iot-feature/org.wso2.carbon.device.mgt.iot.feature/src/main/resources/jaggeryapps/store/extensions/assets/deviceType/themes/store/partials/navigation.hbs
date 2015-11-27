@@ -1,0 +1,61 @@
+<!--
+  ~ Copyright (c) 2015, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!-- secondary header - app bar -->
+<div id="nav" class="row wr-app-bar">
+    <div class="wr-action-container">
+        <div class="wr-asset-type-switcher">
+            <a id="popoverExampleTwo" data-placement="bottom"
+               class="ctrl-asset-type-switcher pull-left" href="javascript:void(0)"
+               data-click-event="popover">
+                <span class="btn-asset"></span>
+            </a>
+            {{#if cuser.username}}
+                <div class="popover bottom right fade clearfix">
+                    <div class="arrow left"></div>
+                    <div class="popover-content">
+                        <ul class="tiles clearfix">
+                            <li><a href="{{url ""}}/pages/devices"><i
+                                    class="icon fw fw-devices"></i>My Devices</a></li>
+                            <li><a href="{{url ""}}/pages/groups"><i class="icon fw fw-grid"></i>My
+                                                                                                 Groups</a>
+                            </li>
+                            <li><a href="{{url ""}}/pages/policies"><i
+                                    class="icon fw fw-policy"></i>Policy Management</a></li>
+                            <li><a href="{{url ""}}/pages/events"><i
+                                    class="icon fw fw-apn"></i>Events</a></li>
+                        </ul>
+                    </div>
+                </div>
+            {{/if}}
+        </div>
+        <div class="search">
+            {{>search .}}
+            <a href="{{url ""}}/pages/advanced-search" class="pull-left advance-search-btn" title="Advanced Search - All Assets"><span class="fa fa-cog advanced-search-icons"></span><span class="advanced-search-text">Search All DeviceTypes</span></a>
+        </div><!--search--->
+    </div>
+    {{#unless isUserDomainAndUrlDomainDifferent}}
+        <div class="site-wide-menu">
+            <div class="inline-block margin-top-sm">
+                {{#hasAppPermission . key="APP_MYITEMS" username=cuser.username tenantId=cuser.tenantId}}
+                    <a href="{{tenantedUrl "/pages/devices"}}" class="bookmark-link" title="{{t "My Devices "}}"><span class="bookmark-link-text">{{t "My Devices "}}</span><i class="fw fw-bookmark fw-inverse fw-lg bookmark-link-icon"></i></a>
+                {{/hasAppPermission}}
+            </div>
+        </div>
+    {{/unless}}
+
+</div>
+<!-- secondary header - app bar -->
+{{> action-bar .}}

@@ -1,0 +1,14 @@
+<%
+var themeModule = require('/modules/theme.js');
+%>
+<header>
+    <div class="row wr-global-header">
+        <div class="col-lg-12 app-logo">
+            <a class="login-link">
+                <img src="<%=themeModule.getThemedUrl('views/images/logo.png')%>" />
+                <h2 class="app-title" style="text-transform: none !important;">
+                    IoT Server</h2>
+            </a>
+        </div>
+    </div>
+</header>

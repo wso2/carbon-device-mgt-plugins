@@ -1,0 +1,87 @@
+form {
+    background: #F4F4F4;
+}
+
+.top-device-details {
+    padding: 20px;
+    border: solid 1px #ccc;
+    background: rgba(48, 162, 249, 0.06);
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+
+.wr-input-control {
+    margin: 10px;
+    padding: 5px;
+}
+
+.wr-input-label {
+    width: 100px;
+}
+
+.wr-input-label-status {
+    width: 200px;
+}
+
+.wr-btn, a.wr-btn {
+    font-weight: normal;
+    font-size: 13px;
+    color: #fff;
+    background: #11375B;
+    padding: 10px 10px;
+    display: inline-block;
+    margin-right: 5px;
+    border: none;
+    text-decoration: none;
+}
+
+.center-container {
+    top: 50px;
+    left: 25%;
+    right: 25%;
+}
+
+.wr-input-control input, .wr-input-control textarea {
+    width: 250px;
+    padding: 8px;
+}
+
+::-webkit-input-placeholder {
+    color: #999;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    color: #999;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+    color: #999;
+}
+
+:-ms-input-placeholder {
+    color: #999;
+}
+
+.assets-container {
+    margin-top: 0;
+}
+
+.padding-left {
+    padding-left: 35px;
+}
+
+.wr-list-group {
+    margin-top: 0;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.list-group-item {
+    height: 50px;
+}
+
+.map-wrapper {
+    height: 400px;
+    margin-left: 35px;
+    margin-bottom: 20px;
+}

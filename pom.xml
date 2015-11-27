@@ -37,9 +37,11 @@
     </parent>
 
     <modules>
+        <module>components/device-mgt-iot</module>
         <module>components/device-mgt-mdm</module>
         <module>components/device-mgt-mdm-android</module>
         <module>components/device-mgt-mdm-windows</module>
+        <module>features/device-mgt-iot-feature</module>
         <module>features/device-mgt-mdm</module>
         <module>features/device-mgt-mdm-android</module>
         <module>features/device-mgt-mdm-windows</module>
@@ -211,6 +213,16 @@
                 <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${commons-collections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-configuration</groupId>
+                <artifactId>commons-configuration</artifactId>
+                <version>${commons-configuration.version}</version>
+            </dependency>
 
             <!-- Device Management Core dependencies -->
             <dependency>
@@ -252,6 +264,74 @@
                 <groupId>org.wso2.carbon.devicemgt</groupId>
                 <artifactId>org.wso2.carbon.certificate.mgt.core</artifactId>
                 <version>${carbon.device.mgt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.analytics</artifactId>
+                <version>${carbon.device.mgt.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.commons</groupId>
+                <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
+                <version>${carbon.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.commons</groupId>
+                <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+                <version>${carbon.commons.version}</version>
+            </dependency>
+
+            <!--IoT Server specific dependencies-->
+
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.api</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+                <type>war</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.json.wso2</groupId>
+                <artifactId>json</artifactId>
+                <version>${commons-json.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.paho</groupId>
+                <artifactId>mqtt-client</artifactId>
+                <version>${eclipse.paho.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-web-api</artifactId>
+                <version>${javaee-web-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+
+            <!--Carbon Analytics Dependency-->
+            <dependency>
+                <groupId>org.wso2.carbon.analytics</groupId>
+                <artifactId>org.wso2.carbon.analytics.datasource.commons</artifactId>
+                <version>${carbon.analytics.version}</version>
+            </dependency>
+
+            <!--Dependencies on XMPP Client Library-->
+            <dependency>
+                <groupId>org.igniterealtime.smack.wso2</groupId>
+                <artifactId>smack</artifactId>
+                <version>${smack.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.igniterealtime.smack.wso2</groupId>
+                <artifactId>smackx</artifactId>
+                <version>${smackx.wso2.version}</version>
             </dependency>
 
             <!--MDM dependencies-->
@@ -295,7 +375,7 @@
                 <version>${carbon.mobile.device.mgt.version}</version>
             </dependency>
 
-            <!--CXF dependencies (needed for mobile Jax_RS web apps)-->
+            <!--CXF dependencies (needed for mobile and IoT Jax_RS web apps)-->
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -327,6 +407,17 @@
                 <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.user.mgt</artifactId>
                 <version>${carbon.commons.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-core-asl</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
 
             <!--Osgi dependencies-->
@@ -857,6 +948,10 @@
 
     <properties>
 
+        <!-- Java Version Compatibility -->
+        <wso2.maven.compiler.source>1.7</wso2.maven.compiler.source>
+        <wso2.maven.compiler.target>1.7</wso2.maven.compiler.target>
+
         <!--Carbon kernel versions-->
         <carbon.kernel.version>4.4.2</carbon.kernel.version>
         <carbon.kernel.version.range>[4.4.0, 4.5.0)</carbon.kernel.version.range>
@@ -922,6 +1017,17 @@
         <!-- Mobile Device Management -->
         <carbon.mobile.device.mgt.version>1.9.2-SNAPSHOT</carbon.mobile.device.mgt.version>
 
+        <!-- IOT Device Management -->
+        <carbon.iot.device.mgt.version>1.9.2-SNAPSHOT</carbon.iot.device.mgt.version>
+
+        <!--XMPP/MQTT Version-->
+        <smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>
+        <smackx.wso2.version>3.0.4.wso2v1</smackx.wso2.version>
+        <eclipse.paho.version>0.4.0</eclipse.paho.version>
+
+        <!--carbon analytics dependencies-->
+        <carbon.analytics.version>1.0.3</carbon.analytics.version>
+
         <!-- Third Party Dependencies-->
         <spongycastle.version>1.51.0.0</spongycastle.version>
         <bouncycastle.version>1.49</bouncycastle.version>
@@ -943,6 +1049,11 @@
         <google.gson.version>2.3.1</google.gson.version>
         <google.gson.version>2.2.4</google.gson.version>
         <gcm.server.version>1.0.2</gcm.server.version>
+        <commons-json.version>2.0.0.wso2v1</commons-json.version>
+        <commons-collections.version>3.2.1</commons-collections.version>
+        <commons-configuration.version>1.8</commons-configuration.version>
+        <httpclient.version>4.3.1.wso2v2</httpclient.version>
+        <javaee-web-api.version>6.0</javaee-web-api.version>
 
 	<!-- Release plugin ID for github-->
 	<project.scm.id>github-scm</project.scm.id>

@@ -1,0 +1,22 @@
+<div class="well asset-well">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12 advanced-search-form-container">
+            <h1 class="asset-name">Advanced Search</h1>
+            <p>Find assets in all asset types.</p>
+
+            <form id="search-form">
+                {{> primary-search-attributes .}}
+                {{> extended-search-attributes .}}
+                {{> advanced-search-buttons .}}
+            </form>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<hr/>
+<div>
+{{> advanced-search-results .}}
+</div>

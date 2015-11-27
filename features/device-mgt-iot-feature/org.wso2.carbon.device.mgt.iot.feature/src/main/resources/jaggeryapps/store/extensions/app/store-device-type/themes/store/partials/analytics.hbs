@@ -1,0 +1,66 @@
+{{#if no_such_device}}
+    <div id="ast-container" class="ast-container list-view">
+        <div class="assets-container margin-top-double padding-top-double">
+            <div class="top-assets-empty-assert">We couldn't find anything for you.</div>
+        </div>
+    </div>
+{{else}}
+    <div class="ast-container">
+        <div class="container-fluid ">
+            <div class="title"><a class="asset-type-deviceType">{{title}}</a></div>
+            <!--title-->
+            <div id="rangeSliderWrapper" class="pull-right">
+                <div class="row-fluid">
+                    <div class="span12">
+                        <div id="dateRangePickerContainer">
+                            <div class="btn-group" role="group">
+                                <button id="hour-btn" type="button"
+                                        class="btn btn-default date-range">Hour
+                                </button>
+                                <button id="h12-btn" type="button"
+                                        class="btn btn-default date-range">12 Hours
+                                </button>
+                                <button id="h24-btn" type="button"
+                                        class="btn btn-default date-range">24 Hours
+                                </button>
+                                <button id="h48-btn" type="button"
+                                        class="btn btn-default date-range">48 Hours
+                                </button>
+                                <button id="date-range" type="button"
+                                        class="btn btn-default date-range last-child"
+                                        data-toggle="popup"
+                                        title="Click to set custom date range"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+    <div class="container container-bg  white-bg">
+        <div class=" margin-top-double">
+            <div class="clear"></div>
+            <div id="div-temperatureData">
+            </div>
+            <div id="div-humidityData">
+            </div>
+            <div id="div-lightData">
+            </div>
+            <div id="div-motionData">
+            </div>
+            <div id="div-sonarData">
+            </div>
+            <div id="div-fanData">
+            </div>
+            <div id="div-bulbData">
+            </div>
+            <div id="div-cpuTemperatureData">
+            </div>
+            <div id="div-CPUData">
+            </div>
+            <div id="div-RAMData">
+            </div>
+        </div>
+    </div>
+{{/if}}

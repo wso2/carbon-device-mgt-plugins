@@ -1,0 +1,74 @@
+<!--
+  ~ Copyright (c) 2014, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!-- secondary header - app bar -->
+<div id="nav" class="row wr-app-bar">
+    <div class="wr-action-container">
+        <div class="wr-asset-type-switcher">
+            <a id="popoverExampleTwo" data-placement="bottom" class="ctrl-asset-type-switcher pull-left" href="javascript:void(0)" data-click-event="popover">
+            
+                <span class="btn-asset"></span>
+            </a>
+            <div class="popover bottom right fade clearfix">
+                <div class="arrow left"></div>
+                <div class="popover-content">
+                    <ul class="tiles clearfix">
+                        {{#with navigationBar}}
+                            {{#each types}}
+                                <li>
+                                    <a target="_self" href='{{tenantedUrl ""}}{{this.listingUrl}}'>
+                                        <i class="icon {{ui.icon}}"></i>
+                                        <span class="name">{{singularLabel}}</span>
+                                    </a>
+                                </li>
+                            {{/each}}
+                        {{/with}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="site-wide-menu">
+        <div class="inline-block margin-top-sm">
+            {{#hasAppPermission . key="APP_MYITEMS" username=cuser.username tenantId=cuser.tenantId}}
+            <a href="{{url "/pages/my-items"}}" class="bookmark-link" title="{{t "My bookmarks "}}"><span class="bookmark-link-text">{{t "My bookmarks "}}</span><i class="fw fw-bookmark fw-inverse fw-lg bookmark-link-icon"></i></a>
+            {{/hasAppPermission}}
+        </div>
+    </div>
+</div>
+<!-- secondary header - app bar -->
+
+
+<!--Need to delete these sections down-->
+<div  style="display: none" id="content-asset-types">
+    <div>
+        {{#with navigationBar}}
+            {{#each types}}
+                <a class="ast-type-item" target="_self" href="{{tenantedUrl ""}}{{this.listingUrl}}">
+                    {{#if value.icon}}
+                        <div style="background-image:url({{url ""}}{{ui.icon}})">
+                        </div>
+                    {{else}}
+                        <i class="{{ui.icon}}"></i>
+                    {{/if}}
+                    {{singularLabel}}
+                </a>
+            {{/each}}
+        {{/with}}
+    </div>
+</div>
+<div class="row">
+  {{> action-bar .}}
+</div>
