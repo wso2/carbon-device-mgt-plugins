@@ -12,7 +12,7 @@
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
   ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  ~ KIND, either express or implied. See the License for the
+  ~ KIND, either express or implied.  See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
@@ -41,7 +41,7 @@
         <module>components/device-mgt-mdm</module>
         <module>components/device-mgt-mdm-android</module>
         <module>components/device-mgt-mdm-windows</module>
-        <module>features/device-mgt-iot</module>
+        <module>features/device-mgt-iot-feature</module>
         <module>features/device-mgt-mdm</module>
         <module>features/device-mgt-mdm-android</module>
         <module>features/device-mgt-mdm-windows</module>

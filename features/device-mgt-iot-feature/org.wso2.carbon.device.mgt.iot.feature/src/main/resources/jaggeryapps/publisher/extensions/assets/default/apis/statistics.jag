@@ -1,0 +1,64 @@
+<%
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+require('/modules/publisher.js').exec(function(ctx) {
+    var log = new Log('statistics-api');
+    var ref = require('utils').request;
+    var options = ref.getQueryOptions(ctx.request.getQueryString());
+    var rxtModule = require('rxt');
+    var statsModule = require('/modules/statistics-api.js');
+    var storeModule = require('store');
+    var am;
+    var type = options.type;
+    var startDate = options.start||statsModule.getTodaysDate();
+    var endDate = options.end;
+    var onChoice = options.onchoice || false;
+    var userDetails = storeModule.server.current(ctx.session);
+    var username = userDetails.username;
+    var tenantId = userDetails.tenantId;
+    var output = {};
+    var statOptions = {};
+    statOptions.username = username;
+    statOptions.tenantId = tenantId;
+    statOptions.type = type;
+    statOptions.am = null;
+    if ((!type) || (!endDate)) {
+        ctx.response.sendError(500, 'Cannot retrieve statistics if both a type and end date are not provided');
+    } else {
+        //Fix to compensate issue with Datepicker plugin used in the client side
+        var tempEndDate = new Date(Date.parse(endDate.replace(/-/g, "/")));
+        tempEndDate.setDate(tempEndDate.getDate() + 1);
+        am = rxtModule.asset.createUserAssetManager(ctx.session, type);
+        statOptions.am = am;
+        statOptions.startDate = startDate;
+        statOptions.endDate = statsModule.normalizeDate(tempEndDate.toDateString());
+
+        //Create the structure of the output object
+        //Obtain the Bookmark statistics
+        var bookmarkResults = statsModule.getBookmarkAssetStats(statOptions);
+        output.bookmarkStats = bookmarkResults.bookmarkStats;
+        output.bookmarkTicks = bookmarkResults.bookmarkTicks;
+
+        //Obtain the Hot asset statistics
+        var hotResults = statsModule.getHotAssetStats(statOptions);
+        output.hotAssetStats = hotResults.hotAssetStats;
+        output.hotAssetTicks = hotResults.hotAssetTicks;
+        print(output);
+    }
+}, request, response, session); %>

@@ -1,0 +1,54 @@
+<%
+/*
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+require('/modules/publisher.js').exec(function(ctx) {
+    var log = new Log();
+    var assetActionAPI = require('/modules/asset-action-api.js').api;
+    var utils = require('utils');
+    var ref = utils.request;
+    var reflectionAPI = utils.reflection;
+    var responseProcessor = utils.response;
+    var ACTION_PATTERN = '/{context}/apis/asset/{id}/{action}';
+    var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
+    var req = ctx.request;
+    var qOptions = ref.getQueryOptions(req.getQueryString());
+    var options = uriMatcher.match(ACTION_PATTERN);
+    var result = {};
+    var response = ctx.response;
+    if (!options.id) {
+        response.sendError(404, 'Asset not found');
+        return;
+    }
+    //options.type = qOptions.type;
+    //Merge the query parameters and the URI pattern components
+    reflectionAPI.copyProps(qOptions,options);
+    try {
+        result = assetActionAPI.resolve(ctx.request, ctx.response, ctx.session, options);
+    } catch (e) {
+        log.error(e);
+        result.success = false;
+        result.code = 500;
+        result.message = 'Oops, something has gone wrong.Check the server logs for more information.';
+    }
+    if (result.success) {
+        response = responseProcessor.buildSuccessResponse(response, result.code, result.data);
+    } else {
+    	response = responseProcessor.buildErrorResponse(response, result.code, result.message);
+    }
+}, request, response, session); %>

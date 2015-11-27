@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="container col-xs-10 col-sm-6 col-md-6 col-lg-4 col-centered wr-content wr-login col-centered">
+            <h2 class="wr-title uppercase blue-bg padding-double white boarder-bottom-blue margin-none">{{t "SIGN IN"}}</h2>
+
+            <form id='basic-login-form' class="form-horizontal" action='{{url ""}}/pages/basic-authenticator' method="POST">
+                <div class="boarder-all ">
+                    <div class="clear"></div>
+                    <span class="padding-double float-left font-large">Sign in to continue </span>
+                    <!-- validation -->
+                    <div class="wr-input-control padding-double">
+                        <br>
+
+                        <div style="clear: both"></div>
+                        <input  type="text" class="input-block-level" placeholder="Username" tabindex="0" id="username" name="username" />
+                        <br><br>
+                        <input  type="password"  class="input-block-level" placeholder="Password"  name="password"  />
+                        <br><br>
+                        <button type="submit" class="wr-btn grey-bg col-xs-12 col-md-12 col-lg-12 uppercase font-extra-large"> {{t "SIGN IN"}} </button>
+                        <br><br><br>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
