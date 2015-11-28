@@ -16,9 +16,24 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.service;
+package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.scep;
 
+public enum SCEPOperation {
+    GET_CA_CERT("GetCACert"),
+    GET_CA_CAPS("GetCACaps"),
+    PKI_OPERATION("PKIOperation");
 
-public interface DeviceTypeService {
+    private String value;
 
+    private SCEPOperation(String value) {
+        this.setValue(value);
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

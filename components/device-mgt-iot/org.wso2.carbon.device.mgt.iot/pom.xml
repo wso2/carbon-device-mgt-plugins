@@ -96,7 +96,7 @@
             </Import-Package>
             <Export-Package>
               !org.wso2.carbon.device.mgt.iot.internal,
-              org.wso2.carbon.device.mgt.iot.*;version="${pom.version}",
+              org.wso2.carbon.device.mgt.iot.*;version="${project.version}",
               org.eclipse.paho.client.mqttv3.*;version="${eclipse.paho.version}"
             </Export-Package>
 

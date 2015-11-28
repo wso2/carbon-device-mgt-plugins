@@ -16,9 +16,16 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.service;
+package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.exception;
 
+public class VirtualFireAlarmException extends Exception {
+    private static final long serialVersionUID = 118512086957330189L;
 
-public interface DeviceTypeService {
+    public VirtualFireAlarmException(String errorMessage) {
+        super(errorMessage);
+    }
 
+    public VirtualFireAlarmException(String errorMessage, Throwable throwable) {
+        super(errorMessage, throwable);
+    }
 }

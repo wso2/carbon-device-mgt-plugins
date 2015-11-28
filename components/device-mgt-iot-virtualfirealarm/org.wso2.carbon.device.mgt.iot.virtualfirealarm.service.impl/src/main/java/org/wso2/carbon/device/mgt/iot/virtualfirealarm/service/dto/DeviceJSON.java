@@ -16,9 +16,21 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.service;
+package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.dto;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-public interface DeviceTypeService {
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class DeviceJSON {
+    @XmlElement(required = true) public String owner;
+    @XmlElement(required = true) public String deviceId;
+    @XmlElement(required = true) public String reply;
+    @XmlElement public Long time;
+    @XmlElement public String key;
+    @XmlElement public float value;
 }

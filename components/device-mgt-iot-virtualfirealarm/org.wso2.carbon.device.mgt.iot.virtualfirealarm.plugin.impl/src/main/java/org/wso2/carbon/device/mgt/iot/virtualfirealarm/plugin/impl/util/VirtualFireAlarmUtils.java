@@ -16,9 +16,30 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.service;
+package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-public interface DeviceTypeService {
+import java.util.Map;
+
+/**
+ * Contains utility methods used by FireAlarm plugin.
+ */
+public class VirtualFireAlarmUtils {
+
+    private static Log log = LogFactory.getLog(VirtualFireAlarmUtils.class);
+
+    public static String getDeviceProperty(Map<String, String> deviceProperties, String property) {
+
+        String deviceProperty = deviceProperties.get(property);
+
+        if (deviceProperty == null) {
+            return "";
+        }
+
+        return deviceProperty;
+    }
+
 
 }

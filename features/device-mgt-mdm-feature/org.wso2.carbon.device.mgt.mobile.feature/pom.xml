@@ -23,7 +23,7 @@
 
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <artifactId>device-mgt-feature</artifactId>
+        <artifactId>device-mgt-mdm-feature</artifactId>
         <version>1.9.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
