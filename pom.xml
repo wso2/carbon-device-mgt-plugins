@@ -57,6 +57,7 @@
         <module>features/device-mgt-mdm-windows-feature</module>
 
         <!--Device specific IoT Features-->
+        <module>features/device-mgt-iot-virtualfirealarm-feature</module>
     </modules>
 
     <dependencyManagement>
@@ -241,6 +242,12 @@
                 <groupId>org.wso2.carbon.devicemgt</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.core</artifactId>
                 <version>${carbon.device.mgt.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-codec.wso2</groupId>
+                        <artifactId>commons-codec</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt</groupId>
@@ -284,23 +291,34 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.analytics-common</groupId>
-                <artifactId>org.wso2.carbon.databridge.core</artifactId>
-                <version>${carbon.analytics.common.version}</version>
+                <groupId>org.wso2.carbon.devicemgt</groupId>
+                <artifactId>org.wso2.carbon.dynamic.client.registration</artifactId>
+                <version>${carbon.device.mgt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-jaxrs</artifactId>
+                <version>1.9.0</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.wso2.carbon.commons</groupId>
+                <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
+                <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
                 <version>${carbon.commons.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.analytics-common</groupId>
-                <artifactId>org.wso2.carbon.databridge.agent</artifactId>
-                <version>${carbon.analytics.common.version}</version>
-            </dependency>
 
             <!--IoT Server specific dependencies-->
 
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+                            <!--Common IoT Server Specific Impl $ API-->
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.iot</artifactId>
@@ -314,11 +332,34 @@
                 <type>war</type>
             </dependency>
 
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+                            <!--VirtualFireAlarm DeviceType Impl, API and Agent-->
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl</artifactId>
                 <version>${carbon.iot.device.mgt.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+                <type>war</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.impl</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.impl</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+            </dependency>
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 
             <dependency>
                 <groupId>org.json.wso2</groupId>
@@ -355,6 +396,13 @@
                 <groupId>org.igniterealtime.smack.wso2</groupId>
                 <artifactId>smackx</artifactId>
                 <version>${smackx.wso2.version}</version>
+            </dependency>
+
+            <!--Dependency on Jetty-Server Library-->
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>${jetty.version}</version>
             </dependency>
 
             <!--MDM dependencies-->
@@ -804,17 +852,6 @@
                 <version>${junit.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt</groupId>
-                <artifactId>org.wso2.carbon.dynamic.client.registration</artifactId>
-                <version>${carbon.device.mgt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-jaxrs</artifactId>
-                <version>1.9.0</version>
-            </dependency>
-
 
             <!-- App Management feature dependencies-->
             <dependency>
@@ -1048,11 +1085,11 @@
         <smackx.wso2.version>3.0.4.wso2v1</smackx.wso2.version>
         <eclipse.paho.version>0.4.0</eclipse.paho.version>
 
-        <!--Carbon Analytics-->
-        <carbon.analytics.common.version>5.0.5</carbon.analytics.common.version>
-        <carbon.analytics.common.version.range>[5.0.5,6.0.0)</carbon.analytics.common.version.range>
-        <carbon.analytics.version>1.0.4</carbon.analytics.version>
-        <carbon.analytics.version.range>[1.0.4,2.0.0]</carbon.analytics.version.range>
+        <!-- Jetty Server Version -->
+        <jetty.version>8.1.3.v20120416</jetty.version>
+
+        <!--carbon analytics dependencies-->
+        <carbon.analytics.version>1.0.3</carbon.analytics.version>
 
         <!-- Third Party Dependencies-->
         <spongycastle.version>1.51.0.0</spongycastle.version>

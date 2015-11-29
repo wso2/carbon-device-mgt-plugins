@@ -30,7 +30,7 @@
 	<artifactId>org.wso2.carbon.device.mgt.iot.feature</artifactId>
 	<packaging>pom</packaging>
 	<version>1.9.2-SNAPSHOT</version>
-	<name>WSO2 Carbon - IoT Server - Features</name>
+	<name>WSO2 Carbon - IoT Server Device Management Feature</name>
 	<url>http://wso2.org</url>
 	<description>This feature contains the core bundles required for IoT Server</description>
 
@@ -59,6 +59,11 @@
 		<dependency>
 			<groupId>org.igniterealtime.smack.wso2</groupId>
 			<artifactId>smackx</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
 		</dependency>
 
 		<dependency>
@@ -154,6 +159,9 @@
 								</bundleDef>
 								<bundleDef>
 									net.sf.ehcache.wso2:ehcache
+								</bundleDef>
+								<bundleDef>
+									org.eclipse.jetty:jetty-server:${jetty.version}
 								</bundleDef>
 							</bundles>
 							<importFeatures>

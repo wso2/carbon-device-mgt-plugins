@@ -31,7 +31,7 @@
 	<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl</artifactId>
 	<version>1.9.2-SNAPSHOT</version>
 	<packaging>bundle</packaging>
-	<name>WSO2 Carbon - Virtual FireAlarm Management Plugin Impl</name>
+	<name>WSO2 Carbon - IoT Server VirtualFireAlarm Management Plugin</name>
 	<description>WSO2 Carbon - Virtual FireAlarm Management/Control Plugin Implementation</description>
 	<url>http://wso2.org</url>
 
