@@ -284,14 +284,19 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.commons</groupId>
-                <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
-                <version>${carbon.commons.version}</version>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.core</artifactId>
+                <version>${carbon.analytics.common.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
                 <version>${carbon.commons.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.agent</artifactId>
+                <version>${carbon.analytics.common.version}</version>
             </dependency>
 
             <!--IoT Server specific dependencies-->
@@ -1043,8 +1048,11 @@
         <smackx.wso2.version>3.0.4.wso2v1</smackx.wso2.version>
         <eclipse.paho.version>0.4.0</eclipse.paho.version>
 
-        <!--carbon analytics dependencies-->
-        <carbon.analytics.version>1.0.3</carbon.analytics.version>
+        <!--Carbon Analytics-->
+        <carbon.analytics.common.version>5.0.5</carbon.analytics.common.version>
+        <carbon.analytics.common.version.range>[5.0.5,6.0.0)</carbon.analytics.common.version.range>
+        <carbon.analytics.version>1.0.4</carbon.analytics.version>
+        <carbon.analytics.version.range>[1.0.4,2.0.0]</carbon.analytics.version.range>
 
         <!-- Third Party Dependencies-->
         <spongycastle.version>1.51.0.0</spongycastle.version>
