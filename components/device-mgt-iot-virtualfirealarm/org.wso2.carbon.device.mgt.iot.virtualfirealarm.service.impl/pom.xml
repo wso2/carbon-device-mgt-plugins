@@ -31,7 +31,7 @@
 	<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl</artifactId>
 	<version>1.9.2-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>WSO2 Carbon - IoT Server APIs : Virtual FireAlarm API</name>
+	<name>WSO2 Carbon - IoT Server VirtualFireAlarm API</name>
 	<description>WSO2 Carbon - Virtual FireAlarm Service API Implementation</description>
 	<url>http://wso2.org</url>
 

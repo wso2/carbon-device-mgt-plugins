@@ -29,7 +29,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.mobile.windows.api</artifactId>
-    <name>Windows JAX-RS API</name>
+    <name>WSO2 Carbon - Windows JAX-RS API</name>
     <description>Windows JAX-RS API</description>
     <packaging>war</packaging>
 
