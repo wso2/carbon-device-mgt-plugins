@@ -19,12 +19,16 @@
 package org.wso2.carbon.device.mgt.iot.internal;
 
 import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.databridge.core.DataBridgeReceiverService;
 
 public class IoTCommonDataHolder {
 
 	private static IoTCommonDataHolder thisInstance = new IoTCommonDataHolder();
 	String trustStoreLocaiton;
 	String trustStorePassword;
+
+	private DataBridgeReceiverService dataBridgeReceiverService;
+
 	private IoTCommonDataHolder() {
 
 	}
@@ -48,5 +52,14 @@ public class IoTCommonDataHolder {
 
 	public String getTrustStorePassword(){
 		return trustStorePassword;
+	}
+
+	public DataBridgeReceiverService getDataBridgeReceiverService() {
+		return dataBridgeReceiverService;
+	}
+
+	public void setDataBridgeReceiverService(
+			DataBridgeReceiverService dataBridgeReceiverService) {
+        this.dataBridgeReceiverService = dataBridgeReceiverService;
 	}
 }

@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.core.ServerStartupObserver;
+import org.wso2.carbon.databridge.core.DataBridgeReceiverService;
 import org.wso2.carbon.device.mgt.iot.DeviceController;
 import org.wso2.carbon.device.mgt.iot.UserManagement;
 import org.wso2.carbon.device.mgt.iot.analytics.statistics.IoTEventsStatisticsClient;
@@ -64,6 +65,12 @@ import java.util.Map;
  * policy="dynamic"
  * bind="setConfigurationContextService"
  * unbind="unsetConfigurationContextService"
+ * @scr.reference name="databridge.component"
+ * interface="org.wso2.carbon.databridge.core.DataBridgeReceiverService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setDataBridgeReceiverService"
+ * unbind="unsetDataBridgeReceiverService"
  */
 public class IotDeviceManagementServiceComponent {
 
@@ -175,8 +182,7 @@ public class IotDeviceManagementServiceComponent {
 			log.debug("Setting Realm Service");
 
 		}
-		UserManagement userManagement= new UserManagement();
-		userManagement.setRealmService(realmService);
+		UserManagement.setRealmService(realmService);
 
 	}
 
@@ -188,8 +194,33 @@ public class IotDeviceManagementServiceComponent {
 		if (log.isDebugEnabled()) {
 			log.debug("Unsetting Realm Service");
 		}
-		UserManagement userManagement= new UserManagement();
-		userManagement.setRealmService(realmService);
+		UserManagement.setRealmService(realmService);
 	}
+
+    /**
+     * Sets DataBridge Receiver Service
+     *
+     * @param dataBridgeReceiverService associated DataBridge service reference
+     */
+    protected void setDataBridgeReceiverService(
+            DataBridgeReceiverService dataBridgeReceiverService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Setting DataBridge Receiver Service");
+        }
+        IoTCommonDataHolder.getInstance().setDataBridgeReceiverService(dataBridgeReceiverService);
+    }
+
+    /**
+     * Unsets Realm Service
+     *
+     * @param dataBridgeReceiverService associated DataBridge service reference
+     */
+    protected void unsetDataBridgeReceiverService(
+            DataBridgeReceiverService dataBridgeReceiverService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Unsetting DataBridge Receiver Service");
+        }
+        IoTCommonDataHolder.getInstance().setDataBridgeReceiverService(null);
+    }
 
 }
