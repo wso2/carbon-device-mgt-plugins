@@ -57,4 +57,8 @@ public class GCMService {
             log.error("Exception occurred while sending the GCM notification : " + result.getErrorMsg());
         }
     }
+
+    public void resetTenantConfigCache() {
+        GCMUtil.resetTenantConfigCache();
+    }
 }
