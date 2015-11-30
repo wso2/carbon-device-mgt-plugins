@@ -1,0 +1,5 @@
+{
+    "version": "1.0.0",
+    "index": 29,
+    "extends": "iot.unit.ui.header.logo"
+}
