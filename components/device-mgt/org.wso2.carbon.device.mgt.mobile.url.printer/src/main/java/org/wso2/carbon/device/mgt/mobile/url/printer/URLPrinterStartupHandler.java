@@ -58,7 +58,7 @@ public class URLPrinterStartupHandler implements ServerStartupObserver {
         if (httpsProxyPort > 0) {
             port = httpsProxyPort;
         }
-        return "https://" + hostName + ":" + port + "/mdm";
+        return "https://" + hostName + ":" + port + "/emm";
     }
 
 }
