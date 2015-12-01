@@ -75,7 +75,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-Path("/VirtualFireAlarmDeviceManager")
+@Path("/VirtualFireAlarmDeviceManager")
 public class VirtualFireAlarmService {
 
     private static Log log = LogFactory.getLog(VirtualFireAlarmService.class);
