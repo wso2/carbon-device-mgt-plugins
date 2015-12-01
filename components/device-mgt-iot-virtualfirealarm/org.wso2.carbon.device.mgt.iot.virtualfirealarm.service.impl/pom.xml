@@ -40,10 +40,12 @@
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt</groupId>
 			<artifactId>org.wso2.carbon.device.mgt.common</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt</groupId>
 			<artifactId>org.wso2.carbon.device.mgt.core</artifactId>
+            <scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.axis2.wso2</groupId>
@@ -55,6 +57,7 @@
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt</groupId>
 			<artifactId>org.wso2.carbon.device.mgt.analytics</artifactId>
+            <scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.apache.axis2.wso2</groupId>
@@ -66,6 +69,7 @@
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt</groupId>
 			<artifactId>org.wso2.carbon.certificate.mgt.core</artifactId>
+            <scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-codec.wso2</groupId>
@@ -102,10 +106,12 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpasyncclient</artifactId>
 			<version>4.1</version>
+            <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
 			<artifactId>org.wso2.carbon.device.mgt.iot</artifactId>
+            <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -117,10 +123,12 @@
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-core-asl</artifactId>
+            <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-jaxrs</artifactId>
+            <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>javax</groupId>
@@ -135,11 +143,13 @@
 		<dependency>
 			<groupId>commons-httpclient.wso2</groupId>
 			<artifactId>commons-httpclient</artifactId>
+            <scope>provided</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.utils</artifactId>
+            <scope>provided</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>org.bouncycastle.wso2</groupId>
@@ -203,6 +213,7 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
+            <scope>provided</scope>
 		</dependency>
 
 		<dependency>
