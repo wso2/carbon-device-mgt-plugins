@@ -40,7 +40,6 @@
         <!--Core Components for MDM and IoT-->
         <module>components/device-mgt-iot</module>
         <module>components/device-mgt-mdm</module>
-        <module>components/new -module</module>
 
         <!--Device Specific MDM Components-->
         <module>components/device-mgt-mdm-android</module>
