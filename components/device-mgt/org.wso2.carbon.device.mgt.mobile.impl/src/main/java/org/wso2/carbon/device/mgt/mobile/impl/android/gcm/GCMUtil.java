@@ -177,6 +177,10 @@ public class GCMUtil {
         return null;
     }
 
+    public static void resetTenantConfigCache() {
+        tenantConfigurationCache.remove(getTenantId());
+    }
+
     private static void addTenantConfigurationToCache(TenantConfiguration tenantConfiguration) {
         tenantConfigurationCache.put(getTenantId(), tenantConfiguration);
     }
