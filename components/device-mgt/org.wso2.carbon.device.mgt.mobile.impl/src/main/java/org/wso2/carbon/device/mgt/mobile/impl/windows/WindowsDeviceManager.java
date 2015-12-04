@@ -51,7 +51,7 @@ public class WindowsDeviceManager implements DeviceManager {
 
     private AbstractMobileDeviceManagementDAOFactory daoFactory;
     private LicenseManager licenseManager;
-	private FeatureManager featureManager = new WindowsFeatureManager();
+    private FeatureManager featureManager = new WindowsFeatureManager();
     private static final Log log = LogFactory.getLog(WindowsDeviceManagementService.class);
 
     public WindowsDeviceManager() {
@@ -61,7 +61,9 @@ public class WindowsDeviceManager implements DeviceManager {
         License defaultLicense = WindowsPluginUtils.getDefaultLicense();
 
         try {
-            licenseManager.addLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, defaultLicense);
+            if (licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, "en_US") == null) {
+                licenseManager.addLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, defaultLicense);
+            }
             featureManager.addSupportedFeaturesToDB();
         } catch (LicenseManagementException e) {
             log.error("Error occurred while adding default license for Windows devices", e);
@@ -118,12 +120,12 @@ public class WindowsDeviceManager implements DeviceManager {
                     MobileDeviceManagementUtil.getPlatformConfigPath(DeviceManagementConstants.
                             MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
             resource = MobileDeviceManagementUtil.getRegistryResource(windowsTenantRegistryPath);
-            if(resource != null){
+            if (resource != null) {
                 JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
                 Unmarshaller unmarshaller = context.createUnmarshaller();
                 return (TenantConfiguration) unmarshaller.unmarshal(
                         new StringReader(new String((byte[]) resource.getContent(), Charset.
-                                                                         forName(MobilePluginConstants.CHARSET_UTF8))));
+                                forName(MobilePluginConstants.CHARSET_UTF8))));
             }
             return null;
         } catch (MobileDeviceMgtPluginException e) {
@@ -255,7 +257,7 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public License getLicense(String languageCode) throws LicenseManagementException {
-       return licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, languageCode);
+        return licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, languageCode);
     }
 
     @Override
