@@ -61,7 +61,8 @@ public class WindowsDeviceManager implements DeviceManager {
         License defaultLicense = WindowsPluginUtils.getDefaultLicense();
 
         try {
-            if (licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, "en_US") == null) {
+            if (licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS,
+                    MobilePluginConstants.LANGUAGE_CODE_ENGLISH_US) == null) {
                 licenseManager.addLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, defaultLicense);
             }
             featureManager.addSupportedFeaturesToDB();

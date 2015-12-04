@@ -60,7 +60,8 @@ public class AndroidDeviceManager implements DeviceManager {
         License defaultLicense;
 
         try {
-            if (licenseManager.getLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, "en_US") == null) {
+            if (licenseManager.getLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID,
+                    MobilePluginConstants.LANGUAGE_CODE_ENGLISH_US) == null) {
                 defaultLicense = AndroidPluginUtils.getDefaultLicense();
                 licenseManager.addLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, defaultLicense);
             }
