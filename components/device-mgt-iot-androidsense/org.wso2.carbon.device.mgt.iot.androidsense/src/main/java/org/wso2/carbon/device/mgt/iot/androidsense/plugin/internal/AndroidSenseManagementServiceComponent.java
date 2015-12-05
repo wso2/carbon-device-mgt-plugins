@@ -23,15 +23,15 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.AndroidSenseManagerService;
-import org.wso2.carbon.device.mgt.iot.common.service.DeviceTypeService;
+import org.wso2.carbon.device.mgt.iot.service.DeviceTypeService;
 
 
 
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.android.internal.AndroidSenseManagementServiceComponent"
  * immediate="true"
- * @scr.reference name="wso2.carbon.device.mgt.iot.common.DeviceTypeService"
- * interface="org.wso2.carbon.device.mgt.iot.common.service.DeviceTypeService"
+ * @scr.reference name="wso2.carbon.device.mgt.iot.service.DeviceTypeServiceImpl"
+ * interface="org.wso2.carbon.device.mgt.iot.service.DeviceTypeService"
  * cardinality="1..1"
  * policy="dynamic"
  * bind="setDeviceTypeService"

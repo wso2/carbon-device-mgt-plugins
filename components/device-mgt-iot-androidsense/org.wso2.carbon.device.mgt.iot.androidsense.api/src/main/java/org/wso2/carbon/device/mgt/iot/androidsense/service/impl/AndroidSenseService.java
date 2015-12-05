@@ -27,10 +27,10 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.DeviceJSON;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.SensorJSON;
-import org.wso2.carbon.device.mgt.iot.common.DeviceManagement;
-import org.wso2.carbon.device.mgt.iot.common.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.common.sensormgt.SensorDataManager;
-import org.wso2.carbon.device.mgt.iot.common.sensormgt.SensorRecord;
+import org.wso2.carbon.device.mgt.iot.DeviceManagement;
+import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
+import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
+import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 
 import javax.servlet.http.HttpServletResponse;
