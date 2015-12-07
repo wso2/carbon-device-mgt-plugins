@@ -30,7 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.iot.config.devicetype.IotDeviceTypeConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.config.devicetype.datasource.IotDeviceTypeConfig;
-import org.wso2.carbon.device.mgt.iot.config.server.DeviceCloudConfigManager;
+import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ApiManagerConfig;
 import org.wso2.carbon.device.mgt.iot.exception.IoTException;
 import org.wso2.carbon.device.mgt.iot.util.IoTUtil;
@@ -62,7 +62,8 @@ public class ApisAppClient {
 	}
 
 	private ApisAppClient() {
-		ApiManagerConfig apiManagerConfig =DeviceCloudConfigManager.getInstance().getDeviceCloudMgtConfig().getApiManager();
+		ApiManagerConfig apiManagerConfig =
+				DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager();
 		String serverUrl=apiManagerConfig.getServerURL();
 		String serverPort=apiManagerConfig.getServerPort();
 		isEnabled = apiManagerConfig.isEnabled();

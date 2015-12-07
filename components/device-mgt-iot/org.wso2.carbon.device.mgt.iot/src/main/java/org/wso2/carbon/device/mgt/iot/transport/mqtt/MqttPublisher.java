@@ -31,11 +31,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * This implementation supports publishing of control signals received to an
  * MQTT end-point.
  * The configuration settings for the MQTT end-point are read from the
- * 'devicecloud-config.xml' file of the project.
+ * 'devicemgt-config.xml' file of the project.
  * This is done using the class 'DeviceCloudConfigManager.java' which loads
  * the settings from the default xml org.wso2.carbon.device.mgt.iot.common.devicecloud.org.wso2.carbon.device.mgt.iot.common.config.server.configs
  * file -
- * /resources/conf/device-controls/devicecloud-config.xml
+ * /resources/conf/iot/devicemgt-config.xml
  */
 public class MqttPublisher implements MqttCallback {
 
@@ -103,7 +103,7 @@ public class MqttPublisher implements MqttCallback {
 				throw new DeviceControllerException(errorMsg, ex);
 			}
 		} else {
-			log.warn("MQTT <Enabled> set to false in 'devicecloud-config.xml'");
+			log.warn("MQTT <Enabled> set to false in 'devicemgt-config.xml'");
 		}
 	}
 

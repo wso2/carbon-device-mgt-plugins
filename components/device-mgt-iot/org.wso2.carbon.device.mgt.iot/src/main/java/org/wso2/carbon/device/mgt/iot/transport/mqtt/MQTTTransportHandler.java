@@ -330,21 +330,27 @@ public abstract class MQTTTransportHandler
      */
     @Override
     public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-        String message = "";
-        try {
-            message = iMqttDeliveryToken.getMessage().toString();
-        } catch (MqttException e) {
-            //TODO:: Throw errors
-            log.error(
-                    "Error occurred whilst trying to read the message from the MQTT delivery " +
-                            "token.");
-        }
         String topic = iMqttDeliveryToken.getTopics()[0];
         String client = iMqttDeliveryToken.getClient().getClientId();
 
-        if (log.isDebugEnabled()) {
-            log.debug("Message - '" + message + "' of client [" + client + "] for the topic (" +
-                              topic + ") was delivered successfully.");
+        try {
+            if (iMqttDeliveryToken.isComplete()) {
+                if (log.isDebugEnabled()) {
+                    if (iMqttDeliveryToken.getMessage() != null) {
+                        String message = iMqttDeliveryToken.getMessage().toString();
+                        log.debug("Message to client [" + client + "] under topic (" + topic +
+                                          ") was delivered successfully with the delivery message: '" + message + "'");
+                    } else {
+                        log.debug("Message to client [" + client + "] under topic (" + topic +
+                                          ") was delivered successfully.");
+                    }
+                }
+            } else {
+                log.warn("FAILED: Delivery of MQTT message to [" + client + "] under topic [" + topic + "] failed.");
+            }
+        } catch (MqttException e) {
+            //TODO:: Throw errors
+            log.error("Error occurred whilst trying to read the message from the MQTT delivery token.");
         }
     }
 

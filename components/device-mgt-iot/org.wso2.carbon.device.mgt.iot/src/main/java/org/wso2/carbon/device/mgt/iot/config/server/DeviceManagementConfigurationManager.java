@@ -23,7 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ControlQueue;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.DataStore;
-import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceCloudConfig;
+import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceManagementConfiguration;
+import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceMgtServerInfo;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -41,28 +42,28 @@ import java.util.List;
 /**
  * Class responsible for the iot device manager configuration initialization.
  */
-public class DeviceCloudConfigManager {
-    private static final Log log = LogFactory.getLog(DeviceCloudConfigManager.class);
+public class DeviceManagementConfigurationManager {
+    private static final Log log = LogFactory.getLog(DeviceManagementConfigurationManager.class);
 
-    private static final String IOT_DEVICE_CONFIG_XML_NAME = "devicecloud-config.xml";
-	private static final String IOT_DC_ROOT_DIRECTORY = "iot";
-	private final String XMLCONFIGS_FILE_LOCATION =
-			CarbonUtils.getCarbonConfigDirPath() + File.separator +
-                    IOT_DC_ROOT_DIRECTORY + File.separator + IOT_DEVICE_CONFIG_XML_NAME;
+    private static final String DEVICE_MGT_CONFIG_XML_NAME = "devicemgt-config.xml";
+    private static final String DEVICE_MGT_ROOT_DIRECTORY = "iot";
+    private final String XMLCONFIGS_FILE_LOCATION =
+            CarbonUtils.getCarbonConfigDirPath() + File.separator +
+                    DEVICE_MGT_ROOT_DIRECTORY + File.separator + DEVICE_MGT_CONFIG_XML_NAME;
 
-    private static final String IOT_DEVICE_CONFIG_XSD_NAME = "devicecloud-config.xsd";
+    private static final String IOT_DEVICE_CONFIG_XSD_NAME = "devicemgt-config.xsd";
     private final String XSDCONFIGS_FILE_LOCATION =
             CarbonUtils.getCarbonConfigDirPath() + File.separator +
-                    IOT_DC_ROOT_DIRECTORY + File.separator + IOT_DEVICE_CONFIG_XSD_NAME;
+                    DEVICE_MGT_ROOT_DIRECTORY + File.separator + IOT_DEVICE_CONFIG_XSD_NAME;
 
-    private DeviceCloudConfig currentDeviceCloudConfig;
-    private static DeviceCloudConfigManager
-            deviceConfigurationManager = new DeviceCloudConfigManager();
+    private DeviceManagementConfiguration currentDeviceManagementConfiguration;
+    private static DeviceManagementConfigurationManager deviceConfigurationManager =
+            new DeviceManagementConfigurationManager();
 
-    private DeviceCloudConfigManager() {
+    private DeviceManagementConfigurationManager() {
     }
 
-    public static DeviceCloudConfigManager getInstance()  {
+    public static DeviceManagementConfigurationManager getInstance() {
         return deviceConfigurationManager;
     }
 
@@ -73,11 +74,11 @@ public class DeviceCloudConfigManager {
 
             File deviceCloudMgtConfig = new File(XMLCONFIGS_FILE_LOCATION);
             Document doc = IotDeviceManagementUtil.convertToDocument(deviceCloudMgtConfig);
-            JAXBContext deviceCloudContext = JAXBContext.newInstance(DeviceCloudConfig.class);
+            JAXBContext deviceCloudContext = JAXBContext.newInstance(DeviceManagementConfiguration.class);
             Unmarshaller unmarshaller = deviceCloudContext.createUnmarshaller();
             unmarshaller.setSchema(schema);
             unmarshaller.setEventHandler(new IotConfigValidationEventHandler());
-            this.currentDeviceCloudConfig = (DeviceCloudConfig) unmarshaller.unmarshal(doc);
+            this.currentDeviceManagementConfiguration = (DeviceManagementConfiguration) unmarshaller.unmarshal(doc);
         } catch (Exception e) {
             String error = "Error occurred while initializing DeviceController configurations";
             log.error(error);
@@ -85,13 +86,13 @@ public class DeviceCloudConfigManager {
         }
     }
 
-    public DeviceCloudConfig getDeviceCloudMgtConfig() {
-        return currentDeviceCloudConfig;
+    public DeviceManagementConfiguration getDeviceCloudMgtConfig() {
+        return currentDeviceManagementConfiguration;
     }
 
-    public DataStore getDataStore(String name){
-        List<DataStore>  dataStores= currentDeviceCloudConfig.getDataStores().getDataStore();
-        if(dataStores!=null) {
+    public DataStore getDataStore(String name) {
+        List<DataStore> dataStores = currentDeviceManagementConfiguration.getDataStores().getDataStore();
+        if (dataStores != null) {
             for (DataStore dataStore : dataStores) {
                 if (dataStore.getName().equals(name)) {
                     return dataStore;
@@ -104,9 +105,9 @@ public class DeviceCloudConfigManager {
         return null;
     }
 
-    public ControlQueue getControlQueue(String name){
-        List<ControlQueue> controlQueues= currentDeviceCloudConfig.getControlQueues().getControlQueue();
-        if(controlQueues!=null) {
+    public ControlQueue getControlQueue(String name) {
+        List<ControlQueue> controlQueues = currentDeviceManagementConfiguration.getControlQueues().getControlQueue();
+        if (controlQueues != null) {
             for (ControlQueue controlQueue : controlQueues) {
                 if (controlQueue.getName().equals(name)) {
                     return controlQueue;
@@ -117,6 +118,13 @@ public class DeviceCloudConfigManager {
         return null;
     }
 
+    public DeviceMgtServerInfo getDeviceManagementServerInfo() {
+        DeviceMgtServerInfo deviceMgtServerInfo = currentDeviceManagementConfiguration.getDmServerInfo();
+        if (deviceMgtServerInfo != null) {
+            return deviceMgtServerInfo;
+        }
+        return null;
+    }
 
 
     private class IotConfigValidationEventHandler implements ValidationEventHandler {
@@ -124,16 +132,16 @@ public class DeviceCloudConfigManager {
 
         @Override
         public boolean handleEvent(ValidationEvent event) {
-            String error= "\nEVENT" +"\nSEVERITY:  " + event.getSeverity()
-            + "\nMESSAGE:  " + event.getMessage()
-            +"\nLINKED EXCEPTION:  " + event.getLinkedException()
-            +"\nLOCATOR"
-            +"\n    LINE NUMBER:  " + event.getLocator().getLineNumber()
-            +"\n    COLUMN NUMBER:  " + event.getLocator().getColumnNumber()
-            +"\n    OFFSET:  " + event.getLocator().getOffset()
-            +"\n    OBJECT:  " + event.getLocator().getObject()
-            +"\n    NODE:  " + event.getLocator().getNode()
-            +"\n    URL:  " + event.getLocator().getURL();
+            String error = "\nEVENT" + "\nSEVERITY:  " + event.getSeverity()
+                    + "\nMESSAGE:  " + event.getMessage()
+                    + "\nLINKED EXCEPTION:  " + event.getLinkedException()
+                    + "\nLOCATOR"
+                    + "\n    LINE NUMBER:  " + event.getLocator().getLineNumber()
+                    + "\n    COLUMN NUMBER:  " + event.getLocator().getColumnNumber()
+                    + "\n    OFFSET:  " + event.getLocator().getOffset()
+                    + "\n    OBJECT:  " + event.getLocator().getObject()
+                    + "\n    NODE:  " + event.getLocator().getNode()
+                    + "\n    URL:  " + event.getLocator().getURL();
 
 
             log.error(error);

@@ -28,14 +28,15 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for DeviceCloudConfig complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
- * &lt;complexType name="DeviceCloudConfig">
+ * &lt;complexType name="DeviceManagementConfigurations">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
+ *         &lt;element name="ServerInfo" type="{}DeviceMgtServerInfo"/>
  *         &lt;element name="DataStores" type="{}DataStoresConfig"/>
  *         &lt;element name="ControlQueues" type="{}ControlQueuesConfig"/>
  *         &lt;element name="Security" type="{}SecurityConfig"/>
@@ -46,20 +47,20 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DeviceCloudConfig", propOrder = {
-    "dataStores",
-    "controlQueues",
-    "security",
-    "apiManager",
-    "deviceUserValidator"
+@XmlType(name = "DeviceManagementConfigurations", propOrder = {
+        "dmServerInfo",
+        "dataStores",
+        "controlQueues",
+        "security",
+        "apiManager",
+        "deviceUserValidator"
 })
-@XmlRootElement(name = "DeviceCloudConfiguration")
-public class DeviceCloudConfig {
-
+@XmlRootElement(name = "DeviceManagementConfigurations")
+public class DeviceManagementConfiguration {
+    @XmlElement(name = "DMServerInfo", required = true)
+    protected DeviceMgtServerInfo dmServerInfo;
     @XmlElement(name = "DataStores", required = true)
     protected DataStoresConfig dataStores;
     @XmlElement(name = "ControlQueues", required = true)
@@ -72,12 +73,29 @@ public class DeviceCloudConfig {
     protected DeviceUserValidatorConfig deviceUserValidator;
 
     /**
+     * Gets the value of the ServerInfo property of the device management configurations manager
+     * @return possible object is
+     * {@link DeviceMgtServerInfo }
+     */
+    public DeviceMgtServerInfo getDmServerInfo() {
+        return dmServerInfo;
+    }
+
+    /**
+     * Sets the value of the ServerInfo property.
+     *
+     * @param value allowed object is
+     *              {@link DeviceMgtServerInfo }
+     */
+    public void setDmServerInfo(DeviceMgtServerInfo value) {
+        this.dmServerInfo = value;
+    }
+
+    /**
      * Gets the value of the dataStores property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link DataStoresConfig }
-     *     
+     *
+     * @return possible object is
+     * {@link DataStoresConfig }
      */
     public DataStoresConfig getDataStores() {
         return dataStores;
@@ -85,11 +103,9 @@ public class DeviceCloudConfig {
 
     /**
      * Sets the value of the dataStores property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link DataStoresConfig }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link DataStoresConfig }
      */
     public void setDataStores(DataStoresConfig value) {
         this.dataStores = value;
@@ -97,11 +113,9 @@ public class DeviceCloudConfig {
 
     /**
      * Gets the value of the controlQueues property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ControlQueuesConfig }
-     *     
+     *
+     * @return possible object is
+     * {@link ControlQueuesConfig }
      */
     public ControlQueuesConfig getControlQueues() {
         return controlQueues;
@@ -109,11 +123,9 @@ public class DeviceCloudConfig {
 
     /**
      * Sets the value of the controlQueues property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ControlQueuesConfig }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link ControlQueuesConfig }
      */
     public void setControlQueues(ControlQueuesConfig value) {
         this.controlQueues = value;
@@ -121,11 +133,9 @@ public class DeviceCloudConfig {
 
     /**
      * Gets the value of the security property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link SecurityConfig }
-     *     
+     *
+     * @return possible object is
+     * {@link SecurityConfig }
      */
     public SecurityConfig getSecurity() {
         return security;
@@ -133,11 +143,9 @@ public class DeviceCloudConfig {
 
     /**
      * Sets the value of the security property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link SecurityConfig }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link SecurityConfig }
      */
     public void setSecurity(SecurityConfig value) {
         this.security = value;
@@ -145,11 +153,9 @@ public class DeviceCloudConfig {
 
     /**
      * Gets the value of the apiManager property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link ApiManagerConfig }
-     *     
+     *
+     * @return possible object is
+     * {@link ApiManagerConfig }
      */
     public ApiManagerConfig getApiManager() {
         return apiManager;
@@ -157,11 +163,9 @@ public class DeviceCloudConfig {
 
     /**
      * Sets the value of the apiManager property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link ApiManagerConfig }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link ApiManagerConfig }
      */
     public void setApiManager(ApiManagerConfig value) {
         this.apiManager = value;
@@ -169,11 +173,9 @@ public class DeviceCloudConfig {
 
     /**
      * Gets the value of the deviceUserValidator property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link DeviceUserValidatorConfig }
-     *     
+     *
+     * @return possible object is
+     * {@link DeviceUserValidatorConfig }
      */
     public DeviceUserValidatorConfig getDeviceUserValidator() {
         return deviceUserValidator;
@@ -181,11 +183,9 @@ public class DeviceCloudConfig {
 
     /**
      * Sets the value of the deviceUserValidator property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link DeviceUserValidatorConfig }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link DeviceUserValidatorConfig }
      */
     public void setDeviceUserValidator(DeviceUserValidatorConfig value) {
         this.deviceUserValidator = value;

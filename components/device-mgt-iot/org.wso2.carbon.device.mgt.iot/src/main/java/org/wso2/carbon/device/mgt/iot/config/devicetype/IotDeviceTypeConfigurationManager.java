@@ -47,20 +47,17 @@ import java.util.Map;
 public class IotDeviceTypeConfigurationManager {
 	private static final Log log = LogFactory.getLog(IotDeviceTypeConfigurationManager.class);
 
-	private static final String IOT_DEVICE_CONFIG_XML_NAME = "iot-config.xml";
-	private static final String IOT_DEVICE_CONFIG_XSD_NAME = "iot-config.xsd";
-	private static final String IOT_DC_ROOT_DIRECTORY = "iot";
+	private static final String DEVICE_TYPE_CONFIG_XML_NAME = "devicetype-config.xml";
+	private static final String DEVICE_TYPE_CONFIG_XSD_NAME = "devicetype-config.xsd";
+	private static final String DEVICE_MGT_ROOT_DIRECTORY = "iot";
 	private IoTDeviceTypeConfigManager currentIoTDeviceTypeConfig;
-	private static IotDeviceTypeConfigurationManager
-			iotDeviceConfigManager = new IotDeviceTypeConfigurationManager();
+	private static IotDeviceTypeConfigurationManager iotDeviceConfigManager = new IotDeviceTypeConfigurationManager();
 
 	private final String iotDeviceMgtConfigXMLPath = CarbonUtils.getCarbonConfigDirPath()
-			+ File.separator +
-			IOT_DC_ROOT_DIRECTORY + File.separator + IOT_DEVICE_CONFIG_XML_NAME;
+			+ File.separator + DEVICE_MGT_ROOT_DIRECTORY + File.separator + DEVICE_TYPE_CONFIG_XML_NAME;
 
 	private final String iotDeviceMgtConfigXSDPath = CarbonUtils.getCarbonConfigDirPath()
-			+ File.separator +
-			IOT_DC_ROOT_DIRECTORY + File.separator + IOT_DEVICE_CONFIG_XSD_NAME;
+			+ File.separator + DEVICE_MGT_ROOT_DIRECTORY + File.separator + DEVICE_TYPE_CONFIG_XSD_NAME;
 
 	HashMap<String,IotDeviceTypeConfig> iotDeviceTypeConfigMap = new HashMap<String,IotDeviceTypeConfig>();
 

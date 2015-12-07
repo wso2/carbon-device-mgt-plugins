@@ -71,7 +71,7 @@ public class XmppServerClient implements ControlQueueConnector {
 		if (xmppEnabled) {
 
 		} else {
-			log.warn("XMPP <Enabled> set to false in 'devicecloud-config.xml'");
+			log.warn("XMPP <Enabled> set to false in 'devicemgt-config.xml'");
 		}
 	}
 
@@ -155,7 +155,7 @@ public class XmppServerClient implements ControlQueueConnector {
 			}
 
 		} else {
-			log.warn("XMPP <Enabled> set to false in 'devicecloud-config.xml'");
+			log.warn("XMPP <Enabled> set to false in 'devicemgt-config.xml'");
 			return false;
 		}
 	}
