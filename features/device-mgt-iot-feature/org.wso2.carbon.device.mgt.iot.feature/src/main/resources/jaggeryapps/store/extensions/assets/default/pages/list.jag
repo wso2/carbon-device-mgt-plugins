@@ -1,0 +1,151 @@
+<%
+/*
+ * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+var caramel;
+var PAGING = {};
+var log = new Log();
+require('/modules/store.js').exec(function(ctx) {
+    caramel = require('caramel');
+    var permissions = require('rxt').permissions;
+    var asset = require('rxt').asset;
+    var core = require('rxt').core;
+    var ui = require('rxt').ui;
+    var constants = require('rxt').constants;
+    var query = ctx.params.query;
+    var store = ctx.store;
+    var user = ctx.user;
+    var am;
+    var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
+    var assetPageUrl = constants.ASSET_PAGE_URL_PATTERN;
+    var tenantedAssetPageUrl = constants.ASSET_TENANT_PAGE_URL_PATTERN;
+    var options = uriMatcher.match(assetPageUrl) || uriMatcher.match(tenantedAssetPageUrl);
+    var type = options.type;
+    var assets = [];
+    var tenantId = ctx.tenant.tenantId;
+    var q = ctx.request.getParameter('q');
+    var sortBy = ctx.request.getParameter('sortBy');
+    var sortOrder = ctx.request.getParameter('sort');
+    var start = ctx.request.getParameter('start');
+    var count = ctx.request.getParameter('count');
+    //var sortOrder = ctx.request.getParameter('sortOrder');
+    var page = ui.buildPage(ctx.session, ctx.request);
+    var output = {};
+    var tag = ctx.request.getParameter('tag');
+    var assetApi = require('/modules/asset-api.js').api;
+    var subscriptionApi = require('/modules/subscriptions-api.js').api;
+    var tenantApi = require('/modules/tenant-api.js').api;
+    var ratingApi = require('/modules/rating-api.js').api;
+    PAGING.sortBy = (sortBy || constants.DEFAULT_ASSET_PAGIN.sortBy);
+    PAGING.sortOrder = (sortOrder || constants.DEFAULT_ASSET_PAGIN.sortOrder);
+    PAGING.start = (start || constants.DEFAULT_ASSET_PAGIN.start);
+    PAGING.count = (count || constants.DEFAULT_ASSET_PAGIN.count);
+    var carbon = require('carbon');
+    var URLTenantId = carbon.server.tenantId({
+        domain: options.domain || constants.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME
+    });
+    var context;
+    var rxtManager;
+    // //Determine the type of asset manager to be created
+    // else if (!user || tenantId != URLTenantId) {
+    //     context = core.createAnonAssetContext(ctx.session, type, URLTenantId);
+    //     am = asset.createAnonAssetManager(ctx.session, type, URLTenantId);
+    // }else {
+    //     context = core.createAssetContext(ctx.session, type, URLTenantId);
+    //     am = asset.createUserAssetManager(ctx.session, type);
+    // }
+    var addGroupingStateToQuery = function(q, type, req, rxtManager) {
+        if (!rxtManager.isGroupingEnabled(type)) {
+            return q;
+        }
+        //Check if grouping is enabled for the asset type
+        var groupQuery = req.getParameter('group')||'';
+        groupQuery = (groupQuery.toLowerCase() === 'true')?true:false;
+        if (groupQuery) {
+            q[constants.Q_PROP_GROUP] = groupQuery;
+        }
+        return q;
+    };
+    var replaceCategoryQuery = function(q, rxtManager, type) {
+        //Determine if a category was provided
+        if (!q.hasOwnProperty('category')) {
+            return q;
+        }
+        var categoryField = rxtManager.getCategoryField(type);
+        var categoryValue;
+        if (!categoryField) {
+            return q;
+        }
+        categoryValue = q.category;
+        delete q.category;
+        q[categoryField] = categoryValue;
+        return q;
+    };
+    var replaceNameQuery = function(q, rxtManager, type) {
+        //Determine if a name was provided
+        if (!q.hasOwnProperty('name')) {
+            return q;
+        }
+        var nameField = rxtManager.getNameAttribute(type);
+        var nameValue;
+        if (!nameField) {
+            return q;
+        }
+        nameValue = q.name;
+        delete q.name;
+        q[nameField] = nameValue;
+        return q;
+    };
+    var tenantResources = tenantApi.createTenantAwareAssetResources(ctx.session, options);
+    am = tenantResources.am;
+    context = tenantResources.context;
+    rxtManager = context.rxtManager;
+    if (tag) {
+        assets = am.tagged(tag);
+    } else if (q) {
+        var qString = '{' + q + '}';
+        var query = parse(qString);
+        //query = replaceNameQuery(query,rxtManager,type);
+        query = replaceCategoryQuery(query,rxtManager,type);
+        query = addGroupingStateToQuery(query, type, ctx.request, rxtManager);
+        if (log.isDebugEnabled()) {
+            log.debug('list page search query: ' + stringify(query));
+        }
+        assets = am.advanceSearch(query, PAGING);
+    } else {
+        if (PAGING.sortOrder == 'popular') {
+            assets = ratingApi.getPopularAssets(type, context.tenantId, am, PAGING.start);
+        } else {
+            if (rxtManager.isGroupingEnabled(type)) {
+                assets = am.searchByGroup();
+            } else {
+                assets = am.search(null, PAGING);
+            }
+        }
+    }
+    var username = user ? user.username : null;
+    var bookmarkable = permissions.hasAssetPermission(permissions.ASSET_BOOKMARK, type, tenantId,
+            username) && !page.isUserDomainAndUrlDomainDifferent;
+    assets.forEach(function(asset) {
+        asset.bookmarkable = bookmarkable;
+    });
+    //Add subscription details to the assets
+    //tenantApi.debug();
+    subscriptionApi.addSubscriptionDetails(assets, am, ctx.session);
+    ratingApi.addRatings(assets, am, context.tenantId, context.username);
+    var output = am.render(assets, page).list();
+    output.paging = assetApi.assetsPaging(assets, type, ctx.request);
+    caramel.render(output);
+}, request, response, session); %>

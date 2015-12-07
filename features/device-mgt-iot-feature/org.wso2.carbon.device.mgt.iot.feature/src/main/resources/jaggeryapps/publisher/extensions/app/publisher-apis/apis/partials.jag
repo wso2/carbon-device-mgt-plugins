@@ -1,0 +1,69 @@
+<%
+var log = new Log();
+var caramel = require('caramel');
+var Handlebars = require('handlebars').Handlebars;
+
+var resolve = function (path, type) {
+    var theme = caramel.theme();
+    var extensionResPath = '/extensions/assets/' + type + '/themes/' + theme.name + '/' + path;
+    var resFile = new File(extensionResPath);
+    if (resFile.isExists()) {
+        return extensionResPath;
+    }
+    return theme.resolve(path);
+};
+
+var analyzePartials = function (partials, ast) {
+    switch (ast.type) {
+        case 'program':
+            if (ast.statements) {
+                ast.statements.forEach(function (program) {
+                    analyzePartials(partials, program);
+                });
+            }
+            if (ast.inverse) {
+                analyzePartials(partials, ast.inverse);
+            }
+            break;
+        case 'block':
+            analyzePartials(partials, ast.program);
+            break;
+        case 'partial':
+            partials.push(ast.id.original);
+    }
+};
+
+var findPartials = function (partials, type, partial) {
+    var file, o, ast, path;
+    if (partials[partial]) {
+        return;
+    }
+    path = resolve('partials/' + partial + '.hbs', type);
+    file = new File(path);
+    file.open('r');
+    ast = Handlebars.parse(file.readAll());
+    file.close();
+    partials[partial] = path;
+    o = [];
+    analyzePartials(o, ast);
+    o.forEach(function (partial) {
+        findPartials(partials, type, partial);
+    });
+};
+
+var find = function (type, partials) {
+    var data = {};
+    partials.forEach(function(partial) {
+        findPartials(data, type, partial);
+    });
+    return data;
+};
+
+
+var type = request.getParameter('type');
+var partials = request.getParameter('partial');
+partials = partials instanceof Array ? partials : [partials];
+
+response.contentType = 'application/json';
+print(find(type, partials));
+%>

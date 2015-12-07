@@ -1,0 +1,275 @@
+<%
+/*
+ * Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the 'License');
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an 'AS IS' BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/*
+ Description: Invoke routed api endpoints
+ Filename : assets.jag
+ * can be extended by asset type
+
+ ENDPOINTS:
+ GET
+ /apis/assets/
+ /apis/assets/{id}
+ /apis/assets/{id}/state
+
+ POST
+ /apis/assets/
+ /apis/assets/{id}
+ /apis/assets/{id}/state
+
+ DELETE
+ /apis/assets/{id}
+
+ */
+
+
+require('/modules/publisher.js').exec(function (ctx) {
+    var log = new Log('asset_api_endpoints');
+    var ref = require('utils').request;
+    var responseProcessor = require('utils').response;
+    var res = ctx.response;
+    var req = ctx.request;
+    var session = ctx.session;
+    var uriMatcher = new URIMatcher(req.getRequestURI());
+    var assetApi = require('/modules/asset-api.js').api;
+    var lcApi = require('/modules/lifecycle/lifecycle-api.js').api;
+    var CREATE_URL = '/{context}/apis/assets/';
+    var UPDATE_URL = '/{context}/apis/assets/{id}';
+    var LIST_ASSETS_URL = '/{context}/apis/assets/';
+    var GET_ASSET_URL = '/{context}/apis/assets/{id}';
+    var DELETE_ASSET_URL = '/{context}/apis/assets/{id}';
+    var ASSET_STATE_URL = '/{context}/apis/assets/{id}/state';
+    var method = req.getMethod();
+    var options = ref.getQueryOptions(req.getQueryString());
+    var response;
+    //response.contentType = 'application/json';
+    var constants = require('rxt').constants;
+    var contentTypeheader, jsonHeader, multipartHeader, formHeader, acceptHeader, jsonHeaderAccept;
+    var addAsset = function (options, req, res, session) {
+        var requestURI = req.getRequestURI();
+        var newAsset = assetApi.create(options, req, res, session);
+        if (!newAsset) {
+            return responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on create asset', res, 'Failed to create asset of type: ' + options.type, 'more information on create asset error', []);
+        }
+        response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.CREATED, res, newAsset);
+        response.addHeader('Location', requestURI + '/' + newAsset.id + '?type=' + newAsset.type);
+    };
+    var updateAsset = function (options, req, res, session) {
+        var updatedAsset = assetApi.update(options, req, res, session);
+        if (!updatedAsset) {
+            return responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.NOT_FOUND, 'error on update api', res, 'No matching asset found by id : ' + options.id, 'this is more information', []);
+        }
+        response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.ACCEPTED, res, updatedAsset);
+    };
+    var getAsset = function (options, req, res, session) {
+        var asset = assetApi.get(options, req, res, session);
+        if (!asset) {
+            return responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.NOT_FOUND, 'error on get api', res, 'No matching asset found by id : ' + options.id, 'this is more information', []);
+        }
+        response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.OK, res, asset);
+    };
+    var deleteAsset = function (options, req, res, session) {
+        var done = assetApi.remove(options, req, res, session);
+        if (!done) {
+            return responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.NOT_FOUND, 'error on delete api', res, 'No matching asset found by id : ' + options.id, 'this is more information', []);
+        }
+        response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.OK, res,
+                {'message':'Asset Deleted Successfully'});
+    };
+    var getAssetState = function (options, req, res, session) {
+        var state = lcApi.getState(options, req, res, session);
+        if (!state) {
+            return responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.NOT_FOUND, 'error on get lifecycle api', res, 'No matching lifecycle found for asset id : ' + options.id, 'this is more information', []);
+        }
+        response = responseProcessor.buildSuccessResponseDefaultLC(constants.STATUS_CODES.OK, res, state);
+    };
+    switch (method) {
+        case 'POST':// POST endpoints
+            if (uriMatcher.match(CREATE_URL)) {//to create asset
+                contentTypeheader = req.getHeader('Content-Type') || '';
+                jsonHeader = contentTypeheader.indexOf('application/json');
+                multipartHeader = contentTypeheader.indexOf('multipart/form-data');
+                formHeader = contentTypeheader.indexOf('application/x-www-form-urlencoded');
+                try {
+                    if (!contentTypeheader) {
+                        response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.UNSUPPORTED_MEDIATYPE, 'error on create asset', res, 'Unsupported Media Type of creating ' + options.type, 'more information on create asset error', []);
+                        return;
+                    }
+                    if (jsonHeader < 0 && multipartHeader < 0 && formHeader < 0) {
+                        response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.UNSUPPORTED_MEDIATYPE, 'error on create asset', res, 'Unsupported Media Type of creating ' + options.type, 'more information on create asset error', []);
+                        return;
+                    }
+                    addAsset(options, req, res, session);
+                } catch (e) {
+                    if (e.hasOwnProperty('message') && e.hasOwnProperty('code')) {
+                        log.error("Error while creating asset for the request due to " + e.message);
+
+                        response = responseProcessor.buildErrorResponseDefault(e.code, 'error on create asset', res,
+                                        'Failed to create asset of type: ' + options.type, e.message, []);
+                        return;
+                    }
+                    log.error(e.message, e);
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on create asset', res, 'Failed to create asset of type: ' + options.type, 'more information on create asset error', []);
+                    if (log.isDebugEnabled()) {
+                        log.debug("Error while creating asset for the request : " + e);
+                    }
+                }
+            } else if (uriMatcher.match(UPDATE_URL)) {//to update asset
+                contentTypeheader = req.getHeader('Content-Type') || '';
+                jsonHeader = contentTypeheader.indexOf('application/json');
+                multipartHeader = contentTypeheader.indexOf('multipart/form-data');
+                formHeader = contentTypeheader.indexOf('application/x-www-form-urlencoded');
+                options.id = uriMatcher.elements().id;
+                try {
+                    if (!contentTypeheader) {
+                        response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.UNSUPPORTED_MEDIATYPE, 'error on update asset', res, 'Unsupported Media Type of updating ' + options.type, 'more information on update asset error', []);
+                        return;
+                    }
+                    if (jsonHeader < 0 && multipartHeader < 0 && formHeader < 0) {
+                        response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.UNSUPPORTED_MEDIATYPE, 'error on update asset', res, 'Unsupported Media Type of updating ' + options.type, 'more information on update asset error', []);
+                        return;
+                    }
+                    updateAsset(options, req, res, session);
+                } catch (e) {
+                    if (e.hasOwnProperty('message') && e.hasOwnProperty('code')) {
+                        log.error(e.message, e);
+                        response = responseProcessor.buildErrorResponseDefault(e.code, 'error on update asset', res, 'Failed to update asset of asset: ' + options.id, e.message, []);
+                        return;
+                    }
+                    if (log.isDebugEnabled()) {
+                        log.debug("Error while updating asset for the request : " + e);
+                        return;
+                    }
+                    log.error(e.message, e);
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on update asset', res, 'Failed to update asset of asset: ' + options.id, 'more information on update asset error', []);
+                }
+            } else if (uriMatcher.match(ASSET_STATE_URL)) {//change asset's LC state
+                var elements = uriMatcher.elements();
+                options.id = elements.id;
+                try {
+                    var out = lcApi.invokeStateTransition(options, req, res, session);
+                    response = responseProcessor.buildSuccessResponseDefaultLC(constants.STATUS_CODES.OK, res, out);
+                } catch (e) {
+                    if (e.hasOwnProperty('message') && e.hasOwnProperty('code')) {
+                        log.error(e.message, e);
+                        response = responseProcessor.buildErrorResponseDefault(e.code, 'error on update asset life cycle', res, 'Failed to update asset lifecycle of asset: ' + options.id, e.message, []);
+                        return;
+                    }
+                    if (log.isDebugEnabled()) {
+                        log.debug("Error while changing asset lifecycle for the request : " + e);
+                        return;
+                    }
+                    log.error(e.message, e);
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on update asset lifecycle of asset', res, 'Failed to update asset lifecycle of asset: ' + options.id, 'more information on update asset lifecycle error', []);
+                }
+            } else {
+                response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.NOT_IMPLEMENTED, 'Not found API endpoints', res, 'Unable to locate this POST endpoint', 'this is more information about not implemented api', []);
+            }
+            break;
+        case 'GET':// GET endpoints
+            options.type = req.getParameter('type');
+            if (uriMatcher.match(LIST_ASSETS_URL)) {//return assets by type
+                //it always return */* when Accept header is not defined
+                acceptHeader = req.getHeader('Accept');
+                jsonHeaderAccept = acceptHeader.indexOf('application/json');
+                try {
+                    if (jsonHeaderAccept >= 0 || acceptHeader === '*/*') {
+                        var assets = [];
+                        if(options.type) {
+                            if(log.isDebugEnabled()){
+                                log.debug('Type specific advanced search');
+                            }
+                            assets = assetApi.advanceSearch(options, req, res, session);
+                        } else {
+                            if(log.isDebugEnabled()){
+                                log.debug('Generic advanced search');
+                            }
+                            assets = assetApi.genericAdvanceSearch(options,req,res,session);
+                        }
+                    response = responseProcessor.buildSuccessResponseDefault(constants.STATUS_CODES.OK, res, assets);
+                        return;
+                    }
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.NOT_ACCEPTABLE, 'error on get api', res, 'The requested media type is not supported', 'this is more information about accept header', []);
+                } catch (e) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Error while getting assets for the request : " + e);
+                        return;
+                    }
+                    log.error(e.message, e);
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on get assets', res, 'Failed to get assets', 'more information on get asset list error', []);
+                }
+            } else if (uriMatcher.match(GET_ASSET_URL)) {//return asset by id
+                options.id = uriMatcher.elements().id;
+                //it always return */* when Accept header is not defined
+                acceptHeader = req.getHeader('Accept');
+                jsonHeaderAccept = acceptHeader.indexOf('application/json');
+                try {
+                    if (jsonHeaderAccept >= 0 || acceptHeader === '*/*') {
+                        getAsset(options, req, res, session);
+                        return;
+                    }
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.NOT_ACCEPTABLE, 'error on get api', res, 'The requested media type is not supported or add content-type for request', 'this is more information about accept header', []);
+                } catch (e) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Error while getting a asset for the request : " + e);
+                        return;
+                    }
+                    log.error(e.message, e);
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on get asset', res, 'Failed to get asset', 'more information on get asset error', []);
+                }
+                //TODO life cycle get state
+            } else if (uriMatcher.match(ASSET_STATE_URL)) {//return asset state by id
+                try {
+                    options.id = uriMatcher.elements().id;
+                    acceptHeader = req.getHeader('Accept');
+                    jsonHeaderAccept = acceptHeader.indexOf('application/json');
+                    if (jsonHeaderAccept >= 0 || acceptHeader === '*/*') {
+                        getAssetState(options, req, res, session);
+                        return;
+                    }
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.NOT_ACCEPTABLE, 'error on get api', res, 'The requested media type is not supported', 'this is more information about accept header', []);
+                } catch (e) {
+                    if (e.hasOwnProperty('message') && e.hasOwnProperty('code')) {
+                        log.error(e.message, e);
+                        response = responseProcessor.buildErrorResponseDefault(e.code, 'error on get state asset', res, 'Failed to get state of asset: ' + options.id, e.message, []);
+                        return;
+                    }
+                    log.error(e.message, e);
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on get state asset', res, 'Failed to get state of asset: ' + options.id, 'more information on get state of asset error', []);
+                }
+            } else {
+                response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.NOT_IMPLEMENTED, 'Not found API endpoints', res, 'Unable to locate this GET endpoint', 'this is more information about not implemented api', []);
+            }
+            break;
+        case 'DELETE': // DELETE endpoints
+            options.type = req.getParameter('type');
+            if (uriMatcher.match(DELETE_ASSET_URL)) {
+                try {
+                    options.id = uriMatcher.elements().id;
+                    deleteAsset(options, req, res, session);
+                } catch (e) {
+                    log.error(e.message, e);
+                    response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.INTERNAL_SERVER_ERROR, 'error on delete API end points', res, 'Unable to Delete Asset of id:' + options.id, 'this more information', []);
+                }
+            } else {
+                response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.NOT_IMPLEMENTED, 'Not found API endpoints', res, 'Unable to locate this GET endpoint', 'this is more information about not implemented api', []);
+            }
+            break;
+        default://other un-implemented endpoints
+            response = responseProcessor.buildErrorResponseDefault(constants.STATUS_CODES.NOT_IMPLEMENTED, 'Not Implemented API endpoints', res, 'The endpoint that you have requested is not implemented for the ' + method + ' method.Try making the request with the appropriate verb' + '(hint: create/update operations use POST).', []);
+    }
+}, request, response, session); %>

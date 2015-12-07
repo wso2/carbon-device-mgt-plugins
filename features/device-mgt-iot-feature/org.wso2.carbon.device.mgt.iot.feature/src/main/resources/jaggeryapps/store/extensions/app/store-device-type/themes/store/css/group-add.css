@@ -1,0 +1,60 @@
+.page-sub-title {
+    font-weight: 300;
+    text-transform: uppercase;
+    font-size: 24px;
+    margin: 0;
+}
+
+.wr-input-label {
+    font-weight: 100;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.wr-input-control {
+    margin-bottom: 20px;
+}
+
+.wr-btn, a.wr-btn {
+    font-weight: normal;
+    font-size: 13px;
+    color: #fff;
+    background: #11375B;
+    padding: 10px 10px;
+    display: inline-block;
+    margin-right: 5px;
+    border: none;
+    text-decoration: none;
+}
+
+.center-container {
+    top: 50px;
+    left: 25%;
+    right: 25%;
+}
+
+.wr-input-control input, .wr-input-control textarea {
+    border: 1px #999 solid;
+    width: 100%;
+    height: 100%;
+    padding: 6px 10px;
+    z-index: 1;
+    -webkit-appearance: none;
+}
+
+::-webkit-input-placeholder {
+    color: #999;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    color: #999;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+    color: #999;
+}
+
+:-ms-input-placeholder {
+    color: #999;
+}

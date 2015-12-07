@@ -1,0 +1,52 @@
+<%
+/*
+ *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ *
+ */
+require('/modules/store.js').exec(function (ctx) {
+    var utils = require('utils');
+    var rxt = require('rxt');
+    var ref = utils.request;
+    var GET_TAGS_PATTERN = '/{context}/apis/tags';
+    var responseProcessor = utils.response;
+    var constants = rxt.constants;
+    var response = ctx.response;
+    var req = ctx.request;
+    var uriMatcher = new URIMatcher(ctx.request.getRequestURI());
+    var method = req.getMethod();
+    var options = ref.getQueryOptions(req.getQueryString());
+    var asset = rxt.asset;
+    var assetManager = asset.createUserAssetManager(ctx.session, options.type);
+    var tagsResults;
+    var log = new Log();
+    switch (method) {
+        case 'GET':
+            if (uriMatcher.match(GET_TAGS_PATTERN)) {
+                var query;
+                var q = ctx.request.getParameter('q');
+                if (q) {
+                    var qString = '{' + q + '}';
+                    query = utils.request.validateQuery(qString);
+                }
+                print(assetManager.tags(query));
+            }
+            break;
+        default:
+            response = responseProcessor.buildErrorResponse(response, constants.STATUS_CODES.NOT_IMPLEMENTED, 'Unable to locate this endpoint for ' + method)
+    }
+}, request, response, session);
+%>
