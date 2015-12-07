@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttSubscriber;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
@@ -39,10 +40,11 @@ import java.util.UUID;
 public class VirtualFireAlarmMQTTSubscriber extends MqttSubscriber {
     private static Log log = LogFactory.getLog(VirtualFireAlarmMQTTSubscriber.class);
 
+    private static final String serverName =
+            DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
     private static final String subscribeTopic =
-            "wso22" + File.separator + "iot" + File.separator + "+" + File.separator +
-                    VirtualFireAlarmConstants.DEVICE_TYPE + File.separator + "+" + File.separator +
-                    "publisher";
+            serverName + File.separator + "+" + File.separator + VirtualFireAlarmConstants.DEVICE_TYPE +
+                    File.separator + "+" + File.separator + "publisher";
 
     private static final String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
     private static String mqttEndpoint;

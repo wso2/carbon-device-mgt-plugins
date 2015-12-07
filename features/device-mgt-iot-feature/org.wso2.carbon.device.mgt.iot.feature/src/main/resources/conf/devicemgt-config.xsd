@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="DeviceCloudConfiguration" type="DeviceCloudConfig" />
+  <xs:element name="DeviceManagementConfigurations" type="DeviceManagementConfigurations" />
 
-  <xs:complexType name="DeviceCloudConfig" >
+  <xs:complexType name="DeviceManagementConfigurations" >
     <xs:sequence>
+      <xs:element type="DeviceMgtServerInfo" name="DMServerInfo"/>
       <xs:element type="DataStoresConfig" name="DataStores"/>
       <xs:element type="ControlQueuesConfig" name="ControlQueues"/>
       <xs:element type="SecurityConfig" name="Security"/>
@@ -12,13 +13,12 @@
     </xs:sequence>
   </xs:complexType>
 
-  <xs:complexType name="DeviceUserValidatorConfig">
+  <xs:complexType name="DeviceMgtServerInfo">
     <xs:sequence>
-      <xs:element type="xs:int" name="CacheSize"/>
-      <xs:element type="xs:int" name="TTL"/>
+      <xs:element type="xs:string" name="Name"/>
+      <xs:element type="xs:string" name="Domain"/>
     </xs:sequence>
   </xs:complexType>
-
 
   <xs:complexType name="DataStoresConfig">
     <xs:sequence>
@@ -81,5 +81,11 @@
     </xs:sequence>
   </xs:complexType>
 
+  <xs:complexType name="DeviceUserValidatorConfig">
+    <xs:sequence>
+      <xs:element type="xs:int" name="CacheSize"/>
+      <xs:element type="xs:int" name="TTL"/>
+    </xs:sequence>
+  </xs:complexType>
 
 </xs:schema>

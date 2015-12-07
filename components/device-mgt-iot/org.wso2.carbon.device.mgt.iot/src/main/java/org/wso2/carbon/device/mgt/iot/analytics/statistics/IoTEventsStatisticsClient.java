@@ -63,8 +63,7 @@ public class IoTEventsStatisticsClient {
 			Context ctx = new InitialContext();
 			dataSource = (DataSource) ctx.lookup(DATA_SOURCE_NAME);
 		} catch (NamingException e) {
-			throw new IoTEventsStatisticsException("Error while looking up the data " +
-														  "source: " + DATA_SOURCE_NAME);
+			throw new IoTEventsStatisticsException("Error while looking up the data source: " + DATA_SOURCE_NAME);
 		}
 	}
 

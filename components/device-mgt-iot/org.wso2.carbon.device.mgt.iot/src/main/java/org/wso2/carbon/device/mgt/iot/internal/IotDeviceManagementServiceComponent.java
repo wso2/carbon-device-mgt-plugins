@@ -32,13 +32,12 @@ import org.wso2.carbon.device.mgt.iot.service.DeviceTypeService;
 import org.wso2.carbon.device.mgt.iot.service.DeviceTypeServiceImpl;
 import org.wso2.carbon.device.mgt.iot.startup.StartupUrlPrinter;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.exception.IotDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.iot.config.server.DeviceCloudConfigManager;
+import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.analytics.statistics.IoTUsageStatisticsClient;
 import org.wso2.carbon.device.mgt.iot.config.devicetype.IotDeviceTypeConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.util.IotDeviceManagementDAOUtil;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
-import org.wso2.carbon.policy.mgt.common.spi.PolicyMonitoringService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
@@ -84,7 +83,7 @@ public class IotDeviceManagementServiceComponent {
 
 
             BundleContext bundleContext = ctx.getBundleContext();              /* Initialize the data source configuration */
-			DeviceCloudConfigManager.getInstance().initConfig();
+			DeviceManagementConfigurationManager.getInstance().initConfig();
 			IotDeviceTypeConfigurationManager.getInstance().initConfig();
 			Map<String, IotDeviceTypeConfig> dsConfigMap =
 					IotDeviceTypeConfigurationManager.getInstance().getIotDeviceTypeConfigMap();

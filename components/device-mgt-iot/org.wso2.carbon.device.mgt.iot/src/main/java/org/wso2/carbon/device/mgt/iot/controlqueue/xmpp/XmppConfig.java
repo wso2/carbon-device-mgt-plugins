@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.device.mgt.iot.controlqueue.xmpp;
 
-import org.wso2.carbon.device.mgt.iot.config.server.DeviceCloudConfigManager;
+import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ControlQueue;
 
 public class XmppConfig {
@@ -69,7 +69,7 @@ public class XmppConfig {
 	}
 
 	private XmppConfig() {
-		xmppControlQueue = DeviceCloudConfigManager.getInstance().getControlQueue(
+		xmppControlQueue = DeviceManagementConfigurationManager.getInstance().getControlQueue(
 				XMPP_QUEUE_CONFIG_NAME);
 
 		xmppServerIP = xmppControlQueue.getServerURL();

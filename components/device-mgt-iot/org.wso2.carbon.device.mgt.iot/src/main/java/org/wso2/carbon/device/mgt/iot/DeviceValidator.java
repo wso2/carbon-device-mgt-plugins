@@ -27,7 +27,7 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
-import org.wso2.carbon.device.mgt.iot.config.server.DeviceCloudConfigManager;
+import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 
 public class DeviceValidator {
 
@@ -36,7 +36,7 @@ public class DeviceValidator {
 
     // private static Log log = LogFactory.getLog(DeviceValidator.class);
     static {
-        int cacheSize = DeviceCloudConfigManager.getInstance().getDeviceCloudMgtConfig().getDeviceUserValidator()
+        int cacheSize = DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getDeviceUserValidator()
                 .getCacheSize();
         cache = new LRUMap(cacheSize);
     }

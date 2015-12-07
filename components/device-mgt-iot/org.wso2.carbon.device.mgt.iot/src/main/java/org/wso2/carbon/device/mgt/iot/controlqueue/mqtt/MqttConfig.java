@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.device.mgt.iot.controlqueue.mqtt;
 
-import org.wso2.carbon.device.mgt.iot.config.server.DeviceCloudConfigManager;
+import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ControlQueue;
 
 public class MqttConfig {
@@ -58,7 +58,7 @@ public class MqttConfig {
 	}
 
 	private MqttConfig() {
-		mqttControlQueue = DeviceCloudConfigManager.getInstance().getControlQueue(
+		mqttControlQueue = DeviceManagementConfigurationManager.getInstance().getControlQueue(
 				MQTT_QUEUE_CONFIG_NAME);
 		mqttQueueEndpoint = mqttControlQueue.getServerURL() + ":" + mqttControlQueue.getPort();
 		mqttQueueUsername = mqttControlQueue.getUsername();

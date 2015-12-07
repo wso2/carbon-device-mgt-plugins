@@ -33,7 +33,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wso2.carbon.device.mgt.iot.config.server.DeviceCloudConfigManager;
+import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ApiManagerConfig;
 import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.IoTException;
@@ -56,10 +56,11 @@ public class TokenClient {
 	public TokenClient(String deviceType) {
 		this.deviceType = deviceType;
 
-		ApiManagerConfig apiManagerConfig =DeviceCloudConfigManager.getInstance().getDeviceCloudMgtConfig().getApiManager();
+		ApiManagerConfig apiManagerConfig =
+				DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager();
 
 		tokenURL = apiManagerConfig.getAccessTokenURL();
-		grantType = DeviceCloudConfigManager.getInstance().getDeviceCloudMgtConfig()
+		grantType = DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig()
 				.getApiManager()
 				.getDeviceGrantType();
 		scope = apiManagerConfig.getDeviceScopes();

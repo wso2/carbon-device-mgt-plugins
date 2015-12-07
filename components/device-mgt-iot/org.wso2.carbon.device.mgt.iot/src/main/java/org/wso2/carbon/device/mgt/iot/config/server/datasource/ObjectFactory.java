@@ -42,7 +42,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _DeviceCloudConfiguration_QNAME = new QName("", "DeviceCloudConfiguration");
+    private final static QName _DeviceCloudConfiguration_QNAME = new QName("", "DeviceManagementConfigurations");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.wso2.carbon.device.mgt.iot.common.config.server.configs
@@ -52,12 +52,18 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link DeviceCloudConfig }
+     * Create an instance of {@link DeviceManagementConfiguration }
      * 
      */
-    public DeviceCloudConfig createDeviceCloudConfig() {
-        return new DeviceCloudConfig();
+    public DeviceManagementConfiguration createDeviceCloudConfig() {
+        return new DeviceManagementConfiguration();
     }
+
+    /**
+     * Create an instance of {@link DeviceManagementConfiguration }
+     *
+     */
+    public DeviceMgtServerInfo createDeviceMgtServerInfo() { return new DeviceMgtServerInfo(); }
 
     /**
      * Create an instance of {@link ApiManagerConfig }
@@ -116,12 +122,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link DeviceCloudConfig }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link DeviceManagementConfiguration }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "", name = "DeviceCloudConfiguration")
-    public JAXBElement<DeviceCloudConfig> createDeviceCloudConfiguration(DeviceCloudConfig value) {
-        return new JAXBElement<DeviceCloudConfig>(_DeviceCloudConfiguration_QNAME, DeviceCloudConfig.class, null, value);
+    @XmlElementDecl(namespace = "", name = "DeviceManagementConfigurations")
+    public JAXBElement<DeviceManagementConfiguration> createDeviceCloudConfiguration(DeviceManagementConfiguration value) {
+        return new JAXBElement<DeviceManagementConfiguration>(_DeviceCloudConfiguration_QNAME, DeviceManagementConfiguration.class, null, value);
     }
 
 }

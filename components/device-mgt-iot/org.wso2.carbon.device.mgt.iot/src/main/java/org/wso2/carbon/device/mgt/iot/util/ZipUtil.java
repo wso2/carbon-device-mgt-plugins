@@ -19,7 +19,7 @@
 package org.wso2.carbon.device.mgt.iot.util;
 
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.iot.config.server.DeviceCloudConfigManager;
+import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
@@ -57,7 +57,7 @@ public class ZipUtil {
 		String httpServerEP = "http://" + iotServerIP + ":" + httpServerPort;
 
 		String apimHost =
-				DeviceCloudConfigManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
+				DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
 						.getServerURL();
 
 //		int indexOfChar = apimIP.lastIndexOf(File.separator);
@@ -66,7 +66,7 @@ public class ZipUtil {
 //		}
 
 		String apimGatewayPort =
-				DeviceCloudConfigManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
+				DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
 						.getGatewayPort();
 
 		String apimEndpoint = apimHost + ":" + apimGatewayPort;
