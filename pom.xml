@@ -48,6 +48,7 @@
 
         <!--Device Specific IoT Components-->
         <module>components/device-mgt-iot-virtualfirealarm</module>
+        <module>components/device-mgt-iot-androidsense</module>
 
         <!--Core MDM and IoT Features-->
         <module>features/device-mgt-iot-feature</module>
@@ -59,6 +60,7 @@
 
         <!--Device specific IoT Features-->
         <module>features/device-mgt-iot-virtualfirealarm-feature</module>
+        <module>features/device-mgt-iot-androidsense-feature</module>
     </modules>
 
     <dependencyManagement>
@@ -383,6 +385,23 @@
             </dependency>
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 
+
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+                            <!--Android sense DeviceType Impl, API and Agent-->
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.androidsense</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.api</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+                <type>war</type>
+            </dependency>
+
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.json.wso2</groupId>
                 <artifactId>json</artifactId>
