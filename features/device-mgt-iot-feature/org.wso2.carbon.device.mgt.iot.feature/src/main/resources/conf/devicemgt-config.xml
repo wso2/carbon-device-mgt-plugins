@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<DeviceCloudConfiguration>
+<DeviceManagementConfigurations>
+    <DMServerInfo>
+        <Name>WSO2IoTServer</Name>
+        <Domain>wso2.iotserver.com</Domain>
+    </DMServerInfo>
     <DataStores>
         <DataStore>
             <Name>WSO2-BAM</Name>
@@ -70,4 +74,4 @@
         <TTL>600</TTL>
     </DeviceUserValidator>
 
-</DeviceCloudConfiguration>
+</DeviceManagementConfigurations>

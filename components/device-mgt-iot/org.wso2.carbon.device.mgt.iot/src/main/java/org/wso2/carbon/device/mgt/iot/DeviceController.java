@@ -20,10 +20,10 @@ package org.wso2.carbon.device.mgt.iot;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.iot.config.server.DeviceCloudConfigManager;
+import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ControlQueue;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.DataStore;
-import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceCloudConfig;
+import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceManagementConfiguration;
 import org.wso2.carbon.device.mgt.iot.controlqueue.ControlQueueConnector;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.datastore.DataStoreConnector;
@@ -45,7 +45,7 @@ public class DeviceController {
 	private static HashMap<String, ControlQueueConnector> controlQueueMap = new HashMap<>();
 
 	public static void init() {
-		DeviceCloudConfig config = DeviceCloudConfigManager.getInstance().getDeviceCloudMgtConfig();
+		DeviceManagementConfiguration config = DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig();
 
 		if (config != null) {
 			initSecurity(config);
@@ -56,7 +56,7 @@ public class DeviceController {
 	}
 
 
-	private static void loadDataStores(DeviceCloudConfig config) {
+	private static void loadDataStores(DeviceManagementConfiguration config) {
 		List<DataStore> dataStores = config.getDataStores().getDataStore();
 		if (dataStores == null) {
 			log.error("Error occurred when trying to read data stores configurations");
@@ -86,7 +86,7 @@ public class DeviceController {
 		}
 	}
 
-	private static void loadControlQueues(DeviceCloudConfig config) {
+	private static void loadControlQueues(DeviceManagementConfiguration config) {
 		List<ControlQueue> controlQueues = config.getControlQueues().getControlQueue();
 		if (controlQueues == null) {
 			log.error("Error occurred when trying to read control queue configurations");
@@ -117,7 +117,7 @@ public class DeviceController {
 		}
 	}
 
-	private static void initSecurity(DeviceCloudConfig config) {
+	private static void initSecurity(DeviceManagementConfiguration config) {
 		String trustStoreFile = null;
 		String trustStorePassword = null;
 		File certificateFile = null;
@@ -153,7 +153,7 @@ public class DeviceController {
 
 		ControlQueueConnector mqttControlQueue = controlQueueMap.get(MqttConfig.getMqttQueueConfigName());
 		if (mqttControlQueue == null) {
-			log.info("MQTT Queue has not been listed in 'devicecloud-config.xml'");
+			log.info("MQTT Queue has not been listed in 'devicemgt-config.xml'");
 			return false;
 		}
 

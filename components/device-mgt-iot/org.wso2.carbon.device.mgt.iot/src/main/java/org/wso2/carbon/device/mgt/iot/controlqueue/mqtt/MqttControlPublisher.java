@@ -137,7 +137,7 @@ public class MqttControlPublisher implements ControlQueueConnector, MqttCallback
 				throw new DeviceControllerException(errorMsg, ex);
 			}
 		} else {
-			log.warn("MQTT <Enabled> set to false in 'devicecloud-config.xml'");
+			log.warn("MQTT <Enabled> set to false in 'devicemgt-config.xml'");
 		}
 	}
 
