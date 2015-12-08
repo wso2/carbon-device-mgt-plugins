@@ -235,8 +235,7 @@ public class VirtualFireAlarmService {
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
         try {
-            Device device = deviceManagement.getDeviceManagementService().getDevice(
-                    deviceIdentifier);
+            Device device = deviceManagement.getDeviceManagementService().getDevice(deviceIdentifier);
             device.setDeviceIdentifier(deviceId);
 
             // device.setDeviceTypeId(deviceTypeId);
@@ -245,8 +244,7 @@ public class VirtualFireAlarmService {
             device.setName(name);
             device.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
 
-            boolean updated = deviceManagement.getDeviceManagementService().modifyEnrollment(
-                    device);
+            boolean updated = deviceManagement.getDeviceManagementService().modifyEnrollment(device);
 
             if (updated) {
                 response.setStatus(Response.Status.OK.getStatusCode());
