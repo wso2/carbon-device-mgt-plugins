@@ -18,7 +18,8 @@
   -->
 
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -440,6 +441,11 @@
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.mobile.url.printer</artifactId>
+                <version>${carbon.mobile.device.mgt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.mdm.mdmmgt</artifactId>
                 <version>${carbon.mobile.device.mgt.version}</version>
             </dependency>
 
@@ -902,57 +908,57 @@
             <dependency>
                 <groupId>org.wso2.carbon.appmgt</groupId>
                 <artifactId>org.wso2.carbon.appmgt.core.feature</artifactId>
-                <version>${appmgt..feature.version}</version>
+                <version>${appmgt.feature.version}</version>
             </dependency>
 
 
             <dependency>
                 <groupId>org.wso2.carbon.appmgt</groupId>
                 <artifactId>org.wso2.carbon.appmgt.feature</artifactId>
-                <version>${appmgt..feature.version}</version>
+                <version>${appmgt.feature.version}</version>
             </dependency>
 
 
             <!--<dependency>-->
             <!--<groupId>org.wso2.carbon.appmgt</groupId>-->
             <!--<artifactId>org.wso2.carbon.appmgt.interceptor.feature</artifactId>-->
-            <!--<version>${appmgt..feature.version}</version>-->
+            <!--<version>${appmgt.feature.version}</version>-->
             <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.appmgt</groupId>
                 <artifactId>org.wso2.carbon.appmgt.mdm.wso2emm.feature</artifactId>
-                <version>${appmgt..feature.version}</version>
+                <version>${appmgt.feature.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.appmgt</groupId>
                 <artifactId>org.wso2.carbon.appmgt.mdm.wso2mdm.feature</artifactId>
-                <version>${appmgt..feature.version}</version>
+                <version>${appmgt.feature.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.appmgt</groupId>
-                <artifactId>org.wso2.carbon.appmgt.mobile.feature</artifactId>
-                <version>${appmgt..feature.version}</version>
+                <artifactId>org.wso2.carbon.appmgt.mobile</artifactId>
+                <version>${appmgt.feature.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.appmgt</groupId>
                 <artifactId>org.wso2.carbon.appmgt.publisher.feature</artifactId>
-                <version>${appmgt..feature.version}</version>
+                <version>${appmgt.feature.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.appmgt</groupId>
                 <artifactId>org.wso2.carbon.appmgt.services.api.feature</artifactId>
-                <version>${appmgt..feature.version}</version>
+                <version>${appmgt.feature.version}</version>
             </dependency>
             <!--<dependency>-->
             <!--<groupId>org.wso2.carbon.appmgt</groupId>-->
             <!--<artifactId>org.wso2.carbon.appmgt.startup.publisher.feature</artifactId>-->
-            <!--<version>${appmgt..feature.version}</version>-->
+            <!--<version>${appmgt.feature.version}</version>-->
             <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.appmgt</groupId>
                 <artifactId>org.wso2.carbon.appmgt.store.feature</artifactId>
-                <version>${appmgt..feature.version}</version>
+                <version>${appmgt.feature.version}</version>
             </dependency>
 
             <!-- End of app management features-->
@@ -1099,6 +1105,10 @@
 
         <!-- Carbon API Management -->
         <carbon.api.mgt.version>4.3.0</carbon.api.mgt.version>
+
+        <!-- App manager version-->
+        <appmgt.feature.version>1.1.1</appmgt.feature.version>
+        <carbon.appmgt.version>1.1.1</carbon.appmgt.version>
 
         <!-- Carbon Deployment -->
         <carbon.deployment.version>4.6.0</carbon.deployment.version>
