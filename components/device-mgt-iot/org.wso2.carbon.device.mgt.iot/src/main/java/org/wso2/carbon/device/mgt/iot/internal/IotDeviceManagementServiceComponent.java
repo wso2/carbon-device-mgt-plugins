@@ -104,7 +104,7 @@ public class IotDeviceManagementServiceComponent {
 						IotDeviceManagementDAOUtil
 								.setupIotDeviceManagementSchema(
 										IotDeviceManagementDAOFactory.getDataSourceMap
-												().get(pluginType));
+												().get(pluginType), pluginType);
 					}
 				} catch (IotDeviceMgtPluginException e) {
 					log.error(
