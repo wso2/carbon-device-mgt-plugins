@@ -1,6 +1,6 @@
-function onRequest (context) {
+function onRequest(context) {
     var log = new Log("detail.js");
-    var deviceType = request.getParameter("type");
+    var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("id");
 
     if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
