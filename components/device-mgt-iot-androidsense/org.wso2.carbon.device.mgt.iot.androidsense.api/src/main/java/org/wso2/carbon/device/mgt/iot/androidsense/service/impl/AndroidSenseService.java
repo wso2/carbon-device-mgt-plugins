@@ -66,7 +66,7 @@ public class AndroidSenseService {
     private static final String SENSOR_ACCELEROMETER = "accelerometer";
     private static final String SENSOR_GYROSCOPE = "gyroscope";
     private static final String SENSOR_PRESSURE = "pressure";
-    private static final String SENSOR_GRVITY = "gravity";
+    private static final String SENSOR_GRAVITY = "gravity";
     private static final String SENSOR_ROTATION = "rotation";
     private static final String SENSOR_LIGHT = "light";
     private static final String SENSOR_GPS = "gps";
@@ -297,7 +297,7 @@ public class AndroidSenseService {
                             gValuesF[0] = Float.parseFloat(valuesG[0]) * Float.parseFloat(valuesG[0]) * Float
                                     .parseFloat(valuesG[0]);
                             payloadData = gValuesF;
-                            sensorName = SENSOR_GRVITY;
+                            sensorName = SENSOR_GRAVITY;
                         } else if (androidSensorId == 11) {
                             streamDef = ROTATION_STREAM_DEFINITION;
                             String value = sensor.value;
