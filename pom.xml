@@ -48,6 +48,7 @@
 
         <!--Device Specific IoT Components-->
         <module>components/device-mgt-iot-virtualfirealarm</module>
+        <module>components/device-mgt-iot-digitaldisplay</module>
         <module>components/device-mgt-iot-androidsense</module>
         <module>components/device-mgt-iot-droneanalyzer</module>
 
@@ -61,6 +62,7 @@
 
         <!--Device specific IoT Features-->
         <module>features/device-mgt-iot-virtualfirealarm-feature</module>
+        <module>features/device-mgt-iot-digitaldisplay-feature</module>
         <module>features/device-mgt-iot-androidsense-feature</module>
         <module>features/device-mgt-iot-droneanalyzer-feature</module>
     </modules>
@@ -420,6 +422,18 @@
             </dependency>
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+            <!--Drone DeviceType Impl, API and Agent-->
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
             <dependency>
                 <groupId>org.json.wso2</groupId>
                 <artifactId>json</artifactId>

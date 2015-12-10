@@ -61,6 +61,7 @@ public class AndroidSenseService {
     private static final String PRESSURE_STREAM_DEFINITION = "org.wso2.iot.devices.pressure";
     private static final String GRAVITY_STREAM_DEFINITION = "org.wso2.iot.devices.gravity";
     private static final String ROTATION_STREAM_DEFINITION = "org.wso2.iot.devices.rotation";
+    private static final String PROXIMITY_STREAM_DEFINITION = "org.wso2.iot.device.proximity";
 
     private static final String SENSOR_ACCELEROMETER = "accelerometer";
     private static final String SENSOR_GYROSCOPE = "gyroscope";
@@ -69,6 +70,7 @@ public class AndroidSenseService {
     private static final String SENSOR_ROTATION = "rotation";
     private static final String SENSOR_LIGHT = "light";
     private static final String SENSOR_GPS = "gps";
+    private static final String SENSOR_PROXIMITY = "proximity";
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     private static final String SENSOR_BATTERY = "battery";
@@ -257,7 +259,7 @@ public class AndroidSenseService {
                         streamDef = LIGHT_STREAM_DEFINITION;
                         sensorName = SENSOR_LIGHT;
                         payloadData = new Object[] { Float.parseFloat(sensor.value) };
-                    }else if(androidSensorId == 1){
+                    } else if (androidSensorId == 1){
                         streamDef = ACCELEROMETER_STREAM_DEFINITION;
                         String value = sensor.value;
                         String valuesM[] = value.split(",");
@@ -266,6 +268,41 @@ public class AndroidSenseService {
                                 .parseFloat(valuesM[0]);
                         payloadData = gValuesF;
                         sensorName = SENSOR_ACCELEROMETER;
+                    } else if (androidSensorId == 4) {
+                        streamDef = GYROSCOPE_STREAM_DEFINITION;
+                        String value = sensor.value;
+                        String valuesG[] = value.split(",");
+                        Float gValuesF[] = new Float[1];
+                        gValuesF[0] = Float.parseFloat(valuesG[0]) * Float.parseFloat(valuesG[0]) * Float
+                                .parseFloat(valuesG[0]);
+                        payloadData = gValuesF;
+                        sensorName = SENSOR_GYROSCOPE;
+                    } else if (androidSensorId == 9) {
+                        streamDef = GRAVITY_STREAM_DEFINITION;
+                        String value = sensor.value;
+                        String valuesG[] = value.split(",");
+                        Float gValuesF[] = new Float[1];
+                        gValuesF[0] = Float.parseFloat(valuesG[0]) * Float.parseFloat(valuesG[0]) * Float
+                                .parseFloat(valuesG[0]);
+                        payloadData = gValuesF;
+                        sensorName = SENSOR_GRVITY;
+                    } else if (androidSensorId == 11) {
+                        streamDef = ROTATION_STREAM_DEFINITION;
+                        String value = sensor.value;
+                        String valuesG[] = value.split(",");
+                        Float gValuesF[] = new Float[1];
+                        gValuesF[0] = Float.parseFloat(valuesG[0]) * Float.parseFloat(valuesG[0]) * Float
+                                .parseFloat(valuesG[0]);
+                        payloadData = gValuesF;
+                        sensorName = SENSOR_ROTATION;
+                    } else if (androidSensorId == 8) {
+                        streamDef = PROXIMITY_STREAM_DEFINITION;
+                        sensorName = SENSOR_PROXIMITY;
+                        payloadData = new Object[] { Float.parseFloat(sensor.value) };
+                    } else if (androidSensorId == 6) {
+                        streamDef = PRESSURE_STREAM_DEFINITION;
+                        sensorName = SENSOR_PRESSURE;
+                        payloadData = new Object[] { Float.parseFloat(sensor.value) };
                     }
                     //Add the remaining sensor types.
 
@@ -378,6 +415,101 @@ public class AndroidSenseService {
     @Consumes("application/json")
     @Produces("application/json")
     public SensorRecord readAccelerometer(@HeaderParam("owner") String owner,
+            @HeaderParam("deviceId") String deviceId,
+            @Context HttpServletResponse response) {
+        SensorRecord sensorRecord = null;
+
+        try {
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_ACCELEROMETER);
+        } catch (DeviceControllerException e) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+
+        response.setStatus(Response.Status.OK.getStatusCode());
+        return sensorRecord;
+    }
+
+    @Path("controller/readrotation")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public SensorRecord readRotation(@HeaderParam("owner") String owner,
+            @HeaderParam("deviceId") String deviceId,
+            @Context HttpServletResponse response) {
+        SensorRecord sensorRecord = null;
+
+        try {
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_ACCELEROMETER);
+        } catch (DeviceControllerException e) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+
+        response.setStatus(Response.Status.OK.getStatusCode());
+        return sensorRecord;
+    }
+
+    @Path("controller/readproximity")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public SensorRecord readProximity(@HeaderParam("owner") String owner,
+            @HeaderParam("deviceId") String deviceId,
+            @Context HttpServletResponse response) {
+        SensorRecord sensorRecord = null;
+
+        try {
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_ACCELEROMETER);
+        } catch (DeviceControllerException e) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+
+        response.setStatus(Response.Status.OK.getStatusCode());
+        return sensorRecord;
+    }
+
+    @Path("controller/readgyroscope")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public SensorRecord readGyroscope(@HeaderParam("owner") String owner,
+            @HeaderParam("deviceId") String deviceId,
+            @Context HttpServletResponse response) {
+        SensorRecord sensorRecord = null;
+
+        try {
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_ACCELEROMETER);
+        } catch (DeviceControllerException e) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+
+        response.setStatus(Response.Status.OK.getStatusCode());
+        return sensorRecord;
+    }
+
+    @Path("controller/readpressure")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public SensorRecord readPressure(@HeaderParam("owner") String owner,
+            @HeaderParam("deviceId") String deviceId,
+            @Context HttpServletResponse response) {
+        SensorRecord sensorRecord = null;
+
+        try {
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_ACCELEROMETER);
+        } catch (DeviceControllerException e) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+
+        response.setStatus(Response.Status.OK.getStatusCode());
+        return sensorRecord;
+    }
+
+    @Path("controller/readgravity")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public SensorRecord readGravity(@HeaderParam("owner") String owner,
             @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
         SensorRecord sensorRecord = null;
