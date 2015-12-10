@@ -13,7 +13,7 @@ function onRequest (context) {
             if (deviceInfo != undefined && String(deviceInfo.toString()).length > 0) {
                 deviceInfo = parse(stringify(deviceInfo));
                     viewModel.system = device.properties.IMEI;
-                    viewModel.machine = "Virtual Firealarm";
+                    viewModel.machine = "Digital Display";
                     viewModel.vendor = device.properties.VENDOR;
                 }
                 device.viewModel = viewModel;

@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.wso2.carbon.device.mgt.iot.common.controlqueue.mqtt.MqttConfig;
+import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.constants.DigitalDisplayConstants;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.transport.CommunicationHandlerException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.transport.MQTTCommunicationHandler;
