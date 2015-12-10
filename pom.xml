@@ -48,6 +48,8 @@
 
         <!--Device Specific IoT Components-->
         <module>components/device-mgt-iot-virtualfirealarm</module>
+
+        <module>components/device-mgt-iot-digitaldisplay</module>
         <module>components/device-mgt-iot-androidsense</module>
         <module>components/device-mgt-iot-droneanalyzer</module>
 
@@ -61,6 +63,8 @@
 
         <!--Device specific IoT Features-->
         <module>features/device-mgt-iot-virtualfirealarm-feature</module>
+
+        <module>features/device-mgt-iot-digitaldisplay-feature</module>
         <module>features/device-mgt-iot-androidsense-feature</module>
         <module>features/device-mgt-iot-droneanalyzer-feature</module>
     </modules>
