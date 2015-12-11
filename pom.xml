@@ -406,8 +406,6 @@
             </dependency>
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-<<<<<<< HEAD
-            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <!--Android sense DeviceType Impl, API and Agent-->
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
@@ -418,7 +416,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.api</artifactId>
-=======
+            </dependency>
                               <!--Drone DeviceType Impl, API and Agent-->
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
@@ -430,14 +428,11 @@
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.service.impl</artifactId>
->>>>>>> upstream/IoTS-1.0.0-M1
                 <version>${carbon.iot.device.mgt.version}</version>
                 <type>war</type>
             </dependency>
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-<<<<<<< HEAD
-=======
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <!--Drone DeviceType Impl, API and Agent-->
@@ -450,7 +445,6 @@
             </dependency>
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
 
->>>>>>> upstream/IoTS-1.0.0-M1
             <dependency>
                 <groupId>org.json.wso2</groupId>
                 <artifactId>json</artifactId>
