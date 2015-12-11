@@ -124,8 +124,12 @@ public class MobileDeviceManagementUtil {
 			propertyList.add(getProperty(MOBILE_DEVICE_MODEL, mobileDevice.getModel()));
 			propertyList.add(getProperty(MOBILE_DEVICE_OS_VERSION, mobileDevice.getOsVersion()));
 			propertyList.add(getProperty(MOBILE_DEVICE_VENDOR, mobileDevice.getVendor()));
-			propertyList.add(getProperty(MOBILE_DEVICE_LATITUDE, mobileDevice.getLatitude()));
-			propertyList.add(getProperty(MOBILE_DEVICE_LONGITUDE, mobileDevice.getLongitude()));
+            if(mobileDevice.getLatitude() != null) {
+                propertyList.add(getProperty(MOBILE_DEVICE_LATITUDE, mobileDevice.getLatitude()));
+            }
+            if(mobileDevice.getLongitude() != null) {
+                propertyList.add(getProperty(MOBILE_DEVICE_LONGITUDE, mobileDevice.getLongitude()));
+            }
 			propertyList.add(getProperty(MOBILE_DEVICE_SERIAL, mobileDevice.getSerial()));
 
 			if (mobileDevice.getDeviceProperties() != null) {
