@@ -8,11 +8,10 @@
     <img src="{{@unit.publicUri}}/images/thumb.png" class="img-responsive">
 </div>
 <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8 padding-top">
-        <h3 class="uppercase">Ingredients</h3>
-        <hr>
-        <p class="grey margin-top">Hardware Requirements </p>
-        <br>
-        <ul>
+    <h3 class="uppercase">Ingredients</h3>
+    <hr>
+    <p class="grey margin-top">Hardware Requirements </p>
+    <br>
             <span class="fw-stack fw-lg margin-right">
                     <i class="fw fw-ring fw-stack-2x"> </i>
                     <i class="fw fw-right-arrow fw-stack-1x"></i>
@@ -29,9 +28,7 @@
                     <i class="fw fw-ring fw-stack-2x"> </i>
                     <i class="fw fw-right-arrow fw-stack-1x"></i>
                 </span> Buzzer(3v)<br/>
-
-        </ul>
-        <br>
+    <br>
 
     <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download</a>
 
@@ -41,36 +38,40 @@
                 <div class="col-md-7 col-centered center-container">
                     <h3>Name your device and download the agent from following link.</h3>
                     <br/>
-                    <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
-                    <div class="control-group">
-                        <div class="controls">
-                            <input class="new-device-name" style="color:#3f3f3f;padding:5px"
-                                   type="text"
-                                   placeholder="Ex. Lobby_Firealarm"
-                                   name="deviceName" size="60" required>
-                            <br/>
-                            <input type="hidden" class="deviceType" name="deviceType"
-                                   value="virtual_firealarm"/>
-                            <input type="hidden" class="sketchType" name="sketchType"
-                                   value="virtual_firealarm"/>
-                            <div class="sketchTypes" style="  padding-top: 20px; padding-bottom: 5px; font-size: 18px;">
+
+                    <form id="downloadForm" method="GET"
+                          action="{{@app.context}}/api/devices/sketch/download">
+                        <div class="control-group">
+                            <div class="controls">
+                                <input class="new-device-name" style="color:#3f3f3f;padding:5px"
+                                       type="text"
+                                       placeholder="Ex. Lobby_Firealarm"
+                                       name="deviceName" size="60" required>
+                                <br/>
+                                <input type="hidden" class="deviceType" name="deviceType"
+                                       value="virtual_firealarm"/>
+                                <input type="hidden" class="sketchType" name="sketchType"
+                                       value="virtual_firealarm"/>
+
+                                <div class="sketchTypes"
+                                     style="  padding-top: 20px; padding-bottom: 5px; font-size: 18px;">
                                     <input type="radio" name="sketchType" id="virtual_firealarm"
                                            value="virtual_firealarm"><label for="virtual_firealarm">virtual_firealarm</label>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <br/>
+                        <br/>
 
-                    <div class="buttons">
-                        <a class="btn-operations" onclick="downloadAgent()">Download
-                            Now</a>
-                        &nbsp;&nbsp;
-                        <a href="#" id="download-device-download-link" class="blue-button">
-                            &nbsp;&nbsp;&nbsp;&nbsp;Copy Link&nbsp;&nbsp;&nbsp;&nbsp;
-                        </a>
-                        &nbsp;&nbsp;
-                    </div>
-                </form>
+                        <div class="buttons">
+                            <a class="btn-operations" onclick="downloadAgent()">Download
+                                Now</a>
+                            &nbsp;&nbsp;
+                            <a href="#" id="download-device-download-link" class="blue-button">
+                                &nbsp;&nbsp;&nbsp;&nbsp;Copy Link&nbsp;&nbsp;&nbsp;&nbsp;
+                            </a>
+                            &nbsp;&nbsp;
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -178,40 +179,54 @@
     <br/><br/>
 </div>
 
-    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double grey-bg ">
-        <h3 class="uppercase">Prepare</h3><hr>
-        <p class="grey margin-top">Get your device ready</p>
-        <br/>
-        <ul>
-            <p class="padding-top-double"><span class="circle">01</span> Set up your RaspberryPi device as shown in the schematic below and get the FireAlarm setup.</p>
-            <p class="padding-top-double"><span class="circle">02</span> Connect a monitor to your RaspberryPi via the HDMI cable to get a UI view of the device.</p>
-            <p class="padding-top-double"><span class="circle">03</span> Get the RaspberryPi to connect to the internet (via Ethernet or Wifi) and note its IP_ADDRESS</p>
-        </ul>
-        <br>
-    </div>
+<div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double grey-bg ">
+    <h3 class="uppercase">Prepare</h3>
+    <hr>
+    <p class="grey margin-top">Get your device ready</p>
+    <br/>
 
-    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double">
-        <h3 class="uppercase">Schematic Diagram</h3><hr>
-        <p class="grey margin-top">Click on the image to zoom</p>
-        <center>
-            <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
-                <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive" style="max-width: 500px; max-height: 500px">
-            </a>
-        </center>
-        <br/>
-    </div>
+        <p class="padding-top-double"><span class="circle">01</span> Set up your RaspberryPi device
+            as shown in the schematic below and get the FireAlarm setup.</p>
 
-    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double">
-        <h3 class="uppercase">Connect (Quick Start)</h3><hr>
-        <p class="grey margin-top">Internet of Things Foundation Quickstart connection</p>
-        <br/>
-        <ul>
-            <p class="padding-top-double"><span class="circle">01</span> <b>Click on the <i>'Create DEB'</i> button above to get the download link for the FireAlarm setup files</b></p>
-            <p class="padding-top-double"><span class="circle">02</span> <i>(The following commands can be issued by directly typing into the terminal of the device or by an <b>'ssh'</b> login from a remote PC)</i></p>
-            <p class="padding-top-double"><span class="circle">03</span> <b>Download the FireAlarm setup files using the following command: 'curl -k < url_link_received_from_the_above_step >> Agent.zip'</b><br/><i>This will download a zip file named 'Agent.zip'</i></p>
-        </ul>
-        <br>
-    </div>
+        <p class="padding-top-double"><span class="circle">02</span> Connect a monitor to your
+            RaspberryPi via the HDMI cable to get a UI view of the device.</p>
+
+        <p class="padding-top-double"><span class="circle">03</span> Get the RaspberryPi to connect
+            to the internet (via Ethernet or Wifi) and note its IP_ADDRESS</p>
+
+    <br>
+</div>
+
+<div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double">
+    <h3 class="uppercase">Schematic Diagram</h3>
+    <hr>
+    <p class="grey margin-top">Click on the image to zoom</p>
+    <center>
+        <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
+            <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive"
+                 style="max-width: 500px; max-height: 500px">
+        </a>
+    </center>
+    <br/>
+</div>
+
+<div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double">
+    <h3 class="uppercase">Connect (Quick Start)</h3>
+    <hr>
+    <p class="grey margin-top">Internet of Things Foundation Quickstart connection</p>
+    <br/>
+        <p class="padding-top-double"><span class="circle">01</span> <b>Click on the <i>'Create
+            DEB'</i> button above to get the download link for the FireAlarm setup files</b></p>
+
+        <p class="padding-top-double"><span class="circle">02</span> <i>(The following commands can
+            be issued by directly typing into the terminal of the device or by an <b>'ssh'</b> login
+            from a remote PC)</i></p>
+
+        <p class="padding-top-double"><span class="circle">03</span> <b>Download the FireAlarm setup
+            files using the following command: 'curl -k < url_link_received_from_the_above_step >>
+            Agent.zip'</b><br/><i>This will download a zip file named 'Agent.zip'</i></p>
+    <br>
+</div>
 
 </div>
 
@@ -246,15 +261,19 @@
         width: 50px;
         color: #fff;
     }
+
     .padding-top-double {
         padding-top: 20px;
     }
+
     .padding-double {
         padding: 20px;
     }
+
     .grey {
         color: #333;
     }
+
     hr {
         display: block;
         height: 1px;
@@ -264,12 +283,15 @@
         padding: 0;
         opacity: 0.2;
     }
+
     .light-grey {
         color: #7c7c7c;
     }
+
     .uppercase {
         text-transform: uppercase;
     }
+
     .grey-bg {
         background-color: #f6f4f4;
     }
@@ -280,12 +302,12 @@
     {{js "/js/jquery.validate.js"}}
     <script type="text/javascript">
 
-        $(document).ready(function(){
+        $(document).ready(function () {
             toggleEnrollment();
         });
 
 
-        function toggleEnrollment(){
+        function toggleEnrollment() {
             $(".modalpopup-content").html($("#qr-code-modal").html());
             //generateQRCode(".modalpopup-content .qr-code");
             showPopup();
