@@ -87,6 +87,36 @@
     <Resource>
         <AuthType>Any</AuthType>
         <HttpVerb>GET</HttpVerb>
+        <Uri>http://localhost:9763/android_sense/controller/readgravity</Uri>
+        <UriTemplate>/controller/readgravity</UriTemplate>
+    </Resource>
+    <Resource>
+        <AuthType>Any</AuthType>
+        <HttpVerb>GET</HttpVerb>
+        <Uri>http://localhost:9763/android_sense/controller/readpressure</Uri>
+        <UriTemplate>/controller/readpressure</UriTemplate>
+    </Resource>
+    <Resource>
+        <AuthType>Any</AuthType>
+        <HttpVerb>GET</HttpVerb>
+        <Uri>http://localhost:9763/android_sense/controller/readproximity</Uri>
+        <UriTemplate>/controller/readproximity</UriTemplate>
+    </Resource>
+    <Resource>
+        <AuthType>Any</AuthType>
+        <HttpVerb>GET</HttpVerb>
+        <Uri>http://localhost:9763/android_sense/controller/readgyroscope</Uri>
+        <UriTemplate>/controller/readgyroscope</UriTemplate>
+    </Resource>
+    <Resource>
+        <AuthType>Any</AuthType>
+        <HttpVerb>GET</HttpVerb>
+        <Uri>http://localhost:9763/android_sense/controller/readrotation</Uri>
+        <UriTemplate>/controller/readrotation</UriTemplate>
+    </Resource>
+    <Resource>
+        <AuthType>Any</AuthType>
+        <HttpVerb>GET</HttpVerb>
         <Uri>http://localhost:9763/android_sense/controller/readaccelerometer</Uri>
         <UriTemplate>/controller/readaccelerometer</UriTemplate>
     </Resource>

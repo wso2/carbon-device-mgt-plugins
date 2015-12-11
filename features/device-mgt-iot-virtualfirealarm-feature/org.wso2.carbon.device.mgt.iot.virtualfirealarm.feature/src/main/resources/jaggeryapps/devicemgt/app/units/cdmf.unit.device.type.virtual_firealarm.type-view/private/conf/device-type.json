@@ -1,0 +1,6 @@
+{
+  "deviceType": {
+    "displayName": "Virtual Firealarm",
+    "category" : "iot"
+  }
+}

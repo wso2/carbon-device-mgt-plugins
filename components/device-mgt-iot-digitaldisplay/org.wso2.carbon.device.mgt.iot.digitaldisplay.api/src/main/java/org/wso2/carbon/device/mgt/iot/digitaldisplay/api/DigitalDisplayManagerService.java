@@ -23,10 +23,16 @@ import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.iot.DeviceManagement;
+<<<<<<< HEAD
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
+=======
+>>>>>>> upstream/IoTS-1.0.0-M1
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.constants.DigitalDisplayConstants;
+import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
+import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 
+import javax.jws.WebService;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -36,6 +42,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
+@WebService
 public class DigitalDisplayManagerService {
 
 	private static Log log = LogFactory.getLog(DigitalDisplayManagerService.class);

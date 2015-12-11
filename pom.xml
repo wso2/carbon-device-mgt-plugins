@@ -48,10 +48,9 @@
 
         <!--Device Specific IoT Components-->
         <module>components/device-mgt-iot-virtualfirealarm</module>
-
         <module>components/device-mgt-iot-digitaldisplay</module>
         <module>components/device-mgt-iot-androidsense</module>
-
+        <module>components/device-mgt-iot-droneanalyzer</module>
 
         <!--Core MDM and IoT Features-->
         <module>features/device-mgt-iot-feature</module>
@@ -63,10 +62,9 @@
 
         <!--Device specific IoT Features-->
         <module>features/device-mgt-iot-virtualfirealarm-feature</module>
-
         <module>features/device-mgt-iot-digitaldisplay-feature</module>
         <module>features/device-mgt-iot-androidsense-feature</module>
-
+        <module>features/device-mgt-iot-droneanalyzer-feature</module>
     </modules>
 
     <dependencyManagement>
@@ -408,6 +406,7 @@
             </dependency>
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<<<<<<< HEAD
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <!--Android sense DeviceType Impl, API and Agent-->
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
@@ -419,11 +418,39 @@
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.api</artifactId>
+=======
+                              <!--Drone DeviceType Impl, API and Agent-->
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.service.impl</artifactId>
+>>>>>>> upstream/IoTS-1.0.0-M1
                 <version>${carbon.iot.device.mgt.version}</version>
                 <type>war</type>
             </dependency>
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+<<<<<<< HEAD
+=======
+
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+            <!--Drone DeviceType Impl, API and Agent-->
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
+>>>>>>> upstream/IoTS-1.0.0-M1
             <dependency>
                 <groupId>org.json.wso2</groupId>
                 <artifactId>json</artifactId>
@@ -1155,7 +1182,7 @@
         <carbon.deployment.version>4.6.0</carbon.deployment.version>
 
         <!-- Identity -->
-        <carbon.identity.version>5.0.2</carbon.identity.version>
+        <carbon.identity.version>5.0.3</carbon.identity.version>
 
         <!-- Multi-tenancy -->
         <carbon.multitenancy.version>4.5.0</carbon.multitenancy.version>
