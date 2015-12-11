@@ -46,16 +46,6 @@ public class AndroidSenseService {
     private static final String LIGHT_STREAM_DEFINITION = "org.wso2.iot.devices.light";
     private static final String GPS_STREAM_DEFINITION = "org.wso2.iot.devices.gps";
     private static final String MAGNETIC_STREAM_DEFINITION = "org.wso2.iot.devices.magnetic";
-
-	/*Definetions for other sensor types.
-    * Accelerometer
-	* Gyroscope
-	* Pressure
-	* Proximity
-	* Gravity
-	* Rotation Vector
-	* */
-
     private static final String ACCELEROMETER_STREAM_DEFINITION = "org.wso2.iot.devices.accelerometer";
     private static final String GYROSCOPE_STREAM_DEFINITION = "org.wso2.iot.devices.gyroscope";
     private static final String PRESSURE_STREAM_DEFINITION = "org.wso2.iot.devices.pressure";
@@ -71,8 +61,6 @@ public class AndroidSenseService {
     private static final String SENSOR_LIGHT = "light";
     private static final String SENSOR_GPS = "gps";
     private static final String SENSOR_PROXIMITY = "proximity";
-
-    /////////////////////////////////////////////////////////////////////////////////////////////
     private static final String SENSOR_BATTERY = "battery";
     private static final String SENSOR_MAGNETIC = "magnetic";
     private static Log log = LogFactory.getLog(AndroidSenseService.class);
@@ -415,11 +403,6 @@ public class AndroidSenseService {
         response.setStatus(Response.Status.OK.getStatusCode());
         return sensorRecord;
     }
-
-    /**
-     * Created by Menaka
-     * Adding Accelerometer
-     */
 
     @Path("controller/readaccelerometer")
     @GET
