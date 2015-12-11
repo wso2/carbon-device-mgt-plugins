@@ -408,6 +408,22 @@
             </dependency>
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+            <!--Android sense DeviceType Impl, API and Agent-->
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.api</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+                <type>war</type>
+            </dependency>
+
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.json.wso2</groupId>
                 <artifactId>json</artifactId>

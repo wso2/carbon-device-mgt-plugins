@@ -102,7 +102,6 @@
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
             <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay</artifactId>
-            <version>1.9.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -232,5 +231,5 @@
             </plugin>
         </plugins>
     </build>
-    
+
 </project>
