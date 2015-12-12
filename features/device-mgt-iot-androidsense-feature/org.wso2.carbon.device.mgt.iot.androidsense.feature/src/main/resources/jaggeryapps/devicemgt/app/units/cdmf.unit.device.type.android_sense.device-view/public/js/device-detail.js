@@ -38,7 +38,7 @@
     $(document).ready(function(){
         $(".panel-body").removeClass("hidden");
         $("#loading-content").remove();
-        loadOperationBar(deviceType);
+        //loadOperationBar(deviceType);
         loadOperationsLog();
         loadApplicationsList();
         loadPolicyCompliance();
