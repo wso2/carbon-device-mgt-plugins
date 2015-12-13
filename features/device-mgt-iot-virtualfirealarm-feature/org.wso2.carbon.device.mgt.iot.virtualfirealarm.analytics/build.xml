@@ -13,6 +13,7 @@
     </target>
 
     <target name="zip" depends="clean">
+        <mkdir dir="${target-dir}"/>
         <zip destfile="${target-dir}/${Temperature_Sensor_dir}.car">
             <zipfileset dir="${Temperature_Sensor_dir}"/>
         </zip>

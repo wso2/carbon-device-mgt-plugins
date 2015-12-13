@@ -22,6 +22,7 @@
     </target>
 
     <target name="zip" depends="clean">
+        <mkdir dir="${target-dir}"/>
         <zip destfile="${target-dir}/${GPS_dir}.car">
             <zipfileset dir="${GPS_dir}"/>
         </zip>
