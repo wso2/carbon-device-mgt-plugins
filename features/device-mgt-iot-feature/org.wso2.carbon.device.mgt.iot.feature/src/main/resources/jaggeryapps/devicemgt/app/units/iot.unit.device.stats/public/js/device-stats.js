@@ -20,11 +20,12 @@ var graph;
 var xAxis;
 
 var deviceType = $("#details").data("devicetype");
-var deviceId = $("#details").data("deviceid");
+var deviceId = $(".device-id").data("deviceid");
 var monitor_operations = $("#details").data("monitor");
+var appContext = $("#details").data("appcontext");
 
-var marker_1 = '/store/extensions/app/store-device-type/themes/store/img/map-marker-1.png';
-var marker_2 = '/store/extensions/app/store-device-type/themes/store/img/map-marker-2.png';
+var marker_1 = appContext +'/public/iot.unit.device.stats/images/map-marker-1.png';
+var marker_2 = appContext + '/public/iot.unit.device.stats/images/map-marker-2.png';
 
 var map;
 var mapPoints = [], mapPaths = [], mapMarkers = [];
@@ -137,7 +138,7 @@ function updateGraphs() {
     var iv = setInterval(function () {
 
         var getStatsRequest = $.ajax({
-            url: "/store/apis/operations/" + deviceType + "/stats?deviceId=" + deviceId,
+            url: appContext + "/api/operations/" + deviceType + "/stats?deviceId=" + deviceId,
             method: "get"
         });
 
