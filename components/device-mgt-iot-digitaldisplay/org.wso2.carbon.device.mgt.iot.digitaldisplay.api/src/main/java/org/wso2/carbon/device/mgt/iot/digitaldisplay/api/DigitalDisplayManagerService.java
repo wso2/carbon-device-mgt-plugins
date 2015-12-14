@@ -23,9 +23,9 @@ import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.iot.DeviceManagement;
-import org.wso2.carbon.device.mgt.iot.digitaldisplay.constants.DigitalDisplayConstants;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
+import org.wso2.carbon.device.mgt.iot.digitaldisplay.constants.DigitalDisplayConstants;
 
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletResponse;
@@ -51,6 +51,7 @@ public class DigitalDisplayManagerService {
 	public boolean register(@QueryParam("deviceId") String deviceId,
 	                        @QueryParam("name") String name, @QueryParam("owner") String owner ) {
 
+		log.info("Register call from " + owner);
 		DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
 
 		DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
