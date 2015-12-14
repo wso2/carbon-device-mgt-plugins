@@ -26,7 +26,7 @@
 </metadata>
 <defs>
 <font id="font-wso2" horiz-adv-x="1024">
-<font-face units-per-em="1024" ascent="960" descent="-64" />
+<font-face jaggeryapps.devicemgt.app.units-per-em="1024" ascent="960" descent="-64" />
 <missing-glyph horiz-adv-x="1024" />
 <glyph unicode="&#x20;" horiz-adv-x="512" d="" />
 <glyph unicode="&#xe600;" glyph-name="airplay" data-tags="airplay" d="M1024 805.376v-574.83h-212.626l-72.777 93.55h191.854v387.73h-836.901v-387.73h185.929l-71.241-93.55h-208.238v574.83h1024zM860.891 90.624l-354.011 455.095-346.405-455.095h700.416z" />
