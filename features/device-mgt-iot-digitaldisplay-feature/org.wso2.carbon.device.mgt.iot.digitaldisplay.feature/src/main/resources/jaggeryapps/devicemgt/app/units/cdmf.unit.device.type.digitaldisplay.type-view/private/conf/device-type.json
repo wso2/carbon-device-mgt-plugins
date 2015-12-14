@@ -1,6 +1,8 @@
 {
   "deviceType": {
-    "displayName": "digital display",
-    "category" : "iot"
+    "label": "Digital Display",
+    "category": "iot",
+    "downloadAgentUri": "http://localhost:9763/digital_display/manager/device/device_display/download"
   }
 }
+

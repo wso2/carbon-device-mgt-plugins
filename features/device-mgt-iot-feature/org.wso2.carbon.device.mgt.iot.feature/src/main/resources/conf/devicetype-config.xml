@@ -8,4 +8,7 @@
     <IotDeviceTypeConfig type="android_sense">
         <DatasourceName>jdbc/AndroidSenseDM_DB</DatasourceName>
     </IotDeviceTypeConfig>
+    <IotDeviceTypeConfigurations type="digitaldisplay">
+        <DatasourceName>jdbc/DigitalDisplayDM_DB</DatasourceName>
+    </IotDeviceTypeConfigurations>
 </IoTDeviceTypeConfigManager>
