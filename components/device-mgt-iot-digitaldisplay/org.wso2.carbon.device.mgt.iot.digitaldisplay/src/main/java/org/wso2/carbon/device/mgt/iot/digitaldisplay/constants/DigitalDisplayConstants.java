@@ -18,7 +18,7 @@ package org.wso2.carbon.device.mgt.iot.digitaldisplay.constants;
 
 public class DigitalDisplayConstants {
 
-    public final static String DEVICE_TYPE = "digital_display";
+    public final static String DEVICE_TYPE = "digitaldisplay";
     public final static String DEVICE_PLUGIN_DEVICE_NAME = "DEVICE_NAME";
     public final static String DEVICE_PLUGIN_DEVICE_ID = "DIGITAL_DISPLAY_DEVICE_ID";
 
