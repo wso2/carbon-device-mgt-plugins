@@ -7,9 +7,7 @@
     <property name="Temperature_Sensor_dir" value="Temperature_Sensor"/>
 
     <target name="clean">
-        <delete>
-            <fileset dir="${target-dir}" includes="**/*.*"/>
-        </delete>
+        <delete dir="${target-dir}" />
     </target>
 
     <target name="zip" depends="clean">

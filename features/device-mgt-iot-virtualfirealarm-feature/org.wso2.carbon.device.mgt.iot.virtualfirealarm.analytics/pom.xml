@@ -22,7 +22,7 @@
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>device-mgt-iot-virtualfirealarm-feature</artifactId>
         <version>1.9.2-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
