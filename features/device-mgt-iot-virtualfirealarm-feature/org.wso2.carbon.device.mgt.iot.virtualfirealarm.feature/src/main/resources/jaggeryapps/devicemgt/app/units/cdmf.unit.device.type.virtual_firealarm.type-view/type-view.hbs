@@ -6,6 +6,7 @@
 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 padding-top">
     <img src="{{@unit.publicUri}}/images/firealarm.png" class="img-responsive">
 </div>
+
 <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8 padding-top">
     <h3 class="uppercase">Ingredients</h3>
     <hr>
@@ -23,6 +24,7 @@
     </ul>
     <br>
 
+    <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin" class="btn-operations" target="_blank" ><i class="fw fw-api"></i> View API</i> &nbsp;</a>
     <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download</a>
 
     <div id="download-device-modal-content" class="hide">
@@ -39,7 +41,7 @@
                                        placeholder="Ex. Lobby_Firealarm"
                                        name="deviceName" size="60" required>
                                 <br/><br/>
-                                <input type="hidden" class="deviceType" name="deviceType" value="virtual_firealarm"/>
+                                <input type="hidden" class="deviceType" name="deviceType" value="{{@uriParams.deviceType}}"/>
                                 <input type="radio" name="sketchType" value="simple_agent" id="simple_agent" checked> <label for="simple_agent">Simple Agent</label> &nbsp;&nbsp;
                                 <input type="radio" name="sketchType" value="advanced_agent" id="advanced_agent"> <label for="advanced_agent">Advanced Agent</label>
                             </div>

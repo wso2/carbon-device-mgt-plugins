@@ -1,6 +1,6 @@
 {
   "deviceType": {
-    "displayName": "Android",
+    "label": "Android",
     "category" : "mobile"
   }
 }
