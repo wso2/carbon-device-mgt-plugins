@@ -1,6 +1,6 @@
 {
   "deviceType": {
     "label": "Android Sense",
-    "category" : "mobile"
+    "category" : "iot"
   }
 }
