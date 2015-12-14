@@ -1,25 +1,15 @@
 function onRequest(context) {
-    var log = new Log("detail.js");
+    var log = new Log("device-view.js");
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("id");
 
     if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
-        var deviceModule = require("/modules/device.js").deviceModule;
+        var deviceModule = require("/app/modules/device.js").deviceModule;
         var device = deviceModule.viewDevice(deviceType, deviceId);
 
-        if (device) {
-            var viewModel = {};
-            var deviceInfo = device.properties.DEVICE_INFO;
-            if (deviceInfo != undefined && String(deviceInfo.toString()).length > 0) {
-                deviceInfo = parse(stringify(deviceInfo));
-                viewModel.system = device.properties.IMEI;
-                viewModel.machine = "Android Sense";
-                viewModel.vendor = device.properties.VENDOR;
-            }
-            device.viewModel = viewModel;
+        if (device && device.status != "error") {
+            log.info(device);
+            return {"device": device};
         }
-        context.device = device;
-
-        return context;
     }
 }

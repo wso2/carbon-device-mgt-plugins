@@ -46,16 +46,6 @@ public class AndroidSenseService {
     private static final String LIGHT_STREAM_DEFINITION = "org.wso2.iot.devices.light";
     private static final String GPS_STREAM_DEFINITION = "org.wso2.iot.devices.gps";
     private static final String MAGNETIC_STREAM_DEFINITION = "org.wso2.iot.devices.magnetic";
-
-	/*Definetions for other sensor types.
-    * Accelerometer
-	* Gyroscope
-	* Pressure
-	* Proximity
-	* Gravity
-	* Rotation Vector
-	* */
-
     private static final String ACCELEROMETER_STREAM_DEFINITION = "org.wso2.iot.devices.accelerometer";
     private static final String GYROSCOPE_STREAM_DEFINITION = "org.wso2.iot.devices.gyroscope";
     private static final String PRESSURE_STREAM_DEFINITION = "org.wso2.iot.devices.pressure";
@@ -66,13 +56,11 @@ public class AndroidSenseService {
     private static final String SENSOR_ACCELEROMETER = "accelerometer";
     private static final String SENSOR_GYROSCOPE = "gyroscope";
     private static final String SENSOR_PRESSURE = "pressure";
-    private static final String SENSOR_GRVITY = "gravity";
+    private static final String SENSOR_GRAVITY = "gravity";
     private static final String SENSOR_ROTATION = "rotation";
     private static final String SENSOR_LIGHT = "light";
     private static final String SENSOR_GPS = "gps";
     private static final String SENSOR_PROXIMITY = "proximity";
-
-    /////////////////////////////////////////////////////////////////////////////////////////////
     private static final String SENSOR_BATTERY = "battery";
     private static final String SENSOR_MAGNETIC = "magnetic";
     private static Log log = LogFactory.getLog(AndroidSenseService.class);
@@ -297,7 +285,7 @@ public class AndroidSenseService {
                             gValuesF[0] = Float.parseFloat(valuesG[0]) * Float.parseFloat(valuesG[0]) * Float
                                     .parseFloat(valuesG[0]);
                             payloadData = gValuesF;
-                            sensorName = SENSOR_GRVITY;
+                            sensorName = SENSOR_GRAVITY;
                         } else if (androidSensorId == 11) {
                             streamDef = ROTATION_STREAM_DEFINITION;
                             String value = sensor.value;
@@ -415,11 +403,6 @@ public class AndroidSenseService {
         response.setStatus(Response.Status.OK.getStatusCode());
         return sensorRecord;
     }
-
-    /**
-     * Created by Menaka
-     * Adding Accelerometer
-     */
 
     @Path("controller/readaccelerometer")
     @GET

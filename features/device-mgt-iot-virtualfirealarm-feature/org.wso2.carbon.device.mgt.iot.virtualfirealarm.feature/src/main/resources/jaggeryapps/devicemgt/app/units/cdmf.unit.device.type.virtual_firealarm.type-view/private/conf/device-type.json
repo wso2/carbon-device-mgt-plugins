@@ -1,6 +1,8 @@
 {
   "deviceType": {
-    "displayName": "Virtual Firealarm",
-    "category" : "iot"
+    "label": "Virtual Firealarm",
+    "category": "iot",
+    "downloadAgentUri": "https://localhost:9443/virtual_firealarm/VirtualFireAlarmDeviceManager/manager/device/virtual_firealarm/download",
+    "downloadAgentLinkGenUri" : "https://localhost:9443/virtual_firealarm/VirtualFireAlarmDeviceManager/manager/device/virtual_firealarm/generate_link"
   }
 }
