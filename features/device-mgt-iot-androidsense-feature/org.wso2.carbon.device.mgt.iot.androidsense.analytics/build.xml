@@ -16,9 +16,7 @@
     <property name="Rotation_dir" value="Rotation"/>
 
     <target name="clean">
-        <delete>
-            <fileset dir="${target-dir}" includes="**/*.*"/>
-        </delete>
+        <delete dir="${target-dir}" />
     </target>
 
     <target name="zip" depends="clean">
