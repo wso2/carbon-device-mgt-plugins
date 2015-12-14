@@ -416,6 +416,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.api</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
             </dependency>
                               <!--Drone DeviceType Impl, API and Agent-->
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
