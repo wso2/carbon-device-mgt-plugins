@@ -1175,7 +1175,7 @@
         <carbon.commons.version>4.4.8</carbon.commons.version>
 
         <!-- Carbon API Management -->
-        <carbon.api.mgt.version>4.3.0</carbon.api.mgt.version>
+        <carbon.api.mgt.version>4.3.1</carbon.api.mgt.version>
 
         <!-- App manager version-->
         <appmgt.feature.version>1.1.1</appmgt.feature.version>
@@ -1448,6 +1448,16 @@
             <id>gcm-server-repository</id>
             <name>GCM Server repository - GitHub</name>
             <url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
+        </repository>
+        <repository>
+            <id>wso2-staging</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/orgwso2carbonapimgt-174/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
         </repository>
 	</repositories>
 </project>
