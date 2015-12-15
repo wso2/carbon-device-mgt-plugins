@@ -16,18 +16,16 @@
  * under the License.
  */
 
-function onRequest(context) {
-    var log = new Log("device-view.js");
-    var deviceType = context.uriParams.deviceType;
-    var deviceId = request.getParameter("id");
+package org.wso2.carbon.device.mgt.iot.arduino.service.exception;
 
-    if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
-        var deviceModule = require("/app/modules/device.js").deviceModule;
-        var device = deviceModule.viewDevice(deviceType, deviceId);
+public class ArduinoException extends Exception {
+    private static final long serialVersionUID = 118512086957330189L;
 
-        if (device && device.status != "error") {
-            log.info(device);
-            return {"device": device};
-        }
+    public ArduinoException(String errorMessage) {
+        super(errorMessage);
+    }
+
+    public ArduinoException(String errorMessage, Throwable throwable) {
+        super(errorMessage, throwable);
     }
 }

@@ -25,9 +25,19 @@ function onRequest(context) {
         var deviceModule = require("/app/modules/device.js").deviceModule;
         var device = deviceModule.viewDevice(deviceType, deviceId);
 
-        if (device && device.status != "error") {
-            log.info(device);
-            return {"device": device};
+        if (device) {
+            var viewModel = {};
+            var deviceInfo = device.properties.DEVICE_INFO;
+            if (deviceInfo != undefined && String(deviceInfo.toString()).length > 0) {
+                deviceInfo = parse(stringify(deviceInfo));
+                viewModel.system = device.properties.IMEI;
+                viewModel.machine = "Arduino";
+                viewModel.vendor = device.properties.VENDOR;
+            }
+            device.viewModel = viewModel;
         }
+        context.device = device;
+
+        return context;
     }
 }

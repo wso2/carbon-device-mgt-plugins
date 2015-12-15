@@ -223,6 +223,11 @@ public class VirtualFireAlarmManager implements DeviceManager {
     }
 
     @Override
+    public boolean requireDeviceAuthorization() {
+        return false;
+    }
+
+    @Override
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device) throws DeviceManagementException {
         boolean status;
         IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
@@ -271,12 +276,6 @@ public class VirtualFireAlarmManager implements DeviceManager {
             throw new DeviceManagementException(msg, e);
         }
         return devices;
-    }
-
-
-    @Override
-    public boolean requireDeviceAuthorization() {
-        return true;
     }
 
 }

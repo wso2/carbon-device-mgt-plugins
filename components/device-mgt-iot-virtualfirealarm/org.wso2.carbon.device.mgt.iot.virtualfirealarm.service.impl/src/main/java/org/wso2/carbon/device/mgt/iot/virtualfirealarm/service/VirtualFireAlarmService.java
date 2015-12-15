@@ -265,8 +265,8 @@ public class VirtualFireAlarmService {
 
     @Path("manager/device/{device_id}")
     @GET
-    @Consumes("application/json")
-    @Produces("application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Device getDevice(@PathParam("device_id") String deviceId) {
 
         DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
@@ -288,8 +288,8 @@ public class VirtualFireAlarmService {
 
     @Path("manager/devices/{username}")
     @GET
-    @Consumes("application/json")
-    @Produces("application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Device[] getFirealarmDevices(@PathParam("username") String username) {
 
         DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
@@ -321,7 +321,7 @@ public class VirtualFireAlarmService {
 
     @Path("manager/device/{sketch_type}/download")
     @GET
-    @Produces("application/octet-stream")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response downloadSketch(@QueryParam("owner") String owner,
                                    @QueryParam("deviceName") String customDeviceName,
                                    @PathParam("sketch_type") String sketchType) {
@@ -419,7 +419,7 @@ public class VirtualFireAlarmService {
 
         ZipUtil ziputil = new ZipUtil();
         ZipArchive zipFile = ziputil.downloadSketch(owner, SUPER_TENANT, sketchType, deviceId, deviceName,
-                                         accessToken, refreshToken);
+                                                    accessToken, refreshToken);
         zipFile.setDeviceId(deviceId);
         return zipFile;
     }
@@ -612,8 +612,8 @@ public class VirtualFireAlarmService {
 
     @Path("controller/readtemperature")
     @GET
-    @Consumes("application/json")
-    @Produces("application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public SensorRecord requestTemperature(@HeaderParam("owner") String owner,
                                            @HeaderParam("deviceId") String deviceId,
                                            @HeaderParam("protocol") String protocol,
@@ -706,9 +706,7 @@ public class VirtualFireAlarmService {
             response.setStatus(Response.Status.CONFLICT.getStatusCode());
             return;
         }
-        SensorDataManager.getInstance().setSensorRecord(deviceId,
-                                                        VirtualFireAlarmConstants
-                                                                .SENSOR_TEMPERATURE,
+        SensorDataManager.getInstance().setSensorRecord(deviceId, VirtualFireAlarmConstants.SENSOR_TEMPERATURE,
                                                         String.valueOf(temperature),
                                                         Calendar.getInstance().getTimeInMillis());
 
