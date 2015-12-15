@@ -29,16 +29,27 @@ import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.DeviceJSON;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.SensorJSON;
+import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
+import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
+import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
+import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
+import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
+import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
+import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
+import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.UUID;
 
 public class AndroidSenseService {
 
@@ -205,6 +216,96 @@ public class AndroidSenseService {
         }
 
     }
+
+    @Path("manager/device/{sketch_type}/download")
+    @GET
+    @Produces("application/octet-stream")
+    public Response downloadSketch(@QueryParam("owner") String owner,
+                                   @QueryParam("deviceName") String customDeviceName,
+                                   @PathParam("sketch_type") String sketchType) {
+        //TODO:: null check customDeviceName at UI level
+        try {
+            ZipArchive zipFile = createDownloadFile(owner, customDeviceName, sketchType);
+            Response.ResponseBuilder rb = Response.ok(zipFile.getZipFile());
+            rb.header("Content-Disposition",
+                      "attachment; filename=\"" + zipFile.getFileName() + "\"");
+            return rb.build();
+        } catch (IllegalArgumentException ex) {
+            return Response.status(400).entity(ex.getMessage()).build();//bad request
+        } catch (DeviceManagementException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (AccessTokenException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (DeviceControllerException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        }
+
+    }
+
+    private ZipArchive createDownloadFile(String owner, String customDeviceName, String sketchType)
+            throws DeviceManagementException, AccessTokenException, DeviceControllerException {
+        if (owner == null) {
+            throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
+        }
+
+        //create new device id
+        String deviceId = shortUUID();
+
+        TokenClient accessTokenClient = new TokenClient(AndroidSenseConstants.DEVICE_TYPE);
+        AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
+
+        //create token
+        String accessToken = accessTokenInfo.getAccess_token();
+        String refreshToken = accessTokenInfo.getRefresh_token();
+        //adding registering data
+
+        XmppAccount newXmppAccount = new XmppAccount();
+        newXmppAccount.setAccountName(owner + "_" + deviceId);
+        newXmppAccount.setUsername(deviceId);
+        newXmppAccount.setPassword(accessToken);
+        newXmppAccount.setEmail(deviceId + "@wso2.com");
+
+        XmppServerClient xmppServerClient = new XmppServerClient();
+        xmppServerClient.initControlQueue();
+        boolean status;
+
+        if (XmppConfig.getInstance().isEnabled()) {
+            status = xmppServerClient.createXMPPAccount(newXmppAccount);
+            if (!status) {
+                String msg =
+                        "XMPP Account was not created for device - " + deviceId + " of owner - " +
+                        owner +
+                        ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot" +
+                        ".common.config.server.configs";
+                log.warn(msg);
+                throw new DeviceManagementException(msg);
+            }
+        }
+
+        //Register the device with CDMF
+        String deviceName = customDeviceName + "_" + deviceId;
+        status = register(deviceId, owner);
+
+        if (!status) {
+            String msg = "Error occurred while registering the device with " + "id: " + deviceId
+                         + " owner:" + owner;
+            throw new DeviceManagementException(msg);
+        }
+
+
+        ZipUtil ziputil = new ZipUtil();
+        ZipArchive zipFile = ziputil.downloadSketch(owner, SUPER_TENANT, sketchType, deviceId, deviceName,
+                                                    accessToken, refreshToken);
+        zipFile.setDeviceId(deviceId);
+        return zipFile;
+    }
+
+    private static String shortUUID() {
+        UUID uuid = UUID.randomUUID();
+        long l = ByteBuffer.wrap(uuid.toString().getBytes(StandardCharsets.UTF_8)).getLong();
+        return Long.toString(l, Character.MAX_RADIX);
+    }
+
 
     /*    Service to push all the sensor data collected by the Android
            Called by the Android device  */
