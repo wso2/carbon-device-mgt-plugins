@@ -18,6 +18,8 @@
   -->
 
 <DeviceTypeConfigurations>
-
-
+  <DeviceTypeConfig type="virtual_firealarm">
+    <DatasourceName>jdbc/VirtualFireAlarmDM_DB</DatasourceName>
+    <!--ApiApplicationName>firealarm</ApiApplicationName-->
+  </DeviceTypeConfig>
 </DeviceTypeConfigurations>
