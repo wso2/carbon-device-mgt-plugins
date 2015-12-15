@@ -2,9 +2,9 @@ instructions.configure = \
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/webapps/);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.digitaldisplay_${feature.version}/webapps/,target:${installFolder}/../../deployment/server/webapps/,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/sketches/);\
-org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/sketches/digitaldisplay/);\
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.digitaldisplay_${feature.version}/agent/,target:${installFolder}/../../resources/sketches/digitaldisplay/,overwrite:true);\
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.digitaldisplay_${feature.version}/dbscripts/,target:${installFolder}/../../../dbscripts/cdm/plugins/digitaldisplay,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/sketches/digital_display/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.digitaldisplay_${feature.version}/agent/,target:${installFolder}/../../resources/sketches/digital_display/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.digitaldisplay_${feature.version}/dbscripts/,target:${installFolder}/../../../dbscripts/cdm/plugins/digital_display,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../conf/datasources/devicemgt/);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.digitaldisplay_${feature.version}/datasources/,target:${installFolder}/../../conf/datasources/devicemgt,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/jaggeryapps/);\
