@@ -17,7 +17,7 @@
         <div id="device-location" class="panel-body">
             {{#if control_operations}}
                 {{#each control_operations}}
-                    <form action="{{@app.context}}/api/operations/{{../device.type}}/{{operation}}?deviceId={{../deviceId}}" method="post">
+                    <form action="{{@app.context}}/api/operations/{{../device.type}}/{{operation}}?deviceId={{../device.deviceIdentifier}}" method="post">
                         <div class="row">
                             <div class="wr-input-control">
                                 <label class="wr-input-label">{{name}}</label>
