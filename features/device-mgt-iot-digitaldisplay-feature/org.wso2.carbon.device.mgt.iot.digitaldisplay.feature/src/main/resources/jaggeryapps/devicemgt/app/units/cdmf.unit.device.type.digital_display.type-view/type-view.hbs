@@ -1,4 +1,4 @@
-<div class="col-lg-12  margin-top-double">
+<div class="col-lg-12  margin-top-double" xmlns="http://www.w3.org/1999/html">
     <h1 class="grey ">Digital Display</h1>
     <hr>
     <p class="margin-bottom-double light-grey ">Connect your Digital Display
@@ -37,35 +37,30 @@
                     <h3>Name your device and download the agent from following link.</h3>
                     <br/>
                     <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
-                    <div class="control-group">
-                        <div class="controls">
-                            <input class="new-device-name" style="color:#3f3f3f;padding:5px"
-                                   type="text"
-                                   placeholder="Ex. Lobby_DigitalDisplay"
-                                   name="deviceName" size="60" required>
-                            <br/>
-                            <input type="hidden" class="deviceType" name="deviceType"
-                                   value="digital_display"/>
-                            <input type="hidden" class="sketchType" name="sketchType"
-                                   value="digital_display"/>
-                            <div class="sketchTypes" style="  padding-top: 20px; padding-bottom: 5px; font-size: 18px;">
-                                    <input type="radio" name="sketchType" id="digital_display"
-                                           value="digital_display"><label for="digital_display">digitaldisplay</label>
+                        <div class="control-group">
+                            <div class="controls">
+                                <input class="new-device-name" style="color:#3f3f3f;padding:5px"
+                                       type="text"
+                                       placeholder="Ex. Lobby_DigitalDisplay"
+                                       name="deviceName" size="60" required>
+                                <br/>
+                                <input type="hidden" class="deviceType" name="deviceType"
+                                       value="digital_display"/>
+                                <input type="hidden" class="sketchType" name="sketchType"
+                                       value="digital_display"/>
                             </div>
                         </div>
-                    </div>
-                    <br/>
-
-                    <div class="buttons">
-                        <a class="btn-operations" onclick="downloadAgent()">Download
-                            Now</a>
-                        &nbsp;&nbsp;
-                        <a href="#" id="download-device-download-link" class="blue-button">
-                            &nbsp;&nbsp;&nbsp;&nbsp;Copy Link&nbsp;&nbsp;&nbsp;&nbsp;
-                        </a>
-                        &nbsp;&nbsp;
-                    </div>
-                </form>
+                        <br/>
+                        <div class="buttons">
+                            <a class="btn-operations" onclick="downloadAgent()">Download
+                                Now</a>
+                            &nbsp;&nbsp;
+                            <a href="#" id="download-device-download-link" class="blue-button">
+                                &nbsp;&nbsp;&nbsp;&nbsp;Copy Link&nbsp;&nbsp;&nbsp;&nbsp;
+                            </a>
+                            &nbsp;&nbsp;
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -202,7 +197,7 @@
         <br/>
         <ul>
             <p class="padding-top-double"><span class="circle">01</span> <b>Click on the <i>'Create DEB'</i> button above to get the download link for the Digital Display setup files</b></p>
-            <p class="padding-top-double"><span class="circle">02</span> <i>(The following commands can be issued by directly typing into the terminal of the device or by an <b>'ssh'<b> login from a remote PC)</i></p>
+            <p class="padding-top-double"><span class="circle">02</span> <i>(The following commands can be issued by directly typing into the terminal of the device or by an <b>'ssh'</b> login from a remote PC)</i></p>
             <p class="padding-top-double"><span class="circle">03</span> <b>Download the Digital Display setup files using the following command: 'curl -k < url_link_received_from_the_above_step >> Agent.zip'</b><br/><i>This will download a zip file named 'Agent.zip'</i></p>
         </ul>
         <br>
