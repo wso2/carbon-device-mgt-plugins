@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.arduino.service.impl.util;
+package org.wso2.carbon.device.mgt.iot.arduino.service.dto;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 

@@ -31,7 +31,7 @@ import org.wso2.carbon.device.mgt.iot.service.DeviceTypeService;
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.arduino.internal.ArduinoManagementServiceComponent"
  * immediate="true"
- * @scr.reference name="wso2.carbon.device.mgt.iot.DeviceTypeService"
+ * @scr.reference name="org.wso2.carbon.device.mgt.iot.service.DeviceTypeServiceImpl"
  * interface="org.wso2.carbon.device.mgt.iot.service.DeviceTypeService"
  * cardinality="1..1"
  * policy="dynamic"
@@ -39,13 +39,10 @@ import org.wso2.carbon.device.mgt.iot.service.DeviceTypeService;
  * unbind="unsetDeviceTypeService"
  */
 public class ArduinoManagementServiceComponent {
-	
-
-    private ServiceRegistration arduinoServiceRegRef;
-
-
 
     private static final Log log = LogFactory.getLog(ArduinoManagementServiceComponent.class);
+    private ServiceRegistration arduinoServiceRegRef;
+
     protected void activate(ComponentContext ctx) {
     	if (log.isDebugEnabled()) {
             log.debug("Activating Arduino Device Management Service Component");
@@ -55,10 +52,8 @@ public class ArduinoManagementServiceComponent {
 
 
             arduinoServiceRegRef =
-                    bundleContext.registerService(DeviceManagementService.class.getName(), new
-                            ArduinoManagerService(), null);
-
-
+                    bundleContext.registerService(DeviceManagementService.class.getName(),
+                                                  new ArduinoManagerService(), null);
 
             if (log.isDebugEnabled()) {
                 log.debug("Arduino Device Management Service Component has been successfully activated");
@@ -87,8 +82,7 @@ public class ArduinoManagementServiceComponent {
     }
 
     protected void setDeviceTypeService(DeviceTypeService deviceTypeService) {
-		/* This is to avoid this component getting initialized before the
-		common registered */
+		/* This is to avoid this component getting initialized before thecommon registered */
         if (log.isDebugEnabled()) {
             log.debug("Data source service set to mobile service component");
         }
@@ -99,5 +93,4 @@ public class ArduinoManagementServiceComponent {
     }
 
 
-    
 }

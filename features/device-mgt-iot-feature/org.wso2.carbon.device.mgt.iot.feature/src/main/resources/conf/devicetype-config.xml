@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <IoTDeviceTypeConfigManager>
+    <IotDeviceTypeConfig type="android_sense">
+        <DatasourceName>jdbc/AndroidSenseDM_DB</DatasourceName>
+    </IotDeviceTypeConfig>
+    <IotDeviceTypeConfig type="arduino">
+        <DatasourceName>jdbc/ArduinoDM_DB</DatasourceName>
+    </IotDeviceTypeConfig>
+    <IotDeviceTypeConfig type="digital_display">
+        <DatasourceName>jdbc/DigitalDisplayDM_DB</DatasourceName>
+    </IotDeviceTypeConfig>
+    <IotDeviceTypeConfig type="raspberrypi">
+        <DatasourceName>jdbc/RaspberryPiDM_DB</DatasourceName>
+    </IotDeviceTypeConfig>
     <IotDeviceTypeConfig type="virtual_firealarm">
         <DatasourceName>jdbc/VirtualFireAlarmDM_DB</DatasourceName>
         <!--TODO: Uncomment this to work with apim @ 192.168.67.21 -->
         <!--ApiApplicationName>firealarm</ApiApplicationName-->
-    </IotDeviceTypeConfig>
-    <IotDeviceTypeConfig type="android_sense">
-        <DatasourceName>jdbc/AndroidSenseDM_DB</DatasourceName>
-    </IotDeviceTypeConfig>
-    <IotDeviceTypeConfig type="digital_display">
-        <DatasourceName>jdbc/DigitalDisplayDM_DB</DatasourceName>
     </IotDeviceTypeConfig>
 </IoTDeviceTypeConfigManager>

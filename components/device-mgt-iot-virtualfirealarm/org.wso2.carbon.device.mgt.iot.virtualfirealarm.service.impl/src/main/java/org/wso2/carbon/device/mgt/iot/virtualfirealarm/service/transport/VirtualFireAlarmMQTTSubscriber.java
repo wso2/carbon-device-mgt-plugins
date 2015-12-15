@@ -47,7 +47,7 @@ public class VirtualFireAlarmMQTTSubscriber extends MqttSubscriber {
                     File.separator + "+" + File.separator + "publisher";
 
     private static final String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
-    private static String mqttEndpoint;
+    private String mqttEndpoint;
 
     private VirtualFireAlarmMQTTSubscriber() {
         super(iotServerSubscriber, VirtualFireAlarmConstants.DEVICE_TYPE,
@@ -108,10 +108,6 @@ public class VirtualFireAlarmMQTTSubscriber extends MqttSubscriber {
                 SensorDataManager.getInstance().setSensorRecord(deviceId, VirtualFireAlarmConstants.SENSOR_TEMPERATURE,
                                                                 temperatureValue,
                                                                 Calendar.getInstance().getTimeInMillis());
-            } else {
-                if (log.isDebugEnabled()) {
-                    log.debug("MQTT: Random Message [" + actualMessage + "] topic: [" + topic + "]");
-                }
             }
         } catch (VirtualFireAlarmException e) {
             String errorMsg =
