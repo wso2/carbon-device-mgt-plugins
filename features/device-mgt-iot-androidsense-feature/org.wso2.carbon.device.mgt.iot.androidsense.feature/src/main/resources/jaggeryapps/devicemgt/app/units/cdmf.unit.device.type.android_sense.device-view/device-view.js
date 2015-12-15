@@ -8,7 +8,6 @@ function onRequest(context) {
         var device = deviceModule.viewDevice(deviceType, deviceId);
 
         if (device && device.status != "error") {
-            log.info(device);
             return {"device": device};
         }
     }
