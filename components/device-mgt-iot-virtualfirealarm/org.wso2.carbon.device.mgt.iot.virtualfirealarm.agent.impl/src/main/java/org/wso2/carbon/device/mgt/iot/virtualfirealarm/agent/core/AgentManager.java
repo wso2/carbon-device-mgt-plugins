@@ -147,7 +147,7 @@ public class AgentManager {
         }
 
         //Start agent communication
-        agentCommunicator.get(protocol).connect();
+        //agentCommunicator.get(protocol).connect();
 
         try {
             EnrollmentManager.getInstance().beginEnrollmentFlow();
