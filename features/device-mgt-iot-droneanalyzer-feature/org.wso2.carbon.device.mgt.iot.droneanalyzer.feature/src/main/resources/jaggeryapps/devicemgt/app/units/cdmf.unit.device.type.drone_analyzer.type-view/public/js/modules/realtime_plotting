@@ -6,14 +6,7 @@ var plotting = function(){
 
     console.log(random1);
     api.current_value = 0;
-    //api.data = d3.range(parseInt($("#window_size_current_value").html())).map(random1);
     api.finishPlotting = function(callBack){
-        /*if(api.isDone == false){
-            callBack(false);
-        }else{
-            api.isDone = true;
-            callBack(true);
-        }*/
         api.isDone = true;
         callBack(true);
     },
@@ -100,11 +93,12 @@ var plotting = function(){
             .style("text-decoration", "underline")
             .text(title + " variation within last "+ $(window_size_holder).html() +" frames");
 
-        tick();
+        updateAgain();
 
-        function tick() {
+        function updateAgain() {
             if(api.isDone)return;
             api.data.push(api.current_value);
+
             path
                 .attr("d", line)
                 .attr("transform", null)
@@ -112,7 +106,7 @@ var plotting = function(){
                 .duration( $(update_interval_holder).html())
                 .ease("linear")
                 .attr("transform", "translate(" + x(0) + ",0)")
-                .each("end", tick);
+                .each("end", updateAgain);
             api.data.shift();
         }
 

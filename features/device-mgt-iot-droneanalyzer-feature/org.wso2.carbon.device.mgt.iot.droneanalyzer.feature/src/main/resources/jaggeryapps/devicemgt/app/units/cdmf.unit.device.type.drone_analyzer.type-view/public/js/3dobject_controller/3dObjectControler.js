@@ -181,10 +181,10 @@ var object_maker = function(){
         config_api.effectController.ux=data.bank;
     },
     make_object.set_heading = function(holder, heading){
-        $(holder).rotate((180/Math.PI)*heading);
+        //$(holder).rotate((180/Math.PI)*heading);
     },
     make_object.set_bank = function(holder, bank){
-        $(holder).rotate((180/Math.PI)*bank);
+        //$(holder).rotate((180/Math.PI)*bank);
     }
 
 
