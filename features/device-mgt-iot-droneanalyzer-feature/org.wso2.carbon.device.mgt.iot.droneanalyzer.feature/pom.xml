@@ -22,11 +22,11 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl</artifactId>
+            <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.service.impl</artifactId>
+            <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.api</artifactId>
             <type>war</type>
         </dependency>
     </dependencies>
@@ -71,7 +71,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                                    <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.service.impl
+                                    <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.api
                                     </artifactId>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
@@ -105,7 +105,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl:${carbon.iot.device.mgt.version}
+                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.droneanalyzer:${carbon.iot.device.mgt.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>

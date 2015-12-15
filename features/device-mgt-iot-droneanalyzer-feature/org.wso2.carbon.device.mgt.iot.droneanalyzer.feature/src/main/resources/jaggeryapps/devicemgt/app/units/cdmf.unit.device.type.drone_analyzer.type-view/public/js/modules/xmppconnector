@@ -1,0 +1,99 @@
+
+    config_api.realtime_plotting_data_window["attitude"] = new Queue();
+    var current_status = {};
+    var url = "ws://localhost:9793/org.wso2.devicemgt.drone.service/datastream/drone_status";
+
+    /*$("#imageTop").rotate((180/Math.PI)*5);*/
+    $('#xmppConnection').click(function (e) {
+        e.preventDefault();
+
+
+        web_socket.openSocket(url, function(sender_message){
+
+            web_socket.send("Hi from server");
+            sender_message = isJSON(sender_message);
+            if(sender_message.quatanium_val != undefined ){
+                current_status = object_maker.get_heading_attitude_bank(sender_message.quatanium_val);
+                object_maker.set_heading_attitude_bank(current_status);
+            }
+            //console.log(config_api.modules_status.angleOfRotation_2);
+
+            //console.log("=======++========"+config_api.modules_status.angleOfRotation_2+"  "+config_api.modules_status.angleOfRotation_1);
+            if(config_api.modules_status.angleOfRotation_2 || config_api.modules_status.angleOfRotation_1)
+            {
+
+                //$("#imageTop").rotate((180/Math.PI)*current_status.bank);
+                object_maker.set_bank("#imageTop", current_status.bank);
+                object_maker.set_heading("#imageBackSecond", current_status.heading);
+
+
+            }
+            if(config_api.modules_status.realtimePlotting)
+            {
+                // console.log("----"+current_status.attitude);
+                if(current_status.attitude != undefined ){
+                    config_api.realtime_plotting_data_window["attitude"].enqueue( current_status.attitude );
+                    //console.log(current_status.attitude);
+                    //console.log(config_api.realtime_plotting_data_window["attitude"].getData());
+                    if(config_api.realtime_plotting_data_window["attitude"].getLength()>config_api.realtime_plotting_totalPoints){
+                        config_api.realtime_plotting_data_window["attitude"].make_fixed_size(0,config_api.realtime_plotting_totalPoints);
+                        console.log(config_api.realtime_plotting_data_window["attitude"].getLength());
+                    }
+                    plotting.realtime_plotting("#realtimechart", config_api.realtime_plotting_data_window["attitude"].getData(),
+                        -1, 1, 30);
+
+                }
+            }
+            if(config_api.modules_status.sensorReadings)
+            {
+                if(sender_message.accelerometer != undefined ){
+                    $("#z_acc").html(sender_message.accelerometer[0]);
+                    $("#pitch_acc").html(sender_message.accelerometer[1]);
+                    $("#yaw_acc").html(sender_message.accelerometer[2]);
+                }
+                if(sender_message.gyroscope != undefined){
+                    $("#roll_gyo").html(sender_message.gyroscope[0]);
+                    $("#pitch_gyo").html(sender_message.gyroscope[1]);
+                    $("#yaw_gyo").html(sender_message.gyroscope[2]);
+                }
+                if(sender_message.magnetometer != undefined ){
+                    $("#roll_mag").html(sender_message.magnetometer[0]);
+                    $("#pitch_mag").html(sender_message.magnetometer[1]);
+                    $("#yaw_mag").html(sender_message.magnetometer[2]);
+                }
+                if(sender_message.basicPrm != undefined ){
+                    $("#altitude_basic").html(sender_message.basicParam[0]);
+                    $("#velocity_basic").html(sender_message.basicParam[1]);
+                }
+            }
+        });
+
+       // $('#xmppserver').modal('show');
+        //var holder = $(this).parent().attr("id");
+       // $("#connect").click(function(){
+
+             //console.log("===========>"+config_api.modules_status.sensorReadings);
+
+             /*var jid = $("#Jid").val();
+             var password = $("#Password").val();
+             var logContainer = $("#log");
+             var resource_s = "sensor_data";*/
+             //var url = "ws://localhost:9793/org.wso2.devicemgt.drone.plotting/echo"
+
+        //});
+
+        /*$("#disconnect").click(function(){
+            web_socket.closeSocket();
+        });
+*/
+        //console.log($(this).parent().attr("id"));
+    });
+
+
+    //xmpp_client.xmpp_connect(config_api.xmpp_server, jid, password, resource_s, logContainer,
+
+
+
+
+
+

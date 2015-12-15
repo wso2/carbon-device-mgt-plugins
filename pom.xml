@@ -412,13 +412,13 @@
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer</artifactId>
                 <version>${carbon.iot.device.mgt.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.service.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.api</artifactId>
                 <version>${carbon.iot.device.mgt.version}</version>
                 <type>war</type>
             </dependency>

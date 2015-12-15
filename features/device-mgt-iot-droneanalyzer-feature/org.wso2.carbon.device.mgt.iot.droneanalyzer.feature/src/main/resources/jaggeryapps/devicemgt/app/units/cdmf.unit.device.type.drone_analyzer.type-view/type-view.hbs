@@ -1,0 +1,506 @@
+<div class="col-lg-12  margin-top-double">
+    <h1 class="grey ">Drone Analyzer</h1>
+    <hr>
+    <p class="margin-bottom-double light-grey ">Connect your Drone device to the WSO2 device cloud.</p>
+</div>
+<head>
+    <link href="{{@unit.publicUri}}/css/charisma-app.css" rel="stylesheet">
+    <link rel="shortcut icon" href="{{@unit.publicUri}}/img/favicon.ico">
+    <script src="{{@unit.publicUri}}/js/d3.min.js"></script>
+    <script src="{{@unit.publicUri}}/js/bower_components/jquery/jquery.min.js"></script>
+</head>
+
+<div>
+
+    <div class="ch-container">
+        <div class="row">
+            <div id="content" class="col-lg-12 col-sm-12">
+
+                <div class=" row">
+                    <br/>
+                    <div class="col-md-2 col-sm-2 col-xs-1">
+                        <button  class="btn btn-primary" data-dismiss="modal" id="connectionOpen"
+                                 onclick="openSocket();">Connect to server</button>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-1">
+                        <button  class="btn btn-primary" data-dismiss="modal" id="xmppConnectionOpen">Start</button>
+                    </div>
+                    <div class="col-md-0.5 col-sm-1 col-xs-2">
+                        <p>Battery Level </p>
+                    </div>
+                    <div class="col-md-4 col-sm-2 col-xs-2">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 60%;">
+                                60%
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="box col-md-12">
+                        <div class="box-inner">
+                            <div class="box-header well">
+                                <h2><i class="glyphicon glyphicon-info-sign"></i> Controller </h2>
+
+                                <div class="box-icon">
+                                    <a href="#" class="btn btn-setting btn-round btn-default"><i
+                                            class="glyphicon glyphicon-cog"></i></a>
+                                    <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                            class="glyphicon glyphicon-chevron-up" ></i></a>
+                                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                                            class="glyphicon glyphicon-remove"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content row" id="module_control">
+
+                                <div class="col-lg-1 col-md-12 hidden-xs center-text">
+                                    <button class="btn btn-default btn-sm" id="takeoff">
+                                        <i class="glyphicon glyphicon-play"></i> Takeoff</button>
+                                </div>
+                                <div class="col-lg-1 col-md-12 hidden-xs center-text">
+                                    <button class="btn btn-default btn-sm" id="land">
+                                        <i class="glyphicon glyphicon-stop"></i> Land</button>
+                                </div>
+                                <div class="col-lg-1 col-md-12 hidden-xs center-text">
+                                    <button class="btn btn-default btn-sm" id="up">
+                                        <i class="glyphicon glyphicon-arrow-up"></i> Up</button>
+                                </div>
+                                <div class="col-lg-1 col-md-12 hidden-xs center-text">
+                                    <button class="btn btn-default btn-sm" id="down">
+                                        <i class="glyphicon glyphicon-arrow-down"></i> Down</button>
+                                </div>
+                                <div class="col-lg-1 col-md-12 hidden-xs center-text">
+                                    <button class="btn btn-default btn-sm" id="left">
+                                        <i class="glyphicon glyphicon-arrow-left"></i> Left</button>
+                                </div>
+                                <div class="col-lg-1 col-md-12 hidden-xs center-text">
+                                    <button class="btn btn-default btn-sm" id="right">
+                                        <i class="glyphicon glyphicon-arrow-right"></i> Right</button>
+                                </div>
+                                <div class="col-lg-1 col-md-12 hidden-xs center-text">
+                                    <button class="btn btn-default btn-sm" id="front">
+                                        <i class="glyphicon glyphicon-chevron-up"></i> Front</button>
+                                </div>
+                                <div class="col-lg-1 col-md-12 hidden-xs center-text">
+                                    <button class="btn btn-default btn-sm" id="back">
+                                        <i class="glyphicon glyphicon-chevron-down"></i> Back</button>
+                                </div>
+                                <div class="col-lg-1 col-md-12 hidden-xs center-text">
+                                    <button class="btn btn-default btn-sm" id="clockwise">
+                                        <i class="glyphicon glyphicon-resize-vertical"></i> Clockwise</button>
+                                </div>
+                                <div class="col-lg-1 col-md-12 hidden-xs center-text">
+                                    <button class="btn btn-default btn-sm" id="counter_clockwise">
+                                        <i class="glyphicon glyphicon-resize-horizontal"></i> Conter-clockwise</button>
+                                </div>
+                                <div class="col-lg-2 col-md-12 hidden-xs center-text">
+                                    <button class="btn btn-default btn-sm" id="stop">
+                                        <i class="glyphicon glyphicon-ban-circle"></i> Stop</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="box col-md-4">
+                        <div class="box-inner" style="max-height: 280px;">
+                            <div class="box-header well" data-original-title="" >
+                                <h2><i class="glyphicon glyphicon-list"></i>Angle of Rotation</h2>
+
+                                <div class="box-icon" id="AngleOfRotation_2">
+                                    <a href="#" class="btn btn-setting btn-round btn-default"><i
+                                            class="glyphicon glyphicon-cog"></i></a>
+                                    <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                            class="glyphicon glyphicon-chevron-up"></i></a>
+                                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                                            class="glyphicon glyphicon-remove"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content" >
+                                <br>
+                                <div style="margin-left: 10%;">
+                                    <img class="grayscale" id="imageBack" src="{{@unit.publicUri}}/images/drone_position_controller/background_drone.png"  style=" width:150px;"/>
+                                    <img class="grayscale" id="imageTop" src="{{@unit.publicUri}}/images/drone_position_controller/direction_drone.png" style=" width:150px; position:relative;left:-150px;"/>
+
+                                    <img  id="imageBackSecond" src="{{@unit.publicUri}}/images/drone_position_controller/pitch_drone.png" style=" width:150px;position:relative;left:-150px;"/>
+                                    <img  id="imageTopSecond" src="{{@unit.publicUri}}/images/drone_position_controller/background_drone.png" style=" width:150px; position:relative;left:158px;top:-150px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box col-md-4">
+                        <div class="box-inner">
+                            <div class="box-header well" data-original-title="" >
+                                <h2><i class="glyphicon glyphicon-list"></i> Angle of Rotation</h2>
+
+                                <div class="box-icon" id="AngleOfRotation_1">
+                                    <a href="#" class="btn btn-setting btn-round btn-default"><i
+                                            class="glyphicon glyphicon-cog"></i></a>
+                                    <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                            class="glyphicon glyphicon-chevron-up"></i></a>
+                                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                                            class="glyphicon glyphicon-remove"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content" style="margin-left: 10%;">
+                                <div class="grayscale" border-radius="2" id="canvasOne" ></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box col-md-4">
+                        <div class="box-inner">
+                            <div class="box-header well" data-original-title="" >
+                                <h2><i class="glyphicon glyphicon-list"></i>Live Video Stream</h2>
+
+                                <div class="box-icon" id="LiveVideoStream">
+                                    <a href="#" class="btn btn-setting btn-round btn-default"><i
+                                            class="glyphicon glyphicon-cog"></i></a>
+                                    <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                            class="glyphicon glyphicon-chevron-up"></i></a>
+                                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                                            class="glyphicon glyphicon-remove"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content">
+                                <img class="grayscale" src="{{@unit.publicUri}}/images/no_video_preview.gif"
+                                     alt="video stream" style="display: block; height:225px; margin: auto;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="box col-md-4">
+                        <div class="box-inner">
+                            <div class="box-header well" data-original-title="" >
+                                <h2><i class="glyphicon glyphicon-list"></i>Sensor Readings</h2>
+                                <div class="box-icon" id="SensorReadings">
+                                    <a href="#" class="btn btn-setting btn-round btn-default"><i
+                                            class="glyphicon glyphicon-cog"></i></a>
+                                    <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                            class="glyphicon glyphicon-chevron-up"></i></a>
+                                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                                            class="glyphicon glyphicon-remove"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content" id="basicSensoReading">
+                                <br>
+                                <ul class="nav nav-tabs" id="showBasicParam">
+                                    <li ><a href="#Accelerometer">Accelerometer</a></li>
+                                    <li><a href="#Gyroscope">Gyroscope</a></li>
+                                    <li><a href="#Magnetometer">Magnetometer</a></li>
+                                    <li><a href="#basicPrm">Basic Parameters</a></li>
+                                </ul>
+
+                                <div id="myTabContent" class="tab-content">
+                                    <div class="tab-pane active" id="Accelerometer">
+                                        <p>Z: <span id="z_acc"></span></p>
+                                        <p>Pitch: <span id="pitch_acc"></span></p>
+                                        <p>Yaw: <span id="yaw_acc"></span></p>
+                                    </div>
+                                    <div class="tab-pane" id="Gyroscope">
+                                        <p>Roll: <span id="roll_gyo"></span></p>
+                                        <p>Pitch: <span id="pitch_gyo"></span></p>
+                                        <p>Yaw: <span id="yaw_gyo"></span></p>
+                                    </div>
+                                    <div class="tab-pane" id="Magnetometer">
+                                        <p>Roll: <span id="roll_mag"></span></p>
+                                        <p>Pitch:<span id="pitch_mag"></span></p>
+                                        <p>Yaw: <span id="yaw_mag"></span></p>
+                                    </div>
+                                    <div class="tab-pane" id="basicPrm">
+                                        <p>Altitude: <span id="altitude_basic"></span></p>
+                                        <p>Velocity: <span id="velocity_basic"></span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box col-md-8">
+                        <div class="box-inner">
+                            <div class="box-header well" data-original-title="" >
+                                <h2><i class="glyphicon glyphicon-list-alt"></i>Realtime Plotting</h2>
+
+                                <div class="box-icon" id="RealtimePlotting">
+                                    <a href="#" class="btn btn-setting btn-round btn-default"><i
+                                            class="glyphicon glyphicon-cog"></i></a>
+                                    <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                            class="glyphicon glyphicon-chevron-up"></i></a>
+                                    <a href="#" class="btn btn-close btn-round btn-default"><i
+                                            class="glyphicon glyphicon-remove"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-content">
+                                <div class="row">
+                                    <div class="box col-md-3" style="height:250px;" id="plottingMetadata">
+                                        Window size : <label id="window_size_current_value" >30</label>
+                                        <div id="window_size" style="width: 250px;" ></div><br>
+                                        Update period : <label id="window_update_value" >300</label>
+                                        <div id="window_update" style="width: 250px;"></div></br>
+                                        Y-axis limits : <label>Min: <input id="range_min" type="text" value="-4" size="3"></label>
+                                        <label>Max: <input id="range_max" value="4" type="text" size="3"></label></br></br>
+                                        <select ng-model='discussionsSelect' class='form-control' id="plotting_attribute">
+                                            <option value='heading' selected>heading</option>
+                                            <option value='bank'>bank</option>
+                                            <option value='attitude'>attitude</option>
+                                        </select></br>
+                                        <button  class="btn btn-primary"  id="replotting" >Replot</button>
+
+                                    </div>
+                                    <div class="box col-md-5" id="realtimechart" style="height:250px; "></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="{{@unit.publicUri}}/js/jQueryRotate.js"></script>
+<script src="{{@unit.publicUri}}/js/3dobject_controller/three.min.js"></script>
+<!-- application script for Charisma demo -->
+<script src="{{@unit.publicUri}}/js/3dobject_controller/Coordinates.js"></script>
+<!-- application script for Charisma demo -->
+<script src="{{@unit.publicUri}}/js/3dobject_controller/OrbitAndPanControls.js"></script>
+<!-- application script for Charisma demo -->
+<script src="{{@unit.publicUri}}/js/3dobject_controller/3dObjectControler.js"></script>
+<!-- application script for C demo -->
+<script src="{{@unit.publicUri}}/js/config/config.js"></script>
+<!-- application script for Charisma demo -->
+<script src="{{@unit.publicUri}}/js/common/ajax_handler.js"></script>
+<script src="{{@unit.publicUri}}/js/common/general_handler"></script>
+<script src="{{@unit.publicUri}}/js/common/xmpp_client"></script>
+<script src="{{@unit.publicUri}}/js/common/websocket_api"></script>
+<!-- chart libraries end -->
+<script src="{{@unit.publicUri}}/js/modules/realtime_plotting"></script>
+<script src="{{@unit.publicUri}}/js/modules/controller.js"></script>
+<script src="{{@unit.publicUri}}/js/modules/flight_dynamics.js"></script>
+
+<script type="text/javascript">
+    var ajax_handler = new ajax_handler();
+    var config_api = new config_api();
+    var plotting = new plotting();
+    var object_maker = new object_maker();
+    object_maker.init(config_api.config_3dobject_holder, config_api.config_3dobject_holder_width,
+            config_api.config_3dobject_holder_height);
+    object_maker.animate();
+    var flight_dynamics = new flight_dynamics();
+
+    $(function() {
+        $( "#window_size" ).slider({
+            range: "min",
+            value: 37,
+            min: 10,
+            max: 300,
+            slide: function( event, ui ) {
+                $( "#window_size_current_value" ).html( $( "#window_size" ).slider( "value" ) );
+
+            }
+        });
+        $( "#window_update" ).slider({
+            range: "min",
+            value: 234,
+            min: 100,
+            max: 1000,
+            slide: function( event, ui ) {
+                $( "#window_update_value" ).html( $( "#window_update" ).slider( "value" ) );
+            }
+        });
+        $("#replotting").click(function(){
+            plotting.finishPlotting(function(status){
+                if(status){
+                    plotting.initPlotting(function(status){
+                        d3.select("#realtimechart").select("svg").remove();
+                        plotting.realtime_plotting("#realtimechart", "#range_min", "#range_max", "#window_update_value",
+                                600, $("#realtimechart").height(), "#window_size_current_value",
+                                $('#plotting_attribute').val());
+                    });
+                }else{
+                    $("#realtimechart").html("There is no data to plot");
+                }
+            });
+        });
+        $('.btn-minimize').click(function (e) {
+            e.preventDefault();
+            var $target = $(this).parent().parent().next('.box-content');
+            if ($target.is(':visible')) {
+                if($(this).parent().attr('id') === "RealtimePlotting"){
+                    plotting.forceToRedraw(function(status){
+
+                        d3.select("#realtimechart").select("svg").remove();
+                        plotting.realtime_plotting("#realtimechart", "#range_min", "#range_max", "#window_update_value",
+                                600, $("#realtimechart").height(), "#window_size_current_value",
+                                $('#plotting_attribute').val());
+                    });
+                }
+            }else{
+            }
+        });
+        $('#connectionOpen').on('click', function () {
+            $('#connectionOpen').toggleClass('active');
+        });
+        $("#basicSensoReading").tabs();
+
+        $("#xmppConnectionOpen").on('click', function () {
+            $('#xmppConnectionOpen').toggleClass('active');
+            if($('#xmppConnectionOpen').html()==="Start"){
+                sendMessage();
+                $('#xmppConnectionOpen').html("Stop");
+            }else if($('#xmppConnectionOpen').html()==="Stop"){
+                closeSocket();
+                $('#xmppConnectionOpen').html("Start");
+                $("#connectionOpen").html("Connect to server").removeClass("btn btn-info").addClass("btn btn-primary");
+            }
+        });
+
+    });
+    $('.btn-minimize').parent().parent().next('.box-content').hide();
+    /*plotting.realtime_plotting("#realtimechart", "#range_min", "#range_max", "#window_update_value",
+     600, $("#realtimechart").height(), "#window_size_current_value", $('#plotting_attribute').val());*/
+
+
+</script>
+
+<script type="text/javascript">
+
+    var webSocket;
+    config_api.realtime_plotting_data_window["attitude"] = new Queue();
+    var current_status = {};
+    function openSocket() {
+        if (webSocket !== undefined && webSocket.readyState !== WebSocket.CLOSED) {
+            writeResponse("WebSocket is already opened.");
+        }else{
+            webSocket = new WebSocket(config_api.web_socket_endpoint);
+        }
+        webSocket.onopen = function (event) {
+            if (event === undefined){
+                writeResponse("WebSocket cant open "+ event);
+                $("#connectionOpen").html("Connect to server").removeClass("btn btn-info").addClass("btn btn-primary");
+            }else{
+
+                if(event["isTrusted"]==true){
+                    $("#connectionOpen").html("Connected").removeClass("btn btn-primary").addClass("btn btn-info");
+                }
+                writeResponse( JSON.stringify(event));
+
+            }
+        };
+        webSocket.onmessage = function (event) {
+            var sender_message = event.data;
+            sender_message = isJSON(sender_message);
+            if(sender_message!= null){
+                flight_dynamics.processingMessage(sender_message);
+            }else{
+                writeResponse("Message has been corrupted.");
+            }
+        };
+
+    }
+    function sendMessage(message){
+        webSocket.send(message);
+    }
+    function closeSocket(){
+        webSocket.close();
+    }
+    function writeResponse(text){
+        console.log(text);
+    }
+    window.onbeforeunload = function() {
+        webSocket.onclose = function () {};
+        webSocket.close()
+    };
+</script>
+
+
+
+{{#zone "topCss"}}
+    <style type="text/css">
+        .circle {
+            background: none repeat scroll 0 0 #191919;
+            border-radius: 50px;
+            height: 50px;
+            padding: 10px;
+            width: 50px;
+            color: #fff;
+        }
+        .padding-top-double {
+            padding-top: 20px;
+        }
+        .padding-double {
+            padding: 20px;
+        }
+        .grey {
+            color: #333;
+        }
+        hr {
+            display: block;
+            height: 1px;
+            border: 0;
+            border-top: 1px solid #7f7f7f;
+            margin: 1em 0;
+            padding: 0;
+            opacity: 0.2;
+        }
+        .light-grey {
+            color: #7c7c7c;
+        }
+        .uppercase {
+            text-transform: uppercase;
+        }
+        .grey-bg {
+            background-color: #f6f4f4;
+        }
+
+        path {
+            stroke: black;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .axis path, .axis line {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 2;
+            shape-rendering: crispEdges;
+        }
+
+        #basicSensoReading .ui-widget-header{
+            background:transparent !important;
+        }
+
+        #basicSensoReading .ui-tabs{
+            padding: 0 !important;
+            margin-top:40px;
+            position:relative;
+        }
+
+        #basicSensoReading .ui-tabs .ui-tabs-nav{
+            padding: 0 !important;
+            position:absolute;
+            margin:-32px -1px 0;
+        }
+    </style>
+{{/zone}}
+
+{{#zone "bottomJs"}}
+    {{js "/js/download.js"}}
+    {{js "/js/jquery.validate.js"}}
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+            toggleEnrollment();
+        });
+
+
+        function toggleEnrollment(){
+            $(".modalpopup-content").html($("#qr-code-modal").html());
+            //generateQRCode(".modalpopup-content .qr-code");
+            //showPopup();
+        }
+
+    </script>
+{{/zone}}
