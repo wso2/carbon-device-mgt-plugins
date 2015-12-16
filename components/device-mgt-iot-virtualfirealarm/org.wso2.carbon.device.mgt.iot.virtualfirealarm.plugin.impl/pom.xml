@@ -59,7 +59,7 @@
 						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Name>${project.artifactId}</Bundle-Name>
 						<Bundle-Version>${carbon.iot.device.mgt.version}</Bundle-Version>
-						<Bundle-Description>IoT Server Impl Bundle</Bundle-Description>
+						<Bundle-Description>IoT Server Virtual Firealarm Impl Bundle</Bundle-Description>
 						<Private-Package>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal</Private-Package>
 						<Import-Package>
 							org.osgi.framework,

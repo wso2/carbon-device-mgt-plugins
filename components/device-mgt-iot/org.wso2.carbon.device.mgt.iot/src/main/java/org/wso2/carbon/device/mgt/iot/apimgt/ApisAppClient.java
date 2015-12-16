@@ -162,8 +162,14 @@ public class ApisAppClient {
 
                 JSONObject object = jsonSubscriptions.getJSONObject(n);
                 String appName = object.getString("name");
-                String prodConsumerKey = object.getString("prodConsumerKey");
-                String prodConsumerSecret = object.getString("prodConsumerSecret");
+				String prodConsumerKey = null;
+				String prodConsumerSecret = null;
+				if(!object.get("prodConsumerKey").equals(null)) {
+					prodConsumerKey = object.getString("prodConsumerKey");
+				}
+				if(!object.get("prodConsumerSecret").equals(null)) {
+					prodConsumerSecret = object.getString("prodConsumerSecret");
+				}
                 subscriptionMap.put(appName, new String(Base64.encodeBase64(
 						(prodConsumerKey + ":" + prodConsumerSecret).getBytes())));
             }
