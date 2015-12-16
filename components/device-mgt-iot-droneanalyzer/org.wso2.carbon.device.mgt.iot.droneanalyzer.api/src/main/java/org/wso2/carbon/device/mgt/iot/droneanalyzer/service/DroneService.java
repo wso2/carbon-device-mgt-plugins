@@ -213,12 +213,14 @@ public class DroneService {
         }
     }
 
+
+
     @Path("manager/device/{sketch_type}/download")
     @GET
     @Produces("application/octet-stream")
     public Response downloadSketch(@QueryParam("owner") String owner, @QueryParam("deviceName") String customDeviceName,
                                    @PathParam("sketch_type") String sketchType) {
-        try {
+        /*try {
             ZipArchive zipFile = createDownloadFile(owner, customDeviceName, sketchType);
             Response.ResponseBuilder rb = Response.ok(zipFile.getZipFile());
             rb.header("Content-Disposition",
@@ -232,7 +234,39 @@ public class DroneService {
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (DeviceControllerException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
+        }*/
+        if (owner == null) {
+            return Response.status(400).build();//bad request
         }
+
+        //create new device id
+        String deviceId = shortUUID();
+
+        //create token
+        String token = UUID.randomUUID().toString();
+        String refreshToken = UUID.randomUUID().toString();
+        //adding registering data
+
+        String deviceName = customDeviceName + "_" + deviceId;
+        boolean status = register(deviceId, customDeviceName, owner);
+        if (!status) {
+            return Response.status(500).entity(
+                    "Error occurred while registering the device with " + "id: " + deviceId
+                            + " owner:" + owner).build();
+
+        }
+
+        ZipUtil ziputil = new ZipUtil();
+        ZipArchive zipFile = null;
+        try {
+            zipFile = ziputil.downloadSketch(owner, SUPER_TENANT, sketchType, deviceId, customDeviceName, token, refreshToken);
+        } catch (DeviceManagementException ex) {
+            return Response.status(500).entity("Error occurred while creating zip file").build();
+        }
+
+        Response.ResponseBuilder rb = Response.ok(zipFile.getZipFile());
+        rb.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
+        return rb.build();
     }
 
     @Path("manager/device/{sketch_type}/generate_link")
