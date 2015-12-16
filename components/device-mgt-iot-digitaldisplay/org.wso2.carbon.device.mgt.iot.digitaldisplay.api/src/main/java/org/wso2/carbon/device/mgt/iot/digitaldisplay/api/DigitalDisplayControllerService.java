@@ -170,14 +170,14 @@ public class DigitalDisplayControllerService {
      * @param attribute this can be path,time or type
      * @param newValue page is used to replace path
      */
-    @Path("/edit-content/{path}/{attribute}/{new-value}")
+    @Path("/edit-content")
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     public void editContent(@QueryParam("deviceId") String deviceId,
                             @QueryParam("owner") String owner,
-                            @PathParam("path") String path,
-                            @PathParam("attribute") String attribute,
-                            @PathParam("new-value") String newValue,
+                            @QueryParam("path") String path,
+                            @QueryParam("attribute") String attribute,
+                            @QueryParam("new-value") String newValue,
                             @QueryParam("sessionId") String sessionId,
                             @Context HttpServletResponse response){
 
@@ -208,13 +208,13 @@ public class DigitalDisplayControllerService {
      * @param time new resource visible time
      * @param path URL of the new resource
      */
-    @Path("/add-resource/{type}/{time}/{path}")
+    @Path("/add-resource")
     @POST
     public void addNewResource(@QueryParam("deviceId") String deviceId,
                                @QueryParam("owner") String owner,
-                               @PathParam("type") String type,
-                               @PathParam("time") String time,
-                               @PathParam("path") String path,
+                               @QueryParam("type") String type,
+                               @QueryParam("time") String time,
+                               @QueryParam("path") String path,
                                @QueryParam("sessionId") String sessionId,
                                @Context HttpServletResponse response){
 
@@ -246,15 +246,15 @@ public class DigitalDisplayControllerService {
      * @param path URL of the new resource
      * @param nextPage next page no of after adding new resource
      */
-    @Path("/add-resource-before/{type}/{time}/{path}/{next-page}")
+    @Path("/add-resource-before")
     @POST
     public void addNewResourceBefore(@QueryParam("deviceId") String deviceId,
                                @QueryParam("owner") String owner,
                                @QueryParam("sessionId") String sessionId,
-                               @PathParam("type") String type,
-                               @PathParam("time") String time,
-                               @PathParam("path") String path,
-                               @PathParam("next-page") String nextPage,
+                               @QueryParam("type") String type,
+                               @QueryParam("time") String time,
+                               @QueryParam("path") String path,
+                               @QueryParam("next-page") String nextPage,
                                @Context HttpServletResponse response){
 
         log.info("Add Sequence : " + deviceId);
@@ -287,14 +287,14 @@ public class DigitalDisplayControllerService {
      * @param path URL of the new resource
      * @param beforePage before page no of after adding new resource
      */
-    @Path("/add-resource-next/{type}/{time}/{path}/{before-page}")
+    @Path("/add-resource-next")
     @POST
     public void addNewResourceAfter(@QueryParam("deviceId") String deviceId,
                                      @QueryParam("owner") String owner,
-                                     @PathParam("type") String type,
-                                     @PathParam("time") String time,
-                                     @PathParam("path") String path,
-                                     @PathParam("before-page") String beforePage,
+                                     @QueryParam("type") String type,
+                                     @QueryParam("time") String time,
+                                     @QueryParam("path") String path,
+                                     @QueryParam("before-page") String beforePage,
                                      @QueryParam("sessionId") String sessionId,
                                      @Context HttpServletResponse response){
 
@@ -324,12 +324,12 @@ public class DigitalDisplayControllerService {
      * @param response response type of the method
      * @param path path of the page no need to delete
      */
-    @Path("/remove-resource/{path}")
+    @Path("/remove-resource")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public void removeResource(@QueryParam("deviceId") String deviceId,
                                @QueryParam("owner") String owner,
-                               @PathParam("path") String path,
+                               @QueryParam("path") String path,
                                @QueryParam("sessionId") String sessionId,
                                @Context HttpServletResponse response){
 
@@ -358,10 +358,10 @@ public class DigitalDisplayControllerService {
      * @param response response type of the method
      * @param directoryName path of the folder need to delete
      */
-    @Path("/remove-directory/{directory-name}")
+    @Path("/remove-directory")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public void removeDirectory(@PathParam("directory-name") String directoryName,
+    public void removeDirectory(@QueryParam("directory-name") String directoryName,
                               @QueryParam("deviceId") String deviceId ,
                               @QueryParam("owner") String owner,
                               @QueryParam("sessionId") String sessionId,
@@ -392,11 +392,11 @@ public class DigitalDisplayControllerService {
      * @param content file name of need to delete
      * @param response response type of the method
      */
-    @Path("/remove-content/{directory_name}/{content}")
+    @Path("/remove-content")
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public void removeContent(@PathParam("directory_name") String directoryName,
-                              @PathParam("content") String content,
+    public void removeContent(@QueryParam("directory_name") String directoryName,
+                              @QueryParam("content") String content,
                               @QueryParam("deviceId") String deviceId ,
                               @QueryParam("owner") String owner,
                               @QueryParam("sessionId") String sessionId,
