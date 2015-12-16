@@ -9,9 +9,9 @@
     <IotDeviceTypeConfig type="digital_display">
         <DatasourceName>jdbc/DigitalDisplayDM_DB</DatasourceName>
     </IotDeviceTypeConfig>
-    <!--<IotDeviceTypeConfig type="drone_analyzer">-->
-        <!--<DatasourceName>jdbc/DroneAnalyzerDM_DB</DatasourceName>-->
-    <!--</IotDeviceTypeConfig>-->
+    <IotDeviceTypeConfig type="drone_analyzer">
+        <DatasourceName>jdbc/DroneAnalyzerDM_DB</DatasourceName>
+    </IotDeviceTypeConfig>
     <!--<IotDeviceTypeConfig type="raspberrypi">-->
         <!--<DatasourceName>jdbc/RaspberryPiDM_DB</DatasourceName>-->
     <!--</IotDeviceTypeConfig>-->
