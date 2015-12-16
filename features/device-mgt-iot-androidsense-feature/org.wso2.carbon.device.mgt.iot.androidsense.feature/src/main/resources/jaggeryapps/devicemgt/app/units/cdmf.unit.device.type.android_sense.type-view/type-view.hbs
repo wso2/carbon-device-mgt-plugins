@@ -2,7 +2,7 @@
     <h1 class="grey ">Android Sense</h1>
     <hr>
     <p class="margin-bottom-double light-grey ">Connect your Android device
-        to the WSO2 device cloud.</p>
+                                                to the WSO2 device cloud.</p>
 </div>
 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 padding-top">
     <i class="fw fw-android fw-5x"></i>
@@ -17,43 +17,11 @@
                 <i class="fw fw-right-arrow fw-stack-1x"></i></span> Android device</li>
 
     </ul>
+
     <br>
-
-    <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download</a>
-
-    <div id="download-device-modal-content" class="hide">
-        <div class="modal-content">
-            <div class="row">
-                <div class="col-md-7 col-centered center-container">
-                    <h3>Name your device and download the agent from following link.</h3>
-                    <br/>
-
-                    <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
-                        <div class="control-group">
-                            <div class="controls">
-                                <input class="new-device-name" style="color:#3f3f3f;padding:5px"
-                                       type="text"
-                                       placeholder="Ex. Personal_Android"
-                                       name="deviceName" size="60" required>
-                                <br/><br/>
-                                <input type="hidden" class="deviceType" name="deviceType" value="android_sense"/>
-                                <input type="hidden" class="sketchType" name="sketchType" value="android_sense" />
-                            </div>
-                        </div>
-                        <div class="buttons" style="padding-bottom: 0px">
-                            <a class="btn btn-operations" onclick="downloadAgent()">Download
-                                Now</a>
-                            &nbsp;&nbsp;
-                            <a href="#" id="download-device-download-link" class="btn btn-operations">
-                                &nbsp;&nbsp;&nbsp;&nbsp;Copy Link&nbsp;&nbsp;&nbsp;&nbsp;
-                            </a>
-                            &nbsp;&nbsp;
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <a href="#" class="download-link btn-operations" data-devicetype="{{@uriParams.deviceType}}" data-sketchtype="{{@uriParams.deviceType}}">
+        <i class="fw fw-mobile fw-inverse fw-lg"></i> Enroll Device</a>
+    <br/><br/>
 
     <div id="download-device-modal-content-links" class="hide">
         <div class="modal-content">
@@ -195,23 +163,30 @@
 
 </div>
 
-<div id="qr-code-modal" data-enrollment-url="{{deviceType.enrollmentURL}}" class="hidden">
+<div id="qr-code-modal" data-enrollment-url="" class="hidden">
 
     <div class="content">
         <div class="row">
             <div class="col-lg-5 col-md-6 col-centered">
-                <h3>
-                    Scan QR code to start enrollment
-                </h3>
-                <h4>
-                    Please scan the QR code using your mobile device to retrieve enrollment URL.
-                </h4>
-
+                <h3>Scan QR code to start enrollment</h3>
+                <p>Please scan the QR code using your mobile device to retrieve enrollment URL.</p>
                 <div class="panel panel-default">
-                    <div class="panel-body col-centered ">
+                    <div class="panel-body col-centered">
                         <div class="qr-code"></div>
                     </div>
                 </div>
+                <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
+                    <div class="control-group">
+                        <div class="controls">
+                            <input type="hidden" class="deviceType" name="deviceType" value="android_sense"/>
+                            <input type="hidden" class="sketchType" name="sketchType" value="android_sense" />
+                        </div>
+                    </div>
+                    <div class="buttons" style="padding-bottom: 0px">
+                        <a class="btn btn-operations" onclick="downloadAgent()">Download Now</a>
+                        &nbsp;&nbsp;
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -264,6 +239,18 @@
 
 {{#zone "bottomJs"}}
     {{js "/js/download.js"}}
+    <script type="text/javascript">
+
+        $(".download-link").click(function(){
+            toggleEnrollment();
+        });
+
+        function toggleEnrollment(){
+            $(".modalpopup-content").html($("#qr-code-modal").html());
+            generateQRCode(".modalpopup-content .qr-code");
+            showPopup();
+        }
+
+    </script>
     {{js "/js/jquery.validate.js"}}
 {{/zone}}
-
