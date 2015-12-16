@@ -3,7 +3,7 @@
 {{#defineZone "device-detail-top"}}
     <div class="row wr-device-board">
         <div class="col-lg-12 wr-secondary-bar">
-            <label class="device-id device-select" data-deviceid="{{device.deviceIdentifier}}" data-type="{{device.type}}">
+            <label class="device-id device-select" data-deviceid="{{device.deviceIdentifier}}" data-type="{{device.type}} data-appcontext="{{@app.context}}">
                 {{device.name}}
             </label>
         </div>

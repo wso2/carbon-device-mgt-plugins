@@ -414,13 +414,13 @@
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer</artifactId>
                 <version>${carbon.iot.device.mgt.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.service.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.api</artifactId>
                 <version>${carbon.iot.device.mgt.version}</version>
                 <type>war</type>
             </dependency>
@@ -1464,6 +1464,16 @@
             <id>gcm-server-repository</id>
             <name>GCM Server repository - GitHub</name>
             <url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
+        </repository>
+        <repository>
+            <id>wso2-staging</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/orgwso2carbonapimgt-174/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
         </repository>
 	</repositories>
 </project>
