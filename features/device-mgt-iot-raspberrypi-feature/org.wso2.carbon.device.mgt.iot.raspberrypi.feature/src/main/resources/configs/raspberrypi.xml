@@ -18,8 +18,7 @@
   -->
 
 <DeviceTypeConfigurations>
-  <DeviceTypeConfig type="arduino">
-    <DatasourceName>jdbc/ArduinoDM_DB</DatasourceName>
-    <!--ApiApplicationName>arduino</ApiApplicationName-->
+  <DeviceTypeConfig type="raspberrypi">
+    <DatasourceName>jdbc/RaspberryPiDM_DB</DatasourceName>
   </DeviceTypeConfig>
 </DeviceTypeConfigurations>

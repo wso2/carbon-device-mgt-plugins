@@ -1,0 +1,242 @@
+<div>
+    <div class="col-lg-12  margin-top-double">
+        <h1 class="grey ">RaspberryPi</h1>
+        <hr>
+        <p class="margin-bottom-double light-grey ">Connect your RaspberryPi device to the WSO2 IoT Server.</p>
+    </div>
+    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 padding-top">
+        <img src="{{@unit.publicUri}}/images/thumb.png" class="img-responsive">
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8 padding-top">
+        <h3 class="uppercase">Ingredients</h3>
+        <hr>
+        <p class="grey margin-top">Hardware Requirements </p>
+        <br>
+        <ul class="list-unstyled">
+            <li><span class="fw-stack fw-lg margin-right"><i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i></span> Raspberry Pi (Internet Enabled)
+            </li>
+            <li><span class="fw-stack fw-lg margin-right"><i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i></span> DHT11 Temperature Sensor
+            </li>
+            <li><span class="fw-stack fw-lg margin-right"><i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i></span> LED
+            </li>
+            <li><span class="fw-stack fw-lg margin-right"><i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i></span> Buzzer(3v)
+            </li>
+        </ul>
+        <br>
+
+        <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin"
+           class="btn-operations" target="_blank"><i class="fw fw-api"></i> View API</i> &nbsp;</a>
+        <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download</a>
+
+        <div id="download-device-modal-content" class="hide">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-7  center-container">
+                        <h3>Name your device and download the agent from following link.</h3>
+                        <br/>
+
+                        <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
+                            <div class="control-group">
+                                <div class="controls">
+                                    <input class="new-device-name" style="color:#3f3f3f;padding:5px"
+                                           type="text"
+                                           placeholder="Ex. Home_RaspberryPi"
+                                           name="deviceName" size="60" required>
+                                    <br/><br/>
+                                    <input type="hidden" class="deviceType" name="deviceType"
+                                           value="{{@uriParams.deviceType}}"/>
+                                    <input type="hidden" class="sketchType" name="sketchType"
+                                           value="{{@uriParams.deviceType}}"/> &nbsp;&nbsp;
+                                </div>
+                            </div>
+                            <div class="buttons" style="padding-bottom: 0px">
+                                <a class="btn btn-operations" onclick="downloadAgent()">Download
+                                                                                        Now</a>
+                                &nbsp;&nbsp;
+                                <a href="#" id="download-device-download-link" class="btn btn-operations">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;Copy Link&nbsp;&nbsp;&nbsp;&nbsp;
+                                </a>
+                                &nbsp;&nbsp;
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="device-400-content" class="hide">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-7 col-centered center-container">
+                        <h3>Exception at backend. Try Later.</h3>
+
+                        <div class="buttons">
+                            <a href="#" id="device-400-link" class="btn-operations">
+                                &nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="device-401-content" class="hide">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-7 col-centered center-container">
+                        <h3>You have to log in first.</h3><br/>
+
+                        <div class="buttons">
+                            <a href="#" id="device-401-link" class="blue-button">
+                                &nbsp;&nbsp;&nbsp;&nbsp;Goto Login Page&nbsp;&nbsp;&nbsp;&nbsp;
+                            </a>&nbsp;&nbsp;
+                            <a href="#" onclick="hidePopup();" class="btn-operations">
+                                &nbsp;&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;&nbsp;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="device-403-content" class="hide">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-7 col-centered center-container">
+                        <h3>Action not permitted.</h3><br/>
+
+                        <div class="buttons">
+                            <a href="#" id="device-403-link" class="btn-operations">
+                                &nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="device-409-content" class="hide">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-7 col-centered center-container">
+                        <h3>Device Sketch does not exist.</h3><br/>
+
+                        <div class="buttons">
+                            <a href="#" id="device-409-link" class="btn-operations">
+                                &nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="device-unexpected-error-content" class="hide">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-7 col-centered center-container">
+                        <h3>Unexpected error.</h3><br/>
+
+                        <div class="buttons">
+                            <a href="#" id="device-unexpected-error-link" class="btn-operations">
+                                &nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br/><br/>
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double grey-bg ">
+        <h3 class="uppercase">Prepare</h3>
+        <hr>
+        <p class="grey margin-top">Get your device ready</p>
+        <br/>
+        <ul class="list-unstyled">
+            <li class="padding-top-double"><span class="circle">01</span> Get your RaspberryPi device and download the Agent
+                                                                          Sketch.
+            </li>
+            <li class="padding-top-double"><span class="circle">02</span> Open the downloaded RaspberryPi sketch and fill in
+                                                                          the pins that you wish to read/control.
+            </li>
+            <li class="padding-top-double"><span class="circle">03</span> Burn the sketch onto your RaspberryPi board and
+                                                                          let the program run.
+            </li>
+        </ul>
+        <br>
+    </div>
+</div>
+
+{{#zone "topCss"}}
+    <style type="text/css">
+        .circle {
+            background: none repeat scroll 0 0 #191919;
+            border-radius: 50px;
+            height: 50px;
+            padding: 10px;
+            width: 50px;
+            color: #fff;
+        }
+
+        .padding-top-double {
+            padding-top: 20px;
+        }
+
+        .padding-double {
+            padding: 20px;
+        }
+
+        .grey {
+            color: #333;
+        }
+
+        hr {
+            display: block;
+            height: 1px;
+            border: 0;
+            border-top: 1px solid #7f7f7f;
+            margin: 1em 0;
+            padding: 0;
+            opacity: 0.2;
+        }
+
+        .light-grey {
+            color: #7c7c7c;
+        }
+
+        .uppercase {
+            text-transform: uppercase;
+        }
+
+        .grey-bg {
+            background-color: #f6f4f4;
+        }
+    </style>
+{{/zone}}
+
+{{#zone "bottomJs"}}
+    {{js "/js/download.js"}}
+    {{js "/js/jquery.validate.js"}}
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            toggleEnrollment();
+        });
+
+
+        function toggleEnrollment() {
+            $(".modalpopup-content").html($("#qr-code-modal").html());
+            //generateQRCode(".modalpopup-content .qr-code");
+            //showPopup();
+        }
+
+    </script>
+{{/zone}}

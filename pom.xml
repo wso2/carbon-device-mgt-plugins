@@ -51,6 +51,7 @@
         <module>components/device-mgt-iot-arduino</module>
         <module>components/device-mgt-iot-digitaldisplay</module>
         <module>components/device-mgt-iot-droneanalyzer</module>
+        <module>components/device-mgt-iot-raspberrypi</module>
         <module>components/device-mgt-iot-virtualfirealarm</module>
 
         <!--Core MDM and IoT Features-->
@@ -66,6 +67,7 @@
         <module>features/device-mgt-iot-arduino-feature</module>
         <module>features/device-mgt-iot-digitaldisplay-feature</module>
         <module>features/device-mgt-iot-droneanalyzer-feature</module>
+        <module>features/device-mgt-iot-raspberrypi-feature</module>
         <module>features/device-mgt-iot-virtualfirealarm-feature</module>
     </modules>
 
@@ -423,6 +425,20 @@
                 <type>war</type>
             </dependency>
 
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+                            <!--RaspberryPi DeviceType Impl, API and Agent-->
+            <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+            </dependency>
+            <!--<dependency>-->
+                <!--<groupId>org.wso2.carbon.devicemgt-plugins</groupId>-->
+                <!--<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl</artifactId>-->
+                <!--<version>${carbon.iot.device.mgt.version}</version>-->
+                <!--<type>war</type>-->
+            <!--</dependency>-->
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
                             <!--VirtualFireAlarm DeviceType Impl, API and Agent-->
