@@ -1,3 +1,4 @@
+
 {{unit "cdmf.unit.lib.service-invoker-utility"}}
 {{unit "cdmf.unit.lib.handlebars"}}
 {{#defineZone "device-detail-top"}}
@@ -27,34 +28,34 @@
                         {{#defineZone "device-detail-properties"}}
                             <table class="table table-responsive table-striped" id="members">
                                 <tbody>
-                                    <tr role="row" class="even">
-                                        <td class="sorting_1" style="padding:10px 15px;">Status</td>
-                                        <td style="padding:10px 15px;">
-                                            {{#equal device.status "ACTIVE"}}<span><i class="fw fw-ok icon-success"></i> Active</span>{{/equal}}
-                                            {{#equal device.status "INACTIVE"}}<span><i class="fw fw-warning icon-warning"></i> Inactive</span>{{/equal}}
-                                            {{#equal device.status "BLOCKED"}}<span><i class="fw fw-remove icon-danger"></i> Blocked</span>{{/equal}}
-                                            {{#equal device.status "REMOVED"}}<span><i class="fw fw-delete icon-danger"></i> Removed</span>{{/equal}}
-                                        </td>
-                                    </tr>
+                                <tr role="row" class="even">
+                                    <td class="sorting_1" style="padding:10px 15px;">Status</td>
+                                    <td style="padding:10px 15px;">
+                                        {{#equal device.status "ACTIVE"}}<span><i class="fw fw-ok icon-success"></i> Active</span>{{/equal}}
+                                        {{#equal device.status "INACTIVE"}}<span><i class="fw fw-warning icon-warning"></i> Inactive</span>{{/equal}}
+                                        {{#equal device.status "BLOCKED"}}<span><i class="fw fw-remove icon-danger"></i> Blocked</span>{{/equal}}
+                                        {{#equal device.status "REMOVED"}}<span><i class="fw fw-delete icon-danger"></i> Removed</span>{{/equal}}
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         {{/defineZone}}
                         <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">Operations</div>
                         <div class="add-margin-top-4x">
-                            {{unit "iot.unit.device.operation" device=device}}
+                            {{unit "iot.unit.device.digitaldisplay.operation" device=device}}
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="media">
-                <div class="media-left col-xs-12 col-sm-2 col-md-2 col-lg-2">
-                    <ul class="list-group" role="tablist">
-                        <li class="active"><a class="list-group-item" href="#device_details" role="tab" data-toggle="tab" aria-controls="device_details">Device Details</a></li>
-                        <li><a class="list-group-item" href="#policy_compliance" role="tab" data-toggle="tab" aria-controls="policy_compliance">Policy Compliance</a></li>
-                        <li><a class="list-group-item" href="#device_location" role="tab" data-toggle="tab" aria-controls="device_location">Device Location</a></li>
-                        <li><a class="list-group-item" href="#event_log" role="tab" data-toggle="tab" aria-controls="event_log">Operations Log</a></li>
-                    </ul>
-                </div>
+        <div class="media">
+            <div class="media-left col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                <ul class="list-group" role="tablist">
+                    <li class="active"><a class="list-group-item" href="#device_details" role="tab" data-toggle="tab" aria-controls="device_details">Device Details</a></li>
+                    <li><a class="list-group-item" href="#policy_compliance" role="tab" data-toggle="tab" aria-controls="policy_compliance">Policy Compliance</a></li>
+                    <li><a class="list-group-item" href="#device_location" role="tab" data-toggle="tab" aria-controls="device_location">Device Location</a></li>
+                    <li><a class="list-group-item" href="#event_log" role="tab" data-toggle="tab" aria-controls="event_log">Operations Log</a></li>
+                </ul>
+            </div>
             {{#defineZone "device-detail-properties"}}
                 <div class="media-body add-padding-left-5x remove-padding-xs tab-content">
                     <div class="panel-group tab-content">

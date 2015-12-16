@@ -1,0 +1,88 @@
+<style>
+    ::-webkit-input-placeholder { color:#f00; }
+    ::-moz-placeholder { color:#f00; } /* firefox 19+ */
+    :-ms-input-placeholder { color:#f00; } /* ie */
+    input:-moz-placeholder { color:#f00; }
+</style>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+        <h2 class="sub-title panel-title">
+            <a data-toggle="collapse"
+               href="#collapseOne" aria-expanded="true"
+               aria-controls="collapseOne">
+                                        <span class="fw-stack">
+                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                        <i class="fw fw-arrow fw-down fw-stack-1x"></i>
+                                        </span>
+                Device Operations
+            </a>
+        </h2>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse in"
+         role="tabpanel" aria-labelledby="headingOne">
+        <div id="device-location" class="panel-body">
+            {{#if control_operations}}
+                {{#each control_operations}}
+                    <form action="{{@app.context}}/api/operations/{{../../device.type}}/{{operation}}" method="post">
+                        <div class="row">
+                            <div class="wr-input-control">
+                                <label class="wr-input-label">{{name}}</label>
+                                <input type="hidden" name="owner"
+                                       value={{../../device.owner}}>
+                                <input type="hidden" name="deviceId"
+                                       value={{../../device.deviceIdentifier}}>
+
+                                {{#if editcontent}}
+                                    <input type="number" name="path"
+                                           placeholder="path">
+                                    <input type="number" name="attribute"
+                                           placeholder="attribute">
+                                    <input type="number" name="new-value"
+                                           placeholder="new-value">
+                                {{/if}}
+
+                                {{#if add}}
+                                    <input type="number" name="type"
+                                           placeholder="type">
+                                    <input type="number" name="time"
+                                           placeholder="time">
+                                    <input type="number" name="path"
+                                           placeholder="path">
+                                {{/if}}
+
+                                {{#if before}}
+                                    <input type="number" name="next-page"
+                                           placeholder="next-page">
+                                {{/if}}
+                                {{#if after}}
+                                    <input type="number" name="before-page"
+                                           placeholder="before-page">
+                                {{/if}}
+                                {{#if removeresource}}
+                                    <input type="number" name="path"
+                                           placeholder="path">
+                                {{/if}}
+                                {{#if remove}}
+                                    <input type="number" name="directory-name"
+                                           placeholder="directory-name">
+                                {{/if}}
+                                {{#if content}}
+                                    <input type="number" name="content"
+                                           placeholder="content">
+                                {{/if}}
+
+                                <button class="wr-btn">&nbsp;&nbsp;&nbsp;&nbsp;Send
+                                    to Device&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                <label id="lblSending" class="wr-input-label hidden"><i class="fw fw-lifecycle fw-spin fw-2x"></i> Sending..</label>
+                                <label id="lblSent" class="wr-input-label hidden"><i class="fw fw-check fw-2x"></i> Sent</label>
+                                <label id="lblLastState" class="wr-input-label wr-input-label-status"></label>
+                            </div>
+                        </div>
+                    </form>
+                {{/each}}
+            {{/if}}
+        </div>
+    </div>
+</div>
