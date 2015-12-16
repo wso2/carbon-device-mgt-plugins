@@ -83,16 +83,15 @@ public class AndroidDAOFactory extends AbstractMobileDeviceManagementDAOFactory 
             }
         } catch (SQLException e) {
             throw new MobileDeviceManagementDAOException("Error occurred while committing the transaction", e);
-        } finally {
-            closeConnection();
         }
     }
 
     public static void closeConnection() throws MobileDeviceManagementDAOException {
-
-        Connection con = currentConnection.get();
+        Connection conn = currentConnection.get();
         try {
-            con.close();
+            if (conn != null) {
+                conn.close();
+            }
         } catch (SQLException e) {
             log.error("Error occurred while close the connection");
         }
@@ -112,8 +111,6 @@ public class AndroidDAOFactory extends AbstractMobileDeviceManagementDAOFactory 
             }
         } catch (SQLException e) {
             throw new MobileDeviceManagementDAOException("Error occurred while rollback the transaction", e);
-        } finally {
-            closeConnection();
         }
     }
 
