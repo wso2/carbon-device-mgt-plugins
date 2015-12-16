@@ -336,7 +336,7 @@ public class VirtualFireAlarmService {
         try {
             ZipArchive zipFile = createDownloadFile(owner, customDeviceName, sketchType);
             Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
-            response.type(MediaType.MULTIPART_FORM_DATA_TYPE);
+            response.type("application/zip");
             response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
             return response.build();
 
@@ -756,9 +756,7 @@ public class VirtualFireAlarmService {
                         if (log.isDebugEnabled()) {
                             log.debug("CA certificate received in GetCACert");
                         }
-
-                        responseBuilder = Response.ok(scepResponse.getEncodedResponse(),
-                                                      ContentType.X_X509_CA_CERT);
+                        responseBuilder = Response.ok(scepResponse.getEncodedResponse(), ContentType.X_X509_CA_CERT);
                         break;
                     case CA_RA_CERT_RECEIVED:
 
@@ -766,8 +764,7 @@ public class VirtualFireAlarmService {
                             log.debug("CA and RA certificates received in GetCACert");
                         }
 
-                        responseBuilder = Response.ok(scepResponse.getEncodedResponse(),
-                                                      ContentType.X_X509_CA_RA_CERT);
+                        responseBuilder = Response.ok(scepResponse.getEncodedResponse(), ContentType.X_X509_CA_RA_CERT);
                         break;
                     default:
                         log.error("Invalid SCEP request");
@@ -777,9 +774,9 @@ public class VirtualFireAlarmService {
 
                 return responseBuilder.build();
             } catch (VirtualFireAlarmException e) {
-                log.error("Error occurred while enrolling the iOS device", e);
+                log.error("Error occurred while enrolling the VirtualFireAlarm device", e);
             } catch (KeystoreException e) {
-                log.error("Keystore error occurred while enrolling the iOS device", e);
+                log.error("Keystore error occurred while enrolling the VirtualFireAlarm device", e);
             }
 
         } else if (SCEPOperation.GET_CA_CAPS.getValue().equals(operation)) {
