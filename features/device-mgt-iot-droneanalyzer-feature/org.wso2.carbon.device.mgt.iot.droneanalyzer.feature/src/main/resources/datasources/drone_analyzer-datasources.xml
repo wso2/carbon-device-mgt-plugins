@@ -23,14 +23,14 @@
 
 	<datasources>
 		<datasource>
-			<name>VirtualFireAlarmDM_DB</name>
-			<description>The datasource used for the Virtual-Firealarm database</description>
+			<name>DroneAnalyzerDM_DB</name>
+			<description>The datasource used for the Drone Analyzer database</description>
 			<jndiConfig>
-				<name>jdbc/VirtualFireAlarmDM_DB</name>
+				<name>jdbc/DroneAnalyzerDM_DB</name>
 			</jndiConfig>
 			<definition type="RDBMS">
 				<configuration>
-					<url>jdbc:h2:repository/database/VirtualFireAlarmDM_DB;DB_CLOSE_ON_EXIT=FALSE
+					<url>jdbc:h2:repository/database/DroneAnalyzerDM_DB;DB_CLOSE_ON_EXIT=FALSE
 					</url>
 					<username>wso2carbon</username>
 					<password>wso2carbon</password>
@@ -45,4 +45,6 @@
 		</datasource>
 	</datasources>
 </datasources-configuration>
+
+
 

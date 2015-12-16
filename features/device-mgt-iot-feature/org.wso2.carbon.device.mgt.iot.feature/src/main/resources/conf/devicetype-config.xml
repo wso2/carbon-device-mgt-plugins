@@ -13,7 +13,7 @@
         <DatasourceName>jdbc/DroneAnalyzerDM_DB</DatasourceName>
     </IotDeviceTypeConfig>
     <!--<IotDeviceTypeConfig type="raspberrypi">-->
-        <!--<DatasourceName>jdbc/RaspberryPiDM_DB</DatasourceName>-->
+    <!--<DatasourceName>jdbc/RaspberryPiDM_DB</DatasourceName>-->
     <!--</IotDeviceTypeConfig>-->
     <IotDeviceTypeConfig type="virtual_firealarm">
         <DatasourceName>jdbc/VirtualFireAlarmDM_DB</DatasourceName>

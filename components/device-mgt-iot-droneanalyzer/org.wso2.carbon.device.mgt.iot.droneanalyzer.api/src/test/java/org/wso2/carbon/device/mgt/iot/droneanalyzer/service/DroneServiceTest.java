@@ -15,9 +15,7 @@ import javax.ws.rs.core.Response;
 import java.util.Collection;
 import java.util.Iterator;
 
-/**
- * Created by geesara on 12/10/15.
- */
+
 public class DroneServiceTest {
 
     private static org.apache.commons.logging.Log log = LogFactory.getLog(DroneServiceTest.class);
