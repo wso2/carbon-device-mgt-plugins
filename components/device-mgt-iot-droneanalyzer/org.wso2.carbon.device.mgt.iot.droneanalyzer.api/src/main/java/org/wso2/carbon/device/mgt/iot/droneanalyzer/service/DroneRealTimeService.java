@@ -45,7 +45,6 @@ public class DroneRealTimeService {
     @OnOpen
     public void onOpen(Session session){
         log.info(session.getId() + " has opened a connection");
-        System.out.println(session.getId() + " has opened a connection");
         try {
             session.getBasicRemote().sendText("Connection Established");
         } catch (IOException e) {
@@ -59,7 +58,6 @@ public class DroneRealTimeService {
             while(true){
                 if((messageController !=null) && (!messageController.isEmptyQueue())){
                     String message1 = messageController.getMessage();
-                    System.out.println("Out going message :"+ message1);
                     session.getBasicRemote().sendText(message1);
                 }
                 Thread.sleep(DroneConstants.MINIMUM_TIME_DURATION);
@@ -78,14 +76,12 @@ public class DroneRealTimeService {
         try {
             xmppConnector.disconnect();
             log.info("XMPP connection is disconnected");
-            System.out.println("XMPP connection is disconnected");
         }
         catch (Exception e) {
             log.error(e.getMessage() + "\n" + e);
             System.out.println(e.getMessage()+"\n"+ e);
         }
         log.info("Session " + session.getId() + " has ended");
-        System.out.println("Session " + session.getId() + " has ended");
     }
 
     @OnError
@@ -94,13 +90,10 @@ public class DroneRealTimeService {
             session.getBasicRemote().sendText("Connection closed");
             xmppConnector.disconnect();
             log.info("XMPP connection is disconnected");
-            System.out.println("00XMPP connection is disconnected");
         } catch (Exception e) {
             log.error(e.getMessage()+"\n"+ e);
-            System.out.println("00"+ e.getMessage()+"\n"+ e);
         }
         log.info("Session " + session.getId() + " has ended");
-        System.out.println("00 Session " + session.getId() + " has ended");
     }
 
 }

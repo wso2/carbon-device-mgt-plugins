@@ -18,14 +18,10 @@
   -->
 
 
-<!--<IoTDeviceTypeConfigManager>
+<IoTDeviceTypeConfigManager>
   <IotDeviceTypeConfig type="drone_analyzer">
     <DatasourceName>jdbc/DroneAnalyzerDM_DB</DatasourceName>
-    &lt;!&ndash;ApiApplicationName>firealarm</ApiApplicationName&ndash;&gt;
+    <!--ApiApplicationName>firealarm</ApiApplicationName-->
   </IotDeviceTypeConfig>
-</IoTDeviceTypeConfigManager>-->
+</IoTDeviceTypeConfigManager>
 
-<DeviceTypeConfigurations>
-
-
-</DeviceTypeConfigurations>
