@@ -19,7 +19,7 @@
 
 <DeviceTypeConfigurations>
   <DeviceTypeConfig type="arduino">
-    <DatasourceName>jdbc/Arduino_DB</DatasourceName>
+    <DatasourceName>jdbc/ArduinoDM_DB</DatasourceName>
     <!--ApiApplicationName>arduino</ApiApplicationName-->
   </DeviceTypeConfig>
 </DeviceTypeConfigurations>

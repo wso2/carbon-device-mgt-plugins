@@ -17,7 +17,11 @@
   ~ under the License.
   -->
 
-<DeviceTypeConfigurations>
 
+<IoTDeviceTypeConfigManager>
+  <IotDeviceTypeConfig type="drone_analyzer">
+    <DatasourceName>jdbc/DroneAnalyzerDM_DB</DatasourceName>
+    <!--ApiApplicationName>firealarm</ApiApplicationName-->
+  </IotDeviceTypeConfig>
+</IoTDeviceTypeConfigManager>
 
-</DeviceTypeConfigurations>
