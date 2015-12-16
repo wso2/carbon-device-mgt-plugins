@@ -73,7 +73,9 @@ public class VirtualFireAlarmXMPPConnector extends XmppConnector {
         String deviceId = from.substring(0, indexOfAt);
         String owner = from.substring(indexOfSlash + 1, from.length());
 
-        log.info("Received XMPP message for: {OWNER-" + owner + "} & {DEVICE.ID-" + deviceId + "}");
+        if (log.isDebugEnabled()) {
+            log.debug("Received XMPP message for: {OWNER-" + owner + "} & {DEVICE.ID-" + deviceId + "}");
+        }
 
         if (subject != null) {
             switch (subject) {
@@ -98,7 +100,9 @@ public class VirtualFireAlarmXMPPConnector extends XmppConnector {
                                                                     tempVal, Calendar.getInstance().getTimeInMillis());
                     break;
                 default:
-                    log.info("Unknown XMPP Message [" + message + "] from [" + from + "] received");
+                    if (log.isDebugEnabled()) {
+                        log.warn("Unknown XMPP Message [" + message + "] from [" + from + "] received");
+                    }
                     break;
             }
         }

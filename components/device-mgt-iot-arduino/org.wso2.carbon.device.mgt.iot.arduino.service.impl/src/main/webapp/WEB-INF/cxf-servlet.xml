@@ -19,44 +19,29 @@
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
-       xsi:schemaLocation="
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	   xsi:schemaLocation="
          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
          http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
 
-    <jaxrs:server id="ArduinoController" address="/controller">
-        <jaxrs:serviceBeans>
-            <bean id="ArduinoControllerService"
-                  class="org.wso2.carbon.device.mgt.iot.arduino.service.impl.ArduinoControllerService">
-                <property name="mqttArduinoSubscriber" ref="mqttSubscriber"/>
-            </bean>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
-        </jaxrs:providers>
-    </jaxrs:server>
+	<jaxrs:server id="Arduino" address="/">
+		<jaxrs:serviceBeans>
+			<bean id="ArduinoService"
+				  class="org.wso2.carbon.device.mgt.iot.arduino.service.ArduinoService">
+				<property name="arduinoMQTTSubscriber" ref="arduinoMQTTSubscriber"/>
+			</bean>
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+		</jaxrs:providers>
+	</jaxrs:server>
 
 
-
-    <jaxrs:server id="ArduinoManager" address="/manager">
-        <jaxrs:serviceBeans>
-            <bean id="ArduinoManagerService"
-                  class="org.wso2.carbon.device.mgt.iot.arduino.service.impl.ArduinoManagerService">
-            </bean>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
-        </jaxrs:providers>
-    </jaxrs:server>
-
-
-    <bean id="mqttSubscriber" class="org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.ArduinoMQTTSubscriber" >
-
+	<bean id="arduinoMQTTSubscriber"
+		  class="org.wso2.carbon.device.mgt.iot.arduino.service.transport.ArduinoMQTTSubscriber">
     </bean>
-
-
 
 
 </beans>

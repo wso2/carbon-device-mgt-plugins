@@ -1,51 +1,25 @@
 {{#zone "topCss"}}
     {{css "css/graph.css"}}
 {{/zone}}
-<span id="details" data-devicetype="{{device.type}}" data-deviceid="{{device.deviceIdentifier}}" data-monitor="{{monitor_operations}}" data-appcontext="{{@app.context}}"></span>
-<!-- statistics -->
-<div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingFour">
-        <h2 class="sub-title panel-title">
-            <a data-toggle="collapse"
-               href="#collapseTwo" aria-expanded="true"
-               aria-controls="collapseTwo">
-                                        <span class="fw-stack">
-                                            <i class="fw fw-ring fw-stack-2x"></i>
-                                            <i class="fw fw-arrow fw-down fw-stack-1x"></i>
-                                        </span>
-                Device Statistics
-            </a>
-        </h2>
+<span id="details" data-devicetype="{{device.type}}" data-deviceid="{{device.deviceIdentifier}}"
+      data-monitor="{{monitor_operations}}" data-appcontext="{{@app.context}}"></span>
+<div id="chartWrapper">
+    <div id="y_axis" class="custom_y_axis"></div>
+    <div class="legend_container">
+        <div id="smoother" title="Smoothing"></div>
+        <div id="legend"></div>
     </div>
-    <div id="collapseTwo" class="panel-collapse collapse in"
-         role="tabpanel"
-         aria-labelledby="headingTwo">
-        <div class="panel-body">
-            <div id="chartWrapper">
-                <div id="y_axis" class="custom_y_axis"></div>
-                <div class="legend_container">
-                    <div id="smoother" title="Smoothing"></div>
-                    <div id="legend"></div>
-                </div>
-                <div id="chart" class="custom_rickshaw_graph"></div>
-                <div class="custom_x_axis"></div>
-            </div>
-            <div id="map" class="map-wrapper hidden">
-
-            </div>
-            <a class="padding-left" href="{{@app.context}}/analytics?deviceId={{device.deviceIdentifier}}&deviceType={{device.type}}&deviceName={{device.name}}">
+    <div id="chart" class="custom_rickshaw_graph"></div>
+    <div class="custom_x_axis"></div>
+</div>
+<a class="padding-left"
+   href="{{@app.context}}/analytics?deviceId={{device.deviceIdentifier}}&deviceType={{device.type}}&deviceName={{device.name}}">
                                         <span class="fw-stack">
                                             <i class="fw fw-ring fw-stack-2x"></i>
                                             <i class="fw fw-statistics fw-stack-1x"></i>
                                         </span> View Device Analytics</a>
-        </div>
-    </div>
-</div>
 <!-- /statistics -->
 {{#zone "bottomJs"}}
-    <script async defer
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO-8KGLeoFkCeqID9BpY_Gh6GOKfaBPVc&callback=initMap">
-    </script>
     {{js "js/d3.min.js"}}
     {{js "js/rickshaw.min.js"}}
     {{js "js/device-stats.js"}}

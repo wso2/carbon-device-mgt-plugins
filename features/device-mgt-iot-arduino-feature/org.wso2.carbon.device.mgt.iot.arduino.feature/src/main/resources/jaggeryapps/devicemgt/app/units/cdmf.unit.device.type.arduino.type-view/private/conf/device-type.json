@@ -1,0 +1,8 @@
+{
+  "deviceType": {
+    "label": "Arduino",
+    "category": "iot",
+    "downloadAgentUri": "ArduinoDeviceManager/manager/device/arduino/download",
+    "downloadAgentLinkGenUri" : "ArduinoDeviceManager/manager/device/arduino/generate_link"
+  }
+}

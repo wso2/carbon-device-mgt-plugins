@@ -40,10 +40,9 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.VirtualFireAl
  * unbind="unsetDeviceTypeService"
  */
 public class VirtualFirealarmManagementServiceComponent {
-    private ServiceRegistration firealarmServiceRegRef;
 
-    private static final Log log = LogFactory.getLog(
-            VirtualFirealarmManagementServiceComponent.class);
+    private static final Log log = LogFactory.getLog(VirtualFirealarmManagementServiceComponent.class);
+    private ServiceRegistration firealarmServiceRegRef;
 
     protected void activate(ComponentContext ctx) {
         if (log.isDebugEnabled()) {
@@ -57,14 +56,11 @@ public class VirtualFirealarmManagementServiceComponent {
 
             if (log.isDebugEnabled()) {
                 log.debug(
-                        "Virtual Firealarm Device Management Service Component has been " +
-                                "successfully activated");
+                        "Virtual Firealarm Device Management Service Component has been successfully activated");
             }
         } catch (Throwable e) {
             log.error(
-                    "Error occurred while activating Virtual Firealarm Device Management Service " +
-                            "Component",
-                    e);
+                    "Error occurred while activating Virtual Firealarm Device Management Service Component", e);
         }
     }
 
@@ -79,14 +75,11 @@ public class VirtualFirealarmManagementServiceComponent {
 
             if (log.isDebugEnabled()) {
                 log.debug(
-                        "Virtual Firealarm Device Management Service Component has been " +
-                                "successfully de-activated");
+                        "Virtual Firealarm Device Management Service Component has been successfully de-activated");
             }
         } catch (Throwable e) {
             log.error(
-                    "Error occurred while de-activating Virtual Firealarm Device Management " +
-                            "bundle",
-                    e);
+                    "Error occurred while de-activating Virtual Firealarm Device Management bundle", e);
         }
     }
 
