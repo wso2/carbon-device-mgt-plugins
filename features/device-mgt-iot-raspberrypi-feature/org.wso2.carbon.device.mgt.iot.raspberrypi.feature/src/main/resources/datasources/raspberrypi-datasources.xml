@@ -23,14 +23,14 @@
 
 	<datasources>
 		<datasource>
-			<name>Arduino_DB</name>
-			<description>The datasource used for the Arduino database</description>
+			<name>RaspberryPi_DB</name>
+			<description>The datasource used for the RaspberryPi database</description>
 			<jndiConfig>
-				<name>jdbc/ArduinoDM_DB</name>
+				<name>jdbc/RaspberryPiDM_DB</name>
 			</jndiConfig>
 			<definition type="RDBMS">
 				<configuration>
-					<url>jdbc:h2:repository/database/ArduinoDM_DB;DB_CLOSE_ON_EXIT=FALSE
+					<url>jdbc:h2:repository/database/RaspberryPiDM_DB;DB_CLOSE_ON_EXIT=FALSE
 					</url>
 					<username>wso2carbon</username>
 					<password>wso2carbon</password>

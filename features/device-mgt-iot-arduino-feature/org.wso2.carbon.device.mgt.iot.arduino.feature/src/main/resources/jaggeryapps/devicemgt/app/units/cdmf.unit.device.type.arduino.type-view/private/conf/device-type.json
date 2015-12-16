@@ -2,7 +2,7 @@
   "deviceType": {
     "label": "Arduino",
     "category": "iot",
-    "downloadAgentUri": "https://localhost:9443/arduino/ArduinoDeviceManager/manager/device/arduino/download",
-    "downloadAgentLinkGenUri" : "https://localhost:9443/arduino/ArduinoDeviceManager/manager/device/arduino/generate_link"
+    "downloadAgentUri": "ArduinoDeviceManager/manager/device/arduino/download",
+    "downloadAgentLinkGenUri" : "ArduinoDeviceManager/manager/device/arduino/generate_link"
   }
 }
