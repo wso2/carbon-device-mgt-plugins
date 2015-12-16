@@ -18,8 +18,12 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.cxf.helpers.IOUtils;
+import org.apache.http.Header;
+import org.apache.woden.wsdl20.extensions.http.HTTPHeader;
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
@@ -65,7 +69,11 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -325,13 +333,13 @@ public class VirtualFireAlarmService {
     public Response downloadSketch(@QueryParam("owner") String owner,
                                    @QueryParam("deviceName") String customDeviceName,
                                    @PathParam("sketch_type") String sketchType) {
-        //TODO:: null check customDeviceName at UI level
         try {
             ZipArchive zipFile = createDownloadFile(owner, customDeviceName, sketchType);
-            Response.ResponseBuilder rb = Response.ok(zipFile.getZipFile());
-            rb.header("Content-Disposition",
-                      "attachment; filename=\"" + zipFile.getFileName() + "\"");
-            return rb.build();
+            Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
+            response.type(MediaType.MULTIPART_FORM_DATA_TYPE);
+            response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
+            return response.build();
+
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
         } catch (DeviceManagementException ex) {
@@ -340,8 +348,9 @@ public class VirtualFireAlarmService {
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (DeviceControllerException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
+        } catch (IOException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
         }
-
     }
 
     @Path("manager/device/{sketch_type}/generate_link")
