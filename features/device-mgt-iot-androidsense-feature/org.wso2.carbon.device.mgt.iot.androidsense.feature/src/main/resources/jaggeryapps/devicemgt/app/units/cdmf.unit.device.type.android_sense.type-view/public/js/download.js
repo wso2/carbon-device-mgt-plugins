@@ -132,20 +132,10 @@ function attachEvents() {
     });
 }
 
+//Device owner removed.
 function downloadAgent() {
     $('#downloadForm').submit();
 
-    var deviceName;
-    $('.new-device-name').each(function () {
-        if (this.value != "") {
-            deviceName = this.value;
-        }
-    });
-    if (deviceName && deviceName.length >= 4) {
-        setTimeout(function () {
-            hidePopup();
-        }, 1000);
-    }
 }
 
 function doAction(data) {

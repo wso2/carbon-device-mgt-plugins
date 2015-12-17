@@ -19,17 +19,17 @@ public class AndroidSenseManagerService implements DeviceManagementService {
 		return AndroidSenseConstants.DEVICE_TYPE;
 	}
 
-	@Override
+//	@Override
 	public String getProviderTenantDomain() {
 		return "carbon.super";
 	}
 
-	@Override
+//	@Override
 	public boolean isSharedWithAllTenants() {
 		return true;
 	}
 
-	@Override
+//	@Override
 	public String[] getSharedTenantsDomain() {
 		return new String[0];
 	}

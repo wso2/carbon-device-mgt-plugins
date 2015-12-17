@@ -1,64 +1,27 @@
 <div class="col-lg-12  margin-top-double">
     <h1 class="grey ">Android Sense</h1>
     <hr>
-    <p class="margin-bottom-double light-grey ">Connect your Android device to the WSO2 device cloud.</p>
+    <p class="margin-bottom-double light-grey ">Connect your Android device
+                                                to the WSO2 device cloud.</p>
 </div>
 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 padding-top">
     <i class="fw fw-android fw-5x"></i>
 </div>
-
 <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8 padding-top">
     <h3 class="uppercase">Ingredients</h3>
     <hr>
     <p class="grey margin-top">Hardware Requirements </p>
     <br>
     <ul class="list-unstyled">
-        <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> Raspberry Pi (Internet Enabled)</li>
-        <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> DHT11 Temperature Sensor</li>
-        <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> LED</li>
-        <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> Buzzer(3v)</li>
+        <li><span class="fw-stack fw-lg margin-right"><i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i></span> Android device</li>
+
     </ul>
+
     <br>
-
-    <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download</a>
-
-    <div id="download-device-modal-content" class="hide">
-        <div class="modal-content">
-            <div class="row">
-                <div class="col-md-7 col-centered center-container">
-                    <h3>Name your device and download the agent from following link.</h3>
-                    <br/>
-
-                    <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
-                        <div class="control-group">
-                            <div class="controls">
-                                <input class="new-device-name" style="color:#3f3f3f;padding:5px"
-                                       type="text"
-                                       placeholder="Ex. Personal_Android"
-                                       name="deviceName" size="60" required>
-                                <br/><br/>
-                                <input type="hidden" class="deviceType" name="deviceType" value="android_sense"/>
-                                <input type="hidden" class="sketchType" name="sketchType" value="android_sense" />
-                            </div>
-                        </div>
-                        <div class="buttons" style="padding-bottom: 0px">
-                            <a class="btn btn-operations" onclick="downloadAgent()">Download
-                                Now</a>
-                            &nbsp;&nbsp;
-                            <a href="#" id="download-device-download-link" class="btn btn-operations">
-                                &nbsp;&nbsp;&nbsp;&nbsp;Copy Link&nbsp;&nbsp;&nbsp;&nbsp;
-                            </a>
-                            &nbsp;&nbsp;
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <a href="#" class="download-link btn-operations" data-devicetype="{{@uriParams.deviceType}}" data-sketchtype="{{@uriParams.deviceType}}" data-url="{{enrollmentURl}}">
+        <i class="fw fw-mobile fw-inverse fw-lg"></i> Enroll Device</a>
+    <br/><br/>
 
     <div id="download-device-modal-content-links" class="hide">
         <div class="modal-content">
@@ -163,60 +126,67 @@
 </div>
 
 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double grey-bg ">
-    <h3 class="uppercase">Prepare</h3><hr>
+    <h3 class="uppercase">Prepare</h3>
+    <hr>
     <p class="grey margin-top">Get your device ready</p>
     <br/>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> Set up your RaspberryPi device
-            as shown in the schematic below and get the FireAlarm setup.</li>
+        <li class="padding-top-double"><span class="circle">01</span> Download the agent apk</li>
 
-        <li class="padding-top-double"><span class="circle">02</span> Connect a monitor to your
-            RaspberryPi via the HDMI cable to get a UI view of the device.</li>
+        <li class="padding-top-double"><span class="circle">02</span> Install the app in your Android device.</li>
 
-        <li class="padding-top-double"><span class="circle">03</span> Get the RaspberryPi to connect
-            to the internet (via Ethernet or Wifi) and note its IP_ADDRESS</li>
+
     </ul>
     <br>
 </div>
 
 <div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double">
-    <h3 class="uppercase">Connect (Quick Start)</h3><hr>
+    <h3 class="uppercase">Connect (Quick Start)</h3>
+    <hr>
     <p class="grey margin-top">Internet of Things Foundation Quickstart connection</p>
     <br/>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> <b>Click on the <i>'Create
-            DEB'</i> button above to get the download link for the FireAlarm setup files</b></li>
+        <li class="padding-top-double"><span class="circle">01</span> Start the IOT server</li>
 
-        <li class="padding-top-double"><span class="circle">02</span> <i>(The following commands can
-            be issued by directly typing into the terminal of the device or by an <b>'ssh'</b> login
-            from a remote PC)</i></li>
+        <li class="padding-top-double"><span class="circle">02</span> Connect the device to the network</li>
 
-        <li class="padding-top-double"><span class="circle">03</span> <b>Download the FireAlarm setup
-            files using the following command: 'curl -k < url_link_received_from_the_above_step >>
-            Agent.zip'</b><br/><i>This will download a zip file named 'Agent.zip'</i></li>
+        <li class="padding-top-double"><span class="circle">03</span> Start the Android Sense app in your device.</li>
+
+        <li class="padding-top-double"><span class="circle">04</span> Fill the login form with the credentials (Use server URL as <i>https://'<'YOUR_HOST'>':9443</i> and click on <strong>Enroll Device</strong> button.</li>
+
+        <li class="padding-top-double"><span class="circle">05</span> Once the device is enrolled, click on the <strong>+</strong> button to select the sensors.</li>
+
+        <li class="padding-top-double"><span class="circle">06</span> Click on the <i>Publish data</i> button to publish the sensor readings to the IOT server.</li>
     </ul>
     <br>
 </div>
 
 </div>
 
-<div id="qr-code-modal" data-enrollment-url="{{deviceType.enrollmentURL}}" class="hidden">
+<div id="qr-code-modal" data-enrollment-url="{{enrollmentURL}}" class="hidden">
 
     <div class="content">
         <div class="row">
             <div class="col-lg-5 col-md-6 col-centered">
-                <h3>
-                    Scan QR code to start enrollment
-                </h3>
-                <h4>
-                    Please scan the QR code using your mobile device to retrieve enrollment URL.
-                </h4>
-
+                <h3>Scan QR code to start enrollment</h3>
+                <p>Please scan the QR code using your mobile device to retrieve enrollment URL.</p>
                 <div class="panel panel-default">
-                    <div class="panel-body col-centered ">
+                    <div class="panel-body col-centered">
                         <div class="qr-code"></div>
                     </div>
                 </div>
+                <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
+                    <div class="control-group">
+                        <div class="controls">
+                            <input type="hidden" class="deviceType" name="deviceType" value="android_sense"/>
+                            <input type="hidden" class="sketchType" name="sketchType" value="android_sense" />
+                        </div>
+                    </div>
+                    <div class="buttons" style="padding-bottom: 0px">
+                        <a class="btn btn-operations" onclick="downloadAgent()">Download Now</a>
+                        &nbsp;&nbsp;
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -269,6 +239,18 @@
 
 {{#zone "bottomJs"}}
     {{js "/js/download.js"}}
+    <script type="text/javascript">
+
+        $(".download-link").click(function(){
+            toggleEnrollment();
+        });
+
+        function toggleEnrollment(){
+            $(".modalpopup-content").html($("#qr-code-modal").html());
+            generateQRCode(".modalpopup-content .qr-code");
+            showPopup();
+        }
+
+    </script>
     {{js "/js/jquery.validate.js"}}
 {{/zone}}
-

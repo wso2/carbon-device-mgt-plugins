@@ -1,8 +1,8 @@
 {
   "name": "org.wso2.iot.devices.light",
   "version": "1.0.0",
-  "nickName": "light Data",
-  "description": "light data received from the Device",
+  "nickName": "Light Data",
+  "description": "Light data received from the Device",
   "metaData": [
     {"name":"owner","type":"STRING"},     
     {"name":"deviceType","type":"STRING"},
