@@ -29,16 +29,29 @@ import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.DeviceJSON;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.SensorJSON;
+import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
+import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
+import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
+import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
+import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
+import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
+import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
+import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.UUID;
 
 public class AndroidSenseService {
 
@@ -202,6 +215,27 @@ public class AndroidSenseService {
             return null;
         } finally {
             deviceManagement.endTenantFlow();
+        }
+
+    }
+
+    @Path("manager/device/{sketch_type}/download")
+    @GET
+    @Produces("application/octet-stream")
+    public Response downloadSketch(@PathParam("sketch_type") String sketchType) {
+        //TODO:: null check customDeviceName at UI level
+        try {
+
+            String sep = File.separator;
+            String sketchFolder = "repository" + sep + "resources" + sep + "sketches" + sep + "android_sense" + sep;
+            String archivesPath = CarbonUtils.getCarbonHome() + sep + sketchFolder;
+
+            Response.ResponseBuilder rb = Response.ok(new File(archivesPath+sep+"androidsense.apk"));
+            rb.header("Content-Disposition",
+                      "attachment; filename=\"" + "androidsense.apk" + "\"");
+            return rb.build();
+        } catch (IllegalArgumentException ex) {
+            return Response.status(400).entity(ex.getMessage()).build();//bad request
         }
 
     }
