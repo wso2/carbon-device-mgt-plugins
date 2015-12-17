@@ -116,16 +116,27 @@ public class TokenClient {
 
 			HttpResponse httpResponse = httpClient.execute(postMethod);
 			String response = IoTUtil.getResponseString(httpResponse);
+
 			if(log.isDebugEnabled()) {
 				log.debug(response);
 			}
-			JSONObject jsonObject = new JSONObject(response);
 
+			JSONObject jsonObject = new JSONObject(response);
 			AccessTokenInfo accessTokenInfo = new AccessTokenInfo();
-			accessTokenInfo.setAccess_token(jsonObject.getString("access_token"));
-			accessTokenInfo.setRefresh_token(jsonObject.getString("refresh_token"));
-			accessTokenInfo.setExpires_in(jsonObject.getInt("expires_in"));
-			accessTokenInfo.setToken_type(jsonObject.getString("token_type"));
+
+			if (!jsonObject.get("access_token").equals(null)) {
+				accessTokenInfo.setAccess_token(jsonObject.getString("access_token"));
+			}
+			if (!jsonObject.get("refresh_token").equals(null)) {
+				accessTokenInfo.setRefresh_token(jsonObject.getString("refresh_token"));
+			}
+			if (!jsonObject.get("expires_in").equals(null)) {
+				accessTokenInfo.setExpires_in(jsonObject.getInt("expires_in"));
+			}
+			if (!jsonObject.get("token_type").equals(null)) {
+				accessTokenInfo.setToken_type(jsonObject.getString("token_type"));
+			}
+
 			return accessTokenInfo;
 
 		} catch ( IOException | JSONException | IoTException e) {

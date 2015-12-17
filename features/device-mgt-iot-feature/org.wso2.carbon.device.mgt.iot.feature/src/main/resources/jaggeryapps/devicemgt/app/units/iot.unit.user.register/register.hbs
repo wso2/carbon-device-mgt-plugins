@@ -1,61 +1,52 @@
+{{unit "uuf.unit.lib.form-validation"}}
 <div class="container col-md-12 col-lg-6 col-centered wr-content wr-login col-centered sign-panel">
 
     <p class="page-sub-title">Register</p>
 
-    <p>Create new account on IoT Server</p>
-
-    <!-- validation -->
-        <span class="wr-validation-summary hidden center-block col-centered">
-		    <strong class="label label-danger col-centered"></strong>
-		</span>
-
+    <p>Create new account on IoT Server (All fields are required.)</p>
     <hr/>
-
-    <form method="POST" class="form-login-box" action="{{@app.context}}">
-        <label class="wr-input-label">First Name</label>
-
-        <div class="wr-input-control">
-            <input type="text right" id="first_name" placeholder="First Name">
+    <!-- validation -->
+    <div class="wr-validation-summary hidden alert alert-danger">
+        <strong></strong>
+        <button type="button" class="close" aria-label="close" data-dismiss="alert"><span aria-hidden="true">
+                <i class="fw fw-cancel"></i></span></button>
+    </div>
+    <form method="POST" class="form-login-box" action="{{@app.context}}" id="registerForm">
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" placeholder="First Name" class="form-control" name="first_name">
         </div>
 
-        <label class="wr-input-label">Last Name</label>
-
-        <div class="wr-input-control">
-            <input type="text right" id="last_name" placeholder="Last Name">
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" placeholder="Last Name" class="form-control" name="last_name">
         </div>
 
-        <label class="wr-input-label">Username</label>
-
-        <div class="wr-input-control">
-            <input type="text right" id="user_name" placeholder="Username ">
+        <div class="form-group">
+            <label for="user_name">Username</label>
+            <input type="text" id="user_name" placeholder="Username" class="form-control" name="user_name">
         </div>
 
-        <label class="wr-input-label">Email</label>
-
-        <div class="wr-input-control">
-            <input type="text right" id="email" placeholder="Email">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" id="email" placeholder="Email" class="form-control" name="email">
         </div>
 
-        <label class="wr-input-label">Password</label>
-
-        <div class="wr-input-control">
-            <input type="password" id="password" placeholder="Password">
+        <div class="form-group">
+            <label for="password" >Password</label>
+            <input type="password" id="password" placeholder="Password" class="form-control" name="password">
         </div>
 
-        <label class="wr-input-label">Confirm Password</label>
-
-        <div class="wr-input-control">
-            <input type="password" id="password_confirmation" placeholder="Confirm Password">
+        <div class="form-group">
+            <label for="password_confirmation">Confirm Password</label>
+            <input type="password" id="password_confirmation" placeholder="Confirm Password" class="form-control"
+                   name="password_confirmation">
         </div>
 
-        <div class="wr-input-label">
-            <input type="checkbox" name="Agree" id="t_and_c" value="Bike"> <span class="italic">
-                        I Agree by Clicking register, you agree to the Terms and Conditions set out by this site</span>
-        </div>
 
         <div class="wr-input-control">
-            <button class="wr-btn" id="add-user-btn">&nbsp;&nbsp;&nbsp;&nbsp;Register&nbsp;&nbsp;&nbsp;&nbsp;</button>
-            <button class="wr-btn" onclick="document.location.href='{{@app.context}}/login';">&nbsp;&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;&nbsp;</button>
+            <button class="wr-btn" id="add-user-btn" type="submit">Register</button>
+            <button class="wr-btn" onclick="document.location.href='{{@app.context}}/login';">Cancel</button>
         </div>
     </form>
 

@@ -4,8 +4,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          metadata-complete="true">
-	<display-name>Arduino</display-name>
-	<description>Arduino</description>
+	<display-name>RaspberryPi</display-name>
+	<description>RaspberryPi</description>
 
 	<servlet>
 		<servlet-name>CXFServlet</servlet-name>
@@ -39,11 +39,11 @@
 	</context-param>
 	<context-param>
 		<param-name>managed-api-name</param-name>
-		<param-value>arduino</param-value>
+		<param-value>raspberrypi</param-value>
 	</context-param>
 	<context-param>
 		<param-name>managed-api-endpoint</param-name>
-		<param-value>http://localhost:9763/arduino</param-value>
+		<param-value>http://localhost:9763/raspberrypi</param-value>
 	</context-param>
 	<context-param>
 		<param-name>managed-api-version</param-name>
@@ -51,15 +51,15 @@
 	</context-param>
 	<context-param>
 		<param-name>managed-api-context</param-name>
-		<param-value>/arduino</param-value>
+		<param-value>/raspberrypi</param-value>
 	</context-param>
 	<context-param>
 		<param-name>managed-api-context-template</param-name>
-		<param-value>/arduino/{version}</param-value>
+		<param-value>/raspberrypi/{version}</param-value>
 	</context-param>
 	<context-param>
 		<param-name>managed-api-application</param-name>
-		<param-value>arduino</param-value>
+		<param-value>raspberrypi</param-value>
 	</context-param>
 	<context-param>
 		<param-name>managed-api-isSecured</param-name>
