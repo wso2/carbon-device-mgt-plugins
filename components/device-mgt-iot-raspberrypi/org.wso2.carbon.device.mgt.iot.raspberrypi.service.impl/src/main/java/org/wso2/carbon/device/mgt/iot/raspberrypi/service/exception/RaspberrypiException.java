@@ -18,14 +18,14 @@
 
 package org.wso2.carbon.device.mgt.iot.raspberrypi.service.exception;
 
-public class RaspberryPiException extends Exception {
+public class RaspberrypiException extends Exception {
     private static final long serialVersionUID = 118512086957330189L;
 
-    public RaspberryPiException(String errorMessage) {
+    public RaspberrypiException(String errorMessage) {
         super(errorMessage);
     }
 
-    public RaspberryPiException(String errorMessage, Throwable throwable) {
+    public RaspberrypiException(String errorMessage, Throwable throwable) {
         super(errorMessage, throwable);
     }
 }

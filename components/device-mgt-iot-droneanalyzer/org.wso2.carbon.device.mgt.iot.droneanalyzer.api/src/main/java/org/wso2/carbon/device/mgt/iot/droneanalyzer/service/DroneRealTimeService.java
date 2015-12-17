@@ -21,13 +21,11 @@ package org.wso2.carbon.device.mgt.iot.droneanalyzer.service;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.service.transport.DroneAnalyzerXMPPConnector;
-import org.wso2.carbon.device.mgt.iot.droneanalyzer.service.transport.DroneXMPPConnector;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.service.trasformer.MessageTransformer;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.nio.channels.ClosedChannelException;
 
 @ServerEndpoint("/datastream/drone_status")
 public class DroneRealTimeService {
@@ -42,6 +40,11 @@ public class DroneRealTimeService {
         xmppConnector.connectLoginAndSetFilterOnReceiver();
     }
 
+
+    /**
+     *
+     * @param session
+     */
     @OnOpen
     public void onOpen(Session session){
         log.info(session.getId() + " has opened a connection");
