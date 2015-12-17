@@ -264,7 +264,6 @@ public class AndroidSenseService {
                 streamDef = BATTERY_STREAM_DEFINITION;
                 payloadData = new Float[]{Float.parseFloat(sensor.value)};
                 sensorName = SENSOR_BATTERY;
-                log.info(sensor.key +"***************************************************************" + sensor.value);
             } else if (sensor.key.equals("GPS")){
                 streamDef = GPS_STREAM_DEFINITION;
                 String gpsValue = sensor.value;
@@ -274,7 +273,6 @@ public class AndroidSenseService {
                 gpsValuesF[1] = Float.parseFloat(gpsValues[0]);
                 payloadData = gpsValuesF;
                 sensorName = SENSOR_GPS;
-                log.info(sensor.key +"***************************************************************" + sensor.value);
             } else {
 
                 try{
