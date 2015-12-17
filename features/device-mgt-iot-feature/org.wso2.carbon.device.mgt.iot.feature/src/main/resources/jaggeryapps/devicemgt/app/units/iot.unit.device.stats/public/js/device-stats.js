@@ -128,6 +128,7 @@ function updateGraphs() {
         width: $("#chartWrapper").width() - 50,
         height: 300,
         renderer: 'line',
+        padding: {top: 0.2, left: 0.0, right: 0.0, bottom: 0.2},
         series: new Rickshaw.Series.FixedDuration(fields, undefined, {
             timeInterval: 10000,
             maxDataPoints: 20,
