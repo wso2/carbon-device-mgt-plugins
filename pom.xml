@@ -51,7 +51,7 @@
         <!--<module>components/device-mgt-iot-arduino</module>-->
         <module>components/device-mgt-iot-digitaldisplay</module>
         <module>components/device-mgt-iot-droneanalyzer</module>
-        <!--<module>components/device-mgt-iot-raspberrypi</module>-->
+        <module>components/device-mgt-iot-raspberrypi</module>
         <module>components/device-mgt-iot-virtualfirealarm</module>
 
         <!--Core MDM and IoT Features-->
@@ -67,7 +67,7 @@
         <!--<module>features/device-mgt-iot-arduino-feature</module>-->
         <module>features/device-mgt-iot-digitaldisplay-feature</module>
         <module>features/device-mgt-iot-droneanalyzer-feature</module>
-        <!--<module>features/device-mgt-iot-raspberrypi-feature</module>-->
+        <module>features/device-mgt-iot-raspberrypi-feature</module>
         <module>features/device-mgt-iot-virtualfirealarm-feature</module>
     </modules>
 
