@@ -260,89 +260,87 @@ public class AndroidSenseService {
         String sensorName = null;
 
         for (SensorJSON sensor : sensorData) {
-            switch (sensor.key) {
-                case "battery":
-                    streamDef = BATTERY_STREAM_DEFINITION;
-                    payloadData = new Object[]{Float.parseFloat(sensor.value)};
-                    sensorName = SENSOR_BATTERY;
-                    break;
-                case "GPS":
-                    streamDef = GPS_STREAM_DEFINITION;
-                    String gpsValue = sensor.value;
-                    String gpsValues[] = gpsValue.split(",");
-                    Float gpsValuesF[] = new Float[2];
-                    gpsValuesF[0] = Float.parseFloat(gpsValues[0]);
-                    gpsValuesF[1] = Float.parseFloat(gpsValues[0]);
-                    payloadData = gpsValuesF;
-                    sensorName = SENSOR_GPS;
-                    break;
-                default:
-                    try {
-                        int androidSensorId = Integer.parseInt(sensor.key);
+            if(sensor.key.equals("battery")){
+                streamDef = BATTERY_STREAM_DEFINITION;
+                payloadData = new Float[]{Float.parseFloat(sensor.value)};
+                sensorName = SENSOR_BATTERY;
+                log.info(sensor.key +"***************************************************************" + sensor.value);
+            } else if (sensor.key.equals("GPS")){
+                streamDef = GPS_STREAM_DEFINITION;
+                String gpsValue = sensor.value;
+                String gpsValues[] = gpsValue.split(",");
+                Float gpsValuesF[] = new Float[2];
+                gpsValuesF[0] = Float.parseFloat(gpsValues[0]);
+                gpsValuesF[1] = Float.parseFloat(gpsValues[0]);
+                payloadData = gpsValuesF;
+                sensorName = SENSOR_GPS;
+                log.info(sensor.key +"***************************************************************" + sensor.value);
+            } else {
 
-                        if (androidSensorId == 2) {
-                            streamDef = MAGNETIC_STREAM_DEFINITION;
-                            String value = sensor.value;
-                            String valuesM[] = value.split(",");
-                            Float gValuesF[] = new Float[1];
-                            gValuesF[0] = Float.parseFloat(valuesM[0]) * Float.parseFloat(valuesM[0]) * Float
-                                    .parseFloat(valuesM[0]);
-                            payloadData = gValuesF;
-                            sensorName = SENSOR_MAGNETIC;
-                        } else if (androidSensorId == 5) {
-                            streamDef = LIGHT_STREAM_DEFINITION;
-                            sensorName = SENSOR_LIGHT;
-                            payloadData = new Object[]{Float.parseFloat(sensor.value)};
-                        } else if (androidSensorId == 1) {
+                try{
+                    int androidSensorId = Integer.parseInt(sensor.key);
+
+                    String value = sensor.value;
+                    String valuesM[] = value.split(",");
+                    Float gValuesF[] = new Float[1];
+
+                    switch (androidSensorId){
+                        case 1:
                             streamDef = ACCELEROMETER_STREAM_DEFINITION;
-                            String value = sensor.value;
-                            String valuesM[] = value.split(",");
-                            Float gValuesF[] = new Float[1];
+
                             gValuesF[0] = Float.parseFloat(valuesM[0]) * Float.parseFloat(valuesM[0]) * Float
                                     .parseFloat(valuesM[0]);
                             payloadData = gValuesF;
                             sensorName = SENSOR_ACCELEROMETER;
-                        } else if (androidSensorId == 4) {
+                            break;
+                        case 2:
+                            streamDef = MAGNETIC_STREAM_DEFINITION;
+                            gValuesF[0] = Float.parseFloat(valuesM[0]) * Float.parseFloat(valuesM[0]) * Float
+                                    .parseFloat(valuesM[0]);
+                            payloadData = gValuesF;
+                            sensorName = SENSOR_MAGNETIC;
+                            break;
+                        case 4:
                             streamDef = GYROSCOPE_STREAM_DEFINITION;
-                            String value = sensor.value;
-                            String valuesG[] = value.split(",");
-                            Float gValuesF[] = new Float[1];
-                            gValuesF[0] = Float.parseFloat(valuesG[0]) * Float.parseFloat(valuesG[0]) * Float
-                                    .parseFloat(valuesG[0]);
+                            gValuesF[0] = Float.parseFloat(valuesM[0]) * Float.parseFloat(valuesM[0]) * Float
+                                    .parseFloat(valuesM[0]);
                             payloadData = gValuesF;
                             sensorName = SENSOR_GYROSCOPE;
-                        } else if (androidSensorId == 9) {
-                            streamDef = GRAVITY_STREAM_DEFINITION;
-                            String value = sensor.value;
-                            String valuesG[] = value.split(",");
-                            Float gValuesF[] = new Float[1];
-                            gValuesF[0] = Float.parseFloat(valuesG[0]) * Float.parseFloat(valuesG[0]) * Float
-                                    .parseFloat(valuesG[0]);
-                            payloadData = gValuesF;
-                            sensorName = SENSOR_GRAVITY;
-                        } else if (androidSensorId == 11) {
-                            streamDef = ROTATION_STREAM_DEFINITION;
-                            String value = sensor.value;
-                            String valuesG[] = value.split(",");
-                            Float gValuesF[] = new Float[1];
-                            gValuesF[0] = Float.parseFloat(valuesG[0]) * Float.parseFloat(valuesG[0]) * Float
-                                    .parseFloat(valuesG[0]);
-                            payloadData = gValuesF;
-                            sensorName = SENSOR_ROTATION;
-                        } else if (androidSensorId == 8) {
-                            streamDef = PROXIMITY_STREAM_DEFINITION;
-                            sensorName = SENSOR_PROXIMITY;
-                            payloadData = new Object[]{Float.parseFloat(sensor.value)};
-                        } else if (androidSensorId == 6) {
+                            break;
+                        case 5:
+                            streamDef = LIGHT_STREAM_DEFINITION;
+                            sensorName = SENSOR_LIGHT;
+                            payloadData = new Float[]{Float.parseFloat(sensor.value)};
+                            break;
+                        case 6:
                             streamDef = PRESSURE_STREAM_DEFINITION;
                             sensorName = SENSOR_PRESSURE;
-                            payloadData = new Object[]{Float.parseFloat(sensor.value)};
-                        }
-                        //Add the remaining sensor types.
+                            payloadData = new Float[]{Float.parseFloat(sensor.value)};
+                            break;
+                        case 8:
+                            streamDef = PROXIMITY_STREAM_DEFINITION;
+                            sensorName = SENSOR_PROXIMITY;
+                            payloadData = new Float[]{Float.parseFloat(sensor.value)};
+                            break;
+                        case 9:
+                            streamDef = GRAVITY_STREAM_DEFINITION;
+                            gValuesF[0] = Float.parseFloat(valuesM[0]) * Float.parseFloat(valuesM[0]) * Float
+                                    .parseFloat(valuesM[0]);
+                            payloadData = gValuesF;
+                            sensorName = SENSOR_GRAVITY;
+                            break;
+                        case 11:
+                            streamDef = ROTATION_STREAM_DEFINITION;
+                            gValuesF[0] = Float.parseFloat(valuesM[0]) * Float.parseFloat(valuesM[0]) * Float
+                                    .parseFloat(valuesM[0]);
+                            payloadData = gValuesF;
+                            sensorName = SENSOR_ROTATION;
+                            break;
 
-                    } catch (NumberFormatException e) {
-                        continue;
                     }
+                }  catch (NumberFormatException e) {
+                    continue;
+                }
 
             }
             Object metdaData[] = {dataMsg.owner, AndroidSenseConstants.DEVICE_TYPE, dataMsg.deviceId, sensor.time};
@@ -467,7 +465,7 @@ public class AndroidSenseService {
         SensorRecord sensorRecord = null;
 
         try {
-            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_ACCELEROMETER);
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_ROTATION);
         } catch (DeviceControllerException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
@@ -486,7 +484,7 @@ public class AndroidSenseService {
         SensorRecord sensorRecord = null;
 
         try {
-            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_ACCELEROMETER);
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_PROXIMITY);
         } catch (DeviceControllerException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
@@ -505,7 +503,7 @@ public class AndroidSenseService {
         SensorRecord sensorRecord = null;
 
         try {
-            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_ACCELEROMETER);
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_GYROSCOPE);
         } catch (DeviceControllerException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
@@ -524,7 +522,7 @@ public class AndroidSenseService {
         SensorRecord sensorRecord = null;
 
         try {
-            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_ACCELEROMETER);
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_PRESSURE);
         } catch (DeviceControllerException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
@@ -543,7 +541,7 @@ public class AndroidSenseService {
         SensorRecord sensorRecord = null;
 
         try {
-            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_ACCELEROMETER);
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, SENSOR_GRAVITY);
         } catch (DeviceControllerException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
