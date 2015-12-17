@@ -1,0 +1,17 @@
+Install Rpi.GPIO
+Install sh
+	sudo easy_install pip
+	sudo pip install sh
+
+
+wget http://67.192.60.197/mikem/bcm2835/bcm2835-1.8.tar.gz
+tar xvfz bcm2835-1.8.tar.gz; 
+cd bcm2835-1.8; 
+./configure; 
+make; 
+sudo make install
+
+sudo apt-get update
+sudo apt-get install python-dev
+
+nohup command >/dev/null 2>&1 &

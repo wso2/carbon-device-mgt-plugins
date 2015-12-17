@@ -16,20 +16,21 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants;
+package org.wso2.carbon.device.mgt.iot.raspberrypi.service.dto;
 
-public class RaspberrypiConstants {
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-    public final static String DEVICE_TYPE = "raspberrypi";
-    public final static String DEVICE_PLUGIN_DEVICE_NAME = "DEVICE_NAME";
-    public final static String DEVICE_PLUGIN_DEVICE_ID = "RASPBERRYPI_DEVICE_ID";
-    public final static String STATE_ON = "ON";
-    public final static String STATE_OFF = "OFF";
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-    public static final String URL_PREFIX = "http://";
-    public static final String BULB_CONTEXT = "/BULB/";
-    public static final String TEMPERATURE_CONTEXT = "/TEMPERATURE/";
+@XmlRootElement
 
-    public static final String SENSOR_TEMPERATURE = "temperature";
-
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class DeviceJSON {
+    @XmlElement(required = true) public String owner;
+    @XmlElement(required = true) public String deviceId;
+    @XmlElement(required = true) public String reply;
+    @XmlElement public Long time;
+    @XmlElement public String key;
+    @XmlElement public float value;
 }
