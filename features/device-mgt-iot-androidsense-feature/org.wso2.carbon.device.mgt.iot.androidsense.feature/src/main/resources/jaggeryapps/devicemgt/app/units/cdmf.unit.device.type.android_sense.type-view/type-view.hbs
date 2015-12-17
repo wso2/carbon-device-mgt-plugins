@@ -19,7 +19,7 @@
     </ul>
 
     <br>
-    <a href="#" class="download-link btn-operations" data-devicetype="{{@uriParams.deviceType}}" data-sketchtype="{{@uriParams.deviceType}}">
+    <a href="#" class="download-link btn-operations" data-devicetype="{{@uriParams.deviceType}}" data-sketchtype="{{@uriParams.deviceType}}" data-url="{{enrollmentURl}}">
         <i class="fw fw-mobile fw-inverse fw-lg"></i> Enroll Device</a>
     <br/><br/>
 
@@ -163,7 +163,7 @@
 
 </div>
 
-<div id="qr-code-modal" data-enrollment-url="" class="hidden">
+<div id="qr-code-modal" data-enrollment-url="{{enrollmentURL}}" class="hidden">
 
     <div class="content">
         <div class="row">
