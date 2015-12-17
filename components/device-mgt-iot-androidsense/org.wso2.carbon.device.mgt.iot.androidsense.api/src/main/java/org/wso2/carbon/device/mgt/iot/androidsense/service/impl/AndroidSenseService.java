@@ -64,7 +64,7 @@ public class AndroidSenseService {
     private static final String PRESSURE_STREAM_DEFINITION = "org.wso2.iot.devices.pressure";
     private static final String GRAVITY_STREAM_DEFINITION = "org.wso2.iot.devices.gravity";
     private static final String ROTATION_STREAM_DEFINITION = "org.wso2.iot.devices.rotation";
-    private static final String PROXIMITY_STREAM_DEFINITION = "org.wso2.iot.device.proximity";
+    private static final String PROXIMITY_STREAM_DEFINITION = "org.wso2.iot.devices.proximity";
 
     private static final String SENSOR_ACCELEROMETER = "accelerometer";
     private static final String SENSOR_GYROSCOPE = "gyroscope";
