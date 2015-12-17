@@ -1,8 +1,8 @@
 <style>
-    ::-webkit-input-placeholder { color:#f00; }
-    ::-moz-placeholder { color:#f00; } /* firefox 19+ */
-    :-ms-input-placeholder { color:#f00; } /* ie */
-    input:-moz-placeholder { color:#f00; }
+    ::-webkit-input-placeholder { color:#161616; }
+    ::-moz-placeholder { color:#161616; }
+    :-ms-input-placeholder { color:#161616; }
+    input:-moz-placeholder { color:#161616; }
 </style>
 
 
@@ -35,41 +35,41 @@
                                        value={{../../device.deviceIdentifier}}>
 
                                 {{#if editcontent}}
-                                    <input type="number" name="path"
-                                           placeholder="path">
-                                    <input type="number" name="attribute"
+                                    <input type="text" name="path"
+                                           placeholder="page no">
+                                    <input type="text" name="attribute"
                                            placeholder="attribute">
-                                    <input type="number" name="new-value"
+                                    <input type="text" name="new-value"
                                            placeholder="new-value">
                                 {{/if}}
 
                                 {{#if add}}
-                                    <input type="number" name="type"
+                                    <input type="text" name="type"
                                            placeholder="type">
-                                    <input type="number" name="time"
+                                    <input type="text" name="time"
                                            placeholder="time">
-                                    <input type="number" name="path"
-                                           placeholder="path">
+                                    <input type="text" name="path"
+                                           placeholder="page no">
                                 {{/if}}
 
                                 {{#if before}}
-                                    <input type="number" name="next-page"
+                                    <input type="text" name="next-page"
                                            placeholder="next-page">
                                 {{/if}}
                                 {{#if after}}
-                                    <input type="number" name="before-page"
+                                    <input type="text" name="before-page"
                                            placeholder="before-page">
                                 {{/if}}
                                 {{#if removeresource}}
-                                    <input type="number" name="path"
-                                           placeholder="path">
+                                    <input type="text" name="path"
+                                           placeholder="page no">
                                 {{/if}}
                                 {{#if remove}}
-                                    <input type="number" name="directory-name"
+                                    <input type="text" name="directory-name"
                                            placeholder="directory-name">
                                 {{/if}}
                                 {{#if content}}
-                                    <input type="number" name="content"
+                                    <input type="text" name="content"
                                            placeholder="content">
                                 {{/if}}
 
