@@ -48,8 +48,7 @@ public class ZipUtil {
 				+ sep + deviceId;
 		String templateSketchPath = sketchFolder + sep + deviceType;
 
-//		String iotServerIP = System.getProperty("bind.address");
-		String iotServerIP = System.getProperty("server.host");
+		String iotServerIP = System.getProperty("carbon.local.ip");     // bind.address
 		String httpsServerPort = System.getProperty("httpsPort");
 		String httpServerPort = System.getProperty("httpPort");
 
@@ -60,28 +59,13 @@ public class ZipUtil {
 				DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
 						.getServerURL();
 
-//		int indexOfChar = apimIP.lastIndexOf(File.separator);
-//		if (indexOfChar != -1) {
-//			apimIP = apimIP.substring((indexOfChar + 1), apimIP.length());
-//		}
-
 		String apimGatewayPort =
 				DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
 						.getGatewayPort();
 
 		String apimEndpoint = apimHost + ":" + apimGatewayPort;
-
 		String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
-//		indexOfChar = mqttEndpoint.lastIndexOf(File.separator);
-//		if (indexOfChar != -1) {
-//			mqttEndpoint = mqttEndpoint.substring((indexOfChar + 1), mqttEndpoint.length());
-//		}
-
 		String xmppEndpoint = XmppConfig.getInstance().getXmppEndpoint();
-//		indexOfChar = xmppEndpoint.lastIndexOf(File.separator);
-//		if (indexOfChar != -1) {
-//			xmppEndpoint = xmppEndpoint.substring((indexOfChar + 1), xmppEndpoint.length());
-//		}
 
 		int indexOfChar = xmppEndpoint.lastIndexOf(":");
 		if (indexOfChar != -1) {
@@ -104,8 +88,7 @@ public class ZipUtil {
 
 		ZipArchive zipFile;
 		try {
-			zipFile = IotDeviceManagementUtil.getSketchArchive(archivesPath, templateSketchPath,
-			                                                   contextParams);
+			zipFile = IotDeviceManagementUtil.getSketchArchive(archivesPath, templateSketchPath, contextParams);
 		} catch (IOException e) {
 			throw new DeviceManagementException("Zip File Creation Failed", e);
 		}

@@ -21,9 +21,6 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.cxf.helpers.IOUtils;
-import org.apache.http.Header;
-import org.apache.woden.wsdl20.extensions.http.HTTPHeader;
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
@@ -69,11 +66,8 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -104,12 +98,20 @@ public class VirtualFireAlarmService {
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
 
 
+    /**
+     *
+     * @param verificationManager
+     */
     public void setVerificationManager(
             VerificationManager verificationManager) {
         this.verificationManager = verificationManager;
         verificationManager.initVerificationManager();
     }
 
+    /**
+     *
+     * @param virtualFireAlarmXMPPConnector
+     */
     public void setVirtualFireAlarmXMPPConnector(
             final VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector) {
         this.virtualFireAlarmXMPPConnector = virtualFireAlarmXMPPConnector;
@@ -127,6 +129,10 @@ public class VirtualFireAlarmService {
         mqttStarterThread.start();
     }
 
+    /**
+     *
+     * @param virtualFireAlarmMQTTSubscriber
+     */
     public void setVirtualFireAlarmMQTTSubscriber(
             final VirtualFireAlarmMQTTSubscriber virtualFireAlarmMQTTSubscriber) {
         this.virtualFireAlarmMQTTSubscriber = virtualFireAlarmMQTTSubscriber;
@@ -144,22 +150,42 @@ public class VirtualFireAlarmService {
         xmppStarterThread.start();
     }
 
+    /**
+     *
+     * @return
+     */
     public VerificationManager getVerificationManager() {
         return verificationManager;
     }
 
+    /**
+     *
+     * @return
+     */
     public VirtualFireAlarmXMPPConnector getVirtualFireAlarmXMPPConnector() {
         return virtualFireAlarmXMPPConnector;
     }
 
+    /**
+     *
+     * @return
+     */
     public VirtualFireAlarmMQTTSubscriber getVirtualFireAlarmMQTTSubscriber() {
         return virtualFireAlarmMQTTSubscriber;
     }
 
     /*	---------------------------------------------------------------------------------------
                                 Device management specific APIs
-             Also contains utility methods required for the execution of these APIs
-         ---------------------------------------------------------------------------------------	*/
+                     Also contains utility methods required for the execution of these APIs
+        ---------------------------------------------------------------------------------------	*/
+
+    /**
+     *
+     * @param deviceId
+     * @param name
+     * @param owner
+     * @return
+     */
     @Path("manager/device/register")
     @PUT
     public boolean register(@QueryParam("deviceId") String deviceId,
@@ -205,6 +231,11 @@ public class VirtualFireAlarmService {
         }
     }
 
+    /**
+     *
+     * @param deviceId
+     * @param response
+     */
     @Path("manager/device/remove/{device_id}")
     @DELETE
     public void removeDevice(@PathParam("device_id") String deviceId, @Context HttpServletResponse response) {
@@ -218,10 +249,8 @@ public class VirtualFireAlarmService {
                     deviceIdentifier);
             if (removed) {
                 response.setStatus(Response.Status.OK.getStatusCode());
-
             } else {
                 response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
-
             }
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
@@ -231,6 +260,13 @@ public class VirtualFireAlarmService {
 
     }
 
+    /**
+     *
+     * @param deviceId
+     * @param name
+     * @param response
+     * @return
+     */
     @Path("manager/device/update/{device_id}")
     @POST
     public boolean updateDevice(@PathParam("device_id") String deviceId,
@@ -256,10 +292,8 @@ public class VirtualFireAlarmService {
 
             if (updated) {
                 response.setStatus(Response.Status.OK.getStatusCode());
-
             } else {
                 response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
-
             }
             return updated;
         } catch (DeviceManagementException e) {
@@ -271,6 +305,11 @@ public class VirtualFireAlarmService {
 
     }
 
+    /**
+     *
+     * @param deviceId
+     * @return
+     */
     @Path("manager/device/{device_id}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -294,6 +333,11 @@ public class VirtualFireAlarmService {
 
     }
 
+    /**
+     *
+     * @param username
+     * @return
+     */
     @Path("manager/devices/{username}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -324,9 +368,15 @@ public class VirtualFireAlarmService {
         } finally {
             deviceManagement.endTenantFlow();
         }
-
     }
 
+    /**
+     *
+     * @param owner
+     * @param customDeviceName
+     * @param sketchType
+     * @return
+     */
     @Path("manager/device/{sketch_type}/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -353,6 +403,13 @@ public class VirtualFireAlarmService {
         }
     }
 
+    /**
+     *
+     * @param owner
+     * @param customDeviceName
+     * @param sketchType
+     * @return
+     */
     @Path("manager/device/{sketch_type}/generate_link")
     @GET
     public Response generateSketchLink(@QueryParam("owner") String owner,
@@ -372,9 +429,18 @@ public class VirtualFireAlarmService {
         } catch (DeviceControllerException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
         }
-
     }
 
+    /**
+     *
+     * @param owner
+     * @param customDeviceName
+     * @param sketchType
+     * @return
+     * @throws DeviceManagementException
+     * @throws AccessTokenException
+     * @throws DeviceControllerException
+     */
     private ZipArchive createDownloadFile(String owner, String customDeviceName, String sketchType)
             throws DeviceManagementException, AccessTokenException, DeviceControllerException {
         if (owner == null) {
@@ -406,8 +472,7 @@ public class VirtualFireAlarmService {
             status = xmppServerClient.createXMPPAccount(newXmppAccount);
             if (!status) {
                 String msg =
-                        "XMPP Account was not created for device - " + deviceId + " of owner - " +
-                                owner +
+                        "XMPP Account was not created for device - " + deviceId + " of owner - " + owner +
                                 ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot" +
                                 ".common.config.server.configs";
                 log.warn(msg);
@@ -420,8 +485,7 @@ public class VirtualFireAlarmService {
         status = register(deviceId, deviceName, owner);
 
         if (!status) {
-            String msg = "Error occurred while registering the device with " + "id: " + deviceId
-                    + " owner:" + owner;
+            String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;
             throw new DeviceManagementException(msg);
         }
 
@@ -433,6 +497,10 @@ public class VirtualFireAlarmService {
         return zipFile;
     }
 
+    /**
+     *
+     * @return
+     */
     private static String shortUUID() {
         UUID uuid = UUID.randomUUID();
         long l = ByteBuffer.wrap(uuid.toString().getBytes(StandardCharsets.UTF_8)).getLong();
@@ -443,6 +511,17 @@ public class VirtualFireAlarmService {
                     Device specific APIs - Control APIs + Data-Publishing APIs
             Also contains utility methods required for the execution of these APIs
          ---------------------------------------------------------------------------------------	*/
+
+    /**
+     *
+     * @param owner
+     * @param deviceId
+     * @param deviceIP
+     * @param devicePort
+     * @param response
+     * @param request
+     * @return
+     */
     @Path("controller/register/{owner}/{deviceId}/{ip}/{port}")
     @POST
     public String registerDeviceIP(@PathParam("owner") String owner,
@@ -473,6 +552,15 @@ public class VirtualFireAlarmService {
 
     /*    Service to switch "ON" and "OFF" the Virtual FireAlarm bulb
            Called by an external client intended to control the Virtual FireAlarm bulb */
+
+    /**
+     *
+     * @param owner
+     * @param deviceId
+     * @param protocol
+     * @param state
+     * @param response
+     */
     @Path("controller/bulb/{state}")
     @POST
     public void switchBulb(@HeaderParam("owner") String owner,
@@ -546,6 +634,14 @@ public class VirtualFireAlarmService {
     }
 
 
+    /**
+     *
+     * @param owner
+     * @param deviceId
+     * @param protocol
+     * @param response
+     * @return
+     */
     @Path("controller/readsonar")
     @GET
     public String requestSonarReading(@HeaderParam("owner") String owner,
@@ -619,6 +715,14 @@ public class VirtualFireAlarmService {
     }
 
 
+    /**
+     *
+     * @param owner
+     * @param deviceId
+     * @param protocol
+     * @param response
+     * @return
+     */
     @Path("controller/readtemperature")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -691,6 +795,11 @@ public class VirtualFireAlarmService {
         return sensorRecord;
     }
 
+    /**
+     *
+     * @param dataMsg
+     * @param response
+     */
     @Path("controller/push_temperature")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -726,6 +835,12 @@ public class VirtualFireAlarmService {
     }
 
 
+    /**
+     *
+     * @param operation
+     * @param message
+     * @return
+     */
     @GET
     @Path("controller/scep")
     public Response scepRequest(@QueryParam("operation") String operation, @QueryParam("message") String message) {
@@ -803,6 +918,12 @@ public class VirtualFireAlarmService {
         return Response.serverError().build();
     }
 
+    /**
+     *
+     * @param operation
+     * @param inputStream
+     * @return
+     */
     @POST
     @Path("controller/scep")
     public Response scepRequestPost(@QueryParam("operation") String operation, InputStream inputStream) {

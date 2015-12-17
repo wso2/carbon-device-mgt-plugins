@@ -16,20 +16,16 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants;
+package org.wso2.carbon.device.mgt.iot.raspberrypi.service.exception;
 
-public class RaspberrypiConstants {
+public class RaspberryPiException extends Exception {
+    private static final long serialVersionUID = 118512086957330189L;
 
-    public final static String DEVICE_TYPE = "raspberrypi";
-    public final static String DEVICE_PLUGIN_DEVICE_NAME = "DEVICE_NAME";
-    public final static String DEVICE_PLUGIN_DEVICE_ID = "RASPBERRYPI_DEVICE_ID";
-    public final static String STATE_ON = "ON";
-    public final static String STATE_OFF = "OFF";
+    public RaspberryPiException(String errorMessage) {
+        super(errorMessage);
+    }
 
-    public static final String URL_PREFIX = "http://";
-    public static final String BULB_CONTEXT = "/BULB/";
-    public static final String TEMPERATURE_CONTEXT = "/TEMPERATURE/";
-
-    public static final String SENSOR_TEMPERATURE = "temperature";
-
+    public RaspberryPiException(String errorMessage, Throwable throwable) {
+        super(errorMessage, throwable);
+    }
 }
