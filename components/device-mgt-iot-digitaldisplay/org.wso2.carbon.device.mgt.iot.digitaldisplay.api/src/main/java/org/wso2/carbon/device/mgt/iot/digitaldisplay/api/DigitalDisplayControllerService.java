@@ -2,11 +2,14 @@ package org.wso2.carbon.device.mgt.iot.digitaldisplay.api;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.exception.DigitalDisplayException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.transport.CommunicationHandlerException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.util.DigitalDisplayMqttCommunicationHandler;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.constants.DigitalDisplayConstants;
+import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -17,6 +20,9 @@ import javax.ws.rs.core.Response;
  * Created by nuwan on 11/13/15.
  */
 
+@Path("/DigitalDisplayDeviceManager")
+@API( name="digital_display", version="1.0.0", context="/digital_display")
+@DeviceType( value = "digital_display")
 public class DigitalDisplayControllerService {
 
 
@@ -46,6 +52,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/restart-browser")
     @POST
+    @Feature( code="DISPLAY_BROWSERRESTART", name="Restart Browser",
+            description="Restart Browser in Digital Display")
     public void restartBrowser(@FormParam("deviceId") String deviceId ,
                                @FormParam("owner") String owner,
                                @FormParam("sessionId") String sessionId,
@@ -77,6 +85,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/close-browser")
     @POST
+    @Feature( code="DISPLAY_BROWSERCLOSE", name="Close Browser",
+            description="Close Browser in Digital Display")
     public void closeBrowser(@FormParam("deviceId") String deviceId,
                              @FormParam("owner") String owner,
                              @FormParam("sessionId") String sessionId,
@@ -107,6 +117,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/terminate-display")
     @POST
+    @Feature( code="DISPLAY_TERMINATE", name="Terminate Display",
+            description="Terminate all running processe in Digital Display")
     public void terminateDisplay(@FormParam("deviceId") String deviceId,
                                  @FormParam("owner") String owner,
                                  @FormParam("sessionId") String sessionId,
@@ -137,6 +149,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/restart-display")
     @POST
+    @Feature( code="DISPLAY_RESTART", name="Restart Display",
+            description="Restart Digital Display")
     public void restartDisplay(@FormParam("deviceId") String deviceId,
                                @FormParam("owner") String owner,
                                @FormParam("sessionId") String sessionId,
@@ -170,6 +184,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/edit-content")
     @POST
+    @Feature( code="DISPLAY_EDITCONTENT", name="Edit Content",
+            description="Search through the sequence and edit requested resource in Digital Display")
     public void editContent(@FormParam("deviceId") String deviceId,
                             @FormParam("owner") String owner,
                             @FormParam("path") String path,
@@ -207,6 +223,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/add-resource")
     @POST
+    @Feature( code="DISPLAY_ADDRESOURCE", name="Add Resource",
+            description="Add new resource end to the existing sequence in Digital Display")
     public void addNewResource(@FormParam("deviceId") String deviceId,
                                @FormParam("owner") String owner,
                                @FormParam("type") String type,
@@ -245,6 +263,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/add-resource-before")
     @POST
+    @Feature( code="DISPLAY_ADDRESOURCE_BEFORE", name="Add Resource Before",
+            description="Add new resource to sequence before given page no. in Digital Display")
     public void addNewResourceBefore(@FormParam("deviceId") String deviceId,
                                @FormParam("owner") String owner,
                                @FormParam("sessionId") String sessionId,
@@ -286,6 +306,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/add-resource-next")
     @POST
+    @Feature( code="DISPLAY_ADDRESOURCE_NEXT", name="Add Resource Next",
+            description="Add new resource to sequence after given page in Digital Display")
     public void addNewResourceAfter(@FormParam("deviceId") String deviceId,
                                      @FormParam("owner") String owner,
                                      @FormParam("type") String type,
@@ -323,6 +345,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/remove-resource")
     @POST
+    @Feature( code="DISPLAY_REMOVE_RESOURCE", name="Remove Resource",
+            description="Delete a resource from sequence in Digital Display")
     public void removeResource(@FormParam("deviceId") String deviceId,
                                @FormParam("owner") String owner,
                                @FormParam("path") String path,
@@ -356,6 +380,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/remove-directory")
     @POST
+    @Feature( code="DISPLAY_REMOVE_DIR", name="Remove Directory",
+            description="Remove directory and whole content in Digital Display")
     public void removeDirectory(@FormParam("directory-name") String directoryName,
                               @FormParam("deviceId") String deviceId ,
                               @FormParam("owner") String owner,
@@ -389,6 +415,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/remove-content")
     @POST
+    @Feature( code="DISPLAY_REMOVE_CONTENT", name="Remove Content",
+            description="Remove content from www folder in Digital Display")
     public void removeContent(@FormParam("directory-name") String directoryName,
                               @FormParam("content") String content,
                               @FormParam("deviceId") String deviceId ,
@@ -421,6 +449,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/shutdown-display")
     @POST
+    @Feature( code="DISPLAY_SHUTDOWN", name="Shut Down",
+            description="Stop specific display in Digital Display")
     public void shutDownDisplay(@FormParam("deviceId") String deviceId,
                                 @FormParam("owner") String owner,
                                 @FormParam("sessionId") String sessionId,
@@ -451,6 +481,8 @@ public class DigitalDisplayControllerService {
      */
     @Path("/get-status")
     @GET
+    @Feature( code="DISPLAY_GET_STATUS", name="Get Status",
+            description="Check specific digital display power ON of OFF")
     public void getStatus(@FormParam("deviceId") String deviceId,
                           @FormParam("owner") String owner,
                           @FormParam("sessionId") String sessionId,

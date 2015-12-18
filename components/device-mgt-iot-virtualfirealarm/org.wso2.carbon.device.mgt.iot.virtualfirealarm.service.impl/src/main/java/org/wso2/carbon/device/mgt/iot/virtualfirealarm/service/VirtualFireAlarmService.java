@@ -22,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
@@ -81,6 +82,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Path("/VirtualFireAlarmDeviceManager")
 @API( name="virtual_firealarm", version="1.0.0", context="/virtual_firealarm")
+@DeviceType( value = "virtual_firealarm")
 public class VirtualFireAlarmService {
 
     private static Log log = LogFactory.getLog(VirtualFireAlarmService.class);
