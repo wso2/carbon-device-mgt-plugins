@@ -38,29 +38,13 @@
 		<param-value>admin</param-value>
 	</context-param>
 	<context-param>
-		<param-name>managed-api-name</param-name>
+		<param-name>managed-api-context-template</param-name>
+		<param-value>/drone_analyzer/{version}</param-value>
+	</context-param>
+	<context-param>
+		<param-name>managed-api-application</param-name>
 		<param-value>drone_analyzer</param-value>
 	</context-param>
-	<context-param>
-		<param-name>managed-api-endpoint</param-name>
-		<param-value>http://localhost:9763/drone_analyzer</param-value>
-	</context-param>
-	<context-param>
-		<param-name>managed-api-version</param-name>
-		<param-value>1.0.0</param-value>
-	</context-param>
-	<context-param>
-		<param-name>managed-api-context</param-name>
-		<param-value>/drone_analyzer</param-value>
-	</context-param>
-    <context-param>
-            <param-name>managed-api-context-template</param-name>
-            <param-value>/drone_analyzer/{version}</param-value>
-    </context-param>
-    <context-param>
-            <param-name>managed-api-application</param-name>
-            <param-value>drone_analyzer</param-value>
-    </context-param>
 	<context-param>
 		<param-name>managed-api-isSecured</param-name>
 		<param-value>true</param-value>

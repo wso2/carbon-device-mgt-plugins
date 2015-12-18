@@ -20,7 +20,6 @@ import javax.ws.rs.core.Response;
  * Created by nuwan on 11/13/15.
  */
 
-@Path("/DigitalDisplayDeviceManager")
 @API( name="digital_display", version="1.0.0", context="/digital_display")
 @DeviceType( value = "digital_display")
 public class DigitalDisplayControllerService {

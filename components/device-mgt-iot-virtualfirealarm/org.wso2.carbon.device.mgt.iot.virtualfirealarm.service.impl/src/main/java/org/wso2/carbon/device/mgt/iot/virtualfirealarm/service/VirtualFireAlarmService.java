@@ -80,7 +80,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Path("/VirtualFireAlarmDeviceManager")
 @API( name="virtual_firealarm", version="1.0.0", context="/virtual_firealarm")
 @DeviceType( value = "virtual_firealarm")
 public class VirtualFireAlarmService {

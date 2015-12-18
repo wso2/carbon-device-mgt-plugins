@@ -38,22 +38,6 @@
 		<param-value>admin</param-value>
 	</context-param>
 	<context-param>
-		<param-name>managed-api-name</param-name>
-		<param-value>arduino</param-value>
-	</context-param>
-	<context-param>
-		<param-name>managed-api-endpoint</param-name>
-		<param-value>http://localhost:9763/arduino</param-value>
-	</context-param>
-	<context-param>
-		<param-name>managed-api-version</param-name>
-		<param-value>1.0.0</param-value>
-	</context-param>
-	<context-param>
-		<param-name>managed-api-context</param-name>
-		<param-value>/arduino</param-value>
-	</context-param>
-	<context-param>
 		<param-name>managed-api-context-template</param-name>
 		<param-value>/arduino/{version}</param-value>
 	</context-param>
@@ -65,6 +49,7 @@
 		<param-name>managed-api-isSecured</param-name>
 		<param-value>true</param-value>
 	</context-param>
+
 
 
 </web-app>
