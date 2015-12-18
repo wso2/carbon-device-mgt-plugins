@@ -164,21 +164,8 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public boolean disenrollDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        boolean status;
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug("Dis-enrolling windows device : " + deviceId);
-            }
-            WindowsDAOFactory.beginTransaction();
-            status = daoFactory.getMobileDeviceDAO().deleteMobileDevice(deviceId.getId());
-            WindowsDAOFactory.commitTransaction();
-        } catch (MobileDeviceManagementDAOException e) {
-            WindowsDAOFactory.rollbackTransaction();
-            throw new DeviceManagementException("Error while removing the Windows device : " + deviceId.getId(), e);
-        } finally {
-            WindowsDAOFactory.closeConnection();
-        }
-        return status;
+        //Here we don't have anything specific to do. Hence returning.
+        return true;
     }
 
     @Override

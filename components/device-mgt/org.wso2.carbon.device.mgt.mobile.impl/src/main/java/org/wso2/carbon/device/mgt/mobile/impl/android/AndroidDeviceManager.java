@@ -200,26 +200,8 @@ public class AndroidDeviceManager implements DeviceManager {
 
     @Override
     public boolean disenrollDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        boolean status;
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug("Dis-enrolling Android device : " + deviceId);
-            }
-            AndroidDAOFactory.beginTransaction();
-            status = daoFactory.getMobileDeviceDAO().deleteMobileDevice(deviceId.getId());
-            AndroidDAOFactory.commitTransaction();
-        } catch (MobileDeviceManagementDAOException e) {
-            try {
-                AndroidDAOFactory.rollbackTransaction();
-            } catch (MobileDeviceManagementDAOException mobileDAOEx) {
-                String msg = "Error occurred while roll back the device dis enrol transaction :" +
-                        deviceId.toString();
-                log.warn(msg, mobileDAOEx);
-            }
-            String msg = "Error while removing the Android device : " + deviceId.getId();
-            throw new DeviceManagementException(msg, e);
-        }
-        return status;
+        //Here we don't have anything specific to do. Hence returning.
+        return true;
     }
 
     @Override
