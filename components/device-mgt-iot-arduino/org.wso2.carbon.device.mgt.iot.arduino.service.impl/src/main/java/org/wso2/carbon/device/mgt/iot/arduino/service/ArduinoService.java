@@ -21,6 +21,9 @@ package org.wso2.carbon.device.mgt.iot.arduino.service;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.device.DeviceType;
+import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -68,7 +71,8 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Path("/ArduinoDeviceManager")
+@API( name="arduino", version="1.0.0", context="/arduino")
+@DeviceType( value = "arduino")
 public class ArduinoService {
 
     private static Log log = LogFactory.getLog(ArduinoService.class);
@@ -480,6 +484,8 @@ public class ArduinoService {
      */
     @Path("controller/bulb/{state}")
     @POST
+    @Feature( code="ARDUINO_BULB_CONTROL", name="Control Bulb",
+            description="Control Bulb on Arduino Arduino")
     public void switchBulb(@HeaderParam("owner") String owner,
                            @HeaderParam("deviceId") String deviceId,
                            @HeaderParam("protocol") String protocol,
@@ -549,6 +555,8 @@ public class ArduinoService {
     @Path("controller/pushdata")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Feature( code="ARDUINO_READ_DATA", name="Read Data",
+            description="Read Data from Arduino")
     public void pushData(final DeviceJSON dataMsg, @Context HttpServletResponse response) {
 
         String owner = dataMsg.owner;
@@ -641,6 +649,8 @@ public class ArduinoService {
     @Path("controller/push_temperature")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Feature( code="ARDUINO_READ_TEMP", name="Read Tempreature",
+            description="Read Tempreature from Arduino")
     public void pushTemperatureData(final DeviceJSON dataMsg,
                                     @Context HttpServletResponse response,
                                     @Context HttpServletRequest request) {

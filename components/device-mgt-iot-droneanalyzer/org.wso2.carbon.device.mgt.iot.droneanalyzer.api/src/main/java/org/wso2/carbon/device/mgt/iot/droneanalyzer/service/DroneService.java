@@ -18,6 +18,9 @@
 package org.wso2.carbon.device.mgt.iot.droneanalyzer.service;
 
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.device.DeviceType;
+import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
@@ -59,7 +62,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Path("/DroneAnalyzerServiceUnitManager")
+@API( name="drone_analyzer", version="1.0.0", context="/drone_analyzer")
+@DeviceType( value = "drone_analyzer")
 public class DroneService {
 
     private static org.apache.commons.logging.Log log = LogFactory.getLog(DroneService.class);
@@ -372,6 +376,8 @@ public class DroneService {
 
     @Path("controller/send_command")
     @POST
+    @Feature( code="DRONE_SEND_COMMAND", name="Send Command",
+            description="Send Commands to Drone")
     public Response droneController(@QueryParam("owner") String owner, @QueryParam("deviceId") String deviceId,
                                  @QueryParam("action") String action, @QueryParam("duration") String duration,
                                  @QueryParam("speed") String speed){
