@@ -70,41 +70,46 @@ public class VirtualFireAlarmXMPPConnector extends XmppConnector {
         int indexOfAt = from.indexOf("@");
         int indexOfSlash = from.indexOf("/");
 
-        String deviceId = from.substring(0, indexOfAt);
-        String owner = from.substring(indexOfSlash + 1, from.length());
+        if (indexOfAt != -1 && indexOfSlash != -1) {
+            String deviceId = from.substring(0, indexOfAt);
+            String owner = from.substring(indexOfSlash + 1, from.length());
 
-        if (log.isDebugEnabled()) {
-            log.debug("Received XMPP message for: {OWNER-" + owner + "} & {DEVICE.ID-" + deviceId + "}");
-        }
-
-        if (subject != null) {
-            switch (subject) {
-                case "PUBLISHER":
-                    float temperature = Float.parseFloat(message.split(":")[1]);
-                    if (!VirtualFireAlarmServiceUtils.publishToDAS(owner, deviceId, temperature)) {
-                        log.error("XMPP Connector: Publishing data to DAS failed.");
-                    }
-
-                    if (log.isDebugEnabled()) {
-                        log.debug("XMPP: Publisher Message [" + message + "] from [" + from + "]");
-                        log.debug("XMPP Connector: Published data to DAS successfully.");
-                    }
-                    break;
-                case "CONTROL-REPLY":
-                    if (log.isDebugEnabled()) {
-                        log.debug("XMPP: Reply Message [" + message + "] from [" + from + "]");
-                    }
-                    String tempVal = message.split(":")[1];
-                    SensorDataManager.getInstance().setSensorRecord(deviceId,
-                                                                    VirtualFireAlarmConstants.SENSOR_TEMPERATURE,
-                                                                    tempVal, Calendar.getInstance().getTimeInMillis());
-                    break;
-                default:
-                    if (log.isDebugEnabled()) {
-                        log.warn("Unknown XMPP Message [" + message + "] from [" + from + "] received");
-                    }
-                    break;
+            if (log.isDebugEnabled()) {
+                log.debug("Received XMPP message for: {OWNER-" + owner + "} & {DEVICE.ID-" + deviceId + "}");
             }
+
+            if (subject != null) {
+                switch (subject) {
+                    case "PUBLISHER":
+                        float temperature = Float.parseFloat(message.split(":")[1]);
+                        if (!VirtualFireAlarmServiceUtils.publishToDAS(owner, deviceId, temperature)) {
+                            log.error("XMPP Connector: Publishing data to DAS failed.");
+                        }
+
+                        if (log.isDebugEnabled()) {
+                            log.debug("XMPP: Publisher Message [" + message + "] from [" + from + "]");
+                            log.debug("XMPP Connector: Published data to DAS successfully.");
+                        }
+                        break;
+                    case "CONTROL-REPLY":
+                        if (log.isDebugEnabled()) {
+                            log.debug("XMPP: Reply Message [" + message + "] from [" + from + "]");
+                        }
+                        String tempVal = message.split(":")[1];
+                        SensorDataManager.getInstance().setSensorRecord(deviceId,
+                                                                        VirtualFireAlarmConstants.SENSOR_TEMPERATURE,
+                                                                        tempVal,
+                                                                        Calendar.getInstance().getTimeInMillis());
+                        break;
+                    default:
+                        if (log.isDebugEnabled()) {
+                            log.warn("Unknown XMPP Message [" + message + "] from [" + from + "] received");
+                        }
+                        break;
+                }
+            }
+        } else {
+            log.warn("Received XMPP message from client with unexpected JID [" + from + "].");
         }
     }
 
