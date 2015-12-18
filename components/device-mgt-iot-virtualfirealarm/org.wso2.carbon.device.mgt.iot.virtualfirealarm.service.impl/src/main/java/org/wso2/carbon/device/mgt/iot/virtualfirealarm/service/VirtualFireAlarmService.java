@@ -21,6 +21,8 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
@@ -78,6 +80,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Path("/VirtualFireAlarmDeviceManager")
+@API( name="virtual_firealarm", version="1.0.0", context="/virtual_firealarm")
 public class VirtualFireAlarmService {
 
     private static Log log = LogFactory.getLog(VirtualFireAlarmService.class);
@@ -563,6 +566,8 @@ public class VirtualFireAlarmService {
      */
     @Path("controller/bulb/{state}")
     @POST
+    @Feature( code="VIRTUALFIREALARM_BULBCONTROL", name="Control Bulb",
+            description="Switch on/off Virtual Fire Alarm Bulb")
     public void switchBulb(@HeaderParam("owner") String owner,
                            @HeaderParam("deviceId") String deviceId,
                            @HeaderParam("protocol") String protocol,
@@ -644,6 +649,8 @@ public class VirtualFireAlarmService {
      */
     @Path("controller/readsonar")
     @GET
+    @Feature( code="VIRTUALFIREALARM_READSONAR", name="Read Sonar",
+            description="Read Sonar Readings from Virtual Fire Alarm")
     public String requestSonarReading(@HeaderParam("owner") String owner,
                                       @HeaderParam("deviceId") String deviceId,
                                       @HeaderParam("protocol") String protocol,
@@ -727,6 +734,8 @@ public class VirtualFireAlarmService {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Feature( code="VIRTUALFIREALARM_REQTEMP", name="Request Tempreature",
+            description="Request Tempreature reading from Virtual Fire Alarm")
     public SensorRecord requestTemperature(@HeaderParam("owner") String owner,
                                            @HeaderParam("deviceId") String deviceId,
                                            @HeaderParam("protocol") String protocol,
