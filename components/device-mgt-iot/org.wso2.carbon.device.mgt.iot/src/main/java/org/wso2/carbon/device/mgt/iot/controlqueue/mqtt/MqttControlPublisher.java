@@ -27,6 +27,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.controlqueue.ControlQueueConnector;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 
@@ -101,10 +102,9 @@ public class MqttControlPublisher implements ControlQueueConnector, MqttCallback
 								 "' is acceptable");
 			}
 
+			String serverName = DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
 			String publishTopic =
-					"wso2" + File.separator + "iot" + File.separator + owner + File.separator +
-							deviceType + File.separator
-							+ deviceId;
+					serverName + File.separator + owner + File.separator + deviceType + File.separator + deviceId;
 			String payLoad = key + ":" + value;
 
 			log.info("Pubish-Topic: " + publishTopic);

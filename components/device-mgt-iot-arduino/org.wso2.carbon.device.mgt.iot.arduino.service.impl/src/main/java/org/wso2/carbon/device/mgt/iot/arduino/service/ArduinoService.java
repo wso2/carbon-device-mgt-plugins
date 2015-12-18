@@ -39,7 +39,6 @@ import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 
-import javax.jws.WebService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -414,8 +413,8 @@ public class ArduinoService {
 
 
         ZipUtil ziputil = new ZipUtil();
-        ZipArchive zipFile = ziputil.downloadSketch(owner, SUPER_TENANT, sketchType, deviceId, deviceName, accessToken,
-                                                    refreshToken);
+        ZipArchive zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, deviceName, accessToken,
+                                                   refreshToken);
         zipFile.setDeviceId(deviceId);
         return zipFile;
     }

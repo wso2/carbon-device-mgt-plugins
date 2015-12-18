@@ -78,7 +78,7 @@ public class AgentManager {
         this.agentConfigs = AgentUtilOperations.readIoTServerConfigs();
 
         // Initialise IoT-Server URL endpoints from the configuration read from file
-        AgentUtilOperations.initializeHTTPEndPoints();
+        AgentUtilOperations.initializeServerEndPoints();
 
         String analyticsPageContext = String.format(AgentConstants.DEVICE_ANALYTICS_PAGE_URL,
                                                     agentConfigs.getDeviceId(),
@@ -107,6 +107,7 @@ public class AgentManager {
 
             String xmppServer = xmppIPPortMap.get("Host");
             int xmppPort = Integer.parseInt(xmppIPPortMap.get("Port"));
+
             TransportHandler xmppCommunicator = new FireAlarmXMPPCommunicator(xmppServer, xmppPort);
             agentCommunicator.put(AgentConstants.XMPP_PROTOCOL, xmppCommunicator);
 
@@ -115,6 +116,7 @@ public class AgentManager {
                               ", provided in the configuration file is invalid.");
         }
         String mqttTopic = String.format(AgentConstants.MQTT_SUBSCRIBE_TOPIC,
+                                         agentConfigs.getServerName(),
                                          agentConfigs.getDeviceOwner(),
                                          agentConfigs.getDeviceId());
 
