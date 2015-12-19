@@ -1,0 +1,4 @@
+var ajax_handler = new ajax_handler();
+var config_api = new config_api();
+var plotting = new plotting();
+var object_maker = new object_maker();

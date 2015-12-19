@@ -1,7 +1,7 @@
 <div class="col-lg-12  margin-top-double">
-    <h1 class="grey ">Virtual Firealrm</h1>
+    <h1 class="grey ">Drone Analyzer</h1>
     <hr>
-    <p class="margin-bottom-double light-grey ">Connect your Android device to the WSO2 device cloud.</p>
+    <p class="margin-bottom-double light-grey ">Connect your drone device to the WSO2 device cloud.</p>
 </div>
 <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 padding-top">
     <img src="{{@unit.publicUri}}/images/drone-icon.png" class="img-responsive">
@@ -13,14 +13,7 @@
     <p class="grey margin-top">Hardware Requirements </p>
     <br>
     <ul class="list-unstyled">
-        <li><span class="fw-stack fw-lg margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> Raspberry Pi (Internet Enabled)</li>
-        <li><span class="fw-stack fw-lg margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> DHT11 Temperature Sensor</li>
-        <li><span class="fw-stack fw-lg margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> LED</li>
-        <li><span class="fw-stack fw-lg margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> Buzzer(3v)</li>
+        <li class="padding-top-double"><span class="circle">01</span> Set up your IRIS+ Drone as shown in the schematic below.</li>
     </ul>
     <br>
 
@@ -38,19 +31,21 @@
                             <div class="controls">
                                 <input class="new-device-name" style="color:#3f3f3f;padding:5px"
                                        type="text"
-                                       placeholder="Ex. Lobby_Firealarm"
+                                       placeholder="Ex. Lobby_DigitalDisplay"
                                        name="deviceName" size="60" required>
-                                <br/><br/>
-                                <input type="hidden" class="deviceType" name="deviceType" value="{{@uriParams.deviceType}}"/>
-                                <input type="radio" name="sketchType" value="simple_agent" id="simple_agent" checked> <label for="simple_agent">Simple Agent</label> &nbsp;&nbsp;
-                                <input type="radio" name="sketchType" value="advanced_agent" id="advanced_agent"> <label for="advanced_agent">Advanced Agent</label>
+                                <br/>
+                                <input type="hidden" class="deviceType" name="deviceType"
+                                       value="digital_display"/>
+                                <input type="hidden" class="sketchType" name="sketchType"
+                                       value="digital_display"/>
                             </div>
                         </div>
-                        <div class="buttons" style="padding-bottom: 0px">
-                            <a class="btn btn-operations" onclick="downloadAgent()">Download
+                        <br/>
+                        <div class="buttons">
+                            <a class="btn-operations" onclick="downloadAgent()">Download
                                 Now</a>
                             &nbsp;&nbsp;
-                            <a href="#" id="download-device-download-link" class="btn btn-operations">
+                            <a href="#" id="download-device-download-link" class="blue-button">
                                 &nbsp;&nbsp;&nbsp;&nbsp;Copy Link&nbsp;&nbsp;&nbsp;&nbsp;
                             </a>
                             &nbsp;&nbsp;
@@ -151,9 +146,7 @@
     <h3 class="uppercase">Prepare</h3><hr>
     <p class="grey margin-top">Get your device ready</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> Set up your RaspberryPi device as shown in the schematic below and get the FireAlarm setup.</li>
-        <li class="padding-top-double"><span class="circle">02</span> Connect a monitor to your RaspberryPi via the HDMI cable to get a UI view of the device.</li>
-        <li class="padding-top-double"><span class="circle">03</span> Get the RaspberryPi to connect to the internet (via Ethernet or Wifi) and note its IP_ADDRESS</li>
+        <li class="padding-top-double"><span class="circle">01</span> Set up your IRIS+ Drone as shown in the schematic below.</li>
     </ul>
     <br>
 </div>
@@ -173,9 +166,41 @@
     <h3 class="uppercase">Connect (Quick Start)</h3><hr>
     <p class="grey margin-top">Internet of Things Foundation Quickstart connection</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> <b>Click on the <i>'Create DEB'</i> button above to get the download link for the FireAlarm setup files</b></li>
-        <li class="padding-top-double"><span class="circle">02</span> <i>(The following commands can be issued by directly typing into the terminal of the device or by an <b>'ssh'<b> login from a remote PC)</i></li>
-        <li class="padding-top-double"><span class="circle">03</span> <b>Download the FireAlarm setup files using the following command: 'curl -k < url_link_received_from_the_above_step >> Agent.zip'</b><br/><i>This will download a zip file named 'Agent.zip'</i></li>
+        <li class="padding-top-double"><span class="circle">01</span> <b>Click on the download button above to get the IRIS+ Drone setup files</b></li>
+        <li class="padding-top-double"><span class="circle">02</span> <b>Connecting to drone</b>
+            </br>
+            <div>
+                <table class="table table-bordered ">
+                    <thead>
+                    <tr>
+                        <th>Connection type</th>
+                        <th>Connection string</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Linux computer connected to the drone via USB</td>
+                        <td>/dev/ttyAMA0(also set baud=57600)</td>
+                    </tr>
+                    <tr>
+                        <td>OSX computer connected to the drone via USB</td>
+                        <td>dev/cu.usbmodem1</td>
+                    </tr>
+                    <tr>
+                        <td>Windows computer connected to the drone via USB (in this case on COM14)</td>
+                        <td>com14</td>
+                    </tr>
+                    <tr>
+                        <td>Windows computer connected to the drone using a 3DR Telemetry Radio on COM14</td>
+                        <td>com14(also set baud=57600)</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            Ones you have the setup files please run startservice.sh with root privilege.</br>
+            <b>Note:</b> these connection types may vary from computer to computer. So please provide the correct
+            connection port
+        </li>
     </ul>
     <br/>
 </div>
