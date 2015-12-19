@@ -1,10 +1,28 @@
 {{#if control_operations}}
+    <style>
+        ::-webkit-input-placeholder {
+            color: #B8B8B8;
+        }
+
+        ::-moz-placeholder {
+            color: #B8B8B8;
+        }
+
+        :-ms-input-placeholder {
+            color: #B8B8B8;
+        }
+
+        input:-moz-placeholder {
+            color: #B8B8B8;
+        }
+    </style>
     {{#each control_operations}}
         <form action="{{@app.context}}/api/operations/{{../device.type}}/{{operation}}?deviceId={{../device.deviceIdentifier}}"
-              method="post" class="form-inline">
+              method="post" class="form-inline" style="padding-bottom: 20px;">
             <label class="wr-input-label">{{name}}</label>
-            <input type="number" name="value"
-                   placeholder="{{description}}">
+            {{#each params}}
+                <input type="text" name="{{this}}" placeholder="{{this}}">
+            {{/each}}
             <button class="wr-btn">&nbsp;&nbsp;&nbsp;&nbsp;Send
                                    to Device&nbsp;&nbsp;&nbsp;&nbsp;</button>
             <label id="lblSending" class="wr-input-label hidden"><i
@@ -16,3 +34,7 @@
         </form>
     {{/each}}
 {{/if}}
+
+{{#zone "bottomJs"}}
+    {{js "js/operation.js"}}
+{{/zone}}
