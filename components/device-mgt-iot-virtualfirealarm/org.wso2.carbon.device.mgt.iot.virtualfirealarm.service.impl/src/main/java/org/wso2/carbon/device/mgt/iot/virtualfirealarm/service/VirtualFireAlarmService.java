@@ -381,6 +381,7 @@ public class VirtualFireAlarmService {
      * @param sketchType
      * @return
      */
+    //TODO:: Needs to go to "common.war" cz all the devices have this
     @Path("manager/device/{sketch_type}/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -495,8 +496,8 @@ public class VirtualFireAlarmService {
 
 
         ZipUtil ziputil = new ZipUtil();
-        ZipArchive zipFile = ziputil.downloadSketch(owner, SUPER_TENANT, sketchType, deviceId, deviceName,
-                                                    accessToken, refreshToken);
+        ZipArchive zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, deviceName,
+                                                   accessToken, refreshToken);
         zipFile.setDeviceId(deviceId);
         return zipFile;
     }

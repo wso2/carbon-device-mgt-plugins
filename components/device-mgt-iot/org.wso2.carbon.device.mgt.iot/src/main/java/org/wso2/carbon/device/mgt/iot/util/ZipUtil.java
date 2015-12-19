@@ -33,9 +33,9 @@ import java.util.Map;
 
 public class ZipUtil {
 
-	public ZipArchive downloadSketch(String owner, String tenantDomain, String deviceType,
-	                                 String deviceId, String deviceName, String token,
-	                                 String refreshToken)
+	public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
+	                                String deviceId, String deviceName, String token,
+	                                String refreshToken)
 			throws DeviceManagementException {
 
 		if (owner == null || deviceType == null) {
@@ -44,10 +44,10 @@ public class ZipUtil {
 
 		String sep = File.separator;
 		String sketchFolder = "repository" + sep + "resources" + sep + "sketches";
-		String archivesPath = CarbonUtils.getCarbonHome() + sep + sketchFolder + sep + "archives"
-				+ sep + deviceId;
+		String archivesPath = CarbonUtils.getCarbonHome() + sep + sketchFolder + sep + "archives" + sep + deviceId;
 		String templateSketchPath = sketchFolder + sep + deviceType;
 
+		String serverName = DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
 		String iotServerIP = System.getProperty("carbon.local.ip");     // bind.address
 		String httpsServerPort = System.getProperty("httpsPort");
 		String httpServerPort = System.getProperty("httpPort");
@@ -75,6 +75,7 @@ public class ZipUtil {
 		xmppEndpoint = xmppEndpoint + ":" + XmppConfig.getInstance().getSERVER_CONNECTION_PORT();
 
 		Map<String, String> contextParams = new HashMap<String, String>();
+		contextParams.put("SERVER_NAME", serverName);
 		contextParams.put("DEVICE_OWNER", owner);
 		contextParams.put("DEVICE_ID", deviceId);
 		contextParams.put("DEVICE_NAME", deviceName);
