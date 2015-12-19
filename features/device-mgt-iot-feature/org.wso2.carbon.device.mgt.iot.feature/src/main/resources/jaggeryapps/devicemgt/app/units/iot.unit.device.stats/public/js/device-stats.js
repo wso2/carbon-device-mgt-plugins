@@ -24,16 +24,19 @@ var deviceId = $(".device-id").data("deviceid");
 var monitor_operations = $("#details").data("monitor");
 var appContext = $("#details").data("appcontext");
 
-var marker_1 = appContext +'/public/iot.unit.device.stats/images/map-marker-1.png';
+var marker_1 = appContext + '/public/iot.unit.device.stats/images/map-marker-1.png';
 var marker_2 = appContext + '/public/iot.unit.device.stats/images/map-marker-2.png';
 
 var map;
 var mapPoints = [], mapPaths = [], mapMarkers = [];
+
 function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 6.9344, lng: 79.8428},
-        zoom: 12
-    });
+    if ($('#map').length) {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 6.9344, lng: 79.8428},
+            zoom: 12
+        });
+    }
 }
 
 function formatDates() {
@@ -122,7 +125,7 @@ function updateGraphs() {
             var graphVals = {};
             for (var s in stats) {
                 var val = stats[s];
-                if (!val){
+                if (!val) {
                     continue;
                 }
                 if (val.time > lastUpdate) {
@@ -141,7 +144,7 @@ function updateGraphs() {
                     map.panTo(val.map);
                     mapMarkers.push(marker);
 
-                    if (mapPoints.length > 1 ){
+                    if (mapPoints.length > 1) {
                         var l = mapPoints.length;
                         var path = new google.maps.Polyline({
                             path: [mapPoints[l - 1], mapPoints[l - 2]],
@@ -157,7 +160,7 @@ function updateGraphs() {
                         mapMarkers[l - 2].setIcon(marker_2);
                     }
 
-                    if (mapPoints.length >= 10){
+                    if (mapPoints.length >= 10) {
                         mapMarkers[0].setMap(null);
                         mapMarkers.splice(0, 1);
 
@@ -174,7 +177,7 @@ function updateGraphs() {
             }
             graph.series.addData(graphVals);
 
-            if (lastUpdate == -1){
+            if (lastUpdate == -1) {
                 $('#last_seen').text("Not seen recently");
             }
 
