@@ -25,33 +25,35 @@ import ssl, pyasn1
 
 from urllib import urlopen
 import iotUtils
+import running_mode
 
 # Python versions before 3.0 do not use UTF-8 encoding
 # by default. To ensure that Unicode is handled properly
 # throughout SleekXMPP, we will set the default encoding
 # ourselves to UTF-8.
-if sys.version_info < (3, 0):
-    from sleekxmpp.util.misc_ops import setdefaultencoding
-    setdefaultencoding('utf8')
-else:
-    raw_input = input
-
-from sleekxmpp.plugins.xep_0323.device import Device
+def initSleekXMPP():
+    if sys.version_info < (3, 0):
+        from sleekxmpp.util.misc_ops import setdefaultencoding
+        setdefaultencoding('utf8')
+    else:
+        raw_input = input
+    from sleekxmpp.plugins.xep_0323.device import Device
 
 class IoT_TestDevice(sleekxmpp.ClientXMPP):
     """
     A simple IoT device that can act as server or client
     """
+
     def __init__(self, jid, password):
         sleekxmpp.ClientXMPP.__init__(self, jid, password)
         self.add_event_handler("session_start", self.session_start)
         self.add_event_handler("message", self.message)
-        self.device=None
-        self.releaseMe=False
-        self.beServer=True
+        self.device = None
+        self.releaseMe = False
+        self.beServer = True
 
-    def beClientOrServer(self,server=True,clientJID=None ):
-        self.beServer=True
+    def beClientOrServer(self, server=True, clientJID=None):
+        self.beServer = True
 
     def testForRelease(self):
         # todo thread safe
@@ -59,16 +61,16 @@ class IoT_TestDevice(sleekxmpp.ClientXMPP):
 
     def doReleaseMe(self):
         # todo thread safe
-        self.releaseMe=True
+        self.releaseMe = True
 
     def addDevice(self, device):
-        self.device=device
+        self.device = device
 
     def session_start(self, event):
         self.send_presence()
         self.get_roster()
         # tell your preffered friend that you are alive
-        #self.send_message(mto='jocke@jabber.sust.se', mbody=self.boundjid.bare +' is now online use xep_323 stanza to talk to me')
+        # self.send_message(mto='jocke@jabber.sust.se', mbody=self.boundjid.bare +' is now online use xep_323 stanza to talk to me')
 
     def message(self, msg):
         if msg['type'] in ('chat', 'normal'):
@@ -78,40 +80,47 @@ class IoT_TestDevice(sleekxmpp.ClientXMPP):
         else:
             print ("XMPP_SERVER: Got unknown message type %s", str(msg['type']))
 
+
 class TheDevice(Device):
     """
     This is the actual device object that you will use to get information from your real hardware
     You will be called in the refresh method when someone is requesting information from you
     """
-    def __init__(self,nodeId):
-        Device.__init__(self,nodeId)
 
-    def refresh(self,fields):
+    def __init__(self, nodeId):
+        Device.__init__(self, nodeId)
+
+    def refresh(self, fields):
         """
         the implementation of the refresh method
         """
-#        global LAST_TEMP
-        #self._set_momentary_timestamp(self._get_timestamp())
-        #self._add_field_momentary_data(self, "Temperature", self.counter)
+        #        global LAST_TEMP
+        # self._set_momentary_timestamp(self._get_timestamp())
+        # self._add_field_momentary_data(self, "Temperature", self.counter)
 
         self._add_field(name="Temperature", typename="numeric", unit="C")
         self._set_momentary_timestamp(self._get_timestamp())
         self._add_field_momentary_data("Temperature", str(iotUtils.LAST_TEMP), flags={"automaticReadout": "true"})
 
+
 def main():
     XMPP_ENDP = iotUtils.XMPP_EP.split(":")[0]
-   
+
+    XMPP_ENDPOINT = iotUtils.XMPP_EP.split(":")
+    XMPP_IP = XMPP_ENDPOINT[1].replace('//', '')
+    XMPP_PORT = int(XMPP_ENDPOINT[2])
+
     XMPP_OWN = iotUtils.DEVICE_OWNER
-    XMPP_JID = iotUtils.DEVICE_ID + "@" + XMPP_ENDP + "/raspi" 	
+    XMPP_JID = iotUtils.DEVICE_ID + "@" + XMPP_IP + "/raspi"
     XMPP_PWD = iotUtils.AUTH_TOKEN
-    
+
     print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
     print "XMPP_SERVER: Owner - " + XMPP_OWN
     print "XMPP_SERVER: AccountID - " + XMPP_JID
     print "XMPP_SERVER: AccountPass - " + XMPP_PWD
     print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
-    xmpp = IoT_TestDevice(XMPP_JID,XMPP_PWD)
+    xmpp = IoT_TestDevice(XMPP_JID, XMPP_PWD)
     xmpp.ssl_version = ssl.PROTOCOL_SSLv3
 
     xmpp.register_plugin('xep_0030')
@@ -131,15 +140,17 @@ def main():
 
         xmpp['xep_0323'].register_node(nodeId=XMPP_OWN, device=myDevice, commTimeout=10)
         xmpp.beClientOrServer(server=True)
-        
-        while not(xmpp.testForRelease()):
+
+        while not (xmpp.testForRelease()):
             try:
-            	xmpp.connect()
-            	xmpp.process(block=True)
-            	print ("XMPP_SERVER: Lost Connection")
+                xmpp.connect()
+                xmpp.process(block=True)
+                print ("XMPP_SERVER: Lost Connection")
             except Exception as e:
                 print "XMPP_SERVER: Exception in XMPPServerThread (either KeyboardInterrupt or Other)"
                 print ("XMPP_SERVER: " + str(e))
 
+
 if __name__ == '__main__':
+    initSleekXMPP()
     main()

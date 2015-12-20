@@ -33,9 +33,6 @@ import org.wso2.carbon.device.mgt.iot.droneanalyzer.service.transport.DroneAnaly
 
 import java.io.File;
 
-/**
- * Created by geesara on 12/9/15.
- */
 public class DroneAnalyzerServiceUtils {
 
     private static final String SUPER_TENANT = "carbon.super";

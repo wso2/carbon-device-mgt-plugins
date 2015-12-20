@@ -22,7 +22,6 @@
 
 import time
 import iotUtils
-#import RPi.GPIO as GPIO
 import paho.mqtt.client as mqtt
 
 
@@ -54,7 +53,7 @@ def on_message(client, userdata, msg):
 		#request.send_header("Content-type", "text/plain")
 		#request.end_headers()
 		#request.wfile.write(LAST_TEMP)
-		# return 
+		# return
 
 	elif resource == "BULB":
                 iotUtils.switchBulb(state)
@@ -66,8 +65,8 @@ def on_message(client, userdata, msg):
 def main():
        
     MQTT_ENDPOINT = iotUtils.MQTT_EP.split(":")
-    MQTT_IP = MQTT_ENDPOINT[0]
-    MQTT_PORT = MQTT_ENDPOINT[1]
+    MQTT_IP = MQTT_ENDPOINT[1].replace('//','')
+    MQTT_PORT = int(MQTT_ENDPOINT[2])
         
     DEV_OWNER = iotUtils.DEVICE_OWNER
     DEV_ID = iotUtils.DEVICE_ID

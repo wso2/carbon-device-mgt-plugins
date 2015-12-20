@@ -21,8 +21,9 @@
 """
 
 import time, commands
-import RPi.GPIO as GPIO
-import ConfigParser 
+import ConfigParser, os
+import random
+import running_mode
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #			HOST_NAME(IP) of the Device
@@ -31,25 +32,25 @@ global HOST_NAME
 HOST_NAME = "0.0.0.0"
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-global LAST_TEMP		
-LAST_TEMP = 25 				# The Last read temperature value from the DHT sensor. Kept globally
-							# Updated by the temperature reading thread
+global LAST_TEMP
+LAST_TEMP = 25  # The Last read temperature value from the DHT sensor. Kept globally
+# Updated by the temperature reading thread
+# Associate pin 23 to TRIG
+TEMPERATURE_READING_INTERVAL_REAL_MODE = 3
+TEMPERATURE_READING_INTERVAL_VIRTUAL_MODE = 60
+TEMP_PIN = 4
+TEMP_SENSOR_TYPE = 11
 
-global LAST_DISTANCE
-LAST_DISTANCE = 100
-
-SONAR_TRIG_PIN = 16                                  #Associate pin 23 to TRIG
-SONAR_ECHO_PIN = 18  
-BULB_PIN = 11               # The GPIO Pin# in RPi to which the LED is connected
-
-
+BULB_PIN = 11  # The GPIO Pin# in RPi to which the LED is connected
+HTTP_SERVER_PORT = 80 # http server port which is listning on
+global GPIO
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Device specific info when pushing data to server
-#       Read from a file "deviceConfigs.cfg" in the same folder level
+#       Read from a file "deviceConfig.properties" in the same folder level
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 configParser = ConfigParser.RawConfigParser()
-configFilePath = r'./deviceConfigs.cfg'
+configFilePath = os.path.join(os.path.dirname(__file__), '../deviceConfig.properties')
 configParser.read(configFilePath)
 
 DEVICE_OWNER = configParser.get('Device-Configurations', 'owner')
@@ -57,10 +58,14 @@ DEVICE_ID = configParser.get('Device-Configurations', 'deviceId')
 MQTT_EP = configParser.get('Device-Configurations', 'mqtt-ep')
 XMPP_EP = configParser.get('Device-Configurations', 'xmpp-ep')
 AUTH_TOKEN = configParser.get('Device-Configurations', 'auth-token')
-
-DEVICE_INFO = '{"owner":"'+ DEVICE_OWNER + '","deviceId":"' + DEVICE_ID  + '","reply":'
+CONTROLLER_CONTEXT = configParser.get('Device-Configurations', 'controller-context')
+DEVICE_INFO = '{"owner":"' + DEVICE_OWNER + '","deviceId":"' + DEVICE_ID + '","reply":'
+HTTPS_EP = configParser.get('Device-Configurations', 'https-ep')
+HTTP_EP = configParser.get('Device-Configurations', 'http-ep')
 DEVICE_IP = '"{ip}","value":'
-DEVICE_DATA = '"{temperature}"'                                                                      # '"{temperature}:{load}:OFF"'
+DEVICE_DATA = '"{temperature}"'  # '"{temperature}:{load}:OFF"'
+
+
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -70,16 +75,38 @@ DEVICE_DATA = '"{temperature}"'                                                 
 def switchBulb(state):
     print "Requested Switch State: " + state
 
-    if state == "ON":
-        GPIO.output(BULB_PIN, True)
-        print "BULB Switched ON"
-    elif state == "OFF":
-        GPIO.output(BULB_PIN, False)
-        print "BULB Switched OFF"
-
+    if running_mode.RUNNING_MODE == "N":
+        import RPi.GPIO as GPIO
+        if state == "ON":
+            GPIO.output(BULB_PIN, True)
+            print "BULB Switched ON"
+        elif state == "OFF":
+            GPIO.output(BULB_PIN, False)
+            print "BULB Switched OFF"
+    else:
+        if state == "ON":
+            print "BULB Switched ON"
+        elif state == "OFF":
+            print "BULB Switched OFF"
     print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#       This method generate a random temperature value
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def generateRandomTemperatureAndHumidityValues():
+    return [random.randint(15, 40),random.randint(15, 40)]
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+#      If an agent runs on a real setup GPIO needs to be imported
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def initGPIOModule():
+    if running_mode.RUNNING_MODE == 'N':
+        import RPi.GPIO as GPIO
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -88,98 +115,38 @@ def switchBulb(state):
 def getDeviceIP():
     rPi_IP = commands.getoutput("ip route list | grep 'src '").split()
     rPi_IP = rPi_IP[rPi_IP.index('src') + 1]
-
-    if len(rPi_IP)<=16:
-		print "------------------------------------------------------------------------------------"
-		print "IOT_UTILS: IP Address of RaspberryPi: " + rPi_IP
-		print "------------------------------------------------------------------------------------"
-		return rPi_IP
+    if len(rPi_IP) <= 16:
+        print "------------------------------------------------------------------------------------"
+        print "IOT_UTILS: IP Address of RaspberryPi: " + rPi_IP
+        print "------------------------------------------------------------------------------------"
+        return rPi_IP
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#       Get the port which http server is listening on
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def getHTTPServerPort():
+    return HTTP_SERVER_PORT
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Set the GPIO pin modes for the ones to be read
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def setUpGPIOPins():
+    import RPi.GPIO as GPIO
     try:
-            GPIO.setwarnings(False)
-            GPIO.setmode(GPIO.BOARD)
+        GPIO.setwarnings(False)
+        GPIO.setmode(GPIO.BOARD)
     except Exception as e:
-            print "IOT_UTILS: Exception at 'GPIO.setmode'"
-            print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-            pass
+        print "IOT_UTILS: Exception at 'GPIO.setmode'"
+        print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+        pass
 
-    GPIO.setup(SONAR_TRIG_PIN,GPIO.OUT)                  #Set pin as GPIO out
-    GPIO.setup(SONAR_ECHO_PIN,GPIO.IN)                   #Set pin as GPIO in
     GPIO.setup(BULB_PIN, GPIO.OUT)
     GPIO.output(BULB_PIN, False)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#       This method get the CPU Temperature of the Raspberry Pi
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def getCPUTemp():
-    	CPU_TEMP_LOC = "/sys/class/thermal/thermal_zone0/temp"                                 # RaspberryPi file location to get CPU TEMP info
-        tempFile = open(CPU_TEMP_LOC)
-        cpuTemp = tempFile.read()
-        cpuTemp = long(float(cpuTemp))
-        cpuTemp = cpuTemp * 1.0 / 1000.0
-        print "The CPU temperature is: %.2f" % cpuTemp
-        return cpuTemp
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#       This method get the CPU Load of the Raspberry Pi
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def getCPULoad():
-    	CPU_LOAD_LOC = "/proc/loadavg"                                                          # RaspberryPi file location to get CPU LOAD info
-        loadFile = open(CPU_LOAD_LOC)
-        cpuLoad = loadFile.read()
-        cpuLoad = cpuLoad.split()[0]
-        cpuLoad = long(float(cpuLoad))
-        print "The CPU temperature is: %.2f" % cpuLoad
-        return cpuLoad
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-def readSonarDistance():
-    global LAST_DISTANCE
-    try:
-        GPIO.output(SONAR_TRIG_PIN, False)                      #Set TRIG as LOW
-        print "IOT_UTILS: Waitng For Sonar Sensor To Settle"
-        time.sleep(0.5)                                         #Delay of 2 seconds
-
-        GPIO.output(SONAR_TRIG_PIN, True)                       #Set TRIG as HIGH
-        time.sleep(0.00001)                                     #Delay of 0.00001 seconds
-        GPIO.output(SONAR_TRIG_PIN, False)                      #Set TRIG as LOW
-
-        while GPIO.input(SONAR_ECHO_PIN)==0:                    #Check whether the ECHO is LOW
-            pulse_start = time.time()                           #Saves the last known time of LOW pulse
-
-        while GPIO.input(SONAR_ECHO_PIN)==1:                    #Check whether the ECHO is HIGH
-            pulse_end = time.time()                             #Saves the last known time of HIGH pulse 
-
-        pulse_duration = pulse_end - pulse_start                #Get pulse duration to a variable
-
-        distance = pulse_duration * 17150                       #Multiply pulse duration by 17150 to get distance
-        distance = round(distance, 2)                           #Round to two decimal points
-
-        if distance > 2 and distance < 400:                     #Check whether the distance is within range
-            print "IOT_UTILS: Distance: ", distance - 0.5,"cm"      #Print distance with 0.5 cm calibration
-            LAST_DISTANCE = distance
-        else:
-            print "IOT_UTILS: Out Of Range"                         #display out of range
-    
-    except Exception, e:
-        print "IOT_UTILS: Exception in SonarReaderThread: Could not successfully read Sonar"
-        print ("IOT_UTILS: " + str(e))
-        print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-
-
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       The Main method of the server script
@@ -188,13 +155,11 @@ def readSonarDistance():
 def main():
     global HOST_NAME
     HOST_NAME = getDeviceIP()
-    setUpGPIOPins()
+    if running_mode.RUNNING_MODE == 'N':
+        setUpGPIOPins()
 
-    while True:
-        readSonarDistance()
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 if __name__ == '__main__':
-	main()
-	
+    main()

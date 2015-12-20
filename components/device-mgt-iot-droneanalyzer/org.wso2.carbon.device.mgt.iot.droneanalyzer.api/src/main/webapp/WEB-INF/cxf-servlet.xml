@@ -24,36 +24,15 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
          http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
 
-
-
-	<!--<jaxrs:server id="VirtualFireAlarmController" address="/controller">-->
-	<!--<jaxrs:serviceBeans>-->
-	<!--<bean id="VirtualFireAlarmControllerService"-->
-	<!--class="org.wso2.carbon.device.mgt.iot.sample.virtual.firealarm.service.impl.VirtualFireAlarmControllerService">-->
-	<!--<property name="virtualFireAlarmMQTTSubscriber" ref="mqttSubscriberBean"/>-->
-	<!--<property name="virtualFireAlarmXMPPConnector" ref="xmppConnectorBean"/>-->
-	<!--</bean>-->
-	<!--</jaxrs:serviceBeans>-->
-	<!--<jaxrs:providers>-->
-	<!--<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />-->
-	<!--</jaxrs:providers>-->
-	<!--</jaxrs:server>-->
-
 	<jaxrs:server id="DroneAnalyzer" address="/">
-        <jaxrs:features>
-            <cxf:logging/>
-        </jaxrs:features>
 		<jaxrs:serviceBeans>
 			<bean id="DroneService" class="org.wso2.carbon.device.mgt.iot.droneanalyzer.service.DroneService">
-				<!--<property name="DroneXMPPConnector" ref="xmppConnectorBean"/>-->
 			</bean>
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
 		</jaxrs:providers>
 	</jaxrs:server>
-	<!--<bean id="xmppConnectorBean"
-		  class="org.wso2.carbon.device.mgt.iot.droneanalyzer.service.transport.DroneAnalyzerXMPPConnector">
-	</bean>-->
+
 </beans>
 
