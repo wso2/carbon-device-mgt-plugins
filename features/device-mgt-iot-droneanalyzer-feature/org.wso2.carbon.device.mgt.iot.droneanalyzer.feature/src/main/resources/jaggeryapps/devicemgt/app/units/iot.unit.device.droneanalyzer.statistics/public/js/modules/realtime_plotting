@@ -1,29 +1,46 @@
-
-var plotting = function(){
-    var api= this;
+/*
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+var plotting = function () {
+    var api = this;
     api.isDone = false;
     api.current_value = 0;
-    api.finishPlotting = function(callBack){
+    api.finishPlotting = function (callBack) {
         api.isDone = true;
         callBack(true);
     },
-    api.initPlotting = function(callback){
+    api.initPlotting = function (callback) {
         api.isDone = false;
         callback(true);
     },
-    api.forceToRedraw = function(callback){
+    api.forceToRedraw = function (callback) {
         api.isDone == true;
         callback(true);
     },
-    api.pushData = function(new_value){
+    api.pushData = function (new_value) {
         console.log(new_value);
         api.current_value = new_value;
     },
-    api.realtime_plotting = function(holder, y_min_hollder, y_max_holder, update_interval_holder, holder_width,
-                                     holder_height, window_size_holder, title) {
+    api.realtime_plotting = function (holder, y_min_hollder, y_max_holder, update_interval_holder, holder_width,
+                                      holder_height, window_size_holder, title) {
         $(holder).html();
-        //api.isDone = false;
-        var init_window = function(){return 0;}
+        var init_window = function () {
+            return 0;
+        }
         api.data = d3.range(parseInt($(window_size_holder).html())).map(init_window);
         var margin = {top: 20, right: 20, bottom: 20, left: 40},
             width = holder_width - margin.left - margin.right,
@@ -70,7 +87,7 @@ var plotting = function(){
         svg.append("text")
             .attr("class", "yaxis_label")
             .attr("transform", "rotate(-90)")
-            .attr("y", 0 - margin.left-4 )
+            .attr("y", 0 - margin.left - 4)
             .attr("x", (0 - (height / 2)))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
@@ -78,8 +95,8 @@ var plotting = function(){
         svg.append("text")
             .attr("class", "xaixs_label")
             .attr("transform",
-            "translate(" + (width/2) + " ," +
-            (height+margin.bottom) + ")")
+            "translate(" + (width / 2) + " ," +
+            (height + margin.bottom) + ")")
             .style("text-anchor", "middle")
             .text("Window Size");
         svg.append("text")
@@ -89,18 +106,18 @@ var plotting = function(){
             .attr("text-anchor", "middle")
             .style("font-size", "16px")
             .style("text-decoration", "underline")
-            .text($(title).val() + " variation within last "+ $(window_size_holder).html() +" frames");
+            .text($(title).val() + " variation within last " + $(window_size_holder).html() + " frames");
 
         updateAgain();
 
         function updateAgain() {
-            if(api.isDone)return;
+            if (api.isDone)return;
             api.data.push(api.current_value);
             path
                 .attr("d", line)
                 .attr("transform", null)
                 .transition()
-                .duration( $(update_interval_holder).html())
+                .duration($(update_interval_holder).html())
                 .ease("linear")
                 .attr("transform", "translate(" + x(0) + ",0)")
                 .each("end", updateAgain);
@@ -109,22 +126,20 @@ var plotting = function(){
 
         function rescale() {
             y.domain([parseInt($(y_min_hollder).val()), parseInt($(y_max_holder).val())])
-            /*svg.select(".y_axis").transition().call(axis_y);*/
 
             svg.select(".title_label")
-                .text($(title).val() + " variation within last "+ $(window_size_holder).html() +" frames");
+                .text($(title).val() + " variation within last " + $(window_size_holder).html() + " frames");
             svg.select(".yaxis_label")
                 .text($(title).val());
 
         }
 
-        function rescale_x(){
-            //y.domain([parseInt($(y_min_hollder).val()), parseInt($(y_max_holder).val())])
+        function rescale_x() {
             x.domain([1, parseInt($(window_size_holder).html()) - 2]).range([0, width])
             svg.select(".x_axis").transition().call(axis_x);
         }
 
-        $("#plotting_attribute").change(function(){
+        $("#plotting_attribute").change(function () {
             rescale();
         });
 
