@@ -15,17 +15,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-function onRequest(context) {
-    var log = new Log("device-view.js");
-    var deviceType = context.uriParams.deviceType;
-    var deviceId = request.getParameter("id");
-
-    if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
-        var deviceModule = require("/app/modules/device.js").deviceModule;
-        var device = deviceModule.viewDevice(deviceType, deviceId);
-
-        if (device && device.status != "error") {
-            return {"device": device};
+$("#module_control button").click(function (index) {
+    console.log("Asking Server to send the " + $(this).attr('id') + " command to Ar Drone");
+    var url = config_api.drone_control + "?action=" + $(this).attr('id') + "&speed=6&duration=7";
+    ajax_handler.ajaxRequest(url, config_api.drone_controlType, {action: $(this).attr('id'), speed: 7, duration: 7},
+        config_api.drone_controlDataType, function (data, status) {
+            console.log(JSON.stringify(data));
         }
-    }
-}
+    );
+});
+
+
+
