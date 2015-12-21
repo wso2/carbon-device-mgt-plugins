@@ -147,7 +147,7 @@ public class VirtualFireAlarmService {
             @Override
             public void run() {
                 virtualFireAlarmMQTTSubscriber.initConnector();
-                virtualFireAlarmMQTTSubscriber.connectAndSubscribe();
+                virtualFireAlarmMQTTSubscriber.connect();
             }
         };
 
@@ -623,8 +623,8 @@ public class VirtualFireAlarmService {
                     VirtualFireAlarmServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint, callUrlPattern, true);
                     break;
                 case MQTT_PROTOCOL:
-                    String mqttMessage = VirtualFireAlarmConstants.BULB_CONTEXT.replace("/", "");
-                    VirtualFireAlarmServiceUtils.sendCommandViaMQTT(owner, deviceId, mqttMessage, switchToState);
+                    String resource = VirtualFireAlarmConstants.BULB_CONTEXT.replace("/", "");
+                    virtualFireAlarmMQTTSubscriber.publishDeviceData(owner, deviceId, resource, switchToState);
                     break;
                 case XMPP_PROTOCOL:
                     VirtualFireAlarmServiceUtils.sendCommandViaXMPP(owner, deviceId,
@@ -701,8 +701,8 @@ public class VirtualFireAlarmService {
                     break;
 
                 case MQTT_PROTOCOL:
-                    String mqttMessage = VirtualFireAlarmConstants.BULB_CONTEXT.replace("/", "");
-                    VirtualFireAlarmServiceUtils.sendCommandViaMQTT(owner, deviceId, mqttMessage, "");
+                    String resource = VirtualFireAlarmConstants.SONAR_CONTEXT.replace("/", "");
+                    virtualFireAlarmMQTTSubscriber.publishDeviceData(owner, deviceId, resource, "");
                     break;
 
                 case XMPP_PROTOCOL:
@@ -775,9 +775,10 @@ public class VirtualFireAlarmService {
                         response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
                     }
 
-                    String temperatureValue = VirtualFireAlarmServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
-                                                                                              VirtualFireAlarmConstants.TEMPERATURE_CONTEXT,
-                                                                                              false);
+                    String temperatureValue = VirtualFireAlarmServiceUtils.
+                            sendCommandViaHTTP(deviceHTTPEndpoint,
+                                               VirtualFireAlarmConstants.TEMPERATURE_CONTEXT,
+                                               false);
 
                     SensorDataManager.getInstance().setSensorRecord(deviceId,
                                                                     VirtualFireAlarmConstants.SENSOR_TEMPERATURE,
@@ -786,8 +787,8 @@ public class VirtualFireAlarmService {
                     break;
 
                 case MQTT_PROTOCOL:
-                    String mqttMessage = VirtualFireAlarmConstants.BULB_CONTEXT.replace("/", "");
-                    VirtualFireAlarmServiceUtils.sendCommandViaMQTT(owner, deviceId, mqttMessage, "");
+                    String resource = VirtualFireAlarmConstants.TEMPERATURE_CONTEXT.replace("/", "");
+                    virtualFireAlarmMQTTSubscriber.publishDeviceData(owner, deviceId, resource, "");
                     break;
 
                 case XMPP_PROTOCOL:

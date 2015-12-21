@@ -20,24 +20,28 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttSubscriber;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
+import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
+import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VerificationManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VirtualFireAlarmServiceUtils;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Calendar;
 import java.util.UUID;
 
-public class VirtualFireAlarmMQTTSubscriber extends MqttSubscriber {
+public class VirtualFireAlarmMQTTSubscriber extends MQTTTransportHandler {
     private static Log log = LogFactory.getLog(VirtualFireAlarmMQTTSubscriber.class);
 
     private static final String serverName =
@@ -58,18 +62,36 @@ public class VirtualFireAlarmMQTTSubscriber extends MqttSubscriber {
         mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
     }
 
-    public void connectAndSubscribe() {
-        try {
-            super.connectAndSubscribe();
-        } catch (DeviceManagementException e) {
-            log.error("Subscription to MQTT Broker at: " + mqttEndpoint + " failed");
-            retryMQTTSubscription();
-        }
+    @Override
+    public void connect() {
+        Runnable connector = new Runnable() {
+            public void run() {
+                while (!isConnected()) {
+                    try {
+                        connectToQueue();
+                        subscribeToQueue();
+                    } catch (TransportHandlerException e) {
+                        log.warn("Connection/Subscription to MQTT Broker at: " + mqttBrokerEndPoint + " failed");
+                        try {
+                            Thread.sleep(timeoutInterval);
+                        } catch (InterruptedException ex) {
+                            //TODO: Need to print exception
+                            log.error("MQTT-Subscriber: Thread Sleep Interrupt Exception");
+                        }
+                    }
+                }
+            }
+        };
+
+        Thread connectorThread = new Thread(connector);
+        connectorThread.setDaemon(true);
+        connectorThread.start();
     }
 
     @Override
-    protected void postMessageArrived(String topic, MqttMessage mqttMessage) {
-        String ownerAndId = topic.replace("wso2" + File.separator + "iot" + File.separator, "");
+    public void processIncomingMessage(MqttMessage mqttMessage, String... messageParams) {
+        String topic = messageParams[0];
+        String ownerAndId = topic.replace(serverName + File.separator, "");
         ownerAndId = ownerAndId.replace(File.separator + VirtualFireAlarmConstants.DEVICE_TYPE + File.separator, ":");
         ownerAndId = ownerAndId.replace(File.separator + "publisher", "");
 
@@ -80,14 +102,13 @@ public class VirtualFireAlarmMQTTSubscriber extends MqttSubscriber {
             log.debug("Received MQTT message for: {OWNER-" + owner + "} & {DEVICE.ID-" + deviceId + "}");
         }
 
-        String actualMessage = "";
+        String actualMessage;
 
         try {
             PublicKey clientPublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
             PrivateKey serverPrivateKey = VerificationManager.getServerPrivateKey();
             actualMessage = VirtualFireAlarmServiceUtils.extractMessageFromPayload(mqttMessage.toString(),
                                                                                    serverPrivateKey, clientPublicKey);
-
             if (log.isDebugEnabled()) {
                 log.debug("MQTT: Received Message [" + actualMessage + "] topic: [" + topic + "]");
             }
@@ -116,37 +137,81 @@ public class VirtualFireAlarmMQTTSubscriber extends MqttSubscriber {
         }
     }
 
-    private void retryMQTTSubscription() {
-        Thread retryToSubscribe = new Thread() {
-            @Override
+
+    @Override
+    public void publishDeviceData() {
+
+    }
+
+
+    @Override
+    public void processIncomingMessage() {
+
+    }
+
+    @Override
+    public void publishDeviceData(String... publishData) {
+        if (publishData.length != 4) {
+
+        }
+
+        String deviceOwner = publishData[0];
+        String deviceId = publishData[1];
+        String resource = publishData[2];
+        String state = publishData[3];
+
+        MqttMessage pushMessage = new MqttMessage();
+        String publishTopic =
+                serverName + File.separator + deviceOwner + File.separator +
+                        VirtualFireAlarmConstants.DEVICE_TYPE + File.separator + deviceId;
+
+        try {
+            PublicKey devicePublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
+            PrivateKey serverPrivateKey = VerificationManager.getServerPrivateKey();
+
+            String actualMessage = resource + ":" + state;
+            String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage,
+                                                                                    devicePublicKey,
+                                                                                    serverPrivateKey);
+
+            pushMessage.setPayload(encryptedMsg.getBytes(StandardCharsets.UTF_8));
+            pushMessage.setQos(DEFAULT_MQTT_QUALITY_OF_SERVICE);
+            pushMessage.setRetained(false);
+
+            publishToQueue(publishTopic, pushMessage);
+
+        } catch (VirtualFireAlarmException e) {
+            log.error("Preparing Secure payload failed", e);
+        } catch (TransportHandlerException e) {
+            log.warn("Data Publish attempt to topic - [" + publishTopic + "] failed for payload [" + pushMessage + "]");
+        }
+    }
+
+
+    @Override
+    public void disconnect() {
+        Runnable stopConnection = new Runnable() {
             public void run() {
-                while (true) {
-                    if (!isConnected()) {
+                while (isConnected()) {
+                    try {
+                        closeConnection();
+                    } catch (MqttException e) {
                         if (log.isDebugEnabled()) {
-                            log.debug("Subscriber re-trying to reach MQTT queue....");
+                            log.warn("Unable to 'STOP' MQTT connection at broker at: " + mqttBrokerEndPoint);
                         }
 
                         try {
-                            VirtualFireAlarmMQTTSubscriber.super.connectAndSubscribe();
-                        } catch (DeviceManagementException e1) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Attempt to re-connect to MQTT-Queue failed");
-                            }
+                            Thread.sleep(timeoutInterval);
+                        } catch (InterruptedException e1) {
+                            log.error("MQTT-Terminator: Thread Sleep Interrupt Exception");
                         }
-                    } else {
-                        break;
-                    }
-
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e1) {
-                        log.error("MQTT: Thread S;eep Interrupt Exception");
                     }
                 }
             }
         };
 
-        retryToSubscribe.setDaemon(true);
-        retryToSubscribe.start();
+        Thread terminatorThread = new Thread(stopConnection);
+        terminatorThread.setDaemon(true);
+        terminatorThread.start();
     }
 }

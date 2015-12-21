@@ -36,7 +36,9 @@ import org.wso2.carbon.device.mgt.iot.DeviceController;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.VirtualFireAlarmService;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.exception.VirtualFireAlarmException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport.VirtualFireAlarmMQTTSubscriber;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport.VirtualFireAlarmXMPPConnector;
 
 import javax.ws.rs.HttpMethod;
@@ -155,31 +157,6 @@ public class VirtualFireAlarmServiceUtils {
         return responseMsg;
     }
 
-
-    public static boolean sendCommandViaMQTT(String deviceOwner, String deviceId, String resource,
-                                             String state) throws DeviceManagementException {
-
-        boolean result;
-        DeviceController deviceController = new DeviceController();
-
-        try {
-            PublicKey devicePublicKey = getDevicePublicKey(deviceId);
-            PrivateKey serverPrivateKey = VerificationManager.getServerPrivateKey();
-            String message = prepareSecurePayLoad(resource, devicePublicKey, serverPrivateKey);
-
-            result = deviceController.publishMqttControl(deviceOwner,
-                                                         VirtualFireAlarmConstants.DEVICE_TYPE,
-                                                         deviceId, message, state);
-        } catch (DeviceControllerException e) {
-            String errorMsg = "Error whilst trying to publish to MQTT Queue";
-            log.error(errorMsg);
-            throw new DeviceManagementException(errorMsg, e);
-        } catch (VirtualFireAlarmException e) {
-            throw new DeviceManagementException(e);
-        }
-        return result;
-    }
-
     public static void sendCommandViaXMPP(String deviceOwner, String deviceId, String resource,
                                           String state, VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector)
             throws DeviceManagementException {
@@ -187,8 +164,7 @@ public class VirtualFireAlarmServiceUtils {
         String xmppServerDomain = XmppConfig.getInstance().getXmppEndpoint();
         int indexOfChar = xmppServerDomain.lastIndexOf(File.separator);
         if (indexOfChar != -1) {
-            xmppServerDomain = xmppServerDomain.substring((indexOfChar + 1),
-                                                          xmppServerDomain.length());
+            xmppServerDomain = xmppServerDomain.substring((indexOfChar + 1), xmppServerDomain.length());
         }
 
         indexOfChar = xmppServerDomain.indexOf(":");
@@ -302,8 +278,8 @@ public class VirtualFireAlarmServiceUtils {
         String signedPayload = VerificationManager.signMessage(encryptedMsg, signatureKey);
 
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.append(JSON_MESSAGE_KEY, encryptedMsg);
-        jsonPayload.append(JSON_SIGNATURE_KEY, signedPayload);
+        jsonPayload.put(JSON_MESSAGE_KEY, encryptedMsg);
+        jsonPayload.put(JSON_SIGNATURE_KEY, signedPayload);
 
         return jsonPayload.toString();
     }
@@ -314,13 +290,20 @@ public class VirtualFireAlarmServiceUtils {
         String actualMessage;
 
         JSONObject jsonPayload = new JSONObject(message);
-        String encryptedMessage = jsonPayload.getString(JSON_MESSAGE_KEY);
-        String signedPayload = jsonPayload.getString(JSON_SIGNATURE_KEY);
+        Object encryptedMessage = jsonPayload.get(JSON_MESSAGE_KEY);
+        Object signedPayload = jsonPayload.get(JSON_SIGNATURE_KEY);
 
-        if (VerificationManager.verifySignature(encryptedMessage, signedPayload, verifySignatureKey)) {
-            actualMessage = VerificationManager.decryptMessage(encryptedMessage, decryptionKey);
+        if (encryptedMessage != null && signedPayload != null) {
+            if (VerificationManager.verifySignature(
+                    encryptedMessage.toString(), signedPayload.toString(), verifySignatureKey)) {
+                actualMessage = VerificationManager.decryptMessage(encryptedMessage.toString(), decryptionKey);
+            } else {
+                String errorMsg = "The message was not signed by a valid client. Could not verify signature on payload";
+                throw new VirtualFireAlarmException(errorMsg);
+            }
         } else {
-            String errorMsg = "The message was not signed by a valid client. Could not verify signature on payload";
+            String errorMsg = "The received message is in an INVALID format. " +
+                    "Need to be JSON - {\"Msg\":\"<ENCRYPTED_MSG>\", \"Sig\":\"<SIGNED_MSG>\"}.";
             throw new VirtualFireAlarmException(errorMsg);
         }
 

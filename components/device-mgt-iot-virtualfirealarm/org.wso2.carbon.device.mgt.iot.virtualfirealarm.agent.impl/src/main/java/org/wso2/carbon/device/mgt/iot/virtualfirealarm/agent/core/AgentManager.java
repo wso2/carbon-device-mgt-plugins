@@ -148,9 +148,6 @@ public class AgentManager {
             }
         }
 
-        //Start agent communication
-        agentCommunicator.get(protocol).connect();
-
         try {
             EnrollmentManager.getInstance().beginEnrollmentFlow();
         } catch (AgentCoreOperationException e) {
@@ -158,6 +155,9 @@ public class AgentManager {
             e.printStackTrace();
             System.exit(0);
         }
+
+        //Start agent communication
+        agentCommunicator.get(protocol).connect();
     }
 
     private void switchCommunicator(String stopProtocol, String startProtocol) {
@@ -303,7 +303,7 @@ public class AgentManager {
             default:
                 log.warn("Unknown protocol " + protocol);
         }
-        transportHandler.publishDeviceData(pushInterval);
+        transportHandler.publishDeviceData();
 
         if (log.isDebugEnabled()) {
             log.debug("The Data Publish Interval was changed to: " + pushInterval);
