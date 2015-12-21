@@ -308,17 +308,17 @@ public class AndroidSenseService {
                         case 5:
                             streamDef = LIGHT_STREAM_DEFINITION;
                             sensorName = SENSOR_LIGHT;
-                            payloadData = new Float[]{Float.parseFloat(sensor.value)};
+                            payloadData = new Float[]{Float.parseFloat(valuesM[0])};
                             break;
                         case 6:
                             streamDef = PRESSURE_STREAM_DEFINITION;
                             sensorName = SENSOR_PRESSURE;
-                            payloadData = new Float[]{Float.parseFloat(sensor.value)};
+                            payloadData = new Float[]{Float.parseFloat(valuesM[0])};
                             break;
                         case 8:
                             streamDef = PROXIMITY_STREAM_DEFINITION;
                             sensorName = SENSOR_PROXIMITY;
-                            payloadData = new Float[]{Float.parseFloat(sensor.value)};
+                            payloadData = new Float[]{Float.parseFloat(valuesM[0])};
                             break;
                         case 9:
                             streamDef = GRAVITY_STREAM_DEFINITION;
