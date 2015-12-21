@@ -70,7 +70,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                         subscribeToQueue();
                         //TODO:: Terminate logs with a period
                         agentManager.updateAgentStatus("Connected to MQTT Queue");
-                        publishDeviceData(agentManager.getPushInterval());
+                        publishDeviceData();
 
                     } catch (TransportHandlerException e) {
                         log.warn(AgentConstants.LOG_APPENDER +
@@ -170,10 +170,10 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
 
     }
 
-
     @Override
-    public void publishDeviceData(int publishInterval) {
+    public void publishDeviceData() {
         final AgentManager agentManager = AgentManager.getInstance();
+        int publishInterval = agentManager.getPushInterval();
         Runnable pushDataRunnable = new Runnable() {
             @Override
             public void run() {
@@ -186,7 +186,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                     MqttMessage pushMessage = new MqttMessage();
                     pushMessage.setPayload(payLoad.getBytes(StandardCharsets.UTF_8));
                     pushMessage.setQos(DEFAULT_MQTT_QUALITY_OF_SERVICE);
-                    pushMessage.setRetained(true);
+                    pushMessage.setRetained(false);
 
                     String topic = String.format(AgentConstants.MQTT_PUBLISH_TOPIC,
                                                  agentManager.getAgentConfigs().getServerName(),
@@ -246,6 +246,11 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
 
     @Override
     public void processIncomingMessage() {
+
+    }
+
+    @Override
+    public void publishDeviceData(String... publishData) {
 
     }
 

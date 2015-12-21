@@ -201,13 +201,14 @@ public class AgentUtilOperations {
      */
     public static void initializeServerEndPoints() {
         AgentManager agentManager = AgentManager.getInstance();
-        String serverEndpoint = agentManager.getAgentConfigs().getHTTPS_ServerEndpoint();
+        String serverSecureEndpoint = agentManager.getAgentConfigs().getHTTPS_ServerEndpoint();
+        String serverUnSecureEndpoint = agentManager.getAgentConfigs().getHTTP_ServerEndpoint();
         String backEndContext = agentManager.getAgentConfigs().getControllerContext();
 
-        String deviceControllerAPIEndpoint = serverEndpoint + backEndContext;
+        String deviceControllerAPIEndpoint = serverSecureEndpoint + backEndContext;
 
         String deviceEnrollmentEndpoint =
-                deviceControllerAPIEndpoint + AgentConstants.DEVICE_ENROLLMENT_API_EP;
+                serverUnSecureEndpoint + backEndContext + AgentConstants.DEVICE_ENROLLMENT_API_EP;
         agentManager.setEnrollmentEP(deviceEnrollmentEndpoint);
 
         String registerEndpointURL =
@@ -251,36 +252,43 @@ public class AgentUtilOperations {
         }
 
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.append(JSON_MESSAGE_KEY, encryptedMsg);
-        jsonPayload.append(JSON_SIGNATURE_KEY, signedPayload);
+        jsonPayload.put(JSON_MESSAGE_KEY, encryptedMsg);
+        jsonPayload.put(JSON_SIGNATURE_KEY, signedPayload);
 
         return jsonPayload.toString();
     }
 
 
     public static String extractMessageFromPayload(String message) throws AgentCoreOperationException {
+        String actualMessage;
+
         PublicKey serverPublicKey = EnrollmentManager.getInstance().getServerPublicKey();
         PrivateKey devicePrivateKey = EnrollmentManager.getInstance().getPrivateKey();
 
-        String actualMessage = "";
-
         JSONObject jsonPayload = new JSONObject(message);
-        String encryptedMessage = jsonPayload.getString(JSON_MESSAGE_KEY);
-        String signedPayload = jsonPayload.getString(JSON_SIGNATURE_KEY);
+        Object encryptedMessage = jsonPayload.get(JSON_MESSAGE_KEY);
+        Object signedPayload = jsonPayload.get(JSON_SIGNATURE_KEY);
         boolean verification;
 
-        try {
-            verification = CommunicationUtils.verifySignature(encryptedMessage, signedPayload, serverPublicKey);
-        } catch (TransportHandlerException e) {
-            String errorMsg = "Error occurred whilst trying to verify signature on received message: [" + message + "]";
-            log.error(errorMsg);
-            throw new AgentCoreOperationException(errorMsg, e);
+        if (encryptedMessage != null && signedPayload != null) {
+            try {
+                verification = CommunicationUtils.verifySignature(
+                        encryptedMessage.toString(), signedPayload.toString(), serverPublicKey);
+            } catch (TransportHandlerException e) {
+                String errorMsg =
+                        "Error occurred whilst trying to verify signature on received message: [" + message + "]";
+                log.error(errorMsg);
+                throw new AgentCoreOperationException(errorMsg, e);
+            }
+        } else {
+            String errorMsg = "The received message is in an INVALID format. " +
+                    "Need to be JSON - {\"Msg\":\"<ENCRYPTED_MSG>\", \"Sig\":\"<SIGNED_MSG>\"}.";
+            throw new AgentCoreOperationException(errorMsg);
         }
-
 
         try {
             if (verification) {
-                actualMessage = CommunicationUtils.decryptMessage(encryptedMessage, devicePrivateKey);
+                actualMessage = CommunicationUtils.decryptMessage(encryptedMessage.toString(), devicePrivateKey);
             } else {
                 String errorMsg = "Could not verify payload signature. The message was not signed by a valid client";
                 log.error(errorMsg);

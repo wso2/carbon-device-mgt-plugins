@@ -80,7 +80,7 @@ public class FireAlarmHTTPCommunicator extends HTTPTransportHandler {
                         processIncomingMessage();
                         server.start();
                         registerThisDevice();
-                        publishDeviceData(AgentManager.getInstance().getPushInterval());
+                        publishDeviceData();
                         log.info("HTTP Server started at port: " + port);
 
                     } catch (Exception e) {
@@ -155,8 +155,9 @@ public class FireAlarmHTTPCommunicator extends HTTPTransportHandler {
     }
 
     @Override
-    public void publishDeviceData(int publishInterval) {
+    public void publishDeviceData() {
         final AgentManager agentManager = AgentManager.getInstance();
+        int publishInterval = agentManager.getPushInterval();
         final String deviceOwner = agentManager.getAgentConfigs().getDeviceOwner();
         final String deviceID = agentManager.getAgentConfigs().getDeviceId();
         boolean simulationMode = false;
@@ -186,6 +187,7 @@ public class FireAlarmHTTPCommunicator extends HTTPTransportHandler {
 
         }
     }
+
 
     private void executeDataPush(String pushDataPayload) {
         AgentManager agentManager = AgentManager.getInstance();
@@ -296,6 +298,10 @@ public class FireAlarmHTTPCommunicator extends HTTPTransportHandler {
 
     }
 
+    @Override
+    public void publishDeviceData(String... publishData) {
+
+    }
 
     public void registerThisDevice() {
         final AgentManager agentManager = AgentManager.getInstance();

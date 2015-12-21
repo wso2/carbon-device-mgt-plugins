@@ -303,7 +303,7 @@ public class AgentManager {
             default:
                 log.warn("Unknown protocol " + protocol);
         }
-        transportHandler.publishDeviceData(pushInterval);
+        transportHandler.publishDeviceData();
 
         if (log.isDebugEnabled()) {
             log.debug("The Data Publish Interval was changed to: " + pushInterval);

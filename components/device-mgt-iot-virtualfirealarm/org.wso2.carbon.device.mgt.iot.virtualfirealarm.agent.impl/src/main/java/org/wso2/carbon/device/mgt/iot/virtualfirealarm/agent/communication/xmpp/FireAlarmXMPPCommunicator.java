@@ -81,7 +81,7 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
                         agentManager.updateAgentStatus("Connected to XMPP Server");
 
                         setMessageFilterAndListener(xmppAdminJID, xmppDeviceJID, true);
-                        publishDeviceData(agentManager.getPushInterval());
+                        publishDeviceData();
 
                     } catch (TransportHandlerException e) {
                         if (log.isDebugEnabled()) {
@@ -166,8 +166,9 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
     }
 
     @Override
-    public void publishDeviceData(int publishInterval) {
+    public void processIncomingMessage() {
         final AgentManager agentManager = AgentManager.getInstance();
+        int publishInterval = agentManager.getPushInterval();
 
         Runnable pushDataRunnable = new Runnable() {
             @Override
@@ -225,7 +226,12 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
     }
 
     @Override
-    public void processIncomingMessage() {
+    public void publishDeviceData(String... publishData) {
+
+    }
+
+    @Override
+    public void publishDeviceData() {
 
     }
 }
