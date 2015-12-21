@@ -285,7 +285,6 @@ public class AndroidSenseService {
                     switch (androidSensorId){
                         case 1:
                             streamDef = ACCELEROMETER_STREAM_DEFINITION;
-
                             gValuesF[0] = Float.parseFloat(valuesM[0]) * Float.parseFloat(valuesM[0]) * Float
                                     .parseFloat(valuesM[0]);
                             payloadData = gValuesF;
