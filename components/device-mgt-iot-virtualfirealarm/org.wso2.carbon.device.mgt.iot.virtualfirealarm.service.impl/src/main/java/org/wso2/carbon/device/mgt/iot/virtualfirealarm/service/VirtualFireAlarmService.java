@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
+import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
@@ -455,6 +456,8 @@ public class VirtualFireAlarmService {
 
         //create new device id
         String deviceId = shortUUID();
+
+        KeyGenerationUtil.createApplicationKeys("virtual_firealarm");
 
         TokenClient accessTokenClient = new TokenClient(VirtualFireAlarmConstants.DEVICE_TYPE);
         AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
