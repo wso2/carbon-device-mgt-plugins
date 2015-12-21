@@ -3,18 +3,22 @@
     <hr>
     <p class="margin-bottom-double light-grey ">Connect your drone device to the WSO2 device cloud.</p>
 </div>
-<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 padding-top">
+<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
     <img src="{{@unit.publicUri}}/images/drone-icon.png" class="img-responsive">
 </div>
 
-<div class="col-xs-12 col-sm-6 col-md-8 col-lg-8 padding-top">
+<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
     <h3 class="uppercase">Ingredients</h3>
     <hr>
     <p class="grey margin-top">Hardware Requirements </p>
     <br>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> IRIS+ Drone</li>
-        <li class="padding-top-double"><span class="circle">02</span> USB to Micro USB cable or Telemetry Radio receiver</li>
+        <li>
+            <span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i></span> IRIS+ Drone</li>
+        <li>
+            <span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i></span> USB to Micro USB cable or Telemetry Radio receiver</li>
     </ul>
     <br>
 
@@ -47,9 +51,9 @@
                                 Now</a>
                             &nbsp;&nbsp;
                             <a href="#" id="download-device-download-link" class="blue-button">
-                                &nbsp;&nbsp;&nbsp;&nbsp;Copy Link&nbsp;&nbsp;&nbsp;&nbsp;
+                                Copy Link
                             </a>
-                            &nbsp;&nbsp;
+
                         </div>
                     </form>
                 </div>
@@ -65,7 +69,7 @@
 
                     <div class="buttons">
                         <a href="#" id="device-400-link" class="btn-operations">
-                            &nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;
+                            OK
                         </a>
                     </div>
                 </div>
@@ -81,10 +85,10 @@
 
                     <div class="buttons">
                         <a href="#" id="device-401-link" class="blue-button">
-                            &nbsp;&nbsp;&nbsp;&nbsp;Goto Login Page&nbsp;&nbsp;&nbsp;&nbsp;
+                            Goto Login Page
                         </a>&nbsp;&nbsp;
                         <a href="#" onclick="hidePopup();" class="btn-operations">
-                            &nbsp;&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;&nbsp;
+                            Cancel
                         </a>
                     </div>
                 </div>
@@ -100,7 +104,7 @@
 
                     <div class="buttons">
                         <a href="#" id="device-403-link" class="btn-operations">
-                            &nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;
+                            OK
                         </a>
                     </div>
                 </div>
@@ -116,7 +120,7 @@
 
                     <div class="buttons">
                         <a href="#" id="device-409-link" class="btn-operations">
-                            &nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;
+                            OK
                         </a>
                     </div>
                 </div>
@@ -132,7 +136,7 @@
 
                     <div class="buttons">
                         <a href="#" id="device-unexpected-error-link" class="btn-operations">
-                            &nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;
+                            OK
                         </a>
                     </div>
                 </div>
@@ -143,7 +147,7 @@
     <br/><br/>
 </div>
 
-<div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double grey-bg ">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
     <h3 class="uppercase">Prepare</h3><hr>
     <p class="grey margin-top">Get your device ready</p>
     <ul class="list-unstyled">
@@ -152,57 +156,57 @@
     <br>
 </div>
 
-<div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double">
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
     <h3 class="uppercase">Schematic Diagram</h3><hr>
     <p class="grey margin-top">Click on the image to zoom</p>
     <center>
         <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
-            <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive" style="max-width: 500px; max-height: 500px">
+            <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive" >
         </a>
     </center>
     <br/>
 </div>
 
-<div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double">
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
     <h3 class="uppercase">Connect (Quick Start)</h3><hr>
     <p class="grey margin-top">Internet of Things Foundation Quickstart connection</p>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">01</span> <b>Click on the download button above to get the IRIS+ Drone setup files</b></li>
         <li class="padding-top-double"><span class="circle">02</span> <b>Connecting to drone</b>
-            </br>
-            <div>
-                <table class="table table-bordered ">
-                    <thead>
-                    <tr>
-                        <th>Connection type</th>
-                        <th>Connection string</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Linux computer connected to the drone via USB</td>
-                        <td>/dev/ttyAMA0(also set baud=57600)</td>
-                    </tr>
-                    <tr>
-                        <td>OSX computer connected to the drone via USB</td>
-                        <td>dev/cu.usbmodem1</td>
-                    </tr>
-                    <tr>
-                        <td>Windows computer connected to the drone via USB (in this case on COM14)</td>
-                        <td>com14</td>
-                    </tr>
-                    <tr>
-                        <td>Windows computer connected to the drone using a 3DR Telemetry Radio on COM14</td>
-                        <td>com14(also set baud=57600)</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            Ones you have the setup files please run startservice.sh with root privilege.</br>
-            <b>Note:</b> these connection types may vary from computer to computer. So please provide the correct
-            connection port
         </li>
     </ul>
+    <div class="padding-top-double">
+        <table class="table table-bordered ">
+            <thead>
+            <tr>
+                <th>Connection type</th>
+                <th>Connection string</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Linux computer connected to the drone via USB</td>
+                <td>/dev/ttyAMA0(also set baud=57600)</td>
+            </tr>
+            <tr>
+                <td>OSX computer connected to the drone via USB</td>
+                <td>dev/cu.usbmodem1</td>
+            </tr>
+            <tr>
+                <td>Windows computer connected to the drone via USB (in this case on COM14)</td>
+                <td>com14</td>
+            </tr>
+            <tr>
+                <td>Windows computer connected to the drone using a 3DR Telemetry Radio on COM14</td>
+                <td>com14(also set baud=57600)</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    Ones you have the setup files please run startservice.sh with root privilege.</br>
+    <b>Note:</b> these connection types may vary from computer to computer. So please provide the correct
+    connection port
+
     <br/>
 </div>
 
