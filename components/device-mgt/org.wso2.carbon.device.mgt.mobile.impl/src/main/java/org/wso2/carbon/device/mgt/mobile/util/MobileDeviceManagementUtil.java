@@ -165,7 +165,7 @@ public class MobileDeviceManagementUtil {
 
 	public static List<Integer> getMobileOperationIdsFromMobileDeviceOperations(
 			List<MobileDeviceOperationMapping> mobileDeviceOperationMappings) {
-		List<Integer> mobileOperationIds = new ArrayList<Integer>();
+		List<Integer> mobileOperationIds = new ArrayList<Integer>(mobileDeviceOperationMappings.size());
 		for (MobileDeviceOperationMapping mobileDeviceOperationMapping : mobileDeviceOperationMappings) {
 			mobileOperationIds.add(mobileDeviceOperationMapping.getOperationId());
 		}
