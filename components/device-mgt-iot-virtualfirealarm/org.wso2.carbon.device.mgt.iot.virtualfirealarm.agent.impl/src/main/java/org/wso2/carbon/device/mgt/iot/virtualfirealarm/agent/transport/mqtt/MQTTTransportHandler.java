@@ -198,7 +198,7 @@ public abstract class MQTTTransportHandler
     protected void subscribeToQueue() throws TransportHandlerException {
         try {
             //TODO:: QoS Level take it from a variable
-            client.subscribe(subscribeTopic, 0);
+            client.subscribe(subscribeTopic, 2);
             log.info("Subscriber '" + clientId + "' subscribed to topic: " + subscribeTopic);
         } catch (MqttException ex) {
             //TODO:: Compulsory log of errors and remove formatted error

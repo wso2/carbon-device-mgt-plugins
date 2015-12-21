@@ -69,7 +69,7 @@ public class VirtualFireAlarmMQTTSubscriber extends MqttSubscriber {
 
     @Override
     protected void postMessageArrived(String topic, MqttMessage mqttMessage) {
-        String ownerAndId = topic.replace("wso2" + File.separator + "iot" + File.separator, "");
+        String ownerAndId = topic.replace(serverName + File.separator, "");
         ownerAndId = ownerAndId.replace(File.separator + VirtualFireAlarmConstants.DEVICE_TYPE + File.separator, ":");
         ownerAndId = ownerAndId.replace(File.separator + "publisher", "");
 

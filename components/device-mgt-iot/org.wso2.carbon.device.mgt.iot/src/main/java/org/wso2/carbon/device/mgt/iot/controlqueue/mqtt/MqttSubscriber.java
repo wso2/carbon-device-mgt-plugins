@@ -176,7 +176,7 @@ public abstract class MqttSubscriber implements MqttCallback {
         }
 
         try {
-            client.subscribe(subscribeTopic, 0);
+            client.subscribe(subscribeTopic, 2);
 
             log.info("Subscribed with client id: " + clientId);
             log.info("Subscribed to topic: " + subscribeTopic);

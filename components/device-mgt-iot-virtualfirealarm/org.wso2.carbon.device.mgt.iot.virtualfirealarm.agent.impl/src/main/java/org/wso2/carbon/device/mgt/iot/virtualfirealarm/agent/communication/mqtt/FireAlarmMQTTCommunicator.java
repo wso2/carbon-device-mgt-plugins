@@ -48,6 +48,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
         super(deviceOwner, deviceType, mqttBrokerEndPoint, subscribeTopic);
     }
 
+    @SuppressWarnings("unused")
     public FireAlarmMQTTCommunicator(String deviceOwner, String deviceType,
                                      String mqttBrokerEndPoint, String subscribeTopic,
                                      int intervalInMillis) {
@@ -97,6 +98,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
     @Override
     public void processIncomingMessage(MqttMessage message, String... messageParams) {
         final AgentManager agentManager = AgentManager.getInstance();
+        String serverName = agentManager.getAgentConfigs().getServerName();
         String deviceOwner = agentManager.getAgentConfigs().getDeviceOwner();
         String deviceID = agentManager.getAgentConfigs().getDeviceId();
         String receivedMessage;
@@ -128,9 +130,8 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                 String replyTemperature = "Current temperature was read as: '" + currentTemperature + "C'";
                 log.info(AgentConstants.LOG_APPENDER + replyTemperature);
 
-                String tempPublishTopic = String.format(
-                        AgentConstants.MQTT_PUBLISH_TOPIC,
-                        agentManager.getAgentConfigs().getServerName(), deviceOwner, deviceID);
+                String tempPublishTopic = String.format(AgentConstants.MQTT_PUBLISH_TOPIC,
+                                                        serverName, deviceOwner, deviceID);
                 replyMessage = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
 
                 try {
@@ -149,7 +150,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                 log.info(AgentConstants.LOG_APPENDER + replyHumidity);
 
                 String humidPublishTopic = String.format(
-                        AgentConstants.MQTT_PUBLISH_TOPIC, deviceOwner, deviceID);
+                        AgentConstants.MQTT_PUBLISH_TOPIC, serverName, deviceOwner, deviceID);
                 replyMessage = AgentConstants.HUMIDITY_CONTROL + ":" + currentHumidity;
 
                 try {
@@ -188,6 +189,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                     pushMessage.setRetained(true);
 
                     String topic = String.format(AgentConstants.MQTT_PUBLISH_TOPIC,
+                                                 agentManager.getAgentConfigs().getServerName(),
                                                  agentManager.getAgentConfigs().getDeviceOwner(),
                                                  agentManager.getAgentConfigs().getDeviceId());
 
@@ -205,8 +207,8 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
             }
         };
 
-        dataPushServiceHandler = service.scheduleAtFixedRate(pushDataRunnable, publishInterval,
-                                                             publishInterval, TimeUnit.SECONDS);
+        dataPushServiceHandler = service.scheduleAtFixedRate(pushDataRunnable, publishInterval, publishInterval,
+                                                             TimeUnit.SECONDS);
     }
 
 
