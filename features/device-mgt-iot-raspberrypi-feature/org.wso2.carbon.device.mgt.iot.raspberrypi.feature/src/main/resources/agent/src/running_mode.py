@@ -1,0 +1,2 @@
+
+global RUNNING_MODE
