@@ -1,17 +1,33 @@
+#"""
+#/**
+#* Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#*
+#* WSO2 Inc. licenses this file to you under the Apache License,
+#* Version 2.0 (the "License"); you may not use this file except
+#* in compliance with the License.
+#* You may obtain a copy of the License at
+#*
+#* http://www.apache.org/licenses/LICENSE-2.0
+#*
+#* Unless required by applicable law or agreed to in writing,
+#* software distributed under the License is distributed on an
+#* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+#* KIND, either express or implied. See the License for the
+#* specific language governing permissions and limitations
+#* under the License.
+#**/
+#"""
+
 #!/bin/bash
 
 echo "----------------------------------------------------------------"
 echo "|		WSO2 IOT Sample				"
-echo "|		  RaspiAlarm				"
+echo "|		  RaspiAgent				"
 echo "|	       ----------------				"
 echo "|    ....initializing startup-script	"
 echo "----------------------------------------------------------------"
 
 currentDir=$PWD
-
-cd /var/lib/dpkg/info
-sudo rm -rf wso2-raspi-alarm*
-dpkg --remove --force-remove-reinstreq wso2-raspi-alarm
 
 while true; do
     read -p "Do you wish to run 'apt-get update' and continue? [Yes/No] " yn
@@ -31,23 +47,21 @@ if [ $? -ne 0 ]; then
     echo "sudo -i"
     echo "cd /var/lib/dpkg/info"
     echo "rm -rf wso2-raspi-alarm*"
-    echo "dpkg --remove --force-remove-reinstreq wso2-raspi-alarm"
+    echo "dpkg --remove --force-remove-reinstreq wso2-raspi-agent"
     echo "exit"
     echo "----------------------------------------------------------------"
     echo "Retry Installation...."
     break;
 fi
 
-
-for f in ./deviceConfigs.cfg; do
+for f in ./deviceConfig.properties; do
     ## Check if the glob gets expanded to existing files.
     ## If not, f here will be exactly the pattern above
     ## and the exists test will evaluate to false.
-    # [ -e "$f" ] && echo "'wso2-raspi-alarm_1.0_armhf.deb' file found and installing" || echo "'wso2-raspi-alarm_1.0_armhf.deb' file does not exist in current path"; exit;
     if [ -e "$f" ]; then
     	echo "Configuration file found......"
     else
-    	echo "'deviceConfigs.cfg' file does not exist in current path. \nExiting installation..."; 
+    	echo "'deviceConfig.properties' file does not exist in current path. \nExiting installation...";
     	exit;
     fi
     ## This is all we needed to know, so we can break after the first iteration
@@ -61,27 +75,36 @@ sudo python setup.py install
 
 cd $currentDir
 
-#sudo apt-get install python-pip
+sudo apt-get install python-pip
 sudo pip install sleekxmpp
 sudo pip install pyasn1 pyasn1-modules
 
-
-echo "Running the RaspberryAgent service...."
-# sudo service RaspberryService.sh start
-
 while true; do
     read -p "Whats the time-interval (in seconds) between successive Data-Pushes to the WSO2-DC (ex: '60' indicates 1 minute) > " input
+    read -p "Are you want to run this as a virtual agent? (Yes/No) " mode
 
     if [ $input -eq $input 2>/dev/null ]
     then
         echo "Setting data-push interval to $input seconds."
-        break;
     else
         echo "Input needs to be an integer indicating the number seconds between successive data-pushes."
     fi
+    case $mode in
+        [Yy]* )  mode="Y"
+                 echo "----------------------------------------------------------"
+                 echo "              This will run as a virtual agent            "
+                 echo "----------------------------------------------------------"
+				 break;;
+        [Nn]* )  mode="N"
+                 echo "----------------------------------------------------------"
+                 echo "              This will run as a real agent               "
+                 echo "----------------------------------------------------------"
+				 break;;
+        * ) echo "Please answer yes or no.";
+    esac
 done
 
-sudo nohup ./RaspberryStats.py -i $input > /dev/null 2>&1 &
+./src/RaspberryStats.py -i $input -m $mode
 
 if [ $? -ne 0 ]; then
 	echo "Could not start the service..."
@@ -91,4 +114,4 @@ fi
 
 echo "--------------------------------------------------------------------------"
 echo "|			Successfully Started		"
-echo "---------------------------------------------------------------------------"
+echo "|		   --------------------------		"

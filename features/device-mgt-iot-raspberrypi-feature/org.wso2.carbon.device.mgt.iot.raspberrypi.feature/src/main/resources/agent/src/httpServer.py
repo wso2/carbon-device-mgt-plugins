@@ -23,81 +23,66 @@
 import time
 import BaseHTTPServer
 import iotUtils
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#       HOST and PORT info of the HTTP Server that gets started
-#			HOST_NAME is initialised in the main() method
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#global HOST_NAME
-#HOST_NAME = "0.0.0.0"
-
-SERVER_PORT = 80 # Maybe set this to 9000.
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+import running_mode
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Class that handles HTTP GET requests for operations on the RPi
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class MyHandler(BaseHTTPServer.BaseHTTPRequestHandler):
-	def do_GET(request):
-		# """Respond to a GET request."""
+class OnRequestListener(BaseHTTPServer.BaseHTTPRequestHandler):
+    def do_GET(request):
+        # """Respond to a GET request."""
 
-		if not processURLPath(request.path):
-			return			
+        if not processURLPath(request.path):
+            return
 
-		resource = request.path.split("/")[1].upper()
-		state = request.path.split("/")[2].upper()
-		print "HTTP_SERVER: Resource - " + resource 
+        print request.path.split("/")[1].upper()
+        resource = request.path.split("/")[1].upper()
+        state = request.path.split("/")[2].upper()
+        print "HTTP_SERVER: Resource - " + resource
 
-		if resource == "TEMP":
-			request.send_response(200)
-			request.send_header("Content-type", "text/plain")
-			request.end_headers()
-			request.wfile.write(iotUtils.LAST_TEMP)
+        if resource == "TEMP":
+            request.send_response(200)
+            request.send_header("Content-type", "text/plain")
+            request.end_headers()
+            request.wfile.write(iotUtils.LAST_TEMP)
 
-		elif resource == "BULB":
-	                iotUtils.switchBulb(state)
-			print "HTTP_SERVER: Requested Switch State - " + state
+        elif resource == "BULB":
+            iotUtils.switchBulb(state)
+            print "HTTP_SERVER: Requested Switch State - " + state
 
-		elif resource == "SONAR":
-			request.send_response(200)
-			request.send_header("Content-type", "text/plain")
-			request.end_headers()
-			request.wfile.write(iotUtils.LAST_DISTANCE)
-
-		print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Check the URL string of the request and validate
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def processURLPath(path):
-	if path.count("/") != 2 and not "favicon" in path:
-		print "HTTP_SERVER: Invalid URL String: " + path
-		return False
-	
-	resource = path.split("/")[1]
+    if path.count("/") != 2 and not "favicon" in path:
+        print "HTTP_SERVER: Invalid URL String: " + path
+        return False
 
-	if not iequal("BULB", resource) and not iequal("TEMP", resource) and not iequal("FAN", resource) and not iequal("SONAR", resource):
-		if not "favicon" in resource:
-			print "HTTP_SERVER: Invalid resource - " + resource + " to execute operation"
-		return False
+    resource = path.split("/")[1]
 
-	return True
+    if not iequal("BULB", resource) and not iequal("TEMP", resource) and not iequal("FAN", resource) and not iequal(
+            "SONAR", resource):
+        if not "favicon" in resource:
+            print "HTTP_SERVER: Invalid resource - " + resource + " to execute operation"
+        return False
+
+    return True
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Case-Insensitive check on whether two string are similar
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def iequal(a, b):
-	try:
-		return a.upper() == b.upper()
-	except AttributeError:
-		return a == b
+    try:
+        return a.upper() == b.upper()
+    except AttributeError:
+        return a == b
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -106,29 +91,29 @@ def iequal(a, b):
 #			This method is invoked from RaspberryStats.py on a new thread
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def main():
-	HOST_NAME = iotUtils.getDeviceIP()
-        server_class = BaseHTTPServer.HTTPServer
+    HOST_NAME = iotUtils.getDeviceIP()
+    HTTP_SERVER_PORT = iotUtils.getHTTPServerPort()
+    server_class = BaseHTTPServer.HTTPServer
 
-	while True:
-	    	try:
-    			httpd = server_class((HOST_NAME, SERVER_PORT), MyHandler)
-    			print "HTTP_SERVER: " + time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, SERVER_PORT)
-                
-       	 		httpd.serve_forever()
-    		except (KeyboardInterrupt, Exception) as e:
-    			print "HTTP_SERVER: Exception in HttpServerThread (either KeyboardInterrupt or Other)"
-    			print ("HTTP_SERVER: " + str(e))
+    while True:
+        try:
+            httpd = server_class((HOST_NAME, HTTP_SERVER_PORT), OnRequestListener)
+            print "HTTP_SERVER: " + time.asctime(), "Server Starts - %s:%s" % (HOST_NAME, HTTP_SERVER_PORT)
 
-                	iotUtils.switchBulb("OFF")
-    			httpd.server_close()
-    			print "HTTP_SERVER: " + time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, SERVER_PORT)
-    			print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-    			pass
+            httpd.serve_forever()
+        except (KeyboardInterrupt, Exception) as e:
+            print "HTTP_SERVER: Exception in HttpServerThread (either KeyboardInterrupt or Other)"
+            print ("HTTP_SERVER: " + str(e))
 
+            if running_mode.RUNNING_MODE == "N":
+                iotUtils.switchBulb("OFF")
+            else :
+                iotUtils.switchBulb("OFF")
+            httpd.server_close()
+            print "HTTP_SERVER: " + time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, HTTP_SERVER_PORT)
+            print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+            pass
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-
 if __name__ == '__main__':
-	main()
-	
+    main()
