@@ -340,13 +340,13 @@ public class AndroidSenseService {
                 }
 
             }
-            Object metdaData[] = {dataMsg.owner, AndroidSenseConstants.DEVICE_TYPE, dataMsg.deviceId, sensor.time};
+            Object metaData[] = {dataMsg.owner, AndroidSenseConstants.DEVICE_TYPE, dataMsg.deviceId, sensor.time};
 
             if (streamDef != null && payloadData != null && payloadData.length > 0) {
                 try {
                     SensorDataManager.getInstance()
                             .setSensorRecord(dataMsg.deviceId, sensorName, sensor.value, sensor.time);
-                    deviceAnalyticsService.publishEvent(streamDef, "1.0.0", metdaData, new Object[0], payloadData);
+                    deviceAnalyticsService.publishEvent(streamDef, "1.0.0", metaData, new Object[0], payloadData);
                 } catch (DataPublisherConfigurationException e) {
                     response.setStatus(Response.Status.UNSUPPORTED_MEDIA_TYPE.getStatusCode());
                 }
