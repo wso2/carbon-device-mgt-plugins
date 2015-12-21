@@ -240,9 +240,7 @@
                 <configuration>
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
                     <warName>drone_analyzer</warName>
-                   <!-- <outputDirectory>/home/geesara/wso2/products/wso2iot-1.0.0-SNAPSHOT/repository/deployment/server/webapps</outputDirectory>
--->
-                </configuration>
+                    </configuration>
             </plugin>
         </plugins>
     </build>
