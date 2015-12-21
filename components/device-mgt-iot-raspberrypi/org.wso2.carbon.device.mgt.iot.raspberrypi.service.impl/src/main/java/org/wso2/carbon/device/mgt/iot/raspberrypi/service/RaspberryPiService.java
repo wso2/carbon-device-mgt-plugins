@@ -21,6 +21,8 @@ package org.wso2.carbon.device.mgt.iot.raspberrypi.service;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -68,7 +70,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Path("/RaspberryPiDeviceManager")
+@API( name="raspberrypi", version="1.0.0", context="/raspberrypi")
+@DeviceType( value = "raspberrypi")
 public class RaspberryPiService {
 
     private static Log log = LogFactory.getLog(RaspberryPiService.class);
