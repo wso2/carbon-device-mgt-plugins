@@ -4,29 +4,35 @@
     <p class="margin-bottom-double light-grey ">Connect your Digital Display
         to the WSO2 device cloud.</p>
 </div>
-<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 padding-top">
+<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
     <img src="{{@unit.publicUri}}/images/display-icon.png" class="img-responsive">
 </div>
-<div class="col-xs-12 col-sm-6 col-md-8 col-lg-8 padding-top">
-        <h3 class="uppercase">Ingredients</h3>
-        <hr>
-        <p class="grey margin-top">Hardware Requirements </p>
-        <br>
-        <ul>
-            <span class="fw-stack fw-lg margin-right">
+<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
+    <h3 class="uppercase">Ingredients</h3>
+    <hr>
+    <p class="grey margin-top">Hardware Requirements </p>
+    <br>
+    <ul class="list-unstyled">
+        <li>
+                <span class="fw-stack margin-right">
                     <i class="fw fw-ring fw-stack-2x"> </i>
                     <i class="fw fw-right-arrow fw-stack-1x"></i>
-                </span> Raspberry Pi <br/>
-            <span class="fw-stack fw-lg margin-right">
+                </span> Raspberry Pi
+        </li>
+        <li>
+                <span class="fw-stack margin-right">
                     <i class="fw fw-ring fw-stack-2x"> </i>
                     <i class="fw fw-right-arrow fw-stack-1x"></i>
-                </span> WIFI Shield<br/>
-            <span class="fw-stack fw-lg margin-right">
+                </span> WIFI Shield
+        </li>
+        <li>
+                <span class="fw-stack margin-right">
                     <i class="fw fw-ring fw-stack-2x"> </i>
                     <i class="fw fw-right-arrow fw-stack-1x"></i>
-                </span> Digital Display with HDMI Cable<br/>
-        </ul>
-        <br>
+                </span> Digital Display with HDMI Cable
+        </li>
+    </ul>
+    <br>
 
     <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download</a>
 
@@ -56,9 +62,9 @@
                                 Now</a>
                             &nbsp;&nbsp;
                             <a href="#" id="download-device-download-link" class="blue-button">
-                                &nbsp;&nbsp;&nbsp;&nbsp;Copy Link&nbsp;&nbsp;&nbsp;&nbsp;
+                                Copy Link
                             </a>
-                            &nbsp;&nbsp;
+
                         </div>
                     </form>
                 </div>
@@ -90,7 +96,7 @@
 
                     <div class="buttons">
                         <a href="#" id="device-400-link" class="btn-operations">
-                            &nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;
+                            OK
                         </a>
                     </div>
                 </div>
@@ -106,10 +112,10 @@
 
                     <div class="buttons">
                         <a href="#" id="device-401-link" class="blue-button">
-                            &nbsp;&nbsp;&nbsp;&nbsp;Goto Login Page&nbsp;&nbsp;&nbsp;&nbsp;
+                            Goto Login Page
                         </a>&nbsp;&nbsp;
                         <a href="#" onclick="hidePopup();" class="btn-operations">
-                            &nbsp;&nbsp;&nbsp;&nbsp;Cancel&nbsp;&nbsp;&nbsp;&nbsp;
+                            Cancel
                         </a>
                     </div>
                 </div>
@@ -125,7 +131,7 @@
 
                     <div class="buttons">
                         <a href="#" id="device-403-link" class="btn-operations">
-                            &nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;
+                            OK
                         </a>
                     </div>
                 </div>
@@ -141,7 +147,7 @@
 
                     <div class="buttons">
                         <a href="#" id="device-409-link" class="btn-operations">
-                            &nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;
+                            OK
                         </a>
                     </div>
                 </div>
@@ -157,7 +163,7 @@
 
                     <div class="buttons">
                         <a href="#" id="device-unexpected-error-link" class="btn-operations">
-                            &nbsp;&nbsp;&nbsp;&nbsp;OK&nbsp;&nbsp;&nbsp;&nbsp;
+                            OK
                         </a>
                     </div>
                 </div>
@@ -168,40 +174,49 @@
     <br/><br/>
 </div>
 
-    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double grey-bg ">
-        <h3 class="uppercase">Prepare</h3><hr>
-        <p class="grey margin-top">Get your device ready</p>
-        <br/>
-        <ul>
-            <p class="padding-top-double"><span class="circle">01</span> Set up your RaspberryPi device as shown in the schematic below and get the Digital Display setup.</p>
-            <p class="padding-top-double"><span class="circle">02</span> Connect a monitor to your RaspberryPi via the HDMI cable to get a UI view of the device.</p>
-            <p class="padding-top-double"><span class="circle">03</span> Get the RaspberryPi to connect to the internet (via Ethernet or Wifi) and note its IP_ADDRESS</p>
-        </ul>
-        <br>
-    </div>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
+    <h3 class="uppercase">Prepare</h3><hr>
+    <p class="grey margin-top">Get your device ready</p>
+    <br/>
+    <ul class="list-unstyled">
+        <li class="padding-top-double"><span class="circle">01</span> Set up your RaspberryPi device as shown in
+            the schematic below and get the Digital Display setup.</li>
+        <li class="padding-top-double"><span class="circle">02</span> Connect a monitor to your RaspberryPi via the
+            HDMI cable to get a UI view of the device.</li>
+        <li class="padding-top-double"><span class="circle">03</span> Get the RaspberryPi to connect to the internet
+            (via Ethernet or Wifi) and note its IP_ADDRESS</li>
+    </ul>
+    <br>
+</div>
 
-    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double">
-        <h3 class="uppercase">Schematic Diagram</h3><hr>
-        <p class="grey margin-top">Click on the image to zoom</p>
-        <center>
-            <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
-                <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive" style="max-width: 500px; max-height: 500px">
-            </a>
-        </center>
-        <br/>
-    </div>
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
+    <h3 class="uppercase">Schematic Diagram</h3><hr>
+    <p class="grey margin-top">Click on the image to zoom</p>
+    <center>
+        <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
+            <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive">
+        </a>
+    </center>
+    <br/>
+</div>
 
-    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-12 padding-double">
-        <h3 class="uppercase">Connect (Quick Start)</h3><hr>
-        <p class="grey margin-top">Internet of Things Foundation Quickstart connection</p>
-        <br/>
-        <ul>
-            <p class="padding-top-double"><span class="circle">01</span> <b>Click on the <i>'Create DEB'</i> button above to get the download link for the Digital Display setup files</b></p>
-            <p class="padding-top-double"><span class="circle">02</span> <i>(The following commands can be issued by directly typing into the terminal of the device or by an <b>'ssh'</b> login from a remote PC)</i></p>
-            <p class="padding-top-double"><span class="circle">03</span> <b>Download the Digital Display setup files using the following command: 'curl -k < url_link_received_from_the_above_step >> Agent.zip'</b><br/><i>This will download a zip file named 'Agent.zip'</i></p>
-        </ul>
-        <br>
-    </div>
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
+    <h3 class="uppercase">Connect (Quick Start)</h3><hr>
+    <p class="grey margin-top">Internet of Things Foundation Quickstart connection</p>
+    <br/>
+    <ul class="list-unstyled">
+        <li class="padding-top-double"><span class="circle">01</span>
+            Click on the <i>'Create DEB'</i> button above to get the download link for the Digital Display setup
+            files</li>
+        <li class="padding-top-double"><span class="circle">02</span> <i>(The following commands can be issued by
+            directly typing into the terminal of the device or by an <b>'ssh'</b> login from a remote PC)</i></li>
+        <li class="padding-top-double"><span class="circle">03</span> Download the Digital Display setup files
+            using the following command: 'curl -k < url_link_received_from_the_above_step >> Agent.zip'
+            This will download a zip file named 'Agent.zip'
+        </li>
+    </ul>
+    <br>
+</div>
 
 </div>
 
