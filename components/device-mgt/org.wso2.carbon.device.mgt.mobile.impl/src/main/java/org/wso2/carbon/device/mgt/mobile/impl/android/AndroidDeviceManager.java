@@ -335,7 +335,7 @@ public class AndroidDeviceManager implements DeviceManager {
             List<MobileDevice> mobileDevices =
                     daoFactory.getMobileDeviceDAO().getAllMobileDevices();
             if (mobileDevices != null) {
-                devices = new ArrayList<>();
+                devices = new ArrayList<>(mobileDevices.size());
                 for (MobileDevice mobileDevice : mobileDevices) {
                     devices.add(MobileDeviceManagementUtil.convertToDevice(mobileDevice));
                 }

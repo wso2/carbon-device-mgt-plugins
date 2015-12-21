@@ -134,7 +134,7 @@ public class GCMUtil {
     }
 
     private static List<String> getGCMTokens(List<Device> devices) {
-        List<String> tokens = new ArrayList<>();
+        List<String> tokens = new ArrayList<>(devices.size());
         for (Device device : devices) {
             tokens.add(getGCMToken(device.getProperties()));
         }
