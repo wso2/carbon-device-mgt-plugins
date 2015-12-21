@@ -285,7 +285,6 @@ public class AndroidSenseService {
                     switch (androidSensorId){
                         case 1:
                             streamDef = ACCELEROMETER_STREAM_DEFINITION;
-
                             gValuesF[0] = Float.parseFloat(valuesM[0]) * Float.parseFloat(valuesM[0]) * Float
                                     .parseFloat(valuesM[0]);
                             payloadData = gValuesF;
@@ -308,17 +307,17 @@ public class AndroidSenseService {
                         case 5:
                             streamDef = LIGHT_STREAM_DEFINITION;
                             sensorName = SENSOR_LIGHT;
-                            payloadData = new Float[]{Float.parseFloat(sensor.value)};
+                            payloadData = new Float[]{Float.parseFloat(valuesM[0])};
                             break;
                         case 6:
                             streamDef = PRESSURE_STREAM_DEFINITION;
                             sensorName = SENSOR_PRESSURE;
-                            payloadData = new Float[]{Float.parseFloat(sensor.value)};
+                            payloadData = new Float[]{Float.parseFloat(valuesM[0])};
                             break;
                         case 8:
                             streamDef = PROXIMITY_STREAM_DEFINITION;
                             sensorName = SENSOR_PROXIMITY;
-                            payloadData = new Float[]{Float.parseFloat(sensor.value)};
+                            payloadData = new Float[]{Float.parseFloat(valuesM[0])};
                             break;
                         case 9:
                             streamDef = GRAVITY_STREAM_DEFINITION;
@@ -341,13 +340,13 @@ public class AndroidSenseService {
                 }
 
             }
-            Object metdaData[] = {dataMsg.owner, AndroidSenseConstants.DEVICE_TYPE, dataMsg.deviceId, sensor.time};
+            Object metaData[] = {dataMsg.owner, AndroidSenseConstants.DEVICE_TYPE, dataMsg.deviceId, sensor.time};
 
             if (streamDef != null && payloadData != null && payloadData.length > 0) {
                 try {
                     SensorDataManager.getInstance()
                             .setSensorRecord(dataMsg.deviceId, sensorName, sensor.value, sensor.time);
-                    deviceAnalyticsService.publishEvent(streamDef, "1.0.0", metdaData, new Object[0], payloadData);
+                    deviceAnalyticsService.publishEvent(streamDef, "1.0.0", metaData, new Object[0], payloadData);
                 } catch (DataPublisherConfigurationException e) {
                     response.setStatus(Response.Status.UNSUPPORTED_MEDIA_TYPE.getStatusCode());
                 }
