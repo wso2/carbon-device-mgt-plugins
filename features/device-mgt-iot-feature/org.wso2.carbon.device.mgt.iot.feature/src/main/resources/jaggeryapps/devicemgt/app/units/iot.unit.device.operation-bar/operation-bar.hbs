@@ -1,7 +1,66 @@
-<div class="wr-operations"></div>
+{{#if control_operations}}
+    <div class="wr-operations" style="height: 87px; display: block;">
+        <style>
+            ::-webkit-input-placeholder {
+                color: #B8B8B8;
+            }
+
+            ::-moz-placeholder {
+                color: #B8B8B8;
+            }
+
+            :-ms-input-placeholder {
+                color: #B8B8B8;
+            }
+
+            input:-moz-placeholder {
+                color: #B8B8B8;
+            }
+        </style>
+        {{#each control_operations}}
+            <a href="javascript:operationSelect('{{operation}}')">
+                <i class="fw fw-service"></i>
+                <span>{{name}}</span>
+            </a>
+
+            <div class="operation" data-operation-code="{{operation}}">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-lg-5 col-md-6 col-centered">
+                            <h3>
+                        <span class="fw-stack">
+                            <i class="fw fw-ring fw-stack-2x"></i>
+                            <i class="fw fw-service fw-stack-1x"></i>
+                        </span>
+                                {{name}}
+                                <br>
+                            </h3>
+                            <h4>
+                                {{description}}
+                                <br>
+                            </h4>
+
+                            <form action="{{@app.context}}/api/operations/{{../device.type}}/{{operation}}?deviceId={{../device.deviceIdentifier}}"
+                                  method="post" style="padding-bottom: 20px;">
+                                {{#each params}}
+                                    <input type="text" name="{{this}}" placeholder="{{this}}" class="form-control">
+                                    <br />
+                                {{/each}}
+                                <button id="btnSend" type="submit" class="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;Send
+                                                       to Device&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                <label id="lblSending" class="wr-input-label hidden"><i
+                                        class="fw fw-lifecycle fw-spin fw-2x"></i> Sending..</label>
+                                <label id="lblSent" class="wr-input-label hidden"><i
+                                        class="fw fw-check fw-2x"></i> Sent</label>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+{{/if}}
 
 {{#zone "bottomJs"}}
-    <script id="operations-bar" src="{{@unit.publicUri}}/templates/operations.hbs"
-            type="text/x-handlebars-template"></script>
-	{{js "js/operation-bar.js"}}
+    {{js "js/operation-bar.js"}}
 {{/zone}}
