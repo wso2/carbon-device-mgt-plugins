@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
+import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
@@ -299,6 +300,9 @@ public class DroneService {
         if (owner == null) {
             throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
         }
+
+        KeyGenerationUtil.createApplicationKeys("drone");
+
         //create new device id
         String deviceId = shortUUID();
         TokenClient accessTokenClient = new TokenClient(DroneConstants.DEVICE_TYPE);
