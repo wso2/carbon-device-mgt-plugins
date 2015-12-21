@@ -15,17 +15,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-function onRequest(context) {
-    var log = new Log("device-view.js");
-    var deviceType = context.uriParams.deviceType;
+function onRequest (context) {
+    /*var log = new Log("detail.js");
+    var deviceType = request.getParameter("type");
     var deviceId = request.getParameter("id");
 
     if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
-        var deviceModule = require("/app/modules/device.js").deviceModule;
+        var deviceModule = require("/modules/device.js").deviceModule;
         var device = deviceModule.viewDevice(deviceType, deviceId);
 
-        if (device && device.status != "error") {
-            return {"device": device};
+        if (device) {
+            var viewModel = {};
+            var deviceInfo = device.properties.DEVICE_INFO;
+            if (deviceInfo != undefined && String(deviceInfo.toString()).length > 0) {
+                deviceInfo = parse(stringify(deviceInfo));
+                    viewModel.system = device.properties.IMEI;
+                    viewModel.machine = "Virtual Firealarm";
+                    viewModel.vendor = device.properties.VENDOR;
+                }
+                device.viewModel = viewModel;
         }
-    }
+        context.device = device;
+
+        return context;
+    }*/
 }
