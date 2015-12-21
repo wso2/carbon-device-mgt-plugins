@@ -123,6 +123,9 @@ public class GCMUtil {
         //Set device reg-ids
         JsonArray regIds = new JsonArray();
         for (String regId : registrationIds) {
+            if (regId == null && regId.isEmpty()) {
+                continue;
+            }
             regIds.add(new JsonPrimitive(regId));
         }
 
