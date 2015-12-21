@@ -19,7 +19,11 @@
         </style>
         {{#each control_operations}}
             <a href="javascript:operationSelect('{{operation}}')">
-                <i class="fw fw-service"></i>
+                {{#if icon}}
+                    <img src="{{@app.context}}/{{icon}}" style="width: 48px;"/>
+                {{else}}
+                    <i class="fw fw-service"></i>
+                {{/if}}
                 <span>{{name}}</span>
             </a>
 
