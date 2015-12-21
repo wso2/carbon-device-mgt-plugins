@@ -21,10 +21,10 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.enrollment.EnrollmentManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.exception.AgentCoreOperationException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.CommunicationUtils;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandlerException;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -79,6 +79,8 @@ public class AgentUtilOperations {
             //load a properties file from class path, inside static method
             properties.load(propertiesInputStream);
 
+            iotServerConfigs.setServerName(properties.getProperty(
+                    AgentConstants.SERVER_NAME_PROPERTY));
             iotServerConfigs.setDeviceOwner(properties.getProperty(
                     AgentConstants.DEVICE_OWNER_PROPERTY));
             iotServerConfigs.setDeviceId(properties.getProperty(
@@ -106,6 +108,8 @@ public class AgentUtilOperations {
             iotServerConfigs.setDataPushInterval(Integer.parseInt(properties.getProperty(
                     AgentConstants.PUSH_INTERVAL_PROPERTY)));
 
+            log.info(AgentConstants.LOG_APPENDER + "Server name: " +
+                             iotServerConfigs.getServerName());
             log.info(AgentConstants.LOG_APPENDER + "Device Owner: " +
                              iotServerConfigs.getDeviceOwner());
             log.info(AgentConstants.LOG_APPENDER + "Device ID: " + iotServerConfigs.getDeviceId());
@@ -149,9 +153,8 @@ public class AgentUtilOperations {
                     propertiesInputStream.close();
                 } catch (IOException e) {
                     log.error(AgentConstants.LOG_APPENDER +
-                                      "Error occurred whilst trying to close InputStream " +
-                                      "resource used to read the '" + propertiesFileName +
-                                      "' file");
+                                      "Error occurred whilst trying to close InputStream resource used to read the '" +
+                                      propertiesFileName + "' file");
                 }
             }
         }
@@ -169,6 +172,7 @@ public class AgentUtilOperations {
 
         AgentConfiguration iotServerConfigs = new AgentConfiguration();
 
+        iotServerConfigs.setDeviceOwner(AgentConstants.DEFAULT_SERVER_NAME);
         iotServerConfigs.setDeviceOwner(AgentConstants.DEFAULT_DEVICE_OWNER);
         iotServerConfigs.setDeviceId(AgentConstants.DEFAULT_DEVICE_ID);
         iotServerConfigs.setDeviceName(AgentConstants.DEFAULT_DEVICE_NAME);
@@ -195,12 +199,12 @@ public class AgentUtilOperations {
      *                                     retrieve the deviceIP of the network-interface read
      *                                     from the configs file
      */
-    public static void initializeHTTPEndPoints() {
+    public static void initializeServerEndPoints() {
         AgentManager agentManager = AgentManager.getInstance();
-        String apimEndpoint = agentManager.getAgentConfigs().getHTTP_ServerEndpoint();
+        String serverEndpoint = agentManager.getAgentConfigs().getHTTPS_ServerEndpoint();
         String backEndContext = agentManager.getAgentConfigs().getControllerContext();
 
-        String deviceControllerAPIEndpoint = apimEndpoint + backEndContext;
+        String deviceControllerAPIEndpoint = serverEndpoint + backEndContext;
 
         String deviceEnrollmentEndpoint =
                 deviceControllerAPIEndpoint + AgentConstants.DEVICE_ENROLLMENT_API_EP;
@@ -275,7 +279,7 @@ public class AgentUtilOperations {
 
 
         try {
-            if (verification){
+            if (verification) {
                 actualMessage = CommunicationUtils.decryptMessage(encryptedMessage, devicePrivateKey);
             } else {
                 String errorMsg = "Could not verify payload signature. The message was not signed by a valid client";
@@ -290,8 +294,6 @@ public class AgentUtilOperations {
 
         return actualMessage;
     }
-
-
 
 
 }

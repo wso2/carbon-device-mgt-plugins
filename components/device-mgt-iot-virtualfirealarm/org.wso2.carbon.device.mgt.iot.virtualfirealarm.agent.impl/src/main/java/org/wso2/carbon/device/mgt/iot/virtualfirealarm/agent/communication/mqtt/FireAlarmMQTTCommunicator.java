@@ -129,7 +129,8 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                 log.info(AgentConstants.LOG_APPENDER + replyTemperature);
 
                 String tempPublishTopic = String.format(
-                        AgentConstants.MQTT_PUBLISH_TOPIC, deviceOwner, deviceID);
+                        AgentConstants.MQTT_PUBLISH_TOPIC,
+                        agentManager.getAgentConfigs().getServerName(), deviceOwner, deviceID);
                 replyMessage = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
 
                 try {

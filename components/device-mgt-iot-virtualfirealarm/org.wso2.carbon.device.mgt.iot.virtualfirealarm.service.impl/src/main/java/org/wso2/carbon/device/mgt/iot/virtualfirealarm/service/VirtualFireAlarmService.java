@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -58,6 +58,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -381,6 +382,7 @@ public class VirtualFireAlarmService {
      * @param sketchType
      * @return
      */
+    //TODO:: Needs to go to "common.war" cz all the devices have this
     @Path("manager/device/{sketch_type}/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -495,8 +497,8 @@ public class VirtualFireAlarmService {
 
 
         ZipUtil ziputil = new ZipUtil();
-        ZipArchive zipFile = ziputil.downloadSketch(owner, SUPER_TENANT, sketchType, deviceId, deviceName,
-                                                    accessToken, refreshToken);
+        ZipArchive zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, deviceName,
+                                                   accessToken, refreshToken);
         zipFile.setDeviceId(deviceId);
         return zipFile;
     }
@@ -565,14 +567,14 @@ public class VirtualFireAlarmService {
      * @param state
      * @param response
      */
-    @Path("controller/bulb/{state}")
+    @Path("controller/bulb")
     @POST
     @Feature( code="VIRTUALFIREALARM_BULBCONTROL", name="Control Bulb",
             description="Switch on/off Virtual Fire Alarm Bulb")
     public void switchBulb(@HeaderParam("owner") String owner,
                            @HeaderParam("deviceId") String deviceId,
                            @HeaderParam("protocol") String protocol,
-                           @PathParam("state") String state,
+                           @FormParam("state") String state,
                            @Context HttpServletResponse response) {
 
         try {

@@ -263,7 +263,8 @@ public class DroneService {
         ZipUtil ziputil = new ZipUtil();
         ZipArchive zipFile = null;
         try {
-            zipFile = ziputil.downloadSketch(owner, SUPER_TENANT, sketchType, deviceId, customDeviceName, token, refreshToken);
+            zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, customDeviceName, token,
+                                            refreshToken);
         } catch (DeviceManagementException ex) {
             return Response.status(500).entity("Error occurred while creating zip file").build();
         }
@@ -336,8 +337,8 @@ public class DroneService {
             throw new DeviceManagementException(msg);
         }
         ZipUtil ziputil = new ZipUtil();
-        ZipArchive zipFile = ziputil.downloadSketch(owner, SUPER_TENANT, sketchType, deviceId, deviceName,
-                                         accessToken, refreshToken);
+        ZipArchive zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, deviceName,
+                                                   accessToken, refreshToken);
         zipFile.setDeviceId(deviceId);
         return zipFile;
     }

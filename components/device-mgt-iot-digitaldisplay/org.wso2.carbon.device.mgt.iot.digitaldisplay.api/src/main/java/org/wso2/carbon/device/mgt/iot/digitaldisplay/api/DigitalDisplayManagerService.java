@@ -226,7 +226,8 @@ public class DigitalDisplayManagerService {
 		ZipUtil ziputil = new ZipUtil();
 		ZipArchive zipFile = null;
 		try {
-			zipFile = ziputil.downloadSketch(owner, SUPER_TENANT, sketchType, deviceId, customDeviceName, token, refreshToken);
+			zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, customDeviceName, token,
+			                                refreshToken);
 		} catch (DeviceManagementException ex) {
 			return Response.status(500).entity("Error occurred while creating zip file").build();
 		}

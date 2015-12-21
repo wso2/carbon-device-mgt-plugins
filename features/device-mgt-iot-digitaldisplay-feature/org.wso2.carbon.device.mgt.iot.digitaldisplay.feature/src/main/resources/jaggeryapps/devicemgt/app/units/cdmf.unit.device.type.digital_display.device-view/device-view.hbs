@@ -1,14 +1,24 @@
-{{#zone "device-thumbnail"}}
-    <img src="{{@unit.publicUri}}/images/thumb.png"/>
+{{#zone "topCss"}}
+    <style>
+        .thumbnail.icon:before {
+            padding-top: 0;
+        }
+    </style>
 {{/zone}}
+
+{{#zone "device-thumbnail"}}
+    <img src="{{@unit.publicUri}}/images/display-icon.png"/>
+{{/zone}}
+
 {{#zone "device-opetations"}}
     <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">
         Operations
     </div>
     <div class="add-margin-top-4x">
-        {{unit "iot.unit.device.digitaldisplay.operation" device=device}}
+        {{unit "iot.unit.device.operation" device=device}}
     </div>
 {{/zone}}
+
 {{#zone "device-detail-properties"}}
     <div class="media">
         <div class="media-left col-xs-12 col-sm-2 col-md-2 col-lg-2">

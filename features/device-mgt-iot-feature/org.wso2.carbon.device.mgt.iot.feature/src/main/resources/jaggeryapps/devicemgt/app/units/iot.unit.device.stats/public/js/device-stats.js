@@ -6,12 +6,12 @@
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -24,16 +24,19 @@ var deviceId = $(".device-id").data("deviceid");
 var monitor_operations = $("#details").data("monitor");
 var appContext = $("#details").data("appcontext");
 
-var marker_1 = appContext +'/public/iot.unit.device.stats/images/map-marker-1.png';
+var marker_1 = appContext + '/public/iot.unit.device.stats/images/map-marker-1.png';
 var marker_2 = appContext + '/public/iot.unit.device.stats/images/map-marker-2.png';
 
 var map;
 var mapPoints = [], mapPaths = [], mapMarkers = [];
+
 function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 6.9344, lng: 79.8428},
-        zoom: 12
-    });
+    if ($('#map').length) {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 6.9344, lng: 79.8428},
+            zoom: 12
+        });
+    }
 }
 
 function formatDates() {
@@ -83,33 +86,6 @@ $(document).ready(function () {
     updateGraphs();
 });
 
-$("form").on('submit', function (e) {
-    var postOperationRequest = $.ajax({
-        url: $(this).attr("action") + '&' + $(this).serialize(),
-        method: "post"
-    });
-
-    var lblSending = $('#lblSending', this);
-    lblSending.removeClass('hidden');
-
-    var lblSent = $('#lblSent', this);
-    var sentValue = $(this).find('input[name="value"]').val();
-    postOperationRequest.done(function (data) {
-        lblSending.addClass('hidden');
-        lblSent.removeClass('hidden');
-        setTimeout(function () {
-            lblSent.addClass('hidden');
-        }, 3000);
-        $('#lblLastState').text('Current value: ' + (sentValue == '1' ? 'On' : 'Off'));
-    });
-
-    postOperationRequest.fail(function (jqXHR, textStatus) {
-        lblSending.addClass('hidden');
-        lblSent.addClass('hidden');
-    });
-    e.preventDefault();
-});
-
 function updateGraphs() {
     var tv = 5000;
 
@@ -149,7 +125,7 @@ function updateGraphs() {
             var graphVals = {};
             for (var s in stats) {
                 var val = stats[s];
-                if (!val){
+                if (!val) {
                     continue;
                 }
                 if (val.time > lastUpdate) {
@@ -168,7 +144,7 @@ function updateGraphs() {
                     map.panTo(val.map);
                     mapMarkers.push(marker);
 
-                    if (mapPoints.length > 1 ){
+                    if (mapPoints.length > 1) {
                         var l = mapPoints.length;
                         var path = new google.maps.Polyline({
                             path: [mapPoints[l - 1], mapPoints[l - 2]],
@@ -184,7 +160,7 @@ function updateGraphs() {
                         mapMarkers[l - 2].setIcon(marker_2);
                     }
 
-                    if (mapPoints.length >= 10){
+                    if (mapPoints.length >= 10) {
                         mapMarkers[0].setMap(null);
                         mapMarkers.splice(0, 1);
 
@@ -201,7 +177,7 @@ function updateGraphs() {
             }
             graph.series.addData(graphVals);
 
-            if (lastUpdate == -1){
+            if (lastUpdate == -1) {
                 $('#last_seen').text("Not seen recently");
             }
 

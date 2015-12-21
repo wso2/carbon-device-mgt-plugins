@@ -373,8 +373,8 @@ public class RaspberryPiService {
         }
 
         ZipUtil ziputil = new ZipUtil();
-        ZipArchive zipFile = ziputil.downloadSketch(owner, SUPER_TENANT, sketchType, deviceId, deviceName, accessToken,
-                                                    refreshToken);
+        ZipArchive zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, deviceName, accessToken,
+                                                   refreshToken);
         zipFile.setDeviceId(deviceId);
         return zipFile;
     }
