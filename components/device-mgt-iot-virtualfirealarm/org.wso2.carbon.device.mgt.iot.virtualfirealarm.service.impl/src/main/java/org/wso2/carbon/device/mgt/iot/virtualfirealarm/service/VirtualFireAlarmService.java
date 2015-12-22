@@ -551,10 +551,10 @@ public class VirtualFireAlarmService {
      * @param state
      * @param response
      */
-    @Path("controller/bulb")
+    @Path("controller/buzzer")
     @POST
-    @Feature(code = "VIRTUALFIREALARM_BULBCONTROL", name = "Control Bulb", type = "operation",
-             description = "Switch on/off Virtual Fire Alarm Bulb")
+    @Feature( code="buzzer", name="Buzzer On / Off", type="operation",
+            description="Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
     public void switchBulb(@HeaderParam("owner") String owner,
                            @HeaderParam("deviceId") String deviceId,
                            @HeaderParam("protocol") String protocol,
@@ -637,8 +637,8 @@ public class VirtualFireAlarmService {
      */
     @Path("controller/readhumidity")
     @GET
-    @Feature(code = "VIRTUALFIREALARM_READHUMIDITY", name = "Read Humidity", type = "monitor",
-             description = "Read Humidity Readings from Virtual Fire Alarm")
+    @Feature( code="readhumidity", name="Humidity", type = "monitor",
+            description="Read Humidity Readings from Virtual Fire Alarm")
     public String requestHumidity(@HeaderParam("owner") String owner,
                                   @HeaderParam("deviceId") String deviceId,
                                   @HeaderParam("protocol") String protocol,
@@ -718,8 +718,8 @@ public class VirtualFireAlarmService {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Feature(code = "VIRTUALFIREALARM_REQTEMP", name = "Request Tempreature", type = "monitor",
-             description = "Request Tempreature reading from Virtual Fire Alarm")
+    @Feature( code="readtemperature", name="Temperature", type="monitor",
+            description="Request Temperature reading from Virtual Fire Alarm")
     public SensorRecord requestTemperature(@HeaderParam("owner") String owner,
                                            @HeaderParam("deviceId") String deviceId,
                                            @HeaderParam("protocol") String protocol,
