@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -381,9 +381,9 @@ public class DroneService {
 
     @Path("controller/send_command")
     @POST
-    @Feature( code="DRONE_SEND_COMMAND", name="Send Command",
+    @Feature( code="send_command", name="Send Command", type="operation",
             description="Send Commands to Drone")
-    public Response droneController(@QueryParam("owner") String owner, @QueryParam("deviceId") String deviceId,
+    public Response droneController(@HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
                                  @QueryParam("action") String action, @QueryParam("duration") String duration,
                                  @QueryParam("speed") String speed){
         try {

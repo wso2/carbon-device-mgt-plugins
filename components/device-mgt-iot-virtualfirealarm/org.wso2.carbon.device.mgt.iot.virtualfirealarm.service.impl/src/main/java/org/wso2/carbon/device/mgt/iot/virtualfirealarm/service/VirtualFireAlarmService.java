@@ -570,10 +570,10 @@ public class VirtualFireAlarmService {
      * @param state
      * @param response
      */
-    @Path("controller/bulb")
+    @Path("controller/buzzer")
     @POST
-    @Feature( code="VIRTUALFIREALARM_BULBCONTROL", name="Control Bulb",
-            description="Switch on/off Virtual Fire Alarm Bulb")
+    @Feature( code="buzzer", name="Buzzer On / Off", type="operation",
+            description="Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
     public void switchBulb(@HeaderParam("owner") String owner,
                            @HeaderParam("deviceId") String deviceId,
                            @HeaderParam("protocol") String protocol,
@@ -655,8 +655,6 @@ public class VirtualFireAlarmService {
      */
     @Path("controller/readsonar")
     @GET
-    @Feature( code="VIRTUALFIREALARM_READSONAR", name="Read Sonar",
-            description="Read Sonar Readings from Virtual Fire Alarm")
     public String requestSonarReading(@HeaderParam("owner") String owner,
                                       @HeaderParam("deviceId") String deviceId,
                                       @HeaderParam("protocol") String protocol,
@@ -740,8 +738,8 @@ public class VirtualFireAlarmService {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Feature( code="VIRTUALFIREALARM_REQTEMP", name="Request Tempreature",
-            description="Request Tempreature reading from Virtual Fire Alarm")
+    @Feature( code="readtemperature", name="Request Temperature", type="monitor",
+            description="Request Temperature reading from Virtual Fire Alarm")
     public SensorRecord requestTemperature(@HeaderParam("owner") String owner,
                                            @HeaderParam("deviceId") String deviceId,
                                            @HeaderParam("protocol") String protocol,
