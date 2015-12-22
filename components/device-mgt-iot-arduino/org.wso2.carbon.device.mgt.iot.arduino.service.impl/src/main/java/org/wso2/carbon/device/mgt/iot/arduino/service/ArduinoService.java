@@ -24,6 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
+import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -398,6 +399,8 @@ public class ArduinoService {
 
         //create new device id
         String deviceId = shortUUID();
+
+        KeyGenerationUtil.createApplicationKeys("arduino");
 
         TokenClient accessTokenClient = new TokenClient(ArduinoConstants.DEVICE_TYPE);
         AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
