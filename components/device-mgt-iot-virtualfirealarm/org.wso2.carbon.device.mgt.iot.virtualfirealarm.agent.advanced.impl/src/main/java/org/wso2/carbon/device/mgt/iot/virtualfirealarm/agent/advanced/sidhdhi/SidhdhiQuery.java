@@ -43,7 +43,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
- * This class reads the sonar reading and injects values
+ * This class reads the humidity reading and injects values
  * to the siddhiEngine for processing on a routine basis
  * also if the siddhiquery is updated the class takes
  * care of re-initializing same.
@@ -104,8 +104,8 @@ public class SidhdhiQuery implements Runnable {
 
 			//Sending events to Siddhi
 			try {
-				int sonarReading = AgentManager.getInstance().getTemperature();
-				inputHandler.send(new Object[]{"FIRE_1", sonarReading});
+				int humidityReading = AgentManager.getInstance().getTemperature();
+				inputHandler.send(new Object[]{"FIRE_1", humidityReading});
 				Thread.sleep(3000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -142,14 +142,14 @@ public class SidhdhiQuery implements Runnable {
 
 
 	/**
-	 * Read sonar data from API URL
+	 * Read humidity data from API URL
 	 *
-	 * @param sonarAPIUrl
+	 * @param humidityAPIUrl
 	 * @return
 	 */
-	private String readSonarData(String sonarAPIUrl) {
+	private String readHumidityData(String humidityAPIUrl) {
 		HttpClient client = new DefaultHttpClient();
-		HttpGet request = new HttpGet(sonarAPIUrl);
+		HttpGet request = new HttpGet(humidityAPIUrl);
 		String responseStr = null;
 		try {
 			HttpResponse response = client.execute(request);
@@ -161,7 +161,7 @@ public class SidhdhiQuery implements Runnable {
 
 		} catch (IOException e) {
 			//log.error("Exception encountered while trying to make get request.");
-			log.error("Error while reading sonar reading from file!");
+			log.error("Error while reading humidity reading from file!");
 			return responseStr;
 		}
 		return responseStr;

@@ -87,8 +87,8 @@
     <Resource>
         <AuthType>Any</AuthType>
         <HttpVerb>GET</HttpVerb>
-        <Uri>http://localhost:9763/virtual_firealarm/controller/controller/readsonar</Uri>
-        <UriTemplate>/controller/readsonar</UriTemplate>
+        <Uri>http://localhost:9763/virtual_firealarm/controller/controller/readhumidity</Uri>
+        <UriTemplate>/controller/readhumidity</UriTemplate>
     </Resource>
     <Resource>
         <AuthType>Any</AuthType>

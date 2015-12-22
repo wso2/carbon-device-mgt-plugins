@@ -309,12 +309,17 @@ public abstract class MQTTTransportHandler
     @Override
     public void messageArrived(final String topic, final MqttMessage mqttMessage) {
         if (log.isDebugEnabled()) {
-            log.info("Got an MQTT message '" + mqttMessage.toString() + "' for topic '" + topic + "'.");
+            log.debug("Got an MQTT message '" + mqttMessage.toString() + "' for topic '" + topic + "'.");
         }
 
         Thread messageProcessorThread = new Thread() {
             public void run() {
-                processIncomingMessage(mqttMessage, topic);
+                try {
+                    processIncomingMessage(mqttMessage, topic);
+                } catch (TransportHandlerException e) {
+                    log.error("An error occurred when trying to process received MQTT message [" + mqttMessage + "] " +
+                                     "for topic [" + topic + "].", e);
+                }
             }
         };
         messageProcessorThread.setDaemon(true);

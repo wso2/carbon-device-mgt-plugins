@@ -43,12 +43,13 @@ import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
+import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.dto.DeviceJSON;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.exception.VirtualFireAlarmException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport.VirtualFireAlarmMQTTSubscriber;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport.VirtualFireAlarmMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport.VirtualFireAlarmXMPPConnector;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VerificationManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VirtualFireAlarmServiceUtils;
@@ -99,7 +100,7 @@ public class VirtualFireAlarmService {
     public static final String MQTT_PROTOCOL = "MQTT";
 
     private VerificationManager verificationManager;
-    private VirtualFireAlarmMQTTSubscriber virtualFireAlarmMQTTSubscriber;
+    private VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector;
     private VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector;
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
 
@@ -126,7 +127,7 @@ public class VirtualFireAlarmService {
             @Override
             public void run() {
                 virtualFireAlarmXMPPConnector.initConnector();
-                virtualFireAlarmXMPPConnector.connectAndLogin();
+                virtualFireAlarmXMPPConnector.connect();
             }
         };
 
@@ -137,23 +138,22 @@ public class VirtualFireAlarmService {
 
     /**
      *
-     * @param virtualFireAlarmMQTTSubscriber
+     * @param virtualFireAlarmMQTTConnector
      */
-    public void setVirtualFireAlarmMQTTSubscriber(
-            final VirtualFireAlarmMQTTSubscriber virtualFireAlarmMQTTSubscriber) {
-        this.virtualFireAlarmMQTTSubscriber = virtualFireAlarmMQTTSubscriber;
+    public void setVirtualFireAlarmMQTTConnector(
+            final VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector) {
+        this.virtualFireAlarmMQTTConnector = virtualFireAlarmMQTTConnector;
 
-        Runnable xmppStarter = new Runnable() {
-            @Override
-            public void run() {
-                virtualFireAlarmMQTTSubscriber.initConnector();
-                virtualFireAlarmMQTTSubscriber.connect();
-            }
-        };
-
-        Thread xmppStarterThread = new Thread(xmppStarter);
-        xmppStarterThread.setDaemon(true);
-        xmppStarterThread.start();
+//        Runnable xmppStarter = new Runnable() {
+//            @Override
+//            public void run() {
+                virtualFireAlarmMQTTConnector.connect();
+//            }
+//        };
+//
+//        Thread xmppStarterThread = new Thread(xmppStarter);
+//        xmppStarterThread.setDaemon(true);
+//        xmppStarterThread.start();
     }
 
     /**
@@ -176,8 +176,8 @@ public class VirtualFireAlarmService {
      *
      * @return
      */
-    public VirtualFireAlarmMQTTSubscriber getVirtualFireAlarmMQTTSubscriber() {
-        return virtualFireAlarmMQTTSubscriber;
+    public VirtualFireAlarmMQTTConnector getVirtualFireAlarmMQTTConnector() {
+        return virtualFireAlarmMQTTConnector;
     }
 
     /*	---------------------------------------------------------------------------------------
@@ -622,20 +622,22 @@ public class VirtualFireAlarmService {
 
                     VirtualFireAlarmServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint, callUrlPattern, true);
                     break;
+
                 case MQTT_PROTOCOL:
-                    String resource = VirtualFireAlarmConstants.BULB_CONTEXT.replace("/", "");
-                    virtualFireAlarmMQTTSubscriber.publishDeviceData(owner, deviceId, resource, switchToState);
+                    String mqttResource = VirtualFireAlarmConstants.BULB_CONTEXT.replace("/", "");
+                    virtualFireAlarmMQTTConnector.publishDeviceData(owner, deviceId, mqttResource, switchToState);
                     break;
+
                 case XMPP_PROTOCOL:
-                    VirtualFireAlarmServiceUtils.sendCommandViaXMPP(owner, deviceId,
-                                                                    VirtualFireAlarmConstants.BULB_CONTEXT,
-                                                                    switchToState, virtualFireAlarmXMPPConnector);
+                    String xmppResource = VirtualFireAlarmConstants.BULB_CONTEXT.replace("/", "");
+                    virtualFireAlarmXMPPConnector.publishDeviceData(owner, deviceId, xmppResource, switchToState);
                     break;
+
                 default:
                     response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
                     return;
             }
-        } catch (DeviceManagementException e) {
+        } catch (DeviceManagementException | TransportHandlerException e) {
             log.error("Failed to send switch-bulb request to device [" + deviceId + "] via " + protocolString);
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return;
@@ -653,23 +655,22 @@ public class VirtualFireAlarmService {
      * @param response
      * @return
      */
-    @Path("controller/readsonar")
+    @Path("controller/readhumidity")
     @GET
-    @Feature( code="VIRTUALFIREALARM_READSONAR", name="Read Sonar",
-            description="Read Sonar Readings from Virtual Fire Alarm")
-    public String requestSonarReading(@HeaderParam("owner") String owner,
-                                      @HeaderParam("deviceId") String deviceId,
-                                      @HeaderParam("protocol") String protocol,
-                                      @Context HttpServletResponse response) {
+    @Feature( code="VIRTUALFIREALARM_READHUMIDITY", name="Read Humidity",
+            description="Read Humidity Readings from Virtual Fire Alarm")
+    public String requestHumidity(@HeaderParam("owner") String owner,
+                                  @HeaderParam("deviceId") String deviceId,
+                                  @HeaderParam("protocol") String protocol,
+                                  @Context HttpServletResponse response) {
         String replyMsg = "";
 
         DeviceValidator deviceValidator = new DeviceValidator();
         try {
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
-                                                                                   VirtualFireAlarmConstants
-                                                                                           .DEVICE_TYPE))) {
+            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(
+                    deviceId, VirtualFireAlarmConstants.DEVICE_TYPE))) {
                 response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-                return "Unauthorized Access";
+                return "Unauthorized Access Attempt";
             }
         } catch (DeviceManagementException e) {
             replyMsg = e.getErrorMessage();
@@ -680,8 +681,7 @@ public class VirtualFireAlarmService {
         String protocolString = protocol.toUpperCase();
 
         if (log.isDebugEnabled()) {
-            log.debug("Sending request to read sonar value of device [" + deviceId + "] via " +
-                              protocolString);
+            log.debug("Sending request to read humidity value of device [" + deviceId + "] via " + protocolString);
         }
 
         try {
@@ -689,26 +689,24 @@ public class VirtualFireAlarmService {
                 case HTTP_PROTOCOL:
                     String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
                     if (deviceHTTPEndpoint == null) {
-                        replyMsg =
-                                "IP not registered for device: " + deviceId + " of owner: " + owner;
+                        replyMsg = "IP not registered for device: " + deviceId + " of owner: " + owner;
                         response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
                         return replyMsg;
                     }
 
                     replyMsg = VirtualFireAlarmServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
-                                                                               VirtualFireAlarmConstants.SONAR_CONTEXT,
+                                                                               VirtualFireAlarmConstants.HUMIDITY_CONTEXT,
                                                                                false);
                     break;
 
                 case MQTT_PROTOCOL:
-                    String resource = VirtualFireAlarmConstants.SONAR_CONTEXT.replace("/", "");
-                    virtualFireAlarmMQTTSubscriber.publishDeviceData(owner, deviceId, resource, "");
+                    String mqttResource = VirtualFireAlarmConstants.HUMIDITY_CONTEXT.replace("/", "");
+                    virtualFireAlarmMQTTConnector.publishDeviceData(owner, deviceId, mqttResource, "");
                     break;
 
                 case XMPP_PROTOCOL:
-                    VirtualFireAlarmServiceUtils.sendCommandViaXMPP(owner, deviceId,
-                                                                    VirtualFireAlarmConstants.SONAR_CONTEXT, "",
-                                                                    virtualFireAlarmXMPPConnector);
+                    String xmppResource = VirtualFireAlarmConstants.HUMIDITY_CONTEXT.replace("/", "");
+                    virtualFireAlarmXMPPConnector.publishDeviceData(owner, deviceId, xmppResource, "");
                     break;
 
                 default:
@@ -716,14 +714,14 @@ public class VirtualFireAlarmService {
                     response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
                     return replyMsg;
             }
-        } catch (DeviceManagementException e) {
-            replyMsg = e.getErrorMessage();
+        } catch (DeviceManagementException | TransportHandlerException e) {
+            replyMsg = e.getMessage();
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return replyMsg;
         }
 
         response.setStatus(Response.Status.OK.getStatusCode());
-        replyMsg = "The current sonar reading of the device is " + replyMsg;
+        replyMsg = "The current humidity reading of the device is " + replyMsg;
         return replyMsg;
     }
 
@@ -750,9 +748,8 @@ public class VirtualFireAlarmService {
 
         DeviceValidator deviceValidator = new DeviceValidator();
         try {
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
-                                                                                   VirtualFireAlarmConstants
-                                                                                           .DEVICE_TYPE))) {
+            if (!deviceValidator.isExist(owner, SUPER_TENANT,
+                                         new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE))) {
                 response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
             }
         } catch (DeviceManagementException e) {
@@ -762,9 +759,8 @@ public class VirtualFireAlarmService {
         String protocolString = protocol.toUpperCase();
 
         if (log.isDebugEnabled()) {
-            log.debug(
-                    "Sending request to read virtual-firealarm-temperature of device [" + deviceId +
-                            "] via " + protocolString);
+            log.debug("Sending request to read virtual-firealarm-temperature of device " +
+                                                                        "[" + deviceId + "] via " + protocolString);
         }
 
         try {
@@ -775,35 +771,33 @@ public class VirtualFireAlarmService {
                         response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
                     }
 
-                    String temperatureValue = VirtualFireAlarmServiceUtils.
-                            sendCommandViaHTTP(deviceHTTPEndpoint,
-                                               VirtualFireAlarmConstants.TEMPERATURE_CONTEXT,
-                                               false);
+                    String temperatureValue = VirtualFireAlarmServiceUtils.sendCommandViaHTTP(
+                                                                deviceHTTPEndpoint,
+                                                                VirtualFireAlarmConstants.TEMPERATURE_CONTEXT,
+                                                                false);
 
                     SensorDataManager.getInstance().setSensorRecord(deviceId,
-                                                                    VirtualFireAlarmConstants.SENSOR_TEMPERATURE,
+                                                                    VirtualFireAlarmConstants.SENSOR_TEMP,
                                                                     temperatureValue,
                                                                     Calendar.getInstance().getTimeInMillis());
                     break;
 
                 case MQTT_PROTOCOL:
-                    String resource = VirtualFireAlarmConstants.TEMPERATURE_CONTEXT.replace("/", "");
-                    virtualFireAlarmMQTTSubscriber.publishDeviceData(owner, deviceId, resource, "");
+                    String mqttResource = VirtualFireAlarmConstants.TEMPERATURE_CONTEXT.replace("/", "");
+                    virtualFireAlarmMQTTConnector.publishDeviceData(owner, deviceId, mqttResource, "");
                     break;
 
                 case XMPP_PROTOCOL:
-                    VirtualFireAlarmServiceUtils.sendCommandViaXMPP(owner, deviceId,
-                                                                    VirtualFireAlarmConstants.TEMPERATURE_CONTEXT, "",
-                                                                    virtualFireAlarmXMPPConnector);
+                    String xmppResource = VirtualFireAlarmConstants.TEMPERATURE_CONTEXT.replace("/", "");
+                    virtualFireAlarmMQTTConnector.publishDeviceData(owner, deviceId, xmppResource, "");
                     break;
 
                 default:
                     response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
             }
             sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-                                                                           VirtualFireAlarmConstants
-                                                                                   .SENSOR_TEMPERATURE);
-        } catch (DeviceManagementException | DeviceControllerException e) {
+                                                                           VirtualFireAlarmConstants.SENSOR_TEMP);
+        } catch (DeviceManagementException | DeviceControllerException | TransportHandlerException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
 
@@ -829,18 +823,16 @@ public class VirtualFireAlarmService {
 
         if (registeredIp == null) {
             log.warn("Unregistered IP: Temperature Data Received from an un-registered IP " +
-                             deviceIp + " for device ID - " + deviceId);
+                                                                            deviceIp + " for device ID - " + deviceId);
             response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
             return;
         } else if (!registeredIp.equals(deviceIp)) {
-            log.warn("Conflicting IP: Received IP is " + deviceIp + ". Device with ID " +
-                             deviceId +
-                             " is already registered under some other IP. Re-registration " +
-                             "required");
+            log.warn("Conflicting IP: Received IP is " + deviceIp + ". Device with ID " + deviceId +
+                                            " is already registered under some other IP. Re-registration required");
             response.setStatus(Response.Status.CONFLICT.getStatusCode());
             return;
         }
-        SensorDataManager.getInstance().setSensorRecord(deviceId, VirtualFireAlarmConstants.SENSOR_TEMPERATURE,
+        SensorDataManager.getInstance().setSensorRecord(deviceId, VirtualFireAlarmConstants.SENSOR_TEMP,
                                                         String.valueOf(temperature),
                                                         Calendar.getInstance().getTimeInMillis());
 

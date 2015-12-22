@@ -25,6 +25,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
@@ -33,6 +34,7 @@ import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.exception.IoTException;
 import org.wso2.carbon.device.mgt.iot.util.IoTUtil;
 
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -46,7 +48,9 @@ public class XmppServerClient implements ControlQueueConnector {
 
 	private static final String XMPP_SERVER_API_CONTEXT = "/plugins/restapi/v1";
 	private static final String USERS_API = "/users";
+	@SuppressWarnings("unused")
 	private static final String GROUPS_API = "/groups";
+	@SuppressWarnings("unused")
 	private static final String APPLICATION_JSON_MT = "application/json";
 
 	private String xmppEndpoint;
@@ -68,9 +72,7 @@ public class XmppServerClient implements ControlQueueConnector {
 	@Override
 	public void enqueueControls(HashMap<String, String> deviceControls)
 			throws DeviceControllerException {
-		if (xmppEnabled) {
-
-		} else {
+		if (!xmppEnabled) {
 			log.warn("XMPP <Enabled> set to false in 'devicemgt-config.xml'");
 		}
 	}
@@ -79,8 +81,7 @@ public class XmppServerClient implements ControlQueueConnector {
 		if (xmppEnabled) {
 			String xmppUsersAPIEndpoint = xmppEndpoint + XMPP_SERVER_API_CONTEXT + USERS_API;
 			if (log.isDebugEnabled()) {
-				log.debug("The API Endpoint URL of the XMPP Server is set to: " +
-								  xmppUsersAPIEndpoint);
+				log.debug("The API Endpoint URL of the XMPP Server is set to: " + xmppUsersAPIEndpoint);
 			}
 
 			String encodedString = xmppUsername + ":" + xmppPassword;
@@ -104,22 +105,23 @@ public class XmppServerClient implements ControlQueueConnector {
 					"        ]" +
 					"    }" +
 					"}";
-			StringEntity requestEntity = null;
+
+			StringEntity requestEntity;
 			try {
-				requestEntity = new StringEntity(jsonRequest,"application/json","UTF-8");
+				requestEntity = new StringEntity(jsonRequest, MediaType.APPLICATION_JSON , StandardCharsets.UTF_8.toString());
 			} catch (UnsupportedEncodingException e) {
 				return false;
 			}
 
-			URL xmppUserApiUrl = null;
+			URL xmppUserApiUrl;
 			try {
 				xmppUserApiUrl = new URL(xmppUsersAPIEndpoint);
 			} catch (MalformedURLException e) {
-				String errMsg = "Malformed URL + " + xmppUsersAPIEndpoint;
+				String errMsg = "Malformed XMPP URL + " + xmppUsersAPIEndpoint;
 				log.error(errMsg);
 				throw new DeviceControllerException(errMsg);
 			}
-			HttpClient httpClient = null;
+			HttpClient httpClient;
 			try {
 				httpClient = IoTUtil.getHttpClient(xmppUserApiUrl.getPort(), xmppUserApiUrl.getProtocol());
 			} catch (Exception e) {
@@ -127,12 +129,10 @@ public class XmppServerClient implements ControlQueueConnector {
 								  + xmppUserApiUrl.getProtocol());
 				return false;
 			}
-			HttpPost httpPost = new HttpPost(xmppUsersAPIEndpoint);
 
+			HttpPost httpPost = new HttpPost(xmppUsersAPIEndpoint);
 			httpPost.addHeader(HttpHeaders.AUTHORIZATION, authorizationHeader);
 			httpPost.setEntity(requestEntity);
-
-
 
 			try {
 				HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -157,6 +157,71 @@ public class XmppServerClient implements ControlQueueConnector {
 		} else {
 			log.warn("XMPP <Enabled> set to false in 'devicemgt-config.xml'");
 			return false;
+		}
+	}
+
+
+	public boolean doesXMPPUserAccountExist(String username) throws DeviceControllerException {
+		if (xmppEnabled) {
+			String xmppUsersAPIEndpoint = xmppEndpoint + XMPP_SERVER_API_CONTEXT + USERS_API + "/" + username;
+			if (log.isDebugEnabled()) {
+				log.debug("The API Endpoint URL of the XMPP Server is set to: " + xmppUsersAPIEndpoint);
+			}
+
+			String encodedString = xmppUsername + ":" + xmppPassword;
+			encodedString = new String(Base64.encodeBase64(encodedString.getBytes(StandardCharsets.UTF_8)));
+			String authorizationHeader = "Basic " + encodedString;
+
+			URL xmppUserApiUrl;
+			try {
+				xmppUserApiUrl = new URL(xmppUsersAPIEndpoint);
+			} catch (MalformedURLException e) {
+				String errMsg = "Malformed XMPP URL + " + xmppUsersAPIEndpoint;
+				log.error(errMsg);
+				throw new DeviceControllerException(errMsg, e);
+			}
+
+			HttpClient httpClient;
+			try {
+				httpClient = IoTUtil.getHttpClient(xmppUserApiUrl.getPort(), xmppUserApiUrl.getProtocol());
+			} catch (Exception e) {
+				String errorMsg = "Error on getting a http client for port :" + xmppUserApiUrl.getPort() +
+						" protocol :" + xmppUserApiUrl.getProtocol();
+				log.error(errorMsg);
+				throw new DeviceControllerException(errorMsg, e);
+			}
+
+			HttpGet httpGet = new HttpGet(xmppUsersAPIEndpoint);
+			httpGet.addHeader(HttpHeaders.AUTHORIZATION, authorizationHeader);
+
+			try {
+				HttpResponse httpResponse = httpClient.execute(httpGet);
+
+				if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+					String response = IoTUtil.getResponseString(httpResponse);
+					if (log.isDebugEnabled()) {
+						log.debug("XMPP Server returned status: '" + httpResponse.getStatusLine().getStatusCode() +
+								          "' for checking existence of account [" + username + "] with message:\n" +
+								          response + "\nProbably, an account with this username does not exist.");
+					}
+					return false;
+				}
+
+			} catch (IOException | IoTException e) {
+				String errorMsg = "Error occured whilst trying a 'GET' at : " + xmppUsersAPIEndpoint +
+						"\nError: " + e.getMessage();
+				log.error(errorMsg);
+				throw new DeviceControllerException(errorMsg, e);
+			}
+
+			if (log.isDebugEnabled()) {
+				log.debug("XMPP Server already has an account for the username - [" + username + "].");
+			}
+			return true;
+		} else {
+			String warnMsg = "XMPP <Enabled> set to false in 'devicemgt-config.xml'";
+			log.warn(warnMsg);
+			throw new DeviceControllerException(warnMsg);
 		}
 	}
 }

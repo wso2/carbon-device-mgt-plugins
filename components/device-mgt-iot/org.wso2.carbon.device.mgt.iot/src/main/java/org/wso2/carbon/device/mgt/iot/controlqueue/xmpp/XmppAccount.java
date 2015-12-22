@@ -18,11 +18,6 @@
 
 package org.wso2.carbon.device.mgt.iot.controlqueue.xmpp;
 
-import java.util.Map;
-
-/**
- * Created by smean-MAC on 7/24/15.
- */
 public class XmppAccount {
 	private String username;
 	private String password;
