@@ -63,7 +63,7 @@ public class TokenClient {
 		grantType = DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig()
 				.getApiManager()
 				.getDeviceGrantType();
-		scope = apiManagerConfig.getDeviceScopes();
+		scope = "device_scope";
 
 		appToken = ApisAppClient.getInstance().getBase64EncodedConsumerKeyAndSecret(deviceType);
 
