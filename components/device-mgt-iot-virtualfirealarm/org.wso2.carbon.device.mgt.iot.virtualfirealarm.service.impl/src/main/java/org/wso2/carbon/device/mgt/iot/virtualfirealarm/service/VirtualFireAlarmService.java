@@ -637,25 +637,23 @@ public class VirtualFireAlarmService {
      */
     @Path("controller/readhumidity")
     @GET
-    @Feature( code="readhumidity", name="Humidity", type = "monitor",
-            description="Read Humidity Readings from Virtual Fire Alarm")
-    public String requestHumidity(@HeaderParam("owner") String owner,
-                                  @HeaderParam("deviceId") String deviceId,
-                                  @HeaderParam("protocol") String protocol,
-                                  @Context HttpServletResponse response) {
-        String replyMsg = "";
-
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Feature(code = "readhumidity", name = "Humidity", type = "monitor",
+            description = "Read Humidity Readings from Virtual Fire Alarm")
+    public SensorRecord requestHumidity(@HeaderParam("owner") String owner,
+                                        @HeaderParam("deviceId") String deviceId,
+                                        @HeaderParam("protocol") String protocol,
+                                        @Context HttpServletResponse response) {
+        SensorRecord sensorRecord = null;
         DeviceValidator deviceValidator = new DeviceValidator();
         try {
             if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(
                     deviceId, VirtualFireAlarmConstants.DEVICE_TYPE))) {
                 response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-                return "Unauthorized Access Attempt";
             }
         } catch (DeviceManagementException e) {
-            replyMsg = e.getErrorMessage();
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            return replyMsg;
         }
 
         String protocolString = protocol.toUpperCase();
@@ -669,15 +667,16 @@ public class VirtualFireAlarmService {
                 case HTTP_PROTOCOL:
                     String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
                     if (deviceHTTPEndpoint == null) {
-                        replyMsg = "IP not registered for device: " + deviceId + " of owner: " + owner;
                         response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
-                        return replyMsg;
                     }
 
-                    replyMsg = VirtualFireAlarmServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
-                                                                               VirtualFireAlarmConstants
-                                                                                       .HUMIDITY_CONTEXT,
-                                                                               false);
+                    String humidityValue = VirtualFireAlarmServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
+                                                                                           VirtualFireAlarmConstants.HUMIDITY_CONTEXT,
+                                                                                           false);
+                    SensorDataManager.getInstance().setSensorRecord(deviceId,
+                                                                    VirtualFireAlarmConstants.SENSOR_TEMP,
+                                                                    humidityValue,
+                                                                    Calendar.getInstance().getTimeInMillis());
                     break;
 
                 case MQTT_PROTOCOL:
@@ -691,21 +690,17 @@ public class VirtualFireAlarmService {
                     break;
 
                 default:
-                    replyMsg = "Requested protocol '" + protocolString + "' is not supported";
                     response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
-                    return replyMsg;
             }
-        } catch (DeviceManagementException | TransportHandlerException e) {
-            replyMsg = e.getMessage();
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
+                                                                           VirtualFireAlarmConstants.SENSOR_HUMIDITY);
+        } catch (DeviceManagementException | DeviceControllerException | TransportHandlerException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            return replyMsg;
         }
 
         response.setStatus(Response.Status.OK.getStatusCode());
-        replyMsg = "The current humidity reading of the device is " + replyMsg;
-        return replyMsg;
+        return sensorRecord;
     }
-
 
     /**
      * @param owner

@@ -251,98 +251,20 @@ public class DigitalDisplayControllerService {
                                @FormParam("type") String type,
                                @FormParam("time") String time,
                                @FormParam("path") String path,
+                               @FormParam("position") String position,
                                @HeaderParam("sessionId") String sessionId,
                                @Context HttpServletResponse response) {
 
         log.info("Add Sequence : " + deviceId);
-
+        String params;
         try {
-            String params = type + "|" + time + "|" + path;
-            sendCommandViaMQTT(owner, deviceId, sessionId + "::" +
-                                                DigitalDisplayConstants.ADD_NEW_RESOURCE_CONSTANT + ":", params);
-            response.setStatus(Response.Status.OK.getStatusCode());
-        } catch (DeviceManagementException e) {
-            log.error(e);
-            response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-        } catch (DigitalDisplayException e) {
-            log.error(e);
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        }
-    }
 
-    /**
-     * Add new resource to sequence before given page no
-     *
-     * @param deviceId  id of the controlling digital display
-     * @param owner     owner of the digital display
-     * @param sessionId web socket id of the method invoke client
-     * @param response  response type of the method
-     * @param type      type of the new resource
-     * @param time      new resource visible time
-     * @param path      URL of the new resource
-     * @param nextPage  next page no of after adding new resource
-     */
-    @Path("/add-resource-before")
-    @POST
-    @Feature(code = "add-resource-before", name = "Add Resource Before", type="operation",
-            description = "Add new resource to sequence before given page no. in Digital Display")
-    public void addNewResourceBefore(@HeaderParam("deviceId") String deviceId,
-                                     @HeaderParam("owner") String owner,
-                                     @HeaderParam("sessionId") String sessionId,
-                                     @FormParam("type") String type,
-                                     @FormParam("time") String time,
-                                     @FormParam("path") String path,
-                                     @FormParam("next-page") String nextPage,
-                                     @Context HttpServletResponse response) {
-
-        log.info("Add Sequence : " + deviceId);
-
-        try {
-            String params = type + "|" + time + "|" + path +
-                            "|" + "before=" + nextPage;
-            sendCommandViaMQTT(owner, deviceId, sessionId + "::" +
-                                                DigitalDisplayConstants.ADD_NEW_RESOURCE_CONSTANT + ":", params);
-            response.setStatus(Response.Status.OK.getStatusCode());
-        } catch (DeviceManagementException e) {
-            log.error(e);
-            response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-        } catch (DigitalDisplayException e) {
-            log.error(e);
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        }
-    }
-
-
-    /**
-     * Add new resource to sequence after given page
-     *
-     * @param deviceId   id of the controlling digital display
-     * @param owner      owner of the digital display
-     * @param sessionId  web socket id of the method invoke client
-     * @param response   response type of the method
-     * @param type       type of the new resource
-     * @param time       new resource visible time
-     * @param path       URL of the new resource
-     * @param beforePage before page no of after adding new resource
-     */
-    @Path("/add-resource-next")
-    @POST
-    @Feature(code = "add-resource-next", name = "Add Resource Next", type="operation",
-            description = "Add new resource to sequence after given page in Digital Display")
-    public void addNewResourceAfter(@HeaderParam("deviceId") String deviceId,
-                                    @HeaderParam("owner") String owner,
-                                    @FormParam("type") String type,
-                                    @FormParam("time") String time,
-                                    @FormParam("path") String path,
-                                    @FormParam("before-page") String beforePage,
-                                    @HeaderParam("sessionId") String sessionId,
-                                    @Context HttpServletResponse response) {
-
-        log.info("Add Sequence : " + deviceId);
-
-        try {
-            String params = type + "|" + time + "|" + path +
-                            "|" + "after=" + beforePage;
+            if (position.isEmpty()){
+                params = type + "|" + time + "|" + path;
+            } else {
+                params = type + "|" + time + "|" + path +
+                         "|" + "after=" + position;
+            }
             sendCommandViaMQTT(owner, deviceId, sessionId + "::" +
                                                 DigitalDisplayConstants.ADD_NEW_RESOURCE_CONSTANT + ":", params);
             response.setStatus(Response.Status.OK.getStatusCode());

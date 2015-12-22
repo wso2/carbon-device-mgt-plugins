@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
+import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
@@ -49,16 +50,7 @@ import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -437,12 +429,12 @@ public class RaspberryPiService {
      * @param state
      * @param response
      */
-    @Path("controller/bulb/{state}")
+    @Path("controller/bulb")
     @POST
-    public void switchBulb(@HeaderParam("owner") String owner,
-                           @HeaderParam("deviceId") String deviceId,
-                           @HeaderParam("protocol") String protocol,
-                           @PathParam("state") String state,
+    @Feature( code="bulb", name="Bulb On / Off", type="operation",
+            description="Switch on/off Raspberry Pi agent's bulb. (On / Off)")
+    public void switchBulb(@HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
+                           @HeaderParam("protocol") String protocol, @FormParam("state") String state,
                            @Context HttpServletResponse response) {
 
         try {
@@ -516,6 +508,8 @@ public class RaspberryPiService {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Feature( code="readtemperature", name="Temperature", type="monitor",
+            description="Request temperature reading from Raspberry Pi agent")
     public SensorRecord requestTemperature(@HeaderParam("owner") String owner,
                                            @HeaderParam("deviceId") String deviceId,
                                            @HeaderParam("protocol") String protocol,

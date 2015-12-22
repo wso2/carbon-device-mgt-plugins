@@ -31,4 +31,5 @@ public class VirtualFireAlarmConstants {
 	public static final String TEMPERATURE_CONTEXT = "/TEMPERATURE/";
 
     public static final String SENSOR_TEMP = "temperature";
+    public static final String SENSOR_HUMIDITY = "humidity";
 }
