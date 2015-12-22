@@ -738,7 +738,7 @@ public class VirtualFireAlarmService {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Feature( code="readtemperature", name="Request Temperature", type="monitor",
+    @Feature( code="readtemperature", name="Temperature", type="monitor",
             description="Request Temperature reading from Virtual Fire Alarm")
     public SensorRecord requestTemperature(@HeaderParam("owner") String owner,
                                            @HeaderParam("deviceId") String deviceId,
