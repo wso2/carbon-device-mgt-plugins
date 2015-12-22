@@ -203,7 +203,10 @@ public abstract class MqttSubscriber implements MqttCallback {
      */
     @Override
 	public void connectionLost(Throwable throwable) {
-		log.warn("Lost Connection for client: " + this.clientId + " to " + this.mqttBrokerEndPoint + ".\nThis was due to - " + throwable.getMessage());
+        if (log.isDebugEnabled()) {
+            log.warn("Lost Connection for client: " + this.clientId + " to " + this.mqttBrokerEndPoint +
+                             ".\nThis was due to - " + throwable.getMessage());
+        }
 
         Runnable reSubscriber = new Runnable() {
             @Override
@@ -219,8 +222,6 @@ public abstract class MqttSubscriber implements MqttCallback {
                             log.debug("Could not reconnect and subscribe to ControlQueue.");
                         }
                     }
-                } else {
-                    return;
                 }
             }
         };
@@ -263,7 +264,11 @@ public abstract class MqttSubscriber implements MqttCallback {
     }
 		String topic = iMqttDeliveryToken.getTopics()[0];
 		String client = iMqttDeliveryToken.getClient().getClientId();
-		log.info("Message - '" + message + "' of client [" + client + "] for the topic (" + topic + ") was delivered successfully.");
+
+        if (log.isDebugEnabled()) {
+            log.debug("Message - '" + message + "' of client [" + client + "] for the topic (" + topic +
+                              ") was delivered successfully.");
+        }
 	}
 
 	/**
