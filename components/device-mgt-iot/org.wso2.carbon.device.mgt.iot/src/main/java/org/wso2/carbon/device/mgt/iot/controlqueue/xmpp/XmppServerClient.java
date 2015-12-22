@@ -220,7 +220,7 @@ public class XmppServerClient implements ControlQueueConnector {
 			return true;
 		} else {
 			String warnMsg = "XMPP <Enabled> set to false in 'devicemgt-config.xml'";
-			log.error(warnMsg);
+			log.warn(warnMsg);
 			throw new DeviceControllerException(warnMsg);
 		}
 	}

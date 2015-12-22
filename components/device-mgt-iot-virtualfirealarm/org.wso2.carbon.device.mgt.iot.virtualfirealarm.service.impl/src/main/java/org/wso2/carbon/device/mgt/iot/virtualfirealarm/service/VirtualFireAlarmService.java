@@ -147,7 +147,6 @@ public class VirtualFireAlarmService {
 //        Runnable xmppStarter = new Runnable() {
 //            @Override
 //            public void run() {
-                virtualFireAlarmMQTTConnector.initConnector();
                 virtualFireAlarmMQTTConnector.connect();
 //            }
 //        };

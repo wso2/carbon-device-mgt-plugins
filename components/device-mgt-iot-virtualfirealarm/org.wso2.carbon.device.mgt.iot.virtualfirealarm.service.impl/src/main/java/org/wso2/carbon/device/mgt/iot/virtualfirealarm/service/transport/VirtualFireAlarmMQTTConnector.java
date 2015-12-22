@@ -43,20 +43,17 @@ import java.util.UUID;
 public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
     private static Log log = LogFactory.getLog(VirtualFireAlarmMQTTConnector.class);
 
-    private static String serverName;
-    private static String subscribeTopic;
-    private static String iotServerSubscriber;
+    private static String serverName = DeviceManagementConfigurationManager.getInstance().
+            getDeviceManagementServerInfo().getName();
+
+    private static String subscribeTopic = serverName + File.separator + "+" + File.separator +
+            VirtualFireAlarmConstants.DEVICE_TYPE + File.separator + "+" + File.separator + "publisher";
+
+    private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
     private VirtualFireAlarmMQTTConnector() {
         super(iotServerSubscriber, VirtualFireAlarmConstants.DEVICE_TYPE,
               MqttConfig.getInstance().getMqttQueueEndpoint(), subscribeTopic);
-    }
-
-    public void initConnector(){
-        iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
-        serverName = DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
-        subscribeTopic = serverName + File.separator + "+" + File.separator + VirtualFireAlarmConstants.DEVICE_TYPE +
-                        File.separator + "+" + File.separator + "publisher";
     }
 
     @Override
