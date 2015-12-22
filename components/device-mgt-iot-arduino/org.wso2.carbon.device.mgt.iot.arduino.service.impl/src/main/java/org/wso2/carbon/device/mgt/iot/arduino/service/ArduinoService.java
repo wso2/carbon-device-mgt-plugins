@@ -486,7 +486,7 @@ public class ArduinoService {
      */
     @Path("controller/bulb/{state}")
     @POST
-    @Feature( code="ARDUINO_BULB_CONTROL", name="Control Bulb",
+    @Feature( code="ARDUINO_BULB_CONTROL", name="Control Bulb", type = "monitor",
             description="Control Bulb on Arduino Arduino")
     public void switchBulb(@HeaderParam("owner") String owner,
                            @HeaderParam("deviceId") String deviceId,
@@ -557,8 +557,6 @@ public class ArduinoService {
     @Path("controller/pushdata")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Feature( code="ARDUINO_READ_DATA", name="Read Data",
-            description="Read Data from Arduino")
     public void pushData(final DeviceJSON dataMsg, @Context HttpServletResponse response) {
 
         String owner = dataMsg.owner;
@@ -651,8 +649,6 @@ public class ArduinoService {
     @Path("controller/push_temperature")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Feature( code="ARDUINO_READ_TEMP", name="Read Tempreature",
-            description="Read Tempreature from Arduino")
     public void pushTemperatureData(final DeviceJSON dataMsg,
                                     @Context HttpServletResponse response,
                                     @Context HttpServletRequest request) {
