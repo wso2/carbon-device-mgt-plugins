@@ -36,6 +36,7 @@ import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.DeviceValidator;
 import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
 import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
+import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
@@ -83,8 +84,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@API( name="virtual_firealarm", version="1.0.0", context="/virtual_firealarm")
-@DeviceType( value = "virtual_firealarm")
+@API(name = "virtual_firealarm", version = "1.0.0", context = "/virtual_firealarm")
+@DeviceType(value = "virtual_firealarm")
 public class VirtualFireAlarmService {
 
     private static Log log = LogFactory.getLog(VirtualFireAlarmService.class);
@@ -104,9 +105,7 @@ public class VirtualFireAlarmService {
     private VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector;
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
 
-
     /**
-     *
      * @param verificationManager
      */
     public void setVerificationManager(
@@ -116,48 +115,43 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @param virtualFireAlarmXMPPConnector
      */
     public void setVirtualFireAlarmXMPPConnector(
             final VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector) {
         this.virtualFireAlarmXMPPConnector = virtualFireAlarmXMPPConnector;
 
-        Runnable mqttStarter = new Runnable() {
-            @Override
-            public void run() {
-                virtualFireAlarmXMPPConnector.initConnector();
-                virtualFireAlarmXMPPConnector.connect();
-            }
-        };
+        if (MqttConfig.getInstance().isEnabled()) {
+            Runnable mqttStarter = new Runnable() {
+                @Override
+                public void run() {
+                    virtualFireAlarmXMPPConnector.initConnector();
+                    virtualFireAlarmXMPPConnector.connect();
+                }
+            };
 
-        Thread mqttStarterThread = new Thread(mqttStarter);
-        mqttStarterThread.setDaemon(true);
-        mqttStarterThread.start();
+            Thread mqttStarterThread = new Thread(mqttStarter);
+            mqttStarterThread.setDaemon(true);
+            mqttStarterThread.start();
+        } else {
+            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
+        }
     }
 
     /**
-     *
      * @param virtualFireAlarmMQTTConnector
      */
     public void setVirtualFireAlarmMQTTConnector(
             final VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector) {
         this.virtualFireAlarmMQTTConnector = virtualFireAlarmMQTTConnector;
-
-//        Runnable xmppStarter = new Runnable() {
-//            @Override
-//            public void run() {
-                virtualFireAlarmMQTTConnector.connect();
-//            }
-//        };
-//
-//        Thread xmppStarterThread = new Thread(xmppStarter);
-//        xmppStarterThread.setDaemon(true);
-//        xmppStarterThread.start();
+        if (XmppConfig.getInstance().isEnabled()) {
+            virtualFireAlarmMQTTConnector.connect();
+        } else {
+            log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmXMPPConnector not started.");
+        }
     }
 
     /**
-     *
      * @return
      */
     public VerificationManager getVerificationManager() {
@@ -165,7 +159,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @return
      */
     public VirtualFireAlarmXMPPConnector getVirtualFireAlarmXMPPConnector() {
@@ -173,7 +166,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @return
      */
     public VirtualFireAlarmMQTTConnector getVirtualFireAlarmMQTTConnector() {
@@ -186,7 +178,6 @@ public class VirtualFireAlarmService {
         ---------------------------------------------------------------------------------------	*/
 
     /**
-     *
      * @param deviceId
      * @param name
      * @param owner
@@ -238,7 +229,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @param deviceId
      * @param response
      */
@@ -267,7 +257,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @param deviceId
      * @param name
      * @param response
@@ -312,7 +301,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @param deviceId
      * @return
      */
@@ -340,7 +328,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @param username
      * @return
      */
@@ -377,7 +364,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @param owner
      * @param customDeviceName
      * @param sketchType
@@ -411,7 +397,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @param owner
      * @param customDeviceName
      * @param sketchType
@@ -439,7 +424,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @param owner
      * @param customDeviceName
      * @param sketchType
@@ -507,7 +491,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @return
      */
     private static String shortUUID() {
@@ -522,7 +505,6 @@ public class VirtualFireAlarmService {
          ---------------------------------------------------------------------------------------	*/
 
     /**
-     *
      * @param owner
      * @param deviceId
      * @param deviceIP
@@ -563,7 +545,6 @@ public class VirtualFireAlarmService {
            Called by an external client intended to control the Virtual FireAlarm bulb */
 
     /**
-     *
      * @param owner
      * @param deviceId
      * @param protocol
@@ -722,7 +703,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @param owner
      * @param deviceId
      * @param protocol
@@ -755,7 +735,7 @@ public class VirtualFireAlarmService {
 
         if (log.isDebugEnabled()) {
             log.debug("Sending request to read virtual-firealarm-temperature of device " +
-                                                                        "[" + deviceId + "] via " + protocolString);
+                              "[" + deviceId + "] via " + protocolString);
         }
 
         try {
@@ -767,9 +747,9 @@ public class VirtualFireAlarmService {
                     }
 
                     String temperatureValue = VirtualFireAlarmServiceUtils.sendCommandViaHTTP(
-                                                                deviceHTTPEndpoint,
-                                                                VirtualFireAlarmConstants.TEMPERATURE_CONTEXT,
-                                                                false);
+                            deviceHTTPEndpoint,
+                            VirtualFireAlarmConstants.TEMPERATURE_CONTEXT,
+                            false);
 
                     SensorDataManager.getInstance().setSensorRecord(deviceId,
                                                                     VirtualFireAlarmConstants.SENSOR_TEMP,
@@ -801,7 +781,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @param dataMsg
      * @param response
      */
@@ -818,12 +797,12 @@ public class VirtualFireAlarmService {
 
         if (registeredIp == null) {
             log.warn("Unregistered IP: Temperature Data Received from an un-registered IP " +
-                                                                            deviceIp + " for device ID - " + deviceId);
+                             deviceIp + " for device ID - " + deviceId);
             response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
             return;
         } else if (!registeredIp.equals(deviceIp)) {
             log.warn("Conflicting IP: Received IP is " + deviceIp + ". Device with ID " + deviceId +
-                                            " is already registered under some other IP. Re-registration required");
+                             " is already registered under some other IP. Re-registration required");
             response.setStatus(Response.Status.CONFLICT.getStatusCode());
             return;
         }
@@ -839,7 +818,6 @@ public class VirtualFireAlarmService {
 
 
     /**
-     *
      * @param operation
      * @param message
      * @return
@@ -922,7 +900,6 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     *
      * @param operation
      * @param inputStream
      * @return

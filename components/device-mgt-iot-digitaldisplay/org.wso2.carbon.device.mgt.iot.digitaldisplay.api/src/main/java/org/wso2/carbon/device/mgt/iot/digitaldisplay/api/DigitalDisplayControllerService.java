@@ -24,6 +24,7 @@ import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.exception.DigitalDisplayException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.transport.CommunicationHandlerException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.util.DigitalDisplayMqttCommunicationHandler;
@@ -54,9 +55,12 @@ public class DigitalDisplayControllerService {
     public void setDigitalDisplayMqttCommunicationHandler(
             DigitalDisplayMqttCommunicationHandler digitalDisplayMqttCommunicationHandler) {
         DigitalDisplayControllerService.digitalDisplayMqttCommunicationHandler = digitalDisplayMqttCommunicationHandler;
-
-        digitalDisplayMqttCommunicationHandler.connect();
-
+        if (MqttConfig.getInstance().isEnabled()) {
+            digitalDisplayMqttCommunicationHandler.connect();
+        } else {
+            log.warn("MQTT disabled in 'devicemgt-config.xml'. " +
+                             "Hence, DigitalDisplayMqttCommunicationHandler not started.");
+        }
     }
 
     /**

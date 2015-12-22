@@ -62,7 +62,7 @@ public class XmppServerClient implements ControlQueueConnector {
 	}
 
 	@Override
-	public void initControlQueue() throws DeviceControllerException {
+	public void initControlQueue() {
 		xmppEndpoint = XmppConfig.getInstance().getXmppEndpoint();
 		xmppUsername = XmppConfig.getInstance().getXmppUsername();
 		xmppPassword = XmppConfig.getInstance().getXmppPassword();

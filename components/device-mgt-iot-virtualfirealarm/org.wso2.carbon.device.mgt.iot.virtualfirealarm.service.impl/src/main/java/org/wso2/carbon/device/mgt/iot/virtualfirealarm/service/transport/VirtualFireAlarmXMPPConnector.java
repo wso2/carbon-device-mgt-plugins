@@ -73,6 +73,7 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
     public void createXMPPAccountForDeviceType() {
         boolean accountExists = false;
         XmppServerClient xmppServerClient = new XmppServerClient();
+        xmppServerClient.initControlQueue();
 
         try {
             accountExists = xmppServerClient.doesXMPPUserAccountExist(xmppVFireAlarmAdminUsername);
