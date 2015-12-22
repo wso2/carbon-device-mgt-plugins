@@ -32,6 +32,7 @@ import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.DeviceValidator;
 import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
 import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
+import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
@@ -71,8 +72,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@API( name="raspberrypi", version="1.0.0", context="/raspberrypi")
-@DeviceType( value = "raspberrypi")
+@API(name = "raspberrypi", version = "1.0.0", context = "/raspberrypi")
+@DeviceType(value = "raspberrypi")
 public class RaspberryPiService {
 
     private static Log log = LogFactory.getLog(RaspberryPiService.class);
@@ -96,17 +97,21 @@ public class RaspberryPiService {
             final RaspberryPiMQTTSubscriber raspberryPiMQTTSubscriber) {
         this.raspberryPiMQTTSubscriber = raspberryPiMQTTSubscriber;
 
-        Runnable xmppStarter = new Runnable() {
-            @Override
-            public void run() {
-                raspberryPiMQTTSubscriber.initConnector();
-                raspberryPiMQTTSubscriber.connectAndSubscribe();
-            }
-        };
+        if (MqttConfig.getInstance().isEnabled()) {
+            Runnable xmppStarter = new Runnable() {
+                @Override
+                public void run() {
+                    raspberryPiMQTTSubscriber.initConnector();
+                    raspberryPiMQTTSubscriber.connectAndSubscribe();
+                }
+            };
 
-        Thread xmppStarterThread = new Thread(xmppStarter);
-        xmppStarterThread.setDaemon(true);
-        xmppStarterThread.start();
+            Thread xmppStarterThread = new Thread(xmppStarter);
+            xmppStarterThread.setDaemon(true);
+            xmppStarterThread.start();
+        } else {
+            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
+        }
     }
 
     /**
