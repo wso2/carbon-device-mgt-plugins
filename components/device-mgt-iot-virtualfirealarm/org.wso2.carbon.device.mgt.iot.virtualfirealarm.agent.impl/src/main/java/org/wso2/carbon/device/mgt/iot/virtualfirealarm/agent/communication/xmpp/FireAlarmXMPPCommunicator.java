@@ -88,8 +88,7 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
                     } catch (TransportHandlerException e) {
                         if (log.isDebugEnabled()) {
                             log.warn(AgentConstants.LOG_APPENDER +
-                                             "Connection/Login to XMPP server at: " + server +
-                                             " failed");
+                                             "Connection/Login to XMPP server at: " + server + " failed");
                         }
                     }
                 }
@@ -219,22 +218,24 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
     public void disconnect() {
         Runnable stopConnection = new Runnable() {
             public void run() {
-                while (isConnected()) {
+
+                if ( dataPushServiceHandler != null) {
                     dataPushServiceHandler.cancel(true);
+                }
+
+                while (isConnected()) {
                     connectorServiceHandler.cancel(true);
                     closeConnection();
 
                     if (log.isDebugEnabled()) {
                         log.warn(AgentConstants.LOG_APPENDER +
-                                         "Unable to 'STOP' connection to XMPP server at: " +
-                                         server);
+                                         "Unable to 'STOP' connection to XMPP server at: " + server);
                     }
 
                     try {
                         Thread.sleep(timeoutInterval);
                     } catch (InterruptedException e1) {
-                        log.error(AgentConstants.LOG_APPENDER +
-                                          "XMPP-Terminator: Thread Sleep Interrupt Exception");
+                        log.error(AgentConstants.LOG_APPENDER + "XMPP-Terminator: Thread Sleep Interrupt Exception");
                     }
 
                 }
