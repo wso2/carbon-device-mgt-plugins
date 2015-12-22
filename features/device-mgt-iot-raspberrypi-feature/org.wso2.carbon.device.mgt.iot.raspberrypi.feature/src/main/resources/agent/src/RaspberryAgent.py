@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 """
 /**
 * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -40,7 +39,6 @@ logging_enabled = False
 LOG_LEVEL = logging.INFO  # Could be e.g. "DEBUG" or "WARNING"
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Define and parse command line arguments
 #       If the log file is specified on the command line then override the default
@@ -49,7 +47,7 @@ parser = argparse.ArgumentParser(description="Python service to push RPi info to
 parser.add_argument("-l", "--log", help="file to write log to (default '" + LOG_FILENAME + "')")
 
 help_string_for_data_push_interval = "time interval between successive data pushes (default '" + str(PUSH_INTERVAL) + "')"
-help_string_for_running_mode = "time interval between successive data pushes (default '" + str(PUSH_INTERVAL) + "')"
+help_string_for_running_mode = "where is going to run on the real device or not"
 parser.add_argument("-i", "--interval", type=int, help=help_string_for_data_push_interval)
 parser.add_argument("-m", "--mode", type=str, help=help_string_for_running_mode)
 
@@ -75,7 +73,7 @@ if args.mode:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Endpoint specific settings to which the data is pushed
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-DC_ENDPOINT = iotUtils.HTTP_EP.split(":")
+DC_ENDPOINT = iotUtils.HTTPS_EP.split(":")
 DC_IP = DC_ENDPOINT[1].replace('//', '')
 DC_PORT = int(DC_ENDPOINT[2])
 DC_ENDPOINT_CONTEXT = iotUtils.CONTROLLER_CONTEXT
@@ -86,9 +84,6 @@ HOST = iotUtils.getDeviceIP()
 HOST_HTTP_SERVER_PORT = iotUtils.getHTTPServerPort()
 HOST_AND_PORT = str(HOST)+ ":" + str(HOST_HTTP_SERVER_PORT)
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       A class we can use to capture stdout and sterr in the log
@@ -103,8 +98,6 @@ class IOTLogger(object):
         if message.rstrip() != "":  # Only log if there is a message (not just a new line)
             self.logger.log(self.level, message.rstrip())
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Configure logging to log to a file, 
@@ -130,9 +123,12 @@ def configureLogger(loggerName):
 #       This method registers the DevieIP in the Device-Cloud
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def registerDeviceIP():
-    dcConncection = httplib.HTTPConnection(DC_IP, DC_PORT)
+    dcConncection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
+    #dcConncection = httplib.HTTPConnection(DC_IP, DC_PORT)
+
     dcConncection.set_debuglevel(1)
     dcConncection.connect()
+
     registerURL = str(REGISTER_ENDPOINT) + '/' + str(iotUtils.DEVICE_OWNER) + '/' + str(iotUtils.DEVICE_ID) + '/' + \
                   str(HOST) + '/' + str(HOST_HTTP_SERVER_PORT) + '/'
     dcConncection.putrequest('POST', registerURL)
@@ -156,11 +152,9 @@ def registerDeviceIP():
 #       This method connects to the Device-Cloud and pushes data
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def connectAndPushData():
-    dcConnection = httplib.HTTPConnection(DC_IP, DC_PORT)
+    dcConnection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
     dcConnection.set_debuglevel(1)
-
     dcConnection.connect()
-
     request = dcConnection.putrequest('POST', PUSH_ENDPOINT)
     dcConnection.putheader('Authorization', 'Bearer ' + iotUtils.AUTH_TOKEN)
     dcConnection.putheader('Content-Type', 'application/json')
@@ -220,6 +214,7 @@ class TemperatureReaderThread(object):
                     humidity, temperature = iotUtils.generateRandomTemperatureAndHumidityValues()
 
                 if temperature != iotUtils.LAST_TEMP:
+                    time.sleep(PUSH_INTERVAL)
                     iotUtils.LAST_TEMP = temperature
                     connectAndPushData()
 
@@ -234,8 +229,6 @@ class TemperatureReaderThread(object):
                 time.sleep(self.interval)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       This is a Thread object for listening for MQTT Messages
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -248,9 +241,6 @@ class UtilsThread(object):
     def run(self):
         iotUtils.main()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       This is a Thread object for HTTP-Server that listens for operations on RPi
@@ -265,13 +255,11 @@ class ListenHTTPServerThread(object):
         httpServer.main()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-def get_now():
-    "get the current date and time as a string"
-    return datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#       When sysvinit sends the TERM signal, cleanup before exiting
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def sigterm_handler(_signo, _stack_frame):
-    "When sysvinit sends the TERM signal, cleanup before exiting."
     print("[] received signal {}, exiting...".format(_signo))
     sys.exit(0)
 
@@ -289,7 +277,6 @@ class ListenXMPPServerThread(object):
         pass
         #xmppServer.main()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -314,7 +301,6 @@ def main():
     configureLogger("WSO2IOT_RPiStats")
     if running_mode.RUNNING_MODE == 'N':
         iotUtils.setUpGPIOPins()
-
     UtilsThread()
     registerDeviceIP()  # Call the register endpoint and register Device IP
     TemperatureReaderThread()  # initiates and runs the thread to continuously read temperature from DHT Sensor

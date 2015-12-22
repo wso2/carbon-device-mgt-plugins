@@ -24,6 +24,9 @@ import time
 import BaseHTTPServer
 import iotUtils
 import running_mode
+import os
+import subprocess
+import re
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Class that handles HTTP GET requests for operations on the RPi
@@ -40,9 +43,10 @@ class OnRequestListener(BaseHTTPServer.BaseHTTPRequestHandler):
         state = request.path.split("/")[2].upper()
         print "HTTP_SERVER: Resource - " + resource
 
-        if resource == "TEMP":
+        if resource == "TEMPERATURE":
             request.send_response(200)
-            request.send_header("Content-type", "text/plain")
+            request.send_header('Content-Type', 'application/json')
+            request.send_header('Authorization', 'Bearer ' + iotUtils.AUTH_TOKEN)
             request.end_headers()
             request.wfile.write(iotUtils.LAST_TEMP)
 
@@ -51,7 +55,6 @@ class OnRequestListener(BaseHTTPServer.BaseHTTPRequestHandler):
             print "HTTP_SERVER: Requested Switch State - " + state
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Check the URL string of the request and validate
@@ -63,16 +66,13 @@ def processURLPath(path):
 
     resource = path.split("/")[1]
 
-    if not iequal("BULB", resource) and not iequal("TEMP", resource) and not iequal("FAN", resource) and not iequal(
-            "SONAR", resource):
+    if not iequal("BULB", resource) and not iequal("TEMPERATURE", resource):
         if not "favicon" in resource:
             print "HTTP_SERVER: Invalid resource - " + resource + " to execute operation"
         return False
 
     return True
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Case-Insensitive check on whether two string are similar
@@ -84,7 +84,6 @@ def iequal(a, b):
         return a == b
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       The Main method of the server script
@@ -109,7 +108,7 @@ def main():
                 iotUtils.switchBulb("OFF")
             else :
                 iotUtils.switchBulb("OFF")
-            httpd.server_close()
+                httpd.server_close()
             print "HTTP_SERVER: " + time.asctime(), "Server Stops - %s:%s" % (HOST_NAME, HTTP_SERVER_PORT)
             print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
             pass
