@@ -35,7 +35,7 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 DESC="This service is used to publish events from the Raspberry Pi to the WSO2 Device Cloud"
 NAME=RaspberryStats
 
-DIR=/usr/local/src/RaspberryAgent
+DIR=/usr/local/src/RaspberryAgent/src/
 DAEMON=$DIR/RaspberryAgent.py
 DAEMON_NAME=$NAME
 SCRIPTNAME=RaspberryService.sh

@@ -103,8 +103,9 @@ while true; do
         * ) echo "Please answer yes or no.";
     esac
 done
-
-./src/RaspberryStats.py -i $input -m $mode
+cp deviceConfig.properties ./src
+chmod +x ./src/RaspberryAgent.py
+./src/RaspberryAgent.py -i $input -m $mode
 
 if [ $? -ne 0 ]; then
 	echo "Could not start the service..."

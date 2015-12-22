@@ -75,28 +75,11 @@ public class DroneAnalyzerXMPPConnector extends XmppConnector {
         super.closeConnection();
     }
 
-    /*public void printRoster(XmppConnector xmppConnection) throws Exception {
-        if(xmppConnection != null){
-            Roster roster = xmppConnection.getRoster();
-            if(roster !=null && roster.getEntries() != null){
-                Collection<RosterEntry> entries = roster.getEntries();
-                for (RosterEntry entry : entries) {
-                    System.out.println(String.format("Buddy:%1$s - Status:%2$s",
-                            entry.getName(), entry.getStatus()));
-                }
-            }
-
-        }else{
-            System.out.println("There are no users");
-        }
-    }*/
-
     @Override
     protected void processXMPPMessage(Message xmppMessage) {
         String from = xmppMessage.getFrom();
         String subject = xmppMessage.getSubject();
         String inbound_message = xmppMessage.getBody();
-        //System.out.println("inbound message :"+inbound_message);
         int indexOfAt = from.indexOf("@");
         int indexOfSlash = from.indexOf("/");
         String deviceId = from.substring(0, indexOfAt);
@@ -109,7 +92,6 @@ public class DroneAnalyzerXMPPConnector extends XmppConnector {
         }
         else {
             log.error("Message is empty or it is not belongs to "+ DroneConstants.DEVICE_ID);
-            System.out.println("Message is empty or it is not belongs to "+ DroneConstants.DEVICE_ID);
         }
     }
 
