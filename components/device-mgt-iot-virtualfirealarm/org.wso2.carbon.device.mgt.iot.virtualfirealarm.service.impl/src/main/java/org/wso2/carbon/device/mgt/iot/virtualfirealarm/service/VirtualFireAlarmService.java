@@ -572,8 +572,8 @@ public class VirtualFireAlarmService {
      */
     @Path("controller/bulb")
     @POST
-    @Feature( code="VIRTUALFIREALARM_BULBCONTROL", name="Control Bulb",
-            description="Switch on/off Virtual Fire Alarm Bulb")
+    @Feature(code = "VIRTUALFIREALARM_BULBCONTROL", name = "Control Bulb", type = "operation",
+             description = "Switch on/off Virtual Fire Alarm Bulb")
     public void switchBulb(@HeaderParam("owner") String owner,
                            @HeaderParam("deviceId") String deviceId,
                            @HeaderParam("protocol") String protocol,
@@ -657,7 +657,7 @@ public class VirtualFireAlarmService {
      */
     @Path("controller/readhumidity")
     @GET
-    @Feature( code="VIRTUALFIREALARM_READHUMIDITY", name="Read Humidity",
+    @Feature( code="VIRTUALFIREALARM_READHUMIDITY", name="Read Humidity", type = "monitor",
             description="Read Humidity Readings from Virtual Fire Alarm")
     public String requestHumidity(@HeaderParam("owner") String owner,
                                   @HeaderParam("deviceId") String deviceId,
@@ -738,7 +738,7 @@ public class VirtualFireAlarmService {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Feature( code="VIRTUALFIREALARM_REQTEMP", name="Request Tempreature",
+    @Feature( code="VIRTUALFIREALARM_REQTEMP", name="Request Tempreature", type = "monitor",
             description="Request Tempreature reading from Virtual Fire Alarm")
     public SensorRecord requestTemperature(@HeaderParam("owner") String owner,
                                            @HeaderParam("deviceId") String deviceId,

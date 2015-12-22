@@ -71,7 +71,7 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
         resource = agentManager.getAgentConfigs().getDeviceOwner();
 
         xmppDeviceJID = username + "@" + server;
-        xmppAdminJID = AgentConstants.XMPP_ADMIN_ACCOUNT_UNAME + "@" + server;
+        xmppAdminJID = agentManager.getAgentConfigs().getServerName() + "_" + AgentConstants.DEVICE_TYPE + "@" + server;
 
 
         Runnable connect = new Runnable() {
@@ -187,19 +187,26 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
         Runnable pushDataRunnable = new Runnable() {
             @Override
             public void run() {
-                int currentTemperature = agentManager.getTemperature();
-                String payLoad = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
-
                 Message xmppMessage = new Message();
-                xmppMessage.setTo(xmppAdminJID);
-                xmppMessage.setSubject("PUBLISHER");
-                xmppMessage.setBody(payLoad);
-                xmppMessage.setType(Message.Type.chat);
 
-                sendXMPPMessage(xmppAdminJID, xmppMessage);
-                log.info(AgentConstants.LOG_APPENDER + "Message: '" + xmppMessage.getBody() +
-                                 "' sent to XMPP JID [" + xmppAdminJID + "] under subject [" +
-                                 xmppMessage.getSubject() + "]");
+                try {
+                    int currentTemperature = agentManager.getTemperature();
+
+                    String message = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
+                    String payLoad = AgentUtilOperations.prepareSecurePayLoad(message);
+
+                    xmppMessage.setTo(xmppAdminJID);
+                    xmppMessage.setSubject("PUBLISHER");
+                    xmppMessage.setBody(payLoad);
+                    xmppMessage.setType(Message.Type.chat);
+
+                    sendXMPPMessage(xmppAdminJID, xmppMessage);
+                    log.info(AgentConstants.LOG_APPENDER + "Message: '" + message + "' sent to XMPP JID - " +
+                                     "[" + xmppAdminJID + "] under subject [" + xmppMessage.getSubject() + "].");
+                } catch (AgentCoreOperationException e) {
+                    log.warn(AgentConstants.LOG_APPENDER + "Preparing Secure payload failed for XMPP JID - " +
+                                     "[" + xmppAdminJID + "] with subject - [" + xmppMessage.getSubject() + "].");
+                }
             }
         };
 
