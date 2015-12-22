@@ -381,7 +381,7 @@ public class DroneService {
 
     @Path("controller/send_command")
     @POST
-    @Feature( code="DRONE_SEND_COMMAND", name="Send Command",
+    @Feature( code="DRONE_SEND_COMMAND", name="Send Command", type = "operation",
             description="Send Commands to Drone")
     public Response droneController(@QueryParam("owner") String owner, @QueryParam("deviceId") String deviceId,
                                  @QueryParam("action") String action, @QueryParam("duration") String duration,
