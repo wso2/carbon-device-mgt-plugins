@@ -61,7 +61,6 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
     private static final int DEFAULT_XMPP_PORT = 5222;
     private XMPPConnection connection;
     private int port;
-    private ConnectionConfiguration config;
     private PacketFilter filter;
     private PacketListener listener;
 
@@ -71,6 +70,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
      *
      * @param server the IP of the XMPP server.
      */
+    @SuppressWarnings("unused")
     protected XMPPTransportHandler(String server) {
         this.server = server;
         this.port = DEFAULT_XMPP_PORT;
@@ -99,6 +99,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
      * @param port            the XMPP server's port to connect to. (default - 5222)
      * @param timeoutInterval the timeout interval to use for the connection and reconnection
      */
+    @SuppressWarnings("unused")
     protected XMPPTransportHandler(String server, int port, int timeoutInterval) {
         this.server = server;
         this.port = port;
@@ -112,6 +113,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
      * @param millis the time in millis to be set as the time-out-limit whilst waiting for a
      *               XMPP-reply.
      */
+    @SuppressWarnings("unused")
     public void setTimeoutInterval(int millis) {
         this.timeoutInterval = millis;
     }
@@ -135,7 +137,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
         log.info(String.format("Initializing connection to XMPP Server at %1$s via port " +
                                        "%2$d.", server, port));
         SmackConfiguration.setPacketReplyTimeout(timeoutInterval);
-        config = new ConnectionConfiguration(server, port);
+        ConnectionConfiguration config = new ConnectionConfiguration(server, port);
 //		TODO:: Need to enable SASL-Authentication appropriately
         config.setSASLAuthenticationEnabled(false);
         config.setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
@@ -214,6 +216,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
      *
      * @param senderJID the JID (XMPP-Account ID of the sender) to which the filter is to be set.
      */
+    @SuppressWarnings("unused")
     protected void setFilterOnSender(String senderJID) {
         filter = new AndFilter(new PacketTypeFilter(Message.class), new FromContainsFilter(
                 senderJID));
@@ -224,7 +227,12 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                     final Message xmppMessage = (Message) packet;
                     Thread msgProcessThread = new Thread() {
                         public void run() {
-                            processIncomingMessage(xmppMessage);
+                            try {
+                                processIncomingMessage(xmppMessage);
+                            } catch (TransportHandlerException e) {
+                                log.error("An error occurred when trying to process received XMPP message " +
+                                                  "[" + xmppMessage.getBody() + "].", e);
+                            }
                         }
                     };
                     msgProcessThread.setDaemon(true);
@@ -255,7 +263,12 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                     final Message xmppMessage = (Message) packet;
                     Thread msgProcessThread = new Thread() {
                         public void run() {
-                            processIncomingMessage(xmppMessage);
+                            try {
+                                processIncomingMessage(xmppMessage);
+                            } catch (TransportHandlerException e) {
+                                log.error("An error occurred when trying to process received XMPP message " +
+                                                  "[" + xmppMessage.getBody() + "].", e);
+                            }
                         }
                     };
                     msgProcessThread.setDaemon(true);
@@ -280,6 +293,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
      *                     if false: then the filter is set with 'OR' operator (senderJID |
      *                     receiverJID)
      */
+    @SuppressWarnings("unused")
     protected void setMessageFilterAndListener(String senderJID, String receiverJID, boolean
             andCondition) {
         PacketFilter jidFilter;
@@ -300,7 +314,12 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                     final Message xmppMessage = (Message) packet;
                     Thread msgProcessThread = new Thread() {
                         public void run() {
-                            processIncomingMessage(xmppMessage);
+                            try {
+                                processIncomingMessage(xmppMessage);
+                            } catch (TransportHandlerException e) {
+                                log.error("An error occurred when trying to process received XMPP message " +
+                                                  "[" + xmppMessage.getBody() + "].", e);
+                            }
                         }
                     };
                     msgProcessThread.setDaemon(true);
@@ -319,6 +338,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
      * @param JID     the JID (XMPP Account ID) to which the message is to be sent to.
      * @param message the XMPP-Message that is to be sent.
      */
+    @SuppressWarnings("unused")
     protected void sendXMPPMessage(String JID, String message) {
         sendXMPPMessage(JID, message, "XMPP-Message");
     }
@@ -351,17 +371,8 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
     protected void sendXMPPMessage(String JID, Message xmppMessage) {
         connection.sendPacket(xmppMessage);
         if (log.isDebugEnabled()) {
-            log.debug("Message: '" + xmppMessage.getBody() + "' sent to XMPP JID [" + JID +
-                              "] sent successfully.");
+            log.debug("Message: '" + xmppMessage.getBody() + "' sent to XMPP JID [" + JID + "] sent successfully.");
         }
-    }
-
-
-    /**
-     * Disables default debugger provided by the XMPPConnection.
-     */
-    protected void disableDebugger() {
-        connection.DEBUG_ENABLED = false;
     }
 
 

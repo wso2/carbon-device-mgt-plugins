@@ -21,10 +21,12 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.xmpp
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.packet.Message;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.xmpp.XMPPTransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentUtilOperations;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.exception.AgentCoreOperationException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandlerException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.xmpp.XMPPTransportHandler;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -94,8 +96,7 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
             }
         };
 
-        connectorServiceHandler = service.scheduleAtFixedRate(connect, 0, timeoutInterval,
-                                                              TimeUnit.MILLISECONDS);
+        connectorServiceHandler = service.scheduleAtFixedRate(connect, 0, timeoutInterval, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -110,63 +111,76 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
         final AgentManager agentManager = AgentManager.getInstance();
         String from = xmppMessage.getFrom();
         String message = xmppMessage.getBody();
-        log.info(AgentConstants.LOG_APPENDER + "Received XMPP message [" + message + "] from " +
-                         from);
-
+        String receivedMessage;
         String replyMessage;
-        String[] controlSignal = message.split(":");
+        String securePayLoad;
+
+        try {
+            receivedMessage = AgentUtilOperations.extractMessageFromPayload(message);
+            log.info(AgentConstants.LOG_APPENDER + "Message [" + receivedMessage + "] was received");
+        } catch (AgentCoreOperationException e) {
+            log.warn(AgentConstants.LOG_APPENDER + "Could not extract message from payload.", e);
+            return;
+        }
+
+        String[] controlSignal = receivedMessage.split(":");
         //message- "<SIGNAL_TYPE>:<SIGNAL_MODE>" format. (ex: "BULB:ON", "TEMPERATURE", "HUMIDITY")
 
+        try {
+            switch (controlSignal[0].toUpperCase()) {
+                case AgentConstants.BULB_CONTROL:
+                    if (controlSignal.length != 2) {
+                        replyMessage = "BULB controls need to be in the form - 'BULB:{ON|OFF}'";
+                        log.warn(replyMessage);
+                        securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
+                        sendXMPPMessage(xmppAdminJID, securePayLoad, "CONTROL-REPLY");
+                        break;
+                    }
 
-        switch (controlSignal[0].toUpperCase()) {
-            case AgentConstants.BULB_CONTROL:
-                if (controlSignal.length != 2) {
-                    replyMessage = "BULB controls need to be in the form - 'BULB:{ON|OFF}'";
-                    log.warn(replyMessage);
-                    sendXMPPMessage(xmppAdminJID, replyMessage, "CONTROL-REPLY");
+                    agentManager.changeAlarmStatus(controlSignal[1].equals(AgentConstants.CONTROL_ON));
+                    log.info(AgentConstants.LOG_APPENDER + "Bulb was switched to state: '" + controlSignal[1] + "'");
                     break;
-                }
 
-                agentManager.changeAlarmStatus(controlSignal[1].equals(AgentConstants.CONTROL_ON));
-                log.info(AgentConstants.LOG_APPENDER + "Bulb was switched to state: '" +
-                                 controlSignal[1] + "'");
-                break;
+                case AgentConstants.TEMPERATURE_CONTROL:
+                    int currentTemperature = agentManager.getTemperature();
 
-            case AgentConstants.TEMPERATURE_CONTROL:
-                int currentTemperature = agentManager.getTemperature();
+                    String replyTemperature =
+                            "The current temperature was read to be: '" + currentTemperature +
+                                    "C'";
+                    log.info(AgentConstants.LOG_APPENDER + replyTemperature);
 
-                String replyTemperature =
-                        "The current temperature was read to be: '" + currentTemperature +
-                                "C'";
-                log.info(AgentConstants.LOG_APPENDER + replyTemperature);
+                    replyMessage = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
+                    securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
+                    sendXMPPMessage(xmppAdminJID, securePayLoad, "CONTROL-REPLY");
+                    break;
 
-                replyMessage = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
-                sendXMPPMessage(xmppAdminJID, replyMessage, "CONTROL-REPLY");
-                break;
+                case AgentConstants.HUMIDITY_CONTROL:
+                    int currentHumidity = agentManager.getHumidity();
 
-            case AgentConstants.HUMIDITY_CONTROL:
-                int currentHumidity = agentManager.getHumidity();
+                    String replyHumidity = "The current humidity was read to be: '" + currentHumidity + "%'";
+                    log.info(AgentConstants.LOG_APPENDER + replyHumidity);
 
-                String replyHumidity =
-                        "The current humidity was read to be: '" + currentHumidity + "%'";
-                log.info(AgentConstants.LOG_APPENDER + replyHumidity);
+                    replyMessage = AgentConstants.HUMIDITY_CONTROL + ":" + currentHumidity;
+                    securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
+                    sendXMPPMessage(xmppAdminJID, securePayLoad, "CONTROL-REPLY");
+                    break;
 
-                replyMessage = AgentConstants.HUMIDITY_CONTROL + ":" + currentHumidity;
-                sendXMPPMessage(xmppAdminJID, replyMessage, "CONTROL-REPLY");
-                break;
-
-            default:
-                replyMessage = "'" + controlSignal[0] +
-                        "' is invalid and not-supported for this device-type";
-                log.warn(replyMessage);
-                sendXMPPMessage(xmppAdminJID, replyMessage, "CONTROL-ERROR");
-                break;
+                default:
+                    replyMessage = "'" + controlSignal[0] + "' is invalid and not-supported for this device-type";
+                    log.warn(replyMessage);
+                    securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
+                    sendXMPPMessage(xmppAdminJID, securePayLoad, "CONTROL-ERROR");
+                    break;
+            }
+        } catch (AgentCoreOperationException e) {
+            log.warn(AgentConstants.LOG_APPENDER + "Preparing Secure payload failed", e);
         }
 
     }
 
+
     @Override
-    public void processIncomingMessage() {
+    public void publishDeviceData() {
         final AgentManager agentManager = AgentManager.getInstance();
         int publishInterval = agentManager.getPushInterval();
 
@@ -225,13 +239,15 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
         terminatorThread.start();
     }
 
+
+    @Override
+    public void processIncomingMessage() {
+
+    }
+
     @Override
     public void publishDeviceData(String... publishData) {
 
     }
 
-    @Override
-    public void publishDeviceData() {
-
-    }
 }

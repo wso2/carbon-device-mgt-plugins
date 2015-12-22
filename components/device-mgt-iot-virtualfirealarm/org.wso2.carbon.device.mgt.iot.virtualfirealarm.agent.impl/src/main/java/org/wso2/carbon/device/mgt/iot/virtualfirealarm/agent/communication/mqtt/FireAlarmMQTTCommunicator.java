@@ -103,6 +103,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
         String deviceID = agentManager.getAgentConfigs().getDeviceId();
         String receivedMessage;
         String replyMessage;
+        String securePayLoad;
 
         try {
             receivedMessage = AgentUtilOperations.extractMessageFromPayload(message.toString());
@@ -116,56 +117,53 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
         String[] controlSignal = receivedMessage.split(":");
         // message- "<SIGNAL_TYPE>:<SIGNAL_MODE>" format.(ex: "BULB:ON", "TEMPERATURE", "HUMIDITY")
 
-        switch (controlSignal[0].toUpperCase()) {
-            case AgentConstants.BULB_CONTROL:
-                boolean stateToSwitch = controlSignal[1].equals(AgentConstants.CONTROL_ON);
+        try {
+            switch (controlSignal[0].toUpperCase()) {
+                case AgentConstants.BULB_CONTROL:
+                    boolean stateToSwitch = controlSignal[1].equals(AgentConstants.CONTROL_ON);
+                    agentManager.changeAlarmStatus(stateToSwitch);
+                    log.info(AgentConstants.LOG_APPENDER + "Bulb was switched to state: '" + controlSignal[1] + "'");
+                    break;
 
-                agentManager.changeAlarmStatus(stateToSwitch);
-                log.info(AgentConstants.LOG_APPENDER + "Bulb was switched to state: '" + controlSignal[1] + "'");
-                break;
+                case AgentConstants.TEMPERATURE_CONTROL:
+                    int currentTemperature = agentManager.getTemperature();
 
-            case AgentConstants.TEMPERATURE_CONTROL:
-                int currentTemperature = agentManager.getTemperature();
+                    String replyTemperature = "Current temperature was read as: '" + currentTemperature + "C'";
+                    log.info(AgentConstants.LOG_APPENDER + replyTemperature);
 
-                String replyTemperature = "Current temperature was read as: '" + currentTemperature + "C'";
-                log.info(AgentConstants.LOG_APPENDER + replyTemperature);
+                    String tempPublishTopic = String.format(AgentConstants.MQTT_PUBLISH_TOPIC,
+                                                            serverName, deviceOwner, deviceID);
 
-                String tempPublishTopic = String.format(AgentConstants.MQTT_PUBLISH_TOPIC,
-                                                        serverName, deviceOwner, deviceID);
-                replyMessage = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
+                    replyMessage = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
+                    securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
+                    publishToQueue(tempPublishTopic, securePayLoad);
+                    break;
 
-                try {
-                    publishToQueue(tempPublishTopic, replyMessage);
-                } catch (TransportHandlerException e) {
-                    log.error(AgentConstants.LOG_APPENDER +
-                                      "MQTT - Publishing, reply message to the MQTT Queue  at: " +
-                                      agentManager.getAgentConfigs().getMqttBrokerEndpoint() + " failed");
-                }
-                break;
+                case AgentConstants.HUMIDITY_CONTROL:
+                    int currentHumidity = agentManager.getHumidity();
 
-            case AgentConstants.HUMIDITY_CONTROL:
-                int currentHumidity = agentManager.getHumidity();
+                    String replyHumidity = "Current humidity was read as: '" + currentHumidity + "%'";
+                    log.info(AgentConstants.LOG_APPENDER + replyHumidity);
 
-                String replyHumidity = "Current humidity was read as: '" + currentHumidity + "%'";
-                log.info(AgentConstants.LOG_APPENDER + replyHumidity);
+                    String humidPublishTopic = String.format(
+                            AgentConstants.MQTT_PUBLISH_TOPIC, serverName, deviceOwner, deviceID);
 
-                String humidPublishTopic = String.format(
-                        AgentConstants.MQTT_PUBLISH_TOPIC, serverName, deviceOwner, deviceID);
-                replyMessage = AgentConstants.HUMIDITY_CONTROL + ":" + currentHumidity;
+                    replyMessage = AgentConstants.HUMIDITY_CONTROL + ":" + currentHumidity;
+                    securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
+                    publishToQueue(humidPublishTopic, securePayLoad);
+                    break;
 
-                try {
-                    publishToQueue(humidPublishTopic, replyMessage);
-                } catch (TransportHandlerException e) {
-                    log.error(AgentConstants.LOG_APPENDER +
-                                      "MQTT - Publishing, reply message to the MQTT Queue at: " +
-                                      agentManager.getAgentConfigs().getMqttBrokerEndpoint() + " failed");
-                }
-                break;
-
-            default:
-                log.warn(AgentConstants.LOG_APPENDER + "'" + controlSignal[0] +
-                                 "' is invalid and not-supported for this device-type");
-                break;
+                default:
+                    log.warn(AgentConstants.LOG_APPENDER + "'" + controlSignal[0] +
+                                     "' is invalid and not-supported for this device-type");
+                    break;
+            }
+        } catch (AgentCoreOperationException e) {
+            log.warn(AgentConstants.LOG_APPENDER + "Preparing Secure payload failed", e);
+        } catch (TransportHandlerException e) {
+            log.error(AgentConstants.LOG_APPENDER +
+                              "MQTT - Publishing, reply message to the MQTT Queue  at: " +
+                              agentManager.getAgentConfigs().getMqttBrokerEndpoint() + " failed");
         }
 
     }

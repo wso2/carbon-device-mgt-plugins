@@ -32,18 +32,11 @@ import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.exception.DataPublisherConfigurationException;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.iot.DeviceController;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
-import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.VirtualFireAlarmService;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.exception.VirtualFireAlarmException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport.VirtualFireAlarmMQTTSubscriber;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport.VirtualFireAlarmXMPPConnector;
 
 import javax.ws.rs.HttpMethod;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -155,27 +148,6 @@ public class VirtualFireAlarmServiceUtils {
         }
 
         return responseMsg;
-    }
-
-    public static void sendCommandViaXMPP(String deviceOwner, String deviceId, String resource,
-                                          String state, VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector)
-            throws DeviceManagementException {
-
-        String xmppServerDomain = XmppConfig.getInstance().getXmppEndpoint();
-        int indexOfChar = xmppServerDomain.lastIndexOf(File.separator);
-        if (indexOfChar != -1) {
-            xmppServerDomain = xmppServerDomain.substring((indexOfChar + 1), xmppServerDomain.length());
-        }
-
-        indexOfChar = xmppServerDomain.indexOf(":");
-        if (indexOfChar != -1) {
-            xmppServerDomain = xmppServerDomain.substring(0, indexOfChar);
-        }
-
-        String clientToConnect = deviceId + "@" + xmppServerDomain + File.separator + deviceOwner;
-        String message = resource.replace("/", "") + ":" + state;
-
-        virtualFireAlarmXMPPConnector.sendXMPPMessage(clientToConnect, message, "CONTROL-REQUEST");
     }
 
 	/*	---------------------------------------------------------------------------------------

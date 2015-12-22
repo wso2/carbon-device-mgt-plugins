@@ -70,8 +70,7 @@ public class DeviceController {
 				Class<?> dataStoreClass = Class.forName(handlerClass);
 				if (DataStoreConnector.class.isAssignableFrom(dataStoreClass)) {
 
-					DataStoreConnector dataStoreConnector =
-							(DataStoreConnector) dataStoreClass.newInstance();
+					DataStoreConnector dataStoreConnector = (DataStoreConnector) dataStoreClass.newInstance();
 					String dataStoreName = dataStore.getName();
 					if (dataStore.isEnabled()) {
 						dataStoresMap.put(dataStoreName, dataStoreConnector);

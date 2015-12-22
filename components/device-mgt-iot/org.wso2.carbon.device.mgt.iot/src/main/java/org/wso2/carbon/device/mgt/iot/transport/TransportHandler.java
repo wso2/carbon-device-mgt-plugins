@@ -34,14 +34,17 @@ public interface TransportHandler<T> {
 
     boolean isConnected();
 
-    //TODO:: Any errors needs to be thrown ahead
-    void processIncomingMessage(T message, String... messageParams);
+    void processIncomingMessage() throws TransportHandlerException;
 
-    void processIncomingMessage();
+    void processIncomingMessage(T message) throws TransportHandlerException;
 
-    void publishDeviceData(String... publishData);
+    void processIncomingMessage(T message, String... messageParams) throws TransportHandlerException;
 
-    void publishDeviceData();
+    void publishDeviceData() throws TransportHandlerException;
+
+    void publishDeviceData(T publishData) throws TransportHandlerException;
+
+    void publishDeviceData(String... publishData) throws TransportHandlerException;
 
     void disconnect();
 }
