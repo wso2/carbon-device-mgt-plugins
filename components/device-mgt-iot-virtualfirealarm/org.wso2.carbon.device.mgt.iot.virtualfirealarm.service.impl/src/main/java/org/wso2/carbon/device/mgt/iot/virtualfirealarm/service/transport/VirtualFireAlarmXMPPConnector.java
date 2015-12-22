@@ -20,49 +20,122 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.jivesoftware.smack.packet.Message;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
+import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConnector;
+import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
+import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
+import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
+import org.wso2.carbon.device.mgt.iot.transport.xmpp.XMPPTransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.exception.VirtualFireAlarmException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VerificationManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VirtualFireAlarmServiceUtils;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.Calendar;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
-public class VirtualFireAlarmXMPPConnector extends XmppConnector {
+@SuppressWarnings("no JAX-WS annotation")
+public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
     private static Log log = LogFactory.getLog(VirtualFireAlarmXMPPConnector.class);
 
     private static String xmppServerIP;
-    //	private static int xmppServerPort;
-    private static String xmppAdminUsername;
-    private static String xmppAdminPassword;
-    private static String xmppAdminAccountJID;
+    private static String xmppVFireAlarmAdminUsername;
+    private static String xmppVFireAlarmAdminAccountJID;
+    private static final String V_FIREALARM_XMPP_PASSWORD = "vfirealarm@123";
+    private ScheduledFuture<?> connectorServiceHandler;
+    private ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
 
     private VirtualFireAlarmXMPPConnector() {
-        super(XmppConfig.getInstance().getXmppServerIP(),
-              XmppConfig.getInstance().getSERVER_CONNECTION_PORT());
+        super(XmppConfig.getInstance().getXmppServerIP(), XmppConfig.getInstance().getSERVER_CONNECTION_PORT());
     }
 
     public void initConnector() {
+        String serverName =
+                DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
+        xmppVFireAlarmAdminUsername = serverName + "_" + VirtualFireAlarmConstants.DEVICE_TYPE;
+
         xmppServerIP = XmppConfig.getInstance().getXmppServerIP();
-        xmppAdminUsername = XmppConfig.getInstance().getXmppUsername();
-        xmppAdminPassword = XmppConfig.getInstance().getXmppPassword();
-        xmppAdminAccountJID = xmppAdminUsername + "@" + xmppServerIP;
+        xmppVFireAlarmAdminAccountJID = xmppVFireAlarmAdminUsername + "@" + xmppServerIP;
+        createXMPPAccountForDeviceType();
     }
 
-    public void connectAndLogin() {
+    public void createXMPPAccountForDeviceType() {
+        boolean accountExists = false;
+        XmppServerClient xmppServerClient = new XmppServerClient();
+
         try {
-            super.connectAndLogin(xmppAdminUsername, xmppAdminPassword, null);
-            super.setMessageFilterOnReceiver(xmppAdminAccountJID);
-        } catch (DeviceManagementException e) {
-            log.error("Connect/Login attempt to XMPP Server at: " + xmppServerIP + " failed");
-            retryXMPPConnection();
+            accountExists = xmppServerClient.doesXMPPUserAccountExist(xmppVFireAlarmAdminUsername);
+        } catch (DeviceControllerException e) {
+            String errorMsg = "An error was encountered whilst trying to check whether Server XMPP account exists " +
+                    "for device-type - " + VirtualFireAlarmConstants.DEVICE_TYPE;
+            log.error(errorMsg, e);
+        }
+
+        if (!accountExists) {
+            XmppAccount xmppAccount = new XmppAccount();
+
+            xmppAccount.setAccountName(xmppVFireAlarmAdminUsername);
+            xmppAccount.setUsername(xmppVFireAlarmAdminUsername);
+            xmppAccount.setPassword(V_FIREALARM_XMPP_PASSWORD);
+            xmppAccount.setEmail("");
+
+            try {
+                boolean xmppCreated = xmppServerClient.createXMPPAccount(xmppAccount);
+                if (!xmppCreated) {
+                    log.warn("Server XMPP Account was not created for device-type - " +
+                                     VirtualFireAlarmConstants.DEVICE_TYPE +
+                                     ". Check whether XMPP is enabled in \"devicemgt-config.xml\" & restart.");
+                } else {
+                    log.info("Server XMPP Account [" + xmppVFireAlarmAdminUsername +
+                                     "] was not created for device-type - " + VirtualFireAlarmConstants.DEVICE_TYPE);
+                }
+            } catch (DeviceControllerException e) {
+                String errorMsg =
+                        "An error was encountered whilst trying to create Server XMPP account for device-type - "
+                                + VirtualFireAlarmConstants.DEVICE_TYPE;
+                log.error(errorMsg, e);
+            }
         }
     }
 
+
     @Override
-    protected void processXMPPMessage(Message xmppMessage) {
+    public void connect() {
+        Runnable connector = new Runnable() {
+            public void run() {
+                if (!isConnected()) {
+                    try {
+                        connectToServer();
+                        loginToServer(xmppVFireAlarmAdminUsername, V_FIREALARM_XMPP_PASSWORD, null);
+                        setFilterOnReceiver(xmppVFireAlarmAdminAccountJID);
+
+                    } catch (TransportHandlerException e) {
+                        if (log.isDebugEnabled()) {
+                            log.warn("Connection/Login to XMPP server at: " + server + " as " +
+                                             xmppVFireAlarmAdminUsername + " failed for device-type [" +
+                                             VirtualFireAlarmConstants.DEVICE_TYPE + "].", e);
+                        }
+                    }
+                }
+            }
+        };
+
+        connectorServiceHandler = service.scheduleAtFixedRate(connector, 0, timeoutInterval, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public void processIncomingMessage(Message xmppMessage) throws TransportHandlerException {
         String from = xmppMessage.getFrom();
         String subject = xmppMessage.getSubject();
         String message = xmppMessage.getBody();
@@ -75,80 +148,139 @@ public class VirtualFireAlarmXMPPConnector extends XmppConnector {
             String owner = from.substring(indexOfSlash + 1, from.length());
 
             if (log.isDebugEnabled()) {
-                log.debug("Received XMPP message for: {OWNER-" + owner + "} & {DEVICE.ID-" + deviceId + "}");
+                log.debug("Received XMPP message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
             }
 
-            if (subject != null) {
-                switch (subject) {
-                    case "PUBLISHER":
-                        float temperature = Float.parseFloat(message.split(":")[1]);
-                        if (!VirtualFireAlarmServiceUtils.publishToDAS(owner, deviceId, temperature)) {
-                            log.error("XMPP Connector: Publishing data to DAS failed.");
-                        }
-
-                        if (log.isDebugEnabled()) {
-                            log.debug("XMPP: Publisher Message [" + message + "] from [" + from + "]");
-                            log.debug("XMPP Connector: Published data to DAS successfully.");
-                        }
-                        break;
-                    case "CONTROL-REPLY":
-                        if (log.isDebugEnabled()) {
-                            log.debug("XMPP: Reply Message [" + message + "] from [" + from + "]");
-                        }
-                        String tempVal = message.split(":")[1];
-                        SensorDataManager.getInstance().setSensorRecord(deviceId,
-                                                                        VirtualFireAlarmConstants.SENSOR_TEMPERATURE,
-                                                                        tempVal,
-                                                                        Calendar.getInstance().getTimeInMillis());
-                        break;
-                    default:
-                        if (log.isDebugEnabled()) {
-                            log.warn("Unknown XMPP Message [" + message + "] from [" + from + "] received");
-                        }
-                        break;
+            try {
+                PublicKey clientPublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
+                PrivateKey serverPrivateKey = VerificationManager.getServerPrivateKey();
+                String actualMessage = VirtualFireAlarmServiceUtils.extractMessageFromPayload(message, serverPrivateKey,
+                                                                                       clientPublicKey);
+                if (log.isDebugEnabled()) {
+                    log.debug("XMPP: Received Message [" + actualMessage + "] from: [" + from + "]");
                 }
+
+                if (subject != null) {
+                    switch (subject) {
+                        case "PUBLISHER":
+                            float temperature = Float.parseFloat(actualMessage.split(":")[1]);
+                            if (!VirtualFireAlarmServiceUtils.publishToDAS(owner, deviceId, temperature)) {
+                                log.error("XMPP Connector: Publishing VirtualFirealarm data to DAS failed.");
+                            }
+
+                            if (log.isDebugEnabled()) {
+                                log.debug("XMPP: Publisher Message [" + actualMessage + "] from [" + from + "] " +
+                                                  "was successfully published to DAS");
+                            }
+                            break;
+
+                        case "CONTROL-REPLY":
+                            String tempVal = actualMessage.split(":")[1];
+                            SensorDataManager.getInstance().setSensorRecord(deviceId,
+                                                                            VirtualFireAlarmConstants.SENSOR_TEMP,
+                                                                            tempVal,
+                                                                            Calendar.getInstance().getTimeInMillis());
+                            break;
+
+                        default:
+                            if (log.isDebugEnabled()) {
+                                log.warn("Unknown XMPP Message [" + actualMessage + "] from [" + from + "] received");
+                            }
+                            break;
+                    }
+                }
+            } catch (VirtualFireAlarmException e) {
+                String errorMsg =
+                        "CertificateManagementService failure oo Signature-Verification/Decryption was unsuccessful.";
+                log.error(errorMsg, e);
             }
         } else {
             log.warn("Received XMPP message from client with unexpected JID [" + from + "].");
         }
     }
 
-    private void retryXMPPConnection() {
-        Thread retryToConnect = new Thread() {
-            @Override
+    @Override
+    public void publishDeviceData(String... publishData) throws TransportHandlerException {
+        if (publishData.length != 4) {
+            String errorMsg = "Incorrect number of arguments received to SEND-MQTT Message. " +
+                    "Need to be [owner, deviceId, resource{BULB/TEMP}, state{ON/OFF or null}]";
+            log.error(errorMsg);
+            throw new TransportHandlerException(errorMsg);
+        }
+
+        String deviceOwner = publishData[0];
+        String deviceId = publishData[1];
+        String resource = publishData[2];
+        String state = publishData[3];
+
+        try {
+            PublicKey devicePublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
+            PrivateKey serverPrivateKey = VerificationManager.getServerPrivateKey();
+
+            String actualMessage = resource + ":" + state;
+            String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage,
+                                                                                    devicePublicKey,
+                                                                                    serverPrivateKey);
+
+            String clientToConnect = deviceId + "@" + xmppServerIP + File.separator + deviceOwner;
+            sendXMPPMessage(clientToConnect, encryptedMsg, "CONTROL-REQUEST");
+
+        } catch (VirtualFireAlarmException e) {
+            String errorMsg = "Preparing Secure payload failed for device - [" + deviceId + "] of owner - " +
+                    "[" + deviceOwner + "].";
+            log.error(errorMsg);
+            throw new TransportHandlerException(errorMsg, e);
+        }
+    }
+
+
+    @Override
+    public void disconnect() {
+        Runnable stopConnection = new Runnable() {
             public void run() {
-
-                while (true) {
-                    if (!isConnected()) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("Re-trying to reach XMPP Server....");
-                        }
-
-                        try {
-                            VirtualFireAlarmXMPPConnector.super.connectAndLogin(xmppAdminUsername,
-                                                                                xmppAdminPassword,
-                                                                                null);
-                            VirtualFireAlarmXMPPConnector.super.setMessageFilterOnReceiver(
-                                    xmppAdminAccountJID);
-                        } catch (DeviceManagementException e1) {
-                            if (log.isDebugEnabled()) {
-                                log.debug("Attempt to re-connect to XMPP-Server failed");
-                            }
-                        }
-                    } else {
-                        break;
+                while (isConnected()) {
+                    connectorServiceHandler.cancel(true);
+                    closeConnection();
+                    if (log.isDebugEnabled()) {
+                        log.warn("Unable to 'STOP' connection to XMPP server at: " + server +
+                                         " for user - " + xmppVFireAlarmAdminUsername);
                     }
 
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(timeoutInterval);
                     } catch (InterruptedException e1) {
-                        log.error("XMPP: Thread Sleep Interrupt Exception");
+                        log.error("XMPP-Terminator: Thread Sleep Interrupt Exception for "
+                                          + VirtualFireAlarmConstants.DEVICE_TYPE + " type.", e1);
                     }
+
                 }
             }
         };
 
-        retryToConnect.setDaemon(true);
-        retryToConnect.start();
+        Thread terminatorThread = new Thread(stopConnection);
+        terminatorThread.setDaemon(true);
+        terminatorThread.start();
+    }
+
+
+    @Override
+    public void processIncomingMessage(Message message, String... messageParams) throws TransportHandlerException {
+        // nothing to do
+    }
+
+    @Override
+    public void processIncomingMessage() throws TransportHandlerException {
+        // nothing to do
+    }
+
+    @Override
+    public void publishDeviceData() throws TransportHandlerException {
+        // nothing to do
+    }
+
+    @Override
+    public void publishDeviceData(Message publishData) throws TransportHandlerException {
+        // nothing to do
     }
 }
+
