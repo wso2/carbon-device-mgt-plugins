@@ -18,6 +18,7 @@ package org.wso2.carbon.device.mgt.iot.androidsense.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.exception.DataPublisherConfigurationException;
@@ -45,6 +46,7 @@ import java.io.File;
 import java.util.Date;
 
 @DeviceType( value = "android_sense" )
+@API( name="android_sense", version="1.0.0", context="/android_sense")
 public class AndroidSenseService {
 
     private static final String BATTERY_STREAM_DEFINITION = "org.wso2.iot.devices.battery";
