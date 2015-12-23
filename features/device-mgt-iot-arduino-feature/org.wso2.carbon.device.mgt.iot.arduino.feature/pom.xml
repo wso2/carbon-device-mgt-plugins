@@ -104,7 +104,7 @@
 									<type>war</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
-									<destFileName>arduino.war</destFileName>
+									<destFileName>arduino_mgt.war</destFileName>
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -113,7 +113,7 @@
 									<type>war</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
-									<destFileName>arduino_mgt.war</destFileName>
+									<destFileName>arduino.war</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
