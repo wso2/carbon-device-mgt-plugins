@@ -192,7 +192,7 @@
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <warName>android_sense</warName>
+                    <warName>android_sense_war</warName>
                 </configuration>
             </plugin>
         </plugins>
