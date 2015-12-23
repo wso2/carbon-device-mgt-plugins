@@ -18,6 +18,7 @@ package org.wso2.carbon.device.mgt.iot.androidsense.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.exception.DataPublisherConfigurationException;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
@@ -29,18 +30,11 @@ import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.DeviceJSON;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.SensorJSON;
-import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
-import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
-import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
-import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
-import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -48,11 +42,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.UUID;
 
+@DeviceType( value = "android_sense" )
 public class AndroidSenseService {
 
     private static final String BATTERY_STREAM_DEFINITION = "org.wso2.iot.devices.battery";
@@ -361,6 +353,7 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
+    @Feature(code = "readlight", name = "Light", description = "Read Light data from the device", type = "monitor")
     public SensorRecord readLight(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -380,6 +373,7 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
+    @Feature(code = "readbattery", name = "Battery", description = "Read Battery data from the device", type = "monitor")
     public SensorRecord readBattery(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -399,6 +393,7 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
+    @Feature(code = "readgps", name = "gps", description = "Read GPS data from the device", type = "monitor")
     public SensorRecord readGPS(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -418,6 +413,7 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
+    @Feature(code = "readmagnetic", name = "Magnetic", description = "Read Magnetic data from the device", type = "monitor")
     public SensorRecord readMagnetic(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -437,6 +433,7 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
+    @Feature(code = "readaccelerometer", name = "Accelerometer", description = "Read Accelerometer data from the device", type = "monitor")
     public SensorRecord readAccelerometer(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -456,6 +453,7 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
+    @Feature(code = "readrotation", name = "Rotation", description = "Read Rotational Vector data from the device", type = "monitor")
     public SensorRecord readRotation(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -475,6 +473,7 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
+    @Feature(code = "readproximity", name = "Proximity", description = "Read Proximity data from the device", type = "monitor")
     public SensorRecord readProximity(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -494,6 +493,7 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
+    @Feature(code = "readgyroscope", name = "Gyroscope", description = "Read Gyroscope data from the device", type = "monitor")
     public SensorRecord readGyroscope(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -513,6 +513,7 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
+    @Feature(code = "readpressure", name = "Pressure", description = "Read Pressure data from the device", type = "monitor")
     public SensorRecord readPressure(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -532,6 +533,7 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
+    @Feature(code = "readgravity", name = "Gravity", description = "Read Gravity data from the device", type = "monitor")
     public SensorRecord readGravity(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
