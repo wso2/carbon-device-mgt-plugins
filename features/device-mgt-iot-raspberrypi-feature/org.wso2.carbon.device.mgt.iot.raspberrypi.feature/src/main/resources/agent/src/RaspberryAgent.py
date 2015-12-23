@@ -73,7 +73,7 @@ if args.mode:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Endpoint specific settings to which the data is pushed
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-DC_ENDPOINT = iotUtils.APIM_EP.split(":")
+DC_ENDPOINT = iotUtils.HTTPS_EP.split(":")
 DC_IP = DC_ENDPOINT[1].replace('//', '')
 DC_PORT = int(DC_ENDPOINT[2])
 DC_ENDPOINT_CONTEXT = iotUtils.CONTROLLER_CONTEXT
@@ -124,8 +124,7 @@ def configureLogger(loggerName):
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def registerDeviceIP():
     dcConncection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
-    #dcConncection = httplib.HTTPConnection(DC_IP, DC_PORT)
-
+    #TODO need to get server certificate when initializing https connection
     dcConncection.set_debuglevel(1)
     dcConncection.connect()
 
