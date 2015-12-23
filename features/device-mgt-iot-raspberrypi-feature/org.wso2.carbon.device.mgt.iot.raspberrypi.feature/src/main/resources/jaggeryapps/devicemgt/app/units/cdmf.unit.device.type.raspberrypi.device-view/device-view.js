@@ -16,8 +16,9 @@
  * under the License.
  */
 
+
 function onRequest(context) {
-    var log = new Log("device-view.js");
+    var log = new Log("detail.js");
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("id");
 
@@ -25,19 +26,9 @@ function onRequest(context) {
         var deviceModule = require("/app/modules/device.js").deviceModule;
         var device = deviceModule.viewDevice(deviceType, deviceId);
 
-        if (device) {
-            var viewModel = {};
-            var deviceInfo = device.properties.DEVICE_INFO;
-            if (deviceInfo != undefined && String(deviceInfo.toString()).length > 0) {
-                deviceInfo = parse(stringify(deviceInfo));
-                viewModel.system = device.properties.IMEI;
-                viewModel.machine = "RaspberryPi";
-                viewModel.vendor = device.properties.VENDOR;
-            }
-            device.viewModel = viewModel;
+        if (device && device.status != "error") {
+            log.info(device);
+            return {"device": device};
         }
-        context.device = device;
-
-        return context;
     }
 }
