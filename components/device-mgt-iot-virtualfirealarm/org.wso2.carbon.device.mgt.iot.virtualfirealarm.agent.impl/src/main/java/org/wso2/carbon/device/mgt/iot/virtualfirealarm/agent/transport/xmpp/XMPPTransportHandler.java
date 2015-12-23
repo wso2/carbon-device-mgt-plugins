@@ -152,13 +152,10 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
     protected void connectToServer() throws TransportHandlerException {
         try {
             connection.connect();
-            log.info(String.format(
-                    "Connection to XMPP Server at %1$s established successfully......", server));
+            log.info(String.format("Connection to XMPP Server at %1$s established successfully......", server));
 
         } catch (XMPPException xmppExcepion) {
-            String errorMsg =
-                    "Connection attempt to the XMPP Server at " + server + " via port " + port +
-                            " failed.";
+            String errorMsg = "Connection attempt to the XMPP Server at " + server + " via port " + port + " failed.";
             log.info(errorMsg);
             throw new TransportHandlerException(errorMsg, xmppExcepion);
         }
@@ -180,28 +177,20 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
             try {
                 if (resource == null) {
                     connection.login(username, password);
-                    log.info(String.format("Logged into XMPP Server at %1$s as user %2$s......",
-                                           server, username));
+                    log.info(String.format("Logged into XMPP Server at %1$s as user %2$s......", server, username));
                 } else {
                     connection.login(username, password, resource);
-                    log.info(String.format(
-                            "Logged into XMPP Server at %1$s as user %2$s on resource %3$s......",
-                            server, username, resource));
+                    log.info(String.format("Logged into XMPP Server at %1$s as user %2$s on resource %3$s......",
+                                           server, username, resource));
                 }
             } catch (XMPPException xmppException) {
                 String errorMsg =
-                        "Login attempt to the XMPP Server at " + server + " with username - " +
-                                username + " failed.";
-                log.info(errorMsg);
+                        "Login attempt to the XMPP Server at " + server + " with username - " + username + " failed.";
+                log.error(errorMsg);
                 throw new TransportHandlerException(errorMsg, xmppException);
             }
-        } else {//TODO:: Log not required
-            String errorMsg =
-                    "Not connected to XMPP-Server to attempt Login. Please 'connectToServer' " +
-                            "before Login";
-            if (log.isDebugEnabled()) {
-                log.debug(errorMsg);
-            }
+        } else {
+            String errorMsg = "Not connected to XMPP-Server to attempt Login. Please 'connectToServer' before Login";
             throw new TransportHandlerException(errorMsg);
         }
     }

@@ -21,10 +21,12 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.communica
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.packet.Message;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.xmpp.XMPPTransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core.AgentConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core.AgentManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core.AgentUtilOperations;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.exception.AgentCoreOperationException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.TransportHandlerException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.xmpp.XMPPTransportHandler;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -69,7 +71,7 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
         resource = agentManager.getAgentConfigs().getDeviceOwner();
 
         xmppDeviceJID = username + "@" + server;
-        xmppAdminJID = AgentConstants.XMPP_ADMIN_ACCOUNT_UNAME + "@" + server;
+        xmppAdminJID = agentManager.getAgentConfigs().getServerName() + "_" + AgentConstants.DEVICE_TYPE + "@" + server;
 
 
         Runnable connect = new Runnable() {
@@ -77,25 +79,24 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
                 if (!isConnected()) {
                     try {
                         connectToServer();
+                    } catch (TransportHandlerException e) {
+                        log.warn(AgentConstants.LOG_APPENDER + "Connection to XMPP server at: " + server + " failed");
+                    }
+
+                    try {
                         loginToServer(username, password, resource);
                         agentManager.updateAgentStatus("Connected to XMPP Server");
-
                         setMessageFilterAndListener(xmppAdminJID, xmppDeviceJID, true);
-                        publishDeviceData(agentManager.getPushInterval());
-
+                        publishDeviceData();
                     } catch (TransportHandlerException e) {
-                        if (log.isDebugEnabled()) {
-                            log.warn(AgentConstants.LOG_APPENDER +
-                                             "Connection/Login to XMPP server at: " + server +
-                                             " failed");
-                        }
+                        log.warn(AgentConstants.LOG_APPENDER + "Login to XMPP server at: " + server + " failed");
+                        agentManager.updateAgentStatus("No XMPP Account for Device");
                     }
                 }
             }
         };
 
-        connectorServiceHandler = service.scheduleAtFixedRate(connect, 0, timeoutInterval,
-                                                              TimeUnit.MILLISECONDS);
+        connectorServiceHandler = service.scheduleAtFixedRate(connect, 0, timeoutInterval, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -110,81 +111,102 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
         final AgentManager agentManager = AgentManager.getInstance();
         String from = xmppMessage.getFrom();
         String message = xmppMessage.getBody();
-        log.info(AgentConstants.LOG_APPENDER + "Received XMPP message [" + message + "] from " +
-                         from);
-
+        String receivedMessage;
         String replyMessage;
-        String[] controlSignal = message.split(":");
+        String securePayLoad;
+
+        try {
+            receivedMessage = AgentUtilOperations.extractMessageFromPayload(message);
+            log.info(AgentConstants.LOG_APPENDER + "Message [" + receivedMessage + "] was received");
+        } catch (AgentCoreOperationException e) {
+            log.warn(AgentConstants.LOG_APPENDER + "Could not extract message from payload.", e);
+            return;
+        }
+
+        String[] controlSignal = receivedMessage.split(":");
         //message- "<SIGNAL_TYPE>:<SIGNAL_MODE>" format. (ex: "BULB:ON", "TEMPERATURE", "HUMIDITY")
 
+        try {
+            switch (controlSignal[0].toUpperCase()) {
+                case AgentConstants.BULB_CONTROL:
+                    if (controlSignal.length != 2) {
+                        replyMessage = "BULB controls need to be in the form - 'BULB:{ON|OFF}'";
+                        log.warn(replyMessage);
+                        securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
+                        sendXMPPMessage(xmppAdminJID, securePayLoad, "CONTROL-REPLY");
+                        break;
+                    }
 
-        switch (controlSignal[0].toUpperCase()) {
-            case AgentConstants.BULB_CONTROL:
-                if (controlSignal.length != 2) {
-                    replyMessage = "BULB controls need to be in the form - 'BULB:{ON|OFF}'";
-                    log.warn(replyMessage);
-                    sendXMPPMessage(xmppAdminJID, replyMessage, "CONTROL-REPLY");
+                    agentManager.changeAlarmStatus(controlSignal[1].equals(AgentConstants.CONTROL_ON));
+                    log.info(AgentConstants.LOG_APPENDER + "Bulb was switched to state: '" + controlSignal[1] + "'");
                     break;
-                }
 
-                agentManager.changeAlarmStatus(controlSignal[1].equals(AgentConstants.CONTROL_ON));
-                log.info(AgentConstants.LOG_APPENDER + "Bulb was switched to state: '" +
-                                 controlSignal[1] + "'");
-                break;
+                case AgentConstants.TEMPERATURE_CONTROL:
+                    int currentTemperature = agentManager.getTemperature();
 
-            case AgentConstants.TEMPERATURE_CONTROL:
-                int currentTemperature = agentManager.getTemperature();
+                    String replyTemperature =
+                            "The current temperature was read to be: '" + currentTemperature +
+                                    "C'";
+                    log.info(AgentConstants.LOG_APPENDER + replyTemperature);
 
-                String replyTemperature =
-                        "The current temperature was read to be: '" + currentTemperature +
-                                "C'";
-                log.info(AgentConstants.LOG_APPENDER + replyTemperature);
+                    replyMessage = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
+                    securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
+                    sendXMPPMessage(xmppAdminJID, securePayLoad, "CONTROL-REPLY");
+                    break;
 
-                replyMessage = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
-                sendXMPPMessage(xmppAdminJID, replyMessage, "CONTROL-REPLY");
-                break;
+                case AgentConstants.HUMIDITY_CONTROL:
+                    int currentHumidity = agentManager.getHumidity();
 
-            case AgentConstants.HUMIDITY_CONTROL:
-                int currentHumidity = agentManager.getHumidity();
+                    String replyHumidity = "The current humidity was read to be: '" + currentHumidity + "%'";
+                    log.info(AgentConstants.LOG_APPENDER + replyHumidity);
 
-                String replyHumidity =
-                        "The current humidity was read to be: '" + currentHumidity + "%'";
-                log.info(AgentConstants.LOG_APPENDER + replyHumidity);
+                    replyMessage = AgentConstants.HUMIDITY_CONTROL + ":" + currentHumidity;
+                    securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
+                    sendXMPPMessage(xmppAdminJID, securePayLoad, "CONTROL-REPLY");
+                    break;
 
-                replyMessage = AgentConstants.HUMIDITY_CONTROL + ":" + currentHumidity;
-                sendXMPPMessage(xmppAdminJID, replyMessage, "CONTROL-REPLY");
-                break;
-
-            default:
-                replyMessage = "'" + controlSignal[0] +
-                        "' is invalid and not-supported for this device-type";
-                log.warn(replyMessage);
-                sendXMPPMessage(xmppAdminJID, replyMessage, "CONTROL-ERROR");
-                break;
+                default:
+                    replyMessage = "'" + controlSignal[0] + "' is invalid and not-supported for this device-type";
+                    log.warn(replyMessage);
+                    securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
+                    sendXMPPMessage(xmppAdminJID, securePayLoad, "CONTROL-ERROR");
+                    break;
+            }
+        } catch (AgentCoreOperationException e) {
+            log.warn(AgentConstants.LOG_APPENDER + "Preparing Secure payload failed", e);
         }
 
     }
 
+
     @Override
-    public void publishDeviceData(int publishInterval) {
+    public void publishDeviceData() {
         final AgentManager agentManager = AgentManager.getInstance();
+        int publishInterval = agentManager.getPushInterval();
 
         Runnable pushDataRunnable = new Runnable() {
             @Override
             public void run() {
-                int currentTemperature = agentManager.getTemperature();
-                String payLoad = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
-
                 Message xmppMessage = new Message();
-                xmppMessage.setTo(xmppAdminJID);
-                xmppMessage.setSubject("PUBLISHER");
-                xmppMessage.setBody(payLoad);
-                xmppMessage.setType(Message.Type.chat);
 
-                sendXMPPMessage(xmppAdminJID, xmppMessage);
-                log.info(AgentConstants.LOG_APPENDER + "Message: '" + xmppMessage.getBody() +
-                                 "' sent to XMPP JID [" + xmppAdminJID + "] under subject [" +
-                                 xmppMessage.getSubject() + "]");
+                try {
+                    int currentTemperature = agentManager.getTemperature();
+
+                    String message = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
+                    String payLoad = AgentUtilOperations.prepareSecurePayLoad(message);
+
+                    xmppMessage.setTo(xmppAdminJID);
+                    xmppMessage.setSubject("PUBLISHER");
+                    xmppMessage.setBody(payLoad);
+                    xmppMessage.setType(Message.Type.chat);
+
+                    sendXMPPMessage(xmppAdminJID, xmppMessage);
+                    log.info(AgentConstants.LOG_APPENDER + "Message: '" + message + "' sent to XMPP JID - " +
+                                     "[" + xmppAdminJID + "] under subject [" + xmppMessage.getSubject() + "].");
+                } catch (AgentCoreOperationException e) {
+                    log.warn(AgentConstants.LOG_APPENDER + "Preparing Secure payload failed for XMPP JID - " +
+                                     "[" + xmppAdminJID + "] with subject - [" + xmppMessage.getSubject() + "].");
+                }
             }
         };
 
@@ -197,22 +219,27 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
     public void disconnect() {
         Runnable stopConnection = new Runnable() {
             public void run() {
-                while (isConnected()) {
+
+                if (dataPushServiceHandler != null) {
                     dataPushServiceHandler.cancel(true);
+                }
+
+                if (connectorServiceHandler != null) {
                     connectorServiceHandler.cancel(true);
+                }
+
+                while (isConnected()) {
                     closeConnection();
 
                     if (log.isDebugEnabled()) {
                         log.warn(AgentConstants.LOG_APPENDER +
-                                         "Unable to 'STOP' connection to XMPP server at: " +
-                                         server);
+                                         "Unable to 'STOP' connection to XMPP server at: " + server);
                     }
 
                     try {
                         Thread.sleep(timeoutInterval);
                     } catch (InterruptedException e1) {
-                        log.error(AgentConstants.LOG_APPENDER +
-                                          "XMPP-Terminator: Thread Sleep Interrupt Exception");
+                        log.error(AgentConstants.LOG_APPENDER + "XMPP-Terminator: Thread Sleep Interrupt Exception");
                     }
 
                 }
@@ -224,8 +251,15 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
         terminatorThread.start();
     }
 
+
     @Override
     public void processIncomingMessage() {
 
     }
+
+    @Override
+    public void publishDeviceData(String... publishData) {
+
+    }
+
 }

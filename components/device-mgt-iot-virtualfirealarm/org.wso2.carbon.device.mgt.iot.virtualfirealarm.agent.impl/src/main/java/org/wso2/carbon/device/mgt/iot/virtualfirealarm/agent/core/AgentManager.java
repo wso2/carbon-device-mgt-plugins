@@ -40,6 +40,7 @@ public class AgentManager {
     private static final Log log = LogFactory.getLog(AgentManager.class);
     private static AgentManager agentManager;
     private String rootPath = "";
+
     private boolean deviceReady = false;
     private boolean isAlarmOn = false;
 
@@ -82,7 +83,8 @@ public class AgentManager {
 
         String analyticsPageContext = String.format(AgentConstants.DEVICE_ANALYTICS_PAGE_URL,
                                                     agentConfigs.getDeviceId(),
-                                                    AgentConstants.DEVICE_TYPE);
+                                                    AgentConstants.DEVICE_TYPE,
+                                                    agentConfigs.getDeviceName());
 
         String controlPageContext = String.format(AgentConstants.DEVICE_DETAILS_PAGE_EP,
                                                   AgentConstants.DEVICE_TYPE,
@@ -102,9 +104,7 @@ public class AgentManager {
 
         Map<String, String> xmppIPPortMap;
         try {
-            xmppIPPortMap = TransportUtils.getHostAndPort(agentConfigs.getXmppServerEndpoint
-                    ());
-
+            xmppIPPortMap = TransportUtils.getHostAndPort(agentConfigs.getXmppServerEndpoint());
             String xmppServer = xmppIPPortMap.get("Host");
             int xmppPort = Integer.parseInt(xmppIPPortMap.get("Port"));
 
@@ -120,12 +120,13 @@ public class AgentManager {
                                          agentConfigs.getDeviceOwner(),
                                          agentConfigs.getDeviceId());
 
-        TransportHandler httpCommunicator = new FireAlarmHTTPCommunicator();
-        TransportHandler mqttCommunicator = new FireAlarmMQTTCommunicator(
-                agentConfigs.getDeviceOwner(), agentConfigs.getDeviceId(),
-                agentConfigs.getMqttBrokerEndpoint(), mqttTopic);
+//        TransportHandler httpCommunicator = new FireAlarmHTTPCommunicator();
+        TransportHandler mqttCommunicator = new FireAlarmMQTTCommunicator(agentConfigs.getDeviceOwner(),
+                                                                          agentConfigs.getDeviceId(),
+                                                                          agentConfigs.getMqttBrokerEndpoint(),
+                                                                          mqttTopic);
 
-        agentCommunicator.put(AgentConstants.HTTP_PROTOCOL, httpCommunicator);
+//        agentCommunicator.put(AgentConstants.HTTP_PROTOCOL, httpCommunicator);
         agentCommunicator.put(AgentConstants.MQTT_PROTOCOL, mqttCommunicator);
 
         try {

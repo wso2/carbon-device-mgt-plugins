@@ -20,15 +20,15 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.enrollment.EnrollmentManager;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.exception.AgentCoreOperationException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.TransportHandler;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.TransportHandlerException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.TransportUtils;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.sidhdhi.SidhdhiQuery;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.communication.http.FireAlarmHTTPCommunicator;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.communication.mqtt.FireAlarmMQTTCommunicator;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.communication.xmpp.FireAlarmXMPPCommunicator;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.enrollment.EnrollmentManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.exception.AgentCoreOperationException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.sidhdhi.SidhdhiQuery;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.TransportHandler;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.TransportHandlerException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.TransportUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.virtual.VirtualHardwareManager;
 
 import java.nio.charset.StandardCharsets;
@@ -97,11 +97,12 @@ public class AgentManager {
         this.agentConfigs = AgentUtilOperations.readIoTServerConfigs();
 
         // Initialise IoT-Server URL endpoints from the configuration read from file
-        AgentUtilOperations.initializeHTTPEndPoints();
+        AgentUtilOperations.initializeServerEndPoints();
 
         String analyticsPageContext = String.format(AgentConstants.DEVICE_ANALYTICS_PAGE_URL,
                                                     agentConfigs.getDeviceId(),
-                                                    AgentConstants.DEVICE_TYPE);
+                                                    AgentConstants.DEVICE_TYPE,
+                                                    agentConfigs.getDeviceName());
 
         String controlPageContext = String.format(AgentConstants.DEVICE_DETAILS_PAGE_EP,
                                                   AgentConstants.DEVICE_TYPE,
@@ -121,28 +122,29 @@ public class AgentManager {
 
         Map<String, String> xmppIPPortMap;
         try {
-            xmppIPPortMap = TransportUtils.getHostAndPort(agentConfigs.getXmppServerEndpoint
-                    ());
-
+            xmppIPPortMap = TransportUtils.getHostAndPort(agentConfigs.getXmppServerEndpoint());
             String xmppServer = xmppIPPortMap.get("Host");
             int xmppPort = Integer.parseInt(xmppIPPortMap.get("Port"));
+
             TransportHandler xmppCommunicator = new FireAlarmXMPPCommunicator(xmppServer, xmppPort);
             agentCommunicator.put(AgentConstants.XMPP_PROTOCOL, xmppCommunicator);
 
         } catch (TransportHandlerException e) {
             log.error("XMPP Endpoint String - " + agentConfigs.getXmppServerEndpoint() +
-                      ", provided in the configuration file is invalid.");
+                              ", provided in the configuration file is invalid.");
         }
         String mqttTopic = String.format(AgentConstants.MQTT_SUBSCRIBE_TOPIC,
+                                         agentConfigs.getServerName(),
                                          agentConfigs.getDeviceOwner(),
                                          agentConfigs.getDeviceId());
 
-        TransportHandler httpCommunicator = new FireAlarmHTTPCommunicator();
-        TransportHandler mqttCommunicator = new FireAlarmMQTTCommunicator(
-                agentConfigs.getDeviceOwner(), agentConfigs.getDeviceId(),
-                agentConfigs.getMqttBrokerEndpoint(), mqttTopic);
+//        TransportHandler httpCommunicator = new FireAlarmHTTPCommunicator();
+        TransportHandler mqttCommunicator = new FireAlarmMQTTCommunicator(agentConfigs.getDeviceOwner(),
+                                                                          agentConfigs.getDeviceId(),
+                                                                          agentConfigs.getMqttBrokerEndpoint(),
+                                                                          mqttTopic);
 
-        agentCommunicator.put(AgentConstants.HTTP_PROTOCOL, httpCommunicator);
+//        agentCommunicator.put(AgentConstants.HTTP_PROTOCOL, httpCommunicator);
         agentCommunicator.put(AgentConstants.MQTT_PROTOCOL, mqttCommunicator);
 
         try {
@@ -169,9 +171,6 @@ public class AgentManager {
             }
         }
 
-        //Start agent communication
-        agentCommunicator.get(protocol).connect();
-
         try {
             EnrollmentManager.getInstance().beginEnrollmentFlow();
         } catch (AgentCoreOperationException e) {
@@ -179,6 +178,9 @@ public class AgentManager {
             e.printStackTrace();
             System.exit(0);
         }
+
+        //Start agent communication
+        agentCommunicator.get(protocol).connect();
     }
 
     private void switchCommunicator(String stopProtocol, String startProtocol) {
@@ -189,7 +191,7 @@ public class AgentManager {
                 Thread.sleep(250);
             } catch (InterruptedException e) {
                 log.info(AgentConstants.LOG_APPENDER +
-                         "Sleep error in 'Switch-Communicator' Thread's shutdown wait.");
+                                 "Sleep error in 'Switch-Communicator' Thread's shutdown wait.");
             }
         }
 
@@ -242,7 +244,7 @@ public class AgentManager {
 
 	/*------------------------------------------------------------------------------------------*/
     /* 		            Getter and Setter Methods for the private variables                 	*/
-	/*------------------------------------------------------------------------------------------*/
+    /*------------------------------------------------------------------------------------------*/
 
     public void setRootPath(String rootPath) {
         this.rootPath = rootPath;
@@ -336,7 +338,7 @@ public class AgentManager {
             default:
                 log.warn("Unknown protocol " + protocol);
         }
-        transportHandler.publishDeviceData(pushInterval);
+        transportHandler.publishDeviceData();
 
         if (log.isDebugEnabled()) {
             log.debug("The Data Publish Interval was changed to: " + pushInterval);
@@ -353,6 +355,7 @@ public class AgentManager {
 
     /**
      * Get temperature reading from device
+     *
      * @return Temperature
      */
     public int getTemperature() {
@@ -361,9 +364,10 @@ public class AgentManager {
 
     /**
      * Get humidity reading from device
+     *
      * @return Humidity
      */
-    public int getHumidity(){
+    public int getHumidity() {
         return VirtualHardwareManager.getInstance().getHumidity();
     }
 

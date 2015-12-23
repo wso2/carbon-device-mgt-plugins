@@ -49,37 +49,37 @@ import java.nio.file.Paths;
  * care of re-initializing same.
  */
 public class SidhdhiQuery implements Runnable {
-	private static final Log log = LogFactory.getLog(SidhdhiQuery.class);
-	final AgentConstants constants = new AgentConstants();
+    private static final Log log = LogFactory.getLog(SidhdhiQuery.class);
+    final AgentConstants constants = new AgentConstants();
 
-	//Bam data push client
-	private static SiddhiManager siddhiManager = new SiddhiManager();
+    //Bam data push client
+    private static SiddhiManager siddhiManager = new SiddhiManager();
 
-	public static SiddhiManager getSiddhiManager() {
-		return siddhiManager;
-	}
+    public static SiddhiManager getSiddhiManager() {
+        return siddhiManager;
+    }
 
-	public static void setSiddhiManager(SiddhiManager siddhiManager) {
-		SidhdhiQuery.siddhiManager = siddhiManager;
-	}
+    public static void setSiddhiManager(SiddhiManager siddhiManager) {
+        SidhdhiQuery.siddhiManager = siddhiManager;
+    }
 
-	public void run() {
+    public void run() {
 
-		//Start the execution plan with pre-defined or previously persisted Siddhi query
+        //Start the execution plan with pre-defined or previously persisted Siddhi query
 
-		String sidhdhiQueryPath =
-				AgentManager.getInstance().getRootPath() + AgentConstants.CEP_FILE_NAME;
+        String sidhdhiQueryPath =
+                AgentManager.getInstance().getRootPath() + AgentConstants.CEP_FILE_NAME;
 
-		File f = new File(sidhdhiQueryPath);
-		if (!f.exists()) {
-			FileOutputStream out = null;
-			try {
-				out = new FileOutputStream(sidhdhiQueryPath);
-				out.write(AgentConstants.CEP_QUERY.getBytes(StandardCharsets.UTF_8));
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-                if (out != null){
+        File f = new File(sidhdhiQueryPath);
+        if (!f.exists()) {
+            FileOutputStream out = null;
+            try {
+                out = new FileOutputStream(sidhdhiQueryPath);
+                out.write(AgentConstants.CEP_QUERY.getBytes(StandardCharsets.UTF_8));
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (out != null) {
                     try {
                         out.close();
                     } catch (IOException e) {
@@ -89,135 +89,135 @@ public class SidhdhiQuery implements Runnable {
             }
         }
 
-		StartExecutionPlan startExecutionPlan = new StartExecutionPlan().invoke();
+        StartExecutionPlan startExecutionPlan = new StartExecutionPlan().invoke();
 
-		while (true) {
+        while (true) {
 
-			//Check if there is new policy update available
-			if (AgentManager.isUpdated()) {
-				System.out.print("### Policy Update Detected!");
-				//Restart execution plan with new query
-				restartSiddhi();
-				startExecutionPlan = new StartExecutionPlan().invoke();
-			}
-			InputHandler inputHandler = startExecutionPlan.getInputHandler();
+            //Check if there is new policy update available
+            if (AgentManager.isUpdated()) {
+                System.out.print("### Policy Update Detected!");
+                //Restart execution plan with new query
+                restartSiddhi();
+                startExecutionPlan = new StartExecutionPlan().invoke();
+            }
+            InputHandler inputHandler = startExecutionPlan.getInputHandler();
 
-			//Sending events to Siddhi
-			try {
-				int humidityReading = AgentManager.getInstance().getTemperature();
-				inputHandler.send(new Object[]{"FIRE_1", humidityReading});
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				break;
-			}
-		}
-	}
+            //Sending events to Siddhi
+            try {
+                int humidityReading = AgentManager.getInstance().getTemperature();
+                inputHandler.send(new Object[]{"FIRE_1", humidityReading});
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                break;
+            }
+        }
+    }
 
-	/**
-	 * Re-Initialize SiddhiManager
-	 */
-	private void restartSiddhi() {
-		siddhiManager.shutdown();
-		siddhiManager = new SiddhiManager();
-	}
-
-
-	/**
-	 * Read content from a given file and return as a string
-	 *
-	 * @param path
-	 * @param encoding
-	 * @return
-	 */
-	public static String readFile(String path, Charset encoding) {
-		byte[] encoded = new byte[0];
-		try {
-			encoded = Files.readAllBytes(Paths.get(path));
-		} catch (IOException e) {
-			log.error("Error reading Sidhdhi query from file.");
-		}
-		return new String(encoded, encoding);
-	}
+    /**
+     * Re-Initialize SiddhiManager
+     */
+    private void restartSiddhi() {
+        siddhiManager.shutdown();
+        siddhiManager = new SiddhiManager();
+    }
 
 
-	/**
-	 * Read humidity data from API URL
-	 *
-	 * @param humidityAPIUrl
-	 * @return
-	 */
-	private String readHumidityData(String humidityAPIUrl) {
-		HttpClient client = new DefaultHttpClient();
-		HttpGet request = new HttpGet(humidityAPIUrl);
-		String responseStr = null;
-		try {
-			HttpResponse response = client.execute(request);
-			log.debug("Response Code : " + response);
-			InputStream input = response.getEntity().getContent();
-			BufferedReader br = new BufferedReader(new InputStreamReader(input, "UTF-8"));
-			responseStr = String.valueOf(br.readLine());
-			br.close();
+    /**
+     * Read content from a given file and return as a string
+     *
+     * @param path
+     * @param encoding
+     * @return
+     */
+    public static String readFile(String path, Charset encoding) {
+        byte[] encoded = new byte[0];
+        try {
+            encoded = Files.readAllBytes(Paths.get(path));
+        } catch (IOException e) {
+            log.error("Error reading Sidhdhi query from file.");
+        }
+        return new String(encoded, encoding);
+    }
 
-		} catch (IOException e) {
-			//log.error("Exception encountered while trying to make get request.");
-			log.error("Error while reading humidity reading from file!");
-			return responseStr;
-		}
-		return responseStr;
-	}
 
-	/**
-	 * Initialize SiddhiExecution plan
-	 */
-	private static class StartExecutionPlan {
-		private InputHandler inputHandler;
+    /**
+     * Read humidity data from API URL
+     *
+     * @param humidityAPIUrl
+     * @return
+     */
+    private String readHumidityData(String humidityAPIUrl) {
+        HttpClient client = new DefaultHttpClient();
+        HttpGet request = new HttpGet(humidityAPIUrl);
+        String responseStr = null;
+        try {
+            HttpResponse response = client.execute(request);
+            log.debug("Response Code : " + response);
+            InputStream input = response.getEntity().getContent();
+            BufferedReader br = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+            responseStr = String.valueOf(br.readLine());
+            br.close();
 
-		public InputHandler getInputHandler() {
-			return inputHandler;
-		}
+        } catch (IOException e) {
+            //log.error("Exception encountered while trying to make get request.");
+            log.error("Error while reading humidity reading from file!");
+            return responseStr;
+        }
+        return responseStr;
+    }
 
-		public StartExecutionPlan invoke() {
-			String executionPlan;
+    /**
+     * Initialize SiddhiExecution plan
+     */
+    private static class StartExecutionPlan {
+        private InputHandler inputHandler;
 
-			String sidhdhiQueryPath =
-					AgentManager.getInstance().getRootPath() + AgentConstants.CEP_FILE_NAME;
-			executionPlan = readFile(sidhdhiQueryPath, StandardCharsets.UTF_8);
+        public InputHandler getInputHandler() {
+            return inputHandler;
+        }
 
-			//Generating runtime
-			siddhiManager.addExecutionPlan(executionPlan);
+        public StartExecutionPlan invoke() {
+            String executionPlan;
 
-			siddhiManager.addCallback("bulbOnStream", new StreamCallback() {
-				@Override
-				public void receive(Event[] events) {
-					System.out.println("Bulb on Event Fired!");
-					if (events.length > 0) {
-						if (!AgentManager.getInstance().isAlarmOn()) {
-							AgentManager.getInstance().changeAlarmStatus(true);
-							System.out.println("#### Performed HTTP call! ON.");
-						}
-					}
-				}
-			});
+            String sidhdhiQueryPath =
+                    AgentManager.getInstance().getRootPath() + AgentConstants.CEP_FILE_NAME;
+            executionPlan = readFile(sidhdhiQueryPath, StandardCharsets.UTF_8);
 
-			siddhiManager.addCallback("bulbOffStream", new StreamCallback() {
-				@Override
-				public void receive(Event[] inEvents) {
-					System.out.println("Bulb off Event Fired");
-					if (AgentManager.getInstance().isAlarmOn()) {
-						AgentManager.getInstance().changeAlarmStatus(false);
-						System.out.println("#### Performed HTTP call! OFF.");
-					}
-				}
+            //Generating runtime
+            siddhiManager.addExecutionPlan(executionPlan);
 
-			});
+            siddhiManager.addCallback("bulbOnStream", new StreamCallback() {
+                @Override
+                public void receive(Event[] events) {
+                    System.out.println("Bulb on Event Fired!");
+                    if (events.length > 0) {
+                        if (!AgentManager.getInstance().isAlarmOn()) {
+                            AgentManager.getInstance().changeAlarmStatus(true);
+                            System.out.println("#### Performed HTTP call! ON.");
+                        }
+                    }
+                }
+            });
 
-			//Retrieving InputHandler to push events into Siddhi
-			inputHandler = siddhiManager.getInputHandler("fireAlarmEventStream");
+            siddhiManager.addCallback("bulbOffStream", new StreamCallback() {
+                @Override
+                public void receive(Event[] inEvents) {
+                    System.out.println("Bulb off Event Fired");
+                    if (AgentManager.getInstance().isAlarmOn()) {
+                        AgentManager.getInstance().changeAlarmStatus(false);
+                        System.out.println("#### Performed HTTP call! OFF.");
+                    }
+                }
 
-			//Starting event processing
-			System.out.println("Execution Plan Started!");
-			return this;
-		}
-	}
+            });
+
+            //Retrieving InputHandler to push events into Siddhi
+            inputHandler = siddhiManager.getInputHandler("fireAlarmEventStream");
+
+            //Starting event processing
+            System.out.println("Execution Plan Started!");
+            return this;
+        }
+    }
 }

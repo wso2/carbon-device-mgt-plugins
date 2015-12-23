@@ -79,17 +79,18 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
                 if (!isConnected()) {
                     try {
                         connectToServer();
+                    } catch (TransportHandlerException e) {
+                        log.warn(AgentConstants.LOG_APPENDER + "Connection to XMPP server at: " + server + " failed");
+                    }
+
+                    try {
                         loginToServer(username, password, resource);
                         agentManager.updateAgentStatus("Connected to XMPP Server");
-
                         setMessageFilterAndListener(xmppAdminJID, xmppDeviceJID, true);
                         publishDeviceData();
-
                     } catch (TransportHandlerException e) {
-                        if (log.isDebugEnabled()) {
-                            log.warn(AgentConstants.LOG_APPENDER +
-                                             "Connection/Login to XMPP server at: " + server + " failed");
-                        }
+                        log.warn(AgentConstants.LOG_APPENDER + "Login to XMPP server at: " + server + " failed");
+                        agentManager.updateAgentStatus("No XMPP Account for Device");
                     }
                 }
             }
@@ -219,12 +220,15 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
         Runnable stopConnection = new Runnable() {
             public void run() {
 
-                if ( dataPushServiceHandler != null) {
+                if (dataPushServiceHandler != null) {
                     dataPushServiceHandler.cancel(true);
                 }
 
-                while (isConnected()) {
+                if (connectorServiceHandler != null) {
                     connectorServiceHandler.cancel(true);
+                }
+
+                while (isConnected()) {
                     closeConnection();
 
                     if (log.isDebugEnabled()) {
