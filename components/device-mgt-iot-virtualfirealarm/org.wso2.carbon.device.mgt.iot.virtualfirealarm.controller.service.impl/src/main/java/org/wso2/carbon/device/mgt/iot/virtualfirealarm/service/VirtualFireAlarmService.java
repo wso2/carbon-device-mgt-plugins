@@ -121,8 +121,8 @@ public class VirtualFireAlarmService {
             final VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector) {
         this.virtualFireAlarmXMPPConnector = virtualFireAlarmXMPPConnector;
 
-        if (MqttConfig.getInstance().isEnabled()) {
-            Runnable mqttStarter = new Runnable() {
+        if (XmppConfig.getInstance().isEnabled()) {
+            Runnable xmppStarter = new Runnable() {
                 @Override
                 public void run() {
                     virtualFireAlarmXMPPConnector.initConnector();
@@ -130,9 +130,9 @@ public class VirtualFireAlarmService {
                 }
             };
 
-            Thread mqttStarterThread = new Thread(mqttStarter);
-            mqttStarterThread.setDaemon(true);
-            mqttStarterThread.start();
+            Thread xmppStarterThread = new Thread(xmppStarter);
+            xmppStarterThread.setDaemon(true);
+            xmppStarterThread.start();
         } else {
             log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
         }
@@ -144,7 +144,7 @@ public class VirtualFireAlarmService {
     public void setVirtualFireAlarmMQTTConnector(
             final VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector) {
         this.virtualFireAlarmMQTTConnector = virtualFireAlarmMQTTConnector;
-        if (XmppConfig.getInstance().isEnabled()) {
+        if (MqttConfig.getInstance().isEnabled()) {
             virtualFireAlarmMQTTConnector.connect();
         } else {
             log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmXMPPConnector not started.");

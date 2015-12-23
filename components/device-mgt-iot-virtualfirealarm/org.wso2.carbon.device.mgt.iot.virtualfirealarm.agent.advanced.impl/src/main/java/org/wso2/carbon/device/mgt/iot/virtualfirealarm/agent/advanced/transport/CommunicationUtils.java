@@ -55,7 +55,7 @@ public class CommunicationUtils {
      * @param encryptionKey the key to use for the encryption of the message.
      * @return the encrypted message in String format.
      * @throws TransportHandlerException if an error occurs with the encryption flow which can be due to Padding
-     *                                     issues, encryption key being invalid or the algorithm used is unrecognizable.
+     *                                   issues, encryption key being invalid or the algorithm used is unrecognizable.
      */
     public static String encryptMessage(String message, Key encryptionKey) throws TransportHandlerException {
         Cipher encrypter;
@@ -92,6 +92,7 @@ public class CommunicationUtils {
     }
 
 ///TODO:: Exception needs to change according to the common package
+
     /**
      * Signed a given message using the PrivateKey that's passes in.
      *
@@ -99,7 +100,7 @@ public class CommunicationUtils {
      * @param signatureKey the PrivateKey with which the message is to be signed.
      * @return the Base64Encoded String of the signed payload.
      * @throws TransportHandlerException if some error occurs with the signing process which may be related to the
-     *                                     signature algorithm used or the key used for signing.
+     *                                   signature algorithm used or the key used for signing.
      */
     public static String signMessage(String message, PrivateKey signatureKey) throws TransportHandlerException {
 
@@ -143,7 +144,7 @@ public class CommunicationUtils {
      *                        the data to be signed by.
      * @return true if the signed data verifies to be signed by the corresponding Private Key.
      * @throws TransportHandlerException if some error occurs with the verification process which may be related to
-     *                                     the signature algorithm used or the key used for signing.
+     *                                   the signature algorithm used or the key used for signing.
      */
     public static boolean verifySignature(String data, String signedData, PublicKey verificationKey)
             throws TransportHandlerException {
@@ -184,7 +185,7 @@ public class CommunicationUtils {
      * @param decryptKey       the key to use in the decryption process.
      * @return the decrypted message in String format.
      * @throws TransportHandlerException if an error occurs with the encryption flow which can be due to Padding
-     *                                     issues, encryption key being invalid or the algorithm used is unrecognizable.
+     *                                   issues, encryption key being invalid or the algorithm used is unrecognizable.
      */
     public static String decryptMessage(String encryptedMessage, Key decryptKey) throws TransportHandlerException {
 

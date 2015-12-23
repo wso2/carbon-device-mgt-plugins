@@ -43,6 +43,10 @@
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
             <artifactId>org.wso2.carbon.device.mgt.mobile.windows</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.h2database.wso2</groupId>
+            <artifactId>h2-database-engine</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -138,6 +142,45 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <!-- Creating  WINDOWS Mobile Plugin Management schema -->
+                        <id>create-windows-mobile-plugin-mgt-schema</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <echo message="########### Create  WINDOWS Mobile plugin Management H2 Schema ###########"/>
+                                <property name="db.dir"
+                                          value="src/main/resources/database"/>
+                                <property name="userid" value="wso2carbon"/>
+                                <property name="password" value="wso2carbon"/>
+                                <property name="dbURL"
+                                          value="jdbc:h2:file:${basedir}/${db.dir}/WSO2MobileWindows_DB;DB_CLOSE_ON_EXIT=FALSE"/>
+
+                                <sql driver="org.h2.Driver" url="${dbURL}" userid="${userid}"
+                                     password="${password}"
+                                     autocommit="true" onerror="continue">
+                                    <classpath refid="maven.dependency.classpath"/>
+                                    <classpath refid="maven.compile.classpath"/>
+                                    <classpath refid="maven.runtime.classpath"/>
+
+                                    <fileset file="${basedir}/src/main/resources/dbscripts/h2.sql"/>
+                                </sql>
+                                <echo message="##################### END ####################"/>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
         </plugins>
     </build>
 </project>

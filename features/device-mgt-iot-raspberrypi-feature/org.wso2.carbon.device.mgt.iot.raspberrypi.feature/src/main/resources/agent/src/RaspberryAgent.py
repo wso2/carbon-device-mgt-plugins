@@ -73,7 +73,7 @@ if args.mode:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Endpoint specific settings to which the data is pushed
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-DC_ENDPOINT = iotUtils.HTTPS_EP.split(":")
+DC_ENDPOINT = iotUtils.APIM_EP.split(":")
 DC_IP = DC_ENDPOINT[1].replace('//', '')
 DC_PORT = int(DC_ENDPOINT[2])
 DC_ENDPOINT_CONTEXT = iotUtils.CONTROLLER_CONTEXT

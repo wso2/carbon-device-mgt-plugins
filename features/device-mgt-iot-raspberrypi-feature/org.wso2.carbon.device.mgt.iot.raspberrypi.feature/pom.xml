@@ -44,8 +44,17 @@
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl</artifactId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.mgt.service.impl</artifactId>
 			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database.wso2</groupId>
+			<artifactId>h2-database-engine</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -90,12 +99,21 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl
+									<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl
 									</artifactId>
 									<type>war</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
 									<destFileName>raspberrypi.war</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+									<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.mgt.service.impl
+									</artifactId>
+									<type>war</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
+									<destFileName>raspberrypi_mgt.war</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
@@ -137,6 +155,45 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<!-- Creating RaspberryPi Plugin Management schema -->
+						<id>create-raspberrypi-plugin-mgt-schema</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<echo message="########### Create RaspberryPi plugin Management H2 Schema ###########"/>
+								<property name="db.dir"
+										  value="src/main/resources/database"/>
+								<property name="userid" value="wso2carbon"/>
+								<property name="password" value="wso2carbon"/>
+								<property name="dbURL"
+										  value="jdbc:h2:file:${basedir}/${db.dir}/RaspberryPiDM_DB;DB_CLOSE_ON_EXIT=FALSE"/>
+
+								<sql driver="org.h2.Driver" url="${dbURL}" userid="${userid}"
+									 password="${password}"
+									 autocommit="true" onerror="continue">
+									<classpath refid="maven.dependency.classpath"/>
+									<classpath refid="maven.compile.classpath"/>
+									<classpath refid="maven.runtime.classpath"/>
+
+									<fileset file="${basedir}/src/main/resources/dbscripts/h2.sql"/>
+								</sql>
+								<echo message="##################### END ####################"/>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
 		</plugins>
 	</build>
 </project>
