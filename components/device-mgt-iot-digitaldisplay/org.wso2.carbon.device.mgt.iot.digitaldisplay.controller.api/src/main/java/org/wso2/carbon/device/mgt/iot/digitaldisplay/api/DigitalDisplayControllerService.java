@@ -26,7 +26,7 @@ import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.exception.DigitalDisplayException;
-import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.transport.CommunicationHandlerException;
+import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.util.DigitalDisplayMqttCommunicationHandler;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.constants.DigitalDisplayConstants;
 
@@ -466,7 +466,7 @@ public class DigitalDisplayControllerService {
 
         try {
             digitalDisplayMqttCommunicationHandler.publishToDigitalDisplay(topic, payload, 2, true);
-        } catch (CommunicationHandlerException e) {
+        } catch (TransportHandlerException e) {
             String errorMessage = "Error publishing data to device with ID " + deviceId;
             throw new DigitalDisplayException(errorMessage, e);
         }
