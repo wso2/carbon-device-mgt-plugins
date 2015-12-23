@@ -170,7 +170,22 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public boolean isEnrolled(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return true;
+        boolean isEnrolled = false;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Checking the enrollment of Windows device : " + deviceId.getId());
+            }
+            MobileDevice mobileDevice =
+                    daoFactory.getMobileDeviceDAO().getMobileDevice(deviceId.getId());
+            if (mobileDevice != null) {
+                isEnrolled = true;
+            }
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error while checking the enrollment status of Windows device : " +
+                    deviceId.getId();
+            throw new DeviceManagementException(msg, e);
+        }
+        return isEnrolled;
     }
 
     @Override
@@ -266,18 +281,26 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public boolean enrollDevice(Device device) throws DeviceManagementException {
-        boolean status;
+        boolean status = false;
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
         try {
-            WindowsDAOFactory.beginTransaction();
-            status = daoFactory.getMobileDeviceDAO().addMobileDevice(mobileDevice);
-            WindowsDAOFactory.commitTransaction();
+            if (log.isDebugEnabled()) {
+                log.debug("Enrolling a new windows device : " + device.getDeviceIdentifier());
+            }
+            boolean isEnrolled = this.isEnrolled(
+                    new DeviceIdentifier(device.getDeviceIdentifier(), device.getType()));
+            if (isEnrolled) {
+                this.modifyEnrollment(device);
+            } else {
+                WindowsDAOFactory.beginTransaction();
+                status = daoFactory.getMobileDeviceDAO().addMobileDevice(mobileDevice);
+                WindowsDAOFactory.commitTransaction();
+            }
         } catch (MobileDeviceManagementDAOException e) {
             WindowsDAOFactory.rollbackTransaction();
-            throw new DeviceManagementException("Error while enrolling the Windows device '" +
-                    device.getDeviceIdentifier() + "'", e);
-        } finally {
-            WindowsDAOFactory.closeConnection();
+            String msg =
+                    "Error while enrolling the windows device : " + device.getDeviceIdentifier();
+            throw new DeviceManagementException(msg, e);
         }
         return status;
     }
