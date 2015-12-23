@@ -163,10 +163,10 @@
 			<version>${slf4j.version}</version>
 		</dependency>
 
-		<!--<dependency>-->
-			<!--<groupId>org.json.wso2</groupId>-->
-			<!--<artifactId>json</artifactId>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>org.json.wso2</groupId>
+			<artifactId>json</artifactId>
+		</dependency>
 
 		<!--Dependency on Sidhdhi - required for PolicyMgt-->
 		<dependency>

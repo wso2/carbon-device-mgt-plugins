@@ -59,6 +59,8 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
         return dataPushServiceHandler;
     }
 
+    //TODO:: Terminate logs with a period
+    //TODO: Need to print exceptions
     @Override
     public void connect() {
         final AgentManager agentManager = AgentManager.getInstance();
@@ -67,23 +69,27 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                 while (!isConnected()) {
                     try {
                         connectToQueue();
-                        subscribeToQueue();
-                        //TODO:: Terminate logs with a period
                         agentManager.updateAgentStatus("Connected to MQTT Queue");
+                    } catch (TransportHandlerException e) {
+                        log.warn(AgentConstants.LOG_APPENDER + "Connection to MQTT Broker at: " + mqttBrokerEndPoint +
+                                         " failed.\n Will retry in " + timeoutInterval + " milli-seconds.");
+                    }
+
+                    try{
+                        subscribeToQueue();
+                        agentManager.updateAgentStatus("Subscribed to MQTT Queue");
                         publishDeviceData();
 
                     } catch (TransportHandlerException e) {
-                        log.warn(AgentConstants.LOG_APPENDER +
-                                         "Connection/Subscription to MQTT Broker at: " +
+                        log.warn(AgentConstants.LOG_APPENDER + "Subscription to MQTT Broker at: " +
                                          mqttBrokerEndPoint + " failed");
+                        agentManager.updateAgentStatus("Subscription to broker failed.");
+                    }
 
-                        try {
-                            Thread.sleep(timeoutInterval);
-                        } catch (InterruptedException ex) {
-                            //TODO: Need to print exception
-                            log.error(AgentConstants.LOG_APPENDER +
-                                              "MQTT-Subscriber: Thread Sleep Interrupt Exception");
-                        }
+                    try {
+                        Thread.sleep(timeoutInterval);
+                    } catch (InterruptedException ex) {
+                        log.error(AgentConstants.LOG_APPENDER + "MQTT: Connect-Thread Sleep Interrupt Exception.");
                     }
                 }
             }
@@ -215,8 +221,12 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
         Runnable stopConnection = new Runnable() {
             public void run() {
                 while (isConnected()) {
-                    try {
+
+                    if (dataPushServiceHandler != null) {
                         dataPushServiceHandler.cancel(true);
+                    }
+
+                    try {
                         closeConnection();
 
                     } catch (MqttException e) {

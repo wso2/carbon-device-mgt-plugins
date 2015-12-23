@@ -36,10 +36,9 @@ public class AgentConstants {
 	public static final String PUSH_SIMULATION_DATA_PAYLOAD =
 			"{\"owner\":\"%s\",\"deviceId\":\"%s\",\"reply\":\"%s\",\"value\":\"%s\",\"isSimulated\":\"%s\",\"duration\":\"%s\",\"frequency\":\"%s\"}";
 
-	public static final String AGENT_CONTROL_APP_EP = "/firealarm-webapp";
-	public static final String DEVICE_DETAILS_PAGE_EP = "/store/pages/device/%s/%s";
-	public static final String DEVICE_ANALYTICS_PAGE_URL =
-			"/store/pages/analytics?deviceId=%s&deviceType=%s";
+	public static final String AGENT_CONTROL_APP_EP = "/devicemgt/device/%s?id=%s";
+	public static final String DEVICE_DETAILS_PAGE_EP = "/devicemgt/device/%s?id=%s";
+	public static final String DEVICE_ANALYTICS_PAGE_URL = "/devicemgt/analytics?deviceId=%s&deviceType=%s&deviceName=%s";
 	/*	---------------------------------------------------------------------------------------
 				HTTP Connection specific information for communicating with IoT-Server
  		---------------------------------------------------------------------------------------	*/

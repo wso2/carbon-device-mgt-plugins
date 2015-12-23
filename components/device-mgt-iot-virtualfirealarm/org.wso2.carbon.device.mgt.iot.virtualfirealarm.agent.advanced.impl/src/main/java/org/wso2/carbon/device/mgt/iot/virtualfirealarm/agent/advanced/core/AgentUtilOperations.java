@@ -20,13 +20,19 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.enrollment.EnrollmentManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.exception.AgentCoreOperationException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.CommunicationUtils;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.TransportHandlerException;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -39,6 +45,8 @@ import java.util.Properties;
 public class AgentUtilOperations {
 
     private static final Log log = LogFactory.getLog(AgentUtilOperations.class);
+    private static final String JSON_MESSAGE_KEY = "Msg";
+    private static final String JSON_SIGNATURE_KEY = "Sig";
 
     /**
      * This method reads the agent specific configurations for the device from the
@@ -72,6 +80,8 @@ public class AgentUtilOperations {
             //load a properties file from class path, inside static method
             properties.load(propertiesInputStream);
 
+            iotServerConfigs.setServerName(properties.getProperty(
+                    AgentConstants.SERVER_NAME_PROPERTY));
             iotServerConfigs.setDeviceOwner(properties.getProperty(
                     AgentConstants.DEVICE_OWNER_PROPERTY));
             iotServerConfigs.setDeviceId(properties.getProperty(
@@ -99,6 +109,8 @@ public class AgentUtilOperations {
             iotServerConfigs.setDataPushInterval(Integer.parseInt(properties.getProperty(
                     AgentConstants.PUSH_INTERVAL_PROPERTY)));
 
+            log.info(AgentConstants.LOG_APPENDER + "Server name: " +
+                             iotServerConfigs.getServerName());
             log.info(AgentConstants.LOG_APPENDER + "Device Owner: " +
                              iotServerConfigs.getDeviceOwner());
             log.info(AgentConstants.LOG_APPENDER + "Device ID: " + iotServerConfigs.getDeviceId());
@@ -142,9 +154,8 @@ public class AgentUtilOperations {
                     propertiesInputStream.close();
                 } catch (IOException e) {
                     log.error(AgentConstants.LOG_APPENDER +
-                                      "Error occurred whilst trying to close InputStream " +
-                                      "resource used to read the '" + propertiesFileName +
-                                      "' file");
+                                      "Error occurred whilst trying to close InputStream resource used to read the '" +
+                                      propertiesFileName + "' file");
                 }
             }
         }
@@ -162,6 +173,7 @@ public class AgentUtilOperations {
 
         AgentConfiguration iotServerConfigs = new AgentConfiguration();
 
+        iotServerConfigs.setDeviceOwner(AgentConstants.DEFAULT_SERVER_NAME);
         iotServerConfigs.setDeviceOwner(AgentConstants.DEFAULT_DEVICE_OWNER);
         iotServerConfigs.setDeviceId(AgentConstants.DEFAULT_DEVICE_ID);
         iotServerConfigs.setDeviceName(AgentConstants.DEFAULT_DEVICE_NAME);
@@ -188,12 +200,17 @@ public class AgentUtilOperations {
      *                                     retrieve the deviceIP of the network-interface read
      *                                     from the configs file
      */
-    public static void initializeHTTPEndPoints() {
+    public static void initializeServerEndPoints() {
         AgentManager agentManager = AgentManager.getInstance();
-        String apimEndpoint = agentManager.getAgentConfigs().getHTTP_ServerEndpoint();
+        String serverSecureEndpoint = agentManager.getAgentConfigs().getHTTPS_ServerEndpoint();
+        String serverUnSecureEndpoint = agentManager.getAgentConfigs().getHTTP_ServerEndpoint();
         String backEndContext = agentManager.getAgentConfigs().getControllerContext();
 
-        String deviceControllerAPIEndpoint = apimEndpoint + backEndContext;
+        String deviceControllerAPIEndpoint = serverSecureEndpoint + backEndContext;
+
+        String deviceEnrollmentEndpoint =
+                serverUnSecureEndpoint + backEndContext + AgentConstants.DEVICE_ENROLLMENT_API_EP;
+        agentManager.setEnrollmentEP(deviceEnrollmentEndpoint);
 
         String registerEndpointURL =
                 deviceControllerAPIEndpoint + AgentConstants.DEVICE_REGISTER_API_EP;
@@ -205,11 +222,87 @@ public class AgentUtilOperations {
 
         log.info(AgentConstants.LOG_APPENDER + "IoT Server's Device Controller API Endpoint: " +
                          deviceControllerAPIEndpoint);
+        log.info(AgentConstants.LOG_APPENDER + "Device Enrollment EndPoint: " +
+                         registerEndpointURL);
         log.info(AgentConstants.LOG_APPENDER + "DeviceIP Registration EndPoint: " +
                          registerEndpointURL);
         log.info(AgentConstants.LOG_APPENDER + "Push-Data API EndPoint: " + pushDataEndPointURL);
     }
 
+
+    public static String prepareSecurePayLoad(String message) throws AgentCoreOperationException {
+        PublicKey serverPublicKey = EnrollmentManager.getInstance().getServerPublicKey();
+        PrivateKey devicePrivateKey = EnrollmentManager.getInstance().getPrivateKey();
+
+        String encryptedMsg;
+        try {
+            encryptedMsg = CommunicationUtils.encryptMessage(message, serverPublicKey);
+        } catch (TransportHandlerException e) {
+            String errorMsg = "Error occurred whilst trying to encryptMessage: [" + message + "]";
+            log.error(errorMsg);
+            throw new AgentCoreOperationException(errorMsg, e);
+        }
+
+        String signedPayload;
+        try {
+            signedPayload = CommunicationUtils.signMessage(encryptedMsg, devicePrivateKey);
+        } catch (TransportHandlerException e) {
+            String errorMsg = "Error occurred whilst trying to sign encrypted message of: [" + message + "]";
+            log.error(errorMsg);
+            throw new AgentCoreOperationException(errorMsg, e);
+        }
+
+        JSONObject jsonPayload = new JSONObject();
+        jsonPayload.put(JSON_MESSAGE_KEY, encryptedMsg);
+        jsonPayload.put(JSON_SIGNATURE_KEY, signedPayload);
+
+        return jsonPayload.toString();
+    }
+
+
+    public static String extractMessageFromPayload(String message) throws AgentCoreOperationException {
+        String actualMessage;
+
+        PublicKey serverPublicKey = EnrollmentManager.getInstance().getServerPublicKey();
+        PrivateKey devicePrivateKey = EnrollmentManager.getInstance().getPrivateKey();
+
+        JSONObject jsonPayload = new JSONObject(message);
+        Object encryptedMessage = jsonPayload.get(JSON_MESSAGE_KEY);
+        Object signedPayload = jsonPayload.get(JSON_SIGNATURE_KEY);
+        boolean verification;
+
+        if (encryptedMessage != null && signedPayload != null) {
+            try {
+                verification = CommunicationUtils.verifySignature(
+                        encryptedMessage.toString(), signedPayload.toString(), serverPublicKey);
+            } catch (TransportHandlerException e) {
+                String errorMsg =
+                        "Error occurred whilst trying to verify signature on received message: [" + message + "]";
+                log.error(errorMsg);
+                throw new AgentCoreOperationException(errorMsg, e);
+            }
+        } else {
+            String errorMsg = "The received message is in an INVALID format. " +
+                    "Need to be JSON - {\"Msg\":\"<ENCRYPTED_MSG>\", \"Sig\":\"<SIGNED_MSG>\"}.";
+            throw new AgentCoreOperationException(errorMsg);
+        }
+
+        try {
+            if (verification) {
+                actualMessage = CommunicationUtils.decryptMessage(encryptedMessage.toString(), devicePrivateKey);
+            } else {
+                String errorMsg = "Could not verify payload signature. The message was not signed by a valid client";
+                log.error(errorMsg);
+                throw new AgentCoreOperationException(errorMsg);
+            }
+        } catch (TransportHandlerException e) {
+            String errorMsg = "Error occurred whilst trying to decrypt received message: [" + encryptedMessage + "]";
+            log.error(errorMsg);
+            throw new AgentCoreOperationException(errorMsg, e);
+        }
+
+        return actualMessage;
+    }
 
     public static String formatMessage(String message) {
         StringBuilder formattedMsg = new StringBuilder(message);

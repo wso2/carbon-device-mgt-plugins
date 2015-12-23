@@ -24,6 +24,7 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core;
  * downloading the device agent from the IoT-Server.
  */
 public class AgentConfiguration {
+	private String serverName;
 	private String deviceOwner;
 	private String deviceId;
 	private String deviceName;
@@ -37,6 +38,14 @@ public class AgentConfiguration {
 	private String authToken;
 	private String refreshToken;
 	private int dataPushInterval;
+
+	public String getServerName() {
+		return serverName;
+	}
+
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
 
 	public String getDeviceOwner() {
 		return deviceOwner;

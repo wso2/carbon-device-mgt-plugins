@@ -18,9 +18,9 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
