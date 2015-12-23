@@ -1,7 +1,7 @@
 <div class="col-lg-12  margin-top-double">
     <h1 class="grey ">Virtual Firealrm</h1>
     <hr>
-    <p class="margin-bottom-double light-grey ">Connect your Android device to the WSO2 device cloud.</p>
+    <p class="margin-bottom-double light-grey ">Use our Virtual Instance of a FireAlarm and connect to the WSO2-IoT Server.</p>
 </div>
 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
     <img src="{{@unit.publicUri}}/images/firealarm-icon.png" class="img-responsive">
@@ -10,17 +10,15 @@
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
     <h3 class="uppercase">Ingredients</h3>
     <hr>
-    <p class="grey margin-top">Hardware Requirements </p>
+    <p class="grey margin-top">This is what you need to get your device started:</p>
     <br>
     <ul class="list-unstyled">
         <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> Raspberry Pi (Internet Enabled)</li>
+                <i class="fw fw-right-arrow fw-stack-1x"></i></span> A "MQTT-Broker" (WSO2-MB, ActiveMQ) for MQTT Communication</li>
         <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> DHT11 Temperature Sensor</li>
-        <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> LED</li>
-        <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> Buzzer(3v)</li>
+                <i class="fw fw-right-arrow fw-stack-1x"></i></span> An "XMPP-Server" (Jabber) for XMPP Communication (if required)</li>
+        <li><br/></li>
+        <li></span> The device supports MQTT and XMPP Communications. It is configured to use MQTT by default.</li>
     </ul>
     <br>
 
@@ -152,20 +150,18 @@
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
     <h3 class="uppercase">Prepare</h3><hr>
-    <p class="grey margin-top">Get your device ready</p>
+    <p class="grey margin-top">Start connecting to the WSO2 IoT Server by creating your own VirtualFireAlarm</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> Set up your RaspberryPi device as shown in the
-            schematic below and get the FireAlarm setup.</li>
-        <li class="padding-top-double"><span class="circle">02</span> Connect a monitor to your RaspberryPi via the
-            HDMI cable to get a UI view of the device.</li>
-        <li class="padding-top-double"><span class="circle">03</span> Get the RaspberryPi to connect to the internet
-            (via Ethernet or Wifi) and note its IP_ADDRESS</li>
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Download your VirtualFireAlarm from the [Download] button above.</li>
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Unzip the downloaded Agent.</li>
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Move into the unzipped Agent folder in the terminal.</li>
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Start your Agent by running the startup script via the command: [sh startup.sh]</li>
     </ul>
     <br>
 </div>
 
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">Schematic Diagram</h3><hr>
+    <h3 class="uppercase">The Virtual-Fire-Alarm Device</h3><hr>
     <p class="grey margin-top">Click on the image to zoom</p>
     <center>
         <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
@@ -180,16 +176,14 @@
     <p class="grey margin-top">Internet of Things Foundation Quickstart connection</p>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">01</span> Click on the <i>'Create DEB'</i> button above to
-            get the download link for the FireAlarm setup files</li>
+                                                                      get the download link for the FireAlarm setup files</li>
         <li class="padding-top-double"><span class="circle">02</span> (The following commands can be issued by
-            directly typing into the terminal of the device or by an <b>'ssh'</b> login from a remote PC)</li>
+                                                                      directly typing into the terminal of the device or by an <b>'ssh'</b> login from a remote PC)</li>
         <li class="padding-top-double"><span class="circle">03</span> Download the FireAlarm setup files using the
-            following command: 'curl -k < url_link_received_from_the_above_step >> Agent.zip'.
-            This will download a zip file named 'Agent.zip'</li>
+                                                                      following command: 'curl -k < url_link_received_from_the_above_step >> Agent.zip'.
+                                                                      This will download a zip file named 'Agent.zip'</li>
     </ul>
     <br/>
-</div>
-
 </div>
 
 <div id="qr-code-modal" data-enrollment-url="{{deviceType.enrollmentURL}}" class="hidden">
