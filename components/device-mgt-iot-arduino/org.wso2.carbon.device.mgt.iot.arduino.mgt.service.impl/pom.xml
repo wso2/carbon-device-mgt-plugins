@@ -29,7 +29,7 @@
 
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>org.wso2.carbon.device.mgt.iot.arduino.service.impl</artifactId>
+	<artifactId>org.wso2.carbon.device.mgt.iot.arduino.mgt.service.impl</artifactId>
 	<version>1.9.2-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>WSO2 Carbon - IoT Server Arduino API</name>
@@ -162,7 +162,7 @@
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-					<warName>arduino</warName>
+					<warName>arduino_mgt</warName>
 				</configuration>
 			</plugin>
 		</plugins>
