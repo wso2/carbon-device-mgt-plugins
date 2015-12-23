@@ -28,7 +28,7 @@ then
 fi
 sudo cp $currentDir/deviceConfig.properties $currentDir/src
 sudo cp -r $currentDir/src $destination
-sudo chmod +x $destination/RaspberryAgent.py
+sudo chmod +x $destination/src/RaspberryAgent.py
 sudo update-rc.d -f RaspberryService.sh remove
 sudo cp $currentDir/RaspberryService.sh /etc/init.d
 sudo chmod +x /etc/init.d/RaspberryService.sh

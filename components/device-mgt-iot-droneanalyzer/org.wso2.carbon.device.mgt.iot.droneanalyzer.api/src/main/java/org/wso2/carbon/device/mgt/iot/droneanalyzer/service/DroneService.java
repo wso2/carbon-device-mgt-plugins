@@ -225,21 +225,6 @@ public class DroneService {
     @Produces("application/octet-stream")
     public Response downloadSketch(@QueryParam("owner") String owner, @QueryParam("deviceName") String customDeviceName,
                                    @PathParam("sketch_type") String sketchType) {
-        /*try {
-            ZipArchive zipFile = createDownloadFile(owner, customDeviceName, sketchType);
-            Response.ResponseBuilder rb = Response.ok(zipFile.getZipFile());
-            rb.header("Content-Disposition",
-                      "attachment; filename=\"" + zipFile.getFileName() + "\"");
-            return rb.build();
-        } catch (IllegalArgumentException ex) {
-            return Response.status(400).entity(ex.getMessage()).build();//bad request
-        } catch (DeviceManagementException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (AccessTokenException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        }*/
         if (owner == null) {
             return Response.status(400).build();//bad request
         }

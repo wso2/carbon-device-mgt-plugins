@@ -37,6 +37,7 @@ import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
 import org.wso2.carbon.device.mgt.iot.arduino.service.dto.DeviceJSON;
 import org.wso2.carbon.device.mgt.iot.arduino.service.transport.ArduinoMQTTSubscriber;
 import org.wso2.carbon.device.mgt.iot.arduino.service.util.ArduinoServiceUtils;
+import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
@@ -99,17 +100,21 @@ public class ArduinoService {
             final ArduinoMQTTSubscriber arduinoMQTTSubscriber) {
         this.arduinoMQTTSubscriber = arduinoMQTTSubscriber;
 
-        Runnable xmppStarter = new Runnable() {
-            @Override
-            public void run() {
-                arduinoMQTTSubscriber.initConnector();
-                arduinoMQTTSubscriber.connectAndSubscribe();
-            }
-        };
+        if (MqttConfig.getInstance().isEnabled()) {
+            Runnable xmppStarter = new Runnable() {
+                @Override
+                public void run() {
+                    arduinoMQTTSubscriber.initConnector();
+                    arduinoMQTTSubscriber.connectAndSubscribe();
+                }
+            };
 
-        Thread xmppStarterThread = new Thread(xmppStarter);
-        xmppStarterThread.setDaemon(true);
-        xmppStarterThread.start();
+            Thread xmppStarterThread = new Thread(xmppStarter);
+            xmppStarterThread.setDaemon(true);
+            xmppStarterThread.start();
+        } else {
+            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, ArduinoMQTTSubscriber not started.");
+        }
     }
 
     /**

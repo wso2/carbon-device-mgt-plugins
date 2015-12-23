@@ -15,10 +15,6 @@ import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 
 
-/**
- * Created by nuwan on 11/16/15.
- */
-
 public class DigitalDisplayMqttCommunicationHandler extends MQTTCommunicationHandler {
 
     private static Log log = LogFactory.getLog(DigitalDisplayMqttCommunicationHandler.class);

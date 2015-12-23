@@ -285,9 +285,10 @@ public abstract class MQTTTransportHandler
      */
     @Override
     public void connectionLost(Throwable throwable) {
-        log.warn("Lost Connection for client: " + this.clientId +
-                         " to " + this.mqttBrokerEndPoint + ".\nThis was due to - " +
-                         throwable.getMessage());
+        if (log.isDebugEnabled()) {
+            log.warn("Lost Connection for client: " + this.clientId + " to " + this.mqttBrokerEndPoint + "." +
+                             "\nThis was due to - " + throwable.getMessage());
+        }
 
         Thread reconnectThread = new Thread() {
             public void run() {

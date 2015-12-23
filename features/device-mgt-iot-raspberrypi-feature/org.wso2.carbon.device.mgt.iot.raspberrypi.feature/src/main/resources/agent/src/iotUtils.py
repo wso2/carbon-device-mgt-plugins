@@ -42,7 +42,7 @@ TEMP_PIN = 4
 TEMP_SENSOR_TYPE = 11
 
 BULB_PIN = 11  # The GPIO Pin# in RPi to which the LED is connected
-HTTP_SERVER_PORT = 80 # http server port which is listning on
+HTTP_SERVER_PORT = 5678 # http server port which is listning on
 global GPIO
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -62,6 +62,7 @@ CONTROLLER_CONTEXT = configParser.get('Device-Configurations', 'controller-conte
 DEVICE_INFO = '{"owner":"' + DEVICE_OWNER + '","deviceId":"' + DEVICE_ID + '","reply":'
 HTTPS_EP = configParser.get('Device-Configurations', 'https-ep')
 HTTP_EP = configParser.get('Device-Configurations', 'http-ep')
+APIM_EP = configParser.get('Device-Configurations', 'apim-ep')
 DEVICE_IP = '"{ip}","value":'
 DEVICE_DATA = '"{temperature}"'  # '"{temperature}:{load}:OFF"'
 
@@ -110,7 +111,7 @@ def initGPIOModule():
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#       Get the wlan0 interface via which the RPi is connected 
+#       Get the wlan0 interface via which the RPi is connected
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def getDeviceIP():
     rPi_IP = commands.getoutput("ip route list | grep 'src '").split()

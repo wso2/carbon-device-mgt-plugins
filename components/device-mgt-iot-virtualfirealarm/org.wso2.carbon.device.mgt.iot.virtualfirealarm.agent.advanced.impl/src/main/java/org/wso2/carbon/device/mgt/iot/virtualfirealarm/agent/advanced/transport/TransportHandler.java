@@ -39,7 +39,9 @@ public interface TransportHandler<T> {
 
     void processIncomingMessage();
 
-    void publishDeviceData(int publishInterval);
+    void publishDeviceData(String... publishData);
+
+    void publishDeviceData();
 
     void disconnect();
 }

@@ -18,12 +18,6 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 public class AgentConstants {
 	public static final String DEVICE_TYPE = "virtual_firealarm";
 	public static final String LOG_APPENDER = "AGENT_LOG:: ";
@@ -33,6 +27,7 @@ public class AgentConstants {
 								IoT-Server specific information
  		---------------------------------------------------------------------------------------	*/
 	public static final String DEVICE_CONTROLLER_API_EP = "/virtual_firealarm/controller";
+	public static final String DEVICE_ENROLLMENT_API_EP = "/scep";
 	public static final String DEVICE_REGISTER_API_EP = "/register";
 	public static final String DEVICE_PUSH_TEMPERATURE_API_EP = "/push_temperature";
 	public static final String PUSH_DATA_PAYLOAD =
@@ -41,10 +36,9 @@ public class AgentConstants {
 	public static final String PUSH_SIMULATION_DATA_PAYLOAD =
 			"{\"owner\":\"%s\",\"deviceId\":\"%s\",\"reply\":\"%s\",\"value\":\"%s\",\"isSimulated\":\"%s\",\"duration\":\"%s\",\"frequency\":\"%s\"}";
 
-	public static final String AGENT_CONTROL_APP_EP = "/firealarm-webapp";
-	public static final String DEVICE_DETAILS_PAGE_EP = "/store/pages/device/%s/%s";
-	public static final String DEVICE_ANALYTICS_PAGE_URL =
-			"/store/pages/analytics?deviceId=%s&deviceType=%s";
+	public static final String AGENT_CONTROL_APP_EP = "/devicemgt/device/%s?id=%s";
+	public static final String DEVICE_DETAILS_PAGE_EP = "/devicemgt/device/%s?id=%s";
+	public static final String DEVICE_ANALYTICS_PAGE_URL = "/devicemgt/analytics?deviceId=%s&deviceType=%s&deviceName=%s";
 	/*	---------------------------------------------------------------------------------------
 				HTTP Connection specific information for communicating with IoT-Server
  		---------------------------------------------------------------------------------------	*/
@@ -62,8 +56,8 @@ public class AgentConstants {
  		---------------------------------------------------------------------------------------	*/
 	public static final int DEFAULT_MQTT_RECONNECTION_INTERVAL = 2;        // time in seconds
 	public static final int DEFAULT_MQTT_QUALITY_OF_SERVICE = 0;
-	public static final String MQTT_SUBSCRIBE_TOPIC = "wso2/iot/%s/" + DEVICE_TYPE + "/%s";
-	public static final String MQTT_PUBLISH_TOPIC = "wso2/iot/%s/" + DEVICE_TYPE + "/%s/publisher";
+	public static final String MQTT_SUBSCRIBE_TOPIC = "%s/%s/" + DEVICE_TYPE + "/%s";
+	public static final String MQTT_PUBLISH_TOPIC = "%s/%s/" + DEVICE_TYPE + "/%s/publisher";
 	/*	---------------------------------------------------------------------------------------
 								XMPP Connection specific information
  		---------------------------------------------------------------------------------------	*/
@@ -72,6 +66,7 @@ public class AgentConstants {
 		  Device/Agent specific properties to be read from the 'deviceConfig.properties' file
  		---------------------------------------------------------------------------------------	*/
 	public static final String AGENT_PROPERTIES_FILE_NAME = "deviceConfig.properties";
+	public static final String SERVER_NAME_PROPERTY = "server-name";
 	public static final String DEVICE_OWNER_PROPERTY = "owner";
 	public static final String DEVICE_ID_PROPERTY = "deviceId";
 	public static final String DEVICE_NAME_PROPERTY = "device-name";
@@ -89,6 +84,7 @@ public class AgentConstants {
 	/*	---------------------------------------------------------------------------------------
 				Default values for the Device/Agent specific configurations listed above
 	 	---------------------------------------------------------------------------------------	*/
+	public static final String DEFAULT_SERVER_NAME = "WSO2IoTServer";
 	public static final String DEFAULT_DEVICE_OWNER = "admin";
 	public static final String DEFAULT_DEVICE_ID = "1234567890";
 	public static final String DEFAULT_DEVICE_NAME = "admin_1234567890";
