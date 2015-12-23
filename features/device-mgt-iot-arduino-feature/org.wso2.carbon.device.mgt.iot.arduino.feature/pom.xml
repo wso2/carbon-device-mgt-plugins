@@ -44,7 +44,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.service.impl</artifactId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.mgt.service.impl</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl</artifactId>
 			<type>war</type>
 		</dependency>
 		<dependency>
@@ -94,12 +99,21 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.service.impl
+									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.mgt.service.impl
 									</artifactId>
 									<type>war</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
 									<destFileName>arduino.war</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl
+									</artifactId>
+									<type>war</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
+									<destFileName>arduino_mgt.war</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>

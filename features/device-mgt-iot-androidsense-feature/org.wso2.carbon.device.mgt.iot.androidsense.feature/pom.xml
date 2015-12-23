@@ -98,7 +98,7 @@
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
-                                    <destFileName>android_sense.war</destFileName>
+                                    <destFileName>android_sense_mgt.war</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
