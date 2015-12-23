@@ -30,14 +30,14 @@
 #define WLAN_SSID       "SSID"           // cannot be longer than 32 characters!
 #define WLAN_PASS       "password"
 
-#define WLAN_SECURITY   WLAN_SEC_WPA
+#define WLAN_SECURITY   WLAN_SEC_WPA2
 // Security can be WLAN_SEC_UNSEC, WLAN_SEC_WEP, WLAN_SEC_WPA or WLAN_SEC_WPA2
 #define IDLE_TIMEOUT_MS  3000
 
 #define DEVICE_OWNER "${DEVICE_OWNER}"          
 #define DEVICE_ID "${DEVICE_ID}"              
 #define DEVICE_TOKEN "${DEVICE_TOKEN}"
-#define REFRESH_DEVICE_TOKEN "${REFRESH_DEVICE_TOKEN}"
+#define REFRESH_DEVICE_TOKEN "${DEVICE_REFRESH_TOKEN}"
 
 
 #define SERVICE_PORT 9763

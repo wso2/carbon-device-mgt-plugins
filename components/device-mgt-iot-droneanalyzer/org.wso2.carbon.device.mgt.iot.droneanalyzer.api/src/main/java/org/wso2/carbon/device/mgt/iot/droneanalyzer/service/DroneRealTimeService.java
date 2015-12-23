@@ -19,6 +19,8 @@ package org.wso2.carbon.device.mgt.iot.droneanalyzer.service;
 
 
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
+import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.service.transport.DroneAnalyzerXMPPConnector;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.service.trasformer.MessageTransformer;
@@ -34,10 +36,15 @@ public class DroneRealTimeService {
     private MessageTransformer messageController;
     private DroneAnalyzerXMPPConnector xmppConnector;
 
-    public DroneRealTimeService(){
+    public DroneRealTimeService() {
         messageController = new MessageTransformer();
         xmppConnector = new DroneAnalyzerXMPPConnector(messageController);
-        xmppConnector.connectLoginAndSetFilterOnReceiver();
+
+        if (XmppConfig.getInstance().isEnabled()){
+            xmppConnector.connectLoginAndSetFilterOnReceiver();
+        } else {
+            log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmXMPPConnector not started.");
+        }
     }
 
 
