@@ -22,48 +22,27 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.device.DeviceType;
-import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
-import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
-import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
-import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.iot.DeviceManagement;
-import org.wso2.carbon.device.mgt.iot.DeviceValidator;
 import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
 import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
-import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
 import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
-import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.dto.DeviceJSON;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.exception.VirtualFireAlarmException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport.VirtualFireAlarmMQTTConnector;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport.VirtualFireAlarmXMPPConnector;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VerificationManager;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VirtualFireAlarmServiceUtils;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.scep.ContentType;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.scep.SCEPOperation;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -74,15 +53,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @API(name = "virtual_firealarm", version = "1.0.0", context = "/virtual_firealarm")
 public class VirtualFireAlarmService {
@@ -94,77 +70,6 @@ public class VirtualFireAlarmService {
 
     @Context  //injected response proxy supporting multiple thread
     private HttpServletResponse response;
-
-    private VerificationManager verificationManager;
-    private VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector;
-    private VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector;
-
-    /**
-     * @param verificationManager
-     */
-    public void setVerificationManager(
-            VerificationManager verificationManager) {
-        this.verificationManager = verificationManager;
-        verificationManager.initVerificationManager();
-    }
-
-    /**
-     * @param virtualFireAlarmXMPPConnector
-     */
-    public void setVirtualFireAlarmXMPPConnector(
-            final VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector) {
-        this.virtualFireAlarmXMPPConnector = virtualFireAlarmXMPPConnector;
-
-        if (MqttConfig.getInstance().isEnabled()) {
-            Runnable mqttStarter = new Runnable() {
-                @Override
-                public void run() {
-                    virtualFireAlarmXMPPConnector.initConnector();
-                    virtualFireAlarmXMPPConnector.connect();
-                }
-            };
-
-            Thread mqttStarterThread = new Thread(mqttStarter);
-            mqttStarterThread.setDaemon(true);
-            mqttStarterThread.start();
-        } else {
-            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
-        }
-    }
-
-    /**
-     * @param virtualFireAlarmMQTTConnector
-     */
-    public void setVirtualFireAlarmMQTTConnector(
-            final VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector) {
-        this.virtualFireAlarmMQTTConnector = virtualFireAlarmMQTTConnector;
-        if (XmppConfig.getInstance().isEnabled()) {
-            virtualFireAlarmMQTTConnector.connect();
-        } else {
-            log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmXMPPConnector not started.");
-        }
-    }
-
-    /**
-     * @return
-     */
-    public VerificationManager getVerificationManager() {
-        return verificationManager;
-    }
-
-    /**
-     * @return
-     */
-    public VirtualFireAlarmXMPPConnector getVirtualFireAlarmXMPPConnector() {
-        return virtualFireAlarmXMPPConnector;
-    }
-
-    /**
-     * @return
-     */
-    public VirtualFireAlarmMQTTConnector getVirtualFireAlarmMQTTConnector() {
-        return virtualFireAlarmMQTTConnector;
-    }
 
     /*	---------------------------------------------------------------------------------------
                                 Device management specific APIs
