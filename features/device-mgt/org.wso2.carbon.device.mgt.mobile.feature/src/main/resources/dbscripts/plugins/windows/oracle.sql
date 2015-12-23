@@ -34,7 +34,7 @@ CREATE TABLE WIN_FEATURE (
 -- -----------------------------------------------------
 -- Sequence `WIN_FEATURE_ID_INC_SEQ`
 -- -----------------------------------------------------
-CREATE SEQUENCE WIN_FEATURE_ID_INC_SEQ START WITH 1 INCREMENT BY 1 NOCACHE;
+CREATE SEQUENCE WIN_FEATURE_ID_INC_SEQ START WITH 1 INCREMENT BY 1 NOCACHE
 /
 
 -- -----------------------------------------------------
