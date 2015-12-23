@@ -85,7 +85,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @API(name = "virtual_firealarm", version = "1.0.0", context = "/virtual_firealarm")
-@DeviceType(value = "virtual_firealarm")
 public class VirtualFireAlarmService {
 
     private static Log log = LogFactory.getLog(VirtualFireAlarmService.class);
