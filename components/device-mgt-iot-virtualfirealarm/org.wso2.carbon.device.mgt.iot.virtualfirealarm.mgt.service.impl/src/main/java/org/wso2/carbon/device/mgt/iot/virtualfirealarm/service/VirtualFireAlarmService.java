@@ -95,14 +95,9 @@ public class VirtualFireAlarmService {
     @Context  //injected response proxy supporting multiple thread
     private HttpServletResponse response;
 
-    public static final String XMPP_PROTOCOL = "XMPP";
-    public static final String HTTP_PROTOCOL = "HTTP";
-    public static final String MQTT_PROTOCOL = "MQTT";
-
     private VerificationManager verificationManager;
     private VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector;
     private VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector;
-    private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
 
     /**
      * @param verificationManager

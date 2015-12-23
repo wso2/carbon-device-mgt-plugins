@@ -71,42 +71,43 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
     }
 
     public void createXMPPAccountForDeviceType() {
-        boolean accountExists = false;
+        boolean accountExists;
         XmppServerClient xmppServerClient = new XmppServerClient();
         xmppServerClient.initControlQueue();
 
         try {
             accountExists = xmppServerClient.doesXMPPUserAccountExist(xmppVFireAlarmAdminUsername);
+
+            if (!accountExists) {
+                XmppAccount xmppAccount = new XmppAccount();
+
+                xmppAccount.setAccountName(xmppVFireAlarmAdminUsername);
+                xmppAccount.setUsername(xmppVFireAlarmAdminUsername);
+                xmppAccount.setPassword(V_FIREALARM_XMPP_PASSWORD);
+                xmppAccount.setEmail("");
+
+                try {
+                    boolean xmppCreated = xmppServerClient.createXMPPAccount(xmppAccount);
+                    if (!xmppCreated) {
+                        log.warn("Server XMPP Account was not created for device-type - " +
+                                         VirtualFireAlarmConstants.DEVICE_TYPE +
+                                         ". Check whether XMPP is enabled in \"devicemgt-config.xml\" & restart.");
+                    } else {
+                        log.info("Server XMPP Account [" + xmppVFireAlarmAdminUsername +
+                                         "] was not created for device-type - " + VirtualFireAlarmConstants.DEVICE_TYPE);
+                    }
+                } catch (DeviceControllerException e) {
+                    String errorMsg =
+                            "An error was encountered whilst trying to create Server XMPP account for device-type - "
+                                    + VirtualFireAlarmConstants.DEVICE_TYPE;
+                    log.error(errorMsg, e);
+                }
+            }
+
         } catch (DeviceControllerException e) {
             String errorMsg = "An error was encountered whilst trying to check whether Server XMPP account exists " +
-                    "for device-type - " + VirtualFireAlarmConstants.DEVICE_TYPE;
+                    "for device-type - " + VirtualFireAlarmConstants.DEVICE_TYPE + ".\n Check [devicemgt-config.xml]";
             log.error(errorMsg, e);
-        }
-
-        if (!accountExists) {
-            XmppAccount xmppAccount = new XmppAccount();
-
-            xmppAccount.setAccountName(xmppVFireAlarmAdminUsername);
-            xmppAccount.setUsername(xmppVFireAlarmAdminUsername);
-            xmppAccount.setPassword(V_FIREALARM_XMPP_PASSWORD);
-            xmppAccount.setEmail("");
-
-            try {
-                boolean xmppCreated = xmppServerClient.createXMPPAccount(xmppAccount);
-                if (!xmppCreated) {
-                    log.warn("Server XMPP Account was not created for device-type - " +
-                                     VirtualFireAlarmConstants.DEVICE_TYPE +
-                                     ". Check whether XMPP is enabled in \"devicemgt-config.xml\" & restart.");
-                } else {
-                    log.info("Server XMPP Account [" + xmppVFireAlarmAdminUsername +
-                                     "] was not created for device-type - " + VirtualFireAlarmConstants.DEVICE_TYPE);
-                }
-            } catch (DeviceControllerException e) {
-                String errorMsg =
-                        "An error was encountered whilst trying to create Server XMPP account for device-type - "
-                                + VirtualFireAlarmConstants.DEVICE_TYPE;
-                log.error(errorMsg, e);
-            }
         }
     }
 
