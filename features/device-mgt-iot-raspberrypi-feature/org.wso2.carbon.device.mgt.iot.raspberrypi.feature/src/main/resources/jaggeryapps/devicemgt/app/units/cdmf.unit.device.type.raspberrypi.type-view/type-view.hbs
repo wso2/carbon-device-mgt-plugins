@@ -153,11 +153,11 @@
     <p class="grey margin-top">Get your device ready</p>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">01</span> Set up your RaspberryPi device as shown in the
-            schematic below and get the FireAlarm setup.</li>
+            schematic below and get the Raspberry Pi agent setup.</li>
         <li class="padding-top-double"><span class="circle">02</span> Connect a monitor to your RaspberryPi via the
-            HDMI cable to get a UI view of the device.</li>
+            HDMI cable to get a UI view of the device or share your computer monitor with RaspberryPi using SSH.</li>
         <li class="padding-top-double"><span class="circle">03</span> Get the RaspberryPi to connect to the internet
-            (via Ethernet or Wifi) and note its IP_ADDRESS</li>
+            (via Ethernet or Wifi)</li>
     </ul>
     <br>
 </div>
@@ -179,11 +179,16 @@
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">01</span> Click on the <i>'Create DEB'</i> button above to
             get the download link for the Raspberry Pi setup files</li>
-        <li class="padding-top-double"><span class="circle">02</span> (The following commands can be issued by
-            directly typing into the terminal of the device or by an <b>'ssh'</b> login from a remote PC)</li>
-        <li class="padding-top-double"><span class="circle">03</span> Download the Raspberry Pi files using the
-            following command: 'curl -k < url_link_received_from_the_above_step >> Agent.zip'.
-            This will download a zip file named 'Agent.zip'</li>
+        <li class="padding-top-double"><span class="circle">02</span> <b>testAgent.sh</b>: his script is used to run
+            this service in a testing environment. It can be run on a real Raspberry Pi device or in a
+            virtual environment.<br>To run: sudo ./testAgent.sh and follow the instructions.</li>
+        <li class="padding-top-double"><span class="circle">03</span> <b>startService.sh</b>: After testing, this script
+            can be used to deploy this application as a service on Raspberry Pi which will get loaded during boot up
+            process.<br>To run: sudo ./startService.sh. <br>Note: You should have to provide following arguments in
+            RaspberryService.sh as shown below. <br>DAEMON_OPTS="-l /usr/local/src/RaspberryAgent/RaspberryStats.log -m N
+            -i 100". <br>Here -l stands for the absolute path for a file which will be using for logging. -i stands for the
+            time interval between successive data pushes to the wso2 IoT Server and finally -m is used to check where to
+            run this application. Weather is going to run on the real device or not.
     </ul>
     <br/>
 </div>
