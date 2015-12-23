@@ -44,7 +44,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl</artifactId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.mgt.service.impl</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl</artifactId>
 			<type>war</type>
 		</dependency>
 	</dependencies>
@@ -90,12 +95,21 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl
+									<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl
 									</artifactId>
 									<type>war</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
 									<destFileName>raspberrypi.war</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+									<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.mgt.service.impl
+									</artifactId>
+									<type>war</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
+									<destFileName>raspberrypi_mgt.war</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
