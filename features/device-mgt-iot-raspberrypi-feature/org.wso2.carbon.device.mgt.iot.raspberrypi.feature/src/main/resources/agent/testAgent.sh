@@ -69,15 +69,6 @@ for f in ./deviceConfig.properties; do
 done
 
 cd $currentDir
-git clone git://git.eclipse.org/gitroot/paho/org.eclipse.paho.mqtt.python.git
-cd org.eclipse.paho.mqtt.python
-sudo python setup.py install
-
-cd $currentDir
-
-sudo apt-get install python-pip
-sudo pip install sleekxmpp
-sudo pip install pyasn1 pyasn1-modules
 
 while true; do
     read -p "Whats the time-interval (in seconds) between successive Data-Pushes to the WSO2-DC (ex: '60' indicates 1 minute) > " input
