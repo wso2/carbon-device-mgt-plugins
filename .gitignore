@@ -28,3 +28,6 @@ carbonapps
 
 # Ignore generated device-type DBs
 *.h2.db
+
+# Ignore generated .pyc pythin files
+*.pyc
