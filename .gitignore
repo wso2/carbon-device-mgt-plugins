@@ -24,7 +24,7 @@ target
 hs_err_pid*
 
 # Ignore generated capps
-carbonapps
+*.car
 
 # Ignore generated device-type DBs
 *.h2.db
