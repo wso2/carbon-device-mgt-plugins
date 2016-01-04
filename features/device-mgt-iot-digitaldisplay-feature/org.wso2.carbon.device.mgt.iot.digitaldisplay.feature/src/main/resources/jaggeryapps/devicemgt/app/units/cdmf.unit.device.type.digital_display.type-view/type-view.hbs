@@ -34,14 +34,17 @@
     </ul>
     <br>
 
+    <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin" class="btn-operations"
+       target="_blank"><i class="fw fw-api"></i> View API</i> &nbsp;</a>
     <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download</a>
 
     <div id="download-device-modal-content" class="hide">
         <div class="modal-content">
             <div class="row">
-                <div class="col-md-7 col-centered center-container">
+                <div class="col-md-7  center-container">
                     <h3>Name your device and download the agent from following link.</h3>
                     <br/>
+
                     <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
                         <div class="control-group">
                             <div class="controls">
@@ -49,22 +52,21 @@
                                        type="text"
                                        placeholder="Ex. Lobby_DigitalDisplay"
                                        name="deviceName" size="60" required>
-                                <br/>
+                                <br/><br/>
                                 <input type="hidden" class="deviceType" name="deviceType"
                                        value="digital_display"/>
                                 <input type="hidden" class="sketchType" name="sketchType"
                                        value="digital_display"/>
                             </div>
                         </div>
-                        <br/>
-                        <div class="buttons">
-                            <a class="btn-operations" onclick="downloadAgent()">Download
+                        <div class="buttons" style="padding-bottom: 0px">
+                            <a class="btn btn-operations" onclick="downloadAgent()">Download
                                 Now</a>
                             &nbsp;&nbsp;
-                            <a href="#" id="download-device-download-link" class="blue-button">
+                            <a href="#" id="download-device-download-link" class="btn btn-operations">
                                 Copy Link
                             </a>
-
+                            &nbsp;&nbsp;
                         </div>
                     </form>
                 </div>
@@ -72,21 +74,6 @@
         </div>
     </div>
 
-    <div id="download-device-modal-content-links" class="hide">
-        <div class="modal-content">
-            <div class="row">
-                <div class="col-md-7 col-centered center-container">
-                    <h3>Please download the file from following link(Press CTRL+C).</h3>
-                    <br/>
-
-                    <div>
-                        <input id="download-device-url" style="color:#3f3f3f;padding:5px"
-                               type="text" value="" placeholder="Type here" size="60">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div id="device-400-content" class="hide">
         <div class="modal-content">
@@ -244,39 +231,39 @@
 
 <style type="text/css">
     .circle {
-        background: none repeat scroll 0 0 #191919;
-        border-radius: 50px;
-        height: 50px;
-        padding: 10px;
-        width: 50px;
-        color: #fff;
+    background: none repeat scroll 0 0 #191919;
+    border-radius: 50px;
+    height: 50px;
+    padding: 10px;
+    width: 50px;
+    color: #fff;
     }
     .padding-top-double {
-        padding-top: 20px;
+    padding-top: 20px;
     }
     .padding-double {
-        padding: 20px;
+    padding: 20px;
     }
     .grey {
-        color: #333;
+    color: #333;
     }
     hr {
-        display: block;
-        height: 1px;
-        border: 0;
-        border-top: 1px solid #7f7f7f;
-        margin: 1em 0;
-        padding: 0;
-        opacity: 0.2;
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #7f7f7f;
+    margin: 1em 0;
+    padding: 0;
+    opacity: 0.2;
     }
     .light-grey {
-        color: #7c7c7c;
+    color: #7c7c7c;
     }
     .uppercase {
-        text-transform: uppercase;
+    text-transform: uppercase;
     }
     .grey-bg {
-        background-color: #f6f4f4;
+    background-color: #f6f4f4;
     }
 </style>
 
@@ -284,4 +271,3 @@
     {{js "/js/download.js"}}
     {{js "/js/jquery.validate.js"}}
 {{/zone}}
-
