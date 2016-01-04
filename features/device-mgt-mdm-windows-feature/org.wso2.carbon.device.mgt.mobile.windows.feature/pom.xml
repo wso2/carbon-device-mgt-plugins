@@ -124,6 +124,8 @@
                                 <property name="dbURL"
                                           value="jdbc:h2:file:${basedir}/${db.dir}/WSO2MobileWindows_DB;DB_CLOSE_ON_EXIT=FALSE"/>
 
+                                <mkdir dir="${basedir}/${db.dir}"/>
+
                                 <sql driver="org.h2.Driver" url="${dbURL}" userid="${userid}"
                                      password="${password}"
                                      autocommit="true" onerror="continue">
