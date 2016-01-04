@@ -49,27 +49,27 @@ import java.util.Date;
 @API( name="android_sense", version="1.0.0", context="/android_sense")
 public class AndroidSenseService {
 
-    private static final String BATTERY_STREAM_DEFINITION = "org.wso2.iot.devices.battery";
-    private static final String LIGHT_STREAM_DEFINITION = "org.wso2.iot.devices.light";
-    private static final String GPS_STREAM_DEFINITION = "org.wso2.iot.devices.gps";
-    private static final String MAGNETIC_STREAM_DEFINITION = "org.wso2.iot.devices.magnetic";
     private static final String ACCELEROMETER_STREAM_DEFINITION = "org.wso2.iot.devices.accelerometer";
-    private static final String GYROSCOPE_STREAM_DEFINITION = "org.wso2.iot.devices.gyroscope";
-    private static final String PRESSURE_STREAM_DEFINITION = "org.wso2.iot.devices.pressure";
+    private static final String BATTERY_STREAM_DEFINITION = "org.wso2.iot.devices.battery";
+    private static final String GPS_STREAM_DEFINITION = "org.wso2.iot.devices.gps";
     private static final String GRAVITY_STREAM_DEFINITION = "org.wso2.iot.devices.gravity";
-    private static final String ROTATION_STREAM_DEFINITION = "org.wso2.iot.devices.rotation";
+    private static final String GYROSCOPE_STREAM_DEFINITION = "org.wso2.iot.devices.gyroscope";
+    private static final String LIGHT_STREAM_DEFINITION = "org.wso2.iot.devices.light";
+    private static final String MAGNETIC_STREAM_DEFINITION = "org.wso2.iot.devices.magnetic";
+    private static final String PRESSURE_STREAM_DEFINITION = "org.wso2.iot.devices.pressure";
     private static final String PROXIMITY_STREAM_DEFINITION = "org.wso2.iot.devices.proximity";
+    private static final String ROTATION_STREAM_DEFINITION = "org.wso2.iot.devices.rotation";
 
     private static final String SENSOR_ACCELEROMETER = "accelerometer";
-    private static final String SENSOR_GYROSCOPE = "gyroscope";
-    private static final String SENSOR_PRESSURE = "pressure";
-    private static final String SENSOR_GRAVITY = "gravity";
-    private static final String SENSOR_ROTATION = "rotation";
-    private static final String SENSOR_LIGHT = "light";
-    private static final String SENSOR_GPS = "gps";
-    private static final String SENSOR_PROXIMITY = "proximity";
     private static final String SENSOR_BATTERY = "battery";
+    private static final String SENSOR_GPS = "gps";
+    private static final String SENSOR_GRAVITY = "gravity";
+    private static final String SENSOR_GYROSCOPE = "gyroscope";
+    private static final String SENSOR_LIGHT = "light";
     private static final String SENSOR_MAGNETIC = "magnetic";
+    private static final String SENSOR_PRESSURE = "pressure";
+    private static final String SENSOR_PROXIMITY = "proximity";
+    private static final String SENSOR_ROTATION = "rotation";
     private static Log log = LogFactory.getLog(AndroidSenseService.class);
 
     //TODO; replace this tenant domain
