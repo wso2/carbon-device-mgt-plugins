@@ -1,8 +1,0 @@
-{
-  "deviceType": {
-    "label": "Drone Analyzer",
-    "category": "iot",
-    "downloadAgentUri": "manager/device/drone_analyzer/download",
-    "downloadAgentLinkGenUri" : "manager/device/drone_analyzer/generate_link"
-  }
-}

@@ -3,7 +3,6 @@
     "label": "RaspberryPi",
     "category": "iot"
    },
-
   "analyticStreams": [
     {
       "name": "Temperature",
@@ -17,5 +16,4 @@
       }
     }
   ]
-
 }
