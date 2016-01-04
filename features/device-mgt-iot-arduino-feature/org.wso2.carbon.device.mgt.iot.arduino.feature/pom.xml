@@ -44,7 +44,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.service.impl</artifactId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.mgt.service.impl</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl</artifactId>
 			<type>war</type>
 		</dependency>
 		<dependency>
@@ -94,7 +99,16 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.service.impl
+									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.mgt.service.impl
+									</artifactId>
+									<type>war</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
+									<destFileName>arduino_mgt.war</destFileName>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl
 									</artifactId>
 									<type>war</type>
 									<overWrite>true</overWrite>
@@ -102,41 +116,6 @@
 									<destFileName>arduino.war</destFileName>
 								</artifactItem>
 							</artifactItems>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.wso2.maven</groupId>
-				<artifactId>carbon-p2-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>p2-feature-generation</id>
-						<phase>package</phase>
-						<goals>
-							<goal>p2-feature-gen</goal>
-						</goals>
-						<configuration>
-							<id>org.wso2.carbon.device.mgt.iot.arduino</id>
-							<propertiesFile>../../../features/etc/feature.properties</propertiesFile>
-							<adviceFile>
-								<properties>
-									<propertyDef>org.wso2.carbon.p2.category.type:server</propertyDef>
-									<propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
-								</properties>
-							</adviceFile>
-							<bundles>
-								<bundleDef>
-									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.arduino.plugin.impl:${carbon.iot.device.mgt.version}
-								</bundleDef>
-							</bundles>
-							<importFeatures>
-								<importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}
-								</importFeatureDef>
-								<importFeatureDef>org.wso2.carbon.device.mgt.server:${carbon.device.mgt.version}
-								</importFeatureDef>
-							</importFeatures>
 						</configuration>
 					</execution>
 				</executions>
@@ -179,6 +158,40 @@
 				</executions>
 			</plugin>
 
+			<plugin>
+				<groupId>org.wso2.maven</groupId>
+				<artifactId>carbon-p2-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>p2-feature-generation</id>
+						<phase>package</phase>
+						<goals>
+							<goal>p2-feature-gen</goal>
+						</goals>
+						<configuration>
+							<id>org.wso2.carbon.device.mgt.iot.arduino</id>
+							<propertiesFile>../../../features/etc/feature.properties</propertiesFile>
+							<adviceFile>
+								<properties>
+									<propertyDef>org.wso2.carbon.p2.category.type:server</propertyDef>
+									<propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
+								</properties>
+							</adviceFile>
+							<bundles>
+								<bundleDef>
+									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.arduino.plugin.impl:${carbon.iot.device.mgt.version}
+								</bundleDef>
+							</bundles>
+							<importFeatures>
+								<importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}
+								</importFeatureDef>
+								<importFeatureDef>org.wso2.carbon.device.mgt.server:${carbon.device.mgt.version}
+								</importFeatureDef>
+							</importFeatures>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 
 		</plugins>
 	</build>

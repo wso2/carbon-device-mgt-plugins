@@ -199,7 +199,9 @@ public abstract class MQTTTransportHandler
         try {
             //TODO:: QoS Level take it from a variable
             client.subscribe(subscribeTopic, 0);
-            log.info("Subscriber '" + clientId + "' subscribed to topic: " + subscribeTopic);
+            if (log.isDebugEnabled()) {
+                log.debug("Subscriber '" + clientId + "' subscribed to topic: " + subscribeTopic);
+            }
         } catch (MqttException ex) {
             //TODO:: Compulsory log of errors and remove formatted error
             String errorMsg = "MQTT Exception when trying to subscribe to topic: " +
