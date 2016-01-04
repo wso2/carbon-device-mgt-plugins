@@ -23,19 +23,6 @@
          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
          http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
-
-    <jaxrs:server id="DigitalDisplayController" address="/controller">
-        <jaxrs:serviceBeans>
-            <bean id="DigitalDisplayManagerControllerService"
-                  class="org.wso2.carbon.device.mgt.iot.digitaldisplay.api.DigitalDisplayControllerService">
-                <property name="digitalDisplayMqttCommunicationHandler" ref="communicationHandler"/>
-            </bean>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
-        </jaxrs:providers>
-    </jaxrs:server>
-
     <jaxrs:server id="DigitalDisplayManager" address="/manager">
         <jaxrs:serviceBeans>
             <bean id="DigitalDisplayManagerService"

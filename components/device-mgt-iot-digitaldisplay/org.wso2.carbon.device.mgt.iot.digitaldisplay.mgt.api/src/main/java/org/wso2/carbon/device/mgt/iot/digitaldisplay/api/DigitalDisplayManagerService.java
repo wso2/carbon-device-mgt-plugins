@@ -40,7 +40,6 @@ import java.util.Date;
 import java.util.UUID;
 
 @WebService
-@API( name="digital_display", version="1.0.0", context="/digital_display")
 public class DigitalDisplayManagerService {
 
 	private static Log log = LogFactory.getLog(DigitalDisplayManagerService.class);

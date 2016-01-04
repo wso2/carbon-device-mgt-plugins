@@ -28,7 +28,13 @@
 
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.api</artifactId>
+            <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.mgt.api</artifactId>
+            <version>1.9.2-SNAPSHOT</version>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api</artifactId>
             <version>1.9.2-SNAPSHOT</version>
             <type>war</type>
         </dependency>
@@ -79,7 +85,16 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                                    <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.api
+                                    <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.mgt.api
+                                    </artifactId>
+                                    <type>war</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
+                                    <destFileName>digital_display_mgt.war</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                                    <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api
                                     </artifactId>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
