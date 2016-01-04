@@ -126,7 +126,7 @@ public class RaspberrypiServiceUtils {
     }
 
 
-    public static boolean sendCommandViaMQTT(String deviceOwner, String deviceId, String resource,
+    /*public static boolean sendCommandViaMQTT(String deviceOwner, String deviceId, String resource,
                                              String state) throws DeviceManagementException {
 
         boolean result;
@@ -140,7 +140,7 @@ public class RaspberrypiServiceUtils {
             throw new DeviceManagementException(errorMsg, e);
         }
         return result;
-    }
+    }*/
 
 	/*	---------------------------------------------------------------------------------------
                     Utility methods relevant to creating and sending http requests

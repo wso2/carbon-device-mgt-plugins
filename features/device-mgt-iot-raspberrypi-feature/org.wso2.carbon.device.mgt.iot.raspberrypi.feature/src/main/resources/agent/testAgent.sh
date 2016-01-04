@@ -95,6 +95,11 @@ while true; do
     esac
 done
 cp deviceConfig.properties ./src
+
+if [ $mode -eq "N" ]; then
+     sudo apt-get install rpi.gpio
+fi
+
 chmod +x ./src/RaspberryAgent.py
 ./src/RaspberryAgent.py -i $input -m $mode
 

@@ -123,7 +123,11 @@ def getDeviceIP():
             print "IOT_UTILS: IP Addresses of RaspberryPi: " + str(rPi_IP)
             print "IOT_UTILS: IP Address used for HTTP Server: " + rPi_IP[0]
             print "------------------------------------------------------------------------------------"
-            return rPi_IP[0]
+            if len(rPi_IP[0].split(":"))>1:
+                return rPi_IP[0].split(":")[1]
+            else:
+                return rPi_IP[0]
+
     # for windows systems
     else:
         from subprocess import check_output
