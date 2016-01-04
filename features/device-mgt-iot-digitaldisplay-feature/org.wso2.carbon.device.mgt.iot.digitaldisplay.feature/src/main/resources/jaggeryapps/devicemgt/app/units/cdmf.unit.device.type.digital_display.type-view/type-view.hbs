@@ -1,70 +1,56 @@
 <div class="col-lg-12  margin-top-double">
     <h1 class="grey ">Digital Display</h1>
     <hr>
-    <p class="margin-bottom-double light-grey ">Connect your Digital Display
-        to the WSO2 device cloud.</p>
+    <p class="margin-bottom-double light-grey ">Connect your Digital Display to the WSO2 IoT Server.</p>
 </div>
+
 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
     <img src="{{@unit.publicUri}}/images/display-icon.png" class="img-responsive">
 </div>
+
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-    <h3 class="uppercase">Ingredients</h3>
+
+    <h3 class="uppercase">What You Need</h3>
     <hr>
-    <p class="grey margin-top">Hardware Requirements </p>
-    <br>
+    <p class="grey margin-top">You'll need the following "Hardware":</p>
     <ul class="list-unstyled">
-        <li>
-                <span class="fw-stack margin-right">
-                    <i class="fw fw-ring fw-stack-2x"> </i>
-                    <i class="fw fw-right-arrow fw-stack-1x"></i>
-                </span> Raspberry Pi
+        <li class="padding-top-double"><span class="circle">ITEM 01</span>&nbsp;&nbsp;&nbsp;Raspberry Pi Board (Internet
+                                                                          Enabled [Wifi or Ethernet]).
         </li>
-        <li>
-                <span class="fw-stack margin-right">
-                    <i class="fw fw-ring fw-stack-2x"> </i>
-                    <i class="fw fw-right-arrow fw-stack-1x"></i>
-                </span> WIFI Shield
+        <li class="padding-top-double"><span class="circle">ITEM 02</span>&nbsp;&nbsp;&nbsp;A Digital Display with HDMI
+                                                                          Cable.
         </li>
-        <li>
-                <span class="fw-stack margin-right">
-                    <i class="fw fw-ring fw-stack-2x"> </i>
-                    <i class="fw fw-right-arrow fw-stack-1x"></i>
-                </span> Digital Display with HDMI Cable
-        </li>
+        <li class="padding-top-double"><span class="circle">GO-TO PREPARE</span></li>
     </ul>
     <br>
 
-    <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download</a>
+    <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin" class="btn-operations"
+       target="_blank"><i class="fw fw-api"></i> View API</i> &nbsp;</a>
+    <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download Agent</a>
 
     <div id="download-device-modal-content" class="hide">
         <div class="modal-content">
             <div class="row">
-                <div class="col-md-7 col-centered center-container">
+                <div class="col-md-7 center-container">
                     <h3>Name your device and download the agent from following link.</h3>
                     <br/>
+
                     <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
                         <div class="control-group">
                             <div class="controls">
                                 <input class="new-device-name" style="color:#3f3f3f;padding:5px"
-                                       type="text"
-                                       placeholder="Ex. Lobby_DigitalDisplay"
+                                       type="text" placeholder="Ex. Lobby_DigitalDisplay"
                                        name="deviceName" size="60" required>
                                 <br/>
-                                <input type="hidden" class="deviceType" name="deviceType"
-                                       value="digital_display"/>
-                                <input type="hidden" class="sketchType" name="sketchType"
-                                       value="digital_display"/>
+                                <br/>
+                                <input type="hidden" class="deviceType" name="deviceType" value="digital_display"/>
+                                <input type="hidden" class="sketchType" name="sketchType" value="digital_display"/>
                             </div>
                         </div>
-                        <br/>
-                        <div class="buttons">
-                            <a class="btn-operations" onclick="downloadAgent()">Download
-                                Now</a>
-                            &nbsp;&nbsp;
-                            <a href="#" id="download-device-download-link" class="blue-button">
-                                Copy Link
-                            </a>
-
+                        <div class="buttons" style="padding-bottom: 0px">
+                            <a class="btn btn-operations" onclick="downloadAgent()">Download Now</a> &nbsp;&nbsp;
+                            <a href="#" id="download-device-download-link" class="btn btn-operations"> Copy Link </a>
+                                                                                                     &nbsp;&nbsp;
                         </div>
                     </form>
                 </div>
@@ -175,22 +161,26 @@
 </div>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
-    <h3 class="uppercase">Prepare</h3><hr>
-    <p class="grey margin-top">Get your device ready</p>
-    <br/>
+    <h3 class="uppercase">Prepare</h3>
+    <hr>
+    <p class="grey margin-top">Follow the steps to get your Digital-Display up &amp; running and communicating to the
+                               WSO2 IoT-Server.</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> Set up your RaspberryPi device as shown in
-            the schematic below and get the Digital Display setup.</li>
-        <li class="padding-top-double"><span class="circle">02</span> Connect a monitor to your RaspberryPi via the
-            HDMI cable to get a UI view of the device.</li>
-        <li class="padding-top-double"><span class="circle">03</span> Get the RaspberryPi to connect to the internet
-            (via Ethernet or Wifi) and note its IP_ADDRESS</li>
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Connect a monitor to your
+                                                                     RaspberryPi via the HDMI cable to get the
+                                                                     Graphical-User-Interface of the RaspberryPi board.
+        </li>
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Setup the RaspberryPi to connect
+                                                                     to the internet (via Ethernet or Wifi) and
+                                                                     note-down its <i>IP_ADDRESS</i>.
+        </li>
     </ul>
     <br>
 </div>
 
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">Schematic Diagram</h3><hr>
+    <h3 class="uppercase">Digital-Display Setup</h3>
+    <hr>
     <p class="grey margin-top">Click on the image to zoom</p>
     <center>
         <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
@@ -201,45 +191,33 @@
 </div>
 
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">Connect (Quick Start)</h3><hr>
-    <p class="grey margin-top">Internet of Things Foundation Quickstart connection</p>
-    <br/>
+    <h3 class="uppercase">Try Out</h3>
+    <hr>
+    <p class="grey margin-top">WSO2-IoT Server provides Analytics and Real-Time Statistics of your device</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span>
-            Click on the <i>'Create DEB'</i> button above to get the download link for the Digital Display setup
-            files</li>
-        <li class="padding-top-double"><span class="circle">02</span> (The following commands can be issued by
-            directly typing into the terminal of the device or by an <b>'ssh'</b> login from a remote PC)</li>
-        <li class="padding-top-double"><span class="circle">03</span> Download the Digital Display setup files
-            using the following command: 'curl -k < url_link_received_from_the_above_step >> Agent.zip'
-            This will download a zip file named 'Agent.zip'
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can view all your created
+                                                                     devices at our <a href="{{@app.context}}/devices">[Device
+                                                                                                                       Management]</a>
+                                                                     page.
+        </li>
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;You can select any of your
+                                                                     created devices here and check for available
+                                                                     operations and monitor Real-Time data.
+        </li>
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can also view "Analytics" of
+                                                                     the data published to the IoT-Server by navigating
+                                                                     to the [Device-Analytics Page] from here.
         </li>
     </ul>
-    <br>
-</div>
+    <br/>
 
-</div>
+    <p class="grey margin-top">Click on the image to zoom</p>
+    <center>
+        <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
+            <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
+        </a>
+    </center>
 
-<div id="qr-code-modal" data-enrollment-url="{{deviceType.enrollmentURL}}" class="hidden">
-
-    <div class="content">
-        <div class="row">
-            <div class="col-lg-5 col-md-6 col-centered">
-                <h3>
-                    Scan QR code to start enrollment
-                </h3>
-                <h4>
-                    Please scan the QR code using your mobile device to retrieve enrollment URL.
-                </h4>
-
-                <div class="panel panel-default">
-                    <div class="panel-body col-centered ">
-                        <div class="qr-code"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <style type="text/css">
@@ -251,15 +229,19 @@
         width: 50px;
         color: #fff;
     }
+
     .padding-top-double {
         padding-top: 20px;
     }
+
     .padding-double {
         padding: 20px;
     }
+
     .grey {
         color: #333;
     }
+
     hr {
         display: block;
         height: 1px;
@@ -269,12 +251,15 @@
         padding: 0;
         opacity: 0.2;
     }
+
     .light-grey {
         color: #7c7c7c;
     }
+
     .uppercase {
         text-transform: uppercase;
     }
+
     .grey-bg {
         background-color: #f6f4f4;
     }

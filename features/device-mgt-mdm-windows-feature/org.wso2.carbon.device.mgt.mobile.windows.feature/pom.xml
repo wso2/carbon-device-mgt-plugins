@@ -133,7 +133,7 @@
                                     <classpath refid="maven.compile.classpath"/>
                                     <classpath refid="maven.runtime.classpath"/>
 
-                                    <fileset file="${basedir}/src/main/resources/dbscripts/h2.sql"/>
+                                    <fileset file="${basedir}/src/main/resources/dbscripts/plugins/h2.sql"/>
                                 </sql>
                                 <echo message="##################### END ####################"/>
                             </tasks>
