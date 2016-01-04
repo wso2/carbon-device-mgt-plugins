@@ -1,179 +1,216 @@
-<div>
-    <div class="col-lg-12  margin-top-double">
-        <h1 class="grey ">Arduino</h1>
-        <hr>
-        <p class="margin-bottom-double light-grey ">Connect your Arduino device to the WSO2 IoT Server.</p>
-    </div>
-    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
-        <img src="{{@unit.publicUri}}/images/ardunio-icon.png" class="img-responsive">
-    </div>
-
-    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-        <h3 class="uppercase">Ingredients</h3>
-        <hr>
-        <p class="grey margin-top">Hardware Requirements </p>
-        <br>
-        <ul class="list-unstyled">
-            <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> Raspberry Pi (Internet Enabled)
-            </li>
-            <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> DHT11 Temperature Sensor
-            </li>
-            <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> LED
-            </li>
-            <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> Buzzer(3v)
-            </li>
-        </ul>
-        <br>
-
-        <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin"
-           class="btn-operations" target="_blank"><i class="fw fw-api"></i> View API</a>
-        <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download</a>
-
-        <div id="download-device-modal-content" class="hide">
-            <div class="modal-content">
-                <div class="row">
-                    <div class="col-md-7  center-container">
-                        <h3>Name your device and download the agent from following link.</h3>
-                        <br/>
-
-                        <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
-                            <div class="control-group">
-                                <div class="controls">
-                                    <input class="new-device-name" style="color:#3f3f3f;padding:5px"
-                                           type="text"
-                                           placeholder="Ex. Home_Arduino"
-                                           name="deviceName" size="60" required>
-                                    <br/><br/>
-                                    <input type="hidden" class="deviceType" name="deviceType"
-                                           value="{{@uriParams.deviceType}}"/>
-                                    <input type="hidden" class="sketchType" name="sketchType"
-                                           value="{{@uriParams.deviceType}}"/> &nbsp;&nbsp;
-                                </div>
-                            </div>
-                            <div class="buttons" style="padding-bottom: 0px">
-                                <a class="btn btn-operations" onclick="downloadAgent()">Download
-                                    Now</a>
-                                &nbsp;&nbsp;
-                                <a href="#" id="download-device-download-link" class="btn btn-operations">
-                                    Copy Link
-                                </a>
-
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="device-400-content" class="hide">
-            <div class="modal-content">
-                <div class="row">
-                    <div class="col-md-7 col-centered center-container">
-                        <h3>Exception at backend. Try Later.</h3>
-
-                        <div class="buttons">
-                            <a href="#" id="device-400-link" class="btn-operations">
-                                OK
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="device-401-content" class="hide">
-            <div class="modal-content">
-                <div class="row">
-                    <div class="col-md-7 col-centered center-container">
-                        <h3>You have to log in first.</h3><br/>
-
-                        <div class="buttons">
-                            <a href="#" id="device-401-link" class="blue-button">
-                                Goto Login Page
-                            </a>&nbsp;&nbsp;
-                            <a href="#" onclick="hidePopup();" class="btn-operations">
-                                Cancel
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="device-403-content" class="hide">
-            <div class="modal-content">
-                <div class="row">
-                    <div class="col-md-7 col-centered center-container">
-                        <h3>Action not permitted.</h3><br/>
-
-                        <div class="buttons">
-                            <a href="#" id="device-403-link" class="btn-operations">
-                                OK
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="device-409-content" class="hide">
-            <div class="modal-content">
-                <div class="row">
-                    <div class="col-md-7 col-centered center-container">
-                        <h3>Device Sketch does not exist.</h3><br/>
-
-                        <div class="buttons">
-                            <a href="#" id="device-409-link" class="btn-operations">
-                                OK
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="device-unexpected-error-content" class="hide">
-            <div class="modal-content">
-                <div class="row">
-                    <div class="col-md-7 col-centered center-container">
-                        <h3>Unexpected error.</h3><br/>
-
-                        <div class="buttons">
-                            <a href="#" id="device-unexpected-error-link" class="btn-operations">
-                                OK
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <br/><br/>
-    </div>
-
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
-        <h3 class="uppercase">Prepare</h3>
-        <hr>
-        <p class="grey margin-top">Get your device ready</p>
-        <br/>
-        <ul class="list-unstyled">
-            <li class="padding-top-double"><span class="circle">01</span> Get your Arduino device and download the Agent
-                Sketch.
-            </li>
-            <li class="padding-top-double"><span class="circle">02</span> Open the downloaded Arduino sketch and fill in
-                the pins that you wish to read/control.
-            </li>
-            <li class="padding-top-double"><span class="circle">03</span> Burn the sketch onto your Arduino board and
-                let the program run.
-            </li>
-        </ul>
-        <br>
-    </div>
+<div class="col-lg-12  margin-top-double">
+    <h1 class="grey ">Arduino</h1>
+    <hr>
+    <p class="margin-bottom-double light-grey ">Connect your Arduino device to the WSO2 IoT Server.</p>
 </div>
+
+<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
+    <img src="{{@unit.publicUri}}/images/ardunio-icon.png" class="img-responsive">
+</div>
+
+<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
+
+    <h3 class="uppercase">What You Need</h3>
+    <hr>
+    <p class="grey margin-top">You'll need the following "Hardware":</p>
+    <ul class="list-unstyled">
+        <li class="padding-top-double"><span class="circle">ITEM 01</span>&nbsp;&nbsp;&nbsp;Arduino UNO Board.
+        </li>
+        <li class="padding-top-double"><span class="circle">ITEM 02</span>&nbsp;&nbsp;&nbsp;Adafruit Wifi-Sheild for
+                                                                          Arduino.
+        </li>
+        <li class="padding-top-double"><span class="circle">ITEM 03</span>&nbsp;&nbsp;&nbsp;An LED Bulb connected to Pin
+                                                                          13. <i>(If not available, will use the one on
+                                                                                 the board.)</i>
+        </li>
+        <li class="padding-top-double"><span class="circle">GO-TO PREPARE</span></li>
+    </ul>
+    <br>
+
+    <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin"
+       class="btn-operations" target="_blank"><i class="fw fw-api"></i> View API</a>
+    <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download Sketch</a>
+
+    <div id="download-device-modal-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7  center-container">
+                    <h3>Name your device and download the agent from following link.</h3>
+                    <br/>
+
+                    <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
+                        <div class="control-group">
+                            <div class="controls">
+                                <input class="new-device-name" style="color:#3f3f3f;padding:5px"
+                                       type="text"
+                                       placeholder="Ex. Home_Arduino"
+                                       name="deviceName" size="60" required>
+                                <br/><br/>
+                                <input type="hidden" class="deviceType" name="deviceType"
+                                       value="{{@uriParams.deviceType}}"/>
+                                <input type="hidden" class="sketchType" name="sketchType"
+                                       value="{{@uriParams.deviceType}}"/> &nbsp;&nbsp;
+                            </div>
+                        </div>
+                        <div class="buttons" style="padding-bottom: 0px">
+                            <a class="btn btn-operations" onclick="downloadAgent()">
+                                Download Now
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="device-400-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>Exception at backend. Try Later.</h3>
+
+                    <div class="buttons">
+                        <a href="#" id="device-400-link" class="btn-operations">
+                            OK
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="device-401-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>You have to log in first.</h3><br/>
+
+                    <div class="buttons">
+                        <a href="#" id="device-401-link" class="blue-button">
+                            Goto Login Page
+                        </a>&nbsp;&nbsp;
+                        <a href="#" onclick="hidePopup();" class="btn-operations">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="device-403-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>Action not permitted.</h3><br/>
+
+                    <div class="buttons">
+                        <a href="#" id="device-403-link" class="btn-operations">
+                            OK
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="device-409-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>Device Sketch does not exist.</h3><br/>
+
+                    <div class="buttons">
+                        <a href="#" id="device-409-link" class="btn-operations">
+                            OK
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="device-unexpected-error-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>Unexpected error.</h3><br/>
+
+                    <div class="buttons">
+                        <a href="#" id="device-unexpected-error-link" class="btn-operations">
+                            OK
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br/><br/>
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
+    <h3 class="uppercase">Prepare</h3>
+    <hr>
+    <p class="grey margin-top">Get the Wifi-Sheild mounted onto the Arduino-UNO board and follow the steps: </p>
+    <ul class="list-unstyled">
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Download the Arduino-Sketch from
+                                                                     the [Download] link above.
+        </li>
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Unzip the downloaded
+                                                                     Arduino-Sketch and open the <i>"ArduinoBoardSketch.h"</i>
+                                                                     file.
+        </li>
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Provide appropriate values for
+            <i>[WLAN_SSID]</i> and <i>[WLAN_PASS]</i> variables according to your network.
+        </li>
+        <li class="padding-top-double"><span class="circle">04</span>&nbsp;&nbsp;&nbsp;Burn the sketch onto your Arduino
+                                                                     board and let the program run.
+        </li>
+
+        <li class="padding-top-double">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="fw-stack fw-lg margin-right">
+                <i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i>
+            </span>
+            &nbsp;&nbsp;&nbsp;The Arduino will publish its internal temperature to the WSO2-IoT-Server and its LED on
+            <i>PIN 13</i> can be controlled from our Device Management page.
+        </li>
+    </ul>
+    <br>
+</div>
+
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
+    <h3 class="uppercase">Try Out</h3>
+    <hr>
+    <p class="grey margin-top">WSO2-IoT Server provides Analytics and Real-Time Statistics of your device</p>
+    <ul class="list-unstyled">
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can view all your created
+                                                                     devices at our <a href="{{@app.context}}/devices">[Device
+                                                                                                                       Management]</a>
+                                                                     page.
+        </li>
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;You can select any of your
+                                                                     created devices here and check for available
+                                                                     operations and monitor Real-Time data.
+        </li>
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can also view "Analytics" of
+                                                                     the data published to the IoT-Server by navigating
+                                                                     to the [Device-Analytics Page] from here.
+        </li>
+    </ul>
+    <br/>
+
+    <p class="grey margin-top">Click on the image to zoom</p>
+    <center>
+        <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
+            <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
+        </a>
+    </center>
+
+</div>
+
 
 {{#zone "topCss"}}
     <style type="text/css">

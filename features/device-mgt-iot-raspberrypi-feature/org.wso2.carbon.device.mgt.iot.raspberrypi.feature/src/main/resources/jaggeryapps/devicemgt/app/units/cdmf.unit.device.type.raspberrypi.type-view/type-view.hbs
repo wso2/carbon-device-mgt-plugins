@@ -1,31 +1,34 @@
-
 <div class="col-lg-12  margin-top-double">
     <h1 class="grey ">Raspberry Pi</h1>
     <hr>
-    <p class="margin-bottom-double light-grey ">Connect your Raspberry Pi device to the WSO2 device cloud.</p>
+    <p class="margin-bottom-double light-grey ">Connect your Raspberry Pi device to the WSO2 IoT Server.</p>
 </div>
+
 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
     <img src="{{@unit.publicUri}}/images/respberry-icon.png" class="img-responsive">
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-    <h3 class="uppercase">Ingredients</h3>
+
+    <h3 class="uppercase">What You Need</h3>
     <hr>
-    <p class="grey margin-top">Hardware Requirements </p>
-    <br>
+    <p class="grey margin-top">You'll need the following "Hardware":</p>
     <ul class="list-unstyled">
-        <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> Raspberry Pi (Internet Enabled)</li>
-        <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> DHT11 Temperature Sensor</li>
-        <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> LED</li>
+        <li class="padding-top-double"><span class="circle">ITEM 01</span>&nbsp;&nbsp;&nbsp;Raspberry Pi Board (Internet
+                                                                          Enabled [Wifi or Ethernet]).
+        </li>
+        <li class="padding-top-double"><span class="circle">ITEM 02</span>&nbsp;&nbsp;&nbsp;Adafruit DHT11 Temperature
+                                                                          Sensor.
+        </li>
+        <li class="padding-top-double"><span class="circle">ITEM 03</span>&nbsp;&nbsp;&nbsp;An LED Bulb.
+        </li>
+        <li class="padding-top-double"><span class="circle">GO-TO PREPARE</span></li>
     </ul>
     <br>
 
     <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin" class="btn-operations"
-       target="_blank" ><i class="fw fw-api"></i> View API</i> &nbsp;</a>
-    <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download</a>
+       target="_blank"><i class="fw fw-api"></i> View API</i> &nbsp;</a>
+    <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download Agent</a>
 
     <div id="download-device-modal-content" class="hide">
         <div class="modal-content">
@@ -33,6 +36,7 @@
                 <div class="col-md-7  center-container">
                     <h3>Name your device and download the agent from following link.</h3>
                     <br/>
+
                     <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
                         <div class="control-group">
                             <div class="controls">
@@ -49,7 +53,7 @@
                         </div>
                         <div class="buttons" style="padding-bottom: 0px">
                             <a class="btn btn-operations" onclick="downloadAgent()">Download
-                                Now</a>
+                                                                                    Now</a>
                             &nbsp;&nbsp;
                             <a href="#" id="download-device-download-link" class="btn btn-operations">
                                 Copy Link
@@ -148,22 +152,65 @@
     <br/><br/>
 </div>
 
+
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
-    <h3 class="uppercase">Prepare</h3><hr>
-    <p class="grey margin-top">Get your device ready</p>
+    <h3 class="uppercase">Prepare</h3>
+    <hr>
+    <p class="grey margin-top">Our RaspberryPi Agent can be tested on a real RaspberryPi Board or in a virtual environment
+                               (ie: The machine to which the agent was downloaded).</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> Set up your RaspberryPi device as shown in the
-            schematic below and get the Raspberry Pi agent setup.</li>
-        <li class="padding-top-double"><span class="circle">02</span> Connect a monitor to your RaspberryPi via the
-            HDMI cable to get a UI view of the device or share your computer monitor with RaspberryPi using SSH.</li>
-        <li class="padding-top-double"><span class="circle">03</span> Get the RaspberryPi to connect to the internet
-            (via Ethernet or Wifi)</li>
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Set up your RaspberryPi device as
+                                                                     shown in the schematic below and get the DHT11
+                                                                     Temperature Sensor and the LED connected.
+        </li>
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Ensure that your RaspberryPi
+                                                                     Board is internet enabled either via WiFi or
+                                                                     Ethernet.
+        </li>
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Download our Raspberry Pi Agent
+                                                                     via the [Download] button above. You can also
+                                                                     generate the [cURL] command to directly download
+                                                                     the Agent to your RaspberryPi.
+        </li>
+        <li class="padding-top-double"><span class="circle">04</span>&nbsp;&nbsp;&nbsp;Copy the downloaded Agent into
+                                                                     your RaspberryPi board (or directly download it to
+                                                                     the borad via the generated [cURL] command).
+        </li>
+        <li class="padding-top-double"><span class="circle">05</span>&nbsp;&nbsp;&nbsp;Unzip the downloaded Agent and
+                                                                     move into the unzipped Agent folder in the
+                                                                     terminal:
+        </li>
+
+
+        <li class="padding-top-double">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="fw-stack fw-lg margin-right">
+                <i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i>
+            </span>
+            &nbsp;&nbsp;&nbsp;[sudo ./testAgent.sh] &nbsp;&nbsp; - &nbsp;&nbsp; Script to test whether the agent is
+            working fine. <i>(This script can be run even on the local machine to which the download was made)</i>
+        </li>
+
+        <li class="padding-top-double">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="fw-stack fw-lg margin-right">
+                <i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i>
+            </span>
+            &nbsp;&nbsp;&nbsp;[sudo ./startService.sh] &nbsp;&nbsp; - &nbsp;&nbsp; After testing, this script can be
+            used to start and deploy this agent as a service on the Raspberry Pi Board. <i>(This registered service will
+                                                                                           be loaded on boot up)</i>
+        </li>
+
+
     </ul>
     <br>
 </div>
 
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">Schematic Diagram</h3><hr>
+    <h3 class="uppercase">Schematic Diagram</h3>
+    <hr>
     <p class="grey margin-top">Click on the image to zoom</p>
     <center>
         <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
@@ -174,49 +221,34 @@
 </div>
 
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">Connect (Quick Start)</h3><hr>
-    <p class="grey margin-top">Internet of Things Foundation Quickstart connection</p>
+    <h3 class="uppercase">Try Out</h3>
+    <hr>
+    <p class="grey margin-top">WSO2-IoT Server provides Analytics and Real-Time Statistics of your device</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> Click on the <i>'Download'</i> button above to
-            get the download link for the Raspberry Pi setup files</li>
-        <li class="padding-top-double"><span class="circle">02</span> <b>testAgent.sh</b>: This script is used to run
-            this service in a testing environment. It can be run on a real Raspberry Pi device or in a
-            virtual environment.<br>To run: sudo ./testAgent.sh and follow the instructions.</li>
-        <li class="padding-top-double"><span class="circle">03</span> <b>startService.sh</b>: After testing, this script
-            can be used to deploy this application as a service on Raspberry Pi which will get loaded during boot up
-            process.<br>To run: sudo ./startService.sh. <br>Note: You should have to provide following arguments in
-            RaspberryService.sh as shown below. <br>DAEMON_OPTS="-l /usr/local/src/RaspberryAgent/RaspberryStats.log -m N
-            -i 100". <br>Here -l stands for the absolute path for a file which will be using for logging. -i stands for the
-            time interval between successive data pushes to the wso2 IoT Server and finally -m is used to check where to
-            run this application. Weather is going to run on the real device or not.
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can view all your created
+                                                                     devices at our <a href="{{@app.context}}/devices">[Device
+                                                                                                                       Management]</a>
+                                                                     page.
+        </li>
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;You can select any of your
+                                                                     created devices here and check for available
+                                                                     operations and monitor Real-Time data.
+        </li>
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can also view "Analytics" of
+                                                                     the data published to the IoT-Server by navigating
+                                                                     to the [Device-Analytics Page] from here.
+        </li>
     </ul>
     <br/>
-</div>
+
+    <p class="grey margin-top">Click on the image to zoom</p>
+    <center>
+        <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
+            <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
+        </a>
+    </center>
 
 </div>
-
-<div id="qr-code-modal" data-enrollment-url="{{deviceType.enrollmentURL}}" class="hidden">
-
-    <div class="content">
-        <div class="row">
-            <div class="col-lg-5 col-md-6 col-centered">
-                <h3>
-                    Scan QR code to start enrollment
-                </h3>
-                <h4>
-                    Please scan the QR code using your mobile device to retrieve enrollment URL.
-                </h4>
-
-                <div class="panel panel-default">
-                    <div class="panel-body col-centered ">
-                        <div class="qr-code"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 {{#zone "topCss"}}
     <style type="text/css">
@@ -228,15 +260,19 @@
             width: 50px;
             color: #fff;
         }
+
         .padding-top-double {
             padding-top: 20px;
         }
+
         .padding-double {
             padding: 20px;
         }
+
         .grey {
             color: #333;
         }
+
         hr {
             display: block;
             height: 1px;
@@ -246,12 +282,15 @@
             padding: 0;
             opacity: 0.2;
         }
+
         .light-grey {
             color: #7c7c7c;
         }
+
         .uppercase {
             text-transform: uppercase;
         }
+
         .grey-bg {
             background-color: #f6f4f4;
         }

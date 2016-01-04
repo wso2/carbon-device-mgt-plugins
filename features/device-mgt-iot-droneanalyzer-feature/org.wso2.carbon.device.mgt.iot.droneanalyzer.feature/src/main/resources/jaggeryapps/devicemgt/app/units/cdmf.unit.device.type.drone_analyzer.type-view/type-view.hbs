@@ -1,29 +1,31 @@
 <div class="col-lg-12  margin-top-double">
     <h1 class="grey ">Drone Analyzer</h1>
     <hr>
-    <p class="margin-bottom-double light-grey ">Connect your drone device to the WSO2 device cloud.</p>
+    <p class="margin-bottom-double light-grey ">Connect your Drone to the WSO2 IoT Server.</p>
 </div>
+
 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
     <img src="{{@unit.publicUri}}/images/drone-icon.png" class="img-responsive">
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-    <h3 class="uppercase">Ingredients</h3>
+
+    <h3 class="uppercase">What You Need</h3>
     <hr>
-    <p class="grey margin-top">Hardware Requirements </p>
-    <br>
+    <p class="grey margin-top">You'll need the following "Hardware":</p>
     <ul class="list-unstyled">
-        <li>
-            <span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> IRIS+ Drone</li>
-        <li>
-            <span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> USB to Micro USB cable or Telemetry Radio receiver</li>
+        <li class="padding-top-double"><span class="circle">ITEM 01</span>&nbsp;&nbsp;&nbsp;Your IRIS+ Drone.
+        </li>
+        <li class="padding-top-double"><span class="circle">ITEM 02</span>&nbsp;&nbsp;&nbsp;USB to Micro USB cable or
+                                                                          Telemetry Radio receiver.
+        </li>
+        <li class="padding-top-double"><span class="circle">GO-TO PREPARE</span></li>
     </ul>
     <br>
 
-    <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin" class="btn-operations" target="_blank" ><i class="fw fw-api"></i> View API</i> &nbsp;</a>
-    <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download</a>
+    <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin" class="btn-operations"
+       target="_blank"><i class="fw fw-api"></i> View API</i> &nbsp;</a>
+    <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download Agent</a>
 
     <div id="download-device-modal-content" class="hide">
         <div class="modal-content">
@@ -31,6 +33,7 @@
                 <div class="col-md-7  center-container">
                     <h3>Name your device and download the agent from following link.</h3>
                     <br/>
+
                     <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
                         <div class="control-group">
                             <div class="controls">
@@ -46,14 +49,9 @@
                             </div>
                         </div>
                         <br/>
-                        <div class="buttons">
-                            <a class="btn-operations" onclick="downloadAgent()">Download
-                                Now</a>
-                            &nbsp;&nbsp;
-                            <a href="#" id="download-device-download-link" class="blue-button">
-                                Copy Link
-                            </a>
 
+                        <div class="buttons">
+                            <a class="btn-operations" onclick="downloadAgent()">Download Now</a>
                         </div>
                     </form>
                 </div>
@@ -147,93 +145,119 @@
     <br/><br/>
 </div>
 
+
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
-    <h3 class="uppercase">Prepare</h3><hr>
-    <p class="grey margin-top">Get your device ready</p>
+    <h3 class="uppercase">Prepare</h3>
+    <hr>
+    <p class="grey margin-top">Follow the steps to get your drone ready to communicate with the WSO2 IoT Server.</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> Set up your IRIS+ Drone as shown in the schematic below.</li>
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Connect your IRIS+ Drone as shown
+                                                                     in the schematic below.
+        </li>
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Click on the [Download] button
+                                                                     above to get the IRIS+ Drone setup files.
+        </li>
+        <li class="padding-top-double"><span class="circle">04</span>&nbsp;&nbsp;&nbsp;Connecting the drone:</li>
+
+        <div class="padding-top-double">
+            <table class="table table-bordered ">
+                <thead>
+                <tr>
+                    <th>
+                        <center><i>CONNECTION-TYPE</i></center>
+                    </th>
+                    <th>
+                        <center><i>CONNECTION-STRING</i></center>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Linux computer connected to the drone via USB</td>
+                    <td>/dev/ttyAMA0 <i>(also set baud=57600)</i></td>
+                </tr>
+                <tr>
+                    <td>OSX computer connected to the drone via USB</td>
+                    <td>dev/cu.usbmodem1</td>
+                </tr>
+                <tr>
+                    <td>Windows computer connected to the drone via USB (in this case on COM14)</td>
+                    <td>com14</td>
+                </tr>
+                <tr>
+                    <td>Windows computer connected to the drone using a 3DR Telemetry Radio on COM14</td>
+                    <td>com14 <i>(also set baud=57600)</i></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <li class="padding-top-double">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="fw-stack fw-lg margin-right">
+                <i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i>
+            </span>
+            &nbsp;&nbsp;&nbsp;Once you have the setup files ready please run the <i>"[startservice.sh]"</i> script with
+            root privilege.
+        </li>
+
+        <li class="padding-top-double">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="fw-stack fw-lg margin-right">
+                <i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i>
+            </span>
+            &nbsp;&nbsp;&nbsp;These connection types may vary from computer to computer. So please provide the correct
+            connection port info.
+        </li>
+
     </ul>
     <br>
 </div>
 
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">Schematic Diagram</h3><hr>
+    <h3 class="uppercase">IRIS+ Drone Connected to a machine.</h3>
+    <hr>
     <p class="grey margin-top">Click on the image to zoom</p>
     <center>
         <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
-            <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive" >
+            <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive">
         </a>
     </center>
     <br/>
 </div>
 
+
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">Connect (Quick Start)</h3><hr>
-    <p class="grey margin-top">Internet of Things Foundation Quickstart connection</p>
+    <h3 class="uppercase">Try Out</h3>
+    <hr>
+    <p class="grey margin-top">WSO2-IoT Server provides Analytics and Real-Time Statistics of your device</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> <b>Click on the download button above to get the IRIS+ Drone setup files</b></li>
-        <li class="padding-top-double"><span class="circle">02</span> <b>Connecting to drone</b>
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can view all your created
+                                                                     devices at our <a href="{{@app.context}}/devices">[Device
+                                                                                                                       Management]</a>
+                                                                     page.
+        </li>
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;You can select any of your
+                                                                     created devices here and check for available
+                                                                     operations and monitor Real-Time data.
+        </li>
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can also view "Analytics" of
+                                                                     the data published to the IoT-Server by navigating
+                                                                     to the [Device-Analytics Page] from here.
         </li>
     </ul>
-    <div class="padding-top-double">
-        <table class="table table-bordered ">
-            <thead>
-            <tr>
-                <th>Connection type</th>
-                <th>Connection string</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>Linux computer connected to the drone via USB</td>
-                <td>/dev/ttyAMA0(also set baud=57600)</td>
-            </tr>
-            <tr>
-                <td>OSX computer connected to the drone via USB</td>
-                <td>dev/cu.usbmodem1</td>
-            </tr>
-            <tr>
-                <td>Windows computer connected to the drone via USB (in this case on COM14)</td>
-                <td>com14</td>
-            </tr>
-            <tr>
-                <td>Windows computer connected to the drone using a 3DR Telemetry Radio on COM14</td>
-                <td>com14(also set baud=57600)</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    Ones you have the setup files please run startservice.sh with root privilege.</br>
-    <b>Note:</b> these connection types may vary from computer to computer. So please provide the correct
-    connection port
-
     <br/>
-</div>
+
+    <p class="grey margin-top">Click on the image to zoom</p>
+    <center>
+        <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
+            <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
+        </a>
+    </center>
 
 </div>
-
-<div id="qr-code-modal" data-enrollment-url="{{deviceType.enrollmentURL}}" class="hidden">
-
-    <div class="content">
-        <div class="row">
-            <div class="col-lg-5 col-md-6 col-centered">
-                <h3>
-                    Scan QR code to start enrollment
-                </h3>
-                <h4>
-                    Please scan the QR code using your mobile device to retrieve enrollment URL.
-                </h4>
-
-                <div class="panel panel-default">
-                    <div class="panel-body col-centered ">
-                        <div class="qr-code"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 {{#zone "topCss"}}
     <style type="text/css">
@@ -245,15 +269,19 @@
             width: 50px;
             color: #fff;
         }
+
         .padding-top-double {
             padding-top: 20px;
         }
+
         .padding-double {
             padding: 20px;
         }
+
         .grey {
             color: #333;
         }
+
         hr {
             display: block;
             height: 1px;
@@ -263,12 +291,15 @@
             padding: 0;
             opacity: 0.2;
         }
+
         .light-grey {
             color: #7c7c7c;
         }
+
         .uppercase {
             text-transform: uppercase;
         }
+
         .grey-bg {
             background-color: #f6f4f4;
         }
