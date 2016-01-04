@@ -17,6 +17,10 @@
                                                 --------------
 This script is used to run this service in a testing environment. It can be run on a real Raspberry Pi device or in a 
 virtual environment.
+If this runs on a real Raspberry Pi device, you need to install Adafruit Python DHT Sensor Library and RPi.GPIO Python Library.To install  Adafruit Python DHT Sensor Library, follow the
+instructions given here https://github.com/adafruit/Adafruit_Python_DHT.
+To install RPi.GPIO Python Library, sudo apt-get install rpi.gpio
+
 To run: sudo ./testAgent.sh and follow the instructions.
 
                                                 -------------------
@@ -32,3 +36,10 @@ DAEMON_OPTS="-l /usr/local/src/RaspberryAgent/RaspberryStats.log -m N -i 56"
 -l ----> file to write log
 -i ----> time interval between successive data pushes to the wso2 IoT Server
 -m ----> weather is going to run on the real device or not
+
+start service:
+       service /etc/init.d/RaspberryService.sh start
+
+stop service:
+       service /etc/init.d/RaspberryService.sh stop
+      

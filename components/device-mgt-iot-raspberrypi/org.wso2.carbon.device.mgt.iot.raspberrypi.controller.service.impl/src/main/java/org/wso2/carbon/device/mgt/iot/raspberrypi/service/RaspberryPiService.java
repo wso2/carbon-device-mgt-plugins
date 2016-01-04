@@ -88,8 +88,7 @@ public class RaspberryPiService {
     public void setRaspberryPiMQTTSubscriber(
             final RaspberryPiMQTTSubscriber raspberryPiMQTTSubscriber) {
         this.raspberryPiMQTTSubscriber = raspberryPiMQTTSubscriber;
-
-        if (MqttConfig.getInstance().isEnabled()) {
+        /*if (MqttConfig.getInstance().isEnabled()) {
             Runnable xmppStarter = new Runnable() {
                 @Override
                 public void run() {
@@ -102,8 +101,8 @@ public class RaspberryPiService {
             xmppStarterThread.setDaemon(true);
             xmppStarterThread.start();
         } else {
-            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
-        }
+            log.warn("MQTT disabled in 'devicemgt-config.xml");
+        }*/
     }
 
     /**
@@ -193,26 +192,14 @@ public class RaspberryPiService {
         }
 
         try {
-            switch (protocolString) {
-                case HTTP_PROTOCOL:
-                    String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
-                    if (deviceHTTPEndpoint == null) {
-                        response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
-                        return;
-                    }
 
-                    RaspberrypiServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint, callUrlPattern, true);
-                    break;
-
-                case MQTT_PROTOCOL:
-                    String mqttMessage = RaspberrypiConstants.BULB_CONTEXT.replace("/", "");
-                    RaspberrypiServiceUtils.sendCommandViaMQTT(owner, deviceId, mqttMessage, switchToState);
-                    break;
-
-                default:
-                    response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
-                    return;
+            String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
+            if (deviceHTTPEndpoint == null) {
+                response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
+                return;
             }
+
+            RaspberrypiServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint, callUrlPattern, true);
         } catch (DeviceManagementException e) {
             log.error("Failed to send switch-bulb request to device [" + deviceId + "] via " + protocolString);
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
@@ -261,29 +248,18 @@ public class RaspberryPiService {
         }
 
         try {
-            switch (protocolString) {
-                case HTTP_PROTOCOL:
-                    String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
-                    if (deviceHTTPEndpoint == null) {
-                        response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
-                    }
-
-                    String temperatureValue = RaspberrypiServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
-                                                                                         RaspberrypiConstants
-                                                                                                 .TEMPERATURE_CONTEXT,
-                                                                                         false);
-                    SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
-                                                                    temperatureValue,
-                                                                    Calendar.getInstance().getTimeInMillis());
-                    break;
-
-                case MQTT_PROTOCOL:
-                    String mqttMessage = RaspberrypiConstants.BULB_CONTEXT.replace("/", "");
-                    RaspberrypiServiceUtils.sendCommandViaMQTT(owner, deviceId, mqttMessage, "");
-                    break;
-                default:
-                    response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
+            String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
+            if (deviceHTTPEndpoint == null) {
+                response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
             }
+
+            String temperatureValue = RaspberrypiServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
+                    RaspberrypiConstants
+                            .TEMPERATURE_CONTEXT,
+                    false);
+            SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
+                    temperatureValue,
+                    Calendar.getInstance().getTimeInMillis());
             sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
                                                                            RaspberrypiConstants.SENSOR_TEMPERATURE);
         } catch (DeviceManagementException | DeviceControllerException e) {

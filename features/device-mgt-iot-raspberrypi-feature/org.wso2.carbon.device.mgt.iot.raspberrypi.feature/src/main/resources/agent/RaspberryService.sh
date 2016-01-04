@@ -44,7 +44,7 @@ SCRIPTNAME=RaspberryService.sh
 PIDFILE=/var/run/$DAEMON_NAME.pid
 
 # Add any command line options for your daemon here
-DAEMON_OPTS="-l /usr/local/src/RaspberryAgent/RaspberryStats.log -m N -i 56"
+DAEMON_OPTS="-l /usr/local/src/RaspberryAgent/RaspberryStats.log -m N -i 60"
 
 # This next line determines what user the script runs as.
 # Root generally not recommended but necessary if you are using the Raspberry Pi GPIO from Python.
