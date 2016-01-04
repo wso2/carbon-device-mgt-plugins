@@ -21,23 +21,36 @@
 
 import logging, logging.handlers
 import sys, os, signal, argparse
-import httplib, time
-import threading
-
-import datetime
-
 import running_mode
+import time, threading, datetime
+
+import httplib, ssl
+from functools import wraps
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#      Overriding the default SSL version used in some of the Python (2.7.x) versions
+#           This is a known issue in earlier Python releases
+#               But was fixed in later versions. Ex-2.7.11
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+def sslwrap(func):
+    @wraps(func)
+    def bar(*args, **kw):
+        kw['ssl_version'] = ssl.PROTOCOL_TLSv1
+        return func(*args, **kw)
+    return bar
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 PUSH_INTERVAL = 5000  # time interval between successive data pushes in seconds
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Logger defaults
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#LOG_FILENAME = "/usr/local/src/RaspberryAgent/logs/RaspberryStats.log"
 LOG_FILENAME = "RaspberryStats.log"
 logging_enabled = False
 LOG_LEVEL = logging.INFO  # Could be e.g. "DEBUG" or "WARNING"
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Define and parse command line arguments
@@ -68,6 +81,7 @@ if args.mode:
         Adafruit_DHT = __import__('Adafruit_DHT') # Adafruit library required for temperature sensing
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Endpoint specific settings to which the data is pushed
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -82,6 +96,7 @@ HOST = iotUtils.getDeviceIP()
 HOST_HTTP_SERVER_PORT = iotUtils.getHTTPServerPort()
 HOST_AND_PORT = str(HOST)+ ":" + str(HOST_HTTP_SERVER_PORT)
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       A class we can use to capture stdout and sterr in the log
@@ -121,6 +136,7 @@ def configureLogger(loggerName):
 #       This method registers the DevieIP in the Device-Cloud
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def registerDeviceIP():
+    ssl.wrap_socket = sslwrap(ssl.wrap_socket)         # using the overridden sslwrap that uses TLSv1
     dcConncection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
     #TODO need to get server certificate when initializing https connection
     dcConncection.set_debuglevel(1)
