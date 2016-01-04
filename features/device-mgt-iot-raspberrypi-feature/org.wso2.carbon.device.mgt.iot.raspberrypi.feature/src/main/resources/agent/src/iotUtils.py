@@ -20,7 +20,7 @@
 **/
 """
 
-import time, commands
+import time
 import ConfigParser, os
 import random
 import running_mode
@@ -111,16 +111,32 @@ def initGPIOModule():
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#       Get the wlan0 interface via which the RPi is connected
+#       Get the IP-Address of the interface via which the RPi is connected
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def getDeviceIP():
-    rPi_IP = commands.getoutput("ip route list | grep 'src '").split()
-    rPi_IP = rPi_IP[rPi_IP.index('src') + 1]
-    if len(rPi_IP) <= 16:
-        print "------------------------------------------------------------------------------------"
-        print "IOT_UTILS: IP Address of RaspberryPi: " + rPi_IP
-        print "------------------------------------------------------------------------------------"
-        return rPi_IP
+    # for POSIX system like MacOS and Linux
+    if os.name != "nt":
+        import commands
+        rPi_IP = commands.getoutput("ifconfig | grep inet | grep -v inet6 | grep -v 127.0.0.1 | awk '{print $2}'").split('\n')
+        if len(rPi_IP) > 0:
+            print "------------------------------------------------------------------------------------"
+            print "IOT_UTILS: IP Addresses of RaspberryPi: " + str(rPi_IP)
+            print "IOT_UTILS: IP Address used for HTTP Server: " + rPi_IP[0]
+            print "------------------------------------------------------------------------------------"
+            return rPi_IP[0]
+    # for windows systems
+    else:
+        from subprocess import check_output
+        rPi_IP = check_output("for /f \"tokens=14\" %a in ('ipconfig ^| findstr \"IPv4\" ^| findstr /v \"127.0.0.1\"') do echo %a", shell=True).decode()
+        rPi_IP = rPi_IP.replace('\r', '')
+        rPi_IP = rPi_IP.split('\n')
+
+        for IPs in rPi_IP:
+            if IPs != '' and len(aps) < 16:
+                print("------------------------------------------------------------------------------------")
+                print("IOT_UTILS: IP Address used for HTTP Server: " + IPs)
+                print("------------------------------------------------------------------------------------")
+                return IPs
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
