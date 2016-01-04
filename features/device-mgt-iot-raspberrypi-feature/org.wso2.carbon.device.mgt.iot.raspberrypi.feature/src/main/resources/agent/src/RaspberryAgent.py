@@ -63,8 +63,6 @@ if args.mode:
     iotUtils = __import__('iotUtils')
     httpServer = __import__('httpServer') # python script used to start a http-server to listen for operations
     # (includes the TEMPERATURE global variable)
-    mqttListener = __import__('mqttListener') # python script used to accept messages via mqtt
-    #xmppServer = __import__('xmppServer') # python script used to communicate with xmpp server
 
     if running_mode.RUNNING_MODE == 'N':
         Adafruit_DHT = __import__('Adafruit_DHT') # Adafruit library required for temperature sensing
@@ -261,37 +259,11 @@ class ListenHTTPServerThread(object):
 def sigterm_handler(_signo, _stack_frame):
     print("[] received signal {}, exiting...".format(_signo))
     sys.exit(0)
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#       This is a Thread object for Server that listens for XMPP Messages
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class ListenXMPPServerThread(object):
-    def __init__(self):
-        thread = threading.Thread(target=self.run, args=())
-        thread.daemon = True  # Daemonize thread
-        thread.start()  # Start the execution
-
-    def run(self):
-        pass
-        #xmppServer.main()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#       This is a Thread object for listening for MQTT Messages
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class ListenMQTTThread(object):
-    def __init__(self):
-        thread = threading.Thread(target=self.run, args=())
-        thread.daemon = True  # Daemonize thread
-        thread.start()  # Start the execution
-
-    def run(self):
-        mqttListener.main()
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 signal.signal(signal.SIGTERM, sigterm_handler)
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       The Main method of the RPi Agent 
@@ -304,8 +276,6 @@ def main():
     registerDeviceIP()  # Call the register endpoint and register Device IP
     TemperatureReaderThread()  # initiates and runs the thread to continuously read temperature from DHT Sensor
     ListenHTTPServerThread()  # starts an HTTP Server that listens for operational commands to switch ON/OFF Led
-    # ListenXMPPServerThread()
-    # ListenMQTTThread()
     while True:
         try:
             if iotUtils.LAST_TEMP > 0:  # Push data only if there had been a successful temperature read
