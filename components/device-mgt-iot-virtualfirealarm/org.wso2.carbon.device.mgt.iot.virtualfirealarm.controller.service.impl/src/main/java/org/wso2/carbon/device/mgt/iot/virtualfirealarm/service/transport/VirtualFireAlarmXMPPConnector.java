@@ -53,6 +53,8 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
     private static String xmppVFireAlarmAdminUsername;
     private static String xmppVFireAlarmAdminAccountJID;
     private static final String V_FIREALARM_XMPP_PASSWORD = "vfirealarm@123";
+    private static final String DEVICEMGT_CONFIG_FILE = "devicemgt-config.xml";
+
     private ScheduledFuture<?> connectorServiceHandler;
     private ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
 
@@ -105,9 +107,13 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
             }
 
         } catch (DeviceControllerException e) {
-            String errorMsg = "An error was encountered whilst trying to check whether Server XMPP account exists " +
-                    "for device-type - " + VirtualFireAlarmConstants.DEVICE_TYPE + ".\n Check [devicemgt-config.xml]";
-            log.error(errorMsg, e);
+            if (e.getMessage().contains(DEVICEMGT_CONFIG_FILE)) {
+                log.warn("XMPP not Enabled");
+            } else {
+                String errorMsg = "An error was encountered whilst trying to check whether Server XMPP account " +
+                        "exists for device-type - " + VirtualFireAlarmConstants.DEVICE_TYPE ;
+                log.error(errorMsg, e);
+            }
         }
     }
 

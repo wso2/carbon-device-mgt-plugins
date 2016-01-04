@@ -1,29 +1,34 @@
 <div class="col-lg-12  margin-top-double">
     <h1 class="grey ">Virtual Firealrm</h1>
     <hr>
-    <p class="margin-bottom-double light-grey ">Use our Virtual Instance of a FireAlarm and connect to the WSO2-IoT Server.</p>
+    <p class="margin-bottom-double light-grey ">Use our Virtual Instance of a FireAlarm and connect to the WSO2-IoT
+                                                Server.</p>
 </div>
 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
     <img src="{{@unit.publicUri}}/images/firealarm-icon.png" class="img-responsive">
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-    <h3 class="uppercase">Ingredients</h3>
+    <h3 class="uppercase">What You Need</h3>
     <hr>
-    <p class="grey margin-top">This is what you need to get your device started:</p>
-    <br>
+    <p class="grey margin-top">VirtualFireAlarm is a "Virtual" Device for you to try-out our server.</p>
     <ul class="list-unstyled">
-        <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> A "MQTT-Broker" (WSO2-MB, ActiveMQ) for MQTT Communication</li>
-        <li><span class="fw-stack margin-right"><i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i></span> An "XMPP-Server" (Jabber) for XMPP Communication (if required)</li>
-        <li><br/></li>
+        <li class="padding-top-double"><span class="circle">STEP 01</span>&nbsp;&nbsp;&nbsp;Go ahead and [Download] the
+                                                                          Device.
+        </li>
+        <li class="padding-top-double"><span class="circle">STEP 02</span>&nbsp;&nbsp;&nbsp;Proceed to the [Prepare]
+                                                                          section.
+        </li>
+        <li class="padding-top-double"><span class="circle">STEP 03</span>&nbsp;&nbsp;&nbsp;Read thh [Try Out] section
+                                                                          to further experiment with the device.
+        </li>
+        <li><br></br></li>
         <li></span> The device supports MQTT and XMPP Communications. It is configured to use MQTT by default.</li>
     </ul>
     <br>
 
     <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin" class="btn-operations"
-       target="_blank" ><i class="fw fw-api"></i> View API</i> &nbsp;</a>
+       target="_blank"><i class="fw fw-api"></i> View API</i> &nbsp;</a>
     <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download</a>
 
     <div id="download-device-modal-content" class="hide">
@@ -32,6 +37,7 @@
                 <div class="col-md-7  center-container">
                     <h3>Name your device and download the agent from following link.</h3>
                     <br/>
+
                     <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
                         <div class="control-group">
                             <div class="controls">
@@ -40,7 +46,8 @@
                                        placeholder="Ex. Lobby_Firealarm"
                                        name="deviceName" size="60" required>
                                 <br/><br/>
-                                <input type="hidden" class="deviceType" name="deviceType" value="{{@uriParams.deviceType}}"/>
+                                <input type="hidden" class="deviceType" name="deviceType"
+                                       value="{{@uriParams.deviceType}}"/>
                                 <input type="radio" name="sketchType" value="simple_agent" id="simple_agent" checked>
                                 <label for="simple_agent">Simple Agent</label> &nbsp;&nbsp;
                                 <input type="radio" name="sketchType" value="advanced_agent" id="advanced_agent">
@@ -49,7 +56,7 @@
                         </div>
                         <div class="buttons" style="padding-bottom: 0px">
                             <a class="btn btn-operations" onclick="downloadAgent()">Download
-                                Now</a>
+                                                                                    Now</a>
                             &nbsp;&nbsp;
                             <a href="#" id="download-device-download-link" class="btn btn-operations">
                                 Copy Link
@@ -149,19 +156,27 @@
 </div>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
-    <h3 class="uppercase">Prepare</h3><hr>
+    <h3 class="uppercase">Prepare</h3>
+    <hr>
     <p class="grey margin-top">Start connecting to the WSO2 IoT Server by creating your own VirtualFireAlarm</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Download your VirtualFireAlarm from the [Download] button above.</li>
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Download your VirtualFireAlarm
+                                                                     from the [Download] button above.
+        </li>
         <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Unzip the downloaded Agent.</li>
-        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Move into the unzipped Agent folder in the terminal.</li>
-        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Start your Agent by running the startup script via the command: [sh startup.sh]</li>
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Move into the unzipped Agent
+                                                                     folder in the terminal.
+        </li>
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Start your Agent by running the
+                                                                     startup script via the command: [sh startup.sh]
+        </li>
     </ul>
     <br>
 </div>
 
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">The Virtual-Fire-Alarm Device</h3><hr>
+    <h3 class="uppercase">The Virtual-Fire-Alarm Device</h3>
+    <hr>
     <p class="grey margin-top">Click on the image to zoom</p>
     <center>
         <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
@@ -172,16 +187,23 @@
 </div>
 
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">Connect (Quick Start)</h3><hr>
-    <p class="grey margin-top">Internet of Things Foundation Quickstart connection</p>
+    <h3 class="uppercase">Try Out</h3>
+    <hr>
+    <p class="grey margin-top">WSO2-IoT Server provides Analytics and Real-Time Statistics of your device</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> Click on the <i>'Create DEB'</i> button above to
-                                                                      get the download link for the FireAlarm setup files</li>
-        <li class="padding-top-double"><span class="circle">02</span> (The following commands can be issued by
-                                                                      directly typing into the terminal of the device or by an <b>'ssh'</b> login from a remote PC)</li>
-        <li class="padding-top-double"><span class="circle">03</span> Download the FireAlarm setup files using the
-                                                                      following command: 'curl -k < url_link_received_from_the_above_step >> Agent.zip'.
-                                                                      This will download a zip file named 'Agent.zip'</li>
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can view all your created
+                                                                     devices at our <a href="{{@app.context}}/devices">[Device
+                                                                                                                       Management]</a>
+                                                                     page.
+        </li>
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;You can select any of your
+                                                                     created devices here and check for available
+                                                                     operations and monitor Real-Time data.
+        </li>
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can also view "Analytics" of
+                                                                     the data published to the IoT-Server by navigating
+                                                                     to the [Device-Analytics Page] from here.
+        </li>
     </ul>
     <br/>
 </div>
@@ -219,15 +241,19 @@
             width: 50px;
             color: #fff;
         }
+
         .padding-top-double {
             padding-top: 20px;
         }
+
         .padding-double {
             padding: 20px;
         }
+
         .grey {
             color: #333;
         }
+
         hr {
             display: block;
             height: 1px;
@@ -237,12 +263,15 @@
             padding: 0;
             opacity: 0.2;
         }
+
         .light-grey {
             color: #7c7c7c;
         }
+
         .uppercase {
             text-transform: uppercase;
         }
+
         .grey-bg {
             background-color: #f6f4f4;
         }
