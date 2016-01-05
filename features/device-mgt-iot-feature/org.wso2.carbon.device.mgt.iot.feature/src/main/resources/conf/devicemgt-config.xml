@@ -58,7 +58,7 @@
     <ApiManager>
         <Enabled>true</Enabled>
         <AccessTokenURL>https://localhost:9443/oauth2/token</AccessTokenURL>
-        <ServerURL>http://localhost</ServerURL>
+        <ServerURL>https://localhost</ServerURL>
         <ServerPort>9763</ServerPort>
         <GatewayPort>8280</GatewayPort>
         <LoginURL>/api-store/site/blocks/user/login/ajax/login.jag</LoginURL>
