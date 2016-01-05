@@ -60,7 +60,7 @@
         <AccessTokenURL>https://localhost:9443/oauth2/token</AccessTokenURL>
         <ServerURL>https://localhost</ServerURL>
         <ServerPort>9443</ServerPort>
-        <GatewayPort>8280</GatewayPort>
+        <GatewayPort>8243</GatewayPort>
         <LoginURL>/api-store/site/blocks/user/login/ajax/login.jag</LoginURL>
         <SubscriptionListURL>/api-store/site/blocks/subscription/subscription-list/ajax/subscription-list.jag</SubscriptionListURL>
         <Username>admin</Username>
