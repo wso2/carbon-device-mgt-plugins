@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -223,7 +223,7 @@ public class DroneService {
     @Path("manager/device/{sketch_type}/download")
     @GET
     @Produces("application/octet-stream")
-    public Response downloadSketch(@QueryParam("owner") String owner, @QueryParam("deviceName") String customDeviceName,
+    public Response downloadSketch(@QueryParam("owner") String owner, @QueryParam("deviceName") String deviceName,
                                    @PathParam("sketch_type") String sketchType) {
         if (owner == null) {
             return Response.status(400).build();//bad request
@@ -237,8 +237,7 @@ public class DroneService {
         String refreshToken = UUID.randomUUID().toString();
         //adding registering data
 
-        String deviceName = customDeviceName + "_" + deviceId;
-        boolean status = register(deviceId, customDeviceName, owner);
+        boolean status = register(deviceId, deviceName, owner);
         if (!status) {
             return Response.status(500).entity(
                     "Error occurred while registering the device with " + "id: " + deviceId
@@ -247,9 +246,9 @@ public class DroneService {
         }
 
         ZipUtil ziputil = new ZipUtil();
-        ZipArchive zipFile = null;
+        ZipArchive zipFile;
         try {
-            zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, customDeviceName, token,
+            zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, deviceName, token,
                                             refreshToken);
         } catch (DeviceManagementException ex) {
             return Response.status(500).entity("Error occurred while creating zip file").build();
@@ -263,10 +262,10 @@ public class DroneService {
     @Path("manager/device/{sketch_type}/generate_link")
     @GET
     public Response generateSketchLink(@QueryParam("owner") String owner,
-                                       @QueryParam("deviceName") String customDeviceName,
+                                       @QueryParam("deviceName") String deviceName,
                                        @PathParam("sketch_type") String sketchType) {
         try {
-            ZipArchive zipFile = createDownloadFile(owner, customDeviceName, sketchType);
+            ZipArchive zipFile = createDownloadFile(owner, deviceName, sketchType);
             Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
             return rb.build();
         } catch (IllegalArgumentException ex) {
@@ -280,7 +279,7 @@ public class DroneService {
         }
     }
 
-    private ZipArchive createDownloadFile(String owner, String customDeviceName, String sketchType)
+    private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
             throws DeviceManagementException, AccessTokenException, DeviceControllerException {
         if (owner == null) {
             throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
@@ -318,7 +317,6 @@ public class DroneService {
             }
         }
         //Register the device with CDMF
-        String deviceName = customDeviceName + "_" + deviceId;
         status = register(deviceId, deviceName, owner);
         if (!status) {
             String msg = "Error occurred while registering the device with " + "id: " + deviceId
