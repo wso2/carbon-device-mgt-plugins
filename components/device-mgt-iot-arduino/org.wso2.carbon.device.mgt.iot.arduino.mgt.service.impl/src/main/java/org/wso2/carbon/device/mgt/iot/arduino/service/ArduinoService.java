@@ -56,7 +56,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@API( name="arduino", version="1.0.0", context="/arduino")
 @DeviceType( value = "arduino")
 public class ArduinoService {
 
