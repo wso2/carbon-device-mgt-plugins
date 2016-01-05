@@ -25,6 +25,9 @@ during boot up process.
 
 create a service:
         ` sudo ./startService.sh `
+        
+get current state of the service:
+       ` sudo service RaspberryService.sh status `
 
 start service:
        ` sudo service RaspberryService.sh start `
@@ -35,8 +38,7 @@ stop service:
 restart service:
        ` sudo service RaspberryService.sh restart `
 
-get current state of the service:
-       ` sudo service RaspberryService.sh status `
+
 
 
       

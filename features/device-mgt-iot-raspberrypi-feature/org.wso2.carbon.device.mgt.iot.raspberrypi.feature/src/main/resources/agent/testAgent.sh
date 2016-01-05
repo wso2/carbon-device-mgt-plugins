@@ -21,10 +21,10 @@
 #!/bin/bash
 
 echo "----------------------------------------------------------------"
-echo "|		WSO2 IOT Sample				"
-echo "|		  RaspiAgent				"
-echo "|	       ----------------				"
-echo "|    ....initializing startup-script	"
+echo "|		                 WSO2 IOT Sample				          "
+echo "|		                   RaspiAgent				              "
+echo "|	                     ----------------				          "
+echo "|                ....initializing startup-script	              "
 echo "----------------------------------------------------------------"
 
 currentDir=$PWD

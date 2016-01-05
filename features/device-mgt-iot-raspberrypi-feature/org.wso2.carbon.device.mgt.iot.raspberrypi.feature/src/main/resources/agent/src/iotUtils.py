@@ -31,6 +31,7 @@ import running_mode
 global HOST_NAME
 HOST_NAME = "0.0.0.0"
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+HTTP_SERVER_PORT = 5678 # http server port which is listning on
 
 global LAST_TEMP
 LAST_TEMP = 25  # The Last read temperature value from the DHT sensor. Kept globally
@@ -40,9 +41,7 @@ TEMPERATURE_READING_INTERVAL_REAL_MODE = 3
 TEMPERATURE_READING_INTERVAL_VIRTUAL_MODE = 60
 TEMP_PIN = 4
 TEMP_SENSOR_TYPE = 11
-
 BULB_PIN = 11  # The GPIO Pin# in RPi to which the LED is connected
-HTTP_SERVER_PORT = 5678 # http server port which is listning on
 global GPIO
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

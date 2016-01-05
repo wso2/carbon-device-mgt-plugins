@@ -20,6 +20,13 @@
 
 #!/usr/bin/env bash
 
+echo "----------------------------------------------------------------"
+echo "|		          WSO2 IOT Sample				                  "
+echo "|		            RaspiAgent				                      "
+echo "|	              ----------------				                  "
+echo "|           ....initializing service-start-script	              "
+echo "----------------------------------------------------------------"
+
 destination="/usr/local/src/RaspberryAgent"
 currentDir=$PWD
 if [ ! -d "$destination" ]

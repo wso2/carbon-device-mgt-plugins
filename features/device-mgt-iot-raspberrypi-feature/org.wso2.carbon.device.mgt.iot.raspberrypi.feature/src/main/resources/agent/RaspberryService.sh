@@ -46,7 +46,6 @@ PIDFILE=/var/run/$DAEMON_NAME.pid
 DAEMON_OPTS="-l /usr/local/src/RaspberryAgent/RaspberryStats.log -m N -i 60"
 
 # This next line determines what user the script runs as.
-# Root generally not recommended but necessary if you are using the Raspberry Pi GPIO from Python.
 DAEMON_USER=root   #pi
 
 # Load the VERBOSE setting and other rcS variables
