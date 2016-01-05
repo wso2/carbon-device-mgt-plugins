@@ -1,0 +1,120 @@
+{
+  "deviceType": {
+    "label": "Android Sense",
+    "category": "iot"
+  },
+  "analyticStreams": [
+    {
+      "name": "Accelerometer",
+      "table": "DEVICE_ACCELEROMETER_SUMMARY",
+      "ui_unit": {
+        "name": "cdmf.unit.analytics.line-chart",
+        "data":[
+          {"column": {"name":"TIME", "label":"time", "ui-mapping":"x-axis"}},
+          {"column": {"name":"ACCELEROMETER", "label":"Accelerometer", "ui-mapping":"y-axis"}}
+        ]
+      }
+    },
+    {
+      "name": "Battery",
+      "table": "DEVICE_BATTERY_SUMMARY",
+      "ui_unit": {
+        "name": "cdmf.unit.analytics.line-chart",
+        "data":[
+          {"column": {"name":"TIME", "label":"time", "ui-mapping":"x-axis"}},
+          {"column": {"name":"BATTERY", "label":"Battery Level", "ui-mapping":"y-axis"}}
+        ]
+      }
+    },
+    {
+      "name": "GPS",
+      "table": "DEVICE_GPS_SUMMARY",
+      "ui_unit": {
+        "name": "cdmf.unit.analytics.google-map",
+        "data":[
+          {"column": {"name":"TIME", "label":"time", "ui-mapping":"time"}},
+          {"column": {"name":"LATITUDE", "label":"Latitude", "ui-mapping":"lat"}},
+          {"column": {"name":"LONGITUDE", "label":"Longitude", "ui-mapping":"lat"}}
+        ]
+      }
+    },
+    {
+      "name": "Gravity",
+      "table": "DEVICE_GRAVITY_SUMMARY",
+      "ui_unit": {
+        "name": "cdmf.unit.analytics.line-chart",
+        "data":[
+          {"column": {"name":"TIME", "label":"time", "ui-mapping":"x-axis"}},
+          {"column": {"name":"GRAVITY", "label":"Gravity", "ui-mapping":"y-axis"}}
+        ]
+      }
+    },
+    {
+      "name": "Gyroscope",
+      "table": "DEVICE_GYROSCOPE_SUMMARY",
+      "ui_unit": {
+        "name": "cdmf.unit.analytics.line-chart",
+        "data":[
+          {"column": {"name":"TIME", "label":"time", "ui-mapping":"x-axis"}},
+          {"column": {"name":"GYROSCOPE", "label":"Gyroscope", "ui-mapping":"y-axis"}}
+        ]
+      }
+    },
+    {
+      "name": "Light",
+      "table": "DEVICE_LIGHT_SUMMARY",
+      "ui_unit": {
+        "name": "cdmf.unit.analytics.line-chart",
+        "data":[
+          {"column": {"name":"TIME", "label":"time", "ui-mapping":"x-axis"}},
+          {"column": {"name":"LIGHT", "label":"Light", "ui-mapping":"y-axis"}}
+        ]
+      }
+    },
+    {
+      "name": "Magnetic",
+      "table": "DEVICE_MAGNETIC_SUMMARY",
+      "ui_unit": {
+        "name": "cdmf.unit.analytics.line-chart",
+        "data":[
+          {"column": {"name":"TIME", "label":"time", "ui-mapping":"x-axis"}},
+          {"column": {"name":"MAGNETIC", "label":"Magnetic", "ui-mapping":"y-axis"}}
+        ]
+      }
+    },
+    {
+      "name": "Pressure",
+      "table": "DEVICE_PRESSURE_SUMMARY",
+      "ui_unit": {
+        "name": "cdmf.unit.analytics.line-chart",
+        "data":[
+          {"column": {"name":"TIME", "label":"time", "ui-mapping":"x-axis"}},
+          {"column": {"name":"PRESSURE", "label":"Pressure", "ui-mapping":"y-axis"}}
+        ]
+      }
+    },
+    {
+      "name": "Proximity",
+      "table": "DEVICE_PROXIMITY_SUMMARY",
+      "ui_unit": {
+        "name": "cdmf.unit.analytics.bar-chart",
+        "data":[
+          {"column": {"name":"TIME", "label":"time", "ui-mapping":"x-axis"}},
+          {"column": {"name":"PROXIMITY", "label":"Proximity", "ui-mapping":"y-axis"}}
+        ]
+      }
+    },
+    {
+      "name": "Rotation",
+      "table": "DEVICE_ROTATION_SUMMARY",
+      "ui_unit": "cdmf.unit.analytics.line-chart",
+      "ui_unit": {
+        "name": "cdmf.unit.analytics.line-chart",
+        "data":[
+          {"column": {"name":"TIME", "label":"time", "ui-mapping":"x-axis"}},
+          {"column": {"name":"ROTATION", "label":"Rotation", "ui-mapping":"y-axis"}}
+        ]
+      }
+    }
+  ]
+}

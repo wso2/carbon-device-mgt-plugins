@@ -1,9 +1,8 @@
 {
   "deviceType": {
-    "label": "Arduino",
-    "category": "iot",
-    "downloadAgentUri": "manager/device/arduino/download",
-  },
+    "label": "RaspberryPi",
+    "category": "iot"
+   },
   "analyticStreams": [
     {
       "name": "Temperature",
@@ -12,7 +11,7 @@
         "name": "cdmf.unit.analytics.line-chart",
         "data":[
           {"column": {"name":"TIME", "label":"time", "ui-mapping":"x-axis"}},
-          {"column": {"name":"ACCELEROMETER", "label":"Accelerometer", "ui-mapping":"y-axis"}}
+          {"column": {"name":"TEMPERATURE", "label":"Temperature", "ui-mapping":"y-axis"}}
         ]
       }
     }

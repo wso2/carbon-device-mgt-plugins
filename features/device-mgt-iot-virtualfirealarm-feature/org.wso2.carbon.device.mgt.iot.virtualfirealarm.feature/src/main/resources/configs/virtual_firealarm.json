@@ -1,8 +1,9 @@
 {
   "deviceType": {
-    "label": "Arduino",
+    "label": "Virtual Firealarm",
     "category": "iot",
-    "downloadAgentUri": "manager/device/arduino/download",
+    "downloadAgentUri": "manager/device/virtual_firealarm/download",
+    "downloadAgentLinkGenUri": "manager/device/virtual_firealarm/generate_link"
   },
   "analyticStreams": [
     {
@@ -12,7 +13,7 @@
         "name": "cdmf.unit.analytics.line-chart",
         "data":[
           {"column": {"name":"TIME", "label":"time", "ui-mapping":"x-axis"}},
-          {"column": {"name":"ACCELEROMETER", "label":"Accelerometer", "ui-mapping":"y-axis"}}
+          {"column": {"name":"TEMPERATURE", "label":"Temperature", "ui-mapping":"y-axis"}}
         ]
       }
     }

@@ -21,10 +21,10 @@
 #!/bin/bash
 
 echo "----------------------------------------------------------------"
-echo "|		WSO2 IOT Sample				"
-echo "|		  RaspiAgent				"
-echo "|	       ----------------				"
-echo "|    ....initializing startup-script	"
+echo "|		                 WSO2 IOT Sample				          "
+echo "|		                   RaspiAgent				              "
+echo "|	                     ----------------				          "
+echo "|                ....initializing startup-script	              "
 echo "----------------------------------------------------------------"
 
 currentDir=$PWD
@@ -95,6 +95,11 @@ while true; do
     esac
 done
 cp deviceConfig.properties ./src
+
+if [ "$mode" = "N" ]; then
+     sudo apt-get install rpi.gpio
+fi
+
 chmod +x ./src/RaspberryAgent.py
 ./src/RaspberryAgent.py -i $input -m $mode
 
@@ -106,4 +111,4 @@ fi
 
 echo "--------------------------------------------------------------------------"
 echo "|			Successfully Started		"
-echo "|		   --------------------------		"
+echo "|		   --------------------------	"

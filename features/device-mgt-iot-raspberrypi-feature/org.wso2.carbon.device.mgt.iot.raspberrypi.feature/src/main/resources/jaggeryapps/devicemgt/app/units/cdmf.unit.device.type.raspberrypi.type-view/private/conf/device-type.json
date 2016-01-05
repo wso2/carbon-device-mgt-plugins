@@ -1,8 +1,0 @@
-{
-  "deviceType": {
-    "label": "RaspberryPi",
-    "category": "iot",
-    "downloadAgentUri": "manager/device/raspberrypi/download",
-    "downloadAgentLinkGenUri" : "manager/device/raspberrypi/generate_link"
-  }
-}
