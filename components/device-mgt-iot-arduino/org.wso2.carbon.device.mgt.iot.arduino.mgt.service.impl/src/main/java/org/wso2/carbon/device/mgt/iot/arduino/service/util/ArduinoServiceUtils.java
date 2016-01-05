@@ -129,7 +129,7 @@ public class ArduinoServiceUtils {
     public static boolean sendCommandViaMQTT(String deviceOwner, String deviceId, String resource,
                                              String state) throws DeviceManagementException {
 
-        boolean result;
+        /*boolean result;
         DeviceController deviceController = new DeviceController();
 
         try {
@@ -139,7 +139,8 @@ public class ArduinoServiceUtils {
             log.error(errorMsg);
             throw new DeviceManagementException(errorMsg, e);
         }
-        return result;
+        return result;*/
+        return false;
     }
 
 	/*	---------------------------------------------------------------------------------------
