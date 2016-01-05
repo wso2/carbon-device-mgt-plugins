@@ -96,7 +96,7 @@ while true; do
 done
 cp deviceConfig.properties ./src
 
-if [ $mode -eq "N" ]; then
+if [ "$mode" = "N" ]; then
      sudo apt-get install rpi.gpio
 fi
 
@@ -111,4 +111,4 @@ fi
 
 echo "--------------------------------------------------------------------------"
 echo "|			Successfully Started		"
-echo "|		   --------------------------		"
+echo "|		   --------------------------	"

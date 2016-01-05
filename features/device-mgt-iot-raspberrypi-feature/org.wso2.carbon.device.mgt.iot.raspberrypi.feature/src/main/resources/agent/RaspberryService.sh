@@ -31,7 +31,6 @@
 ### END INIT INFO
 
 PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
-# Change the next 3 lines to suit where you install your script and what you want to call it
 DESC="This service is used to publish events from the Raspberry Pi to the WSO2 Device Cloud"
 NAME=RaspberryStats
 
