@@ -72,7 +72,6 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@API( name="arduino", version="1.0.0", context="/arduino")
 @DeviceType( value = "arduino")
 public class ArduinoService {
 

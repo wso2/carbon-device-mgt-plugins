@@ -15,10 +15,10 @@
     <p class="grey margin-top">You'll need the following "Hardware":</p>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">ITEM 01</span>&nbsp;&nbsp;&nbsp;Raspberry Pi Board (Internet
-                                                                          Enabled [Wifi or Ethernet]).
+            Enabled [Wifi or Ethernet]).
         </li>
         <li class="padding-top-double"><span class="circle">ITEM 02</span>&nbsp;&nbsp;&nbsp;A Digital Display with HDMI
-                                                                          Cable.
+            Cable.
         </li>
         <li class="padding-top-double"><span class="circle">GO-TO PREPARE</span></li>
     </ul>
@@ -50,7 +50,7 @@
                         <div class="buttons" style="padding-bottom: 0px">
                             <a class="btn btn-operations" onclick="downloadAgent()">Download Now</a> &nbsp;&nbsp;
                             <a href="#" id="download-device-download-link" class="btn btn-operations"> Copy Link </a>
-                                                                                                     &nbsp;&nbsp;
+                            &nbsp;&nbsp;
                         </div>
                     </form>
                 </div>
@@ -164,15 +164,15 @@
     <h3 class="uppercase">Prepare</h3>
     <hr>
     <p class="grey margin-top">Follow the steps to get your Digital-Display up &amp; running and communicating to the
-                               WSO2 IoT-Server.</p>
+        WSO2 IoT-Server.</p>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Connect a monitor to your
-                                                                     RaspberryPi via the HDMI cable to get the
-                                                                     Graphical-User-Interface of the RaspberryPi board.
+            RaspberryPi via the HDMI cable to get the
+            Graphical-User-Interface of the RaspberryPi board.
         </li>
         <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Setup the RaspberryPi to connect
-                                                                     to the internet (via Ethernet or Wifi) and
-                                                                     note-down its <i>IP_ADDRESS</i>.
+            to the internet (via Ethernet or Wifi) and
+            note-down its <i>IP_ADDRESS</i>.
         </li>
     </ul>
     <br>
@@ -196,17 +196,17 @@
     <p class="grey margin-top">WSO2-IoT Server provides Analytics and Real-Time Statistics of your device</p>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can view all your created
-                                                                     devices at our <a href="{{@app.context}}/devices">[Device
-                                                                                                                       Management]</a>
-                                                                     page.
+            devices at our <a href="{{@app.context}}/devices">[Device
+                Management]</a>
+            page.
         </li>
         <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;You can select any of your
-                                                                     created devices here and check for available
-                                                                     operations and monitor Real-Time data.
+            created devices here and check for available
+            operations and monitor Real-Time data.
         </li>
         <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can also view "Analytics" of
-                                                                     the data published to the IoT-Server by navigating
-                                                                     to the [Device-Analytics Page] from here.
+            the data published to the IoT-Server by navigating
+            to the [Device-Analytics Page] from here.
         </li>
     </ul>
     <br/>
@@ -222,46 +222,39 @@
 
 <style type="text/css">
     .circle {
-        background: none repeat scroll 0 0 #191919;
-        border-radius: 50px;
-        height: 50px;
-        padding: 10px;
-        width: 50px;
-        color: #fff;
+    background: none repeat scroll 0 0 #191919;
+    border-radius: 50px;
+    height: 50px;
+    padding: 10px;
+    width: 50px;
+    color: #fff;
     }
-
     .padding-top-double {
-        padding-top: 20px;
+    padding-top: 20px;
     }
-
     .padding-double {
-        padding: 20px;
+    padding: 20px;
     }
-
     .grey {
-        color: #333;
+    color: #333;
     }
-
     hr {
-        display: block;
-        height: 1px;
-        border: 0;
-        border-top: 1px solid #7f7f7f;
-        margin: 1em 0;
-        padding: 0;
-        opacity: 0.2;
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #7f7f7f;
+    margin: 1em 0;
+    padding: 0;
+    opacity: 0.2;
     }
-
     .light-grey {
-        color: #7c7c7c;
+    color: #7c7c7c;
     }
-
     .uppercase {
-        text-transform: uppercase;
+    text-transform: uppercase;
     }
-
     .grey-bg {
-        background-color: #f6f4f4;
+    background-color: #f6f4f4;
     }
 </style>
 
@@ -269,4 +262,3 @@
     {{js "/js/download.js"}}
     {{js "/js/jquery.validate.js"}}
 {{/zone}}
-
