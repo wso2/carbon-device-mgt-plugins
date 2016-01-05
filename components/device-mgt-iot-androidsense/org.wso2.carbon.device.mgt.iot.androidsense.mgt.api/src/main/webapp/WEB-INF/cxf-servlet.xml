@@ -29,8 +29,8 @@
             <cxf:logging/>
         </jaxrs:features>
         <jaxrs:serviceBeans>
-            <bean id="AndroidSenseService"
-                  class="org.wso2.carbon.device.mgt.iot.androidsense.service.impl.AndroidSenseService"/>
+            <bean id="AndroidSenseMgtService"
+                  class="org.wso2.carbon.device.mgt.iot.androidsense.mgt.service.impl.AndroidSenseService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />

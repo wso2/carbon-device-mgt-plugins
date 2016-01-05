@@ -1,4 +1,4 @@
-package org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util;
+package org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.util;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 

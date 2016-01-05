@@ -10,11 +10,11 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.api</artifactId>
+    <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.mgt.api</artifactId>
     <version>1.9.2-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>WSO2 Carbon - Android Sense API</name>
-    <description>WSO2 Carbon - Android Sense Service API Implementation</description>
+    <name>WSO2 Carbon - Android Sense Management API</name>
+    <description>WSO2 Carbon - Android Sense Service Management API Implementation</description>
     <url>http://wso2.org</url>
 
 
@@ -174,6 +174,11 @@
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
             <artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.apimgt.webapp.publisher</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>
