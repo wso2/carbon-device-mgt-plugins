@@ -20,6 +20,13 @@
 
 #!/usr/bin/env bash
 
+echo "----------------------------------------------------------------"
+echo "|		          WSO2 IOT Sample				                  "
+echo "|		            RaspiAgent				                      "
+echo "|	              ----------------				                  "
+echo "|           ....initializing service-start-script	              "
+echo "----------------------------------------------------------------"
+
 destination="/usr/local/src/RaspberryAgent"
 currentDir=$PWD
 if [ ! -d "$destination" ]
@@ -33,4 +40,4 @@ sudo update-rc.d -f RaspberryService.sh remove
 sudo cp $currentDir/RaspberryService.sh /etc/init.d
 sudo chmod +x /etc/init.d/RaspberryService.sh
 sudo update-rc.d RaspberryService.sh defaults
-sudo service /etc/init.d/RaspberryService.sh start
+sudo service RaspberryService.sh start

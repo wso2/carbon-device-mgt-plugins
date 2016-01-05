@@ -54,8 +54,8 @@ LOG_LEVEL = logging.INFO  # Could be e.g. "DEBUG" or "WARNING"
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Python version
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-if sys.version_info<(2,7,5):
-  sys.stderr.write("You need python 2.7.5 or later to run this script\n")
+if sys.version_info<(2,7,0):
+  sys.stderr.write("You need python 2.7.0 or later to run this script\n")
   exit(1)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
