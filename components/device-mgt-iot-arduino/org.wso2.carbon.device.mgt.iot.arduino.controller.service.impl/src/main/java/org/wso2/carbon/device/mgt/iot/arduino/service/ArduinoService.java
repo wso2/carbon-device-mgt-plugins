@@ -41,6 +41,7 @@ import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
+import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 
@@ -219,7 +220,7 @@ public class ArduinoService {
         }
 
         try {
-            switch (protocolString) {
+            /*switch (protocolString) {
                 case HTTP_PROTOCOL:
                     String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
                     if (deviceHTTPEndpoint == null) {
@@ -235,7 +236,14 @@ public class ArduinoService {
                 default:
                     response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
                     return;
+            }*/
+            String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
+            if (deviceHTTPEndpoint == null) {
+                response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
+                return;
             }
+            ArduinoServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint, callUrlPattern, true);
+
         } catch (DeviceManagementException e) {
             log.error("Failed to send switch-bulb request to device [" + deviceId + "] via " + protocolString);
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
@@ -244,6 +252,65 @@ public class ArduinoService {
         response.setStatus(Response.Status.OK.getStatusCode());
     }
 
+    /**
+     * @param owner
+     * @param deviceId
+     * @param protocol
+     * @param response
+     * @return
+     */
+    @Path("controller/readtemperature")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Feature( code="readtemperature", name="Temperature", type="monitor",
+            description="Request temperature reading from Arduino agent")
+    public SensorRecord requestTemperature(@HeaderParam("owner") String owner,
+                                           @HeaderParam("deviceId") String deviceId,
+                                           @HeaderParam("protocol") String protocol,
+                                           @Context HttpServletResponse response) {
+        SensorRecord sensorRecord = null;
+
+        DeviceValidator deviceValidator = new DeviceValidator();
+        try {
+            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
+                    ArduinoConstants.DEVICE_TYPE))) {
+                response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
+            }
+        } catch (DeviceManagementException e) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+
+        String protocolString = protocol.toUpperCase();
+
+        if (log.isDebugEnabled()) {
+            log.debug(
+                    "Sending request to read raspberrypi-temperature of device [" + deviceId + "] via " +
+                            protocolString);
+        }
+
+        try {
+            String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
+            if (deviceHTTPEndpoint == null) {
+                response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
+            }
+
+            String temperatureValue = ArduinoServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
+                    ArduinoConstants
+                            .TEMPERATURE_CONTEXT,
+                    false);
+            SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
+                    temperatureValue,
+                    Calendar.getInstance().getTimeInMillis());
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
+                    ArduinoConstants.SENSOR_TEMPERATURE);
+        } catch (DeviceManagementException | DeviceControllerException e) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+
+        response.setStatus(Response.Status.OK.getStatusCode());
+        return sensorRecord;
+    }
 
     /**
      * @param dataMsg

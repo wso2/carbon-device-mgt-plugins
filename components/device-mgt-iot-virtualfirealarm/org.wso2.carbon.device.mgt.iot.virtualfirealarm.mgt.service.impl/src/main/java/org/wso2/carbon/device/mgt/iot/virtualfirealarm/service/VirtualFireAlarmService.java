@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -264,7 +264,7 @@ public class VirtualFireAlarmService {
 
     /**
      * @param owner
-     * @param customDeviceName
+     * @param deviceName
      * @param sketchType
      * @return
      */
@@ -273,10 +273,10 @@ public class VirtualFireAlarmService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response downloadSketch(@QueryParam("owner") String owner,
-                                   @QueryParam("deviceName") String customDeviceName,
+                                   @QueryParam("deviceName") String deviceName,
                                    @PathParam("sketch_type") String sketchType) {
         try {
-            ZipArchive zipFile = createDownloadFile(owner, customDeviceName, sketchType);
+            ZipArchive zipFile = createDownloadFile(owner, deviceName, sketchType);
             Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
             response.type("application/zip");
             response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
@@ -297,18 +297,18 @@ public class VirtualFireAlarmService {
 
     /**
      * @param owner
-     * @param customDeviceName
+     * @param deviceName
      * @param sketchType
      * @return
      */
     @Path("manager/device/{sketch_type}/generate_link")
     @GET
     public Response generateSketchLink(@QueryParam("owner") String owner,
-                                       @QueryParam("deviceName") String customDeviceName,
+                                       @QueryParam("deviceName") String deviceName,
                                        @PathParam("sketch_type") String sketchType) {
 
         try {
-            ZipArchive zipFile = createDownloadFile(owner, customDeviceName, sketchType);
+            ZipArchive zipFile = createDownloadFile(owner, deviceName, sketchType);
             Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
             return rb.build();
         } catch (IllegalArgumentException ex) {
@@ -324,14 +324,14 @@ public class VirtualFireAlarmService {
 
     /**
      * @param owner
-     * @param customDeviceName
+     * @param deviceName
      * @param sketchType
      * @return
      * @throws DeviceManagementException
      * @throws AccessTokenException
      * @throws DeviceControllerException
      */
-    private ZipArchive createDownloadFile(String owner, String customDeviceName, String sketchType)
+    private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
             throws DeviceManagementException, AccessTokenException, DeviceControllerException {
         if (owner == null) {
             throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
@@ -373,7 +373,6 @@ public class VirtualFireAlarmService {
         }
 
         //Register the device with CDMF
-        String deviceName = customDeviceName + "_" + deviceId;
         status = register(deviceId, deviceName, owner);
 
         if (!status) {

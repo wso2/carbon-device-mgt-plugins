@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -18,38 +18,28 @@
 
 package org.wso2.carbon.device.mgt.iot.arduino.service;
 
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
-import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.iot.DeviceManagement;
-import org.wso2.carbon.device.mgt.iot.DeviceValidator;
 import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
 import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
-import org.wso2.carbon.device.mgt.iot.arduino.service.dto.DeviceJSON;
-import org.wso2.carbon.device.mgt.iot.arduino.service.transport.ArduinoMQTTSubscriber;
-import org.wso2.carbon.device.mgt.iot.arduino.service.util.ArduinoServiceUtils;
-import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -62,17 +52,10 @@ import javax.ws.rs.core.Response;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
-@API( name="arduino", version="1.0.0", context="/arduino")
 @DeviceType( value = "arduino")
 public class ArduinoService {
 
@@ -83,61 +66,6 @@ public class ArduinoService {
 
     @Context  //injected response proxy supporting multiple thread
     private HttpServletResponse response;
-
-    public static final String HTTP_PROTOCOL = "HTTP";
-    public static final String MQTT_PROTOCOL = "MQTT";
-
-    private ArduinoMQTTSubscriber arduinoMQTTSubscriber;
-    private static Map<String, LinkedList<String>> replyMsgQueue = new HashMap<>();
-    private static Map<String, LinkedList<String>> internalControlsQueue = new HashMap<>();
-    private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
-
-    /**
-     * @param arduinoMQTTSubscriber an object of type "ArduinoMQTTSubscriber" specific for this ArduinoService
-     */
-    @SuppressWarnings("unused")
-    public void setArduinoMQTTSubscriber(
-            final ArduinoMQTTSubscriber arduinoMQTTSubscriber) {
-        this.arduinoMQTTSubscriber = arduinoMQTTSubscriber;
-
-        if (MqttConfig.getInstance().isEnabled()) {
-            Runnable xmppStarter = new Runnable() {
-                @Override
-                public void run() {
-                    arduinoMQTTSubscriber.initConnector();
-                    arduinoMQTTSubscriber.connectAndSubscribe();
-                }
-            };
-
-            Thread xmppStarterThread = new Thread(xmppStarter);
-            xmppStarterThread.setDaemon(true);
-            xmppStarterThread.start();
-        } else {
-            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, ArduinoMQTTSubscriber not started.");
-        }
-    }
-
-    /**
-     * @return the "ArduinoMQTTSubscriber" object of this ArduinoService instance
-     */
-    @SuppressWarnings("unused")
-    public ArduinoMQTTSubscriber getArduinoMQTTSubscriber() {
-        return arduinoMQTTSubscriber;
-    }
-
-    /**
-     * @return the queue containing all the MQTT reply messages from all Arduinos communicating to this service
-     */
-    public static Map<String, LinkedList<String>> getReplyMsgQueue() {
-        return replyMsgQueue;
-    }
-
-    /**
-     * @return the queue containing all the MQTT controls received to be sent to any Arduinos connected to this server
-     */
-    public static Map<String, LinkedList<String>> getInternalControlsQueue() {
-        return internalControlsQueue;
-    }
 
     /*	---------------------------------------------------------------------------------------
                                 Device management specific APIs
@@ -361,18 +289,18 @@ public class ArduinoService {
 
     /**
      * @param owner
-     * @param customDeviceName
+     * @param deviceName
      * @param sketchType
      * @return
      */
     @Path("manager/device/{sketch_type}/generate_link")
     @GET
     public Response generateSketchLink(@QueryParam("owner") String owner,
-                                       @QueryParam("deviceName") String customDeviceName,
+                                       @QueryParam("deviceName") String deviceName,
                                        @PathParam("sketch_type") String sketchType) {
 
         try {
-            ZipArchive zipFile = createDownloadFile(owner, customDeviceName, sketchType);
+            ZipArchive zipFile = createDownloadFile(owner, deviceName, sketchType);
             Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
             return rb.build();
         } catch (IllegalArgumentException ex) {
@@ -389,14 +317,14 @@ public class ArduinoService {
 
     /**
      * @param owner
-     * @param customDeviceName
+     * @param deviceName
      * @param sketchType
      * @return
      * @throws DeviceManagementException
      * @throws AccessTokenException
      * @throws DeviceControllerException
      */
-    private ZipArchive createDownloadFile(String owner, String customDeviceName, String sketchType)
+    private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
             throws DeviceManagementException, AccessTokenException, DeviceControllerException {
         if (owner == null) {
             throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
@@ -415,7 +343,6 @@ public class ArduinoService {
         String refreshToken = accessTokenInfo.getRefresh_token();
 
         //Register the device with CDMF
-        String deviceName = customDeviceName + "_" + deviceId;
         boolean status = register(deviceId, deviceName, owner);
 
         if (!status) {

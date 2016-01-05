@@ -30,19 +30,11 @@
 		<jaxrs:serviceBeans>
 			<bean id="ArduinoService"
 				  class="org.wso2.carbon.device.mgt.iot.arduino.service.ArduinoService">
-				<property name="arduinoMQTTSubscriber" ref="arduinoMQTTSubscriber"/>
 			</bean>
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
 		</jaxrs:providers>
 	</jaxrs:server>
-
-
-	<bean id="arduinoMQTTSubscriber"
-		  class="org.wso2.carbon.device.mgt.iot.arduino.service.transport.ArduinoMQTTSubscriber">
-    </bean>
-
-
 </beans>
 
