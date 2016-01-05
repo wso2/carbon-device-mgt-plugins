@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -277,12 +277,12 @@ public class RaspberryPiService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response downloadSketch(@QueryParam("owner") String owner,
-                                   @QueryParam("deviceName") String customDeviceName,
+                                   @QueryParam("deviceName") String deviceName,
                                    @PathParam("sketch_type") String
                                            sketchType) {
 
         try {
-            ZipArchive zipFile = createDownloadFile(owner, customDeviceName, sketchType);
+            ZipArchive zipFile = createDownloadFile(owner, deviceName, sketchType);
             Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
             response.type("application/zip");
             response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
@@ -305,11 +305,11 @@ public class RaspberryPiService {
     @Path("manager/device/{sketch_type}/generate_link")
     @GET
     public Response generateSketchLink(@QueryParam("owner") String owner,
-                                       @QueryParam("deviceName") String customDeviceName,
+                                       @QueryParam("deviceName") String deviceName,
                                        @PathParam("sketch_type") String sketchType) {
 
         try {
-            ZipArchive zipFile = createDownloadFile(owner, customDeviceName, sketchType);
+            ZipArchive zipFile = createDownloadFile(owner, deviceName, sketchType);
             Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
             return rb.build();
         } catch (IllegalArgumentException ex) {
@@ -324,7 +324,7 @@ public class RaspberryPiService {
     }
 
 
-    private ZipArchive createDownloadFile(String owner, String customDeviceName, String sketchType)
+    private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
             throws DeviceManagementException, AccessTokenException, DeviceControllerException {
         if (owner == null) {
             throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
@@ -366,7 +366,6 @@ public class RaspberryPiService {
         }
 
         //Register the device with CDMF
-        String deviceName = customDeviceName + "_" + deviceId;
         status = register(deviceId, deviceName, owner);
 
         if (!status) {
