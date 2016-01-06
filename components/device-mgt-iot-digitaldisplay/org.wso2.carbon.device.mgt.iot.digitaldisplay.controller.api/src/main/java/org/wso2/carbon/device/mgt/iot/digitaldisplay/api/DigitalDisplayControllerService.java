@@ -80,8 +80,6 @@ public class DigitalDisplayControllerService {
                                @HeaderParam("sessionId") String sessionId,
                                @Context HttpServletResponse response) {
 
-        log.info("Restart Browser : " + deviceId);
-
         try {
             sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.RESTART_BROWSER_CONSTANT + ":", "");
             response.setStatus(Response.Status.OK.getStatusCode());
@@ -113,8 +111,6 @@ public class DigitalDisplayControllerService {
                              @HeaderParam("sessionId") String sessionId,
                              @Context HttpServletResponse response) {
 
-        log.info("Close Browser : " + deviceId);
-
         try {
             sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.CLOSE_BROWSER_CONSTANT + ":", "");
             response.setStatus(Response.Status.OK.getStatusCode());
@@ -145,8 +141,6 @@ public class DigitalDisplayControllerService {
                                  @HeaderParam("sessionId") String sessionId,
                                  @Context HttpServletResponse response) {
 
-        log.info("Terminate Display : " + deviceId);
-
         try {
             sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.TERMINATE_DISPLAY_CONSTANT + ":", "");
             response.setStatus(Response.Status.OK.getStatusCode());
@@ -176,8 +170,6 @@ public class DigitalDisplayControllerService {
                                @HeaderParam("owner") String owner,
                                @HeaderParam("sessionId") String sessionId,
                                @Context HttpServletResponse response) {
-
-        log.info("Restart Display : " + deviceId);
 
         try {
             sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.RESTART_DISPLAY_CONSTANT + ":", "");
@@ -214,8 +206,6 @@ public class DigitalDisplayControllerService {
                             @FormParam("new-value") String newValue,
                             @HeaderParam("sessionId") String sessionId,
                             @Context HttpServletResponse response) {
-
-        log.info("Edit Content Display Id - " + deviceId + " by " + owner);
 
         try {
             String params = path + "|" + attribute + "|" + newValue;
@@ -255,7 +245,6 @@ public class DigitalDisplayControllerService {
                                @HeaderParam("sessionId") String sessionId,
                                @Context HttpServletResponse response) {
 
-        log.info("Add Sequence : " + deviceId);
         String params;
         try {
 
@@ -296,8 +285,6 @@ public class DigitalDisplayControllerService {
                                @HeaderParam("sessionId") String sessionId,
                                @Context HttpServletResponse response) {
 
-        log.info("Remove Resource : " + deviceId);
-
         try {
             sendCommandViaMQTT(owner, deviceId, sessionId + "::" +
                                                 DigitalDisplayConstants.REMOVE_RESOURCE_CONSTANT + ":", path);
@@ -331,7 +318,6 @@ public class DigitalDisplayControllerService {
                                 @HeaderParam("sessionId") String sessionId,
                                 @Context HttpServletResponse response) {
 
-        log.info("Remove Directory : " + deviceId);
         try {
             sendCommandViaMQTT(owner, deviceId, sessionId + "::" +
                                                 DigitalDisplayConstants.REMOVE_DIRECTORY_CONSTANT + ":", directoryName);
@@ -367,7 +353,6 @@ public class DigitalDisplayControllerService {
                               @HeaderParam("sessionId") String sessionId,
                               @Context HttpServletResponse response) {
 
-        log.info("Remove Content : " + deviceId);
         try {
             String param = directoryName + "|" + content;
             sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.REMOVE_CONTENT_CONSTANT + ":", param);
@@ -399,8 +384,6 @@ public class DigitalDisplayControllerService {
                                 @HeaderParam("sessionId") String sessionId,
                                 @Context HttpServletResponse response) {
 
-        log.info("Shut down display : " + deviceId);
-
         try {
             sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.SHUTDOWN_DISPLAY_CONSTANT + ":", "");
             response.setStatus(Response.Status.OK.getStatusCode());
@@ -425,13 +408,11 @@ public class DigitalDisplayControllerService {
     @Path("/get-status")
     @POST
     @Feature(code = "get-status", name = "Get Status", type="operation",
-            description = "Check specific digital display power ON of OFF")
+            description = "Check specific digital display power ON or OFF")
     public void getStatus(@HeaderParam("deviceId") String deviceId,
                           @HeaderParam("owner") String owner,
                           @HeaderParam("sessionId") String sessionId,
                           @Context HttpServletResponse response) {
-
-        log.info("Status : " + deviceId);
 
         try {
             sendCommandViaMQTT(owner, deviceId, sessionId + ":" + DigitalDisplayConstants.GET_STATUS_CONSTANT, "");

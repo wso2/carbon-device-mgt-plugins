@@ -12,7 +12,7 @@
         "name": "cdmf.unit.analytics.line-chart",
         "data":[
           {"column": {"name":"TIME", "label":"time", "ui-mapping":"x-axis"}},
-          {"column": {"name":"ACCELEROMETER", "label":"Accelerometer", "ui-mapping":"y-axis"}}
+          {"column": {"name":"TEMPERATURE", "label":"temperature", "ui-mapping":"y-axis"}}
         ]
       }
     }
