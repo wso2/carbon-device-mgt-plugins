@@ -27,20 +27,19 @@
 #define ADAFRUIT_CC3000_VBAT  5
 #define ADAFRUIT_CC3000_CS    10
 
-#define WLAN_SSID       "SSID"           // cannot be longer than 32 characters!
-#define WLAN_PASS       "password"
+#define WLAN_SSID       "ssid"           // Your wifi network SSID (cannot be longer than 32 characters!)
+#define WLAN_PASS       "password"        // Your wifi network password
 
-#define WLAN_SECURITY   WLAN_SEC_WPA2
+#define WLAN_SECURITY WLAN_SEC_WPA2
 // Security can be WLAN_SEC_UNSEC, WLAN_SEC_WEP, WLAN_SEC_WPA or WLAN_SEC_WPA2
 #define IDLE_TIMEOUT_MS  3000
 
-#define DEVICE_OWNER "${DEVICE_OWNER}"          
-#define DEVICE_ID "${DEVICE_ID}"              
+
+#define DEVICE_OWNER "${DEVICE_OWNER}"
+#define DEVICE_ID "${DEVICE_ID}"
 #define DEVICE_TOKEN "${DEVICE_TOKEN}"
 #define REFRESH_DEVICE_TOKEN "${DEVICE_REFRESH_TOKEN}"
 
-
-#define SERVICE_PORT 9763
 #define SERVICE_EPOINT "/arduino/controller/"
 
 #define POLL_INTERVAL 1000
@@ -48,7 +47,14 @@
 #define DEBUG true
 #define CON_DEBUG true
 
-byte server[4] = { 192, 168, 1, 101 };
+byte server[4] = {192,168,43,168};        //Ip address of iot server
+#define SERVICE_PORT 9763                 //http port of iot server
+
+byte dns2[] = { 8, 8, 8, 8 };             //Ststic dns of arduino
+byte subnet[] = { 255, 255, 255, 0 };     //Ststic subnet of arduino
+byte gateway[] = { 192, 168, 43, 1 };     //Ststic gateway of arduino
+byte deviceIP[4] = { 192, 168, 43,11 };   //Ststic ip address of arduino
+
 String host, jsonPayLoad, replyMsg;
 String responseMsg, subStrn;
 double cpuTemperature =0;
@@ -57,6 +63,5 @@ static unsigned long pollTimestamp = 0;
 
 
 #endif
-
 
 

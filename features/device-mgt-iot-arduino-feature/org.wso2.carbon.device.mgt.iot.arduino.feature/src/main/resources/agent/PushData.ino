@@ -25,7 +25,7 @@
  ***********************************************************************************************/
 
 void pushData(){
-    String payLoad = "Data";
+    String payLoad = "Temp";
     payLoad = payLoad +  "\",\"value\":\"";
     
     
@@ -48,7 +48,8 @@ void pushData(){
     
     if(DEBUG) {
         Serial.print("POST ");
-        Serial.print(SERVICE_EPOINT); Serial.print("pushdata");
+        Serial.print(SERVICE_EPOINT);
+        Serial.print("pushdata");
         Serial.print(" HTTP/1.1"); Serial.println();
         Serial.print(host); Serial.println();
         Serial.print("Content-Type: application/json"); Serial.println();
@@ -135,4 +136,3 @@ double getBoardTemp(void)
     // The returned temperature is in degrees Celcius.
     return (t);
 }
-
