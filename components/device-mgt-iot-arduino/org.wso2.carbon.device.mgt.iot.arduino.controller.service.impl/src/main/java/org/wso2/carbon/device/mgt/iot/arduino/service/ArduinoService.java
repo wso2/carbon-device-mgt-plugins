@@ -280,7 +280,7 @@ public class ArduinoService {
             response.setStatus(HttpStatus.SC_NO_CONTENT);
         } else {
             try {
-                result = deviceControlList.remove(); //returns the  head value
+                result = deviceControlList.remove();
                 response.setStatus(HttpStatus.SC_ACCEPTED);
 
             } catch (NoSuchElementException ex) {
@@ -310,49 +310,16 @@ public class ArduinoService {
                                     @Context HttpServletRequest request) {
         String owner = dataMsg.owner;
         String deviceId = dataMsg.deviceId;
-        String deviceIp = dataMsg.reply;            //TODO:: Get IP from request
         float temperature = dataMsg.value;
 
-        try {
-            DeviceValidator deviceValidator = new DeviceValidator();
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
-                                                                                   ArduinoConstants.DEVICE_TYPE))) {
-                response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-                log.warn("Temperature data Received from unregistered Arduino device [" + deviceId + "] for owner [" +
-                                 owner + "]");
-                return;
-            }
-
-            String registeredIp = deviceToIpMap.get(deviceId);
-
-            if (registeredIp == null) {
-                log.warn("Unregistered IP: Temperature Data Received from an un-registered IP " + deviceIp +
-                                 " for device ID - " + deviceId);
-                response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
-                return;
-            } else if (!registeredIp.equals(deviceIp)) {
-                log.warn("Conflicting IP: Received IP is " + deviceIp + ". Device with ID " + deviceId +
-                                 " is already registered under some other IP. Re-registration required");
-                response.setStatus(Response.Status.CONFLICT.getStatusCode());
-                return;
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("Received Pin Data Value: " + temperature + " degrees C");
-            }
-            SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
+        SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
                                                             String.valueOf(temperature),
                                                             Calendar.getInstance().getTimeInMillis());
 
-            if (!ArduinoServiceUtils.publishToDAS(dataMsg.owner, dataMsg.deviceId, dataMsg.value)) {
-                response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-                log.warn("An error occured whilst trying to publish temperature data of Arduino with ID [" + deviceId +
+        if (!ArduinoServiceUtils.publishToDAS(dataMsg.owner, dataMsg.deviceId, dataMsg.value)) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            log.warn("An error occured whilst trying to publish temperature data of Arduino with ID [" + deviceId +
                                  "] of owner [" + owner + "]");
-            }
-
-        } catch (DeviceManagementException e) {
-            String errorMsg = "Validation attempt for deviceId [" + deviceId + "] of owner [" + owner + "] failed.\n";
-            log.error(errorMsg + Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase() + "\n" + e.getErrorMessage());
         }
     }
 }
