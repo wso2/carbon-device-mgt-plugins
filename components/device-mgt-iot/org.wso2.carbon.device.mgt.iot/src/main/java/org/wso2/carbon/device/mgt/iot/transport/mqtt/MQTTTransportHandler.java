@@ -133,7 +133,7 @@ public abstract class MQTTTransportHandler
         }
 
         options = new MqttConnectOptions();
-        options.setCleanSession(false);
+        options.setCleanSession(true);
         //TODO:: Use constant strings
         options.setWill(clientWillTopic, "Connection-Lost".getBytes(StandardCharsets.UTF_8), 2,
                         true);
