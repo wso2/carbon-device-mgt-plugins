@@ -55,8 +55,8 @@ LOG_LEVEL = logging.INFO  # Could be e.g. "DEBUG" or "WARNING"
 #       Python version
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 if sys.version_info<(2,7,0):
-  sys.stderr.write("You need python 2.7.0 or later to run this script\n")
-  exit(1)
+    sys.stderr.write("You need python 2.7.0 or later to run this script\n")
+    exit(1)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -120,7 +120,7 @@ class IOTLogger(object):
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#       Configure logging to log to a file, 
+#       Configure logging to log to a file,
 #               making a new file at midnight and keeping the last 3 day's data
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def configureLogger(loggerName):
@@ -143,8 +143,11 @@ def configureLogger(loggerName):
 #       This method registers the DevieIP in the Device-Cloud
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def registerDeviceIP():
-    ssl.wrap_socket = sslwrap(ssl.wrap_socket)         # using the overridden sslwrap that uses TLSv1
-    dcConncection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
+    ssl.wrap_socket = sslwrap(ssl.wrap_socket) # using the overridden sslwrap that uses TLSv1
+    if sys.version_info<(2,7,9):
+        dcConncection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
+    else:
+        dcConncection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT, context=ssl._create_unverified_context())
     #TODO need to get server certificate when initializing https connection
     dcConncection.set_debuglevel(1)
     dcConncection.connect()
@@ -172,7 +175,11 @@ def registerDeviceIP():
 #       This method connects to the Device-Cloud and pushes data
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def connectAndPushData():
-    dcConnection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
+    if sys.version_info<(2,7,9):
+        dcConnection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
+    else:
+        dcConnection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT, context=ssl._create_unverified_context())
+
     dcConnection.set_debuglevel(1)
     dcConnection.connect()
     request = dcConnection.putrequest('POST', PUSH_ENDPOINT)
@@ -289,7 +296,7 @@ signal.signal(signal.SIGTERM, sigterm_handler)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#       The Main method of the RPi Agent 
+#       The Main method of the RPi Agent
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def main():
     configureLogger("WSO2IOT_RPiStats")
