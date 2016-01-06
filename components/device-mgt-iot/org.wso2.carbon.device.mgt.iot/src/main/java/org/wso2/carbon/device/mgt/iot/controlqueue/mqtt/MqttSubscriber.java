@@ -120,7 +120,7 @@ public abstract class MqttSubscriber implements MqttCallback {
         }
 
         options = new MqttConnectOptions();
-        options.setCleanSession(false);
+        options.setCleanSession(true);
         options.setWill(clientWillTopic, "connection crashed".getBytes(StandardCharsets.UTF_8), 2, true);
         client.setCallback(this);
     }
