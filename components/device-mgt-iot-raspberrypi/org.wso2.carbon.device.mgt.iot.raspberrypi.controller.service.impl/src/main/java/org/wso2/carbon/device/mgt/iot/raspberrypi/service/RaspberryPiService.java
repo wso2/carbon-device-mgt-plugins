@@ -85,8 +85,7 @@ public class RaspberryPiService {
     /**
      * @param raspberryPiMQTTSubscriber
      */
-    public void setRaspberryPiMQTTSubscriber(
-            final RaspberryPiMQTTSubscriber raspberryPiMQTTSubscriber) {
+    public void setRaspberryPiMQTTSubscriber(final RaspberryPiMQTTSubscriber raspberryPiMQTTSubscriber) {
         this.raspberryPiMQTTSubscriber = raspberryPiMQTTSubscriber;
         /*if (MqttConfig.getInstance().isEnabled()) {
             Runnable xmppStarter = new Runnable() {
@@ -254,12 +253,9 @@ public class RaspberryPiService {
             }
 
             String temperatureValue = RaspberrypiServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
-                    RaspberrypiConstants
-                            .TEMPERATURE_CONTEXT,
-                    false);
+                    RaspberrypiConstants.TEMPERATURE_CONTEXT, false);
             SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
-                    temperatureValue,
-                    Calendar.getInstance().getTimeInMillis());
+                    temperatureValue, Calendar.getInstance().getTimeInMillis());
             sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
                                                                            RaspberrypiConstants.SENSOR_TEMPERATURE);
         } catch (DeviceManagementException | DeviceControllerException e) {
