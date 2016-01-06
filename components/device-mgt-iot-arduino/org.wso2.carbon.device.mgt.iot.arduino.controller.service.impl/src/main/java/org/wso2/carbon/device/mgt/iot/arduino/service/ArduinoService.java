@@ -190,65 +190,18 @@ public class ArduinoService {
                            @FormParam("state") String state,
                            @Context HttpServletResponse response) {
 
-        try {
-            DeviceValidator deviceValidator = new DeviceValidator();
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
-                                                                                   ArduinoConstants.DEVICE_TYPE))) {
-                response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-                return;
-            }
-        } catch (DeviceManagementException e) {
-            log.error("DeviceValidation Failed for deviceId: " + deviceId + " of user: " + owner);
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            return;
+        LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
+
+        String operation = "BULB:" + state.toUpperCase();
+        log.info(operation);
+        if (deviceControlList == null) {
+            deviceControlList = new LinkedList<>();
+            deviceControlList.add(operation);
+            internalControlsQueue.put(deviceId,deviceControlList);
+        } else {
+            deviceControlList.add(operation);
         }
 
-        String switchToState = state.toUpperCase();
-
-        if (!switchToState.equals(ArduinoConstants.STATE_ON) && !switchToState.equals(ArduinoConstants.STATE_OFF)) {
-            log.error("The requested state change shoud be either - 'ON' or 'OFF'");
-            response.setStatus(Response.Status.BAD_REQUEST.getStatusCode());
-            return;
-        }
-
-        String protocolString = protocol.toUpperCase();
-        String callUrlPattern = ArduinoConstants.BULB_CONTEXT + switchToState;
-
-        if (log.isDebugEnabled()) {
-            log.debug("Sending request to switch-bulb of device [" + deviceId + "] via " +
-                              protocolString);
-        }
-
-        try {
-            /*switch (protocolString) {
-                case HTTP_PROTOCOL:
-                    String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
-                    if (deviceHTTPEndpoint == null) {
-                        response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
-                        return;
-                    }
-                    ArduinoServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint, callUrlPattern, true);
-                    break;
-                case MQTT_PROTOCOL:
-                    String mqttMessage = ArduinoConstants.BULB_CONTEXT.replace("/", "");
-                    ArduinoServiceUtils.sendCommandViaMQTT(owner, deviceId, mqttMessage, switchToState);
-                    break;
-                default:
-                    response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
-                    return;
-            }*/
-            String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
-            if (deviceHTTPEndpoint == null) {
-                response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
-                return;
-            }
-            ArduinoServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint, callUrlPattern, true);
-
-        } catch (DeviceManagementException e) {
-            log.error("Failed to send switch-bulb request to device [" + deviceId + "] via " + protocolString);
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            return;
-        }
         response.setStatus(Response.Status.OK.getStatusCode());
     }
 
@@ -271,40 +224,10 @@ public class ArduinoService {
                                            @Context HttpServletResponse response) {
         SensorRecord sensorRecord = null;
 
-        DeviceValidator deviceValidator = new DeviceValidator();
         try {
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
-                    ArduinoConstants.DEVICE_TYPE))) {
-                response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-            }
-        } catch (DeviceManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        }
-
-        String protocolString = protocol.toUpperCase();
-
-        if (log.isDebugEnabled()) {
-            log.debug(
-                    "Sending request to read raspberrypi-temperature of device [" + deviceId + "] via " +
-                            protocolString);
-        }
-
-        try {
-            String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
-            if (deviceHTTPEndpoint == null) {
-                response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
-            }
-
-            String temperatureValue = ArduinoServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
-                    ArduinoConstants
-                            .TEMPERATURE_CONTEXT,
-                    false);
-            SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
-                    temperatureValue,
-                    Calendar.getInstance().getTimeInMillis());
             sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
                     ArduinoConstants.SENSOR_TEMPERATURE);
-        } catch (DeviceManagementException | DeviceControllerException e) {
+        } catch ( DeviceControllerException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
 
@@ -323,49 +246,18 @@ public class ArduinoService {
 
         String owner = dataMsg.owner;
         String deviceId = dataMsg.deviceId;
-        String deviceIp = dataMsg.reply;            //TODO:: Get IP from request
         float pinData = dataMsg.value;
 
-        try {
-            DeviceValidator deviceValidator = new DeviceValidator();
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
-                                                                                   ArduinoConstants.DEVICE_TYPE))) {
-                response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-                log.warn("Data Received from unregistered Arduino device [" + deviceId + "] for owner [" + owner + "]");
-                return;
-            }
-
-            String registeredIp = deviceToIpMap.get(deviceId);
-
-            if (registeredIp == null) {
-                log.warn("Unregistered IP: Arduino Pin Data Received from an un-registered IP " + deviceIp +
-                                 " for device ID - " + deviceId);
-                response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
-                return;
-            } else if (!registeredIp.equals(deviceIp)) {
-                log.warn("Conflicting IP: Received IP is " + deviceIp + ". Device with ID " + deviceId +
-                                 " is already registered under some other IP. Re-registration required");
-                response.setStatus(Response.Status.CONFLICT.getStatusCode());
-                return;
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("Received Pin Data Value: " + pinData + " degrees C");
-            }
-            SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
+        SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
                                                             String.valueOf(pinData),
                                                             Calendar.getInstance().getTimeInMillis());
 
-            if (!ArduinoServiceUtils.publishToDAS(dataMsg.owner, dataMsg.deviceId, dataMsg.value)) {
-                response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-                log.warn("An error occured whilst trying to publish pin data of Arduino with ID [" + deviceId +
+        if (!ArduinoServiceUtils.publishToDAS(dataMsg.owner, dataMsg.deviceId, dataMsg.value)) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            log.warn("An error occured whilst trying to publish pin data of Arduino with ID [" + deviceId +
                                  "] of owner [" + owner + "]");
-            }
-
-        } catch (DeviceManagementException e) {
-            String errorMsg = "Validation attempt for deviceId [" + deviceId + "] of owner [" + owner + "] failed.\n";
-            log.error(errorMsg + Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase() + "\n" + e.getErrorMessage());
         }
+
     }
 
     /**
@@ -397,6 +289,7 @@ public class ArduinoService {
                 response.setStatus(HttpStatus.SC_NO_CONTENT);
             }
         }
+
         if (log.isDebugEnabled()) {
             log.debug(result);
         }
