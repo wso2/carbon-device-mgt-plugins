@@ -19,20 +19,30 @@
 #include "ArduinoBoardSketch.h"
 void readControls() {
     //  String responseMsg;
+
+    Serial.println("Started..");
     
     client.fastrprint(F("GET "));
     client.fastrprint(SERVICE_EPOINT);
-    client.fastrprint(F("readcontrols/"));
+    client.fastrprint(F("readcontrols"));
+    client.fastrprint(F(" HTTP/1.1"));
+    client.fastrprint(F("\n"));
+    client.fastrprint(host.c_str()); 
+    client.fastrprint(F("\n"));
     client.fastrprint(DEVICE_ID);
-    client.fastrprint(F("?owner="));
+    client.fastrprint(F("owner: "));
     client.fastrprint(DEVICE_OWNER);
-    client.fastrprint(F(" HTTP/1.1")); client.fastrprint(F("\n"));
-    client.fastrprint(host.c_str()); client.fastrprint(F("\n"));
+    client.fastrprint(F("\n"));
+    client.fastrprint(F("deviceId: "));
+    client.fastrprint(F(DEVICE_ID));
+    client.fastrprint(F("\n"));
+    client.fastrprint(F("deviceId: "));
+    client.fastrprint(F("protocol: HTTP\n"));
     client.println();
     
+    
     delay(1000);
-    
-    
+    Serial.println("Ended..");
     while (client.available()) {
         char response = client.read();
         responseMsg += response;
@@ -42,6 +52,7 @@ void readControls() {
     int newLine = responseMsg.lastIndexOf("\n");
     subStrn = responseMsg.substring(index + 1);
     responseMsg = responseMsg.substring(newLine + 1, index);
+    
     if(DEBUG) {
         Serial.print(responseMsg);
         Serial.println();
@@ -50,17 +61,16 @@ void readControls() {
     
     if (subStrn.equals("ON")) {
         Serial.println("ITS ON");
-        //digitalWrite(13, HIGH);
+        digitalWrite(13, HIGH);
         digitalWrite(6, HIGH);
     } else if (subStrn.equals("OFF")){
         
         Serial.println("ITS OFF");
-        //digitalWrite(13, LOW);
+        digitalWrite(13, LOW);
         digitalWrite(6, LOW);
         
     }
     
 }
-
 
 

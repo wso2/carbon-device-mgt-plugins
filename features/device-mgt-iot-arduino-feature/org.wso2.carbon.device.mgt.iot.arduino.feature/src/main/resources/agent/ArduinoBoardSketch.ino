@@ -31,20 +31,25 @@ uint32_t sserver;
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
     Serial.println(F("Internal Temperature Sensor"));
     pinMode(6, OUTPUT);
+    pinMode(13, OUTPUT);
     connectHttp();
     setupResource();
     wdt_enable(WDTO_8S);
+   
 }
 
 void loop()
 {
+  wdt_reset();
     while( !cc3000.checkConnected() ){
         connectHttp();
     
     }
+
+    
     cpuTemperature=getBoardTemp();
 
 
@@ -60,16 +65,19 @@ void loop()
     //Serial.println("PUSHED");
 
 
+      wdt_reset();
+    
     if(millis() - pollTimestamp > POLL_INTERVAL){
         while (!client.connected()) {
             setupClient();
         }
+        Serial.println("Read Controls");
         readControls();
           
         pollTimestamp = millis();
         
     }
 
-    //Serial.println("LOOPING");
+//    //Serial.println("LOOPING");
     wdt_reset();
 }

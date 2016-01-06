@@ -20,18 +20,9 @@
 /**********************************************************************************************
  Use the below variables when required to set a static IP for the WifiSheild
  ***********************************************************************************************/
-//  byte dns2[] = { 8, 8, 8, 8 };
-//  byte subnet[] = { 255, 255, 255, 0 };
-//  byte gateway[] = { 10, 100, 9, 254 };
-//  byte deviceIP[4] = { 10, 100, 9, 9 };
-//  byte gateway[] = { 192, 168, 1, 1 };
-//  byte deviceIP[4] = { 192, 168, 1, 219 };
+  
+  uint32_t ip, ddns, ssubnet, ggateway;
 
-//  uint32_t ip, ddns, ssubnet, ggateway;
-
-//  byte mac[6] = { 0xC0, 0x4A, 0x00, 0x1A, 0x08, 0xDA };  //mac - c0:4a:00:1a:08:da
-//      c0:4a:00:1a:03:f8
-//      b8:27:eb:88:37:7a
 String connecting = "connecting.... ";
 
 void connectHttp() {
@@ -42,31 +33,19 @@ void connectHttp() {
         if(DEBUG) Serial.println(F("Couldn't begin()! Check your wiring?"));
         while(1);
     }
-    
-    //  if( cc3000.setMacAddress(mac) ) {            //  Set your own mac and print it to re-check
-    //    uint8_t address[6];
-    //    cc3000.getMacAddress(address);
-    //    if(DEBUG){
-    //      Serial.print(address[0], HEX); Serial.print(":");
-    //      Serial.print(address[1], HEX); Serial.print(":");
-    //      Serial.print(address[2], HEX); Serial.print(":");
-    //      Serial.print(address[3], HEX); Serial.print(":");
-    //      Serial.print(address[4], HEX); Serial.print(":");
-    //      Serial.println(address[5], HEX);
-    //    }
-    //  }
-    
+
     /**********************************************************************************************
      Only required if using static IP for the WifiSheild
      ***********************************************************************************************/
     
-    //  ip = cc3000.IP2U32(deviceIP[0], deviceIP[1], deviceIP[2], deviceIP[3]);
-    //  ddns = cc3000.IP2U32(dns2[0], dns2[1], dns2[2], dns2[3]);
-    //  ssubnet = cc3000.IP2U32(subnet[0], subnet[1], subnet[2], subnet[3]);
-    //  ggateway = cc3000.IP2U32(gateway[0], gateway[1], gateway[2], gateway[3]);
-    //  cc3000.setStaticIPAddress(ip, ssubnet, ggateway, ddns);            // required for setting static IP
+      ip = cc3000.IP2U32(deviceIP[0], deviceIP[1], deviceIP[2], deviceIP[3]);
+      ddns = cc3000.IP2U32(dns2[0], dns2[1], dns2[2], dns2[3]);
+      ssubnet = cc3000.IP2U32(subnet[0], subnet[1], subnet[2], subnet[3]);
+      ggateway = cc3000.IP2U32(gateway[0], gateway[1], gateway[2], gateway[3]);
+      cc3000.setStaticIPAddress(ip, ssubnet, ggateway, ddns);            // required for setting static IP
     
     /***********************************************************************************************/
+
     
     sserver = cc3000.IP2U32(server[0], server[1], server[2], server[3]);
     
@@ -74,6 +53,8 @@ void connectHttp() {
         Serial.print(F("\nAttempting to connect to "));
         Serial.println(WLAN_SSID);
     }
+
+    cc3000.deleteProfiles();
     
     if (!cc3000.connectToAP(WLAN_SSID, WLAN_PASS, WLAN_SECURITY)) {
         if(CON_DEBUG) Serial.println(F("Failed!"));
@@ -85,24 +66,26 @@ void connectHttp() {
     if(CON_DEBUG) Serial.println(F("Request DHCP"));
     while (!cc3000.checkDHCP())
     {
-        delay(100); // ToDo: Insert a DHCP timeout!
+        delay(100);
     }
     
     /* Display the IP address DNS, Gateway, etc. */
     while (! displayConnectionDetails()) {
         delay(1000);
     }
-    
-    client = cc3000.connectTCP(sserver, SERVICE_PORT);  //SERVICE_PORT
-    if (client.connected()) {
-        if(CON_DEBUG) Serial.println("client Connected to server");
-    } else {
-        if(CON_DEBUG) Serial.println(F("client Connection failed"));
-    }
-    
-    
-    
-    
+
+    if (cc3000.checkConnected()) {
+        Serial.println("client Connected to AP");
+        client = cc3000.connectTCP(sserver, SERVICE_PORT);
+        if (client.connected()) {
+          if(CON_DEBUG) Serial.println("client Connected to server");
+        } else {
+          if(CON_DEBUG) Serial.println(F("client Connection failed"));
+        }
+      } else {
+        Serial.println(F("client Connection to AP failed"));
+      }
+
     if(CON_DEBUG) Serial.println(F("-------------------------------------"));
 }
 
