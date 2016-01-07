@@ -31,12 +31,12 @@ public class AndroidPluginUtils {
         license.setName(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID);
         license.setLanguage("en_US");
         license.setVersion("1.0.0");
-        license.setText("This End User License Agreement (“Agreement”) is a legal agreement between you (“You”) " +
-                "and WSO2, Inc., regarding the enrollment of Your personal mobile device (“Device”) in SoR’s " +
+        license.setText("This End User License Agreement (\"Agreement\") is a legal agreement between you (\"You\") " +
+                "and WSO2, Inc., regarding the enrollment of Your personal mobile device (\"Device\") in SoR's " +
                 "mobile device management program, and the loading to and removal from Your Device and Your use " +
                 "of certain applications and any associated software and user documentation, whether provided in " +
-                "“online” or electronic format, used in connection with the operation of or provision of services " +
-                "to WSO2, Inc.,  BY SELECTING “I ACCEPT” DURING INSTALLATION, YOU ARE ENROLLING YOUR DEVICE, AND " +
+                "\"online\" or electronic format, used in connection with the operation of or provision of services " +
+                "to WSO2, Inc.,  BY SELECTING \"I ACCEPT\" DURING INSTALLATION, YOU ARE ENROLLING YOUR DEVICE, AND " +
                 "THEREBY AUTHORIZING SOR OR ITS AGENTS TO INSTALL, UPDATE AND REMOVE THE APPS FROM YOUR DEVICE AS " +
                 "DESCRIBED IN THIS AGREEMENT.  YOU ARE ALSO EXPLICITLY ACKNOWLEDGING AND AGREEING THAT (1) THIS IS " +
                 "A BINDING CONTRACT AND (2) YOU HAVE READ AND AGREE TO THE TERMS OF THIS AGREEMENT.\n" +
