@@ -47,7 +47,6 @@ public class DigitalDisplayMqttCommunicationHandler extends MQTTTransportHandler
             public void run() {
                 while (!isConnected()) {
                     try {
-                        log.info("Trying to Connect..");
                         connectToQueue();
                         subscribeToQueue();
 
