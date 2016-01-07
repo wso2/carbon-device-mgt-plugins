@@ -12,8 +12,7 @@ specific language governing permissions and limitations under the License.
                                                   testAgent.sh
                                                 --------------
 This script is used to run this service in a testing environment. It can be run on a real Raspberry Pi device or in a 
-virtual environment.If this runs on a real Raspberry Pi device, you need to install [Adafruit Python DHT Sensor Library](https://github.com/adafruit/Adafruit_Python_DHT).
-To install  Adafruit Python DHT Sensor Library: follow the instructions given here https://github.com/adafruit/Adafruit_Python_DHT.
+virtual environment.
 
 To run: ` sudo ./testAgent.sh ` and follow the instructions.
 
