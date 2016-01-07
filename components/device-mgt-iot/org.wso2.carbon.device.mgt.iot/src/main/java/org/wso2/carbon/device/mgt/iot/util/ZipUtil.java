@@ -33,6 +33,14 @@ import java.util.Map;
 
 public class ZipUtil {
 
+	private static final String LOCAL_BIND_ADDRESS_PROPERTY = "carbon.local.ip";
+	private static final String HTTPS_PORT_PROPERTY = "httpsPort";
+	private static final String HTTP_PORT_PROPERTY = "httpPort";
+
+	private static final String LOCALHOST = "localhost";
+	private static final String HTTPS_PROTOCOL_APPENDER = "https://";
+	private static final String HTTP_PROTOCOL_APPENDER = "http://";
+
 	public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
 	                                String deviceId, String deviceName, String token,
 	                                String refreshToken)
@@ -48,12 +56,12 @@ public class ZipUtil {
 		String templateSketchPath = sketchFolder + sep + deviceType;
 
 		String serverName = DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
-		String iotServerIP = System.getProperty("carbon.local.ip");     // bind.address
-		String httpsServerPort = System.getProperty("httpsPort");
-		String httpServerPort = System.getProperty("httpPort");
+		String iotServerIP = System.getProperty(LOCAL_BIND_ADDRESS_PROPERTY);     // bind.address
+		String httpsServerPort = System.getProperty(HTTPS_PORT_PROPERTY);
+		String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
 
-		String httpsServerEP = "https://" + iotServerIP + ":" + httpsServerPort;
-		String httpServerEP = "http://" + iotServerIP + ":" + httpServerPort;
+		String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
+		String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
 
 		String apimHost =
 				DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
@@ -65,6 +73,11 @@ public class ZipUtil {
 
 		String apimEndpoint = apimHost + ":" + apimGatewayPort;
 		String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
+
+		if (mqttEndpoint.contains(LOCALHOST)) {
+			mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
+		}
+
 		String xmppEndpoint = XmppConfig.getInstance().getXmppEndpoint();
 
 		int indexOfChar = xmppEndpoint.lastIndexOf(":");
