@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -21,6 +21,7 @@ var stepForwardFrom = {};
 var stepBackFrom = {};
 var policy = {};
 var configuredOperations = [];
+var deviceTypeLabel;
 
 /**
  * Method to update the visibility of grouped input.
@@ -74,7 +75,7 @@ validateStep["policy-profile"] = function () {
 stepForwardFrom["policy-profile"] = function () {
     policy["profile"] = operationModule.generateProfile(policy["platform"], configuredOperations);
     // updating next-page wizard title with selected platform
-    $("#policy-criteria-page-wizard-title").text("ADD " + policy["platform"] + " POLICY");
+    $("#policy-criteria-page-wizard-title").text("ADD " + deviceTypeLabel + " POLICY");
 };
 
 stepBackFrom["policy-profile"] = function () {
@@ -111,7 +112,7 @@ stepForwardFrom["policy-criteria"] = function () {
     policy["selectedNonCompliantAction"] = $("#action-input").find(":selected").data("action");
     policy["selectedOwnership"] = $("#ownership-input").val();
     // updating next-page wizard title with selected platform
-    $("#policy-naming-page-wizard-title").text("ADD " + policy["platform"] + " POLICY");
+    $("#policy-naming-page-wizard-title").text("ADD " + deviceTypeLabel + " POLICY");
 };
 
 /**
@@ -416,10 +417,9 @@ $(document).ready(function () {
 
     policy["platform"] = $("#platform").data("platform");
     policy["platformId"] = $("#platform").data("platform-id");
+    deviceTypeLabel = $("#platform").data("platform-label");
     // updating next-page wizard title with selected platform
-    $("#policy-profile-page-wizard-title").text("ADD " + policy["platform"] + " POLICY");
-
-    var deviceType = policy["platform"];
+    $("#policy-profile-page-wizard-title").text("ADD " + deviceTypeLabel + " POLICY");
 
     $("select.select2[multiple=multiple]").select2({
         "tags": true
