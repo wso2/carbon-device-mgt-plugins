@@ -29,7 +29,7 @@
             <cxf:logging/>
         </jaxrs:features>
         <jaxrs:serviceBeans>
-            <bean id="AndroidSenseMgtService"
+            <bean id="AndroidSenseService"
                   class="org.wso2.carbon.device.mgt.iot.androidsense.mgt.service.impl.AndroidSenseService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>

@@ -19,14 +19,14 @@
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
-	<!--<context-param>-->
-		<!--<param-name>isAdminService</param-name>-->
-		<!--<param-value>false</param-value>-->
-	<!--</context-param>-->
-	<!--<context-param>-->
-		<!--<param-name>doAuthentication</param-name>-->
-		<!--<param-value>false</param-value>-->
-	<!--</context-param>-->
+	<context-param>
+		<param-name>isAdminService</param-name>
+		<param-value>false</param-value>
+	</context-param>
+	<context-param>
+		<param-name>doAuthentication</param-name>
+		<param-value>false</param-value>
+	</context-param>
 
 	<!--publish to apim-->
 	<context-param>
@@ -38,20 +38,12 @@
 		<param-value>admin</param-value>
 	</context-param>
 	<context-param>
-		<param-name>managed-api-name</param-name>
+		<param-name>managed-api-context-template</param-name>
+		<param-value>/android_sense/{version}</param-value>
+	</context-param>
+	<context-param>
+		<param-name>managed-api-application</param-name>
 		<param-value>android_sense</param-value>
-	</context-param>
-	<context-param>
-		<param-name>managed-api-endpoint</param-name>
-		<param-value>http://localhost:9763/android_sense</param-value>
-	</context-param>
-	<context-param>
-		<param-name>managed-api-version</param-name>
-		<param-value>1.0.0</param-value>
-	</context-param>
-	<context-param>
-		<param-name>managed-api-context</param-name>
-		<param-value>/android_sense</param-value>
 	</context-param>
 	<context-param>
 		<param-name>managed-api-isSecured</param-name>

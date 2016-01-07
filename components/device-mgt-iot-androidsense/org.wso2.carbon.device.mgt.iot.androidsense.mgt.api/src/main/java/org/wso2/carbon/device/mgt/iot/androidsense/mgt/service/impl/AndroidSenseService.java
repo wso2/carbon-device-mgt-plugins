@@ -20,6 +20,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
+import org.wso2.carbon.context.CarbonContext;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -29,6 +31,9 @@ import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSense
 import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
 import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
 import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
+import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.api.UserStoreManager;
+import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +43,7 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.Date;
 
-@API( name="android_sense", version="1.0.0", context="/android_sense")
+@API( name="android_sense_mgt", version="1.0.0", context="/android_sense_mgt")
 public class AndroidSenseService {
 
     private static Log log = LogFactory.getLog(AndroidSenseService.class);
@@ -48,34 +53,62 @@ public class AndroidSenseService {
 
     @Context  //injected response proxy supporting multiple thread
     private HttpServletResponse response;
+    private PrivilegedCarbonContext ctx;
+
+    private RealmService getRealmServiceProvider() {
+        String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+        PrivilegedCarbonContext.startTenantFlow();
+        ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        ctx.setTenantDomain(tenantDomain, true);
+        if (log.isDebugEnabled()) {
+            log.debug("Getting thread local carbon context for tenant domain: " + tenantDomain);
+        }
+        return (RealmService) ctx.getOSGiService(RealmService.class, null);
+    }
 
     @Path("manager/device")
     @PUT
-    public boolean register(@FormParam("deviceId") String deviceId,
+    public boolean register(@FormParam("username") String username,
+                            @FormParam("password") String password,
+                            @FormParam("deviceId") String deviceId,
                             @FormParam("owner") String owner) {
 
         DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
 
+        RealmService realmService = getRealmServiceProvider();
+        int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
+        try {
+            UserStoreManager userStoreManager = realmService.getTenantUserRealm(tenantId).getUserStoreManager();
+            log.debug(userStoreManager.authenticate(username, password)+"");
+
+            if (!userStoreManager.authenticate(username, password)){
+                response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
+                return false;
+            }
+        } catch (UserStoreException e) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            return false;
+        }
+
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
+
         try {
             if (deviceManagement.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
                 response.setStatus(Response.Status.CONFLICT.getStatusCode());
+                getTokens(owner, deviceId, response);
                 return true;
             }
+
+            KeyGenerationUtil.createApplicationKeys("android_sense");
+
+            getTokens(owner, deviceId, response);
+
             Device device = new Device();
             device.setDeviceIdentifier(deviceId);
             EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
 
-//            KeyGenerationUtil.createApplicationKeys("android_sense");
-//
-//            TokenClient accessTokenClient = new TokenClient(AndroidSenseConstants.DEVICE_TYPE);
-//            AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
-//
-//            //create token
-//            String accessToken = accessTokenInfo.getAccess_token();
-//            String refreshToken = accessTokenInfo.getRefresh_token();
 
             enrolmentInfo.setDateOfEnrolment(new Date().getTime());
             enrolmentInfo.setDateOfLastUpdate(new Date().getTime());
@@ -90,8 +123,6 @@ public class AndroidSenseService {
 
             if (added) {
                 response.setStatus(Response.Status.OK.getStatusCode());
-//                response.addHeader("access", accessToken);
-//                response.addHeader("refresh", refreshToken);
             } else {
                 response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
             }
@@ -100,7 +131,7 @@ public class AndroidSenseService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
-        } catch (Exception e) {
+        } catch (AccessTokenException e) {
             e.printStackTrace();
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
@@ -218,6 +249,18 @@ public class AndroidSenseService {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
         }
 
+    }
+
+    public void getTokens(String owner, String deviceId, HttpServletResponse response)
+            throws AccessTokenException {
+        TokenClient accessTokenClient = new TokenClient(AndroidSenseConstants.DEVICE_TYPE);
+        AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
+
+        String accessToken = accessTokenInfo.getAccess_token();
+        String refreshToken = accessTokenInfo.getRefresh_token();
+
+        response.addHeader("access", accessToken);
+        response.addHeader("refresh", refreshToken);
     }
 
 }
