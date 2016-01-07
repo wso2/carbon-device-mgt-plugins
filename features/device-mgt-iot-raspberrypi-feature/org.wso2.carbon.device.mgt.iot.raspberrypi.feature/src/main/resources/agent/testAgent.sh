@@ -98,6 +98,9 @@ cp deviceConfig.properties ./src
 
 if [ "$mode" = "N" ]; then
      sudo apt-get install rpi.gpio
+     git clone https://github.com/adafruit/Adafruit_Python_DHT.git
+     sudo apt-get install build-essential python-dev python-openssl
+     sudo python ./Adafruit_Python_DHT/setup.py install
 fi
 
 chmod +x ./src/RaspberryAgent.py
