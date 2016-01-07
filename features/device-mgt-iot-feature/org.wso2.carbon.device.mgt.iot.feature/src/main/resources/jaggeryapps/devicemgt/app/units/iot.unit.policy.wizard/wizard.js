@@ -17,7 +17,7 @@
  */
 
 function onRequest(context) {
-    var log = new Log("wizard.js");
+    //var log = new Log("wizard.js");
     var DTYPE_CONF_DEVICE_TYPE_KEY = "deviceType";
     var DTYPE_CONF_DEVICE_TYPE_LABEL_KEY = "label";
 
@@ -43,6 +43,5 @@ function onRequest(context) {
             }
         }
     }
-    log.warn(wizardPage);
     return wizardPage;
 }
