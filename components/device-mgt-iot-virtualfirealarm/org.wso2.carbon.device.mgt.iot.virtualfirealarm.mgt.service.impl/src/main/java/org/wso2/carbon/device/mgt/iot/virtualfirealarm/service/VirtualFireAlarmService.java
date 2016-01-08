@@ -63,11 +63,9 @@ import java.util.UUID;
 @API(name = "virtual_firealarm", version = "1.0.0", context = "/virtual_firealarm")
 public class VirtualFireAlarmService {
 
-    private static Log log = LogFactory.getLog(VirtualFireAlarmService.class);
-
     //TODO; replace this tenant domain
     private static final String SUPER_TENANT = "carbon.super";
-
+    private static Log log = LogFactory.getLog(VirtualFireAlarmService.class);
     @Context  //injected response proxy supporting multiple thread
     private HttpServletResponse response;
 
@@ -75,6 +73,15 @@ public class VirtualFireAlarmService {
                                 Device management specific APIs
                      Also contains utility methods required for the execution of these APIs
         ---------------------------------------------------------------------------------------	*/
+
+    /**
+     * @return
+     */
+    private static String shortUUID() {
+        UUID uuid = UUID.randomUUID();
+        long l = ByteBuffer.wrap(uuid.toString().getBytes(StandardCharsets.UTF_8)).getLong();
+        return Long.toString(l, Character.MAX_RADIX);
+    }
 
     /**
      * @param deviceId
@@ -133,7 +140,8 @@ public class VirtualFireAlarmService {
      */
     @Path("manager/device/remove/{device_id}")
     @DELETE
-    public void removeDevice(@PathParam("device_id") String deviceId, @Context HttpServletResponse response) {
+    public void removeDevice(@PathParam("device_id") String deviceId,
+                             @Context HttpServletResponse response) {
 
         DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
@@ -246,8 +254,8 @@ public class VirtualFireAlarmService {
             for (Device device : userDevices) {
 
                 if (device.getType().equals(VirtualFireAlarmConstants.DEVICE_TYPE) &&
-                        device.getEnrolmentInfo().getStatus().equals(
-                                EnrolmentInfo.Status.ACTIVE)) {
+                    device.getEnrolmentInfo().getStatus().equals(
+                            EnrolmentInfo.Status.ACTIVE)) {
                     userDevicesforFirealarm.add(device);
 
                 }
@@ -343,7 +351,7 @@ public class VirtualFireAlarmService {
         KeyGenerationUtil.createApplicationKeys("virtual_firealarm");
 
         TokenClient accessTokenClient = new TokenClient(VirtualFireAlarmConstants.DEVICE_TYPE);
-        AccessTokenInfo A = accessTokenClient.getAccessToken(owner, deviceId);
+        AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
 
         //create token
         String accessToken = accessTokenInfo.getAccess_token();
@@ -365,8 +373,8 @@ public class VirtualFireAlarmService {
             if (!status) {
                 String msg =
                         "XMPP Account was not created for device - " + deviceId + " of owner - " + owner +
-                                ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot" +
-                                ".common.config.server.configs";
+                        ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot" +
+                        ".common.config.server.configs";
                 log.warn(msg);
                 throw new DeviceManagementException(msg);
             }
@@ -386,15 +394,6 @@ public class VirtualFireAlarmService {
                                                    accessToken, refreshToken);
         zipFile.setDeviceId(deviceId);
         return zipFile;
-    }
-
-    /**
-     * @return
-     */
-    private static String shortUUID() {
-        UUID uuid = UUID.randomUUID();
-        long l = ByteBuffer.wrap(uuid.toString().getBytes(StandardCharsets.UTF_8)).getLong();
-        return Long.toString(l, Character.MAX_RADIX);
     }
 
 }
