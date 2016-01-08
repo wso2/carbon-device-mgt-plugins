@@ -44,7 +44,12 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.api</artifactId>
+            <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.mgt.api</artifactId>
+            <type>war</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.controller.api</artifactId>
             <type>war</type>
         </dependency>
         <dependency>
@@ -94,11 +99,30 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                                    <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.api</artifactId>
+                                    <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.mgt.api</artifactId>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
                                     <destFileName>android_sense_mgt.war</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-controller-jaxrs-war</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                                    <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.controller.api</artifactId>
+                                    <type>war</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/src/main/resources/webapps/</outputDirectory>
+                                    <destFileName>android_sense.war</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

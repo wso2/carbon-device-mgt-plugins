@@ -379,7 +379,13 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.api</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.controller.api</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+                <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.mgt.api</artifactId>
                 <version>${carbon.iot.device.mgt.version}</version>
                 <type>war</type>
             </dependency>
