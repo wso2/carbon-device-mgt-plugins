@@ -316,13 +316,6 @@ public abstract class MQTTTransportHandler
             log.debug("Got an MQTT message '" + mqttMessage.toString() + "' for topic '" + topic + "'.");
         }
 
-
-        try {
-            throw new DeviceManagementException("Test Exception");
-        } catch (DeviceManagementException e) {
-            e.printStackTrace();
-        }
-
         Thread messageProcessorThread = new Thread() {
             public void run() {
                 try {
