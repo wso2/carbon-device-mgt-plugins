@@ -8,30 +8,39 @@
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-    <h4 class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Arduino" target="_blank">[ here ]</a> for latest instructions and trouble shooting</h4>
+    <h4 class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Arduino"
+                                  target="_blank">[ here ]</a> for latest instructions and trouble
+                         shooting.</h4>
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
 
     <h3 class="uppercase">What it Does</h3>
     <hr>
-    <p class="grey margin-top">Enables users to connect devices built around Arduino Boards to WSO2 IoT Server and visualize sensor data.</p>
+    <p class="grey margin-top">Connect Arduino UNO board to WSO2 IoT Server and visualize sensor
+                               data.</p>
     <br>
 
     <h3 class="uppercase">What You Need</h3>
     <hr>
-    <p class="grey margin-top">You'll need the following "Hardware":</p>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">ITEM 01</span>&nbsp;&nbsp;&nbsp;Arduino UNO Board.
         </li>
-        <li class="padding-top-double"><span class="circle">ITEM 02</span>&nbsp;&nbsp;&nbsp;Adafruit Wifi-Sheild for
+        <li class="padding-top-double"><span class="circle">ITEM 02</span>&nbsp;&nbsp;&nbsp;Adafruit
+                                                                          Wifi Shield for
                                                                           Arduino.
         </li>
-        <li class="padding-top-double"><span class="circle">ITEM 03</span>&nbsp;&nbsp;&nbsp;An LED Bulb connected to Pin
-                                                                          13. <i>(If not available, will use the one on
+        <li class="padding-top-double"><span class="circle">ITEM 03</span>&nbsp;&nbsp;&nbsp;LED bulb
+                                                                          connected to Pin
+                                                                          13. <i>(If not available,
+                                                                                 will use the one on
                                                                                  the board.)</i>
         </li>
-        <li class="padding-top-double"><span class="circle">STEP 04</span>&nbsp;&nbsp;&nbsp;Proceed to the [Prepare]
+        <li class="padding-top-double"><span class="circle">ITEM 04</span>&nbsp;&nbsp;&nbsp;Resister(
+                                                                          e.g 330 ohms )
+        </li>
+        <li class="padding-top-double"><span class="circle">STEP 05</span>&nbsp;&nbsp;&nbsp;Proceed
+                                                                          to [Prepare]
             section.
 
     </ul>
@@ -162,20 +171,41 @@
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
     <h3 class="uppercase">Prepare</h3>
     <hr>
-    <p class="grey margin-top">Get the Wifi-Sheild mounted onto the Arduino-UNO board and follow these steps: </p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Download our Arduino-Sketch from
-                                                                     the [Download] link above.
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Wifi-Shield
+                                                                     mounted onto the Arduino-UNO
+                                                                     board
         </li>
-        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Unzip the downloaded
-                                                                     Arduino Agent and create a folder named ArduinoBoardSketch and
-                                                                     move all the source files into it.
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Connect LED
+                                                                     bulb to arduino as follows
+            <br/><br/>
+            <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
+                <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive">
+            </a>
+            <br/>
         </li>
-        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Open ArduinoBoardSketch.h and
-                                                                     Provide appropriate values for
+
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Download
+                                                                     Arduino-Sketch from
+                                                                     [Download] link above.
+        </li>
+        <li class="padding-top-double"><span class="circle">04</span>&nbsp;&nbsp;&nbsp;Unzip the
+                                                                     downloaded
+                                                                     Arduino Agent
+        </li>
+        <li class="padding-top-double"><span class="circle">05</span>&nbsp;&nbsp;&nbsp;Create a
+                                                                     folder called
+                                                                     "ArduinoBoardSketch"
+                                                                     and move all source files
+                                                                     inside
+        </li>
+        <li class="padding-top-double"><span class="circle">06</span>&nbsp;&nbsp;&nbsp;Open
+                                                                     ArduinoBoardSketch.h and
+                                                                     provide appropriate values for
             <i>[WLAN_SSID]</i>,<i>[WLAN_PASS]</i>,<i>[SERVICE_PORT]</i>,<i>[server]</i> and <i>[deviceIP]</i> variables according to your network.
         </li>
-        <li class="padding-top-double"><span class="circle">04</span>&nbsp;&nbsp;&nbsp;Burn the sketch onto your Arduino
+        <li class="padding-top-double"><span class="circle">07</span>&nbsp;&nbsp;&nbsp;Burn the
+                                                                     sketch onto your Arduino
                                                                      board and let the program run.
         </li>
 
@@ -185,51 +215,55 @@
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
-            &nbsp;&nbsp;&nbsp;The Arduino will publish its internal temperature to the WSO2-IoT-Server and its LED connected to
-            <i>PIN 13</i> can be controlled from our Device Management page.
+            &nbsp;&nbsp;&nbsp;Arduino will publish it's internal temperature to WSO2-IoT-Server
+            <br/><br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="fw-stack fw-lg margin-right">
+                <i class="fw fw-ring fw-stack-2x"></i>
+                <i class="fw fw-right-arrow fw-stack-1x"></i>
+            </span>
+            &nbsp;&nbsp;&nbsp;LED on <i>PIN 13</i> can be controlled from Device Management page.
         </li>
     </ul>
     <br>
 </div>
-<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">Schematic Diagram</h3>
-    <hr>
-    <p class="grey margin-top">Click on the image to zoom</p>
-    <center>
-        <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
-            <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive">
-        </a>
-    </center>
-    <br/>
-</div>
-<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">Try Out</h3>
-    <hr>
-    <p class="grey margin-top">WSO2-IoT Server provides Analytics and Real-Time Statistics of your device</p>
-    <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can view all your created
-                                                                     devices at our <a href="{{@app.context}}/devices">[Device
-                                                                                                                       Management]</a>
-                                                                     page.
-        </li>
-        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;You can select any of your
-                                                                     created devices here and check for available
-                                                                     operations and monitor Real-Time data.
-        </li>
-        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can also view "Analytics" of
-                                                                     the data published to the IoT-Server by navigating
-                                                                     to the [Device-Analytics Page] from here.
-        </li>
-    </ul>
-    <br/>
 
-    <p class="grey margin-top">Click on the image to zoom</p>
-    <center>
-        <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
-            <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
-        </a>
-    </center>
-
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double">
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
+        <h3 class="uppercase">Try Out</h3>
+        <hr>
+        <ul class="list-unstyled">
+            <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can
+                                                                         view all your connected
+                                                                         devices at <a
+                        href="{{@app.context}}/devices">[Device
+                                                        Management]</a>
+                                                                         page.
+            </li>
+            <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Select
+                                                                         one of connected devices
+                                                                         and check for available
+                                                                         control operations and
+                                                                         monitor Real-Time data.
+            </li>
+            <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can
+                                                                         also view analytics of
+                                                                         the data published to
+                                                                         IoT-Server by navigating
+                                                                         to Device Analytics page.
+            </li>
+        </ul>
+        <br/>
+    </div>
+    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
+        <p class="grey margin-top">Click on the image to zoom</p>
+        <center>
+            <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
+                <img src="{{@unit.publicUri}}/images/myDevices_analytics.png"
+                     class="img-responsive">
+            </a>
+        </center>
+    </div>
 </div>
 
 
