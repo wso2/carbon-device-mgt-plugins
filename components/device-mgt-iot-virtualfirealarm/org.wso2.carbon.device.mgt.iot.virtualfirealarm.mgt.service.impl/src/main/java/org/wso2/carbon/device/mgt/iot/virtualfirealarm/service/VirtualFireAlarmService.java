@@ -343,7 +343,7 @@ public class VirtualFireAlarmService {
         KeyGenerationUtil.createApplicationKeys("virtual_firealarm");
 
         TokenClient accessTokenClient = new TokenClient(VirtualFireAlarmConstants.DEVICE_TYPE);
-        AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
+        AccessTokenInfo A = accessTokenClient.getAccessToken(owner, deviceId);
 
         //create token
         String accessToken = accessTokenInfo.getAccess_token();

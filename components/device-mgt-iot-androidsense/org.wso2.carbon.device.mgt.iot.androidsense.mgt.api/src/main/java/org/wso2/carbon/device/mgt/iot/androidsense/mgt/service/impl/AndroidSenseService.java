@@ -71,7 +71,8 @@ public class AndroidSenseService {
     public boolean register(@FormParam("username") String username,
                             @FormParam("password") String password,
                             @FormParam("deviceId") String deviceId,
-                            @FormParam("owner") String owner) {
+                            @FormParam("owner") String owner,
+                            @FormParam("deviceName") String deviceName) {
 
         DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
 
@@ -114,8 +115,7 @@ public class AndroidSenseService {
             enrolmentInfo.setDateOfLastUpdate(new Date().getTime());
             enrolmentInfo.setStatus(EnrolmentInfo.Status.ACTIVE);
             enrolmentInfo.setOwnership(EnrolmentInfo.OwnerShip.BYOD);
-            String name = owner + " android " + deviceId;
-            device.setName(name);
+            device.setName(deviceName);
             device.setType(AndroidSenseConstants.DEVICE_TYPE);
             enrolmentInfo.setOwner(owner);
             device.setEnrolmentInfo(enrolmentInfo);
