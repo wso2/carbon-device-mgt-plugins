@@ -211,7 +211,8 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    @Feature(code = "readbattery", name = "Battery", description = "Read Battery data from the device", type = "monitor")
+    @Feature(code = "readbattery", name = "Battery", description = "Read Battery data from the device",
+            type = "monitor")
     public SensorRecord readBattery(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -251,7 +252,8 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    @Feature(code = "readmagnetic", name = "Magnetic", description = "Read Magnetic data from the device", type = "monitor")
+    @Feature(code = "readmagnetic", name = "Magnetic", description = "Read Magnetic data from the device",
+            type = "monitor")
     public SensorRecord readMagnetic(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -271,7 +273,8 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    @Feature(code = "readaccelerometer", name = "Accelerometer", description = "Read Accelerometer data from the device", type = "monitor")
+    @Feature(code = "readaccelerometer", name = "Accelerometer", description = "Read Accelerometer data from the " +
+                                                                               "device",  type = "monitor")
     public SensorRecord readAccelerometer(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -291,7 +294,8 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    @Feature(code = "readrotation", name = "Rotation", description = "Read Rotational Vector data from the device", type = "monitor")
+    @Feature(code = "readrotation", name = "Rotation", description = "Read Rotational Vector data from the device",
+            type = "monitor")
     public SensorRecord readRotation(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -311,7 +315,8 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    @Feature(code = "readproximity", name = "Proximity", description = "Read Proximity data from the device", type = "monitor")
+    @Feature(code = "readproximity", name = "Proximity", description = "Read Proximity data from the device",
+            type = "monitor")
     public SensorRecord readProximity(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
@@ -331,7 +336,8 @@ public class AndroidSenseService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    @Feature(code = "readgyroscope", name = "Gyroscope", description = "Read Gyroscope data from the device", type = "monitor")
+    @Feature(code = "readgyroscope", name = "Gyroscope", description = "Read Gyroscope data from the device",
+            type = "monitor")
     public SensorRecord readGyroscope(
             @HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
             @Context HttpServletResponse response) {
