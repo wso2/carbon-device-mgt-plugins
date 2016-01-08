@@ -14,10 +14,6 @@ import java.io.File;
 import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 
-//import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.transport.CommunicationHandlerException;
-//import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.transport.MQTTCommunicationHandler;
-
-
 public class DigitalDisplayMqttCommunicationHandler extends MQTTTransportHandler {
 
     private static Log log = LogFactory.getLog(DigitalDisplayMqttCommunicationHandler.class);

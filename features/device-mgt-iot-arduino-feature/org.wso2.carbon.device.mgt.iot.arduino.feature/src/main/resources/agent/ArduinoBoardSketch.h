@@ -47,13 +47,15 @@
 #define DEBUG true
 #define CON_DEBUG true
 
-byte server[4] = {192,168,43,168};        //Ip address of iot server
 #define SERVICE_PORT 9763                 //http port of iot server
+
+byte server[4] = {192,168,43,168};        //Ip address of iot server
+byte deviceIP[4] = { 192, 168, 43,11 };   //Ststic ip address of arduino
 
 byte dns2[] = { 8, 8, 8, 8 };             //Ststic dns of arduino
 byte subnet[] = { 255, 255, 255, 0 };     //Ststic subnet of arduino
 byte gateway[] = { 192, 168, 43, 1 };     //Ststic gateway of arduino
-byte deviceIP[4] = { 192, 168, 43,11 };   //Ststic ip address of arduino
+
 
 String host, jsonPayLoad, replyMsg;
 String responseMsg, subStrn;
