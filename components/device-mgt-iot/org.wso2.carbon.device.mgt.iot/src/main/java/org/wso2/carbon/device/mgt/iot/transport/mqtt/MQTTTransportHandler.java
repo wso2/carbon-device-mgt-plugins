@@ -27,6 +27,7 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandler;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 
@@ -313,6 +314,13 @@ public abstract class MQTTTransportHandler
     public void messageArrived(final String topic, final MqttMessage mqttMessage) {
         if (log.isDebugEnabled()) {
             log.debug("Got an MQTT message '" + mqttMessage.toString() + "' for topic '" + topic + "'.");
+        }
+
+
+        try {
+            throw new DeviceManagementException("Test Exception");
+        } catch (DeviceManagementException e) {
+            e.printStackTrace();
         }
 
         Thread messageProcessorThread = new Thread() {

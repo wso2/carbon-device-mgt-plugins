@@ -84,18 +84,6 @@ public class AgentConstants {
 	/*	---------------------------------------------------------------------------------------
 				Default values for the Device/Agent specific configurations listed above
 	 	---------------------------------------------------------------------------------------	*/
-	public static final String DEFAULT_SERVER_NAME = "WSO2IoTServer";
-	public static final String DEFAULT_DEVICE_OWNER = "admin";
-	public static final String DEFAULT_DEVICE_ID = "1234567890";
-	public static final String DEFAULT_DEVICE_NAME = "admin_1234567890";
-	public static final String DEFAULT_HTTPS_SERVER_EP = "https://localhost:9443";
-	public static final String DEFAULT_HTTP_SERVER_EP = "http://localhost:9763";
-	public static final String DEFAULT_APIM_GATEWAY_EP = "http://127.0.0.1:8281";
-	public static final String DEFAULT_MQTT_BROKER_EP = "tcp://127.0.0.1:1883";
-	public static final String DEFAULT_XMPP_SERVER_EP = "http://127.0.0.1:9061";
-	public static final String DEFAULT_AUTH_METHOD = "token";
-	public static final String DEFAULT_AUTH_TOKEN = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0987654321";
-	public static final String DEFAULT_REFRESH_TOKEN = "1234567890ZYXWVUTSRQPONMKLJIHGFEDCBA";
 	public static final String DEFAULT_NETWORK_INTERFACE = "en0";
 	public static final int DEFAULT_DATA_PUBLISH_INTERVAL = 15;                  // seconds
 	public static final String DEFAULT_PROTOCOL = "MQTT";
