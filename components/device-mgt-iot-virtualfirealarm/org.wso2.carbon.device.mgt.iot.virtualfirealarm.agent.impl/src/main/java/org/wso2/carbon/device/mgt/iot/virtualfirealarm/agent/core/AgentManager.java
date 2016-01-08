@@ -76,7 +76,13 @@ public class AgentManager {
         agentCommunicator = new HashMap<>();
 
         // Read IoT-Server specific configurations from the 'deviceConfig.properties' file
-        this.agentConfigs = AgentUtilOperations.readIoTServerConfigs();
+        try {
+            this.agentConfigs = AgentUtilOperations.readIoTServerConfigs();
+        } catch (AgentCoreOperationException e) {
+            log.error("Reading device configuration from configd file failed:\n");
+            log.error(e);
+            System.exit(0);
+        }
 
         // Initialise IoT-Server URL endpoints from the configuration read from file
         AgentUtilOperations.initializeServerEndPoints();
@@ -153,7 +159,7 @@ public class AgentManager {
             EnrollmentManager.getInstance().beginEnrollmentFlow();
         } catch (AgentCoreOperationException e) {
             log.error("Device Enrollment Failed:\n");
-            e.printStackTrace();
+            log.error(e);
             System.exit(0);
         }
 

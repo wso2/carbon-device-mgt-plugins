@@ -26,11 +26,14 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.exception.AgentCore
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.CommunicationUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandlerException;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Properties;
@@ -56,7 +59,7 @@ public class AgentUtilOperations {
      * @return an object of type 'AgentConfiguration' which contains all the necessary
      * configuration attributes
      */
-    public static AgentConfiguration readIoTServerConfigs() {
+    public static AgentConfiguration readIoTServerConfigs() throws AgentCoreOperationException {
         AgentManager agentManager = AgentManager.getInstance();
         AgentConfiguration iotServerConfigs = new AgentConfiguration();
         Properties properties = new Properties();
@@ -67,14 +70,14 @@ public class AgentUtilOperations {
             ClassLoader loader = AgentUtilOperations.class.getClassLoader();
             URL path = loader.getResource(propertiesFileName);
             System.out.println(path);
-            String root = path.getPath().replace(
-                    "wso2-firealarm-virtual-agent.jar!/deviceConfig.properties",
-                    "").replace("jar:", "").replace("file:", "");
+            String root = path.getPath().replace("wso2-firealarm-virtual-agent.jar!/deviceConfig.properties", "")
+                                        .replace("jar:", "").replace("file:", "");
 
+            root = URLDecoder.decode(root, StandardCharsets.UTF_8.toString());
             agentManager.setRootPath(root);
 
-            propertiesInputStream = new FileInputStream(
-                    root + AgentConstants.AGENT_PROPERTIES_FILE_NAME);
+            String deviceConfigFilePath = root + AgentConstants.AGENT_PROPERTIES_FILE_NAME;
+            propertiesInputStream = new FileInputStream(deviceConfigFilePath);
 
             //load a properties file from class path, inside static method
             properties.load(propertiesInputStream);
@@ -137,16 +140,15 @@ public class AgentUtilOperations {
                              iotServerConfigs.getDataPushInterval());
 
         } catch (FileNotFoundException ex) {
-            log.error(AgentConstants.LOG_APPENDER + "Unable to find " + propertiesFileName +
-                              " file at: " + AgentConstants.PROPERTIES_FILE_PATH);
-            iotServerConfigs = setDefaultDeviceConfigs();
+            String errorMsg = "[" + propertiesFileName + "] file not found at: " + AgentConstants.PROPERTIES_FILE_PATH;
+            log.error(AgentConstants.LOG_APPENDER + errorMsg);
+            throw new AgentCoreOperationException(errorMsg);
 
         } catch (IOException ex) {
-            log.error(AgentConstants.LOG_APPENDER + "Error occurred whilst trying to fetch '" +
-                              propertiesFileName + "' from: " +
-                              AgentConstants.PROPERTIES_FILE_PATH);
-            iotServerConfigs = setDefaultDeviceConfigs();
-
+            String errorMsg = "Error occurred whilst trying to fetch [" + propertiesFileName + "] from: " +
+                                        AgentConstants.PROPERTIES_FILE_PATH;
+            log.error(AgentConstants.LOG_APPENDER + errorMsg);
+            throw new AgentCoreOperationException(errorMsg);
         } finally {
             if (propertiesInputStream != null) {
                 try {
@@ -160,36 +162,6 @@ public class AgentUtilOperations {
         }
         return iotServerConfigs;
     }
-
-    /**
-     * Sets the default Device specific configurations listed in the 'AgentConstants' class.
-     *
-     * @return an object of AgentConfiguration class including all default device specific configs.
-     */
-    private static AgentConfiguration setDefaultDeviceConfigs() {
-        log.warn(AgentConstants.LOG_APPENDER +
-                         "Default Values are being set to all Agent specific configurations");
-
-        AgentConfiguration iotServerConfigs = new AgentConfiguration();
-
-        iotServerConfigs.setDeviceOwner(AgentConstants.DEFAULT_SERVER_NAME);
-        iotServerConfigs.setDeviceOwner(AgentConstants.DEFAULT_DEVICE_OWNER);
-        iotServerConfigs.setDeviceId(AgentConstants.DEFAULT_DEVICE_ID);
-        iotServerConfigs.setDeviceName(AgentConstants.DEFAULT_DEVICE_NAME);
-        iotServerConfigs.setControllerContext(AgentConstants.DEVICE_CONTROLLER_API_EP);
-        iotServerConfigs.setHTTPS_ServerEndpoint(AgentConstants.DEFAULT_HTTPS_SERVER_EP);
-        iotServerConfigs.setHTTP_ServerEndpoint(AgentConstants.DEFAULT_HTTP_SERVER_EP);
-        iotServerConfigs.setApimGatewayEndpoint(AgentConstants.DEFAULT_APIM_GATEWAY_EP);
-        iotServerConfigs.setMqttBrokerEndpoint(AgentConstants.DEFAULT_MQTT_BROKER_EP);
-        iotServerConfigs.setXmppServerEndpoint(AgentConstants.DEFAULT_XMPP_SERVER_EP);
-        iotServerConfigs.setAuthMethod(AgentConstants.DEFAULT_AUTH_METHOD);
-        iotServerConfigs.setAuthToken(AgentConstants.DEFAULT_AUTH_TOKEN);
-        iotServerConfigs.setRefreshToken(AgentConstants.DEFAULT_REFRESH_TOKEN);
-        iotServerConfigs.setDataPushInterval(AgentConstants.DEFAULT_DATA_PUBLISH_INTERVAL);
-
-        return iotServerConfigs;
-    }
-
 
     /**
      * This method constructs the URLs for each of the API Endpoints called by the device agent

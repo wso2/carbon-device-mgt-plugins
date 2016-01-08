@@ -28,6 +28,8 @@ public class MqttConfig {
 	private boolean isEnabled;
 
 	private static final String MQTT_QUEUE_CONFIG_NAME = "MQTT";
+	private static final String LOCALHOST = "localhost";
+	private static final String PORT_OFFSET_PROPERTY = "portOffset";
 
 	private ControlQueue mqttControlQueue;
 
@@ -58,13 +60,28 @@ public class MqttConfig {
 	}
 
 	private MqttConfig() {
-		mqttControlQueue = DeviceManagementConfigurationManager.getInstance().getControlQueue(
-				MQTT_QUEUE_CONFIG_NAME);
-		mqttQueueEndpoint = mqttControlQueue.getServerURL() + ":" + mqttControlQueue.getPort();
+		mqttControlQueue = DeviceManagementConfigurationManager.getInstance().getControlQueue(MQTT_QUEUE_CONFIG_NAME);
+
+		int portOffset = Integer.parseInt(System.getProperty(PORT_OFFSET_PROPERTY));
+		String brokerURL = mqttControlQueue.getServerURL();
+
+
+		if (portOffset != 0 && brokerURL.contains(LOCALHOST)) {
+			// if using the internal MB (meaning URL is localhost and there is a portOffset)
+			//          then increment port accordingly
+			int mqttPort = mqttControlQueue.getPort();
+			mqttPort = mqttPort + portOffset;
+			mqttQueueEndpoint = mqttControlQueue.getServerURL() + ":" + mqttPort;
+
+		} else {
+			mqttQueueEndpoint = mqttControlQueue.getServerURL() + ":" + mqttControlQueue.getPort();
+		}
+
 		mqttQueueUsername = mqttControlQueue.getUsername();
 		mqttQueuePassword = mqttControlQueue.getPassword();
 		isEnabled = mqttControlQueue.isEnabled();
 	}
+
 
 	public static MqttConfig getInstance() {
 		return mqttConfig;
