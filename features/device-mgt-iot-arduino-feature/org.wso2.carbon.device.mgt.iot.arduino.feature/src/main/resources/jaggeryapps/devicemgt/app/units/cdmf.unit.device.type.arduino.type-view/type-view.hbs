@@ -27,8 +27,8 @@
                                                                           13. <i>(If not available, will use the one on
                                                                                  the board.)</i>
         </li>
-        <li class="padding-top-double"><span class="circle">STEP 04</span>&nbsp;&nbsp;&nbsp;Proceed to the [Prepare]
-            section.
+        <li class="padding-top-double"><span class="circle">GO-TO PREPARE</span></li>
+
     </ul>
     <br>
 
@@ -163,11 +163,12 @@
                                                                      the [Download] link above.
         </li>
         <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Unzip the downloaded
-                                                                     Arduino-Sketch and open the <i>"ArduinoBoardSketch.h"</i>
-                                                                     file.
+                                                                     Arduino Agent and create folder named ArduinoBoardSketch and
+                                                                     move all the source files into ArduinoBoardSketch it.
         </li>
-        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Provide appropriate values for
-            <i>[WLAN_SSID]</i> and <i>[WLAN_PASS]</i> variables according to your network.
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Open ArduinoBoardSketch.h and
+                                                                     Provide appropriate values for
+            <i>[WLAN_SSID]</i>,<i>[WLAN_PASS]</i>,<i>[SERVICE_PORT]</i>,<i>[server]</i> and <i>[deviceIP]</i> variables according to your network.
         </li>
         <li class="padding-top-double"><span class="circle">04</span>&nbsp;&nbsp;&nbsp;Burn the sketch onto your Arduino
                                                                      board and let the program run.
@@ -185,7 +186,17 @@
     </ul>
     <br>
 </div>
-
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
+    <h3 class="uppercase">Schematic Diagram</h3>
+    <hr>
+    <p class="grey margin-top">Click on the image to zoom</p>
+    <center>
+        <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
+            <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive">
+        </a>
+    </center>
+    <br/>
+</div>
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
     <h3 class="uppercase">Try Out</h3>
     <hr>

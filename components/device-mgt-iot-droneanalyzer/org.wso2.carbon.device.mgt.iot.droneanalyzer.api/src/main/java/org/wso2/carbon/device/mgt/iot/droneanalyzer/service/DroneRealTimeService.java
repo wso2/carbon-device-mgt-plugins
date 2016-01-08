@@ -76,7 +76,6 @@ public class DroneRealTimeService {
             log.error(ex.getMessage() + "\n" + ex);
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
-            System.out.println(e.getMessage()+" "+ e);
         }
     }
 
@@ -89,7 +88,6 @@ public class DroneRealTimeService {
         }
         catch (Exception e) {
             log.error(e.getMessage() + "\n" + e);
-            System.out.println(e.getMessage()+"\n"+ e);
         }
         log.info("Session " + session.getId() + " has ended");
     }
