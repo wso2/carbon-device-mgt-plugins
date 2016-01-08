@@ -37,7 +37,8 @@
 
     <modules>
         <module>org.wso2.carbon.device.mgt.iot.androidsense</module>
-        <module>org.wso2.carbon.device.mgt.iot.androidsense.api</module>
+        <module>org.wso2.carbon.device.mgt.iot.androidsense.controller.api</module>
+        <module>org.wso2.carbon.device.mgt.iot.androidsense.mgt.api</module>
     </modules>
 
     <build>
