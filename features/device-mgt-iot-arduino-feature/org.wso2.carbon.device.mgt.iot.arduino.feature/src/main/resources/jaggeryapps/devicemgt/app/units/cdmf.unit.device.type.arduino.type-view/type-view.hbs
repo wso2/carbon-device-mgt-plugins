@@ -8,14 +8,17 @@
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-    <h4 class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Arduino" target="_blank">[ here ]</a> for latest instructions and trouble shooting</h4>
+    <h4 class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Arduino"
+                                  target="_blank">[ here ]</a> for latest instructions and trouble
+        shooting.</h4>
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
 
     <h3 class="uppercase">What it Does</h3>
     <hr>
-    <p class="grey margin-top">Connect Arduino UNO board to WSO2 IoT Server and visualize sensor data.</p>
+    <p class="grey margin-top">Connect Arduino UNO board to WSO2 IoT Server and visualize sensor
+        data.</p>
     <br>
 
     <h3 class="uppercase">What You Need</h3>
@@ -23,16 +26,21 @@
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">ITEM 01</span>&nbsp;&nbsp;&nbsp;Arduino UNO Board.
         </li>
-        <li class="padding-top-double"><span class="circle">ITEM 02</span>&nbsp;&nbsp;&nbsp;Adafruit Wifi Shield for
+        <li class="padding-top-double"><span class="circle">ITEM 02</span>&nbsp;&nbsp;&nbsp;Adafruit
+            Wifi Shield for
             Arduino.
         </li>
-        <li class="padding-top-double"><span class="circle">ITEM 03</span>&nbsp;&nbsp;&nbsp;LED bulb connected to Pin
-            13. <i>(If not available, will use the one on
+        <li class="padding-top-double"><span class="circle">ITEM 03</span>&nbsp;&nbsp;&nbsp;LED bulb
+            connected to Pin
+            13. <i>(If not available,
+                will use the one on
                 the board.)</i>
         </li>
-        <li class="padding-top-double"><span class="circle">ITEM 04</span>&nbsp;&nbsp;&nbsp;A resister( e.g 330 ohms )
+        <li class="padding-top-double"><span class="circle">ITEM 04</span>&nbsp;&nbsp;&nbsp;Resister(
+            e.g 330 ohms )
         </li>
-        <li class="padding-top-double"><span class="circle">STEP 05</span>&nbsp;&nbsp;&nbsp;Proceed to [Prepare]
+        <li class="padding-top-double"><span class="circle">STEP 05</span>&nbsp;&nbsp;&nbsp;Proceed
+            to [Prepare]
             section.
 
     </ul>
@@ -164,30 +172,40 @@
     <h3 class="uppercase">Prepare</h3>
     <hr>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Wifi-Shield mounted onto the Arduino-UNO board
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Wifi-Shield
+            mounted onto the Arduino-UNO
+            board
         </li>
-        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Connect LED bulb to arduino as follows
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Connect LED
+            bulb to arduino as follows
             <br/><br/>
-            <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank" >
+            <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
                 <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive">
             </a>
             <br/>
         </li>
 
-        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Download Arduino-Sketch from
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Download
+            Arduino-Sketch from
             [Download] link above.
         </li>
-        <li class="padding-top-double"><span class="circle">04</span>&nbsp;&nbsp;&nbsp;Unzip the downloaded
-            Arduino Agent.
+        <li class="padding-top-double"><span class="circle">04</span>&nbsp;&nbsp;&nbsp;Unzip the
+            downloaded
+            Arduino Agent
         </li>
-        <li class="padding-top-double"><span class="circle">05</span>&nbsp;&nbsp;&nbsp;Create a folder called "ArduinoBoardSketch"
-            and move all source files inside.
+        <li class="padding-top-double"><span class="circle">05</span>&nbsp;&nbsp;&nbsp;Create a
+            folder called
+            "ArduinoBoardSketch"
+            and move all source files
+            inside
         </li>
-        <li class="padding-top-double"><span class="circle">06</span>&nbsp;&nbsp;&nbsp;Open ArduinoBoardSketch.h and
+        <li class="padding-top-double"><span class="circle">06</span>&nbsp;&nbsp;&nbsp;Open
+            ArduinoBoardSketch.h and
             provide appropriate values for
             <i>[WLAN_SSID]</i>,<i>[WLAN_PASS]</i>,<i>[SERVICE_PORT]</i>,<i>[server]</i> and <i>[deviceIP]</i> variables according to your network.
         </li>
-        <li class="padding-top-double"><span class="circle">07</span>&nbsp;&nbsp;&nbsp;Burn the sketch onto your Arduino
+        <li class="padding-top-double"><span class="circle">07</span>&nbsp;&nbsp;&nbsp;Burn the
+            sketch onto your Arduino
             board and let the program run.
         </li>
 
@@ -214,18 +232,24 @@
     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
         <h3 class="uppercase">Try Out</h3>
         <hr>
-        <p class="grey margin-top">WSO2-IoT Server provides Analytics and Real-Time Statistics of your device</p>
         <ul class="list-unstyled">
-            <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can view all your connected
-                devices at <a href="{{@app.context}}/devices">[Device
+            <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can
+                view all your connected
+                devices at <a
+                        href="{{@app.context}}/devices">[Device
                     Management]</a>
                 page.
             </li>
-            <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Select one of connected devices and check for available
-                control operations and monitor Real-Time data.
+            <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Select
+                one of connected devices
+                and check for available
+                control operations and
+                monitor Real-Time data.
             </li>
-            <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can also view analytics of
-                the data published to IoT-Server by navigating
+            <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can
+                also view analytics of
+                the data published to
+                IoT-Server by navigating
                 to Device Analytics page.
             </li>
         </ul>
@@ -235,7 +259,8 @@
         <p class="grey margin-top">Click on the image to zoom</p>
         <center>
             <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
-                <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
+                <img src="{{@unit.publicUri}}/images/myDevices_analytics.png"
+                     class="img-responsive">
             </a>
         </center>
     </div>
@@ -252,19 +277,15 @@
             width: 50px;
             color: #fff;
         }
-
         .padding-top-double {
             padding-top: 20px;
         }
-
         .padding-double {
             padding: 20px;
         }
-
         .grey {
             color: #333;
         }
-
         hr {
             display: block;
             height: 1px;
@@ -274,25 +295,20 @@
             padding: 0;
             opacity: 0.2;
         }
-
         .light-grey {
             color: #7c7c7c;
         }
-
         .uppercase {
             text-transform: uppercase;
         }
-
         .grey-bg {
             background-color: #f6f4f4;
         }
-
         .doc-link {
             background: #11375B;
             padding: 20px;
             color: white;
         }
-
         .doc-link a {
             color: white;
         }
@@ -303,17 +319,14 @@
     {{js "/js/download.js"}}
     {{js "/js/jquery.validate.js"}}
     <script type="text/javascript">
-
         $(document).ready(function () {
             toggleEnrollment();
         });
-
-
         function toggleEnrollment() {
             $(".modalpopup-content").html($("#qr-code-modal").html());
             //generateQRCode(".modalpopup-content .qr-code");
             //showPopup();
         }
-
     </script>
 {{/zone}}
+Status API Training Shop Blog About Pricing

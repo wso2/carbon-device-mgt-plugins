@@ -8,26 +8,31 @@
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-    <h4 class="doc-link">Click <a href="https://docs.wso2.com/pages/viewpage.action?pageId=48289181" target="_blank">[ here ]</a> for latest instructions and trouble shooting</h4>
+    <h4 class="doc-link">Click <a href="https://docs.wso2.com/pages/viewpage.action?pageId=48289181"
+                                  target="_blank">[ here ]</a> for latest instructions and trouble
+                         shooting.</h4>
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
 
     <h3 class="uppercase">What it Does</h3>
     <hr>
-    <p class="grey margin-top">Enables users to connect a IRIS+ Drones to WSO2 IoT Server and visualize statistics.</p>
+    <p class="grey margin-top">Connect an <a href="https://store.3drobotics.com/products/iris"
+                                             target="_blank">[IRIS+]</a> Drone to WSO2 IoT Server
+                               and visualize statistics.</p>
     <br>
 
     <h3 class="uppercase">What You Need</h3>
     <hr>
-    <p class="grey margin-top">You'll need the following "Hardware":</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">ITEM 01</span>&nbsp;&nbsp;&nbsp;Your IRIS+ Drone.
+        <li class="padding-top-double"><span class="circle">ITEM 01</span>&nbsp;&nbsp;&nbsp;IRIS+
+                                                                          Drone.
         </li>
         <li class="padding-top-double"><span class="circle">ITEM 02</span>&nbsp;&nbsp;&nbsp;USB to Micro USB cable or
                                                                           Telemetry Radio receiver.
         </li>
-        <li class="padding-top-double"><span class="circle">STEP 03</span>&nbsp;&nbsp;&nbsp;Proceed to the [Prepare]
+        <li class="padding-top-double"><span class="circle">STEP 03</span>&nbsp;&nbsp;&nbsp;Proceed
+                                                                          to [Prepare]
             section.
     </ul>
     <br>
@@ -158,15 +163,20 @@
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
     <h3 class="uppercase">Prepare</h3>
     <hr>
-    <p class="grey margin-top">Follow the steps to get your drone ready to communicate with the WSO2 IoT Server.</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Connect your IRIS+ Drone as shown
-                                                                     in the schematic below.
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Connect your
+                                                                     IRIS+ Drone to your computer
+                                                                     using either USB to Micro USB
+                                                                     cable or
+                                                                     Telemetry Radio receiver.
         </li>
-        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Click on the [Download] button
-                                                                     above to get the IRIS+ Drone setup files.
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Click on
+                                                                     [Download] button
+                                                                     above to get IRIS+ Drone agent.
         </li>
-        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Connecting the drone:</li>
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Use following
+                                                                     connection properties:
+        </li>
 
         <div class="padding-top-double">
             <table class="table table-bordered ">
@@ -207,18 +217,9 @@
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
-            &nbsp;&nbsp;&nbsp;Once you have the setup files ready please run the <i>"[startservice.sh]"</i> script with
-            root privilege.
-        </li>
-
-        <li class="padding-top-double">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span class="fw-stack fw-lg margin-right">
-                <i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i>
-            </span>
-            &nbsp;&nbsp;&nbsp;These connection types may vary from computer to computer. So please provide the correct
-            connection port info.
+            &nbsp;&nbsp;&nbsp;Once you have downloaded the agent please run
+            <i>"[startservice.sh]"</i> script with
+            root privileges.
         </li>
 
     </ul>
@@ -226,7 +227,7 @@
 </div>
 
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">IRIS+ Drone Connected to a machine.</h3>
+    <h3 class="uppercase">IRIS+ Drone Connected to a computer</h3>
     <hr>
     <p class="grey margin-top">Click on the image to zoom</p>
     <center>
@@ -241,20 +242,25 @@
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
     <h3 class="uppercase">Try Out</h3>
     <hr>
-    <p class="grey margin-top">WSO2-IoT Server provides Analytics and Real-Time Statistics of your device</p>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can view all your created
-                                                                     devices at our <a href="{{@app.context}}/devices">[Device
+        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can view
+                                                                     all your connected
+                                                                     devices at <a
+                    href="{{@app.context}}/devices">[Device
                                                                                                                        Management]</a>
                                                                      page.
         </li>
-        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;You can select any of your
-                                                                     created devices here and check for available
-                                                                     operations and monitor Real-Time data.
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Select one of
+                                                                     connected devices and check for
+                                                                     available
+                                                                     control operations and monitor
+                                                                     Real-Time data.
         </li>
-        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can also view "Analytics" of
-                                                                     the data published to the IoT-Server by navigating
-                                                                     to the [Device-Analytics Page] from here.
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can also
+                                                                     view analytics of
+                                                                     the data published to
+                                                                     IoT-Server by navigating
+                                                                     to Device Analytics page.
         </li>
     </ul>
     <br/>
@@ -317,6 +323,7 @@
             background: #11375B;
             padding: 20px;
             color: white;
+            margin-top: 0;
         }
 
         .doc-link a {
