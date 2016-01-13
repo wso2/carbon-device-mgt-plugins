@@ -81,14 +81,19 @@ public class ApisAppClient {
 		String consumerKeyAndSecret = deviceTypeToApiAppMap.get(deviceType);
 		if(consumerKeyAndSecret == null){
 			ArrayList<IotDeviceTypeConfig> iotDeviceTypeConfigs = new ArrayList<>();
-			IotDeviceTypeConfig DeviceTypeConfig = IotDeviceTypeConfigurationManager.getInstance().getIotDeviceTypeConfigMap().get(deviceType);
-			if(DeviceTypeConfig != null) {
-				iotDeviceTypeConfigs.add(DeviceTypeConfig);
-				setBase64EncodedConsumerKeyAndSecret(iotDeviceTypeConfigs);
-				consumerKeyAndSecret = deviceTypeToApiAppMap.get(deviceType);
-				if(consumerKeyAndSecret==null){
-					log.warn("There is no API application for the device type " + deviceType);
-				}
+			IotDeviceTypeConfig deviceTypeConfig = IotDeviceTypeConfigurationManager.getInstance().getIotDeviceTypeConfigMap().get(deviceType);
+			if(deviceTypeConfig != null) {
+				iotDeviceTypeConfigs.add(deviceTypeConfig);
+			}else{
+				deviceTypeConfig = new IotDeviceTypeConfig();
+				deviceTypeConfig.setType(deviceType);
+				deviceTypeConfig.setApiApplicationName(deviceType);
+				iotDeviceTypeConfigs.add(deviceTypeConfig);
+			}
+			setBase64EncodedConsumerKeyAndSecret(iotDeviceTypeConfigs);
+			consumerKeyAndSecret = deviceTypeToApiAppMap.get(deviceType);
+			if(consumerKeyAndSecret==null){
+				log.warn("There is no API application for the device type " + deviceType);
 			}
 		}
 		return  consumerKeyAndSecret;
@@ -132,8 +137,6 @@ public class ApisAppClient {
 				getMethod.setHeader("cookie", cookie);
 				httpResponse = httpClient.execute(getMethod);
 				response = IoTUtil.getResponseString(httpResponse);
-
-
 				if(log.isDebugEnabled()) {
 					log.debug(response);
 				}
