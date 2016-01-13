@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -32,12 +32,15 @@ import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.device.mgt.iot.exception.IoTException;
 import org.wso2.carbon.device.mgt.iot.internal.IoTCommonDataHolder;
+import org.wso2.carbon.utils.NetworkUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.SocketException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -46,7 +49,8 @@ import java.security.UnrecoverableKeyException;
 
 public class IoTUtil {
 
-	private static final Log log = LogFactory.getLog(IoTUtil.class);
+    public static final String HOST_NAME = "HostName";
+    private static final Log log = LogFactory.getLog(IoTUtil.class);
 
 	/**
 	 * Return a http client instance
@@ -105,5 +109,19 @@ public class IoTUtil {
 			}
 		}
 	}
+
+    public static String getHostName() throws IoTException {
+        String hostName = ServerConfiguration.getInstance().getFirstProperty(HOST_NAME);
+
+        try {
+            if (hostName == null) {
+                hostName = NetworkUtils.getLocalHostname();
+            }
+        } catch (SocketException e) {
+            throw new IoTException("Error while trying to read hostname.", e);
+        }
+
+        return hostName;
+    }
 
 }

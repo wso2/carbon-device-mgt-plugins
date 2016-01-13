@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -22,6 +22,7 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
+import org.wso2.carbon.device.mgt.iot.exception.IoTException;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -33,7 +34,6 @@ import java.util.Map;
 
 public class ZipUtil {
 
-	private static final String LOCAL_BIND_ADDRESS_PROPERTY = "carbon.local.ip";
 	private static final String HTTPS_PORT_PROPERTY = "httpsPort";
 	private static final String HTTP_PORT_PROPERTY = "httpPort";
 
@@ -56,9 +56,14 @@ public class ZipUtil {
 		String templateSketchPath = sketchFolder + sep + deviceType;
 
 		String serverName = DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
-		String iotServerIP = System.getProperty(LOCAL_BIND_ADDRESS_PROPERTY);     // bind.address
-		String httpsServerPort = System.getProperty(HTTPS_PORT_PROPERTY);
-		String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
+        String iotServerIP;
+        try {
+            iotServerIP = IoTUtil.getHostName();
+        } catch (IoTException e) {
+            throw new DeviceManagementException(e.getMessage());
+        }
+        String httpsServerPort = System.getProperty(HTTPS_PORT_PROPERTY);
+        String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
 
 		String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
 		String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
@@ -87,8 +92,8 @@ public class ZipUtil {
 
 		xmppEndpoint = xmppEndpoint + ":" + XmppConfig.getInstance().getSERVER_CONNECTION_PORT();
 
-		Map<String, String> contextParams = new HashMap<String, String>();
-		contextParams.put("SERVER_NAME", serverName);
+        Map<String, String> contextParams = new HashMap<>();
+        contextParams.put("SERVER_NAME", serverName);
 		contextParams.put("DEVICE_OWNER", owner);
 		contextParams.put("DEVICE_ID", deviceId);
 		contextParams.put("DEVICE_NAME", deviceName);
