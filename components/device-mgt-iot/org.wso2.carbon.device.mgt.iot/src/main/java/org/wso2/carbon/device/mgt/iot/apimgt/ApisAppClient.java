@@ -51,7 +51,7 @@ public class ApisAppClient {
 	private String loginEndpoint;
 	private String subscriptionListEndpoint;
 	private static Log log = LogFactory.getLog(ApisAppClient.class);
-	private boolean isEnabled;
+	private boolean isApiManagerEnabled;
 
 	public static ApisAppClient getInstance(){
 
@@ -66,7 +66,7 @@ public class ApisAppClient {
 				DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager();
 		String serverUrl=apiManagerConfig.getServerURL();
 		String serverPort=apiManagerConfig.getServerPort();
-		isEnabled = apiManagerConfig.isEnabled();
+		isApiManagerEnabled = apiManagerConfig.isEnabled();
 
 		String loginURL = serverUrl+":"+serverPort+apiManagerConfig.getLoginURL();
 		loginEndpoint= loginURL+"?action=login&username="+apiManagerConfig.getUsername()
@@ -77,7 +77,7 @@ public class ApisAppClient {
 	}
 
 	public String getBase64EncodedConsumerKeyAndSecret(String deviceType) {
-		if (!isEnabled) return null;
+		if (!isApiManagerEnabled) return null;
 		String consumerKeyAndSecret = deviceTypeToApiAppMap.get(deviceType);
 		if (consumerKeyAndSecret == null) {
 			ArrayList<IotDeviceTypeConfig> iotDeviceTypeConfigs = new ArrayList<>();
@@ -106,7 +106,7 @@ public class ApisAppClient {
 	}
 
 	public void setBase64EncodedConsumerKeyAndSecret(List<IotDeviceTypeConfig> iotDeviceTypeConfigList) {
-		if(!isEnabled) return;
+		if(!isApiManagerEnabled) return;
 
 		URL loginURL = null;
 		try {
