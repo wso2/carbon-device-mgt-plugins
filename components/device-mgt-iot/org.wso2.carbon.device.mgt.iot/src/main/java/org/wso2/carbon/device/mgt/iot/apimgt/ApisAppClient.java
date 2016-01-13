@@ -77,14 +77,20 @@ public class ApisAppClient {
 	}
 
 	public String getBase64EncodedConsumerKeyAndSecret(String deviceType) {
-		if(!isEnabled) return null;
+		if (!isEnabled) return null;
 		String consumerKeyAndSecret = deviceTypeToApiAppMap.get(deviceType);
-		if(consumerKeyAndSecret == null){
+		if (consumerKeyAndSecret == null) {
 			ArrayList<IotDeviceTypeConfig> iotDeviceTypeConfigs = new ArrayList<>();
-			IotDeviceTypeConfig deviceTypeConfig = IotDeviceTypeConfigurationManager.getInstance().getIotDeviceTypeConfigMap().get(deviceType);
-			if(deviceTypeConfig != null) {
+			IotDeviceTypeConfigurationManager deviceTypeConfigurationManager =
+					IotDeviceTypeConfigurationManager.getInstance();
+			IotDeviceTypeConfig deviceTypeConfig = null;
+			if (deviceTypeConfigurationManager != null) {
+				deviceTypeConfig = deviceTypeConfigurationManager.getIotDeviceTypeConfigMap().get(
+						deviceType);
+			}
+			if (deviceTypeConfig != null) {
 				iotDeviceTypeConfigs.add(deviceTypeConfig);
-			}else{
+			} else {
 				deviceTypeConfig = new IotDeviceTypeConfig();
 				deviceTypeConfig.setType(deviceType);
 				deviceTypeConfig.setApiApplicationName(deviceType);
@@ -92,11 +98,11 @@ public class ApisAppClient {
 			}
 			setBase64EncodedConsumerKeyAndSecret(iotDeviceTypeConfigs);
 			consumerKeyAndSecret = deviceTypeToApiAppMap.get(deviceType);
-			if(consumerKeyAndSecret==null){
+			if (consumerKeyAndSecret == null) {
 				log.warn("There is no API application for the device type " + deviceType);
 			}
 		}
-		return  consumerKeyAndSecret;
+		return consumerKeyAndSecret;
 	}
 
 	public void setBase64EncodedConsumerKeyAndSecret(List<IotDeviceTypeConfig> iotDeviceTypeConfigList) {
