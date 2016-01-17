@@ -20,7 +20,6 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.jivesoftware.smack.packet.Message;
 import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
@@ -32,11 +31,10 @@ import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.xmpp.XMPPTransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.exception.VirtualFireAlarmException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VerificationManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.SecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VirtualFireAlarmServiceUtils;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.Calendar;
@@ -161,7 +159,7 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
 
             try {
                 PublicKey clientPublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
-                PrivateKey serverPrivateKey = VerificationManager.getServerPrivateKey();
+                PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();
                 String actualMessage = VirtualFireAlarmServiceUtils.extractMessageFromPayload(message, serverPrivateKey,
                                                                                        clientPublicKey);
                 if (log.isDebugEnabled()) {
@@ -223,7 +221,7 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
 
         try {
             PublicKey devicePublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
-            PrivateKey serverPrivateKey = VerificationManager.getServerPrivateKey();
+            PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();
 
             String actualMessage = resource + ":" + state;
             String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage,

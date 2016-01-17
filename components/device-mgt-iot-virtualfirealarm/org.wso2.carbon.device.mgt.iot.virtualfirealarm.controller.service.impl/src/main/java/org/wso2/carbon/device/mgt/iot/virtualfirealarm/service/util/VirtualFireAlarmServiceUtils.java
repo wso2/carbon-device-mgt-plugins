@@ -246,8 +246,8 @@ public class VirtualFireAlarmServiceUtils {
 
     public static String prepareSecurePayLoad(String message, Key encryptionKey, PrivateKey signatureKey)
             throws VirtualFireAlarmException {
-        String encryptedMsg = VerificationManager.encryptMessage(message, encryptionKey);
-        String signedPayload = VerificationManager.signMessage(encryptedMsg, signatureKey);
+        String encryptedMsg = SecurityManager.encryptMessage(message, encryptionKey);
+        String signedPayload = SecurityManager.signMessage(encryptedMsg, signatureKey);
 
         JSONObject jsonPayload = new JSONObject();
         jsonPayload.put(JSON_MESSAGE_KEY, encryptedMsg);
@@ -266,9 +266,9 @@ public class VirtualFireAlarmServiceUtils {
         Object signedPayload = jsonPayload.get(JSON_SIGNATURE_KEY);
 
         if (encryptedMessage != null && signedPayload != null) {
-            if (VerificationManager.verifySignature(
+            if (SecurityManager.verifySignature(
                     encryptedMessage.toString(), signedPayload.toString(), verifySignatureKey)) {
-                actualMessage = VerificationManager.decryptMessage(encryptedMessage.toString(), decryptionKey);
+                actualMessage = SecurityManager.decryptMessage(encryptedMessage.toString(), decryptionKey);
             } else {
                 String errorMsg = "The message was not signed by a valid client. Could not verify signature on payload";
                 throw new VirtualFireAlarmException(errorMsg);

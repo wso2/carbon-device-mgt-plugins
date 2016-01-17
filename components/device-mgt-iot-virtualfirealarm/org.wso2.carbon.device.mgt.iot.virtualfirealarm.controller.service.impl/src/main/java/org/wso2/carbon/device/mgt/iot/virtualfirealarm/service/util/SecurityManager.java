@@ -47,14 +47,14 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
 
-public class VerificationManager {
-    private static final Log log = LogFactory.getLog(VerificationManager.class);
+public class SecurityManager {
+    private static final Log log = LogFactory.getLog(SecurityManager.class);
 
     private static PrivateKey serverPrivateKey;
     private static final String SIGNATURE_ALG = "SHA1withRSA";
     private static final String CIPHER_PADDING = "RSA/ECB/PKCS1Padding";
 
-    private VerificationManager() {
+    private SecurityManager() {
 
     }
 

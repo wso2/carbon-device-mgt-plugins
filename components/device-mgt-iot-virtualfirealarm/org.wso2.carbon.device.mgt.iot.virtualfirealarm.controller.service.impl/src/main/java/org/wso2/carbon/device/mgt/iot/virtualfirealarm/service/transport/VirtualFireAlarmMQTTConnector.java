@@ -29,7 +29,7 @@ import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.exception.VirtualFireAlarmException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VerificationManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.SecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VirtualFireAlarmServiceUtils;
 
 import java.io.File;
@@ -99,7 +99,7 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 
         try {
             PublicKey clientPublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
-            PrivateKey serverPrivateKey = VerificationManager.getServerPrivateKey();
+            PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();
             actualMessage = VirtualFireAlarmServiceUtils.extractMessageFromPayload(mqttMessage.toString(),
                                                                                    serverPrivateKey, clientPublicKey);
             if (log.isDebugEnabled()) {
@@ -151,7 +151,7 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 
         try {
             PublicKey devicePublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
-            PrivateKey serverPrivateKey = VerificationManager.getServerPrivateKey();
+            PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();
 
             String actualMessage = resource + ":" + state;
             String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage,
