@@ -63,18 +63,24 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
                 while (!isConnected()) {
                     try {
                         connectToQueue();
-                        subscribeToQueue();
                     } catch (TransportHandlerException e) {
-                        log.warn("Connection/Subscription to MQTT Broker at: " + mqttBrokerEndPoint + " failed");
+                        log.error("Connection to MQTT Broker at: " + mqttBrokerEndPoint + " failed", e);
                         try {
                             Thread.sleep(timeoutInterval);
                         } catch (InterruptedException ex) {
-                            log.error("MQTT-Subscriber: Thread Sleep Interrupt Exception.", ex);
+                            log.error("MQTT-Connector: Thread Sleep Interrupt Exception.", ex);
                         }
+                    }
+
+                    try {
+                        subscribeToQueue();
+                    } catch (TransportHandlerException e) {
+                        log.warn("Subscription to MQTT Broker at: " + mqttBrokerEndPoint + " failed", e);
                     }
                 }
             }
         };
+
 
         Thread connectorThread = new Thread(connector);
         connectorThread.setDaemon(true);
