@@ -62,6 +62,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
 
     // Quality of Service Levels for MQTT Subscription and Publishing.
     public static final int QoS_0 = 0;      // At-Most Once
+    @SuppressWarnings("unused")
     public static final int QoS_1 = 1;      // At-Least Once
     public static final int QoS_2 = 2;      // Exactly Once
 
@@ -245,6 +246,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
      * @param payLoad the message (payload) of the MQTT publish action.
      * @see MQTTTransportHandler#publishToQueue(String, String, int, boolean)
      */
+    @SuppressWarnings("unused")
     protected void publishToQueue(String topic, String payLoad) throws TransportHandlerException {
         publishToQueue(topic, payLoad, DEFAULT_MQTT_QUALITY_OF_SERVICE, false);
     }
