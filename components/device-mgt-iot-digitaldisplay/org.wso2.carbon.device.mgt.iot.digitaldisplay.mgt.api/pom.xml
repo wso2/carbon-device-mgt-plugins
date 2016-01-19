@@ -130,6 +130,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.apimgt.webapp.publisher</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.utils</artifactId>
             <scope>provided</scope>
@@ -212,6 +218,11 @@
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
             <artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.apimgt.webapp.publisher</artifactId>
             <scope>provided</scope>
         </dependency>
 

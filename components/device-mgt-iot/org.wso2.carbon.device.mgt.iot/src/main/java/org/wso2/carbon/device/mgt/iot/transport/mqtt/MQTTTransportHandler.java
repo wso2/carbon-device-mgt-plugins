@@ -137,7 +137,7 @@ public abstract class MQTTTransportHandler
         options.setCleanSession(true);
         //TODO:: Use constant strings
         options.setWill(clientWillTopic, "Connection-Lost".getBytes(StandardCharsets.UTF_8), 2,
-                        true);
+                true);
         client.setCallback(this);
     }
 
@@ -247,7 +247,7 @@ public abstract class MQTTTransportHandler
             client.publish(topic, payLoad.getBytes(StandardCharsets.UTF_8), qos, retained);
             if (log.isDebugEnabled()) {
                 log.debug("Message: " + payLoad + " to MQTT topic [" + topic +
-                                  "] published successfully");
+                        "] published successfully");
             }
         } catch (MqttException ex) {
             String errorMsg =
@@ -266,7 +266,7 @@ public abstract class MQTTTransportHandler
             client.publish(topic, message);
             if (log.isDebugEnabled()) {
                 log.debug("Message: " + message.toString() + " to MQTT topic [" + topic +
-                                  "] published successfully");
+                        "] published successfully");
             }
         } catch (MqttException ex) {
             //TODO:: Compulsory log of errors and remove formatted error
@@ -290,7 +290,7 @@ public abstract class MQTTTransportHandler
     public void connectionLost(Throwable throwable) {
         if (log.isDebugEnabled()) {
             log.warn("Lost Connection for client: " + this.clientId + " to " + this.mqttBrokerEndPoint + "." +
-                             "\nThis was due to - " + throwable.getMessage());
+                    "\nThis was due to - " + throwable.getMessage());
         }
 
         Thread reconnectThread = new Thread() {
@@ -322,7 +322,7 @@ public abstract class MQTTTransportHandler
                     processIncomingMessage(mqttMessage, topic);
                 } catch (TransportHandlerException e) {
                     log.error("An error occurred when trying to process received MQTT message [" + mqttMessage + "] " +
-                                     "for topic [" + topic + "].", e);
+                            "for topic [" + topic + "].", e);
                 }
             }
         };
@@ -348,10 +348,10 @@ public abstract class MQTTTransportHandler
                     if (iMqttDeliveryToken.getMessage() != null) {
                         String message = iMqttDeliveryToken.getMessage().toString();
                         log.debug("Message to client [" + client + "] under topic (" + topic +
-                                          ") was delivered successfully with the delivery message: '" + message + "'");
+                                ") was delivered successfully with the delivery message: '" + message + "'");
                     } else {
                         log.debug("Message to client [" + client + "] under topic (" + topic +
-                                          ") was delivered successfully.");
+                                ") was delivered successfully.");
                     }
                 }
             } else {
@@ -372,4 +372,3 @@ public abstract class MQTTTransportHandler
         }
     }
 }
-
