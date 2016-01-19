@@ -63,7 +63,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@API( name="drone_analyzer", version="1.0.0", context="/drone_analyzer")
 @DeviceType( value = "drone_analyzer")
 public class DroneService {
 
@@ -73,7 +72,6 @@ public class DroneService {
     private HttpServletResponse response;
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
     private DroneController droneController = new DroneControllerImpl();
-
     /*	---------------------------------------------------------------------------------------
                                 Device management specific APIs
              Also contains utility methods required for the execution of these APIs
@@ -228,15 +226,12 @@ public class DroneService {
         if (owner == null) {
             return Response.status(400).build();//bad request
         }
-
         //create new device id
         String deviceId = shortUUID();
-
         //create token
         String token = UUID.randomUUID().toString();
         String refreshToken = UUID.randomUUID().toString();
         //adding registering data
-
         boolean status = register(deviceId, deviceName, owner);
         if (!status) {
             return Response.status(500).entity(
@@ -244,7 +239,6 @@ public class DroneService {
                             + " owner:" + owner).build();
 
         }
-
         ZipUtil ziputil = new ZipUtil();
         ZipArchive zipFile;
         try {
@@ -253,7 +247,6 @@ public class DroneService {
         } catch (DeviceManagementException ex) {
             return Response.status(500).entity("Error occurred while creating zip file").build();
         }
-
         Response.ResponseBuilder rb = Response.ok(zipFile.getZipFile());
         rb.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
         return rb.build();
@@ -284,9 +277,7 @@ public class DroneService {
         if (owner == null) {
             throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
         }
-
         KeyGenerationUtil.createApplicationKeys("drone");
-
         //create new device id
         String deviceId = shortUUID();
         TokenClient accessTokenClient = new TokenClient(DroneConstants.DEVICE_TYPE);
@@ -303,7 +294,6 @@ public class DroneService {
         XmppServerClient xmppServerClient = new XmppServerClient();
         xmppServerClient.initControlQueue();
         boolean status;
-
         if (XmppConfig.getInstance().isEnabled()) {
             status = xmppServerClient.createXMPPAccount(newXmppAccount);
             if (!status) {
@@ -334,60 +324,6 @@ public class DroneService {
         UUID uuid = UUID.randomUUID();
         long l = ByteBuffer.wrap(uuid.toString().getBytes(StandardCharsets.UTF_8)).getLong();
         return Long.toString(l, Character.MAX_RADIX);
-    }
-
-    /*	---------------------------------------------------------------------------------------
-                    Device specific APIs - Control APIs + Data-Publishing APIs
-            Also contains utility methods required for the execution of these APIs
-         ---------------------------------------------------------------------------------------	*/
-    @Path("controller/register/{owner}/{deviceId}/{ip}/{port}")
-    @POST
-    public String registerDeviceIP(@PathParam("owner") String owner, @PathParam("deviceId") String deviceId,
-                                   @PathParam("ip") String deviceIP,
-                                   @PathParam("port") String devicePort,
-                                   @Context HttpServletResponse response,
-                                   @Context HttpServletRequest request) {
-        String result;
-        log.info("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId +
-                         " of owner: " + owner);
-        String deviceHttpEndpoint = deviceIP + ":" + devicePort;
-        deviceToIpMap.put(deviceId, deviceHttpEndpoint);
-        result = "Device-IP Registered";
-        response.setStatus(Response.Status.OK.getStatusCode());
-        if (log.isDebugEnabled()) {
-            log.debug(result);
-        }
-        log.info(owner + deviceId + deviceIP + devicePort );
-        return result;
-
-    }
-
-    @Path("controller/send_command")
-    @POST
-    @Feature( code="send_command", name="Send Command", type="operation",
-            description="Send Commands to Drone")
-    public Response droneController(@HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
-                                 @QueryParam("action") String action, @QueryParam("duration") String duration,
-                                 @QueryParam("speed") String speed){
-        try {
-            DeviceValidator deviceValidator = new DeviceValidator();
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
-                    DroneConstants.DEVICE_TYPE))) {
-                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
-            }
-        } catch (DeviceManagementException e) {
-            log.error("DeviceValidation Failed for deviceId: " + deviceId + " of user: " + owner);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-        try {
-            DroneAnalyzerServiceUtils.sendControlCommand(droneController, deviceId, action, Double.valueOf(speed),
-                    Double.valueOf(duration));
-            return Response.status(Response.Status.ACCEPTED).build();
-
-        } catch (DeviceManagementException e) {
-           log.error("Drone command didn't success. Try again, \n"+ e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
     @GET

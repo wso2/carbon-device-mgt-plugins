@@ -163,7 +163,6 @@ public class RaspberryPiService {
     @DELETE
     public void removeDevice(@PathParam("device_id") String deviceId,
                              @Context HttpServletResponse response) {
-
         DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
@@ -181,8 +180,6 @@ public class RaspberryPiService {
         } finally {
             deviceManagement.endTenantFlow();
         }
-
-
     }
 
     @Path("manager/device/update/{device_id}")

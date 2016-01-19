@@ -7,10 +7,10 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.api</artifactId>
+    <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.mgt.api</artifactId>
     <version>1.9.2-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>WSO2 Carbon - IoT Server Drone Analyzer API</name>
+    <name>WSO2 Carbon - IoT Server Drone Analyzer Manager API</name>
     <url>http://maven.apache.org</url>
 
     <dependencies>
@@ -245,8 +245,8 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
-                    <warName>drone_analyzer</warName>
-                    </configuration>
+                    <warName>drone_analyzer_mgt</warName>
+                </configuration>
             </plugin>
         </plugins>
     </build>
