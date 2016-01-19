@@ -39,29 +39,57 @@ import java.security.PublicKey;
 import java.util.Calendar;
 import java.util.UUID;
 
+/**
+ * This is an example for the use of the MQTT capabilities provided by the IoT-Server. This example depicts the use
+ * of MQTT Transport for the VirtualFirealarm device-type. This class extends the abstract class
+ * "MQTTTransportHandler". "MQTTTransportHandler" consists of the MQTT client specific functionality and implements
+ * the "TransportHandler" interface. The actual functionality related to the "TransportHandler" interface is
+ * implemented here, in this concrete class. Whilst the abstract class "MQTTTransportHandler" is intended to provide
+ * the common MQTT functionality, this class (which is its extension) provides the implementation specific to the
+ * MQTT communication of the Device-Type (VirtualFirealarm) in concern.
+ * <p/>
+ * Hence, the methods of this class are implementation of the "TransportHandler" interface which handles the device
+ * specific logic to connect-to, publish-to, process-incoming-messages-from and disconnect-from the MQTT broker
+ * listed in the configurations.
+ */
 @SuppressWarnings("no JAX-WS annotation")
 public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
     private static Log log = LogFactory.getLog(VirtualFireAlarmMQTTConnector.class);
 
+    // the server name is read from the IoT-Server config file `devicemgt-config.xml`.
+    // it is used as a prefix to the MQTT-Topic.
     private static String serverName = DeviceManagementConfigurationManager.getInstance().
             getDeviceManagementServerInfo().getName();
 
+    // subscription topic: <SERVER_NAME>/+/virtual_firealarm/+/publisher
+    // wildcard (+) is in place for device_owner & device_id
     private static String subscribeTopic = serverName + File.separator + "+" + File.separator +
             VirtualFireAlarmConstants.DEVICE_TYPE + File.separator + "+" + File.separator + "publisher";
 
     private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
+    /**
+     * Default constructor for the VirtualFirealarmMQTTConnector.
+     */
     private VirtualFireAlarmMQTTConnector() {
         super(iotServerSubscriber, VirtualFireAlarmConstants.DEVICE_TYPE,
               MqttConfig.getInstance().getMqttQueueEndpoint(), subscribeTopic);
     }
 
+    /**
+     * {@inheritDoc}
+     * VirtualFirealarm device-type specific implementation to connect to the MQTT broker and subscribe to a topic.
+     * This method is called to initiate a MQTT communication.
+     */
     @Override
     public void connect() {
         Runnable connector = new Runnable() {
             public void run() {
                 while (!isConnected()) {
                     try {
+                        String brokerUsername = MqttConfig.getInstance().getMqttQueueUsername();
+                        String brokerPassword = MqttConfig.getInstance().getMqttQueuePassword();
+                        setUsernameAndPassword(brokerUsername, brokerPassword);
                         connectToQueue();
                     } catch (TransportHandlerException e) {
                         log.error("Connection to MQTT Broker at: " + mqttBrokerEndPoint + " failed", e);
@@ -87,9 +115,16 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
         connectorThread.start();
     }
 
+    /**
+     * {@inheritDoc}
+     * VirtualFirealarm device-type specific implementation to process incoming messages. This is the specific
+     * method signature of the overloaded "processIncomingMessage" method that gets called from the messageArrived()
+     * callback of the "MQTTTransportHandler".
+     */
     @Override
     public void processIncomingMessage(MqttMessage mqttMessage, String... messageParams) {
         String topic = messageParams[0];
+        // owner and the deviceId are extracted from the MQTT topic to which the messgae was received.
         String ownerAndId = topic.replace(serverName + File.separator, "");
         ownerAndId = ownerAndId.replace(File.separator + VirtualFireAlarmConstants.DEVICE_TYPE + File.separator, ":");
         ownerAndId = ownerAndId.replace(File.separator + "publisher", "");
@@ -102,10 +137,13 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
         }
 
         String actualMessage;
-
         try {
+            // the hash-code of the deviceId is used as the alias for device certificates during SCEP enrollment.
+            // hence, the same is used here to fetch the device-specific-certificate from the key store.
             PublicKey clientPublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
             PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();
+
+            // the MQTT-messages from VirtualFireAlarm devices are in the form {"Msg":<MESSAGE>, "Sig":<SIGNATURE>}
             actualMessage = VirtualFireAlarmServiceUtils.extractMessageFromPayload(mqttMessage.toString(),
                                                                                    serverPrivateKey, clientPublicKey);
             if (log.isDebugEnabled()) {
@@ -136,6 +174,11 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * VirtualFirealarm device-type specific implementation to publish data to the device. This method calls the
+     * {@link #publishToQueue(String, MqttMessage)} method of the "MQTTTransportHandler" class.
+     */
     @Override
     public void publishDeviceData(String... publishData) throws TransportHandlerException {
         if (publishData.length != 4) {
@@ -179,6 +222,10 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
     }
 
 
+    /**
+     * {@inheritDoc}
+     * VirtualFirealarm device-type specific implementation to disconnect from the MQTT broker.
+     */
     @Override
     public void disconnect() {
         Runnable stopConnection = new Runnable() {
@@ -196,7 +243,7 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
                             Thread.sleep(timeoutInterval);
                         } catch (InterruptedException e1) {
                             log.error("MQTT-Terminator: Thread Sleep Interrupt Exception at device-type - " +
-                                                                        VirtualFireAlarmConstants.DEVICE_TYPE, e1);
+                                              VirtualFireAlarmConstants.DEVICE_TYPE, e1);
                         }
                     }
                 }
@@ -209,22 +256,33 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
     }
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void publishDeviceData() {
         // nothing to do
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void publishDeviceData(MqttMessage publishData) throws TransportHandlerException {
         // nothing to do
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void processIncomingMessage() {
         // nothing to do
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void processIncomingMessage(MqttMessage message) throws TransportHandlerException {
         // nothing to do
