@@ -36,9 +36,9 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.device.mgt.iot.androidsense</module>
+        <module>org.wso2.carbon.device.mgt.iot.androidsense.plugin</module>
         <module>org.wso2.carbon.device.mgt.iot.androidsense.controller.api</module>
-        <module>org.wso2.carbon.device.mgt.iot.androidsense.mgt.api</module>
+        <module>org.wso2.carbon.device.mgt.iot.androidsense.manager.api</module>
     </modules>
 
     <build>

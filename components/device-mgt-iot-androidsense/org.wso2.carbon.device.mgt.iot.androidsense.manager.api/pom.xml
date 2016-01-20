@@ -10,11 +10,11 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.mgt.api</artifactId>
+    <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.manager.api</artifactId>
     <version>1.9.2-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>WSO2 Carbon - Android Sense Management API</name>
-    <description>WSO2 Carbon - Android Sense Service Management API Implementation</description>
+    <description>WSO2 Carbon - Android Sense Management Service-API Implementation</description>
     <url>http://wso2.org</url>
 
 

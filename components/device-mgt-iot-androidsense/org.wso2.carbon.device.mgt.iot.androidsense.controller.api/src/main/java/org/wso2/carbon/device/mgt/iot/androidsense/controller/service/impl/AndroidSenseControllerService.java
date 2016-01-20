@@ -39,7 +39,7 @@ import javax.ws.rs.core.Response;
 
 @DeviceType( value = "android_sense" )
 @API( name="android_sense", version="1.0.0", context="/android_sense")
-public class AndroidSenseService {
+public class AndroidSenseControllerService {
 
     private static final String ACCELEROMETER_STREAM_DEFINITION = "org.wso2.iot.devices.accelerometer";
     private static final String BATTERY_STREAM_DEFINITION = "org.wso2.iot.devices.battery";
@@ -62,7 +62,7 @@ public class AndroidSenseService {
     private static final String SENSOR_PRESSURE = "pressure";
     private static final String SENSOR_PROXIMITY = "proximity";
     private static final String SENSOR_ROTATION = "rotation";
-    private static Log log = LogFactory.getLog(AndroidSenseService.class);
+    private static Log log = LogFactory.getLog(AndroidSenseControllerService.class);
 
     //TODO; replace this tenant domain
     private final String SUPER_TENANT = "carbon.super";

@@ -24,13 +24,13 @@
 
 
 
-    <jaxrs:server id="AndroidSense" address="/">
+    <jaxrs:server id="AndroidSenseManager" address="/">
         <jaxrs:features>
             <cxf:logging/>
         </jaxrs:features>
         <jaxrs:serviceBeans>
-            <bean id="AndroidSenseService"
-                  class="org.wso2.carbon.device.mgt.iot.androidsense.mgt.service.impl.AndroidSenseService"/>
+            <bean id="AndroidSenseManagerService"
+                  class="org.wso2.carbon.device.mgt.iot.androidsense.manager.service.impl.AndroidSenseManagerService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
