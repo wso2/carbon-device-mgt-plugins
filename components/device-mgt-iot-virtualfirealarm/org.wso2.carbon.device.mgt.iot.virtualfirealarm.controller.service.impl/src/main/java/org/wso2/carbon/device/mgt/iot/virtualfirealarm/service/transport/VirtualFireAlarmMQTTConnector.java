@@ -109,7 +109,6 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
             }
         };
 
-
         Thread connectorThread = new Thread(connector);
         connectorThread.setDaemon(true);
         connectorThread.start();

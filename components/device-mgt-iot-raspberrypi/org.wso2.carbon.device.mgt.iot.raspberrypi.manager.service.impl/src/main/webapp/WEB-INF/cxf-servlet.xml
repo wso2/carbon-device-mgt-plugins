@@ -25,21 +25,19 @@
          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
          http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
-    <jaxrs:server id="RaspberryPiController" address="/">
+
+
+
+    <jaxrs:server id="RaspberryPiManager" address="/">
         <jaxrs:serviceBeans>
-            <bean id="RaspberryPiControllerService"
-                  class="org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.RaspberryPiControllerService">
-                <property name="raspberryPiMQTTConnector" ref="raspberryPiMQTTConnector"/>
+            <bean id="RaspberryPiManagerService"
+                  class="org.wso2.carbon.device.mgt.iot.raspberrypi.manager.service.impl.RaspberryPiManagerService">
             </bean>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
         </jaxrs:providers>
     </jaxrs:server>
-
-    <bean id="raspberryPiMQTTConnector"
-          class="org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.transport.RaspberryPiMQTTConnector">
-    </bean>
 
 </beans>
 

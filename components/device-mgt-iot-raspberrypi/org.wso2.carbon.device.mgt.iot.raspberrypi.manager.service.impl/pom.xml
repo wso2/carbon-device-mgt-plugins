@@ -29,11 +29,11 @@
 
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl</artifactId>
+	<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.manager.service.impl</artifactId>
 	<version>1.9.2-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>WSO2 Carbon - IoT Server RaspberryPi Controller API</name>
-	<description>WSO2 Carbon - RaspberryPi Controller Service API Implementation</description>
+	<name>WSO2 Carbon - IoT Server RaspberryPi Manager API</name>
+	<description>WSO2 Carbon - RaspberryPi Manager Service API Implementation</description>
 	<url>http://wso2.org</url>
 
 	<dependencies>
@@ -84,6 +84,7 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpasyncclient</artifactId>
 			<version>4.1</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -150,7 +151,7 @@
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-					<warName>raspberrypi</warName>
+					<warName>raspberrypi_mgt</warName>
 				</configuration>
 			</plugin>
 		</plugins>

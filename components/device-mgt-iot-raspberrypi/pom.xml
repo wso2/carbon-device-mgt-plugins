@@ -37,7 +37,7 @@
 
 	<modules>
 		<module>org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl</module>
-		<module>org.wso2.carbon.device.mgt.iot.raspberrypi.mgt.service.impl</module>
+		<module>org.wso2.carbon.device.mgt.iot.raspberrypi.manager.service.impl</module>
 		<module>org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl</module>
 	</modules>
 
