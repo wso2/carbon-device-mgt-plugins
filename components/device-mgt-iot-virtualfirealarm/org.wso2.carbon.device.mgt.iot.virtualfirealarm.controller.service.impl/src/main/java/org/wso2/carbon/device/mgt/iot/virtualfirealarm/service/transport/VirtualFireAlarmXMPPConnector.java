@@ -64,7 +64,6 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
         String serverName =
                 DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
         xmppVFireAlarmAdminUsername = serverName + "_" + VirtualFireAlarmConstants.DEVICE_TYPE;
-
         xmppServerIP = XmppConfig.getInstance().getXmppServerIP();
         xmppVFireAlarmAdminAccountJID = xmppVFireAlarmAdminUsername + "@" + xmppServerIP;
         createXMPPAccountForDeviceType();
@@ -94,7 +93,7 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
                                          ". Check whether XMPP is enabled in \"devicemgt-config.xml\" & restart.");
                     } else {
                         log.info("Server XMPP Account [" + xmppVFireAlarmAdminUsername +
-                                         "] was not created for device-type - " + VirtualFireAlarmConstants.DEVICE_TYPE);
+                                         "] was not created for device - " + VirtualFireAlarmConstants.DEVICE_TYPE);
                     }
                 } catch (DeviceControllerException e) {
                     String errorMsg =

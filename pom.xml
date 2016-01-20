@@ -421,12 +421,12 @@
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin</artifactId>
                 <version>${carbon.iot.device.mgt.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.mgt.api</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.manager.api</artifactId>
                 <version>${carbon.iot.device.mgt.version}</version>
                 <type>war</type>
             </dependency>
@@ -442,13 +442,20 @@
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin</artifactId>
                 <version>${carbon.iot.device.mgt.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.api</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.manager.api</artifactId>
+                <version>${carbon.iot.device.mgt.version}</version>
+                <type>war</type>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api</artifactId>
                 <version>${carbon.iot.device.mgt.version}</version>
                 <type>war</type>
             </dependency>

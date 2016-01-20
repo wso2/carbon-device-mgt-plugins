@@ -99,7 +99,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay</artifactId>
+            <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin</artifactId>
             <scope>provided</scope>
         </dependency>
 
