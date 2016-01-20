@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -50,6 +50,9 @@ import java.security.cert.X509Certificate;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
+/**
+ *
+ */
 public class VirtualFireAlarmServiceUtils {
     private static final Log log = LogFactory.getLog(VirtualFireAlarmServiceUtils.class);
 
@@ -59,8 +62,12 @@ public class VirtualFireAlarmServiceUtils {
     private static final String JSON_MESSAGE_KEY = "Msg";
     private static final String JSON_SIGNATURE_KEY = "Sig";
 
-    public static CertificateManagementService getCertificateManagementService() throws
-                                                                                 VirtualFireAlarmException {
+    /**
+     *
+     * @return
+     * @throws VirtualFireAlarmException
+     */
+    public static CertificateManagementService getCertificateManagementService() throws VirtualFireAlarmException {
 
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         CertificateManagementService certificateManagementService = (CertificateManagementService)
@@ -76,8 +83,16 @@ public class VirtualFireAlarmServiceUtils {
     }
 
 
-    public static String sendCommandViaHTTP(final String deviceHTTPEndpoint, String urlContext,
-                                            boolean fireAndForgot) throws DeviceManagementException {
+    /**
+     *
+     * @param deviceHTTPEndpoint
+     * @param urlContext
+     * @param fireAndForgot
+     * @return
+     * @throws DeviceManagementException
+     */
+    public static String sendCommandViaHTTP(final String deviceHTTPEndpoint, String urlContext, boolean fireAndForgot)
+            throws DeviceManagementException {
 
         String responseMsg = "";
         String urlString = VirtualFireAlarmConstants.URL_PREFIX + deviceHTTPEndpoint + urlContext;
@@ -156,8 +171,13 @@ public class VirtualFireAlarmServiceUtils {
 
 	/* This methods creates and returns a http connection object */
 
-    public static HttpURLConnection getHttpConnection(String urlString) throws
-                                                                        DeviceManagementException {
+    /**
+     *
+     * @param urlString
+     * @return
+     * @throws DeviceManagementException
+     */
+    public static HttpURLConnection getHttpConnection(String urlString) throws DeviceManagementException {
 
         URL connectionUrl = null;
         HttpURLConnection httpConnection;
@@ -221,6 +241,13 @@ public class VirtualFireAlarmServiceUtils {
         return completeResponse.toString();
     }
 
+    /**
+     *
+     * @param owner
+     * @param deviceId
+     * @param temperature
+     * @return
+     */
     public static boolean publishToDAS(String owner, String deviceId, float temperature) {
         PrivilegedCarbonContext.startTenantFlow();
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
@@ -242,12 +269,18 @@ public class VirtualFireAlarmServiceUtils {
         return true;
     }
 
-
-
+    /**
+     *
+     * @param message
+     * @param encryptionKey
+     * @param signatureKey
+     * @return
+     * @throws VirtualFireAlarmException
+     */
     public static String prepareSecurePayLoad(String message, Key encryptionKey, PrivateKey signatureKey)
             throws VirtualFireAlarmException {
-        String encryptedMsg = VerificationManager.encryptMessage(message, encryptionKey);
-        String signedPayload = VerificationManager.signMessage(encryptedMsg, signatureKey);
+        String encryptedMsg = SecurityManager.encryptMessage(message, encryptionKey);
+        String signedPayload = SecurityManager.signMessage(encryptedMsg, signatureKey);
 
         JSONObject jsonPayload = new JSONObject();
         jsonPayload.put(JSON_MESSAGE_KEY, encryptedMsg);
@@ -256,7 +289,14 @@ public class VirtualFireAlarmServiceUtils {
         return jsonPayload.toString();
     }
 
-
+    /**
+     *
+     * @param message
+     * @param decryptionKey
+     * @param verifySignatureKey
+     * @return
+     * @throws VirtualFireAlarmException
+     */
     public static String extractMessageFromPayload(String message, Key decryptionKey, PublicKey verifySignatureKey)
             throws VirtualFireAlarmException {
         String actualMessage;
@@ -266,9 +306,9 @@ public class VirtualFireAlarmServiceUtils {
         Object signedPayload = jsonPayload.get(JSON_SIGNATURE_KEY);
 
         if (encryptedMessage != null && signedPayload != null) {
-            if (VerificationManager.verifySignature(
+            if (SecurityManager.verifySignature(
                     encryptedMessage.toString(), signedPayload.toString(), verifySignatureKey)) {
-                actualMessage = VerificationManager.decryptMessage(encryptedMessage.toString(), decryptionKey);
+                actualMessage = SecurityManager.decryptMessage(encryptedMessage.toString(), decryptionKey);
             } else {
                 String errorMsg = "The message was not signed by a valid client. Could not verify signature on payload";
                 throw new VirtualFireAlarmException(errorMsg);
@@ -282,7 +322,12 @@ public class VirtualFireAlarmServiceUtils {
         return actualMessage;
     }
 
-
+    /**
+     *
+     * @param deviceId
+     * @return
+     * @throws VirtualFireAlarmException
+     */
     public static PublicKey getDevicePublicKey(String deviceId) throws VirtualFireAlarmException {
         PublicKey clientPublicKey;
         String alias = "";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,48 +11,36 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
-import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
-import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
-import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.DeviceValidator;
-import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
-import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
-import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
-import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
-import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.dto.DeviceJSON;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport.VirtualFireAlarmMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.transport.VirtualFireAlarmXMPPConnector;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VerificationManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.SecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.VirtualFireAlarmServiceUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.scep.ContentType;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.scep.SCEPOperation;
@@ -60,12 +48,10 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.util.scep.SCEPOpe
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -73,21 +59,21 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * This class consists the functions/APIs specific to the "actions" of the VirtualFirealarm device-type. These APIs
+ * include the ones that are used by the [Device] to contact the server (i.e: Enrollment & Publishing Data) and the
+ * ones used by the [Server/Owner] to contact the [Device] (i.e: sending control signals). This class also initializes
+ * the transport 'Connectors' [XMPP & MQTT] specific to the VirtualFirealarm device-type in order to communicate with
+ * such devices and to receive messages form it.
+ */
 @API(name = "virtual_firealarm", version = "1.0.0", context = "/virtual_firealarm")
 @DeviceType(value = "virtual_firealarm")
+@SuppressWarnings("Non-Annoted WebService")
 public class VirtualFireAlarmService {
-
     private static Log log = LogFactory.getLog(VirtualFireAlarmService.class);
 
     //TODO; replace this tenant domain
@@ -95,30 +81,39 @@ public class VirtualFireAlarmService {
 
     @Context  //injected response proxy supporting multiple thread
     private HttpServletResponse response;
+    private static final String XMPP_PROTOCOL = "XMPP";
+    private static final String HTTP_PROTOCOL = "HTTP";
+    private static final String MQTT_PROTOCOL = "MQTT";
 
-    public static final String XMPP_PROTOCOL = "XMPP";
-    public static final String HTTP_PROTOCOL = "HTTP";
-    public static final String MQTT_PROTOCOL = "MQTT";
-
-    private VerificationManager verificationManager;
+    // consists of utility methods related to encrypting and decrypting messages
+    private SecurityManager securityManager;
+    // connects to the given MQTT broker and handles MQTT communication
     private VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector;
+    // connects to the given XMPP server and handles XMPP communication
     private VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector;
+    // holds a mapping of the IP addresses to Device-IDs for HTTP communication
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
 
     /**
-     * @param verificationManager
+     * Sets the `securityManager` variable of this VirtualFirealarm controller service.
+     *
+     * @param securityManager a 'SecurityManager' object that handles the encryption, decryption, signing and validation
+     *                        of incoming messages from VirtualFirealarm device-types.
      */
-    public void setVerificationManager(
-            VerificationManager verificationManager) {
-        this.verificationManager = verificationManager;
-        verificationManager.initVerificationManager();
+    @SuppressWarnings("Unused")
+    public void setSecurityManager(SecurityManager securityManager) {
+        this.securityManager = securityManager;
+        securityManager.initVerificationManager();
     }
 
     /**
-     * @param virtualFireAlarmXMPPConnector
+     * Sets the `virtualFireAlarmXMPPConnector` variable of this VirtualFirealarm controller service.
+     *
+     * @param virtualFireAlarmXMPPConnector a 'VirtualFireAlarmXMPPConnector' object that handles all XMPP related
+     *                                      communications of any connected VirtualFirealarm device-type
      */
-    public void setVirtualFireAlarmXMPPConnector(
-            final VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector) {
+    @SuppressWarnings("Unused")
+    public void setVirtualFireAlarmXMPPConnector(final VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector) {
         this.virtualFireAlarmXMPPConnector = virtualFireAlarmXMPPConnector;
 
         if (XmppConfig.getInstance().isEnabled()) {
@@ -134,72 +129,88 @@ public class VirtualFireAlarmService {
             xmppStarterThread.setDaemon(true);
             xmppStarterThread.start();
         } else {
-            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
+            log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmXMPPConnector not started.");
         }
     }
 
     /**
-     * @param virtualFireAlarmMQTTConnector
+     * Sets the `virtualFireAlarmMQTTConnector` variable of this VirtualFirealarm controller service.
+     *
+     * @param virtualFireAlarmMQTTConnector a 'VirtualFireAlarmMQTTConnector' object that handles all MQTT related
+     *                                      communications of any connected VirtualFirealarm device-type
      */
+    @SuppressWarnings("Unused")
     public void setVirtualFireAlarmMQTTConnector(
             final VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector) {
         this.virtualFireAlarmMQTTConnector = virtualFireAlarmMQTTConnector;
         if (MqttConfig.getInstance().isEnabled()) {
             virtualFireAlarmMQTTConnector.connect();
         } else {
-            log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmXMPPConnector not started.");
+            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
         }
     }
 
     /**
-     * @return
+     * Fetches the `SecurityManager` specific to this VirtualFirealarm controller service.
+     *
+     * @return the 'SecurityManager' instance bound to the 'securityManager' variable of this service.
      */
-    public VerificationManager getVerificationManager() {
-        return verificationManager;
+    @SuppressWarnings("Unused")
+    public SecurityManager getSecurityManager() {
+        return securityManager;
     }
 
     /**
-     * @return
+     * Fetches the `VirtualFireAlarmXMPPConnector` specific to this VirtualFirealarm controller service.
+     *
+     * @return the 'VirtualFireAlarmXMPPConnector' instance bound to the 'virtualFireAlarmXMPPConnector' variable of
+     * this service.
      */
+    @SuppressWarnings("Unused")
     public VirtualFireAlarmXMPPConnector getVirtualFireAlarmXMPPConnector() {
         return virtualFireAlarmXMPPConnector;
     }
 
     /**
-     * @return
+     * Fetches the `VirtualFireAlarmMQTTConnector` specific to this VirtualFirealarm controller service.
+     *
+     * @return the 'VirtualFireAlarmMQTTConnector' instance bound to the 'virtualFireAlarmMQTTConnector' variable of
+     * this service.
      */
+    @SuppressWarnings("Unused")
     public VirtualFireAlarmMQTTConnector getVirtualFireAlarmMQTTConnector() {
         return virtualFireAlarmMQTTConnector;
     }
 
-    /*	---------------------------------------------------------------------------------------
-                    Device specific APIs - Control APIs + Data-Publishing APIs
-            Also contains utility methods required for the execution of these APIs
-         ---------------------------------------------------------------------------------------	*/
-
     /**
-     * @param owner
-     * @param deviceId
-     * @param deviceIP
-     * @param devicePort
-     * @param response
-     * @param request
-     * @return
+     * This is an API used/called by the device. It registers the IP of a VirtualFirealarm device against its DeviceID
+     * when the device connects with the server for the first time. This DeviceID to IP mapping is necessary only for
+     * cases where HTTP communication is to be used. At such instances, this mapping is used by the server to
+     * identify the IP of the device to which it has some message to be sent. This method becomes useful only in
+     * scenarios where HTTP communication is used in a setup where the IoT-Server and the devices communicating with it
+     * are in the same IP network.
+     *
+     * @param owner      the name of the owner(username) of the device from which this register-IP call was initiated.
+     * @param deviceId   the ID of the VirtualFirealarm device from which this register-IP call was initiated.
+     * @param deviceIP   the IP of the VirtualFirealarm device which has sent this register-IP request.
+     * @param devicePort the PORT on the VirtualFirealarm device (on this IP) that's open for HTTP communication.
+     * @param request    the HTTP servlet request object received by default as part of the HTTP call to this API.
+     * @param response   the HTTP servlet response object received  by default as part of the HTTP call to this API.
+     * @return a custom message indicating whether the DeviceID to IP mapping was successful.
      */
-    @Path("controller/register/{owner}/{deviceId}/{ip}/{port}")
     @POST
+    @Path("controller/register/{owner}/{deviceId}/{ip}/{port}")
     public String registerDeviceIP(@PathParam("owner") String owner,
                                    @PathParam("deviceId") String deviceId,
                                    @PathParam("ip") String deviceIP,
                                    @PathParam("port") String devicePort,
-                                   @Context HttpServletResponse response,
-                                   @Context HttpServletRequest request) {
-
-        //TODO:: Need to get IP from the request itself
+                                   @Context HttpServletRequest request,
+                                   @Context HttpServletResponse response) {
+        //TODO:: Need to get IP from the request itself and have a mapping to owner
         String result;
-
-        log.info("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId +
-                         " of owner: " + owner);
+        if (log.isDebugEnabled()) {
+            log.debug("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId + " of owner: " + owner);
+        }
 
         String deviceHttpEndpoint = deviceIP + ":" + devicePort;
         deviceToIpMap.put(deviceId, deviceHttpEndpoint);
@@ -214,20 +225,22 @@ public class VirtualFireAlarmService {
         return result;
     }
 
-    /*    Service to switch "ON" and "OFF" the Virtual FireAlarm bulb
-           Called by an external client intended to control the Virtual FireAlarm bulb */
-
     /**
-     * @param owner
-     * @param deviceId
-     * @param protocol
-     * @param state
-     * @param response
+     * This is an API called/used from within the Server(Front-End) or by a device Owner. It sends a control command to
+     * the VirtualFirealarm device to switch `ON` or `OFF` its buzzer. The method also takes in the protocol to be used
+     * to connect-to and send the command to the device.
+     *
+     * @param owner    the name of the owner(username) of the device to which the control-command is to be sent.
+     * @param deviceId the ID of the VirtualFirealarm device on which the buzzer needs to switched `ON` or `OFF`.
+     * @param protocol the protocol (HTTP, MQTT, XMPP) to be used to connect-to & send the message to the device.
+     * @param state    the state to which the buzzer on the device needs to be changed. Either "ON" or "OFF".
+     *                 (Case-Insensitive String)
+     * @param response the HTTP servlet response object received  by default as part of the HTTP call to this API.
      */
-    @Path("controller/buzzer")
     @POST
-    @Feature( code="buzzer", name="Buzzer On / Off", type="operation",
-            description="Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
+    @Path("controller/buzzer")
+    @Feature(code = "buzzer", name = "Buzzer On / Off", type = "operation",
+             description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
     public void switchBulb(@HeaderParam("owner") String owner,
                            @HeaderParam("deviceId") String deviceId,
                            @HeaderParam("protocol") String protocol,
@@ -236,9 +249,8 @@ public class VirtualFireAlarmService {
 
         try {
             DeviceValidator deviceValidator = new DeviceValidator();
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
-                                                                                   VirtualFireAlarmConstants
-                                                                                           .DEVICE_TYPE))) {
+            if (!deviceValidator.isExist(owner, SUPER_TENANT,
+                                         new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE))) {
                 response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
                 return;
             }
@@ -302,22 +314,28 @@ public class VirtualFireAlarmService {
 
 
     /**
-     * @param owner
-     * @param deviceId
-     * @param protocol
-     * @param response
-     * @return
+     * This is an API called/used from within the Server(Front-End) or by a device Owner. It sends a control command
+     * to the VirtualFirealarm device to 'tell what's its current humidity reading'. The method also takes in the
+     * protocol to be used to connect-to and send the command to the device.
+     *
+     * @param owner    the name of the owner(username) of the device to which the control-command is to be sent.
+     * @param deviceId the ID of the VirtualFirealarm device on which the humidity reading is be read-from.
+     * @param protocol the protocol (HTTP, MQTT, XMPP) to be used to connect-to & send the message to the device.
+     * @param response the HTTP servlet response object received  by default as part of the HTTP call to this API.
+     * @return an instance of the 'SensorRecord' object that holds the last updated humidity of the VirtualFirealarm
+     * whose humidity reading was requested.
      */
-    @Path("controller/readhumidity")
     @GET
+    @Path("controller/readhumidity")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Feature(code = "readhumidity", name = "Humidity", type = "monitor",
-            description = "Read Humidity Readings from Virtual Fire Alarm")
+             description = "Read Humidity Readings from Virtual Fire Alarm")
     public SensorRecord requestHumidity(@HeaderParam("owner") String owner,
                                         @HeaderParam("deviceId") String deviceId,
                                         @HeaderParam("protocol") String protocol,
                                         @Context HttpServletResponse response) {
+        //TODO::Need to use Web-Sockets to reply messages.
         SensorRecord sensorRecord = null;
         DeviceValidator deviceValidator = new DeviceValidator();
         try {
@@ -344,7 +362,8 @@ public class VirtualFireAlarmService {
                     }
 
                     String humidityValue = VirtualFireAlarmServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
-                                                                                           VirtualFireAlarmConstants.HUMIDITY_CONTEXT,
+                                                                                           VirtualFireAlarmConstants
+                                                                                                   .HUMIDITY_CONTEXT,
                                                                                            false);
                     SensorDataManager.getInstance().setSensorRecord(deviceId,
                                                                     VirtualFireAlarmConstants.SENSOR_TEMP,
@@ -376,18 +395,23 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     * @param owner
-     * @param deviceId
-     * @param protocol
-     * @param response
-     * @return
+     * This is an API called/used from within the Server(Front-End) or by a device Owner. It sends a control command
+     * to the VirtualFirealarm device to 'tell what's its current temperature reading'. The method also takes in the
+     * protocol to be used to connect-to and send the command to the device.
+     *
+     * @param owner    the name of the owner(username) of the device to which the control-command is to be sent.
+     * @param deviceId the ID of the VirtualFirealarm device on which the temperature reading is be read-from.
+     * @param protocol the protocol (HTTP, MQTT, XMPP) to be used to connect-to & send the message to the device.
+     * @param response the HTTP servlet response object received  by default as part of the HTTP call to this API.
+     * @return an instance of the 'SensorRecord' object that holds the last updated temperature of the VirtualFirealarm
+     * whose temperature reading was requested.
      */
-    @Path("controller/readtemperature")
     @GET
+    @Path("controller/readtemperature")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Feature( code="readtemperature", name="Temperature", type="monitor",
-            description="Request Temperature reading from Virtual Fire Alarm")
+    @Feature(code = "readtemperature", name = "Temperature", type = "monitor",
+             description = "Request Temperature reading from Virtual Fire Alarm")
     public SensorRecord requestTemperature(@HeaderParam("owner") String owner,
                                            @HeaderParam("deviceId") String deviceId,
                                            @HeaderParam("protocol") String protocol,
@@ -454,14 +478,17 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     * @param dataMsg
-     * @param response
+     * This is an API called/used by the VirtualFirealarm device to publish its temperature to the IoT-Server. The
+     * received data from the device is stored in a 'DeviceRecord' under the device's ID in the 'SensorDataManager'
+     * of the Server.
+     *
+     * @param dataMsg  the temperature data received from the device in JSON format complying to type 'DeviceJSON'.
+     * @param response the HTTP servlet response object received  by default as part of the HTTP call to this API.
      */
-    @Path("controller/push_temperature")
     @POST
+    @Path("controller/push_temperature")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void pushTemperatureData(final DeviceJSON dataMsg,
-                                    @Context HttpServletResponse response) {
+    public void pushTemperatureData(final DeviceJSON dataMsg, @Context HttpServletResponse response) {
         String deviceId = dataMsg.deviceId;
         String deviceIp = dataMsg.reply;
         float temperature = dataMsg.value;
@@ -491,9 +518,17 @@ public class VirtualFireAlarmService {
 
 
     /**
-     * @param operation
-     * @param message
-     * @return
+     * This is an API called/used by the SCEP Client of the VirtualFirealarm device in its SCEP enrollment process.
+     * This acts as the endpoint exposed as part of the SCEP-Server for use by a SCEP Client. This is one of the two
+     * method-signatures that takes different parameters according to the SCEP-Operation executed by the SCEP-Client
+     * of the enrolling device. The API supports 2 SCEP Operations [GetCACert] and [GetCACaps].
+     * <p/>
+     * Operation [GetCACert] returns the CA cert of the SCEP-Server for the device to verify its authenticity.
+     * Operation [GetCACaps] returns the CA Capabilities of the SCEP-Server.
+     *
+     * @param operation the SCEP operation requested by the client. [GetCACert] or [GetCACaps]
+     * @param message   any messages pertaining to the requested SCEP Operation.
+     * @return an HTTP Response object with either the CA-Cert or the CA-Capabilities according to the operation.
      */
     @GET
     @Path("controller/scep")
@@ -573,9 +608,16 @@ public class VirtualFireAlarmService {
     }
 
     /**
-     * @param operation
-     * @param inputStream
-     * @return
+     * This is an API called/used by the SCEP Client of the VirtualFirealarm device in its SCEP enrollment process.
+     * This acts as the endpoint exposed as part of the SCEP-Server for use by a SCEP Client. This is one of the two
+     * method-signatures that takes different parameters according to the SCEP-Operation executed by the SCEP-Client
+     * of the enrolling device. This API supports the SCEP Operation [PKIOperation].
+     * <p/>
+     * Operation [PKIOperation] returns a certificate generated by the SCEP-Server for the enrolling device.
+     *
+     * @param operation   the final SCEP operation executed in the enrollment process - which is [PKIOperation]
+     * @param inputStream an input stream consisting of the Certificate-Signing-Request (CSR) from the device.
+     * @return an HTTP Response object with the signed certificate for the device by the CA of the SCEP Server.
      */
     @POST
     @Path("controller/scep")
