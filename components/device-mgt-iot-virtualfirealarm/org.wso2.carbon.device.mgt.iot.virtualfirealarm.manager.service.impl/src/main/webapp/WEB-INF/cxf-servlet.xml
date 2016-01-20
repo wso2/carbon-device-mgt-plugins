@@ -24,29 +24,16 @@
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
          http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
-	<jaxrs:server id="VirtualFireAlarmController" address="/">
+	<jaxrs:server id="VirtualFireAlarmManager" address="/">
 		<jaxrs:serviceBeans>
-			<bean id="VirtualFireAlarmControllerService"
-				  class="org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.VirtualFireAlarmControllerService">
-				<property name="securityManager" ref="securityManagerBean"/>
-				<property name="virtualFireAlarmMQTTConnector" ref="mqttConnectorBean"/>
-				<property name="virtualFireAlarmXMPPConnector" ref="xmppConnectorBean"/>
+			<bean id="VirtualFireAlarmManagerService"
+				  class="org.wso2.carbon.device.mgt.iot.virtualfirealarm.manager.service.impl.VirtualFireAlarmManagerService">
 			</bean>
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
 		</jaxrs:providers>
 	</jaxrs:server>
-
-	<bean id="securityManagerBean"
-		  class="org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.SecurityManager">
-	</bean>
-	<bean id="mqttConnectorBean"
-		  class="org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.transport.VirtualFireAlarmMQTTConnector">
-	</bean>
-	<bean id="xmppConnectorBean"
-		  class="org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.transport.VirtualFireAlarmXMPPConnector">
-	</bean>
 
 </beans>
 

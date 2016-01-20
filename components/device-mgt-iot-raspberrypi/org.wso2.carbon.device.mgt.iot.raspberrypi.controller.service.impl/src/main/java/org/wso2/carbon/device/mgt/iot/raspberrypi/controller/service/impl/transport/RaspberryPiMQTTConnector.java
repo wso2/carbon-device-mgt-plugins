@@ -160,7 +160,7 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
     public void processIncomingMessage(MqttMessage message) throws TransportHandlerException {
 
     }
-    
+
     @Override
     public void publishDeviceData() throws TransportHandlerException {
 

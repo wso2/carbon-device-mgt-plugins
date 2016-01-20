@@ -492,7 +492,7 @@
 
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.mgt.service.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.manager.service.impl</artifactId>
                 <version>${carbon.iot.device.mgt.version}</version>
                 <type>war</type>
             </dependency>
