@@ -68,10 +68,10 @@ public class GroupManagerService extends AbstractManagerService {
     @Path("/groups")
     @POST
     @Produces("application/json")
-    public boolean createGroup(@FormParam("name") String name, @FormParam("userName") String userName,
+    public boolean createGroup(@FormParam("groupName") String groupName, @FormParam("userName") String userName,
                                @FormParam("description") String description) {
         DeviceGroup group = new DeviceGroup();
-        group.setName(name);
+        group.setName(groupName);
         group.setDescription(description);
         group.setOwner(userName);
         group.setDateOfCreation(new Date().getTime());
@@ -104,7 +104,7 @@ public class GroupManagerService extends AbstractManagerService {
     @Path("/groups/{groupId}")
     @PUT
     @Produces("application/json")
-    public boolean updateGroup(@PathParam("groupId") int groupId, @FormParam("name") String name,
+    public boolean updateGroup(@PathParam("groupId") int groupId, @FormParam("groupName") String groupName,
                                @FormParam("userName") String userName, @FormParam("description") String description) {
         if (!isAuthorized(getCurrentUserName(), groupId, "/permission/device-mgt/admin/groups/modify")){
             response.setStatus(Response.Status.FORBIDDEN.getStatusCode());
@@ -113,7 +113,7 @@ public class GroupManagerService extends AbstractManagerService {
         try {
             GroupManagementServiceProvider groupManagementService = this.getServiceProvider(GroupManagementServiceProvider.class);
             DeviceGroup group = groupManagementService.getGroup(groupId);
-            group.setName(name);
+            group.setName(groupName);
             group.setDescription(description);
             group.setOwner(userName);
             group.setDateOfLastUpdate(new Date().getTime());
