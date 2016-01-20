@@ -29,11 +29,11 @@
 
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>org.wso2.carbon.device.mgt.iot.arduino.mgt.service.impl</artifactId>
+	<artifactId>org.wso2.carbon.device.mgt.iot.arduino.manager.service.impl</artifactId>
 	<version>1.9.2-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>WSO2 Carbon - IoT Server Arduino Manager API</name>
-	<description>WSO2 Carbon - Arduino Manager API Implementation</description>
+	<name>WSO2 Carbon - IoT Server Arduino ManagerService API</name>
+	<description>WSO2 Carbon - Arduino ManagerService API Implementation</description>
 	<url>http://wso2.org</url>
 
 

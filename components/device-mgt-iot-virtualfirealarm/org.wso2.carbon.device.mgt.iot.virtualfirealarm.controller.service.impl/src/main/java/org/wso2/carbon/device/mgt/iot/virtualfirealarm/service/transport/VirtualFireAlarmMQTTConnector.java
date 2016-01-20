@@ -133,7 +133,7 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
         String deviceId = ownerAndId.split(":")[1];
 
         if (log.isDebugEnabled()) {
-            log.debug("Received MQTT message for: {OWNER-" + owner + "} & {DEVICE.ID-" + deviceId + "}");
+            log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
         }
 
         String actualMessage;

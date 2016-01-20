@@ -16,16 +16,21 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.arduino.service.exception;
+package org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl.dto;
 
-public class ArduinoException extends Exception {
-    private static final long serialVersionUID = 118512086957330189L;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-    public ArduinoException(String errorMessage) {
-        super(errorMessage);
-    }
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
-    public ArduinoException(String errorMessage, Throwable throwable) {
-        super(errorMessage, throwable);
-    }
+@XmlRootElement
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class DeviceJSON {
+    @XmlElement(required = true) public String owner;
+    @XmlElement(required = true) public String deviceId;
+    @XmlElement(required = true) public String reply;
+    @XmlElement public Long time;
+    @XmlElement public String key;
+    @XmlElement public float value;
 }

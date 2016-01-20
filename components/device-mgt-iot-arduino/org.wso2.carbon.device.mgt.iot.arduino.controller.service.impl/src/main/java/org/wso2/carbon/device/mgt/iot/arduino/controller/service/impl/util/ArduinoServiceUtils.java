@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.arduino.service.util;
+package org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,9 +29,7 @@ import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.exception.DataPublisherConfigurationException;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.iot.DeviceController;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
-import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 
 import javax.ws.rs.HttpMethod;
 import java.io.BufferedReader;

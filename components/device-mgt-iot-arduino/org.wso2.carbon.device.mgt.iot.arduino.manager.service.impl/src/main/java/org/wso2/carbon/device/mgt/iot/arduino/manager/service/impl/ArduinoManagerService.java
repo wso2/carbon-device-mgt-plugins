@@ -11,16 +11,15 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.arduino.service;
+package org.wso2.carbon.device.mgt.iot.arduino.manager.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
 import org.wso2.carbon.device.mgt.common.Device;
@@ -57,9 +56,9 @@ import java.util.List;
 import java.util.UUID;
 
 @DeviceType( value = "arduino")
-public class ArduinoService {
+public class ArduinoManagerService {
 
-    private static Log log = LogFactory.getLog(ArduinoService.class);
+    private static Log log = LogFactory.getLog(ArduinoManagerService.class);
 
     //TODO; replace this tenant domain
     private static final String SUPER_TENANT = "carbon.super";

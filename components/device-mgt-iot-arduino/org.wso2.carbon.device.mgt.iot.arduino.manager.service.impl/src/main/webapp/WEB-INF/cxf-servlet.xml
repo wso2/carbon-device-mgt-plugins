@@ -26,10 +26,10 @@
          http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
 
-	<jaxrs:server id="Arduino" address="/">
+	<jaxrs:server id="ArduinoManager" address="/">
 		<jaxrs:serviceBeans>
-			<bean id="ArduinoService"
-				  class="org.wso2.carbon.device.mgt.iot.arduino.service.ArduinoService">
+			<bean id="ArduinoManagerService"
+				  class="org.wso2.carbon.device.mgt.iot.arduino.manager.service.impl.ArduinoManagerService">
 			</bean>
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>

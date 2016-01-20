@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,12 +11,12 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.arduino.service;
+package org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.logging.Log;
@@ -24,26 +24,14 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
-import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
-import org.wso2.carbon.device.mgt.common.Device;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
-import org.wso2.carbon.device.mgt.iot.DeviceManagement;
-import org.wso2.carbon.device.mgt.iot.DeviceValidator;
-import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
-import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
-import org.wso2.carbon.device.mgt.iot.arduino.service.dto.DeviceJSON;
-import org.wso2.carbon.device.mgt.iot.arduino.service.transport.ArduinoMQTTSubscriber;
-import org.wso2.carbon.device.mgt.iot.arduino.service.util.ArduinoServiceUtils;
+import org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl.dto.DeviceJSON;
+import org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl.transport.ArduinoMQTTConnector;
+import org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl.util.ArduinoServiceUtils;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
-import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
-import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
-import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,24 +39,18 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @API( name="arduino", version="1.0.0", context="/arduino")
 @DeviceType( value = "arduino")
-public class ArduinoService {
+public class ArduinoControllerService {
 
-    private static Log log = LogFactory.getLog(ArduinoService.class);
+    private static Log log = LogFactory.getLog(ArduinoControllerService.class);
 
     //TODO; replace this tenant domain
     private static final String SUPER_TENANT = "carbon.super";
@@ -79,42 +61,31 @@ public class ArduinoService {
     public static final String HTTP_PROTOCOL = "HTTP";
     public static final String MQTT_PROTOCOL = "MQTT";
 
-    private ArduinoMQTTSubscriber arduinoMQTTSubscriber;
+    private ArduinoMQTTConnector arduinoMQTTConnector;
     private static Map<String, LinkedList<String>> replyMsgQueue = new HashMap<>();
     private static Map<String, LinkedList<String>> internalControlsQueue = new HashMap<>();
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
 
     /**
-     * @param arduinoMQTTSubscriber an object of type "ArduinoMQTTSubscriber" specific for this ArduinoService
+     * @param arduinoMQTTConnector an object of type "ArduinoMQTTConnector" specific for this ArduinoControllerService
      */
     @SuppressWarnings("unused")
-    public void setArduinoMQTTSubscriber(
-            final ArduinoMQTTSubscriber arduinoMQTTSubscriber) {
-        this.arduinoMQTTSubscriber = arduinoMQTTSubscriber;
-
+    public void setArduinoMQTTConnector(
+            final ArduinoMQTTConnector arduinoMQTTConnector) {
+        this.arduinoMQTTConnector = arduinoMQTTConnector;
         if (MqttConfig.getInstance().isEnabled()) {
-            Runnable xmppStarter = new Runnable() {
-                @Override
-                public void run() {
-                    arduinoMQTTSubscriber.initConnector();
-                    arduinoMQTTSubscriber.connectAndSubscribe();
-                }
-            };
-
-            Thread xmppStarterThread = new Thread(xmppStarter);
-            xmppStarterThread.setDaemon(true);
-            xmppStarterThread.start();
+            arduinoMQTTConnector.connect();
         } else {
-            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, ArduinoMQTTSubscriber not started.");
+            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, ArduinoMQTTConnector not started.");
         }
     }
 
     /**
-     * @return the "ArduinoMQTTSubscriber" object of this ArduinoService instance
+     * @return the "ArduinoMQTTConnector" object of this ArduinoControllerService instance
      */
     @SuppressWarnings("unused")
-    public ArduinoMQTTSubscriber getArduinoMQTTSubscriber() {
-        return arduinoMQTTSubscriber;
+    public ArduinoMQTTConnector getArduinoMQTTConnector() {
+        return arduinoMQTTConnector;
     }
 
     /**
