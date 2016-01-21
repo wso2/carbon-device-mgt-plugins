@@ -2,7 +2,6 @@
   "deviceType": {
     "label": "Virtual Firealarm",
     "category": "virtual",
-    "downloadAgentUri": "manager/device/virtual_firealarm/download",
     "downloadAgentLinkGenUri": "manager/device/virtual_firealarm/generate_link"
   },
   "analyticStreams": [
