@@ -24,7 +24,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.core.ServerStartupObserver;
 import org.wso2.carbon.databridge.core.DataBridgeReceiverService;
-import org.wso2.carbon.device.mgt.iot.DeviceController;
 import org.wso2.carbon.device.mgt.iot.UserManagement;
 import org.wso2.carbon.device.mgt.iot.analytics.statistics.IoTEventsStatisticsClient;
 import org.wso2.carbon.device.mgt.iot.analytics.statistics.IoTUsageStatisticsClient;
@@ -120,8 +119,6 @@ public class IotDeviceManagementServiceComponent {
             IoTCommonDataHolder.getInstance().initialize();
 
             //TODO: handle
-
-            DeviceController.init();
             IoTUsageStatisticsClient.initializeDataSource();
             IoTEventsStatisticsClient.initializeDataSource();
             UserManagement.registerApiAccessRoles();

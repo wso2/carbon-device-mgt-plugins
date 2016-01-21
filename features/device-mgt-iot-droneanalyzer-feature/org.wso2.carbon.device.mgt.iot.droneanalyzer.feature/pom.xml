@@ -164,7 +164,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.droneanalyzer:${carbon.iot.device.mgt.version}
+                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin:${carbon.iot.device.mgt.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>

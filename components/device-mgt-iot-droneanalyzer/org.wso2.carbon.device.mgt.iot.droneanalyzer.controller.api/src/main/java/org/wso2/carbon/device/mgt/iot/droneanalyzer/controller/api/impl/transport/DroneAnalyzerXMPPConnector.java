@@ -19,13 +19,10 @@ package org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.transpo
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.jivesoftware.smack.packet.Message;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConnector;
-import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.trasformer.MessageTransformer;
+import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.xmpp.XMPPTransportHandler;
 

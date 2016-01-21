@@ -190,7 +190,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.androidsense:${carbon.iot.device.mgt.version}
+                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.androidsense.plugin:${carbon.iot.device.mgt.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>
