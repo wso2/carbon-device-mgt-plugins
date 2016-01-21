@@ -1,13 +1,10 @@
-{{#zone "topCss"}}
-    <style>
-        .thumbnail.icon:before {
-            padding-top: 0;
-        }
-    </style>
-{{/zone}}
-
 {{#zone "device-thumbnail"}}
     <img src="{{@unit.publicUri}}/images/display-icon.png"/>
+{{/zone}}
+
+{{#zone "operation-status"}}
+    <div id="div-operation-status" class="hidden" align="center" style="padding: 10px; margin-bottom: 5px">
+    </div>
 {{/zone}}
 
 {{#zone "device-opetations"}}
@@ -83,3 +80,13 @@
         </div>
     </div>
 {{/zone}}
+
+{{#zone "bottomJs"}}
+    <script type="text/javascript">
+        var token = "{{token}}";
+        var port = "{{port}}";
+        var host = "{{host}}";
+    </script>
+    {{js "js/websocket.js"}}
+{{/zone}}
+

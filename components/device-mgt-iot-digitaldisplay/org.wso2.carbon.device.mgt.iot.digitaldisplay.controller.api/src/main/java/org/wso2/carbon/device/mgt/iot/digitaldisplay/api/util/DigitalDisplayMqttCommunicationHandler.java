@@ -4,12 +4,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.websocket.DigitalDisplayWebSocketServerEndPoint;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.constants.DigitalDisplayConstants;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
-
 import java.io.File;
 import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
@@ -29,7 +29,7 @@ public class DigitalDisplayMqttCommunicationHandler extends MQTTTransportHandler
 
     private DigitalDisplayMqttCommunicationHandler() {
         super(iotServerSubscriber, DigitalDisplayConstants.DEVICE_TYPE,
-              MqttConfig.getInstance().getMqttQueueEndpoint(), subscribeTopic);
+                MqttConfig.getInstance().getMqttQueueEndpoint(), subscribeTopic);
     }
 
     public ScheduledFuture<?> getDataPushServiceHandler() {
@@ -48,7 +48,7 @@ public class DigitalDisplayMqttCommunicationHandler extends MQTTTransportHandler
 
                     } catch (TransportHandlerException e) {
                         log.warn("Connection/Subscription to MQTT Broker at: " +
-                                         mqttBrokerEndPoint + " failed");
+                                mqttBrokerEndPoint + " failed");
 
                         try {
                             Thread.sleep(timeoutInterval);
@@ -83,15 +83,23 @@ public class DigitalDisplayMqttCommunicationHandler extends MQTTTransportHandler
 
         String[] messageData = message.toString().split(":");
 
-
         log.info("Received MQTT message for: {OWNER-" + owner + "} & {DEVICE.ID-" + deviceId + "}");
 
-        if (messageData.length == 3) {
-            String randomId = messageData[0];
-            String requestMessage = messageData[1];
-            String result = messageData[2];
-            log.info("Return result " + result + " for Request " + requestMessage);
-            DigitalDisplayWebSocketServerEndPoint.sendMessage(randomId, result);
+        String token = messageData[0];
+
+        if(messageData.length == 2){
+            String responseMessage = messageData[1];
+            DigitalDisplayWebSocketServerEndPoint.sendMessage(token, responseMessage);
+        }else if(messageData.length == 3){
+            String tag = messageData[1];
+            if(tag.equals("screenshot")){
+                String response = messageData[2];
+                JSONObject schreenshot = new JSONObject(response);
+                System.out.println(schreenshot);
+            }else if(tag.equals("contentlist")){
+
+            }
+
         }
 
     }
@@ -114,7 +122,7 @@ public class DigitalDisplayMqttCommunicationHandler extends MQTTTransportHandler
                     } catch (MqttException e) {
                         if (log.isDebugEnabled()) {
                             log.warn("Unable to 'STOP' MQTT connection at broker at: " +
-                                             mqttBrokerEndPoint);
+                                    mqttBrokerEndPoint);
                         }
 
                         try {
