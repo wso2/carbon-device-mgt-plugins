@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.iot.service;
 
+import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ControlQueue;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceManagementConfiguration;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceMgtServerInfo;
@@ -26,16 +27,16 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
     @Override
     public DeviceManagementConfiguration getDeviceCloudMgtConfig() {
-        return null;
+        return DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig();
     }
 
     @Override
     public ControlQueue getControlQueue(String name) {
-        return null;
+        return DeviceManagementConfigurationManager.getInstance().getControlQueue(name);
     }
 
     @Override
     public DeviceMgtServerInfo getDeviceManagementServerInfo() {
-        return null;
+        return DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo();
     }
 }

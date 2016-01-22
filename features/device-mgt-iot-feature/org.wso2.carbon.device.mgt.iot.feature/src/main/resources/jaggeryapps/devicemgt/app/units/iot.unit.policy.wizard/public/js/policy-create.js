@@ -267,6 +267,7 @@ function publishToDevice() {
         "description": policy["description"],
         "compliance": policy["selectedNonCompliantAction"],
         "ownershipType": "ANY",
+        "deviceId": getParameterByName('deviceId'),
         "profile": {
             "profileName": policy["policyName"],
             "deviceType": {
@@ -660,3 +661,10 @@ $(document).ready(function () {
         }
     });
 });
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
