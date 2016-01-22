@@ -32,7 +32,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wso2.carbon.device.mgt.iot.controlqueue.ControlQueueConnector;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.exception.IoTException;
 import org.wso2.carbon.device.mgt.iot.util.IoTUtil;
@@ -43,9 +42,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 
-public class XmppServerClient implements ControlQueueConnector {
+public class XmppServerClient {
 
     private static final Log log = LogFactory.getLog(XmppServerClient.class);
 
@@ -66,20 +64,11 @@ public class XmppServerClient implements ControlQueueConnector {
     public XmppServerClient() {
     }
 
-    @Override
     public void initControlQueue() {
         xmppEndpoint = XmppConfig.getInstance().getXmppEndpoint();
         xmppUsername = XmppConfig.getInstance().getXmppUsername();
         xmppPassword = XmppConfig.getInstance().getXmppPassword();
         xmppEnabled = XmppConfig.getInstance().isEnabled();
-    }
-
-    @Override
-    public void enqueueControls(HashMap<String, String> deviceControls)
-            throws DeviceControllerException {
-        if (!xmppEnabled) {
-            log.warn(String.format("XMPP <Enabled> set to false in [%s]", DEVICEMGT_CONFIG_FILE));
-        }
     }
 
     public boolean createXMPPAccount(XmppAccount newUserAccount) throws DeviceControllerException {

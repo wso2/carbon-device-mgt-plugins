@@ -26,11 +26,11 @@
          http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
 
-	<jaxrs:server id="Arduino" address="/">
+	<jaxrs:server id="ArduinoController" address="/">
 		<jaxrs:serviceBeans>
-			<bean id="ArduinoService"
-				  class="org.wso2.carbon.device.mgt.iot.arduino.service.ArduinoService">
-				<property name="arduinoMQTTSubscriber" ref="arduinoMQTTSubscriber"/>
+			<bean id="ArduinoControllerService"
+				  class="org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl.ArduinoControllerService">
+				<property name="arduinoMQTTConnector" ref="arduinoMQTTConnector"/>
 			</bean>
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
@@ -39,8 +39,8 @@
 	</jaxrs:server>
 
 
-	<bean id="arduinoMQTTSubscriber"
-		  class="org.wso2.carbon.device.mgt.iot.arduino.service.transport.ArduinoMQTTSubscriber">
+	<bean id="arduinoMQTTConnector"
+		  class="org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl.transport.ArduinoMQTTConnector">
     </bean>
 
 

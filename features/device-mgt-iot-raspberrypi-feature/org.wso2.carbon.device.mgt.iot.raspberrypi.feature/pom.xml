@@ -44,7 +44,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.mgt.service.impl</artifactId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.manager.service.impl</artifactId>
 			<type>war</type>
 		</dependency>
 		<dependency>
@@ -108,7 +108,7 @@
 								</artifactItem>
 								<artifactItem>
 									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.mgt.service.impl
+									<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.manager.service.impl
 									</artifactId>
 									<type>war</type>
 									<overWrite>true</overWrite>

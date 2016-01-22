@@ -44,7 +44,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.mgt.service.impl</artifactId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.manager.service.impl</artifactId>
 			<type>war</type>
 		</dependency>
 		<dependency>
@@ -99,7 +99,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.mgt.service.impl
+									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.manager.service.impl
 									</artifactId>
 									<type>war</type>
 									<overWrite>true</overWrite>

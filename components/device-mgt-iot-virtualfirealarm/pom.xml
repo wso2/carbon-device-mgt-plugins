@@ -38,7 +38,7 @@
 	<modules>
 		<module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl</module>
 		<module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl</module>
-		<module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.mgt.service.impl</module>
+		<module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.manager.service.impl</module>
 		<module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.impl</module>
 		<module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.impl</module>
 	</modules>
