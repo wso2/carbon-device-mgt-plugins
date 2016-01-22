@@ -10,7 +10,10 @@ import org.wso2.carbon.device.mgt.iot.digitaldisplay.api.websocket.DigitalDispla
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.constants.DigitalDisplayConstants;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
+
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ScheduledFuture;
 
@@ -26,6 +29,8 @@ public class DigitalDisplayMqttCommunicationHandler extends MQTTTransportHandler
     private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
     private ScheduledFuture<?> dataPushServiceHandler;
+
+    private Map<String, String[]> schreenshots = new HashMap<>();
 
     private DigitalDisplayMqttCommunicationHandler() {
         super(iotServerSubscriber, DigitalDisplayConstants.DEVICE_TYPE,
@@ -81,27 +86,54 @@ public class DigitalDisplayMqttCommunicationHandler extends MQTTTransportHandler
         String owner = ownerAndId.split(":")[0];
         String deviceId = ownerAndId.split(":")[1];
 
-        String[] messageData = message.toString().split(":");
-
+        String[] messageData = message.toString().split("::");
         log.info("Received MQTT message for: {OWNER-" + owner + "} & {DEVICE.ID-" + deviceId + "}");
 
         String token = messageData[0];
-
-        if(messageData.length == 2){
+        if (messageData.length == 2) {
             String responseMessage = messageData[1];
-            DigitalDisplayWebSocketServerEndPoint.sendMessage(token, responseMessage);
-        }else if(messageData.length == 3){
+            DigitalDisplayWebSocketServerEndPoint.sendMessage(token, new StringBuilder(responseMessage));
+        } else if (messageData.length == 3) {
             String tag = messageData[1];
-            if(tag.equals("screenshot")){
+            if (tag.equals("token")) {
                 String response = messageData[2];
+
                 JSONObject schreenshot = new JSONObject(response);
-                System.out.println(schreenshot);
-            }else if(tag.equals("contentlist")){
+                String pic_id = schreenshot.getString("pic_id");
+                String data = schreenshot.getString("data");
+                int pos = schreenshot.getInt("pos");
+                int length = schreenshot.getInt("size");
+                createScreenShot(token, pic_id, pos, length ,data);
 
             }
 
         }
+    }
 
+    private void createScreenShot(String token, String pic_id, int pos, int length, String data) {
+
+        String[] screenshot = schreenshots.get(pic_id);
+
+        if (screenshot == null) {
+            screenshot = new String[length + 2];
+            screenshot[length + 1] = "0";
+            schreenshots.put(pic_id, screenshot);
+        }
+        if (!screenshot[length + 1].equals(String.valueOf(length + 1))) {
+            screenshot[pos] = data;
+            screenshot[length + 1] = String.valueOf(Integer.parseInt(screenshot[length + 1]) + 1);
+
+            if(screenshot[length + 1].equals(String.valueOf(length + 1))){
+                StringBuilder displayScreenShot = new StringBuilder("");
+
+                for(int i = 0 ; i < (screenshot.length - 1) ; i++){
+                    displayScreenShot.append(screenshot[i]);
+                }
+                System.out.println(screenshot[length+1]);
+                schreenshots.remove(pic_id);
+                DigitalDisplayWebSocketServerEndPoint.sendMessage(token, displayScreenShot);
+            }
+        }
     }
 
     public void publishToDigitalDisplay(String topic, String payLoad, int qos, boolean retained)

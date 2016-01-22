@@ -31,7 +31,8 @@ public class DigitalDisplayConstants {
     public final static String EDIT_SEQUENCE_CONSTANT = "edit_content_config";
     public final static String ADD_NEW_RESOURCE_CONSTANT = "add_new_resource";
     public final static String REMOVE_RESOURCE_CONSTANT = "remove_resources";
-    public final static String GET_STATUS_CONSTANT = "get_status";
+    public final static String SCREENSHOT_CONSTANT = "get_screenshot";
+    public final static String GET_RESOURCES_CONSTANT = "get_resources";
     public final static String PUBLISH_TOPIC = "wso2/iot/%s/digital_display/%s/digital_display_subscriber";
 
 }

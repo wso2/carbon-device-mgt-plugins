@@ -1,5 +1,6 @@
 package org.wso2.carbon.device.mgt.iot.digitaldisplay.api.websocket;
 
+import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -58,10 +59,10 @@ public class DigitalDisplayWebSocketServerEndPoint {
      * @param token the client of message to be sent.
      * @param message the message sent by device to client
      */
-    public static void sendMessage(String token , String message){
+    public static void sendMessage(String token , StringBuilder message){
         Session session = clientSessions.get(token);
         if(session != null){
-            session.getAsyncRemote().sendText(message);
+            session.getAsyncRemote().sendText(message.toString());
         }else {
             log.error("Client already disconnected.");
         }

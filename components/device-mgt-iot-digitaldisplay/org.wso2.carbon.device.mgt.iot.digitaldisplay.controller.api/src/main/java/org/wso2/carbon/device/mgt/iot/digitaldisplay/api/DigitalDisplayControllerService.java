@@ -207,7 +207,7 @@ public class DigitalDisplayControllerService {
             description = "Search through the sequence and edit requested resource in Digital Display")
     public void editContent(@HeaderParam("deviceId") String deviceId,
                             @HeaderParam("owner") String owner,
-                            @FormParam("path") String path,
+                            @FormParam("name") String path,
                             @FormParam("attribute") String attribute,
                             @FormParam("new-value") String newValue,
                             @HeaderParam("Authorization") String token,
@@ -248,8 +248,8 @@ public class DigitalDisplayControllerService {
                                @FormParam("type") String type,
                                @FormParam("time") String time,
                                @FormParam("path") String path,
-                               @FormParam("position") String position,
                                @FormParam("name") String name,
+                               @FormParam("name") String position,
                                @HeaderParam("Authorization") String token,
                                @Context HttpServletResponse response) {
 
@@ -290,7 +290,7 @@ public class DigitalDisplayControllerService {
             description = "Delete a resource from sequence in Digital Display")
     public void removeResource(@HeaderParam("deviceId") String deviceId,
                                @HeaderParam("owner") String owner,
-                               @FormParam("path") String path,
+                               @FormParam("name") String path,
                                @HeaderParam("Authorization") String token,
                                @Context HttpServletResponse response) {
 
@@ -411,6 +411,67 @@ public class DigitalDisplayControllerService {
     }
 
     /**
+     * Stop specific display
+     *
+     * @param deviceId  id of the controlling digital display
+     * @param owner     owner of the digital display
+     * @param token web socket id of the method invoke client
+     * @param response  response type of the method
+     */
+    @Path("/screenshot")
+    @POST
+    @Feature(code = "screenshot", name = "Take Screenshot", type="operation",
+            description = "Show current view in Digital Display")
+    public void showScreenshot(@HeaderParam("deviceId") String deviceId,
+                                @HeaderParam("owner") String owner,
+                                @HeaderParam("Authorization") String token,
+                                @Context HttpServletResponse response) {
+
+        try {
+            token = token.split(" ")[1];
+            sendCommandViaMQTT(owner, deviceId, token + "::" + DigitalDisplayConstants.SCREENSHOT_CONSTANT + "::", "");
+            response.setStatus(Response.Status.OK.getStatusCode());
+        } catch (DeviceManagementException e) {
+            log.error(e);
+            response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
+        } catch (DigitalDisplayException e) {
+            log.error(e);
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+    }
+
+    /**
+     * Stop specific display
+     *
+     * @param deviceId  id of the controlling digital display
+     * @param owner     owner of the digital display
+     * @param token web socket id of the method invoke client
+     * @param response  response type of the method
+     */
+    @Path("/get-resources")
+    @POST
+    @Feature(code = "get-resources", name = "Get Resources", type="operation",
+            description = "Resources in Digital Display")
+    public void getResources(@HeaderParam("deviceId") String deviceId,
+                               @HeaderParam("owner") String owner,
+                               @HeaderParam("Authorization") String token,
+                               @Context HttpServletResponse response) {
+
+        try {
+            token = token.split(" ")[1];
+            sendCommandViaMQTT(owner, deviceId, token + "::" + DigitalDisplayConstants.GET_RESOURCES_CONSTANT + "::", "");
+            response.setStatus(Response.Status.OK.getStatusCode());
+        } catch (DeviceManagementException e) {
+            log.error(e);
+            response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
+        } catch (DigitalDisplayException e) {
+            log.error(e);
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        }
+    }
+
+
+    /**
      * Send message via MQTT protocol
      *
      * @param deviceOwner owner of target digital display
@@ -426,7 +487,7 @@ public class DigitalDisplayControllerService {
 
         log.info(deviceOwner);
         String topic = String.format(DigitalDisplayConstants.PUBLISH_TOPIC, deviceOwner, deviceId);
-        String payload = operation + ":" + param;
+        String payload = operation + param;
 
         try {
             digitalDisplayMqttCommunicationHandler.publishToDigitalDisplay(topic, payload, 2, false);

@@ -1,3 +1,11 @@
+{{#zone "topCss"}}
+    <style>
+        .thumbnail.icon:before {
+            padding-top: 0;
+        }
+    </style>
+{{/zone}}
+
 {{#zone "device-thumbnail"}}
     <img src="{{@unit.publicUri}}/images/display-icon.png"/>
 {{/zone}}
@@ -17,6 +25,7 @@
 {{/zone}}
 
 {{#zone "device-detail-properties"}}
+
     <div class="media">
         <div class="media-left col-xs-12 col-sm-2 col-md-2 col-lg-2">
             <ul class="list-group" role="tablist">
@@ -28,8 +37,28 @@
             </ul>
         </div>
         <div class="media-body add-padding-left-5x remove-padding-xs tab-content">
-            <div class="panel-group tab-content">
 
+            <div class="panel panel-default tab-pane active"
+                 id="device_statistics" role="tabpanel" aria-labelledby="device_statistics">
+                <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">
+                    Display Status
+                </div>
+                <div id = "screen-shot" align="left">
+                    <div>Display View</div>
+                    <a id = "zoom-image" href="{{@unit.publicUri}}/images/default-screen.png" target="_blank">
+                        <img id="img" src="{{@unit.publicUri}}/images/default-screen.png" style="width: 40% ; height: 40% ; float: left" class="img-responsive"/>
+                    </a>
+                </div>
+
+                <div id = "content-list-pane" align="center">
+                    <div>Content List</div>
+                    <ul id = "content-list">
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="panel-group tab-content">
                 <div class="panel panel-default tab-pane" id="policy_compliance" role="tabpanel"
                      aria-labelledby="policy_compliance">
                     <div class="panel-heading">Policy Compliance <span><a href="#"
@@ -89,4 +118,3 @@
     </script>
     {{js "js/websocket.js"}}
 {{/zone}}
-
