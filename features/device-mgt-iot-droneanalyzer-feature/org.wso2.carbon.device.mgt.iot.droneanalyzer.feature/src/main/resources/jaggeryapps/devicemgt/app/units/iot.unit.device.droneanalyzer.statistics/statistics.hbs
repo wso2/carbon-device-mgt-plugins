@@ -6,7 +6,7 @@
                         <div>
                             <div class="col-md-2 col-sm-2 col-xs-1">
                                 <button  class="btn btn-primary" data-dismiss="modal" id="connectionOpen"
-                                         onclick="openSocket();">Connect to server</button>
+                                         onclick="openSocket('{{wssAddress}}');">Connect to XMPP Server</button>
                             </div>
                             <div class="col-md-2 col-sm-2 col-xs-1">
                                 <button  class="btn btn-primary" data-dismiss="modal" id="xmppConnectionOpen">Start</button>
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+               <!-- <div class="row">
                     <div class="box col-md-12">
                         <div class="box-inner">
                             <div class="box-header well">
@@ -85,7 +85,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <div class="row">
                     <div class="box col-md-12">
                         <div class="box col-md-4">
@@ -230,8 +230,6 @@
                         </div>
                     </div>
                 </div>
-
-
 {{#zone "bottomJs"}}
     {{js  "/js/d3.min.js" }}
     {{js "/js/3dobject_controller/three.min.js" }}
