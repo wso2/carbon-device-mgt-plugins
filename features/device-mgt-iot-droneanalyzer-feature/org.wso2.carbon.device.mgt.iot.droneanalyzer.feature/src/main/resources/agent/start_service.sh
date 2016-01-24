@@ -66,7 +66,7 @@ while true; do
 done
 
 cp deviceConfig.properties ./src
-./src/IRIS+DroneStatistics.py -i $push_interval -b $baud -c $connection_target
+python ./src/IRIS+DroneStatistics.py -i $push_interval -b $baud -c $connection_target
 
 if [ $? -ne 0 ]; then
 	echo "Could not start the service..."

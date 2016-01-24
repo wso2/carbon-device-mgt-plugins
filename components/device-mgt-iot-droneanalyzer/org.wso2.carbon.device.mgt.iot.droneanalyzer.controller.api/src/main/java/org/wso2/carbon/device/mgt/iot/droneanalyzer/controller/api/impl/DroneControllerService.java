@@ -29,13 +29,8 @@ import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConsta
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.controller.DroneController;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.controller.impl.DroneControllerImpl;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,11 +52,10 @@ public class DroneControllerService {
          ---------------------------------------------------------------------------------------	*/
     @Path("controller/register/{owner}/{deviceId}/{ip}/{port}")
     @POST
-    public String registerDeviceIP(@PathParam("owner") String owner, @PathParam("deviceId") String deviceId,
+    public Response registerDeviceIP(@PathParam("owner") String owner, @PathParam("deviceId") String deviceId,
                                    @PathParam("ip") String deviceIP,
                                    @PathParam("port") String devicePort,
-                                   @Context HttpServletResponse response,
-                                   @Context HttpServletRequest request) {
+                                   @Context HttpServletResponse response) {
         String result;
         log.info("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId + " of owner: " + owner);
         String deviceHttpEndpoint = deviceIP + ":" + devicePort;
@@ -72,17 +66,16 @@ public class DroneControllerService {
             log.debug(result);
         }
         log.info(owner + deviceId + deviceIP + devicePort );
-        return result;
-
+        return Response.ok(Response.Status.OK.getStatusCode()).build();
     }
 
     @Path("controller/send_command")
     @POST
-    @Feature( code="send_command", name="Send Command", type="operation",
-            description="Send Commands to Drone")
+    /*@Feature( code="send_command", name="Send Command", type="operation",
+            description="Send Commands to Drone")*/
     public Response droneController(@HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
-                                 @QueryParam("action") String action, @QueryParam("duration") String duration,
-                                 @QueryParam("speed") String speed){
+                                    @FormParam("action") String action, @FormParam("duration") String duration,
+                                    @FormParam("speed") String speed){
         try {
             DeviceValidator deviceValidator = new DeviceValidator();
             if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,

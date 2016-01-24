@@ -1,57 +1,5 @@
 {{#zone "topCss"}}
     {{css "css/main-app.css" }}
-    <style type="text/css">
-        .circle {
-            background: none repeat scroll 0 0 #191919;
-            border-radius: 50px;
-            height: 50px;
-            padding: 10px;
-            width: 50px;
-            color: #fff;
-        }
-        .padding-top-double {
-            padding-top: 20px;
-        }
-        .padding-double {
-            padding: 20px;
-        }
-        .grey {
-            color: #333;
-        }
-        hr {
-            display: block;
-            height: 1px;
-            border: 0;
-            border-top: 1px solid #7f7f7f;
-            margin: 1em 0;
-            padding: 0;
-            opacity: 0.2;
-        }
-        .light-grey {
-            color: #7c7c7c;
-        }
-        .uppercase {
-            text-transform: uppercase;
-        }
-        .grey-bg {
-            background-color: #f6f4f4;
-        }
-
-        path {
-            stroke: black;
-            stroke-width: 2;
-            fill: none;
-        }
-
-        .axis path, .axis line {
-            fill: none;
-            stroke: #ccc;
-            stroke-width: 2;
-            shape-rendering: crispEdges;
-        }
-
-
-    </style>
 {{/zone}}
                 <div class=" row">
                     <div class="box col-md-12">
@@ -69,8 +17,8 @@
                             <div class="col-md-4 col-sm-2 col-xs-2">
                                 <div class="progress">
                                     <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                                         aria-valuemax="100" style="width: 0%;">
-                                        0%
+                                         aria-valuemax="100" style="width: 0%;" id="battery_level_holder">
+                                        <p id="battery_level">0%</p>
                                     </div>
                                 </div>
                             </div>
@@ -84,12 +32,8 @@
                                 <h2><i class="glyphicon glyphicon-info-sign"></i> Controller </h2>
 
                                 <div class="box-icon">
-                                    <a href="#" class="btn btn-setting btn-round btn-default"><i
-                                            class="glyphicon glyphicon-cog"></i></a>
                                     <a href="#" class="btn btn-minimize btn-round btn-default"><i
                                             class="glyphicon glyphicon-chevron-up" ></i></a>
-                                    <a href="#" class="btn btn-close btn-round btn-default"><i
-                                            class="glyphicon glyphicon-remove"></i></a>
                                 </div>
                             </div>
                             <div class="box-content row" id="module_control">
@@ -150,12 +94,8 @@
                                     <h2><i class="glyphicon glyphicon-list"></i> Angle of Rotation</h2>
 
                                     <div class="box-icon" id="AngleOfRotation_1">
-                                        <a href="#" class="btn btn-setting btn-round btn-default"><i
-                                                class="glyphicon glyphicon-cog"></i></a>
                                         <a href="#" class="btn btn-minimize btn-round btn-default"><i
                                                 class="glyphicon glyphicon-chevron-up"></i></a>
-                                        <a href="#" class="btn btn-close btn-round btn-default"><i
-                                                class="glyphicon glyphicon-remove"></i></a>
                                     </div>
                                 </div>
                                 <div class="box-content" style="position: relative;" id="objectHolder">
@@ -170,12 +110,8 @@
                                 <div class="box-header well" data-original-title="" >
 
                                     <div class="box-icon" id="AngleOfRotation_2">
-                                        <a href="#" class="btn btn-setting btn-round btn-default"><i
-                                                class="glyphicon glyphicon-cog"></i></a>
                                         <a href="#" class="btn btn-minimize btn-round btn-default"><i
                                                 class="glyphicon glyphicon-chevron-up"></i></a>
-                                        <a href="#" class="btn btn-close btn-round btn-default"><i
-                                                class="glyphicon glyphicon-remove"></i></a>
                                     </div>
                                 </div>
                                 <div class="box-content" >
@@ -196,12 +132,8 @@
                                 <div class="box-header well" data-original-title="" >
 
                                     <div class="box-icon" id="AngleOfRotation_3">
-                                        <a href="#" class="btn btn-setting btn-round btn-default"><i
-                                                class="glyphicon glyphicon-cog"></i></a>
                                         <a href="#" class="btn btn-minimize btn-round btn-default"><i
                                                 class="glyphicon glyphicon-chevron-up"></i></a>
-                                        <a href="#" class="btn btn-close btn-round btn-default"><i
-                                                class="glyphicon glyphicon-remove"></i></a>
                                     </div>
                                 </div>
                                 <div class="box-content" >
@@ -224,12 +156,8 @@
                                     <h2><i class="glyphicon glyphicon-list"></i>Live Video Stream</h2>
 
                                     <div class="box-icon" id="LiveVideoStream">
-                                        <a href="#" class="btn btn-setting btn-round btn-default"><i
-                                                class="glyphicon glyphicon-cog"></i></a>
                                         <a href="#" class="btn btn-minimize btn-round btn-default"><i
                                                 class="glyphicon glyphicon-chevron-up"></i></a>
-                                        <a href="#" class="btn btn-close btn-round btn-default"><i
-                                                class="glyphicon glyphicon-remove"></i></a>
                                     </div>
                                 </div>
                                 <div class="box-content">
@@ -248,20 +176,16 @@
                                 <div class="box-header well" data-original-title="" >
                                     <h2><i class="glyphicon glyphicon-list"></i>Sensor Readings</h2>
                                     <div class="box-icon" id="SensorReadings">
-                                        <a href="#" class="btn btn-setting btn-round btn-default"><i
-                                                class="glyphicon glyphicon-cog"></i></a>
                                         <a href="#" class="btn btn-minimize btn-round btn-default"><i
                                                 class="glyphicon glyphicon-chevron-up"></i></a>
-                                        <a href="#" class="btn btn-close btn-round btn-default"><i
-                                                class="glyphicon glyphicon-remove"></i></a>
                                     </div>
                                 </div>
                                 <div class="box-content" id="basicSensoReading">
                                     <div>
-                                        <p>Location latitude: <label id="locationLat"></label></br>
+                                        <p>Location</br> latitude: <label id="locationLat"></label></br>
                                             longitude:  <label id="locationLog"></label></br>
                                             altitudes: <label id="locationAlt"></label></p>
-                                        <p> Velocity: x :<label id="velocityx"></label></br>
+                                        <p> Velocity:</br> x :<label id="velocityx"></label></br>
                                             y :  <label id="velocityy"></label></br>
                                             z : <label id="velocityz"></label></p>
                                         <p> Battery Voltage:<label id="battery_voltage"></label></p>
@@ -275,12 +199,8 @@
                                     <h2><i class="glyphicon glyphicon-list-alt"></i>Realtime Plotting</h2>
 
                                     <div class="box-icon" id="RealtimePlotting">
-                                        <a href="#" class="btn btn-setting btn-round btn-default"><i
-                                                class="glyphicon glyphicon-cog"></i></a>
                                         <a href="#" class="btn btn-minimize btn-round btn-default"><i
                                                 class="glyphicon glyphicon-chevron-up"></i></a>
-                                        <a href="#" class="btn btn-close btn-round btn-default"><i
-                                                class="glyphicon glyphicon-remove"></i></a>
                                     </div>
                                 </div>
                                 <div class="box-content">

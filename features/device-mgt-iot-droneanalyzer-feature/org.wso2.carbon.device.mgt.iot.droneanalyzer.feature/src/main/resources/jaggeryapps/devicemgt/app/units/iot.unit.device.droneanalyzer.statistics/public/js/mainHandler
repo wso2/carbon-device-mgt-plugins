@@ -16,7 +16,7 @@
  * under the License.
  */
 
-object_maker.init(config_api.config_3dobject_holder, $("#objectHolder").width(), $("#objectHolder").width()/2);
+object_maker.init(config_api.config_3dobject_holder, $("#objectHolder").width(), $("#objectHolder").width()/1.5);
 object_maker.animate();
 var flight_dynamics = new flight_dynamics();
 $("#window_size").slider({
