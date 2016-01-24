@@ -19,9 +19,6 @@
 package org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.util;
 
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.analytics.exception.DataPublisherConfigurationException;
-import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.transport.DroneAnalyzerXMPPConnector;
@@ -34,7 +31,6 @@ import java.io.File;
 public class DroneAnalyzerServiceUtils {
 
     private static final String SUPER_TENANT = "carbon.super";
-    private static final String TEMPERATURE_STREAM_DEFINITION = "org.wso2.iot.devices.temperature";
     private static org.apache.commons.logging.Log log = LogFactory.getLog(DroneAnalyzerServiceUtils.class);
 
     public static void sendCommandViaXMPP(String deviceOwner, String deviceId, String resource,
@@ -96,26 +92,5 @@ public class DroneAnalyzerServiceUtils {
             log.error(e.getMessage()+ "\n"+ e);
         }
         return controlState;
-    }
-
-    public static boolean publishToDAS(String owner, String deviceId, float temperature) {
-        PrivilegedCarbonContext.startTenantFlow();
-        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        ctx.setTenantDomain(SUPER_TENANT, true);
-        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx.getOSGiService(
-                DeviceAnalyticsService.class, null);
-        Object metdaData[] = {owner, DroneConstants.DEVICE_TYPE, deviceId,
-                System.currentTimeMillis()};
-        Object payloadData[] = {temperature};
-
-        try {
-            deviceAnalyticsService.publishEvent(TEMPERATURE_STREAM_DEFINITION, "1.0.0", metdaData,
-                    new Object[0], payloadData);
-        } catch (DataPublisherConfigurationException e) {
-            return false;
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
-        }
-        return true;
     }
 }
