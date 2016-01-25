@@ -38,8 +38,7 @@ public class DroneRealTimeService {
     public DroneRealTimeService() {
         messageController = new MessageTransformer();
         xmppConnector = new DroneAnalyzerXMPPConnector(messageController);
-
-        if (XmppConfig.getInstance().isEnabled()){
+        if (!XmppConfig.getInstance().isEnabled()){
             xmppConnector.connect();
         } else {
             log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, DroneAnalyzerXMPPConnector not started.");
@@ -58,24 +57,23 @@ public class DroneRealTimeService {
 
     @OnMessage
     public void onMessage(String message, Session session){
-        try {
             while(true){
-                if((messageController !=null) && (!messageController.isEmptyQueue())){
-                    String message1 = messageController.getMessage();
-                    session.getBasicRemote().sendText(message1);
+                try{
+                    if((messageController !=null) && (!messageController.isEmptyQueue())){
+                        String message1 = messageController.getMessage();
+                        session.getBasicRemote().sendText(message1);
+                    }
+                    Thread.sleep(DroneConstants.MINIMUM_TIME_DURATION);
+                } catch (IOException ex) {
+                    log.error(ex.getMessage() + "\n" + ex);
+                } catch (InterruptedException e) {
+                    log.error(e.getMessage(), e);
                 }
-                Thread.sleep(DroneConstants.MINIMUM_TIME_DURATION);
             }
-        } catch (IOException ex) {
-            log.error(ex.getMessage() + "\n" + ex);
-        } catch (InterruptedException e) {
-            log.error(e.getMessage(), e);
-        }
     }
 
     @OnClose
     public void onClose(Session session){
-
         try {
             xmppConnector.disconnect();
             log.info("XMPP connection is disconnected");

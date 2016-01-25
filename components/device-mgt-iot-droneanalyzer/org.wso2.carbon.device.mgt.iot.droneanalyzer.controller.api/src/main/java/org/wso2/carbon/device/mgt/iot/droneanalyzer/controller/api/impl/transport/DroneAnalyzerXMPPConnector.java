@@ -35,33 +35,29 @@ public class DroneAnalyzerXMPPConnector extends XMPPTransportHandler {
     private static Log log = LogFactory.getLog(DroneAnalyzerXMPPConnector.class);
 
     private static String xmppServerIP;
-    private static int xmppServerPort;
     private static String xmppAdminUsername;
     private static String xmppAdminPassword;
     private static String xmppAdminAccountJID;
     private MessageTransformer messageTransformer;
-
     private ScheduledFuture<?> connectorServiceHandler;
     private ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
 
     public DroneAnalyzerXMPPConnector(MessageTransformer messageTransformer) {
-        super(XmppConfig.getInstance().getXmppServerIP(),
-                XmppConfig.getInstance().getSERVER_CONNECTION_PORT());
+        super(XmppConfig.getInstance().getXmppServerIP(),XmppConfig.getInstance().getSERVER_CONNECTION_PORT());
         this.messageTransformer = messageTransformer;
-
     }
 
     @Override
     public void connect() {
         Runnable connector = new Runnable() {
+            @Override
             public void run() {
                 if (!isConnected()) {
                     try {
                         initConnector();
                         connectToServer();
                         loginToServer(xmppAdminUsername, xmppAdminPassword, null);
-                        setFilterOnReceiver(DroneConstants.DEVICE_ID+ "@" + xmppServerIP);
-
+                        setFilterOnReceiver(xmppAdminAccountJID);
                     } catch (TransportHandlerException e) {
                         if (log.isDebugEnabled()) {
                             log.warn("Connection/Login to XMPP server at: " + server + " as " +
@@ -84,18 +80,28 @@ public class DroneAnalyzerXMPPConnector extends XMPPTransportHandler {
 
     @Override
     public void processIncomingMessage(Message message) throws TransportHandlerException {
-        String from = message.getFrom();
-        String subject = message.getSubject();
-        String inbound_message = message.getBody();
-        int indexOfAt = from.indexOf("@");
-        int indexOfSlash = from.indexOf("/");
-        String deviceId = from.substring(0, indexOfAt);
-        String resource = from.substring(indexOfSlash + 1, from.length());
-
-        if ((inbound_message != null)&&(resource.equals(DroneConstants.MESSAGE_RESOURCE)) ){
-            messageTransformer.messageTranslater(inbound_message);
-        } else {
-            log.error("Message is empty or it is not belongs to "+ DroneConstants.DEVICE_ID);
+        try{
+            String from = message.getFrom();
+            String inbound_message = message.getBody();
+            int indexOfSlash = from.indexOf("/");
+            if(indexOfSlash==0){
+                if(log.isDebugEnabled()){
+                    log.debug("Required resource not available.");
+                }
+            }else{
+                String resource = from.substring(indexOfSlash + 1, from.length());
+                if ((inbound_message != null)&&(resource.equals(DroneConstants.MESSAGE_RESOURCE)) ){
+                    messageTransformer.messageTranslater(inbound_message);
+                } else {
+                    if(log.isDebugEnabled()){
+                        log.debug("Message is empty or it is not belongs to " + xmppAdminUsername);
+                    }
+                }
+            }
+        }catch(ArrayIndexOutOfBoundsException e){
+            log.error("Wrong message format: input message", e);
+        }catch(RuntimeException e){
+            log.error("Unexpected error has been occurred, ", e);
         }
     }
 
@@ -117,18 +123,15 @@ public class DroneAnalyzerXMPPConnector extends XMPPTransportHandler {
                         log.warn("Unable to 'STOP' connection to XMPP server at: " + server +
                                          " for user - " + xmppAdminUsername);
                     }
-
                     try {
                         Thread.sleep(timeoutInterval);
                     } catch (InterruptedException e1) {
                         log.error("XMPP-Terminator: Thread Sleep Interrupt Exception for "
                                           + DroneConstants.DEVICE_TYPE + " type.", e1);
                     }
-
                 }
             }
         };
-
         Thread terminatorThread = new Thread(stopConnection);
         terminatorThread.setDaemon(true);
         terminatorThread.start();

@@ -15,32 +15,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 var flight_dynamics = function () {
     var api = this;
     api.processingMessage = function (sender_message) {
-
-        JSON.stringify(sender_message);
-
+        if(sender_message.battery_level!= undefined){
+            $("#battery_level_holder").width( parseInt(sender_message.battery_level)+"%" );
+            $("#battery_level").html(sender_message.battery_level+"%");
+        }
         if (sender_message.quatanium_val != undefined) {
             current_status = object_maker.get_heading_attitude_bank(sender_message.quatanium_val);
             object_maker.set_heading_attitude_bank(current_status);
             $("#imageTop").animate({rotate: '' + (180 / Math.PI) * 2.890456 + 'deg'}, 2);
         }
-
-        $("#imageTop").delay(2).animate({rotate: '45deg'}, 2);
         if (config_api.modules_status.angleOfRotation_2 || config_api.modules_status.angleOfRotation_1) {
             console.log(JSON.stringify(current_status));
             object_maker.set_bank("#imageTop", current_status.bank);
             object_maker.set_heading("#imageBackSecond", current_status.heading);
 
         }
-
         if (config_api.modules_status.realtimePlotting) {
             if (current_status[$('#plotting_attribute').val()] != undefined) {
                 plotting.pushData(current_status[$('#plotting_attribute').val()]);
             }
         }
-
         if (sender_message.basicParam != undefined) {
             if (sender_message.basicParam.velocity != undefined) {
                 var velocity = sender_message.basicParam.velocity;
