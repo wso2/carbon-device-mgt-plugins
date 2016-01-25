@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -24,11 +24,12 @@ import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api.exception.DigitalDisplayException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api.util.DigitalDisplayMQTTConnector;
-import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.constants.DigitalDisplayConstants;
+import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
@@ -48,19 +49,40 @@ public class DigitalDisplayControllerService {
 
     private static DigitalDisplayMQTTConnector digitalDisplayMQTTConnector;
 
+    private boolean waitForServerStartup() {
+        while (!DeviceManagement.isServerReady()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public DigitalDisplayMQTTConnector getDigitalDisplayMQTTConnector() {
         return DigitalDisplayControllerService.digitalDisplayMQTTConnector;
     }
 
-    public void setDigitalDisplayMQTTConnector(
+    public void setDigitalDisplayMQTTConnector(final
             DigitalDisplayMQTTConnector digitalDisplayMQTTConnector) {
-        DigitalDisplayControllerService.digitalDisplayMQTTConnector = digitalDisplayMQTTConnector;
-        if (MqttConfig.getInstance().isEnabled()) {
-            digitalDisplayMQTTConnector.connect();
-        } else {
-            log.warn("MQTT disabled in 'devicemgt-config.xml'. " +
+        Runnable connector = new Runnable() {
+            public void run() {
+                if (waitForServerStartup()) {
+                    return;
+                }
+                DigitalDisplayControllerService.digitalDisplayMQTTConnector = digitalDisplayMQTTConnector;
+                if (MqttConfig.getInstance().isEnabled()) {
+                    digitalDisplayMQTTConnector.connect();
+                } else {
+                    log.warn("MQTT disabled in 'devicemgt-config.xml'. " +
                              "Hence, DigitalDisplayMQTTConnector not started.");
-        }
+                }
+            }
+        };
+        Thread connectorThread = new Thread(connector);
+        connectorThread.setDaemon(true);
+        connectorThread.start();
     }
 
     /**

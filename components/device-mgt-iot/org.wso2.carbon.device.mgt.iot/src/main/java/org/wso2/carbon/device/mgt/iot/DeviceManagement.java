@@ -30,8 +30,8 @@ import org.wso2.carbon.device.mgt.core.dao.DeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.core.dto.DeviceType;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.util.DeviceTypes;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
+import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ import java.util.Map;
 public class DeviceManagement {
 
 	private static Log log = LogFactory.getLog(DeviceManagement.class);
-    private static boolean serverReady = false;
+    private static volatile boolean serverReady = false;
     private PrivilegedCarbonContext ctx;
 	private String tenantDomain;
 

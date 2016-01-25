@@ -36,7 +36,6 @@ import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.dto.DeviceJSON;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.transport.VirtualFireAlarmMQTTConnector;
@@ -45,6 +44,7 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.u
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.VirtualFireAlarmServiceUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.scep.ContentType;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.scep.SCEPOperation;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -97,7 +97,6 @@ public class VirtualFireAlarmControllerService {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
                 return true;
             }
         }
@@ -197,13 +196,8 @@ public class VirtualFireAlarmControllerService {
             final VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector) {
         Runnable connector = new Runnable() {
             public void run() {
-                while (!DeviceManagement.isServerReady()) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        return;
-                    }
+                if (waitForServerStartup()) {
+                    return;
                 }
                 VirtualFireAlarmControllerService.this.virtualFireAlarmMQTTConnector = virtualFireAlarmMQTTConnector;
                 if (MqttConfig.getInstance().isEnabled()) {
