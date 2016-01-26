@@ -65,28 +65,30 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
 
     @Override
     public void processIncomingMessage(MqttMessage message, String... messageParams) {
-        String topic = messageParams[0];
-        String ownerAndId = topic.replace("wso2" + File.separator + "iot" + File.separator, "");
-        ownerAndId = ownerAndId.replace(File.separator + DigitalDisplayConstants.DEVICE_TYPE + File.separator, ":");
-        ownerAndId = ownerAndId.replace(File.separator + "digital_display_publisher", "");
+        if(messageParams.length != 0) {
+            String topic = messageParams[0];
+            String ownerAndId = topic.replace("wso2" + File.separator + "iot" + File.separator, "");
+            ownerAndId = ownerAndId.replace(File.separator + DigitalDisplayConstants.DEVICE_TYPE + File.separator, ":");
+            ownerAndId = ownerAndId.replace(File.separator + "digital_display_publisher", "");
 
-        String owner = ownerAndId.split(":")[0];
-        String deviceId = ownerAndId.split(":")[1];
-        String[] messageData = message.toString().split(":");
+            String owner = ownerAndId.split(":")[0];
+            String deviceId = ownerAndId.split(":")[1];
+            String[] messageData = message.toString().split(":");
 
-        if (log.isDebugEnabled()){
-            log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
-        }
-
-        if (messageData.length == 3) {
-            String randomId = messageData[0];
-            String requestMessage = messageData[1];
-            String result = messageData[2];
-
-            if(log.isDebugEnabled()){
-                log.debug("Return result " + result + " for Request " + requestMessage);
+            if (log.isDebugEnabled()) {
+                log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
             }
-            DigitalDisplayWebSocketServerEndPoint.sendMessage(randomId, result);
+
+            if (messageData.length == 3) {
+                String randomId = messageData[0];
+                String requestMessage = messageData[1];
+                String result = messageData[2];
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Return result " + result + " for Request " + requestMessage);
+                }
+                DigitalDisplayWebSocketServerEndPoint.sendMessage(randomId, result);
+            }
         }
     }
 
