@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.core.ServerStartupObserver;
 import org.wso2.carbon.databridge.core.DataBridgeReceiverService;
 import org.wso2.carbon.device.mgt.iot.UserManagement;
 import org.wso2.carbon.device.mgt.iot.analytics.statistics.IoTEventsStatisticsClient;
@@ -36,6 +37,7 @@ import org.wso2.carbon.device.mgt.iot.service.ConfigurationService;
 import org.wso2.carbon.device.mgt.iot.service.ConfigurationServiceImpl;
 import org.wso2.carbon.device.mgt.iot.service.DeviceTypeService;
 import org.wso2.carbon.device.mgt.iot.service.DeviceTypeServiceImpl;
+import org.wso2.carbon.device.mgt.iot.service.StartupListener;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.util.IotDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.exception.IotDeviceMgtPluginException;
@@ -83,17 +85,15 @@ public class IotDeviceManagementServiceComponent {
             log.debug("Activating Iot Device Management Service Component");
         }
         try {
-
-
             BundleContext bundleContext = ctx.getBundleContext();
             /* Initialize the data source configuration */
             DeviceManagementConfigurationManager.getInstance().initConfig();
             IotDeviceTypeConfigurationManager.getInstance().initConfig();
             Map<String, IotDeviceTypeConfig> dsConfigMap =
                     IotDeviceTypeConfigurationManager.getInstance().getIotDeviceTypeConfigMap();
-
             IotDeviceManagementDAOFactory.init(dsConfigMap);
 
+            bundleContext.registerService(ServerStartupObserver.class.getName(), new StartupListener(), null);
 
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
@@ -122,7 +122,6 @@ public class IotDeviceManagementServiceComponent {
             IoTUsageStatisticsClient.initializeDataSource();
             IoTEventsStatisticsClient.initializeDataSource();
             UserManagement.registerApiAccessRoles();
-
 
             bundleContext.registerService(DeviceTypeService.class.getName(),
                                           new DeviceTypeServiceImpl(), null);
