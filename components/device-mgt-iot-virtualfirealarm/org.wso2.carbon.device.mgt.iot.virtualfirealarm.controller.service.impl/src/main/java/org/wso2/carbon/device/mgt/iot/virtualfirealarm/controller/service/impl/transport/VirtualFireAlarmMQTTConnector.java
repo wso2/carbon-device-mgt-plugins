@@ -122,54 +122,56 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
      */
     @Override
     public void processIncomingMessage(MqttMessage mqttMessage, String... messageParams) {
-        String topic = messageParams[0];
-        // owner and the deviceId are extracted from the MQTT topic to which the messgae was received.
-        String ownerAndId = topic.replace(serverName + File.separator, "");
-        ownerAndId = ownerAndId.replace(File.separator + VirtualFireAlarmConstants.DEVICE_TYPE + File.separator, ":");
-        ownerAndId = ownerAndId.replace(File.separator + "publisher", "");
+        if(messageParams.length != 0) {
+            String topic = messageParams[0];
+            // owner and the deviceId are extracted from the MQTT topic to which the messgae was received.
+            String ownerAndId = topic.replace(serverName + File.separator, "");
+            ownerAndId = ownerAndId.replace(File.separator + VirtualFireAlarmConstants.DEVICE_TYPE + File.separator, ":");
+            ownerAndId = ownerAndId.replace(File.separator + "publisher", "");
 
-        String owner = ownerAndId.split(":")[0];
-        String deviceId = ownerAndId.split(":")[1];
+            String owner = ownerAndId.split(":")[0];
+            String deviceId = ownerAndId.split(":")[1];
 
-        if (log.isDebugEnabled()) {
-            log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
-        }
-
-        String actualMessage;
-        try {
-            // the hash-code of the deviceId is used as the alias for device certificates during SCEP enrollment.
-            // hence, the same is used here to fetch the device-specific-certificate from the key store.
-            PublicKey clientPublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
-            PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();
-
-            // the MQTT-messages from VirtualFireAlarm devices are in the form {"Msg":<MESSAGE>, "Sig":<SIGNATURE>}
-            actualMessage = VirtualFireAlarmServiceUtils.extractMessageFromPayload(mqttMessage.toString(),
-                                                                                   serverPrivateKey, clientPublicKey);
             if (log.isDebugEnabled()) {
-                log.debug("MQTT: Received Message [" + actualMessage + "] topic: [" + topic + "]");
+                log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
             }
 
-            if (actualMessage.contains("PUBLISHER")) {
-                float temperature = Float.parseFloat(actualMessage.split(":")[2]);
+            String actualMessage;
+            try {
+                // the hash-code of the deviceId is used as the alias for device certificates during SCEP enrollment.
+                // hence, the same is used here to fetch the device-specific-certificate from the key store.
+                PublicKey clientPublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
+                PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();
 
-                if (!VirtualFireAlarmServiceUtils.publishToDAS(owner, deviceId, temperature)) {
-                    log.error("MQTT Subscriber: Publishing data to DAS failed.");
-                }
-
+                // the MQTT-messages from VirtualFireAlarm devices are in the form {"Msg":<MESSAGE>, "Sig":<SIGNATURE>}
+                actualMessage = VirtualFireAlarmServiceUtils.extractMessageFromPayload(mqttMessage.toString(),
+                        serverPrivateKey, clientPublicKey);
                 if (log.isDebugEnabled()) {
-                    log.debug("MQTT Subscriber: Published data to DAS successfully.");
+                    log.debug("MQTT: Received Message [" + actualMessage + "] topic: [" + topic + "]");
                 }
 
-            } else if (actualMessage.contains("TEMPERATURE")) {
-                String temperatureValue = actualMessage.split(":")[1];
-                SensorDataManager.getInstance().setSensorRecord(deviceId, VirtualFireAlarmConstants.SENSOR_TEMP,
-                                                                temperatureValue,
-                                                                Calendar.getInstance().getTimeInMillis());
+                if (actualMessage.contains("PUBLISHER")) {
+                    float temperature = Float.parseFloat(actualMessage.split(":")[2]);
+
+                    if (!VirtualFireAlarmServiceUtils.publishToDAS(owner, deviceId, temperature)) {
+                        log.error("MQTT Subscriber: Publishing data to DAS failed.");
+                    }
+
+                    if (log.isDebugEnabled()) {
+                        log.debug("MQTT Subscriber: Published data to DAS successfully.");
+                    }
+
+                } else if (actualMessage.contains("TEMPERATURE")) {
+                    String temperatureValue = actualMessage.split(":")[1];
+                    SensorDataManager.getInstance().setSensorRecord(deviceId, VirtualFireAlarmConstants.SENSOR_TEMP,
+                            temperatureValue,
+                            Calendar.getInstance().getTimeInMillis());
+                }
+            } catch (VirtualFireAlarmException e) {
+                String errorMsg =
+                        "CertificateManagementService failure oo Signature-Verification/Decryption was unsuccessful.";
+                log.error(errorMsg, e);
             }
-        } catch (VirtualFireAlarmException e) {
-            String errorMsg =
-                    "CertificateManagementService failure oo Signature-Verification/Decryption was unsuccessful.";
-            log.error(errorMsg, e);
         }
     }
 

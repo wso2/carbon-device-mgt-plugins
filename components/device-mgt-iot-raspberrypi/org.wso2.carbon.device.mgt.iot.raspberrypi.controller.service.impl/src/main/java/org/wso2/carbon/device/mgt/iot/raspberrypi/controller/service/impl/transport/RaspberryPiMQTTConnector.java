@@ -86,37 +86,39 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
 
     @Override
     public void processIncomingMessage(MqttMessage message, String... messageParams) throws TransportHandlerException {
-        String topic = messageParams[0];
-        // owner and the deviceId are extracted from the MQTT topic to which the messgae was received.
-        String ownerAndId = topic.replace(serverName + File.separator, "");
-        ownerAndId = ownerAndId.replace(File.separator + RaspberrypiConstants.DEVICE_TYPE + File.separator, ":");
-        ownerAndId = ownerAndId.replace(File.separator + "publisher", "");
+        if(messageParams.length != 0) {
+            String topic = messageParams[0];
+            // owner and the deviceId are extracted from the MQTT topic to which the messgae was received.
+            String ownerAndId = topic.replace(serverName + File.separator, "");
+            ownerAndId = ownerAndId.replace(File.separator + RaspberrypiConstants.DEVICE_TYPE + File.separator, ":");
+            ownerAndId = ownerAndId.replace(File.separator + "publisher", "");
 
-        String owner = ownerAndId.split(":")[0];
-        String deviceId = ownerAndId.split(":")[1];
-        String receivedMessage = message.toString();
-
-        if (log.isDebugEnabled()) {
-            log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
-            log.debug("Message [" + receivedMessage + "] topic: [" + topic + "]");
-        }
-
-        if (receivedMessage.contains("PUBLISHER")) {
-            float temperature = Float.parseFloat(receivedMessage.split(":")[2]);
-
-            if (!RaspberrypiServiceUtils.publishToDAS(owner, deviceId, temperature)) {
-                log.error("MQTT Subscriber: Publishing data to DAS failed.");
-            }
+            String owner = ownerAndId.split(":")[0];
+            String deviceId = ownerAndId.split(":")[1];
+            String receivedMessage = message.toString();
 
             if (log.isDebugEnabled()) {
-                log.debug("MQTT Subscriber: Published data to DAS successfully.");
+                log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
+                log.debug("Message [" + receivedMessage + "] topic: [" + topic + "]");
             }
 
-        } else if (receivedMessage.contains("TEMPERATURE")) {
-            String temperatureValue = receivedMessage.split(":")[1];
-            SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
-                                                            temperatureValue,
-                                                            Calendar.getInstance().getTimeInMillis());
+            if (receivedMessage.contains("PUBLISHER")) {
+                float temperature = Float.parseFloat(receivedMessage.split(":")[2]);
+
+                if (!RaspberrypiServiceUtils.publishToDAS(owner, deviceId, temperature)) {
+                    log.error("MQTT Subscriber: Publishing data to DAS failed.");
+                }
+
+                if (log.isDebugEnabled()) {
+                    log.debug("MQTT Subscriber: Published data to DAS successfully.");
+                }
+
+            } else if (receivedMessage.contains("TEMPERATURE")) {
+                String temperatureValue = receivedMessage.split(":")[1];
+                SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
+                        temperatureValue,
+                        Calendar.getInstance().getTimeInMillis());
+            }
         }
     }
 

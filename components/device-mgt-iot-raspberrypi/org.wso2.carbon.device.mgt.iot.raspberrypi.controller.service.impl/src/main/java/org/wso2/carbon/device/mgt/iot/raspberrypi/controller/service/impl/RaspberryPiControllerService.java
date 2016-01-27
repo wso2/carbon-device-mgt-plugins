@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -25,19 +25,27 @@ import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.DeviceValidator;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.transport.RaspberryPiMQTTConnector;
-import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.dto.DeviceJSON;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.transport.RaspberryPiMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.util.RaspberrypiServiceUtils;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -48,30 +56,25 @@ import java.util.concurrent.ConcurrentHashMap;
 @DeviceType(value = "raspberrypi")
 public class RaspberryPiControllerService {
 
-    private static Log log = LogFactory.getLog(RaspberryPiControllerService.class);
-
-    //TODO; replace this tenant domain
-    private static final String SUPER_TENANT = "carbon.super";
-
-    @Context  //injected response proxy supporting multiple thread
-    private HttpServletResponse response;
-
     public static final String HTTP_PROTOCOL = "HTTP";
     public static final String MQTT_PROTOCOL = "MQTT";
-
+    //TODO; replace this tenant domain
+    private static final String SUPER_TENANT = "carbon.super";
+    private static Log log = LogFactory.getLog(RaspberryPiControllerService.class);
+    @Context  //injected response proxy supporting multiple thread
+    private HttpServletResponse response;
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
     private RaspberryPiMQTTConnector raspberryPiMQTTConnector;
 
-    /**
-     * @param raspberryPiMQTTConnector
-     */
-    public void setRaspberryPiMQTTConnector(final RaspberryPiMQTTConnector raspberryPiMQTTConnector) {
-        this.raspberryPiMQTTConnector = raspberryPiMQTTConnector;
-        if (MqttConfig.getInstance().isEnabled()) {
-            raspberryPiMQTTConnector.connect();
-        } else {
-            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, RaspberryPiMQTTConnector not started.");
+    private boolean waitForServerStartup() {
+        while (!DeviceManagement.isServerReady()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                return true;
+            }
         }
+        return false;
     }
 
     /**
@@ -79,6 +82,29 @@ public class RaspberryPiControllerService {
      */
     public RaspberryPiMQTTConnector getRaspberryPiMQTTConnector() {
         return raspberryPiMQTTConnector;
+    }
+
+    /**
+     * @param raspberryPiMQTTConnector
+     */
+    public void setRaspberryPiMQTTConnector(
+            final RaspberryPiMQTTConnector raspberryPiMQTTConnector) {
+        Runnable connector = new Runnable() {
+            public void run() {
+                if (waitForServerStartup()) {
+                    return;
+                }
+                RaspberryPiControllerService.this.raspberryPiMQTTConnector = raspberryPiMQTTConnector;
+                if (MqttConfig.getInstance().isEnabled()) {
+                    raspberryPiMQTTConnector.connect();
+                } else {
+                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, RaspberryPiMQTTConnector not started.");
+                }
+            }
+        };
+        Thread connectorThread = new Thread(connector);
+        connectorThread.setDaemon(true);
+        connectorThread.start();
     }
 
 
