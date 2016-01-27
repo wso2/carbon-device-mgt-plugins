@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -21,15 +21,11 @@ package org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
+import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.transport.DroneAnalyzerXMPPConnector;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.trasformer.MessageTransformer;
-import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
 
-import javax.websocket.OnClose;
-import javax.websocket.OnError;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 
@@ -48,8 +44,7 @@ public class DroneRealTimeService {
                 }
                 messageController = new MessageTransformer();
                 xmppConnector = new DroneAnalyzerXMPPConnector(messageController);
-
-                if (XmppConfig.getInstance().isEnabled()) {
+                if (!XmppConfig.getInstance().isEnabled()){
                     xmppConnector.connect();
                 } else {
                     log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, DroneAnalyzerXMPPConnector not started.");
@@ -84,24 +79,23 @@ public class DroneRealTimeService {
 
     @OnMessage
     public void onMessage(String message, Session session){
-        try {
             while(true){
-                if((messageController !=null) && (!messageController.isEmptyQueue())){
-                    String message1 = messageController.getMessage();
-                    session.getBasicRemote().sendText(message1);
+                try{
+                    if((messageController !=null) && (!messageController.isEmptyQueue())){
+                        String message1 = messageController.getMessage();
+                        session.getBasicRemote().sendText(message1);
+                    }
+                    Thread.sleep(DroneConstants.MINIMUM_TIME_DURATION);
+                } catch (IOException ex) {
+                    log.error(ex.getMessage() + "\n" + ex);
+                } catch (InterruptedException e) {
+                    log.error(e.getMessage(), e);
                 }
-                Thread.sleep(DroneConstants.MINIMUM_TIME_DURATION);
             }
-        } catch (IOException ex) {
-            log.error(ex.getMessage() + "\n" + ex);
-        } catch (InterruptedException e) {
-            log.error(e.getMessage(), e);
-        }
     }
 
     @OnClose
     public void onClose(Session session){
-
         try {
             xmppConnector.disconnect();
             log.info("XMPP connection is disconnected");
