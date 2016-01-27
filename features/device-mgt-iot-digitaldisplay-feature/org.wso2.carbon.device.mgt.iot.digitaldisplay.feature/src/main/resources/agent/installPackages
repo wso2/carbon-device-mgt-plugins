@@ -9,6 +9,8 @@ for P in paho-mqtt lxml; do
     }
 done
 
+unzip DigitalDisplay
+cp ./deviceConfig.properties ./DigitalDisplay
 
 
 

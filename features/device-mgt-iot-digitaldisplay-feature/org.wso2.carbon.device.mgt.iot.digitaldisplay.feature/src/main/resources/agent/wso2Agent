@@ -4,8 +4,6 @@ ps aux|grep httpserver.py|awk '{print $2}'|xargs kill -9
 #xdotool mousemove 0 0
 #xdotool search -name LXTerminal windowunmap
 #cd ~/
-unzip DigitalDisplay
-cp ./deviceConfig.properties ./DigitalDisplay 
 cd ./DigitalDisplay/
 mkdir -p tmp/dd-kernel-test
 python displayagent.py
