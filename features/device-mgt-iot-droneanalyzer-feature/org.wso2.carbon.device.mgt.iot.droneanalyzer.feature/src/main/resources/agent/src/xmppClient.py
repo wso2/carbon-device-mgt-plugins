@@ -23,9 +23,9 @@ import util
 XMPP_ENDPOINT = util.XMPP_EP.split(":")
 XMPP_IP = XMPP_ENDPOINT[1].replace('//', '')
 XMPP_PORT = int(XMPP_ENDPOINT[2])
-MESSAGE_TO = "admin"
-XMPP_OWN = util.DEVICE_OWNER
-XMPP_PWD = util.DEVICE_ID
+MESSAGE_TO = util.DEVICE_OWNER
+XMPP_PWD = util.DEVICE_PASSWORD
+XMPP_OWN = util.DEVICE_ID
 
 XMPP_RESOURCE = "drone_current_status"
 XMPP_JID = MESSAGE_TO + "@" + XMPP_IP + "/" + XMPP_RESOURCE

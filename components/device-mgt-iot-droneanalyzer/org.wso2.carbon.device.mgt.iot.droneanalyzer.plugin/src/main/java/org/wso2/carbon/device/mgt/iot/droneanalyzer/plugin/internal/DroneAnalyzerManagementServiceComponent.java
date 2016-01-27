@@ -27,8 +27,6 @@ import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl.DroneAnalyzerManagerService;
 import org.wso2.carbon.device.mgt.iot.service.DeviceTypeService;
 
-
-
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.internal
  * .DroneAnalyzerManagementServiceComponent"
