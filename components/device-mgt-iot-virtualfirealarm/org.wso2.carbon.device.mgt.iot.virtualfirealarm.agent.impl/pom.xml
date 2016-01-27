@@ -101,7 +101,7 @@
 		<!--Dependency on MQTT Client Library-->
 		<dependency>
 			<groupId>org.eclipse.paho</groupId>
-			<artifactId>mqtt-client</artifactId>
+			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
 			<version>${paho.mqtt.version}</version>
 		</dependency>
 
@@ -209,7 +209,7 @@
 		<jetty.version>8.1.3.v20120416</jetty.version>
 
 		<!-- MQTT Paho Version -->
-		<paho.mqtt.version>0.4.0</paho.mqtt.version>
+		<paho.mqtt.version>1.0.2</paho.mqtt.version>
 
 		<!-- Jivesoftware XMPP Version -->
 		<smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>

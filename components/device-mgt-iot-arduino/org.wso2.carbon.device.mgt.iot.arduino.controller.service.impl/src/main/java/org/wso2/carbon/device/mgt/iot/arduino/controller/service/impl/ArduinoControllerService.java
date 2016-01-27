@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -24,10 +24,11 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
-import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
+import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl.dto.DeviceJSON;
 import org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl.transport.ArduinoMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl.util.ArduinoServiceUtils;
+import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
@@ -35,7 +36,14 @@ import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -50,43 +58,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @DeviceType( value = "arduino")
 public class ArduinoControllerService {
 
-    private static Log log = LogFactory.getLog(ArduinoControllerService.class);
-
-    //TODO; replace this tenant domain
-    private static final String SUPER_TENANT = "carbon.super";
-
-    @Context  //injected response proxy supporting multiple thread
-    private HttpServletResponse response;
-
     public static final String HTTP_PROTOCOL = "HTTP";
     public static final String MQTT_PROTOCOL = "MQTT";
-
-    private ArduinoMQTTConnector arduinoMQTTConnector;
+    //TODO; replace this tenant domain
+    private static final String SUPER_TENANT = "carbon.super";
+    private static Log log = LogFactory.getLog(ArduinoControllerService.class);
     private static Map<String, LinkedList<String>> replyMsgQueue = new HashMap<>();
     private static Map<String, LinkedList<String>> internalControlsQueue = new HashMap<>();
+    @Context  //injected response proxy supporting multiple thread
+    private HttpServletResponse response;
+    private ArduinoMQTTConnector arduinoMQTTConnector;
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
-
-    /**
-     * @param arduinoMQTTConnector an object of type "ArduinoMQTTConnector" specific for this ArduinoControllerService
-     */
-    @SuppressWarnings("unused")
-    public void setArduinoMQTTConnector(
-            final ArduinoMQTTConnector arduinoMQTTConnector) {
-        this.arduinoMQTTConnector = arduinoMQTTConnector;
-        if (MqttConfig.getInstance().isEnabled()) {
-            arduinoMQTTConnector.connect();
-        } else {
-            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, ArduinoMQTTConnector not started.");
-        }
-    }
-
-    /**
-     * @return the "ArduinoMQTTConnector" object of this ArduinoControllerService instance
-     */
-    @SuppressWarnings("unused")
-    public ArduinoMQTTConnector getArduinoMQTTConnector() {
-        return arduinoMQTTConnector;
-    }
 
     /**
      * @return the queue containing all the MQTT reply messages from all Arduinos communicating to this service
@@ -100,6 +82,49 @@ public class ArduinoControllerService {
      */
     public static Map<String, LinkedList<String>> getInternalControlsQueue() {
         return internalControlsQueue;
+    }
+
+    private boolean waitForServerStartup() {
+        while (!DeviceManagement.isServerReady()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return the "ArduinoMQTTConnector" object of this ArduinoControllerService instance
+     */
+    @SuppressWarnings("unused")
+    public ArduinoMQTTConnector getArduinoMQTTConnector() {
+        return arduinoMQTTConnector;
+    }
+
+    /**
+     * @param arduinoMQTTConnector an object of type "ArduinoMQTTConnector" specific for this ArduinoControllerService
+     */
+    @SuppressWarnings("unused")
+    public void setArduinoMQTTConnector(
+            final ArduinoMQTTConnector arduinoMQTTConnector) {
+        Runnable connector = new Runnable() {
+            public void run() {
+                if (waitForServerStartup()) {
+                    return;
+                }
+                ArduinoControllerService.this.arduinoMQTTConnector = arduinoMQTTConnector;
+                if (MqttConfig.getInstance().isEnabled()) {
+                    arduinoMQTTConnector.connect();
+                } else {
+                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, ArduinoMQTTConnector not started.");
+                }
+            }
+        };
+        Thread connectorThread = new Thread(connector);
+        connectorThread.setDaemon(true);
+        connectorThread.start();
     }
 
     /*	---------------------------------------------------------------------------------------

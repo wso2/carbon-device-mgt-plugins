@@ -88,58 +88,60 @@ public class ArduinoMQTTConnector extends MQTTTransportHandler {
 
     @Override
     public void processIncomingMessage(MqttMessage message, String... messageParams) throws TransportHandlerException {
-        String topic = messageParams[0];
-        // owner and the deviceId are extracted from the MQTT topic to which the messgae was received.
-        String ownerAndId = topic.replace(serverName + File.separator, "");
-        ownerAndId = ownerAndId.replace(File.separator + ArduinoConstants.DEVICE_TYPE + File.separator, ":");
+        if(messageParams.length != 0) {
+            String topic = messageParams[0];
+            // owner and the deviceId are extracted from the MQTT topic to which the messgae was received.
+            String ownerAndId = topic.replace(serverName + File.separator, "");
+            ownerAndId = ownerAndId.replace(File.separator + ArduinoConstants.DEVICE_TYPE + File.separator, ":");
 
-        String owner = ownerAndId.split(":")[0];
-        String deviceId = ownerAndId.split(":")[1];
-
-        if (log.isDebugEnabled()) {
-            log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
-        }
-
-        int lastIndex = message.toString().lastIndexOf(":");
-        String msgContext = message.toString().substring(lastIndex + 1);
-
-        LinkedList<String> deviceControlList;
-        LinkedList<String> replyMessageList;
-
-        if (msgContext.equals(MESSAGE_TO_SEND) || msgContext.equals(ArduinoConstants.STATE_ON) || msgContext.equals(
-                ArduinoConstants.STATE_OFF)) {
+            String owner = ownerAndId.split(":")[0];
+            String deviceId = ownerAndId.split(":")[1];
 
             if (log.isDebugEnabled()) {
-                log.debug("Received a control message: ");
-                log.debug("Control message topic: " + topic);
-                log.debug("Control message: " + message.toString());
+                log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
             }
 
-            synchronized (ArduinoControllerService.getInternalControlsQueue()) {
-                deviceControlList = ArduinoControllerService.getInternalControlsQueue().get(deviceId);
-                if (deviceControlList == null) {
-                    ArduinoControllerService.getInternalControlsQueue()
-                            .put(deviceId, deviceControlList = new LinkedList<String>());
+            int lastIndex = message.toString().lastIndexOf(":");
+            String msgContext = message.toString().substring(lastIndex + 1);
+
+            LinkedList<String> deviceControlList;
+            LinkedList<String> replyMessageList;
+
+            if (msgContext.equals(MESSAGE_TO_SEND) || msgContext.equals(ArduinoConstants.STATE_ON) || msgContext.equals(
+                    ArduinoConstants.STATE_OFF)) {
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Received a control message: ");
+                    log.debug("Control message topic: " + topic);
+                    log.debug("Control message: " + message.toString());
                 }
-            }
-            deviceControlList.add(message.toString());
 
-        } else if (msgContext.equals(MESSAGE_RECEIVED)) {
-
-            if (log.isDebugEnabled()) {
-                log.debug("Received reply from a device: ");
-                log.debug("Reply message topic: " + topic);
-                log.debug("Reply message: " + message.toString().substring(0, lastIndex));
-            }
-
-            synchronized (ArduinoControllerService.getReplyMsgQueue()) {
-                replyMessageList = ArduinoControllerService.getReplyMsgQueue().get(deviceId);
-                if (replyMessageList == null) {
-                    ArduinoControllerService.getReplyMsgQueue()
-                            .put(deviceId, replyMessageList = new LinkedList<>());
+                synchronized (ArduinoControllerService.getInternalControlsQueue()) {
+                    deviceControlList = ArduinoControllerService.getInternalControlsQueue().get(deviceId);
+                    if (deviceControlList == null) {
+                        ArduinoControllerService.getInternalControlsQueue()
+                                .put(deviceId, deviceControlList = new LinkedList<String>());
+                    }
                 }
+                deviceControlList.add(message.toString());
+
+            } else if (msgContext.equals(MESSAGE_RECEIVED)) {
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Received reply from a device: ");
+                    log.debug("Reply message topic: " + topic);
+                    log.debug("Reply message: " + message.toString().substring(0, lastIndex));
+                }
+
+                synchronized (ArduinoControllerService.getReplyMsgQueue()) {
+                    replyMessageList = ArduinoControllerService.getReplyMsgQueue().get(deviceId);
+                    if (replyMessageList == null) {
+                        ArduinoControllerService.getReplyMsgQueue()
+                                .put(deviceId, replyMessageList = new LinkedList<>());
+                    }
+                }
+                replyMessageList.add(message.toString());
             }
-            replyMessageList.add(message.toString());
         }
     }
 

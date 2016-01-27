@@ -95,11 +95,11 @@
                             org.wso2.carbon.device.mgt.core.*,
                             org.wso2.carbon.context.*;version="${carbon.kernel.version.range}",
                             org.wso2.carbon.ndatasource.core;version="${carbon.kernel.version.range}",
+                            org.eclipse.paho.client.mqttv3.*;version="${eclipse.paho.version}"
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.iot.internal,
-                            org.wso2.carbon.device.mgt.iot.*;version="${project.version}",
-                            org.eclipse.paho.client.mqttv3.*;version="${eclipse.paho.version}"
+                            org.wso2.carbon.device.mgt.iot.*;version="${project.version}"
                         </Export-Package>
 
                     </instructions>
@@ -181,7 +181,7 @@
         <!--</dependency>-->
 
         <!--<dependency>-->
-        <!--<groupId>com.h2database.wso2</groupId>-->
+        <!--<groupId> h2database.wso2</groupId>-->
         <!--<artifactId>h2-database-engine</artifactId>-->
         <!--<scope>test</scope>-->
         <!--</dependency>-->
@@ -214,8 +214,9 @@
 
         <dependency>
             <groupId>org.eclipse.paho</groupId>
-            <artifactId>mqtt-client</artifactId>
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
         </dependency>
+
 
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
@@ -231,14 +232,6 @@
             <groupId>org.igniterealtime.smack.wso2</groupId>
             <artifactId>smackx</artifactId>
         </dependency>
-
     </dependencies>
-
-    <repositories>
-        <repository>
-            <id>Eclipse Paho Repo</id>
-            <url>http://repo.spring.io/plugins-release/</url>
-        </repository>
-    </repositories>
 
 </project>

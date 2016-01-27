@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -33,9 +33,11 @@ import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfiguratio
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
+import org.wso2.carbon.device.mgt.iot.service.ConfigurationService;
+import org.wso2.carbon.device.mgt.iot.service.ConfigurationServiceImpl;
 import org.wso2.carbon.device.mgt.iot.service.DeviceTypeService;
 import org.wso2.carbon.device.mgt.iot.service.DeviceTypeServiceImpl;
-import org.wso2.carbon.device.mgt.iot.startup.StartupUrlPrinter;
+import org.wso2.carbon.device.mgt.iot.service.StartupListener;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.util.IotDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.exception.IotDeviceMgtPluginException;
@@ -83,17 +85,15 @@ public class IotDeviceManagementServiceComponent {
             log.debug("Activating Iot Device Management Service Component");
         }
         try {
-
-
-            BundleContext bundleContext = ctx.getBundleContext();              /* Initialize the data source
-            configuration */
+            BundleContext bundleContext = ctx.getBundleContext();
+            /* Initialize the data source configuration */
             DeviceManagementConfigurationManager.getInstance().initConfig();
             IotDeviceTypeConfigurationManager.getInstance().initConfig();
             Map<String, IotDeviceTypeConfig> dsConfigMap =
                     IotDeviceTypeConfigurationManager.getInstance().getIotDeviceTypeConfigMap();
-
             IotDeviceManagementDAOFactory.init(dsConfigMap);
 
+            bundleContext.registerService(ServerStartupObserver.class.getName(), new StartupListener(), null);
 
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
@@ -123,15 +123,15 @@ public class IotDeviceManagementServiceComponent {
             IoTEventsStatisticsClient.initializeDataSource();
             UserManagement.registerApiAccessRoles();
 
-
             bundleContext.registerService(DeviceTypeService.class.getName(),
                                           new DeviceTypeServiceImpl(), null);
+
+            bundleContext.registerService(ConfigurationService.class.getName(),
+                                          new ConfigurationServiceImpl(), null);
 
             if (log.isDebugEnabled()) {
                 log.debug("Iot Device Management Service Component has been successfully activated");
             }
-
-            bundleContext.registerService(ServerStartupObserver.class, new StartupUrlPrinter(), null);
         } catch (Throwable e) {
             log.error("Error occurred while activating Iot Device Management Service Component", e);
         }
