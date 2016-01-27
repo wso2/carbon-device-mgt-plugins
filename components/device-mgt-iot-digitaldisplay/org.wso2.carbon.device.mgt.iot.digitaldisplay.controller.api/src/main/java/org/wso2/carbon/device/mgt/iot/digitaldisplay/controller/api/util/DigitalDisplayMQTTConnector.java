@@ -4,14 +4,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
+import org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api.model.ScreenShotModel;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api.websocket.DigitalDisplayWebSocketServerEndPoint;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.constants.DigitalDisplayConstants;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
 
 @SuppressWarnings("no JAX-WS annotation")
 public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
@@ -25,9 +30,13 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
 
     private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
+    private ScheduledFuture<?> dataPushServiceHandler;
+
+    private Map<String, ScreenShotModel> screenshots = new HashMap<>();
+
     private DigitalDisplayMQTTConnector() {
         super(iotServerSubscriber, DigitalDisplayConstants.DEVICE_TYPE,
-              MqttConfig.getInstance().getMqttQueueEndpoint(), subscribeTopic);
+                MqttConfig.getInstance().getMqttQueueEndpoint(), subscribeTopic);
     }
 
     @Override
@@ -65,36 +74,62 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
 
     @Override
     public void processIncomingMessage(MqttMessage message, String... messageParams) {
-        if(messageParams.length != 0) {
-            String topic = messageParams[0];
-            String ownerAndId = topic.replace("wso2" + File.separator + "iot" + File.separator, "");
-            ownerAndId = ownerAndId.replace(File.separator + DigitalDisplayConstants.DEVICE_TYPE + File.separator, ":");
-            ownerAndId = ownerAndId.replace(File.separator + "digital_display_publisher", "");
+        String topic = messageParams[0];
+        String ownerAndId = topic.replace("wso2" + File.separator + "iot" + File.separator, "");
+        ownerAndId = ownerAndId.replace(File.separator + DigitalDisplayConstants.DEVICE_TYPE + File.separator, ":");
+        ownerAndId = ownerAndId.replace(File.separator + "digital_display_publisher", "");
 
-            String owner = ownerAndId.split(":")[0];
-            String deviceId = ownerAndId.split(":")[1];
-            String[] messageData = message.toString().split(":");
+        String owner = ownerAndId.split(":")[0];
+        String deviceId = ownerAndId.split(":")[1];
 
-            if (log.isDebugEnabled()) {
-                log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
-            }
+        String[] messageData = message.toString().split("::");
+        if (log.isDebugEnabled()) {
+            log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
+        }
 
-            if (messageData.length == 3) {
-                String randomId = messageData[0];
-                String requestMessage = messageData[1];
-                String result = messageData[2];
+        String token = messageData[0];
+        if (messageData.length == 2) {
+            String responseMessage = messageData[1];
+            DigitalDisplayWebSocketServerEndPoint.sendMessage(token, new StringBuilder(responseMessage));
+        } else if (messageData.length == 3) {
+            String response = messageData[2];
+            JSONObject schreenshot = new JSONObject(response);
+            String pic_id = schreenshot.getString("pic_id");
+            String data = schreenshot.getString("data");
+            int pos = schreenshot.getInt("pos");
+            int length = schreenshot.getInt("size");
+            createScreenShot(token, pic_id, pos, length, data);
+        }
+    }
 
-                if (log.isDebugEnabled()) {
-                    log.debug("Return result " + result + " for Request " + requestMessage);
+    private void createScreenShot(String token, String pic_id, int pos, int length, String data) {
+
+        ScreenShotModel screenShotModel = screenshots.get(pic_id);
+
+        if (screenShotModel == null) {
+            screenShotModel = new ScreenShotModel();
+            screenShotModel.setScrrenShotData(new String[length + 1]);
+            screenShotModel.setLength(0);
+            screenshots.put(pic_id, screenShotModel);
+        }
+        if (screenShotModel.getLength() <= length) {
+            screenShotModel.getScrrenShotData()[pos] = data;
+            System.out.println(screenShotModel.getLength());
+            screenShotModel.setLength(screenShotModel.getLength() + 1);
+            if (screenShotModel.getLength() == (length + 1)) {
+                StringBuilder displayScreenShot = new StringBuilder("Screenshot||");
+                for (String screenshot : screenShotModel.getScrrenShotData()) {
+                    displayScreenShot.append(screenshot);
                 }
-                DigitalDisplayWebSocketServerEndPoint.sendMessage(randomId, result);
+                screenshots.remove(pic_id);
+                DigitalDisplayWebSocketServerEndPoint.sendMessage(token, displayScreenShot);
             }
         }
     }
 
     public void publishToDigitalDisplay(String topic, String payLoad, int qos, boolean retained)
             throws TransportHandlerException {
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Publishing message [" + payLoad + "to topic [" + topic + "].");
         }
         publishToQueue(topic, payLoad, qos, retained);
