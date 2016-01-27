@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -28,6 +28,7 @@ import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.DeviceValidator;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
@@ -35,7 +36,6 @@ import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.dto.DeviceJSON;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.transport.VirtualFireAlarmMQTTConnector;
@@ -44,6 +44,7 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.u
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.VirtualFireAlarmServiceUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.scep.ContentType;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.scep.SCEPOperation;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -74,17 +75,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @DeviceType(value = "virtual_firealarm")
 @SuppressWarnings("Non-Annoted WebService")
 public class VirtualFireAlarmControllerService {
-    private static Log log = LogFactory.getLog(VirtualFireAlarmControllerService.class);
-
     //TODO; replace this tenant domain
     private static final String SUPER_TENANT = "carbon.super";
-
-    @Context  //injected response proxy supporting multiple thread
-    private HttpServletResponse response;
     private static final String XMPP_PROTOCOL = "XMPP";
     private static final String HTTP_PROTOCOL = "HTTP";
     private static final String MQTT_PROTOCOL = "MQTT";
-
+    private static Log log = LogFactory.getLog(VirtualFireAlarmControllerService.class);
+    @Context  //injected response proxy supporting multiple thread
+    private HttpServletResponse response;
     // consists of utility methods related to encrypting and decrypting messages
     private SecurityManager securityManager;
     // connects to the given MQTT broker and handles MQTT communication
@@ -93,6 +91,27 @@ public class VirtualFireAlarmControllerService {
     private VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector;
     // holds a mapping of the IP addresses to Device-IDs for HTTP communication
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
+
+    private boolean waitForServerStartup() {
+        while (!DeviceManagement.isServerReady()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Fetches the `SecurityManager` specific to this VirtualFirealarm controller service.
+     *
+     * @return the 'SecurityManager' instance bound to the 'securityManager' variable of this service.
+     */
+    @SuppressWarnings("Unused")
+    public SecurityManager getSecurityManager() {
+        return securityManager;
+    }
 
     /**
      * Sets the `securityManager` variable of this VirtualFirealarm controller service.
@@ -107,60 +126,6 @@ public class VirtualFireAlarmControllerService {
     }
 
     /**
-     * Sets the `virtualFireAlarmXMPPConnector` variable of this VirtualFirealarm controller service.
-     *
-     * @param virtualFireAlarmXMPPConnector a 'VirtualFireAlarmXMPPConnector' object that handles all XMPP related
-     *                                      communications of any connected VirtualFirealarm device-type
-     */
-    @SuppressWarnings("Unused")
-    public void setVirtualFireAlarmXMPPConnector(final VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector) {
-        this.virtualFireAlarmXMPPConnector = virtualFireAlarmXMPPConnector;
-
-        if (XmppConfig.getInstance().isEnabled()) {
-            Runnable xmppStarter = new Runnable() {
-                @Override
-                public void run() {
-                    virtualFireAlarmXMPPConnector.initConnector();
-                    virtualFireAlarmXMPPConnector.connect();
-                }
-            };
-
-            Thread xmppStarterThread = new Thread(xmppStarter);
-            xmppStarterThread.setDaemon(true);
-            xmppStarterThread.start();
-        } else {
-            log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmXMPPConnector not started.");
-        }
-    }
-
-    /**
-     * Sets the `virtualFireAlarmMQTTConnector` variable of this VirtualFirealarm controller service.
-     *
-     * @param virtualFireAlarmMQTTConnector a 'VirtualFireAlarmMQTTConnector' object that handles all MQTT related
-     *                                      communications of any connected VirtualFirealarm device-type
-     */
-    @SuppressWarnings("Unused")
-    public void setVirtualFireAlarmMQTTConnector(
-            final VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector) {
-        this.virtualFireAlarmMQTTConnector = virtualFireAlarmMQTTConnector;
-        if (MqttConfig.getInstance().isEnabled()) {
-            virtualFireAlarmMQTTConnector.connect();
-        } else {
-            log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
-        }
-    }
-
-    /**
-     * Fetches the `SecurityManager` specific to this VirtualFirealarm controller service.
-     *
-     * @return the 'SecurityManager' instance bound to the 'securityManager' variable of this service.
-     */
-    @SuppressWarnings("Unused")
-    public SecurityManager getSecurityManager() {
-        return securityManager;
-    }
-
-    /**
      * Fetches the `VirtualFireAlarmXMPPConnector` specific to this VirtualFirealarm controller service.
      *
      * @return the 'VirtualFireAlarmXMPPConnector' instance bound to the 'virtualFireAlarmXMPPConnector' variable of
@@ -172,6 +137,44 @@ public class VirtualFireAlarmControllerService {
     }
 
     /**
+     * Sets the `virtualFireAlarmXMPPConnector` variable of this VirtualFirealarm controller service.
+     *
+     * @param virtualFireAlarmXMPPConnector a 'VirtualFireAlarmXMPPConnector' object that handles all XMPP related
+     *                                      communications of any connected VirtualFirealarm device-type
+     */
+    @SuppressWarnings("Unused")
+    public void setVirtualFireAlarmXMPPConnector(
+            final VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector) {
+        Runnable connector = new Runnable() {
+            public void run() {
+                if (waitForServerStartup()) {
+                    return;
+                }
+                VirtualFireAlarmControllerService.this.virtualFireAlarmXMPPConnector = virtualFireAlarmXMPPConnector;
+
+                if (XmppConfig.getInstance().isEnabled()) {
+                    Runnable xmppStarter = new Runnable() {
+                        @Override
+                        public void run() {
+                            virtualFireAlarmXMPPConnector.initConnector();
+                            virtualFireAlarmXMPPConnector.connect();
+                        }
+                    };
+
+                    Thread xmppStarterThread = new Thread(xmppStarter);
+                    xmppStarterThread.setDaemon(true);
+                    xmppStarterThread.start();
+                } else {
+                    log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmXMPPConnector not started.");
+                }
+            }
+        };
+        Thread connectorThread = new Thread(connector);
+        connectorThread.setDaemon(true);
+        connectorThread.start();
+    }
+
+    /**
      * Fetches the `VirtualFireAlarmMQTTConnector` specific to this VirtualFirealarm controller service.
      *
      * @return the 'VirtualFireAlarmMQTTConnector' instance bound to the 'virtualFireAlarmMQTTConnector' variable of
@@ -180,6 +183,33 @@ public class VirtualFireAlarmControllerService {
     @SuppressWarnings("Unused")
     public VirtualFireAlarmMQTTConnector getVirtualFireAlarmMQTTConnector() {
         return virtualFireAlarmMQTTConnector;
+    }
+
+    /**
+     * Sets the `virtualFireAlarmMQTTConnector` variable of this VirtualFirealarm controller service.
+     *
+     * @param virtualFireAlarmMQTTConnector a 'VirtualFireAlarmMQTTConnector' object that handles all MQTT related
+     *                                      communications of any connected VirtualFirealarm device-type
+     */
+    @SuppressWarnings("Unused")
+    public void setVirtualFireAlarmMQTTConnector(
+            final VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector) {
+        Runnable connector = new Runnable() {
+            public void run() {
+                if (waitForServerStartup()) {
+                    return;
+                }
+                VirtualFireAlarmControllerService.this.virtualFireAlarmMQTTConnector = virtualFireAlarmMQTTConnector;
+                if (MqttConfig.getInstance().isEnabled()) {
+                    virtualFireAlarmMQTTConnector.connect();
+                } else {
+                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
+                }
+            }
+        };
+        Thread connectorThread = new Thread(connector);
+        connectorThread.setDaemon(true);
+        connectorThread.start();
     }
 
     /**

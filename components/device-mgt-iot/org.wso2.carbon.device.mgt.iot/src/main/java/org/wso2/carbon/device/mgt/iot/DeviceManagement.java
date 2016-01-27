@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -30,8 +30,8 @@ import org.wso2.carbon.device.mgt.core.dao.DeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.core.dto.DeviceType;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.util.DeviceTypes;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
+import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,8 +41,10 @@ import java.util.Map;
 public class DeviceManagement {
 
 	private static Log log = LogFactory.getLog(DeviceManagement.class);
-	private PrivilegedCarbonContext ctx;
+    private static volatile boolean serverReady = false;
+    private PrivilegedCarbonContext ctx;
 	private String tenantDomain;
+
 	public DeviceManagement(String tenantDomain){
 		this.tenantDomain=tenantDomain;
 		PrivilegedCarbonContext.startTenantFlow();
@@ -50,6 +52,13 @@ public class DeviceManagement {
 		ctx.setTenantDomain(tenantDomain, true);
 	}
 
+    public static boolean isServerReady() {
+        return serverReady;
+    }
+
+    public static void setServerReady(boolean serverReady) {
+        DeviceManagement.serverReady = serverReady;
+    }
 
 	public boolean isExist(String owner, DeviceIdentifier deviceIdentifier)
 			throws DeviceManagementException {
