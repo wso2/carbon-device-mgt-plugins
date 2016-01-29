@@ -21,24 +21,18 @@ function onRequest(context) {
     var log = new Log("device-view.js");
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("id");
-    var owner = context.user.username;
-
-    var TokenClient = Packages.org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
-    var accessTokenClient = new TokenClient(deviceType);
-    var accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
-    var accessToken =  accessTokenInfo.getAccess_token();
 
     var getProperty = require("process").getProperty;
     var port = getProperty("carbon.https.port");
     var host = getProperty("carbon.local.ip");
-
+    var sessionId = session.getId();
     if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
         var deviceModule = require("/app/modules/device.js").deviceModule;
         var device = deviceModule.viewDevice(deviceType, deviceId);
 
         if (device && device.status != "error") {
             log.info(device);
-            return {"device": device, "token" : accessToken , "port" : port, "host" : host};
+            return {"device": device, "port" : port, "host" : host , "sessionId" : sessionId};
         }
     }
 }

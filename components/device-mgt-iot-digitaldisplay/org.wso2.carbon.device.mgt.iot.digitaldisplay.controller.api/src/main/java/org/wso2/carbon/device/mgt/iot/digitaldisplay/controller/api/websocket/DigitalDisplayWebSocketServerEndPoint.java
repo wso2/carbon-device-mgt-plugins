@@ -10,7 +10,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.util.HashMap;
 import java.util.Map;
 
-@ServerEndpoint(value = "/{token}")
+@ServerEndpoint(value = "/{sessionId}")
 @Singleton
 public class DigitalDisplayWebSocketServerEndPoint {
 
@@ -24,8 +24,8 @@ public class DigitalDisplayWebSocketServerEndPoint {
      * @param userSession the userSession which is opened.
      */
     @OnOpen
-    public void onOpen(Session userSession, @PathParam("token") String token) {
-        clientSessions.put(token, userSession);
+    public void onOpen(Session userSession, @PathParam("sessionId") String sessionId) {
+        clientSessions.put(sessionId, userSession);
     }
 
     /**
@@ -49,11 +49,11 @@ public class DigitalDisplayWebSocketServerEndPoint {
      * This method will be invoked when a message received from device
      * to send client.
      *
-     * @param token   the client of message to be sent.
+     * @param sessionId   the client of message to be sent.
      * @param message the message sent by device to client
      */
-    public static void sendMessage(String token, StringBuilder message) {
-        Session session = clientSessions.get(token);
+    public static void sendMessage(String sessionId, StringBuilder message) {
+        Session session = clientSessions.get(sessionId);
         if (session != null) {
             session.getAsyncRemote().sendText(message.toString());
         } else {

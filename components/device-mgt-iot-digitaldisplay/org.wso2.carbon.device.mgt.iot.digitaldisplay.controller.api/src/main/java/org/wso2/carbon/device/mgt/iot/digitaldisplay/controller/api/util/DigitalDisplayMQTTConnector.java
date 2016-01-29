@@ -87,10 +87,10 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
             log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
         }
 
-        String token = messageData[0];
+        String sessionId = messageData[0];
         if (messageData.length == 2) {
             String responseMessage = messageData[1];
-            DigitalDisplayWebSocketServerEndPoint.sendMessage(token, new StringBuilder(responseMessage));
+            DigitalDisplayWebSocketServerEndPoint.sendMessage(sessionId, new StringBuilder(responseMessage));
         } else if (messageData.length == 3) {
             String response = messageData[2];
             JSONObject schreenshot = new JSONObject(response);
@@ -98,11 +98,11 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
             String data = schreenshot.getString("data");
             int pos = schreenshot.getInt("pos");
             int length = schreenshot.getInt("size");
-            createScreenShot(token, pic_id, pos, length, data);
+            createScreenShot(sessionId, pic_id, pos, length, data);
         }
     }
 
-    private void createScreenShot(String token, String pic_id, int pos, int length, String data) {
+    private void createScreenShot(String sessionId, String pic_id, int pos, int length, String data) {
 
         ScreenShotModel screenShotModel = screenshots.get(pic_id);
 
@@ -114,7 +114,6 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
         }
         if (screenShotModel.getLength() <= length) {
             screenShotModel.getScrrenShotData()[pos] = data;
-            System.out.println(screenShotModel.getLength());
             screenShotModel.setLength(screenShotModel.getLength() + 1);
             if (screenShotModel.getLength() == (length + 1)) {
                 StringBuilder displayScreenShot = new StringBuilder("Screenshot||");
@@ -122,7 +121,7 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
                     displayScreenShot.append(screenshot);
                 }
                 screenshots.remove(pic_id);
-                DigitalDisplayWebSocketServerEndPoint.sendMessage(token, displayScreenShot);
+                DigitalDisplayWebSocketServerEndPoint.sendMessage(sessionId, displayScreenShot);
             }
         }
     }
