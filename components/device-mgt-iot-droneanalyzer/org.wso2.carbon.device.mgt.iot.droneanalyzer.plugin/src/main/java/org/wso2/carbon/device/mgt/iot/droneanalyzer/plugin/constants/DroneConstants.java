@@ -25,7 +25,7 @@ public class DroneConstants {
     public final static String MESSAGE_RESOURCE = "drone_current_status";
     public static final String DEVICE_TYPE = "drone_analyzer";
     public static final int MINIMUM_TIME_DURATION = 150;
-    public static final int MAXIMUM_BUFFERE_SIZE_OF_SHARED_QUEUE = 100;
+    public static final int MAXIMUM_BUFFERE_SIZE_OF_SHARED_QUEUE = 10;
     public static final String DEVICE_ID = "drone_type1";
     public final static String TAKE_OFF = "takeoff";
     public final static String LAND = "land";
