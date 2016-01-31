@@ -18,24 +18,29 @@ package org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.analytics.datasource.commons.Record;
+import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.exception.DataPublisherConfigurationException;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
-import org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.util.SensorJSON;
+import org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.util.SensorData;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
-import org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.util.DeviceJSON;
+import org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.util.DeviceData;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @DeviceType( value = "android_sense" )
 @API( name="android_sense", version="1.0.0", context="/android_sense")
@@ -76,7 +81,7 @@ public class AndroidSenseControllerService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void pushSensorData(
-            final DeviceJSON dataMsg, @Context HttpServletResponse response) {
+            final DeviceData dataMsg, @Context HttpServletResponse response) {
 
         PrivilegedCarbonContext.startTenantFlow();
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
@@ -84,12 +89,12 @@ public class AndroidSenseControllerService {
         DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
                 .getOSGiService(DeviceAnalyticsService.class, null);
 
-        SensorJSON[] sensorData = dataMsg.values;
+        SensorData[] sensorData = dataMsg.values;
         String streamDef = null;
         Object payloadData[] = null;
         String sensorName = null;
 
-        for (SensorJSON sensor : sensorData) {
+        for (SensorData sensor : sensorData) {
             if(sensor.key.equals("battery")){
                 streamDef = BATTERY_STREAM_DEFINITION;
                 payloadData = new Float[]{Float.parseFloat(sensor.value)};
@@ -391,6 +396,119 @@ public class AndroidSenseControllerService {
 
         response.setStatus(Response.Status.OK.getStatusCode());
         return sensorRecord;
+    }
+
+    /**
+     * Retreive Sensor data for the device type
+     * @param deviceId
+     * @param sensor
+     * @param user
+     * @param from
+     * @param to
+     * @return
+     */
+    @Path("controller/stats/device/{deviceId}/sensors/{sensorName}")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public SensorData[] getAndroidSenseDeviceStats(@PathParam("deviceId") String deviceId,
+                                           @PathParam("sensorName") String sensor,
+                                           @QueryParam("username") String user,
+                                           @QueryParam("from") long from,
+                                           @QueryParam("to") long to) {
+
+        String fromDate = String.valueOf(from);
+        String toDate = String.valueOf(to);
+
+        List<SensorData> sensorDatas = new ArrayList<>();
+        PrivilegedCarbonContext.startTenantFlow();
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        //TODO - get the JWT from api manager.
+        ctx.setTenantDomain("carbon.super", true);
+        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
+                .getOSGiService(DeviceAnalyticsService.class, null);
+        String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
+                AndroidSenseConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+        String sensorTableName = getSensorEventTableName(sensor);
+        try {
+            List<Record> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName, query);
+
+            Collections.sort(records, new Comparator<Record>() {
+                @Override
+                public int compare(Record o1, Record o2) {
+                    long t1 = (Long) o1.getValue("time");
+                    long t2 = (Long) o2.getValue("time");
+                    if (t1 < t2) {
+                        return -1;
+                    } else if (t1 > t2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+
+            for (Record record : records) {
+                SensorData sensorData = new SensorData();
+                sensorData.setTime((long) record.getValue("time"));
+                sensorData.setValue("" + (float) record.getValue(sensor));
+                sensorDatas.add(sensorData);
+            }
+            return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
+        } catch (AnalyticsException e) {
+            String errorMsg =
+                    "Error on retrieving stats on table " + sensorTableName + " with query " + query;
+            log.error(errorMsg);
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+        }
+    }
+
+    /**
+     * get the event table from the sensor name.
+     * TODO : this needs to be managed with sensor management.
+     * @param sensorName
+     * @return
+     */
+    private String getSensorEventTableName(String sensorName){
+        String sensorEventTableName;
+        switch (sensorName) {
+            case SENSOR_ACCELEROMETER:
+                sensorEventTableName = ACCELEROMETER_STREAM_DEFINITION.replace('.', '_').toUpperCase();
+                break;
+            case SENSOR_BATTERY:
+                sensorEventTableName = BATTERY_STREAM_DEFINITION.replace('.', '_').toUpperCase();
+                break;
+            case SENSOR_GPS:
+                sensorEventTableName = GPS_STREAM_DEFINITION.replace('.', '_').toUpperCase();
+                break;
+            case SENSOR_GRAVITY:
+                sensorEventTableName = GRAVITY_STREAM_DEFINITION.replace('.', '_').toUpperCase();
+                break;
+            case SENSOR_GYROSCOPE:
+                sensorEventTableName = GYROSCOPE_STREAM_DEFINITION.replace('.', '_').toUpperCase();
+                break;
+            case SENSOR_LIGHT:
+                sensorEventTableName = LIGHT_STREAM_DEFINITION.replace('.', '_').toUpperCase();
+                break;
+            case SENSOR_MAGNETIC:
+                sensorEventTableName = MAGNETIC_STREAM_DEFINITION.replace('.', '_').toUpperCase();
+                break;
+            case SENSOR_PRESSURE:
+                sensorEventTableName = PRESSURE_STREAM_DEFINITION.replace('.', '_').toUpperCase();
+                break;
+            case SENSOR_PROXIMITY:
+                sensorEventTableName = PROXIMITY_STREAM_DEFINITION.replace('.', '_').toUpperCase();
+                break;
+            case SENSOR_ROTATION:
+                sensorEventTableName = ROTATION_STREAM_DEFINITION.replace('.', '_').toUpperCase();
+                break;
+            default:
+                sensorEventTableName = "";
+        }
+        return sensorEventTableName;
     }
 
 }
