@@ -173,10 +173,14 @@
             [Download Agent] button
             above to get IRIS+ Drone agent.
         </li>
-        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Use following
-            connection properties:
+        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Once you have downloaded the
+            agent please run <i>"[startService.sh]"</i> script with root privileges.
         </li>
-
+        <li class="padding-top-double"><span class="circle">04</span>&nbsp;&nbsp;&nbsp;Then you will be prompted to
+            enter time interval (in seconds) between successive Data-Pushes to the XMPP server, connection target and
+            communication speed. So below table will help you to find what is the correct connection target and
+            communication speed.
+        </li>
         <div class="padding-top-double">
             <table class="table table-bordered ">
                 <thead>
@@ -191,36 +195,28 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td>Linux computer connected to the drone via USB</td>
-                    <td>/dev/ttyAMA0 <i>(also set baud=57600)</i></td>
+                    <td>Linux computer connected to the vehicle via USB</td>
+                    <td> e.g. /dev/ttyUSB0</td>
+                </tr>
+                <tr>
+                    <td>Linux computer connected to the drone via Serial port</td>
+                    <td> e.g. /dev/ttyAMA0 <i>(also set baud=57600)</i></td>
                 </tr>
                 <tr>
                     <td>OSX computer connected to the drone via USB</td>
-                    <td>dev/cu.usbmodem1</td>
+                    <td>e.g. dev/cu.usbmodem1</td>
                 </tr>
                 <tr>
                     <td>Windows computer connected to the drone via USB (in this case on COM14)</td>
-                    <td>com14</td>
+                    <td>e.g. com14</td>
                 </tr>
                 <tr>
                     <td>Windows computer connected to the drone using a 3DR Telemetry Radio on COM14</td>
-                    <td>com14 <i>(also set baud=57600)</i></td>
+                    <td>e.g. com14 <i>(also set baud=57600)</i></td>
                 </tr>
                 </tbody>
             </table>
         </div>
-
-        <li class="padding-top-double">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span class="fw-stack fw-lg margin-right">
-                <i class="fw fw-ring fw-stack-2x"></i>
-                <i class="fw fw-right-arrow fw-stack-1x"></i>
-            </span>
-            &nbsp;&nbsp;&nbsp;Once you have downloaded the agent please run
-            <i>"[startservice.sh]"</i> script with
-            root privileges.
-        </li>
-
     </ul>
     <br>
 </div>
@@ -249,25 +245,16 @@
                 Management]</a>
             page.
         </li>
-        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Select one of
-            connected devices and check for
-            available
-            control operations and monitor
-            Real-Time data.
-        </li>
-        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can also
-            view analytics of
-            the data published to
-            IoT-Server by navigating
-            to Device Analytics page.
+        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Select one of connected devices
+            and view stats which are published by the device.
         </li>
     </ul>
     <br/>
 
     <p class="grey margin-top">Click on the image to zoom</p>
     <center>
-        <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
-            <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
+        <a href="{{@unit.publicUri}}/images/devices_analytics.png" target="_blank">
+            <img src="{{@unit.publicUri}}/images/devices_analytics.png" class="img-responsive">
         </a>
     </center>
 

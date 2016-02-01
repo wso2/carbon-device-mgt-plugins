@@ -44,7 +44,7 @@ public class DroneRealTimeService {
                 }
                 messageController = new MessageTransformer();
                 xmppConnector = new DroneAnalyzerXMPPConnector(messageController);
-                if (!XmppConfig.getInstance().isEnabled()){
+                if (XmppConfig.getInstance().isEnabled()){
                     xmppConnector.connect();
                 } else {
                     log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, DroneAnalyzerXMPPConnector not started.");
