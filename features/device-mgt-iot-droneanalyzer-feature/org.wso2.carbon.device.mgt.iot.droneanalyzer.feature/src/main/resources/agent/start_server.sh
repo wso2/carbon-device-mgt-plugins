@@ -50,6 +50,11 @@ for f in ./deviceConfig.properties; do
     break
 done
 
+#installing dependencies
+sudo apt-get install python-pip python-dev
+sudo pip install dronekit
+sudo apt-get install python-xmpp
+
 while true; do
     read -p "Whats the time-interval (in seconds) between successive Data-Pushes to the XMPP server (ex: '60' indicates 1 minute) > " push_interval
     read -p "Vehicle connection target. Default '/dev/ttyACM0' :" connection_target

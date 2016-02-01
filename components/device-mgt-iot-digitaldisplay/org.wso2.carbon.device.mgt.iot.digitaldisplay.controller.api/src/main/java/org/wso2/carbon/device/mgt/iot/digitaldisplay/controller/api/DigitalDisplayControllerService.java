@@ -31,6 +31,7 @@ import org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api.util.Digital
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.constants.DigitalDisplayConstants;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
@@ -65,7 +66,7 @@ public class DigitalDisplayControllerService {
     }
 
     public void setDigitalDisplayMQTTConnector(final
-            DigitalDisplayMQTTConnector digitalDisplayMQTTConnector) {
+                                               DigitalDisplayMQTTConnector digitalDisplayMQTTConnector) {
 
         Runnable connector = new Runnable() {
             public void run() {
@@ -77,7 +78,7 @@ public class DigitalDisplayControllerService {
                     digitalDisplayMQTTConnector.connect();
                 } else {
                     log.warn("MQTT disabled in 'devicemgt-config.xml'. " +
-                             "Hence, DigitalDisplayMQTTConnector not started.");
+                            "Hence, DigitalDisplayMQTTConnector not started.");
                 }
             }
         };
@@ -89,10 +90,10 @@ public class DigitalDisplayControllerService {
     /**
      * Restart the running browser in the given digital display.
      *
-     * @param deviceId id of the controlling digital display
-     * @param owner    owner of the digital display
-     * @param token    web socket id of the method invoke client
-     * @param response response type of the method
+     * @param deviceId  id of the controlling digital display
+     * @param owner     owner of the digital display
+     * @param sessionId web socket id of the method invoke client
+     * @param response  response type of the method
      */
     @Path("/restart-browser")
     @POST
@@ -100,12 +101,11 @@ public class DigitalDisplayControllerService {
             description = "Restart Browser in Digital Display")
     public void restartBrowser(@HeaderParam("deviceId") String deviceId,
                                @HeaderParam("owner") String owner,
-                               @HeaderParam("Authorization") String token,
+                               @HeaderParam("sessionId") String sessionId,
                                @Context HttpServletResponse response) {
 
         try {
-            token = token.split(" ")[1];
-            sendCommandViaMQTT(owner, deviceId, token + "::" + DigitalDisplayConstants.RESTART_BROWSER_CONSTANT + "::", "");
+            sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.RESTART_BROWSER_CONSTANT + "::", "");
             response.setStatus(Response.Status.OK.getStatusCode());
         } catch (DeviceManagementException e) {
             log.error(e);
@@ -121,10 +121,10 @@ public class DigitalDisplayControllerService {
     /**
      * Terminate all running processes. If this execute we have to reboot digital display manually.
      *
-     * @param deviceId id of the controlling digital display
-     * @param owner    owner of the digital display
-     * @param token    web socket id of the method invoke client
-     * @param response response type of the method
+     * @param deviceId  id of the controlling digital display
+     * @param owner     owner of the digital display
+     * @param sessionId web socket id of the method invoke client
+     * @param response  response type of the method
      */
     @Path("/terminate-display")
     @POST
@@ -132,12 +132,11 @@ public class DigitalDisplayControllerService {
             description = "Terminate all running process in Digital Display")
     public void terminateDisplay(@HeaderParam("deviceId") String deviceId,
                                  @HeaderParam("owner") String owner,
-                                 @HeaderParam("Authorization") String token,
+                                 @HeaderParam("sessionId") String sessionId,
                                  @Context HttpServletResponse response) {
 
         try {
-            token = token.split(" ")[1];
-            sendCommandViaMQTT(owner, deviceId, token + "::" + DigitalDisplayConstants.TERMINATE_DISPLAY_CONSTANT + "::", "");
+            sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.TERMINATE_DISPLAY_CONSTANT + "::", "");
             response.setStatus(Response.Status.OK.getStatusCode());
         } catch (DeviceManagementException e) {
             log.error(e);
@@ -152,10 +151,10 @@ public class DigitalDisplayControllerService {
     /**
      * Reboot running digital display
      *
-     * @param deviceId id of the controlling digital display
-     * @param owner    owner of the digital display
-     * @param token    web socket id of the method invoke client
-     * @param response response type of the method
+     * @param deviceId  id of the controlling digital display
+     * @param owner     owner of the digital display
+     * @param sessionId web socket id of the method invoke client
+     * @param response  response type of the method
      */
     @Path("/restart-display")
     @POST
@@ -163,12 +162,11 @@ public class DigitalDisplayControllerService {
             description = "Restart Digital Display")
     public void restartDisplay(@HeaderParam("deviceId") String deviceId,
                                @HeaderParam("owner") String owner,
-                               @HeaderParam("Authorization") String token,
+                               @HeaderParam("sessionId") String sessionId,
                                @Context HttpServletResponse response) {
 
         try {
-            token = token.split(" ")[1];
-            sendCommandViaMQTT(owner, deviceId, token + "::" + DigitalDisplayConstants.RESTART_DISPLAY_CONSTANT + "::", "");
+            sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.RESTART_DISPLAY_CONSTANT + "::", "");
             response.setStatus(Response.Status.OK.getStatusCode());
         } catch (DeviceManagementException e) {
             log.error(e);
@@ -185,7 +183,7 @@ public class DigitalDisplayControllerService {
      *
      * @param deviceId  id of the controlling digital display
      * @param owner     owner of the digital display
-     * @param token     web socket id of the method invoke client
+     * @param sessionId web socket id of the method invoke client
      * @param response  response type of the method
      * @param name      name of page need to change
      * @param attribute this can be path,time or type
@@ -200,13 +198,13 @@ public class DigitalDisplayControllerService {
                              @FormParam("name") String name,
                              @FormParam("attribute") String attribute,
                              @FormParam("new-value") String newValue,
-                             @HeaderParam("Authorization") String token,
+                             @HeaderParam("sessionId") String sessionId,
                              @Context HttpServletResponse response) {
 
         try {
-            token = token.split(" ")[1];
             String params = name + "|" + attribute + "|" + newValue;
-            sendCommandViaMQTT(owner, deviceId, token + "::" + DigitalDisplayConstants.EDIT_SEQUENCE_CONSTANT + "::", params);
+            sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.EDIT_SEQUENCE_CONSTANT +
+                    "::", params);
             response.setStatus(Response.Status.OK.getStatusCode());
         } catch (DeviceManagementException e) {
             log.error(e);
@@ -226,13 +224,12 @@ public class DigitalDisplayControllerService {
                               @HeaderParam("owner") String owner,
                               @FormParam("remote-path") String remotePath,
                               @FormParam("screen-name") String screenName,
-                              @HeaderParam("Authorization") String token,
+                              @HeaderParam("sessionId") String sessionId,
                               @Context HttpServletResponse response) {
 
         try {
-            token = token.split(" ")[1];
             String params = remotePath + "|" + screenName;
-            sendCommandViaMQTT(owner, deviceId, token + "::" + DigitalDisplayConstants.UPLOAD_CONTENT_CONSTANT + "::",
+            sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.UPLOAD_CONTENT_CONSTANT + "::",
                     params);
             response.setStatus(Response.Status.OK.getStatusCode());
         } catch (DeviceManagementException e) {
@@ -248,13 +245,13 @@ public class DigitalDisplayControllerService {
     /**
      * Add new resource end to the existing sequence
      *
-     * @param deviceId id of the controlling digital display
-     * @param owner    owner of the digital display
-     * @param token    web socket id of the method invoke client
-     * @param response response type of the method
-     * @param type     type of new resource
-     * @param time     new resource visible time
-     * @param path     URL of the new resource
+     * @param deviceId  id of the controlling digital display
+     * @param owner     owner of the digital display
+     * @param sessionId web socket id of the method invoke client
+     * @param response  response type of the method
+     * @param type      type of new resource
+     * @param time      new resource visible time
+     * @param path      URL of the new resource
      */
     @Path("/add-resource")
     @POST
@@ -267,7 +264,7 @@ public class DigitalDisplayControllerService {
                                @FormParam("path") String path,
                                @FormParam("name") String name,
                                @FormParam("position") String position,
-                               @HeaderParam("Authorization") String token,
+                               @HeaderParam("sessionId") String sessionId,
                                @Context HttpServletResponse response) {
 
         String params;
@@ -279,8 +276,7 @@ public class DigitalDisplayControllerService {
                 params = type + "|" + time + "|" + path + "|" + name +
                         "|" + "after=" + position;
             }
-            token = token.split(" ")[1];
-            sendCommandViaMQTT(owner, deviceId, token + "::" +
+            sendCommandViaMQTT(owner, deviceId, sessionId + "::" +
                     DigitalDisplayConstants.ADD_NEW_RESOURCE_CONSTANT + "::", params);
             response.setStatus(Response.Status.OK.getStatusCode());
         } catch (DeviceManagementException e) {
@@ -295,11 +291,11 @@ public class DigitalDisplayControllerService {
     /**
      * Delete a resource in sequence
      *
-     * @param deviceId id of the controlling digital display
-     * @param owner    owner of the digital display
-     * @param token    web socket id of the method invoke client
-     * @param response response type of the method
-     * @param name     name of the page no need to delete
+     * @param deviceId  id of the controlling digital display
+     * @param owner     owner of the digital display
+     * @param sessionId web socket id of the method invoke client
+     * @param response  response type of the method
+     * @param name      name of the page no need to delete
      */
     @Path("/remove-resource")
     @POST
@@ -308,12 +304,11 @@ public class DigitalDisplayControllerService {
     public void removeResource(@HeaderParam("deviceId") String deviceId,
                                @HeaderParam("owner") String owner,
                                @FormParam("name") String name,
-                               @HeaderParam("Authorization") String token,
+                               @HeaderParam("sessionId") String sessionId,
                                @Context HttpServletResponse response) {
 
         try {
-            token = token.split(" ")[1];
-            sendCommandViaMQTT(owner, deviceId, token + "::" +
+            sendCommandViaMQTT(owner, deviceId, sessionId + "::" +
                     DigitalDisplayConstants.REMOVE_RESOURCE_CONSTANT + "::", name);
             response.setStatus(Response.Status.OK.getStatusCode());
         } catch (DeviceManagementException e) {
@@ -328,10 +323,10 @@ public class DigitalDisplayControllerService {
     /**
      * Restart HTTP in running display
      *
-     * @param deviceId id of the controlling digital display
-     * @param owner    owner of the digital display
-     * @param token    web socket id of the method invoke client
-     * @param response response type of the method
+     * @param deviceId  id of the controlling digital display
+     * @param owner     owner of the digital display
+     * @param sessionId web socket id of the method invoke client
+     * @param response  response type of the method
      */
     @Path("/restart-server")
     @POST
@@ -339,12 +334,11 @@ public class DigitalDisplayControllerService {
             description = "Stop HTTP Server running in Digital Display")
     public void restartServer(@HeaderParam("deviceId") String deviceId,
                               @HeaderParam("owner") String owner,
-                              @HeaderParam("Authorization") String token,
+                              @HeaderParam("sessionId") String sessionId,
                               @Context HttpServletResponse response) {
 
         try {
-            token = token.split(" ")[1];
-            sendCommandViaMQTT(owner, deviceId, token + "::" + DigitalDisplayConstants.RESTART_SERVER_CONSTANT + "::", "");
+            sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.RESTART_SERVER_CONSTANT + "::", "");
             response.setStatus(Response.Status.OK.getStatusCode());
         } catch (DeviceManagementException e) {
             log.error(e);
@@ -359,10 +353,10 @@ public class DigitalDisplayControllerService {
     /**
      * Get screenshot of running display
      *
-     * @param deviceId id of the controlling digital display
-     * @param owner    owner of the digital display
-     * @param token    web socket id of the method invoke client
-     * @param response response type of the method
+     * @param deviceId  id of the controlling digital display
+     * @param owner     owner of the digital display
+     * @param sessionId web socket id of the method invoke client
+     * @param response  response type of the method
      */
     @Path("/screenshot")
     @POST
@@ -370,12 +364,11 @@ public class DigitalDisplayControllerService {
             description = "Show current view in Digital Display")
     public void showScreenshot(@HeaderParam("deviceId") String deviceId,
                                @HeaderParam("owner") String owner,
-                               @HeaderParam("Authorization") String token,
+                               @HeaderParam("sessionId") String sessionId,
                                @Context HttpServletResponse response) {
 
         try {
-            token = token.split(" ")[1];
-            sendCommandViaMQTT(owner, deviceId, token + "::" + DigitalDisplayConstants.SCREENSHOT_CONSTANT + "::", "");
+            sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.SCREENSHOT_CONSTANT + "::", "");
             response.setStatus(Response.Status.OK.getStatusCode());
         } catch (DeviceManagementException e) {
             log.error(e);
@@ -389,23 +382,22 @@ public class DigitalDisplayControllerService {
     /**
      * Get statistics of running display
      *
-     * @param deviceId id of the controlling digital display
-     * @param owner    owner of the digital display
-     * @param token    web socket id of the method invoke client
-     * @param response response type of the method
+     * @param deviceId  id of the controlling digital display
+     * @param owner     owner of the digital display
+     * @param sessionId web socket id of the method invoke client
+     * @param response  response type of the method
      */
     @Path("/get-device-status")
     @POST
-    @Feature(code = "get-device-status", name = "Get Device Status", type = "operation",
+    @Feature(code = "get-device-status", name = "Get Device Statistics", type = "operation",
             description = "Current status in Digital Display")
     public void getDevicestatus(@HeaderParam("deviceId") String deviceId,
                                 @HeaderParam("owner") String owner,
-                                @HeaderParam("Authorization") String token,
+                                @HeaderParam("sessionId") String sessionId,
                                 @Context HttpServletResponse response) {
 
         try {
-            token = token.split(" ")[1];
-            sendCommandViaMQTT(owner, deviceId, token + "::" + DigitalDisplayConstants.GET_DEVICE_STATUS_CONSTANT +
+            sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.GET_DEVICE_STATUS_CONSTANT +
                     "::", "");
             response.setStatus(Response.Status.OK.getStatusCode());
         } catch (DeviceManagementException e) {
@@ -420,10 +412,10 @@ public class DigitalDisplayControllerService {
     /**
      * Stop specific display
      *
-     * @param deviceId id of the controlling digital display
-     * @param owner    owner of the digital display
-     * @param token    web socket id of the method invoke client
-     * @param response response type of the method
+     * @param deviceId  id of the controlling digital display
+     * @param owner     owner of the digital display
+     * @param sessionId web socket id of the method invoke client
+     * @param response  response type of the method
      */
     @Path("/get-content-list")
     @POST
@@ -431,12 +423,12 @@ public class DigitalDisplayControllerService {
             description = "Content List in Digital Display")
     public void getResources(@HeaderParam("deviceId") String deviceId,
                              @HeaderParam("owner") String owner,
-                             @HeaderParam("Authorization") String token,
+                             @HeaderParam("sessionId") String sessionId,
                              @Context HttpServletResponse response) {
 
         try {
-            token = token.split(" ")[1];
-            sendCommandViaMQTT(owner, deviceId, token + "::" + DigitalDisplayConstants.GET_CONTENTLIST_CONSTANT + "::", "");
+            sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.GET_CONTENTLIST_CONSTANT
+                    + "::", "");
             response.setStatus(Response.Status.OK.getStatusCode());
         } catch (DeviceManagementException e) {
             log.error(e);

@@ -9,8 +9,7 @@ window.onbeforeunload = function () {
 }
 
 function connect() {
-
-    displayClient = new WebSocket("wss://" + host + ":" + port + "/digital_display/" + token);
+    displayClient = new WebSocket("wss://" + host + ":" + port + "/digital_display/" + sessionId);
 
     displayClient.onmessage = function (event) {
         var message = event.data;

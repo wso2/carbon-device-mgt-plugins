@@ -56,7 +56,7 @@
                         <ul id="content-list"></ul>
                     </div>
                     <div id="device-statics-pane" class="col-md-4">
-                        <div>Device Statics</div>
+                        <div>Device Statistics</div>
                         <ul id="device-statics"></ul>
                     </div>
                 </div>
@@ -126,9 +126,9 @@
 
 {{#zone "bottomJs"}}
     <script type="text/javascript">
-        var token = "{{token}}";
         var port = "{{port}}";
         var host = "{{host}}";
+        var sessionId = "{{sessionId}}";
     </script>
     {{js "js/websocket.js"}}
 {{/zone}}
