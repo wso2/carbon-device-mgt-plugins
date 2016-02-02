@@ -22,24 +22,13 @@ import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 
 /**
  * Contains utility methods which are used by Windows plugin.
  */
 public class WindowsUtils {
 
-    public static String getDeviceProperty(Map<String, String> deviceProperties, String property) {
-
-        String deviceProperty = deviceProperties.get(property);
-        if (deviceProperty == null) {
-            return null;
-        }
-        return deviceProperty;
-    }
-
     public static MobileDevice loadMobileDevices(ResultSet rs) throws SQLException {
-
         MobileDevice mobileDevice = new MobileDevice();
         mobileDevice.setMobileDeviceId(rs.getString(WindowsPluginConstants.DEVICE_ID));
         mobileDevice.setImei(rs.getString(WindowsPluginConstants.IMEI));

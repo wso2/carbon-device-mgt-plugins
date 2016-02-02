@@ -298,9 +298,8 @@ public class WindowsDeviceManager implements DeviceManager {
             }
         } catch (MobileDeviceManagementDAOException e) {
             WindowsDAOFactory.rollbackTransaction();
-            String msg =
-                    "Error while enrolling the windows device : " + device.getDeviceIdentifier();
-            throw new DeviceManagementException(msg, e);
+            throw new DeviceManagementException("Error while enrolling the windows device : "
+                    + device.getDeviceIdentifier(), e);
         }
         return status;
     }
