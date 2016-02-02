@@ -116,13 +116,13 @@ public class WindowsFeatureManager implements FeatureManager {
             featureDAO.deleteFeatureByCode(code);
             WindowsDAOFactory.commitTransaction();
             status = true;
+            return status;
         } catch (MobileDeviceManagementDAOException e) {
             WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error occurred while removing the feature", e);
         } finally {
             WindowsDAOFactory.closeConnection();
         }
-        return status;
     }
 
     @Override
