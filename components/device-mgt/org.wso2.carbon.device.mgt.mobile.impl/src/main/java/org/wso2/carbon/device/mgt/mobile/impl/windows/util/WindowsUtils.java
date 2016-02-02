@@ -52,16 +52,4 @@ public class WindowsUtils {
         mobileDevice.setOsVersion(rs.getString(WindowsPluginConstants.LATITUDE));
         return mobileDevice;
     }
-
-    public static MobileDevice loadMatchingMobileDevices(ResultSet rs) throws SQLException {
-        MobileDevice mobileDevice = new MobileDevice();
-        mobileDevice.setMobileDeviceId(rs.getString(WindowsPluginConstants.DEVICE_ID));
-        mobileDevice.setVendor(rs.getString(WindowsPluginConstants.IMEI));
-        mobileDevice.setLatitude(rs.getString(WindowsPluginConstants.IMSI));
-        mobileDevice.setLongitude(rs.getString(WindowsPluginConstants.OS_VERSION));
-        mobileDevice.setImei(rs.getString(WindowsPluginConstants.DEVICE_MODEL));
-        mobileDevice.setImsi(rs.getString(WindowsPluginConstants.VENDOR));
-        mobileDevice.setOsVersion(rs.getString(WindowsPluginConstants.LATITUDE));
-        return mobileDevice;
-    }
 }

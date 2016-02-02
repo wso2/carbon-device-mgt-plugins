@@ -216,7 +216,7 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
             rs = stmt.executeQuery();
 
             while (rs.next()) {
-                mobileDevice = WindowsUtils.loadMatchingMobileDevices(rs);
+                mobileDevice = WindowsUtils.loadMobileDevices(rs);
                 Map<String, String> propertyMap = new HashMap<>();
                 propertyMap.put(WindowsPluginConstants.CHANNEL_URI, rs.getString(WindowsPluginConstants.CHANNEL_URI));
                 propertyMap.put(WindowsPluginConstants.DEVICE_INFO, rs.getString(WindowsPluginConstants.DEVICE_INFO));
