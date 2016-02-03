@@ -20,22 +20,26 @@ package org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.analytics.datasource.commons.Record;
+import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.DeviceValidator;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.dto.DeviceJSON;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.dto.DeviceData;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.dto.SensorData;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.transport.RaspberryPiMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.util.RaspberrypiServiceUtils;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -46,10 +50,15 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 @API(name = "raspberrypi", version = "1.0.0", context = "/raspberrypi")
@@ -269,7 +278,7 @@ public class RaspberryPiControllerService {
     @Path("controller/push_temperature")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void pushTemperatureData(final DeviceJSON dataMsg,
+    public void pushTemperatureData(final DeviceData dataMsg,
                                     @Context HttpServletResponse response,
                                     @Context HttpServletRequest request) {
         String owner = dataMsg.owner;
@@ -317,6 +326,73 @@ public class RaspberryPiControllerService {
         } catch (DeviceManagementException e) {
             String errorMsg = "Validation attempt for deviceId [" + deviceId + "] of owner [" + owner + "] failed.\n";
             log.error(errorMsg + Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase() + "\n" + e.getErrorMessage());
+        }
+    }
+
+    /**
+     * Retreive Sensor data for the device type
+     * @param deviceId
+     * @param user
+     * @param from
+     * @param to
+     * @return
+     */
+    @Path("controller/stats/device/{deviceId}/sensors/temperature")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public SensorData[] getArduinoTemperatureStats(@PathParam("deviceId") String deviceId,
+                                                   @QueryParam("username") String user,
+                                                   @QueryParam("from") long from,
+                                                   @QueryParam("to") long to) {
+
+        String fromDate = String.valueOf(from);
+        String toDate = String.valueOf(to);
+
+        List<SensorData> sensorDatas = new ArrayList<>();
+        PrivilegedCarbonContext.startTenantFlow();
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        //TODO - get the JWT from api manager.
+        ctx.setTenantDomain("carbon.super", true);
+        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
+                .getOSGiService(DeviceAnalyticsService.class, null);
+        String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
+                RaspberrypiConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+        String sensorTableName = RaspberrypiConstants.TEMPERATURE_EVENT_TABLE;
+        try {
+            List<Record> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName,
+                                                                                query);
+
+            Collections.sort(records, new Comparator<Record>() {
+                @Override
+                public int compare(Record o1, Record o2) {
+                    long t1 = (Long) o1.getValue("time");
+                    long t2 = (Long) o2.getValue("time");
+                    if (t1 < t2) {
+                        return -1;
+                    } else if (t1 > t2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+
+            for (Record record : records) {
+                SensorData sensorData = new SensorData();
+                sensorData.setTime((long) record.getValue("time"));
+                sensorData.setValue("" + (float) record.getValue(RaspberrypiConstants.SENSOR_TEMPERATURE));
+                sensorDatas.add(sensorData);
+            }
+            return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
+        } catch (AnalyticsException e) {
+            String errorMsg =
+                    "Error on retrieving stats on table " + sensorTableName + " with query " + query;
+            log.error(errorMsg);
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 

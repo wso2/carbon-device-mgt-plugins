@@ -73,6 +73,7 @@ public class GroupManagerService {
 
     private GroupManagementServiceProvider getServiceProvider() {
         String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+        String username = CarbonContext.getThreadLocalCarbonContext().getUsername();
         PrivilegedCarbonContext.startTenantFlow();
         ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         ctx.setTenantDomain(tenantDomain, true);

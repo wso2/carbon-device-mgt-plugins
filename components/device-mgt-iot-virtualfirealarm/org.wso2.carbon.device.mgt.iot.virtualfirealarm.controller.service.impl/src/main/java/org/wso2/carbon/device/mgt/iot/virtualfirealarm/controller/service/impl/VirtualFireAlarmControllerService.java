@@ -20,12 +20,16 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.analytics.datasource.commons.Record;
+import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.DeviceManagement;
@@ -36,7 +40,8 @@ import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.dto.DeviceJSON;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.dto.DeviceData;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.dto.SensorData;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.transport.VirtualFireAlarmMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.transport.VirtualFireAlarmXMPPConnector;
@@ -61,7 +66,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -479,9 +488,11 @@ public class VirtualFireAlarmControllerService {
                             false);
 
                     SensorDataManager.getInstance().setSensorRecord(deviceId,
-                                                                    VirtualFireAlarmConstants.SENSOR_TEMP,
+                                                                    VirtualFireAlarmConstants
+                                                                            .SENSOR_TEMP,
                                                                     temperatureValue,
-                                                                    Calendar.getInstance().getTimeInMillis());
+                                                                    Calendar.getInstance()
+                                                                            .getTimeInMillis());
                     break;
 
                 case MQTT_PROTOCOL:
@@ -512,13 +523,13 @@ public class VirtualFireAlarmControllerService {
      * received data from the device is stored in a 'DeviceRecord' under the device's ID in the 'SensorDataManager'
      * of the Server.
      *
-     * @param dataMsg  the temperature data received from the device in JSON format complying to type 'DeviceJSON'.
+     * @param dataMsg  the temperature data received from the device in JSON format complying to type 'DeviceData'.
      * @param response the HTTP servlet response object received  by default as part of the HTTP call to this API.
      */
     @POST
     @Path("controller/temperature")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void pushTemperatureData(final DeviceJSON dataMsg, @Context HttpServletResponse response) {
+    public void pushTemperatureData(final DeviceData dataMsg, @Context HttpServletResponse response) {
         String deviceId = dataMsg.deviceId;
         String deviceIp = dataMsg.reply;
         float temperature = dataMsg.value;
@@ -536,7 +547,8 @@ public class VirtualFireAlarmControllerService {
             response.setStatus(Response.Status.CONFLICT.getStatusCode());
             return;
         }
-        SensorDataManager.getInstance().setSensorRecord(deviceId, VirtualFireAlarmConstants.SENSOR_TEMP,
+        SensorDataManager.getInstance().setSensorRecord(deviceId,
+                                                        VirtualFireAlarmConstants.SENSOR_TEMP,
                                                         String.valueOf(temperature),
                                                         Calendar.getInstance().getTimeInMillis());
 
@@ -677,5 +689,95 @@ public class VirtualFireAlarmControllerService {
             }
         }
         return Response.serverError().build();
+    }
+
+    /**
+     * Retreive Sensor data for the device type
+     * @param deviceId
+     * @param sensor
+     * @param user
+     * @param from
+     * @param to
+     * @return
+     */
+    @Path("controller/stats/device/{deviceId}/sensors/{sensorName}")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public SensorData[] getAndroidSenseDeviceStats(@PathParam("deviceId") String deviceId,
+                                                   @PathParam("sensorName") String sensor,
+                                                   @QueryParam("username") String user,
+                                                   @QueryParam("from") long from,
+                                                   @QueryParam("to") long to) {
+
+        String fromDate = String.valueOf(from);
+        String toDate = String.valueOf(to);
+
+        List<SensorData> sensorDatas = new ArrayList<>();
+        PrivilegedCarbonContext.startTenantFlow();
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        //TODO - get the JWT from api manager.
+        ctx.setTenantDomain("carbon.super", true);
+        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
+                .getOSGiService(DeviceAnalyticsService.class, null);
+        String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
+                VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+        String sensorTableName = getSensorEventTableName(sensor);
+        try {
+            List<Record> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName,
+                                                                                query);
+
+            Collections.sort(records, new Comparator<Record>() {
+                @Override
+                public int compare(Record o1, Record o2) {
+                    long t1 = (Long) o1.getValue("time");
+                    long t2 = (Long) o2.getValue("time");
+                    if (t1 < t2) {
+                        return -1;
+                    } else if (t1 > t2) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            });
+
+            for (Record record : records) {
+                SensorData sensorData = new SensorData();
+                sensorData.setTime((long) record.getValue("time"));
+                sensorData.setValue("" + (float) record.getValue(sensor));
+                sensorDatas.add(sensorData);
+            }
+            return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
+        } catch (AnalyticsException e) {
+            String errorMsg =
+                    "Error on retrieving stats on table " + sensorTableName + " with query " + query;
+            log.error(errorMsg);
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+        }
+    }
+
+    /**
+     * get the event table from the sensor name.
+     * TODO : this needs to be managed with sensor management.
+     * @param sensorName
+     * @return
+     */
+    private String getSensorEventTableName(String sensorName){
+        String sensorEventTableName;
+        switch (sensorName) {
+            case VirtualFireAlarmConstants.SENSOR_TEMP:
+                sensorEventTableName = VirtualFireAlarmConstants.TEMPERATURE_EVENT_TABLE;
+                break;
+            case VirtualFireAlarmConstants.SENSOR_HUMIDITY:
+                sensorEventTableName = VirtualFireAlarmConstants.HUMIDITY_EVENT_TABLE;
+                break;
+            default:
+                sensorEventTableName = "";
+        }
+        return sensorEventTableName;
     }
 }

@@ -30,6 +30,9 @@ public class RaspberrypiConstants {
     public static final String BULB_CONTEXT = "/BULB/";
     public static final String TEMPERATURE_CONTEXT = "/TEMPERATURE/";
 
+    //type of the sensor
     public static final String SENSOR_TEMPERATURE = "temperature";
+    //sensor events summerized table name
+    public static final String TEMPERATURE_EVENT_TABLE = "ORG_WSO2_IOT_DEVICES_TEMPERATURE";
 
 }
