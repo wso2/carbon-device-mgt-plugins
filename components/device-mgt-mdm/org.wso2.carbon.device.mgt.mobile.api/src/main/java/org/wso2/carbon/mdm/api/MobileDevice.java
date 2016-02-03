@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -40,40 +40,49 @@ public class MobileDevice {
     private static Log log = LogFactory.getLog(MobileDevice.class);
 
     /**
-     * Get all devices
+     * Get all devices. We have to use accept all the necessary query parameters sent by datatable.
+     * Hence had to put lot of query params here.
      *
      * @return Device List
      * @throws MDMAPIException
      */
     @GET
     public Object getAllDevices(@QueryParam("type") String type, @QueryParam("user") String user,
-                                    @QueryParam("role") String role, @QueryParam("status") EnrolmentInfo.Status status,
-                                        @QueryParam("start") int startIdx, @QueryParam("length") int length) throws MDMAPIException {
+                                @QueryParam("role") String role, @QueryParam("status") EnrolmentInfo.Status status,
+                                @QueryParam("start") int startIdx, @QueryParam("length") int length,
+                                @QueryParam("device-name") String deviceName,
+                                @QueryParam("ownership") EnrolmentInfo.OwnerShip ownership
+    ) throws MDMAPIException {
         try {
             DeviceManagementProviderService service = MDMAPIUtils.getDeviceManagementService();
-            List<Device> allDevices = null;
-            PaginationResult paginationResult = null;
-            if ((type != null) && !type.isEmpty()) {
-                if (length > 0) {
-                    paginationResult = service.getAllDevices(type, startIdx, length);
-                } else {
-                    allDevices = service.getAllDevices(type);
+            //Length > 0 means this is a pagination request.
+            if (length > 0) {
+                PaginationRequest paginationRequest = new PaginationRequest(startIdx, length);
+                paginationRequest.setDeviceName(deviceName);
+                paginationRequest.setOwner(user);
+                if (ownership != null) {
+                    paginationRequest.setOwnership(ownership.toString());
                 }
+                if (status != null) {
+                    paginationRequest.setStatus(status.toString());
+                }
+                paginationRequest.setDeviceType(type);
+                return service.getAllDevices(paginationRequest);
+            }
+
+            List<Device> allDevices = null;
+            if ((type != null) && !type.isEmpty()) {
+                allDevices = service.getAllDevices(type);
             } else if ((user != null) && !user.isEmpty()) {
                 allDevices = service.getDevicesOfUser(user);
             } else if ((role != null) && !role.isEmpty()) {
                 allDevices = service.getAllDevicesOfRole(role);
             } else if (status != null) {
                 allDevices = service.getDevicesByStatus(status);
+            } else if (deviceName != null) {
+                allDevices = service.getDevicesByName(deviceName);
             } else {
-                if (length > 0) {
-                    paginationResult = service.getAllDevices(startIdx, length);
-                } else {
-                    allDevices = service.getAllDevices();
-                }
-            }
-            if(paginationResult != null) {
-                return paginationResult;
+                allDevices = service.getAllDevices();
             }
             return allDevices;
         } catch (DeviceManagementException e) {
@@ -108,7 +117,7 @@ public class MobileDevice {
         if (device == null) {
             responsePayload.setStatusCode(HttpStatus.SC_NOT_FOUND);
             responsePayload.setMessageFromServer("Requested device by type: " +
-                    type + " and id: " + id + " does not exist.");
+                                                 type + " and id: " + id + " does not exist.");
             return Response.status(HttpStatus.SC_NOT_FOUND).entity(responsePayload).build();
         } else {
             responsePayload.setStatusCode(HttpStatus.SC_OK);
@@ -186,24 +195,24 @@ public class MobileDevice {
         return devices;
     }
 
-	/**
-	 * Get the list of available device types.
-	 *
-	 * @return list of device types.
-	 * @throws MDMAPIException If some unusual behaviour is observed while fetching the device list
-	 */
-	@GET
-	@Path("types")
-	public List<DeviceType> getDeviceTypes() throws MDMAPIException {
+    /**
+     * Get the list of available device types.
+     *
+     * @return list of device types.
+     * @throws MDMAPIException If some unusual behaviour is observed while fetching the device list
+     */
+    @GET
+    @Path("types")
+    public List<DeviceType> getDeviceTypes() throws MDMAPIException {
 
-		List<DeviceType> deviceTypes;
-		try {
-			deviceTypes = MDMAPIUtils.getDeviceManagementService().getAvailableDeviceTypes();
-		} catch (DeviceManagementException e) {
-			String msg = "Error occurred while fetching the list of device types.";
-			log.error(msg, e);
-			throw new MDMAPIException(msg, e);
-		}
-		return deviceTypes;
-	}
+        List<DeviceType> deviceTypes;
+        try {
+            deviceTypes = MDMAPIUtils.getDeviceManagementService().getAvailableDeviceTypes();
+        } catch (DeviceManagementException e) {
+            String msg = "Error occurred while fetching the list of device types.";
+            log.error(msg, e);
+            throw new MDMAPIException(msg, e);
+        }
+        return deviceTypes;
+    }
 }
