@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -24,12 +24,18 @@ import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.PaginationResult;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfigurationManagementService;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementService;
 import org.wso2.carbon.device.mgt.core.app.mgt.ApplicationManagementProviderService;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.mdm.api.common.MDMAPIException;
+import org.wso2.carbon.ntask.core.TaskManager;
+import org.wso2.carbon.policy.mgt.common.PolicyMonitoringTaskException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
+import org.wso2.carbon.policy.mgt.core.task.TaskScheduleService;
+import org.wso2.carbon.policy.mgt.core.util.PolicyManagementConstants;
 import org.wso2.carbon.user.api.AuthorizationManager;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
@@ -44,7 +50,35 @@ import java.util.List;
  */
 public class MDMAPIUtils {
 
+    private static final String NOTIFIER_FREQUENCY = "notifierFrequency";
+
     private static Log log = LogFactory.getLog(MDMAPIUtils.class);
+
+    public static int getNotifierFrequency(TenantConfiguration tenantConfiguration) {
+        List<ConfigurationEntry> configEntryList = tenantConfiguration.getConfiguration();
+        if (configEntryList != null && !configEntryList.isEmpty()) {
+            for(ConfigurationEntry entry : configEntryList) {
+                if (NOTIFIER_FREQUENCY.equals(entry.getName())) {
+                    return Integer.parseInt((String) entry.getValue());
+                }
+            }
+        }
+        return 0;
+    }
+
+    public static void scheduleTaskService(int notifierFrequency) {
+        TaskScheduleService taskScheduleService;
+        try {
+            taskScheduleService = getPolicyManagementService().getTaskScheduleService();
+            if (taskScheduleService.isTaskScheduled()) {
+                taskScheduleService.updateTask(notifierFrequency);
+            } else {
+                taskScheduleService.startTask(notifierFrequency);
+            }
+        } catch (PolicyMonitoringTaskException e) {
+            log.error("Exception occurred while starting the Task service.", e);
+        }
+    }
 
     public static DeviceManagementProviderService getDeviceManagementService() {
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();

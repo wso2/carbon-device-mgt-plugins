@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -22,6 +22,8 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.PaginationRequest;
+import org.wso2.carbon.device.mgt.common.PaginationResult;
 import org.wso2.carbon.device.mgt.common.Platform;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
@@ -69,11 +71,33 @@ public class Operation {
         return operations;
     }
 
+    @GET
+    @Path("paginate/{type}/{id}")
+    public PaginationResult getDeviceOperations(
+            @PathParam("type") String type,	@PathParam("id") String id, @QueryParam("start") int startIdx,
+            @QueryParam("length") int length, @QueryParam("search") String search)
+            throws MDMAPIException {
+        PaginationResult operations;
+        DeviceManagementProviderService dmService;
+        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+        PaginationRequest paginationRequest = new PaginationRequest(startIdx, length);
+        try {
+            deviceIdentifier.setType(type);
+            deviceIdentifier.setId(id);
+            dmService = MDMAPIUtils.getDeviceManagementService();
+            operations = dmService.getOperations(deviceIdentifier, paginationRequest);
+        } catch (OperationManagementException e) {
+            String msg = "Error occurred while fetching the operations for the device.";
+            log.error(msg, e);
+            throw new MDMAPIException(msg, e);
+        }
+        return operations;
+    }
+
 	@GET
 	@Path("{type}/{id}")
 	public List<? extends org.wso2.carbon.device.mgt.common.operation.mgt.Operation> getDeviceOperations(
-			@PathParam("type") String type,
-			@PathParam("id") String id)
+			@PathParam("type") String type,	@PathParam("id") String id)
 			throws MDMAPIException {
 		List<? extends org.wso2.carbon.device.mgt.common.operation.mgt.Operation> operations;
 		DeviceManagementProviderService dmService;
