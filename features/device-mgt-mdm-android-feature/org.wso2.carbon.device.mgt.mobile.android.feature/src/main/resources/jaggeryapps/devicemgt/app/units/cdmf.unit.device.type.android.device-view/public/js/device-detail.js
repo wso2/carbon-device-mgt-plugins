@@ -38,7 +38,7 @@
             $('#apps-spinner').removeClass('hidden');
             loadApplicationsList();
         });
-
+        loadOperationBar(deviceType);
     });
 
     function loadApplicationsList() {
