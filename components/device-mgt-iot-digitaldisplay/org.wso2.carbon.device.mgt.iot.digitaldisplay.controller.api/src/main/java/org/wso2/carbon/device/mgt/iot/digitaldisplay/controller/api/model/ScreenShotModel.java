@@ -2,28 +2,28 @@ package org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api.model;
 
 public class ScreenShotModel {
 
-    private String[] scrrenShotData;
+    private String[] screenShotData;
     private int length;
 
     public ScreenShotModel(){
 
     }
 
-    public ScreenShotModel(String[] scrrenShotData , int length){
-        this.scrrenShotData = scrrenShotData;
+    public ScreenShotModel(String[] screenShotData , int length){
+        this.screenShotData = screenShotData;
         this.length = length;
     }
 
-    public void setScrrenShotData(String[] scrrenShotData){
-        this.scrrenShotData = scrrenShotData;
+    public void setScreenShotData(String[] screrenShotData){
+        this.screenShotData = screenShotData;
     }
 
     public void setLength(int length){
         this.length = length;
     }
 
-    public String[] getScrrenShotData(){
-        return this.scrrenShotData;
+    public String[] getScreenShotData(){
+        return this.screenShotData;
     }
 
     public int getLength(){

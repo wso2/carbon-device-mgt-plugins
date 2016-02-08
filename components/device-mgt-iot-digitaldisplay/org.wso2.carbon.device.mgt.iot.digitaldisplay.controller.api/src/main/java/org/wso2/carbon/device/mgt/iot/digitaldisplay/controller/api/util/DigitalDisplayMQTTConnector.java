@@ -93,34 +93,34 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
             DigitalDisplayWebSocketServerEndPoint.sendMessage(sessionId, new StringBuilder(responseMessage));
         } else if (messageData.length == 3) {
             String response = messageData[2];
-            JSONObject schreenshot = new JSONObject(response);
-            String pic_id = schreenshot.getString("pic_id");
-            String data = schreenshot.getString("data");
-            int pos = schreenshot.getInt("pos");
-            int length = schreenshot.getInt("size");
-            createScreenShot(sessionId, pic_id, pos, length, data);
+            JSONObject schreenShot = new JSONObject(response);
+            String picId = schreenShot.getString("pic_id");
+            String data = schreenShot.getString("data");
+            int pos = schreenShot.getInt("pos");
+            int length = schreenShot.getInt("size");
+            createScreenShot(sessionId, picId, pos, length, data);
         }
     }
 
-    private void createScreenShot(String sessionId, String pic_id, int pos, int length, String data) {
+    private void createScreenShot(String sessionId, String picId, int pos, int length, String data) {
 
-        ScreenShotModel screenShotModel = screenshots.get(pic_id);
+        ScreenShotModel screenShotModel = screenshots.get(picId);
 
         if (screenShotModel == null) {
             screenShotModel = new ScreenShotModel();
-            screenShotModel.setScrrenShotData(new String[length + 1]);
+            screenShotModel.setScreenShotData(new String[length + 1]);
             screenShotModel.setLength(0);
-            screenshots.put(pic_id, screenShotModel);
+            screenshots.put(picId, screenShotModel);
         }
         if (screenShotModel.getLength() <= length) {
-            screenShotModel.getScrrenShotData()[pos] = data;
+            screenShotModel.getScreenShotData()[pos] = data;
             screenShotModel.setLength(screenShotModel.getLength() + 1);
             if (screenShotModel.getLength() == (length + 1)) {
                 StringBuilder displayScreenShot = new StringBuilder("Screenshot||");
-                for (String screenshot : screenShotModel.getScrrenShotData()) {
+                for (String screenshot : screenShotModel.getScreenShotData()) {
                     displayScreenShot.append(screenshot);
                 }
-                screenshots.remove(pic_id);
+                screenshots.remove(picId);
                 DigitalDisplayWebSocketServerEndPoint.sendMessage(sessionId, displayScreenShot);
             }
         }
