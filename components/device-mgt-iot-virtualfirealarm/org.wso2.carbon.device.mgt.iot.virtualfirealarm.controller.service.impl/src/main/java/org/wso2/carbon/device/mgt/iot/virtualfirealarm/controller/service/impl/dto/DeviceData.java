@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl.dto;
+package org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.dto;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DeviceJSON {
+public class DeviceData {
     @XmlElement(required = true) public String owner;
     @XmlElement(required = true) public String deviceId;
     @XmlElement(required = true) public String reply;

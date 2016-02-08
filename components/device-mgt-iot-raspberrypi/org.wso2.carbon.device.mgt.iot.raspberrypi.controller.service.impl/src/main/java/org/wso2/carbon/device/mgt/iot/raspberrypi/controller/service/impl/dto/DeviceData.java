@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DeviceJSON {
+public class DeviceData {
     @XmlElement(required = true) public String owner;
     @XmlElement(required = true) public String deviceId;
     @XmlElement(required = true) public String reply;
