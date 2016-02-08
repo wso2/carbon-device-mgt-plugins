@@ -52,7 +52,7 @@ public class MobileDevice {
                                 @QueryParam("start") int startIdx, @QueryParam("length") int length,
                                 @QueryParam("device-name") String deviceName,
                                 @QueryParam("ownership") EnrolmentInfo.OwnerShip ownership
-    ) throws MDMAPIException {
+                                ) throws MDMAPIException {
         try {
             DeviceManagementProviderService service = MDMAPIUtils.getDeviceManagementService();
             //Length > 0 means this is a pagination request.
@@ -84,7 +84,7 @@ public class MobileDevice {
             } else {
                 allDevices = service.getAllDevices();
             }
-            return allDevices;
+             return allDevices;
         } catch (DeviceManagementException e) {
             String msg = "Error occurred while fetching the device list.";
             log.error(msg, e);
@@ -117,7 +117,7 @@ public class MobileDevice {
         if (device == null) {
             responsePayload.setStatusCode(HttpStatus.SC_NOT_FOUND);
             responsePayload.setMessageFromServer("Requested device by type: " +
-                                                 type + " and id: " + id + " does not exist.");
+                    type + " and id: " + id + " does not exist.");
             return Response.status(HttpStatus.SC_NOT_FOUND).entity(responsePayload).build();
         } else {
             responsePayload.setStatusCode(HttpStatus.SC_OK);
@@ -195,24 +195,24 @@ public class MobileDevice {
         return devices;
     }
 
-    /**
-     * Get the list of available device types.
-     *
-     * @return list of device types.
-     * @throws MDMAPIException If some unusual behaviour is observed while fetching the device list
-     */
-    @GET
-    @Path("types")
-    public List<DeviceType> getDeviceTypes() throws MDMAPIException {
+	/**
+	 * Get the list of available device types.
+	 *
+	 * @return list of device types.
+	 * @throws MDMAPIException If some unusual behaviour is observed while fetching the device list
+	 */
+	@GET
+	@Path("types")
+	public List<DeviceType> getDeviceTypes() throws MDMAPIException {
 
-        List<DeviceType> deviceTypes;
-        try {
-            deviceTypes = MDMAPIUtils.getDeviceManagementService().getAvailableDeviceTypes();
-        } catch (DeviceManagementException e) {
-            String msg = "Error occurred while fetching the list of device types.";
-            log.error(msg, e);
-            throw new MDMAPIException(msg, e);
-        }
-        return deviceTypes;
-    }
+		List<DeviceType> deviceTypes;
+		try {
+			deviceTypes = MDMAPIUtils.getDeviceManagementService().getAvailableDeviceTypes();
+		} catch (DeviceManagementException e) {
+			String msg = "Error occurred while fetching the list of device types.";
+			log.error(msg, e);
+			throw new MDMAPIException(msg, e);
+		}
+		return deviceTypes;
+	}
 }

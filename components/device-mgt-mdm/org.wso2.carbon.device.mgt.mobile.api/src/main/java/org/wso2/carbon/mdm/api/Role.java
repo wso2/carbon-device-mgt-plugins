@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
- * either express or implied. See the License for the
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -29,6 +29,7 @@ import org.wso2.carbon.mdm.api.util.ResponsePayload;
 import org.wso2.carbon.mdm.beans.RoleWrapper;
 import org.wso2.carbon.mdm.util.SetReferenceTransformer;
 import org.wso2.carbon.user.api.*;
+import org.wso2.carbon.user.core.common.AbstractUserStoreManager;
 import org.wso2.carbon.user.mgt.UserRealmProxy;
 import org.wso2.carbon.user.mgt.common.UIPermissionNode;
 import org.wso2.carbon.user.mgt.common.UserAdminException;
@@ -60,22 +61,97 @@ public class Role {
                 log.debug("Getting the list of user roles");
             }
             roles = userStoreManager.getRoleNames();
+
         } catch (UserStoreException e) {
             String msg = "Error occurred while retrieving the list of user roles.";
             log.error(msg, e);
             throw new MDMAPIException(msg, e);
         }
-        // removing all internal roles
-        List<String> rolesWithoutInternalRoles = new ArrayList<String>();
+        // removing all internal roles and roles created for Service-providers
+        List<String> filteredRoles = new ArrayList<String>();
         for (String role : roles) {
-            if (!role.startsWith("Internal/")) {
-                rolesWithoutInternalRoles.add(role);
+            if (!(role.startsWith("Internal/") || role.startsWith("Application/"))) {
+                filteredRoles.add(role);
             }
         }
         ResponsePayload responsePayload = new ResponsePayload();
         responsePayload.setStatusCode(HttpStatus.SC_OK);
         responsePayload.setMessageFromServer("All user roles were successfully retrieved.");
-        responsePayload.setResponseContent(rolesWithoutInternalRoles);
+        responsePayload.setResponseContent(filteredRoles);
+        return Response.status(HttpStatus.SC_OK).entity(responsePayload).build();
+    }
+
+    /**
+     * Get user roles by user store(except all internal roles) from system.
+     *
+     * @return A list of users
+     * @throws org.wso2.carbon.mdm.api.common.MDMAPIException
+     */
+    @GET
+    @Path ("{userStore}")
+    @Produces ({MediaType.APPLICATION_JSON})
+    public Response getRoles(@PathParam ("userStore") String userStore) throws MDMAPIException {
+        AbstractUserStoreManager abstractUserStoreManager = (AbstractUserStoreManager) MDMAPIUtils.getUserStoreManager();
+        String[] roles;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Getting the list of user roles");
+            }
+            roles = abstractUserStoreManager.getRoleNames(userStore+"/*", -1, false, true, true);
+
+        } catch (UserStoreException e) {
+            String msg = "Error occurred while retrieving the list of user roles.";
+            log.error(msg, e);
+            throw new MDMAPIException(msg, e);
+        }
+        // removing all internal roles and roles created for Service-providers
+        List<String> filteredRoles = new ArrayList<String>();
+        for (String role : roles) {
+            if (!(role.startsWith("Internal/") || role.startsWith("Application/"))) {
+                filteredRoles.add(role);
+            }
+        }
+        ResponsePayload responsePayload = new ResponsePayload();
+        responsePayload.setStatusCode(HttpStatus.SC_OK);
+        responsePayload.setMessageFromServer("All user roles were successfully retrieved.");
+        responsePayload.setResponseContent(filteredRoles);
+        return Response.status(HttpStatus.SC_OK).entity(responsePayload).build();
+    }
+
+    /**
+     * Get user roles by providing a filtering criteria(except all internal roles & system roles) from system.
+     *
+     * @return A list of users
+     * @throws org.wso2.carbon.mdm.api.common.MDMAPIException
+     */
+    @GET
+    @Path ("search")
+    @Produces ({MediaType.APPLICATION_JSON})
+    public Response getMatchingRoles(@QueryParam ("filter") String filter) throws MDMAPIException {
+        AbstractUserStoreManager abstractUserStoreManager = (AbstractUserStoreManager) MDMAPIUtils.getUserStoreManager();
+        String[] roles;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Getting the list of user roles using filter : " + filter);
+            }
+            roles = abstractUserStoreManager.getRoleNames("*" + filter + "*", -1, true, true, true);
+
+        } catch (UserStoreException e) {
+            String msg = "Error occurred while retrieving the list of user roles using the filter : " + filter;
+            log.error(msg, e);
+            throw new MDMAPIException(msg, e);
+        }
+        // removing all internal roles and roles created for Service-providers
+        List<String> filteredRoles = new ArrayList<String>();
+        for (String role : roles) {
+            if (!(role.startsWith("Internal/") || role.startsWith("Application/"))) {
+                filteredRoles.add(role);
+            }
+        }
+        ResponsePayload responsePayload = new ResponsePayload();
+        responsePayload.setStatusCode(HttpStatus.SC_OK);
+        responsePayload.setMessageFromServer("All matching user roles were successfully retrieved.");
+        responsePayload.setResponseContent(filteredRoles);
         return Response.status(HttpStatus.SC_OK).entity(responsePayload).build();
     }
 
@@ -236,28 +312,28 @@ public class Role {
             MDMAPIException {
         final UserStoreManager userStoreManager = MDMAPIUtils.getUserStoreManager();
         final AuthorizationManager authorizationManager = MDMAPIUtils.getAuthorizationManager();
+        String newRoleName = roleWrapper.getRoleName();
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Updating the role to user store");
             }
-            if (roleWrapper.getRoleName() != null && !roleName.equals(roleWrapper.getRoleName())) {
-                userStoreManager.updateRoleName(roleName, roleWrapper.getRoleName());
+            if (newRoleName != null && !roleName.equals(newRoleName)) {
+                userStoreManager.updateRoleName(roleName, newRoleName);
             }
             if (roleWrapper.getUsers() != null) {
                 SetReferenceTransformer transformer = new SetReferenceTransformer();
-                transformer.transform(Arrays.asList(userStoreManager.getUserListOfRole(roleName)),
-                        Arrays.asList(roleWrapper.getUsers()));
+                transformer.transform(Arrays.asList(userStoreManager.getUserListOfRole(newRoleName)),
+                                      Arrays.asList(roleWrapper.getUsers()));
                 final String[] usersToAdd = (String[])
                         transformer.getObjectsToAdd().toArray(new String[transformer.getObjectsToAdd().size()]);
                 final String[] usersToDelete = (String[])
                         transformer.getObjectsToRemove().toArray(new String[transformer.getObjectsToRemove().size()]);
-
-                userStoreManager.updateUserListOfRole(roleName, usersToDelete, usersToAdd);
+                userStoreManager.updateUserListOfRole(newRoleName, usersToDelete, usersToAdd);
             }
             if (roleWrapper.getPermissions() != null) {
                 // Delete all authorizations for the current role before authorizing the permission tree
                 authorizationManager.clearRoleAuthorization(roleName);
-                if (roleWrapper.getPermissions() != null && roleWrapper.getPermissions().length > 0) {
+                if (roleWrapper.getPermissions().length > 0) {
                     for (int i = 0; i < roleWrapper.getPermissions().length; i++) {
                         String permission = roleWrapper.getPermissions()[i];
                         authorizationManager.authorizeRole(roleName, permission, CarbonConstants.UI_PERMISSION_ACTION);
@@ -265,7 +341,7 @@ public class Role {
                 }
             }
         } catch (UserStoreException e) {
-            String msg = "Error occurred while saving the role: " + roleWrapper.getRoleName();
+            String msg = e.getMessage();
             log.error(msg, e);
             throw new MDMAPIException(msg, e);
         }
@@ -329,7 +405,7 @@ public class Role {
         } catch (UserStoreException e) {
             String msg = "Error occurred while saving the users of the role: " + roleName;
             log.error(msg, e);
-            throw new MDMAPIException(msg, e);
+            throw new MDMAPIException(e.getMessage(), e);
         }
         return Response.status(HttpStatus.SC_OK).build();
     }

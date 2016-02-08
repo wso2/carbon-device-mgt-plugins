@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
   ~ WSO2 Inc. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
   ~ in compliance with the License.
-  ~ you may obtain a copy of the License at
+  ~ You may obtain a copy of the License at
   ~
-  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
   ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  ~ KIND, either express or implied.  See the License for the
+  ~ KIND, either express or implied. See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
@@ -42,22 +42,6 @@
         <name>Get all device types</name>
         <path>/device-mgt/devices/types</path>
         <url>/devices/types</url>
-        <method>GET</method>
-        <scope>emm_admin</scope>
-    </Permission>
-
-    <Permission>
-        <name>Get all notifications</name>
-        <path>/device-mgt/notifications/view</path>
-        <url>/notifications</url>
-        <method>GET</method>
-        <scope>emm_admin</scope>
-    </Permission>
-
-    <Permission>
-        <name>Get new notifications</name>
-        <path>/device-mgt/notifications/view</path>
-        <url>/notifications/*</url>
         <method>GET</method>
         <scope>emm_admin</scope>
     </Permission>
@@ -103,10 +87,44 @@
     </Permission>
     <!-- End of Device related APIs -->
 
+    <!-- Notification related APIs -->
+    <Permission>
+        <name>Get all notifications</name>
+        <path>/device-mgt/notifications/view</path>
+        <url>/notifications</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Add notification</name>
+        <path>/device-mgt/notifications/add</path>
+        <url>/notifications</url>
+        <method>POST</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Update notification</name>
+        <path>/device-mgt/notifications/view</path>
+        <url>/notifications/*/*</url>
+        <method>PUT</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Get new notifications</name>
+        <path>/device-mgt/notifications/view</path>
+        <url>/notifications/*</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+    <!-- End of Notification related APIs -->
+
     <!-- Operations related APIs -->
     <Permission>
         <name>Get all operations</name>
-        <path>/device-mgt/operations/view-all</path>
+        <path>/device-mgt/operations/view</path>
         <url>/operations</url>
         <method>GET</method>
         <scope>emm_admin</scope>
@@ -138,7 +156,7 @@
 
     <Permission>
         <name>Get Applications For Devices</name>
-        <path>/device-mgt/operations/application/view-all</path>
+        <path>/device-mgt/operations/application/view</path>
         <url>/operations/*/*/*</url>
         <method>GET</method>
         <scope>emm_admin,emm_user</scope>
@@ -153,7 +171,7 @@
 
     <Permission>
         <name>Get Applications For Device Type</name>
-        <path>/device-mgt/operations/application/view-all</path>
+        <path>/device-mgt/operations/application/view</path>
         <url>/operations/*</url>
         <method>GET</method>
         <scope>emm_admin,emm_user</scope>
@@ -163,14 +181,14 @@
     <!-- Feature related APIs -->
     <Permission>
         <name>Get features</name>
-        <path>/device-mgt/features/view-all</path>
+        <path>/device-mgt/features/view</path>
         <url>/features/*</url>
         <method>GET</method>
         <scope>emm_admin</scope>
     </Permission>
     <Permission>
         <name>Get all features</name>
-        <path>/device-mgt/features/view-all</path>
+        <path>/device-mgt/features/view</path>
         <url>/features</url>
         <method>GET</method>
         <scope>emm_admin</scope>
@@ -186,8 +204,15 @@
         <scope>emm_admin</scope>
     </Permission>
     <Permission>
+        <name>Get role permissions</name>
+        <path>/device-mgt/roles</path>
+        <url>/roles/permissions</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+    <Permission>
         <name>Get User roles</name>
-        <path>/device-mgt/role</path>
+        <path>/device-mgt/roles</path>
         <url>/roles/*</url>
         <method>GET</method>
         <scope>emm_admin</scope>
@@ -201,7 +226,7 @@
     </Permission>
     <Permission>
         <name>Update a specific role</name>
-        <path>/device-mgt/role/update</path>
+        <path>/device-mgt/roles/update</path>
         <url>/roles/*</url>
         <method>PUT</method>
         <scope>emm_admin</scope>
@@ -223,7 +248,7 @@
     <Permission>
         <name>Delete User roles</name>
         <path>/device-mgt/roles/delete</path>
-        <url>/roles/*</url>
+        <url>/roles</url>
         <method>DELETE</method>
         <scope>emm_admin</scope>
     </Permission>
@@ -256,6 +281,13 @@
         <path>/device-mgt/users/update</path>
         <url>/users</url>
         <method>PUT</method>
+        <scope>emm_admin</scope>
+    </Permission>
+    <Permission>
+        <name>Change user password</name>
+        <path>/device-mgt/users/reset-password</path>
+        <url>/users/reset-password</url>
+        <method>POST</method>
         <scope>emm_admin</scope>
     </Permission>
     <Permission>
@@ -310,7 +342,21 @@
     <Permission>
         <name>Get all user names</name>
         <path>/device-mgt/users/view</path>
+        <url>/users/view-users</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+    <Permission>
+        <name>Get all usernames</name>
+        <path>/device-mgt/users/view</path>
         <url>/users/users-by-username</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+    <Permission>
+        <name>Get filtered usernames</name>
+        <path>/device-mgt/users/view</path>
+        <url>/users/users-by-username/*</url>
         <method>GET</method>
         <scope>emm_admin</scope>
     </Permission>
@@ -477,40 +523,40 @@
     <!-- End of Profile related APIs -->
 
     <!-- License related APIs -->
-    <Permission>
-        <name>Get license</name>
-        <path>/device-mgt/license/view</path>
-        <url>/license/*/*</url>
-        <method>GET</method>
-        <scope>emm_admin</scope>
-    </Permission>
-    <Permission>
-        <name>Add license</name>
-        <path>/device-mgt/license/add</path>
-        <url>/license</url>
-        <method>POST</method>
-        <scope>emm_admin</scope>
-    </Permission>
+    <!--<Permission>-->
+    <!--<name>Get license</name>-->
+    <!--<path>/device-mgt/license/view</path>-->
+    <!--<url>/license/*/*</url>-->
+    <!--<method>GET</method>-->
+    <!--<scope>emm_admin</scope>-->
+    <!--</Permission>-->
+    <!--<Permission>-->
+    <!--<name>Add license</name>-->
+    <!--<path>/device-mgt/license/add</path>-->
+    <!--<url>/license</url>-->
+    <!--<method>POST</method>-->
+    <!--<scope>emm_admin</scope>-->
+    <!--</Permission>-->
     <!-- End of License related APIs -->
 
     <!-- Configuration related APIs -->
     <Permission>
         <name>Get configuration</name>
-        <path>/device-mgt/tenant/configuration</path>
+        <path>/device-mgt/tenant/configuration/view</path>
         <url>/configuration</url>
         <method>GET</method>
         <scope>emm_admin</scope>
     </Permission>
     <Permission>
         <name>Add configuration</name>
-        <path>/device-mgt/tenant/configuration</path>
+        <path>/device-mgt/tenant/configuration/modify</path>
         <url>/configuration</url>
         <method>POST</method>
         <scope>emm_admin</scope>
     </Permission>
     <Permission>
         <name>Update configuration</name>
-        <path>/device-mgt/tenant/configuration</path>
+        <path>/device-mgt/tenant/configuration/modify</path>
         <url>/configuration</url>
         <method>PUT</method>
         <scope>emm_admin</scope>
