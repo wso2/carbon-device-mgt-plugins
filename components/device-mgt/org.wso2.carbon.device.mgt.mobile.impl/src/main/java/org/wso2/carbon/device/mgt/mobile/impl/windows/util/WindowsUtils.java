@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.mobile.impl.windows.util;
 
+import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 
 import java.sql.ResultSet;
@@ -40,5 +41,9 @@ public class WindowsUtils {
         mobileDevice.setSerial(rs.getString(WindowsPluginConstants.SERIAL));
         mobileDevice.setOsVersion(rs.getString(WindowsPluginConstants.LATITUDE));
         return mobileDevice;
+    }
+    public static Feature getMobileFeature() {
+        Feature feature = new Feature();
+        return feature;
     }
 }

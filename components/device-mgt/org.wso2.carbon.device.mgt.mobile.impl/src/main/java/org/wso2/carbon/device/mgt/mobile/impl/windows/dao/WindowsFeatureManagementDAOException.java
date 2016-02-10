@@ -21,7 +21,7 @@ package org.wso2.carbon.device.mgt.mobile.impl.windows.dao;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
 
 /**
- * Implement Exception class for Windows Device Features.
+ * This class responsible for wrapping exceptions related on Windows device features.
  */
 public class WindowsFeatureManagementDAOException extends MobileDeviceManagementDAOException {
 
