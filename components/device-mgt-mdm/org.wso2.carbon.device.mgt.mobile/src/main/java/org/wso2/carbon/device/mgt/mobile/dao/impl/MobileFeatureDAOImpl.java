@@ -63,10 +63,10 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 			stmt.setString(4, mobileFeature.getDeviceType());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
-                if (log.isDebugEnabled()) {
+				if (log.isDebugEnabled()) {
 					log.debug("Added a new MobileFeature " + mobileFeature.getCode() + " to the MDM database.");
 				}
-                status = true;
+				status = true;
 			}
 		} catch (SQLException e) {
 			String msg = "Error occurred while adding feature code - '" +
@@ -183,6 +183,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		MobileFeature mobileFeature = null;
+		ResultSet resultSet = null;
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
@@ -190,7 +191,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 					"WHERE CODE = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblFeatureCode);
-			ResultSet resultSet = stmt.executeQuery();
+			resultSet = stmt.executeQuery();
 			if (resultSet.next()) {
 				mobileFeature = new MobileFeature();
 				mobileFeature.setId(resultSet.getInt(1));
@@ -207,7 +208,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
-			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, resultSet);
 		}
 		return mobileFeature;
 	}
@@ -218,6 +219,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		MobileFeature mobileFeature = null;
+		ResultSet resultSet = null;
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
@@ -225,7 +227,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 					" WHERE ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setInt(1, mblFeatureId);
-			ResultSet resultSet = stmt.executeQuery();
+			resultSet = stmt.executeQuery();
 			if (resultSet.next()) {
 				mobileFeature = new MobileFeature();
 				mobileFeature.setId(resultSet.getInt(1));
@@ -242,7 +244,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
-			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, resultSet);
 		}
 		return mobileFeature;
 	}
@@ -253,12 +255,13 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		PreparedStatement stmt = null;
 		MobileFeature mobileFeature;
 		List<MobileFeature> mobileFeatures = new ArrayList<MobileFeature>();
+		ResultSet resultSet = null;
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
 					"SELECT ID, CODE, NAME, DESCRIPTION, DEVICE_TYPE FROM AD_FEATURE";
 			stmt = conn.prepareStatement(selectDBQuery);
-			ResultSet resultSet = stmt.executeQuery();
+			resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mobileFeature = new MobileFeature();
 				mobileFeature.setId(resultSet.getInt(1));
@@ -277,7 +280,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
-			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, resultSet);
 		}
 	}
 
@@ -287,6 +290,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 		PreparedStatement stmt = null;
 		MobileFeature mobileFeature;
 		List<MobileFeature> mobileFeatures = new ArrayList<>();
+		ResultSet resultSet = null;
 		try {
 			conn = this.getConnection();
 			String selectDBQuery =
@@ -294,7 +298,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 					" WHERE DEVICE_TYPE = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, deviceType);
-			ResultSet resultSet = stmt.executeQuery();
+			resultSet = stmt.executeQuery();
 			while (resultSet.next()) {
 				mobileFeature = new MobileFeature();
 				mobileFeature.setId(resultSet.getInt(1));
@@ -314,7 +318,7 @@ public class MobileFeatureDAOImpl implements MobileFeatureDAO {
 			log.error(msg, e);
 			throw new MobileDeviceManagementDAOException(msg, e);
 		} finally {
-			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, null);
+			MobileDeviceManagementDAOUtil.cleanupResources(conn, stmt, resultSet);
 		}
 	}
 

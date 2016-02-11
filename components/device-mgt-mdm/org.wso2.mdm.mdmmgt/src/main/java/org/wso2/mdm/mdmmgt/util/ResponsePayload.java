@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,11 +11,11 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
-package main.java.org.wso2.mdm.mdmmgt.util;
+package org.wso2.mdm.mdmmgt.util;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -26,21 +26,6 @@ public class ResponsePayload {
     private int statusCode;
     private String messageFromServer;
     private Object responseContent;
-
-    public static ResponsePayloadBuilder statusCode(int statusCode) {
-        ResponsePayload message = new ResponsePayload();
-        return message.getBuilder().statusCode(statusCode);
-    }
-
-    public static ResponsePayloadBuilder messageFromServer(String messageFromServer) {
-        ResponsePayload message = new ResponsePayload();
-        return message.getBuilder().messageFromServer(messageFromServer);
-    }
-
-    public static ResponsePayloadBuilder responseContent(String responseContent) {
-        ResponsePayload message = new ResponsePayload();
-        return message.getBuilder().responseContent(responseContent);
-    }
 
     @XmlElement
     public int getStatusCode() {
@@ -71,6 +56,21 @@ public class ResponsePayload {
 
     private ResponsePayloadBuilder getBuilder() {
         return new ResponsePayloadBuilder();
+    }
+
+    public static ResponsePayloadBuilder statusCode(int statusCode) {
+        ResponsePayload message = new ResponsePayload();
+        return message.getBuilder().statusCode(statusCode);
+    }
+
+    public static ResponsePayloadBuilder messageFromServer(String messageFromServer) {
+        ResponsePayload message = new ResponsePayload();
+        return message.getBuilder().messageFromServer(messageFromServer);
+    }
+
+    public static ResponsePayloadBuilder responseContent(String responseContent) {
+        ResponsePayload message = new ResponsePayload();
+        return message.getBuilder().responseContent(responseContent);
     }
 
     public class ResponsePayloadBuilder {

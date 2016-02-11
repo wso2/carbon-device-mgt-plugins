@@ -36,7 +36,7 @@ CREATE TABLE IOS_FEATURE (
 
 -- Sequence `IOS_FEATURE_ID_INC_SEQ`
 -- -----------------------------------------------------
-CREATE SEQUENCE IOS_FEATURE_ID_INC_SEQ START WITH 1 INCREMENT BY 1 NOCACHE;
+CREATE SEQUENCE IOS_FEATURE_ID_INC_SEQ START WITH 1 INCREMENT BY 1 NOCACHE
 /
 
 -- -----------------------------------------------------

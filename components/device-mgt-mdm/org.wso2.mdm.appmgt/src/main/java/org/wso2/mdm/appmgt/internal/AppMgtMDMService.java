@@ -17,7 +17,7 @@ public class AppMgtMDMService {
 
         BundleContext bundleContext = componentContext.getBundleContext();
         bundleContext.registerService(MDMOperations.class.getName(),
-                                      new MDMOperationsImpl(), null);
+                new MDMOperationsImpl(), null);
 
     }
 

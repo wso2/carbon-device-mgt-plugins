@@ -66,7 +66,7 @@ public class ProfileFeature implements Serializable {
 
     public String getPayLoad() {
         Gson gson = new Gson();
-        this.payLoad = gson.toJson(content);
+        this.payLoad =  gson.toJson(content);
         return payLoad;
     }
 

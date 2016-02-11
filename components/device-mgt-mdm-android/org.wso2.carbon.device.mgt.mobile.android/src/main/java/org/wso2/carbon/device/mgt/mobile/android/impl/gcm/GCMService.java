@@ -43,7 +43,7 @@ public class GCMService {
     }
 
     public void sendNotification(String messageData, Device device) {
-        List<Device> devices = new ArrayList<>();
+        List<Device> devices = new ArrayList<>(1);
         devices.add(device);
         GCMResult result = GCMUtil.sendWakeUpCall(messageData, devices);
         if (result.getStatusCode() != 200) {
@@ -56,5 +56,9 @@ public class GCMService {
         if (result.getStatusCode() != 200) {
             log.error("Exception occurred while sending the GCM notification : " + result.getErrorMsg());
         }
+    }
+
+    public void resetTenantConfigCache() {
+        GCMUtil.resetTenantConfigCache();
     }
 }

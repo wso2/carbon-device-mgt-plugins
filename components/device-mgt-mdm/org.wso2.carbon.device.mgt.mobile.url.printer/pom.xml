@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>device-mgt-mdm</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>1.9.2-SNAPSHOT</version>
+        <version>2.0.4-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.mobile.url.printer</artifactId>
-    <version>1.9.2-SNAPSHOT</version>
+    <version>2.0.4-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Startup Handler That Prints MDM End-User Web-App URL</name>
     <description>WSO2 Carbon - Startup Handler That Prints MDM End-User Web-App URL</description>
@@ -32,7 +30,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Bundle-Version>${carbon.mobile.device.mgt.version}</Bundle-Version>
+                        <Bundle-Version>${carbon.device.mgt.plugin.version}</Bundle-Version>
                         <Bundle-Description>Bundle Containing The Startup Handler That Prints MDM End-User Web-App URL</Bundle-Description>
                         <Private-Package>org.wso2.carbon.device.mgt.mobile.url.printer.internal</Private-Package>
                         <Import-Package>

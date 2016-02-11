@@ -61,32 +61,35 @@ public class AndroidPolicyMonitoringService implements PolicyMonitoringService {
         if (compliancePayload == null || policy == null) {
             return complianceData;
         }
-        List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>();
-
+        String compliancePayloadString = new Gson().toJson(compliancePayload);
         // Parsing json string to get compliance features.
         JsonElement jsonElement;
-        if (compliancePayload instanceof String) {
-            jsonElement = new JsonParser().parse((String) compliancePayload);
+        if (compliancePayloadString instanceof String) {
+            jsonElement = new JsonParser().parse(compliancePayloadString);
         } else {
             throw new PolicyComplianceException("Invalid policy compliance payload");
         }
+
         JsonArray jsonArray = jsonElement.getAsJsonArray();
         Gson gson = new Gson();
         ComplianceFeature complianceFeature;
+        List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>(jsonArray.size());
+        List<ComplianceFeature> nonComplianceFeatures = new ArrayList<>();
 
         for (JsonElement element : jsonArray) {
             complianceFeature = gson.fromJson(element, ComplianceFeature.class);
             complianceFeatures.add(complianceFeature);
         }
 
-        complianceData.setComplianceFeatures(complianceFeatures);
-
         for (ComplianceFeature cf : complianceFeatures) {
             if (!cf.isCompliant()) {
                 complianceData.setStatus(false);
+                nonComplianceFeatures.add(cf);
                 break;
             }
         }
+
+        complianceData.setComplianceFeatures(nonComplianceFeatures);
         return complianceData;
     }
 

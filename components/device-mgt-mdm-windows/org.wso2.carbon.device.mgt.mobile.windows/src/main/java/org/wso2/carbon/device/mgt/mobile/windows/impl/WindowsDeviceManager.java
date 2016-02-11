@@ -51,7 +51,7 @@ public class WindowsDeviceManager implements DeviceManager {
 
     private AbstractMobileDeviceManagementDAOFactory daoFactory;
     private LicenseManager licenseManager;
-	private FeatureManager featureManager = new WindowsFeatureManager();
+    private FeatureManager featureManager = new WindowsFeatureManager();
     private static final Log log = LogFactory.getLog(WindowsDeviceManagementService.class);
 
     public WindowsDeviceManager() {
@@ -61,7 +61,10 @@ public class WindowsDeviceManager implements DeviceManager {
         License defaultLicense = WindowsPluginUtils.getDefaultLicense();
 
         try {
-            licenseManager.addLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, defaultLicense);
+            if (licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS,
+                    MobilePluginConstants.LANGUAGE_CODE_ENGLISH_US) == null) {
+                licenseManager.addLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, defaultLicense);
+            }
             featureManager.addSupportedFeaturesToDB();
         } catch (LicenseManagementException e) {
             log.error("Error occurred while adding default license for Windows devices", e);
@@ -118,12 +121,12 @@ public class WindowsDeviceManager implements DeviceManager {
                     MobileDeviceManagementUtil.getPlatformConfigPath(DeviceManagementConstants.
                             MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
             resource = MobileDeviceManagementUtil.getRegistryResource(windowsTenantRegistryPath);
-            if(resource != null){
+            if (resource != null) {
                 JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
                 Unmarshaller unmarshaller = context.createUnmarshaller();
                 return (TenantConfiguration) unmarshaller.unmarshal(
                         new StringReader(new String((byte[]) resource.getContent(), Charset.
-                                                                         forName(MobilePluginConstants.CHARSET_UTF8))));
+                                forName(MobilePluginConstants.CHARSET_UTF8))));
             }
             return null;
         } catch (MobileDeviceMgtPluginException e) {
@@ -161,26 +164,28 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public boolean disenrollDevice(DeviceIdentifier deviceId) throws DeviceManagementException {
-        boolean status;
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug("Dis-enrolling windows device : " + deviceId);
-            }
-            WindowsDAOFactory.beginTransaction();
-            status = daoFactory.getMobileDeviceDAO().deleteMobileDevice(deviceId.getId());
-            WindowsDAOFactory.commitTransaction();
-        } catch (MobileDeviceManagementDAOException e) {
-            WindowsDAOFactory.rollbackTransaction();
-            throw new DeviceManagementException("Error while removing the Windows device : " + deviceId.getId(), e);
-        } finally {
-            WindowsDAOFactory.closeConnection();
-        }
-        return status;
+        //Here we don't have anything specific to do. Hence returning.
+        return true;
     }
 
     @Override
     public boolean isEnrolled(DeviceIdentifier deviceId) throws DeviceManagementException {
-        return true;
+        boolean isEnrolled = false;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Checking the enrollment of Windows device : " + deviceId.getId());
+            }
+            MobileDevice mobileDevice =
+                    daoFactory.getMobileDeviceDAO().getMobileDevice(deviceId.getId());
+            if (mobileDevice != null) {
+                isEnrolled = true;
+            }
+        } catch (MobileDeviceManagementDAOException e) {
+            String msg = "Error while checking the enrollment status of Windows device : " +
+                    deviceId.getId();
+            throw new DeviceManagementException(msg, e);
+        }
+        return isEnrolled;
     }
 
     @Override
@@ -203,7 +208,7 @@ public class WindowsDeviceManager implements DeviceManager {
             WindowsDAOFactory.openConnection();
             List<MobileDevice> mobileDevices = daoFactory.getMobileDeviceDAO().getAllMobileDevices();
             if (mobileDevices != null) {
-                devices = new ArrayList<>();
+                devices = new ArrayList<>(mobileDevices.size());
                 for (MobileDevice mobileDevice : mobileDevices) {
                     devices.add(MobileDeviceManagementUtil.convertToDevice(mobileDevice));
                 }
@@ -255,7 +260,7 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public License getLicense(String languageCode) throws LicenseManagementException {
-       return licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, languageCode);
+        return licenseManager.getLicense(WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS, languageCode);
     }
 
     @Override
@@ -276,18 +281,26 @@ public class WindowsDeviceManager implements DeviceManager {
 
     @Override
     public boolean enrollDevice(Device device) throws DeviceManagementException {
-        boolean status;
+        boolean status = false;
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
         try {
-            WindowsDAOFactory.beginTransaction();
-            status = daoFactory.getMobileDeviceDAO().addMobileDevice(mobileDevice);
-            WindowsDAOFactory.commitTransaction();
+            if (log.isDebugEnabled()) {
+                log.debug("Enrolling a new windows device : " + device.getDeviceIdentifier());
+            }
+            boolean isEnrolled = this.isEnrolled(
+                    new DeviceIdentifier(device.getDeviceIdentifier(), device.getType()));
+            if (isEnrolled) {
+                this.modifyEnrollment(device);
+            } else {
+                WindowsDAOFactory.beginTransaction();
+                status = daoFactory.getMobileDeviceDAO().addMobileDevice(mobileDevice);
+                WindowsDAOFactory.commitTransaction();
+            }
         } catch (MobileDeviceManagementDAOException e) {
             WindowsDAOFactory.rollbackTransaction();
-            throw new DeviceManagementException("Error while enrolling the Windows device '" +
-                    device.getDeviceIdentifier() + "'", e);
-        } finally {
-            WindowsDAOFactory.closeConnection();
+            String msg =
+                    "Error while enrolling the windows device : " + device.getDeviceIdentifier();
+            throw new DeviceManagementException(msg, e);
         }
         return status;
     }

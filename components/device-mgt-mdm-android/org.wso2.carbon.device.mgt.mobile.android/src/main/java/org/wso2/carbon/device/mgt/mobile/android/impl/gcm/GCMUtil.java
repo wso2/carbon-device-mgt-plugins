@@ -129,6 +129,9 @@ public class GCMUtil {
         //Set device reg-ids
         JsonArray regIds = new JsonArray();
         for (String regId : registrationIds) {
+            if (regId == null || regId.isEmpty()) {
+                continue;
+            }
             regIds.add(new JsonPrimitive(regId));
         }
 
@@ -137,7 +140,7 @@ public class GCMUtil {
     }
 
     private static List<String> getGCMTokens(List<Device> devices) {
-        List<String> tokens = new ArrayList<>();
+        List<String> tokens = new ArrayList<>(devices.size());
         for (Device device : devices) {
             tokens.add(getGCMToken(device.getProperties()));
         }
@@ -181,6 +184,10 @@ public class GCMUtil {
             log.error("Exception occurred while fetching the tenant-config.",e);
         }
         return null;
+    }
+
+    public static void resetTenantConfigCache() {
+        tenantConfigurationCache.remove(getTenantId());
     }
 
     private static void addTenantConfigurationToCache(TenantConfiguration tenantConfiguration) {
