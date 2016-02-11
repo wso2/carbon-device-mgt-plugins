@@ -704,7 +704,7 @@ public class VirtualFireAlarmControllerService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    public SensorData[] getAndroidSenseDeviceStats(@PathParam("deviceId") String deviceId,
+    public SensorData[] getVirtualFireAlarmDeviceStats(@PathParam("deviceId") String deviceId,
                                                    @PathParam("sensorName") String sensor,
                                                    @QueryParam("username") String user,
                                                    @QueryParam("from") long from,
