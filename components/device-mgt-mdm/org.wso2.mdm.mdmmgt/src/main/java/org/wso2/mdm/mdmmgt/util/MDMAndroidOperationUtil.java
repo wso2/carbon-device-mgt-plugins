@@ -27,88 +27,89 @@ import org.wso2.mdm.mdmmgt.beans.android.WebApplication;
 import org.wso2.mdm.mdmmgt.common.MDMException;
 
 /**
+ *
  * This class contains the all the operations related to Android.
  */
 public class MDMAndroidOperationUtil {
 
-    /**
-     * This method is used to create Install Application operation.
-     *
-     * @param application MobileApp application
-     * @return operation
-     * @throws MDMException
-     */
-    public static Operation createInstallAppOperation(MobileApp application) throws MDMException {
+	/**
+	 * This method is used to create Install Application operation.
+	 *
+	 * @param application MobileApp application
+	 * @return operation
+	 * @throws MDMException
+	 *
+	 */
+	public static Operation createInstallAppOperation(MobileApp application) throws MDMException {
 
-        ProfileOperation operation = new ProfileOperation();
-        operation.setCode(MDMAppConstants.AndroidConstants.OPCODE_INSTALL_APPLICATION);
-        operation.setType(Operation.Type.PROFILE);
+		ProfileOperation operation = new ProfileOperation();
+		operation.setCode(MDMAppConstants.AndroidConstants.OPCODE_INSTALL_APPLICATION);
+		operation.setType(Operation.Type.PROFILE);
 
-        switch (application.getType()) {
-            case ENTERPRISE:
-                EnterpriseApplication enterpriseApplication = new EnterpriseApplication();
-                enterpriseApplication.setType(application.getType().toString());
-                enterpriseApplication.setUrl(application.getLocation());
-                operation.setPayLoad(enterpriseApplication.toJSON());
-                break;
-            case PUBLIC:
+		switch (application.getType()) {
+			case ENTERPRISE:
+				EnterpriseApplication enterpriseApplication = new EnterpriseApplication();
+				enterpriseApplication.setType(application.getType().toString());
+				enterpriseApplication.setUrl(application.getLocation());
+				operation.setPayLoad(enterpriseApplication.toJSON());
+				break;
+			case PUBLIC:
                 AppStoreApplication appStoreApplication = new AppStoreApplication();
-                appStoreApplication.setType(application.getType().toString());
-                appStoreApplication.setAppIdentifier(application.getIdentifier());
-                operation.setPayLoad(appStoreApplication.toJSON());
-                break;
-            case WEBAPP:
-                WebApplication webApplication = new WebApplication();
-                webApplication.setUrl(application.getLocation());
-                webApplication.setName(application.getName());
-                webApplication.setType(application.getType().toString());
-                operation.setPayLoad(webApplication.toJSON());
-                break;
-            default:
-                String errorMessage = "Invalid application type.";
-                throw new MDMException(errorMessage);
-        }
-        return operation;
-    }
+				appStoreApplication.setType(application.getType().toString());
+				appStoreApplication.setAppIdentifier(application.getIdentifier());
+				operation.setPayLoad(appStoreApplication.toJSON());
+				break;
+			case WEBAPP:
+				WebApplication webApplication = new WebApplication();
+				webApplication.setUrl(application.getLocation());
+				webApplication.setName(application.getName());
+				webApplication.setType(application.getType().toString());
+				operation.setPayLoad(webApplication.toJSON());
+				break;
+			default:
+				String errorMessage = "Invalid application type.";
+				throw new MDMException(errorMessage);
+		}
+		return operation;
+	}
 
-    /**
-     * This method is used to create Uninstall Application operation.
-     *
-     * @param application MobileApp application
-     * @return operation
-     * @throws MDMException
-     */
-    public static Operation createAppUninstallOperation(MobileApp application) throws MDMException {
+	/**
+	 * This method is used to create Uninstall Application operation.
+	 * @param application MobileApp application
+	 * @return operation
+	 * @throws MDMException
+	 */
+	public static Operation createAppUninstallOperation(MobileApp application) throws MDMException {
 
-        ProfileOperation operation = new ProfileOperation();
-        operation.setCode(MDMAppConstants.AndroidConstants.OPCODE_UNINSTALL_APPLICATION);
-        operation.setType(Operation.Type.PROFILE);
+		ProfileOperation operation = new ProfileOperation();
+		operation.setCode(MDMAppConstants.AndroidConstants.OPCODE_UNINSTALL_APPLICATION);
+		operation.setType(Operation.Type.PROFILE);
 
-        switch (application.getType()) {
-            case ENTERPRISE:
-                EnterpriseApplication enterpriseApplication = new EnterpriseApplication();
-                enterpriseApplication.setType(application.getType().toString());
-                enterpriseApplication.setAppIdentifier(application.getIdentifier());
-                operation.setPayLoad(enterpriseApplication.toJSON());
-                break;
-            case PUBLIC:
-                AppStoreApplication appStoreApplication = new AppStoreApplication();
-                appStoreApplication.setType(application.getType().toString());
-                appStoreApplication.setAppIdentifier(application.getIdentifier());
-                operation.setPayLoad(appStoreApplication.toJSON());
-                break;
-            case WEBAPP:
-                WebApplication webApplication = new WebApplication();
-                webApplication.setUrl(application.getLocation());
-                webApplication.setName(application.getName());
-                webApplication.setType(application.getType().toString());
-                operation.setPayLoad(webApplication.toJSON());
-                break;
-            default:
-                String errorMessage = "Invalid application type.";
-                throw new MDMException(errorMessage);
-        }
-        return operation;
-    }
+		switch (application.getType()) {
+			case ENTERPRISE:
+				EnterpriseApplication enterpriseApplication = new EnterpriseApplication();
+				enterpriseApplication.setType(application.getType().toString());
+				enterpriseApplication.setAppIdentifier(application.getIdentifier());
+				operation.setPayLoad(enterpriseApplication.toJSON());
+				break;
+			case PUBLIC:
+				AppStoreApplication appStoreApplication = new AppStoreApplication();
+				appStoreApplication.setType(application.getType().toString());
+				appStoreApplication.setAppIdentifier(application.getIdentifier());
+				operation.setPayLoad(appStoreApplication.toJSON());
+				break;
+			case WEBAPP:
+				WebApplication webApplication = new WebApplication();
+				webApplication.setUrl(application.getLocation());
+				webApplication.setName(application.getName());
+				webApplication.setType(application.getType().toString());
+				operation.setPayLoad(webApplication.toJSON());
+				break;
+			default:
+				String errorMessage = "Invalid application type.";
+				throw new MDMException(errorMessage);
+		}
+		return operation;
+	}
 
 }

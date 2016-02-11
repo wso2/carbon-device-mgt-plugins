@@ -38,54 +38,55 @@ public class MDMIOSOperationUtil {
      * @param application MobileApp application
      * @return operation
      * @throws MDMException
+     *
      */
     public static Operation createInstallAppOperation(MobileApp application) throws MDMException {
 
         ProfileOperation operation = new ProfileOperation();
 
         switch (application.getType()) {
-            case ENTERPRISE:
-                EnterpriseApplication enterpriseApplication = new EnterpriseApplication();
-                enterpriseApplication.setBundleId(application.getId());
-                enterpriseApplication.setIdentifier(application.getIdentifier());
-                enterpriseApplication.setManifestURL(application.getLocation());
+        case ENTERPRISE:
+            EnterpriseApplication enterpriseApplication = new EnterpriseApplication();
+            enterpriseApplication.setBundleId(application.getId());
+            enterpriseApplication.setIdentifier(application.getIdentifier());
+            enterpriseApplication.setManifestURL(application.getLocation());
 
-                Properties properties = application.getProperties();
-                enterpriseApplication.setPreventBackupOfAppData((Boolean) properties.
-                        get(MDMAppConstants.IOSConstants.IS_PREVENT_BACKUP));
-                enterpriseApplication.setRemoveAppUponMDMProfileRemoval((Boolean) properties.
-                        get(MDMAppConstants.IOSConstants.IS_REMOVE_APP));
-                operation.setCode(MDMAppConstants.IOSConstants.OPCODE_INSTALL_ENTERPRISE_APPLICATION);
-                operation.setPayLoad(enterpriseApplication.toJSON());
-                operation.setType(Operation.Type.COMMAND);
-                break;
-            case PUBLIC:
-                AppStoreApplication appStoreApplication = new AppStoreApplication();
-                appStoreApplication.setRemoveAppUponMDMProfileRemoval((Boolean) application.getProperties().
-                        get(MDMAppConstants.IOSConstants.IS_REMOVE_APP));
-                appStoreApplication.setIdentifier(application.getIdentifier());
-                appStoreApplication.setPreventBackupOfAppData((Boolean) application.getProperties().
-                        get(MDMAppConstants.IOSConstants.IS_PREVENT_BACKUP));
-                appStoreApplication.setBundleId(application.getId());
-                appStoreApplication.setiTunesStoreID((Integer) application.getProperties().
-                        get(MDMAppConstants.IOSConstants.I_TUNES_ID));
-                operation.setCode(MDMAppConstants.IOSConstants.OPCODE_INSTALL_STORE_APPLICATION);
-                operation.setType(Operation.Type.COMMAND);
-                operation.setPayLoad(appStoreApplication.toJSON());
-                break;
-            case WEBAPP:
-                WebClip webClip = new WebClip();
-                webClip.setIcon(application.getIconImage());
-                webClip.setIsRemovable(application.getProperties().
-                        getProperty(MDMAppConstants.IOSConstants.IS_REMOVE_APP));
-                webClip.setLabel(application.getProperties().
-                        getProperty(MDMAppConstants.IOSConstants.LABEL));
-                webClip.setURL(application.getLocation());
+            Properties properties = application.getProperties();
+            enterpriseApplication.setPreventBackupOfAppData((Boolean) properties.
+                    get(MDMAppConstants.IOSConstants.IS_PREVENT_BACKUP));
+            enterpriseApplication.setRemoveAppUponMDMProfileRemoval((Boolean) properties.
+                    get(MDMAppConstants.IOSConstants.IS_REMOVE_APP));
+            operation.setCode(MDMAppConstants.IOSConstants.OPCODE_INSTALL_ENTERPRISE_APPLICATION);
+            operation.setPayLoad(enterpriseApplication.toJSON());
+            operation.setType(Operation.Type.COMMAND);
+            break;
+        case PUBLIC:
+            AppStoreApplication appStoreApplication = new AppStoreApplication();
+            appStoreApplication.setRemoveAppUponMDMProfileRemoval((Boolean) application.getProperties().
+                    get(MDMAppConstants.IOSConstants.IS_REMOVE_APP));
+            appStoreApplication.setIdentifier(application.getIdentifier());
+            appStoreApplication.setPreventBackupOfAppData((Boolean) application.getProperties().
+                    get(MDMAppConstants.IOSConstants.IS_PREVENT_BACKUP));
+            appStoreApplication.setBundleId(application.getId());
+            appStoreApplication.setiTunesStoreID((Integer) application.getProperties().
+                    get(MDMAppConstants.IOSConstants.I_TUNES_ID));
+            operation.setCode(MDMAppConstants.IOSConstants.OPCODE_INSTALL_STORE_APPLICATION);
+            operation.setType(Operation.Type.COMMAND);
+            operation.setPayLoad(appStoreApplication.toJSON());
+            break;
+        case WEBAPP:
+            WebClip webClip = new WebClip();
+            webClip.setIcon(application.getIconImage());
+            webClip.setIsRemovable(application.getProperties().
+                    getProperty(MDMAppConstants.IOSConstants.IS_REMOVE_APP));
+            webClip.setLabel(application.getProperties().
+                    getProperty(MDMAppConstants.IOSConstants.LABEL));
+            webClip.setURL(application.getLocation());
 
-                operation.setCode(MDMAppConstants.IOSConstants.OPCODE_INSTALL_WEB_APPLICATION);
-                operation.setType(Operation.Type.PROFILE);
-                operation.setPayLoad(webClip.toJSON());
-                break;
+            operation.setCode(MDMAppConstants.IOSConstants.OPCODE_INSTALL_WEB_APPLICATION);
+            operation.setType(Operation.Type.PROFILE);
+            operation.setPayLoad(webClip.toJSON());
+            break;
         }
         return operation;
     }

@@ -25,12 +25,12 @@
 	<parent>
 		<artifactId>device-mgt-iot-virtualfirealarm</artifactId>
 		<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-		<version>1.9.2-SNAPSHOT</version>
+		<version>2.0.4-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.impl</artifactId>
-	<version>1.9.2-SNAPSHOT</version>
+	<version>2.0.4-SNAPSHOT</version>
 	<name>WSO2 Carbon - IoT Server VirtualFireAlarm Agent</name>
 	<description>WSO2 Carbon - VirtualFireAlarm Device Agent Implementation</description>
 	<url>http://wso2.org</url>
@@ -198,8 +198,6 @@
 	</repositories>
 
 	<properties>
-		<!-- IOT Device Management -->
-		<carbon.iot.device.mgt.version>1.9.2-SNAPSHOT</carbon.iot.device.mgt.version>
 
 		<!-- Java Version Compatibility -->
 		<wso2.maven.compiler.source>1.7</wso2.maven.compiler.source>

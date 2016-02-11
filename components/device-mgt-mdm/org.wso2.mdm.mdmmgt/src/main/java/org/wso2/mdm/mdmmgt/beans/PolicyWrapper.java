@@ -64,16 +64,16 @@ public class PolicyWrapper {
         return policyName;
     }
 
-    public void setPolicyName(String policyName) {
-        this.policyName = policyName;
-    }
-
     public String getDescription() {
-        return description;
+	return description;
     }
 
     public void setDescription(String description) {
-        this.description = description;
+	this.description = description;
+    }
+
+    public void setPolicyName(String policyName) {
+        this.policyName = policyName;
     }
 
     public List<String> getRoles() {

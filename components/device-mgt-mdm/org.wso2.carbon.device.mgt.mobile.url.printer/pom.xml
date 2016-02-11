@@ -30,7 +30,7 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <Bundle-Version>${carbon.mobile.device.mgt.version}</Bundle-Version>
+                        <Bundle-Version>${carbon.device.mgt.plugin.version}</Bundle-Version>
                         <Bundle-Description>Bundle Containing The Startup Handler That Prints MDM End-User Web-App URL</Bundle-Description>
                         <Private-Package>org.wso2.carbon.device.mgt.mobile.url.printer.internal</Private-Package>
                         <Import-Package>

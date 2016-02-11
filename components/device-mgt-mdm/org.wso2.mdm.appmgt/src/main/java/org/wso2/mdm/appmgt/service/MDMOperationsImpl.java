@@ -28,9 +28,8 @@ public class MDMOperationsImpl implements MDMOperations {
     private static Log log = LogFactory.getLog(MDMOperationsImpl.class);
 
     @Override
-    public void performAction(User currentUser, String action, App app, int tenantId, String type,
-                              String[] params,
-                              HashMap<String, String> configProperties) {
+    public void performAction(User currentUser, String action, App app, int tenantId, String type, String[] params,
+            HashMap<String, String> configProperties) {
 
         ApplicationManager appManagerConnector;
         org.wso2.carbon.device.mgt.common.operation.mgt.Operation operation = null;
@@ -50,7 +49,7 @@ public class MDMOperationsImpl implements MDMOperations {
                 } catch (DeviceManagementException devEx) {
                     String errorMsg =
                             "Error occurred fetch device for user " + userName + devEx.getErrorMessage() + " " +
-                            "at app installation";
+                                    "at app installation";
                     log.error(errorMsg, devEx);
                 }
 
@@ -71,7 +70,7 @@ public class MDMOperationsImpl implements MDMOperations {
                 } catch (DeviceManagementException devMgtEx) {
                     String errorMsg = "Error occurred fetch device for user role " + userRole + devMgtEx
                             .getErrorMessage() + " " +
-                                      "at app installation";
+                            "at app installation";
                     log.error(errorMsg, devMgtEx);
                 }
                 for (org.wso2.carbon.device.mgt.common.Device device : deviceList) {
@@ -142,7 +141,7 @@ public class MDMOperationsImpl implements MDMOperations {
                         }
                     }
                     MDMServiceAPIUtils.getAppManagementService(tenantId).installApplicationForDevices(operation,
-                                                                                                      deviceIdentifiers);
+                            deviceIdentifiers);
                 }
             }
         } catch (MDMException mdmExce) {
@@ -154,17 +153,16 @@ public class MDMOperationsImpl implements MDMOperations {
 
     @Override
 
-    public List<Device> getDevices(User currentUser, int tenantId, String type, String[] params,
-                                   String platform,
-                                   String platformVersion, boolean isSampleDevicesEnabled,
-                                   HashMap<String, String> configProperties) {
+    public List<Device> getDevices(User currentUser, int tenantId, String type, String[] params, String platform,
+            String platformVersion, boolean isSampleDevicesEnabled,
+            HashMap<String, String> configProperties) {
 
-        List<Device> devices = new ArrayList<>();
+        List<Device> devices = null;
         Device device = null;
         try {
             List<org.wso2.carbon.device.mgt.common.Device> deviceList =
                     MDMServiceAPIUtils.getDeviceManagementService(tenantId).getAllDevices();
-
+            devices = new ArrayList<>(deviceList.size());
             for (org.wso2.carbon.device.mgt.common.Device commondevice : deviceList) {
                 device = new Device();
                 device.setId(commondevice.getDeviceIdentifier() + "---" + commondevice.getType());

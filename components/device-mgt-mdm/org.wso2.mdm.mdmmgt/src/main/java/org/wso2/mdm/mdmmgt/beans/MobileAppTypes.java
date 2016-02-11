@@ -18,5 +18,5 @@
 package org.wso2.mdm.mdmmgt.beans;
 
 public enum MobileAppTypes {
-    ENTERPRISE, WEBAPP, PUBLIC
+    ENTERPRISE,WEBAPP,PUBLIC
 }

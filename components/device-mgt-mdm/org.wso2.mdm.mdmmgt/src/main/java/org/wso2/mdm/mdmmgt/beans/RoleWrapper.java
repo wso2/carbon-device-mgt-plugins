@@ -20,40 +20,40 @@ import org.wso2.carbon.user.mgt.common.UIPermissionNode;
  * under the License.
  */
 public class RoleWrapper {
-    private String roleName;
-    private String[] permissions;
-    private String[] users;
-    private UIPermissionNode permissionList;
+	private String roleName;
+	private String[] permissions;
+	private String[] users;
+	private UIPermissionNode permissionList;
 
-    public String getRoleName() {
-        return roleName;
-    }
+	public String getRoleName() {
+		return roleName;
+	}
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
 
-    public String[] getPermissions() {
-        return permissions;
-    }
+	public String[] getPermissions() {
+		return permissions;
+	}
 
-    public void setPermissions(String[] permissions) {
-        this.permissions = permissions;
-    }
+	public void setPermissions(String[] permissions) {
+		this.permissions = permissions;
+	}
 
-    public String[] getUsers() {
-        return users;
-    }
+	public String[] getUsers() {
+		return users;
+	}
 
-    public void setUsers(String[] users) {
-        this.users = users;
-    }
+	public void setUsers(String[] users) {
+		this.users = users;
+	}
 
-    public UIPermissionNode getPermissionList() {
-        return permissionList;
-    }
+	public UIPermissionNode getPermissionList() {
+		return permissionList;
+	}
 
-    public void setPermissionList(UIPermissionNode permissionList) {
-        this.permissionList = permissionList;
-    }
+	public void setPermissionList(UIPermissionNode permissionList) {
+		this.permissionList = permissionList;
+	}
 }

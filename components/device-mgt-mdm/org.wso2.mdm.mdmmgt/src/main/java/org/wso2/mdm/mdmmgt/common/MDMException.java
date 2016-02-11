@@ -1,7 +1,7 @@
 package org.wso2.mdm.mdmmgt.common;
 
 
-public class MDMException extends Exception {
+public class MDMException extends Exception{
 
     private static final long serialVersionUID = 5136875495185597926L;
     private String errorMessage;

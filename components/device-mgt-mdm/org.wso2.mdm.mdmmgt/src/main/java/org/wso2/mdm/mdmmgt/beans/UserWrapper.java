@@ -67,7 +67,7 @@ public class UserWrapper {
      */
     public String[] getRoles() {
         String[] copiedRoles = roles;
-        if (roles != null) {
+        if (roles != null){
             copiedRoles = roles.clone();
         }
         return copiedRoles;
