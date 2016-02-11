@@ -23,5 +23,7 @@ public class MobilePluginConstants {
 
     public static final String MEDIA_TYPE_XML = "application/xml";
     public static final String CHARSET_UTF8 = "UTF8";
+    public static final String LANGUAGE_CODE_ENGLISH_US = "en_US";
+    public static final String LANGUAGE_CODE_ENGLISH_UK = "en_UK";
 
 }

@@ -93,7 +93,7 @@ public class MobileDeviceManagementDAOUtil {
     public static void setupMobileDeviceManagementSchema(DataSource dataSource, String pluginType) throws MobileDeviceMgtPluginException {
         MobileDeviceManagementSchemaInitializer initializer =
                 new MobileDeviceManagementSchemaInitializer(dataSource, pluginType);
-        log.info("Initializing mobile device management repository database schema for " + dataSource);
+        log.info("Initializing mobile device management repository database schema for : " + pluginType);
         try {
             initializer.createRegistryDatabase();
         } catch (Exception e) {
