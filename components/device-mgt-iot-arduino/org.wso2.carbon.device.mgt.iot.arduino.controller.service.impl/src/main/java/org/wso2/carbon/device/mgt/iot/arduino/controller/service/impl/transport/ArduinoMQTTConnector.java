@@ -39,9 +39,7 @@ public class ArduinoMQTTConnector extends MQTTTransportHandler {
     private static final String serverName =
             DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
 
-    private static final String subscribeTopic =
-            serverName + File.separator + "+" + File.separator + ArduinoConstants.DEVICE_TYPE + File.separator + "#";
-
+    private static final String subscribeTopic = serverName + "/+/" + ArduinoConstants.DEVICE_TYPE + "/#";
     private static final String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
     private static final String MESSAGE_TO_SEND = "IN";
@@ -89,13 +87,12 @@ public class ArduinoMQTTConnector extends MQTTTransportHandler {
     @Override
     public void processIncomingMessage(MqttMessage message, String... messageParams) throws TransportHandlerException {
         if(messageParams.length != 0) {
+            // owner and the deviceId are extracted from the MQTT topic to which the message was received.
+            // <Topic> = [ServerName/Owner/DeviceType/DeviceId]
             String topic = messageParams[0];
-            // owner and the deviceId are extracted from the MQTT topic to which the messgae was received.
-            String ownerAndId = topic.replace(serverName + File.separator, "");
-            ownerAndId = ownerAndId.replace(File.separator + ArduinoConstants.DEVICE_TYPE + File.separator, ":");
-
-            String owner = ownerAndId.split(":")[0];
-            String deviceId = ownerAndId.split(":")[1];
+            String[] topicParams = topic.split("/");
+            String owner = topicParams[1];
+            String deviceId = topicParams[3];
 
             if (log.isDebugEnabled()) {
                 log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");

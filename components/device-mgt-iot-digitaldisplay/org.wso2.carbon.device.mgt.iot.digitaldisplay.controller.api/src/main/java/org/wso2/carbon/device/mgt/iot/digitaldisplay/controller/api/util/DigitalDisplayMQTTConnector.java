@@ -22,11 +22,9 @@ import java.util.concurrent.ScheduledFuture;
 public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
 
     private static Log log = LogFactory.getLog(DigitalDisplayMQTTConnector.class);
-
+    private static final String MQTT_TOPIC_APPENDER = "wso2/iot";
     private static final String subscribeTopic =
-            "wso2" + File.separator + "iot" + File.separator + "+" + File.separator +
-                    DigitalDisplayConstants.DEVICE_TYPE + File.separator + "+" + File.separator +
-                    "digital_display_publisher";
+            MQTT_TOPIC_APPENDER + "/+/" + DigitalDisplayConstants.DEVICE_TYPE + "/+/digital_display_publisher";
 
     private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
@@ -36,7 +34,7 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
 
     private DigitalDisplayMQTTConnector() {
         super(iotServerSubscriber, DigitalDisplayConstants.DEVICE_TYPE,
-                MqttConfig.getInstance().getMqttQueueEndpoint(), subscribeTopic);
+              MqttConfig.getInstance().getMqttQueueEndpoint(), subscribeTopic);
     }
 
     @Override
@@ -75,14 +73,11 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
     @Override
     public void processIncomingMessage(MqttMessage message, String... messageParams) {
         String topic = messageParams[0];
-        String ownerAndId = topic.replace("wso2" + File.separator + "iot" + File.separator, "");
-        ownerAndId = ownerAndId.replace(File.separator + DigitalDisplayConstants.DEVICE_TYPE + File.separator, ":");
-        ownerAndId = ownerAndId.replace(File.separator + "digital_display_publisher", "");
-
-        String owner = ownerAndId.split(":")[0];
-        String deviceId = ownerAndId.split(":")[1];
-
+        String[] topicParams = topic.split("/");
+        String owner = topicParams[2];
+        String deviceId = topicParams[4];
         String[] messageData = message.toString().split("::");
+
         if (log.isDebugEnabled()) {
             log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
         }
