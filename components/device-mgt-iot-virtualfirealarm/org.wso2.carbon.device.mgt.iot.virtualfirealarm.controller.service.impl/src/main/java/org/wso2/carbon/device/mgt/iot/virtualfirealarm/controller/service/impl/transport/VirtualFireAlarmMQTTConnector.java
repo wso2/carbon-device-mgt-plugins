@@ -27,10 +27,10 @@ import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.SecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.VirtualFireAlarmServiceUtils;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -63,8 +63,8 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 
     // subscription topic: <SERVER_NAME>/+/virtual_firealarm/+/publisher
     // wildcard (+) is in place for device_owner & device_id
-    private static String subscribeTopic = serverName + File.separator + "+" + File.separator +
-            VirtualFireAlarmConstants.DEVICE_TYPE + File.separator + "+" + File.separator + "publisher";
+    private static String subscribeTopic =
+            serverName + "/+/" + VirtualFireAlarmConstants.DEVICE_TYPE + "/+/" + "publisher";
 
     private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
@@ -122,12 +122,13 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
      */
     @Override
     public void processIncomingMessage(MqttMessage mqttMessage, String... messageParams) {
-        if(messageParams.length != 0) {
+        if (messageParams.length != 0) {
             String topic = messageParams[0];
             // owner and the deviceId are extracted from the MQTT topic to which the messgae was received.
-            String ownerAndId = topic.replace(serverName + File.separator, "");
-            ownerAndId = ownerAndId.replace(File.separator + VirtualFireAlarmConstants.DEVICE_TYPE + File.separator, ":");
-            ownerAndId = ownerAndId.replace(File.separator + "publisher", "");
+            String ownerAndId = topic.replace(serverName + "/", "");
+            ownerAndId = ownerAndId.replace("/" + VirtualFireAlarmConstants.DEVICE_TYPE + "/",
+                                            ":");
+            ownerAndId = ownerAndId.replace("/publisher", "");
 
             String owner = ownerAndId.split(":")[0];
             String deviceId = ownerAndId.split(":")[1];
@@ -145,7 +146,8 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 
                 // the MQTT-messages from VirtualFireAlarm devices are in the form {"Msg":<MESSAGE>, "Sig":<SIGNATURE>}
                 actualMessage = VirtualFireAlarmServiceUtils.extractMessageFromPayload(mqttMessage.toString(),
-                        serverPrivateKey, clientPublicKey);
+                                                                                       serverPrivateKey,
+                                                                                       clientPublicKey);
                 if (log.isDebugEnabled()) {
                     log.debug("MQTT: Received Message [" + actualMessage + "] topic: [" + topic + "]");
                 }
@@ -164,14 +166,18 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
                 } else if (actualMessage.contains("TEMPERATURE")) {
                     String temperatureValue = actualMessage.split(":")[1];
                     SensorDataManager.getInstance().setSensorRecord(deviceId, VirtualFireAlarmConstants.SENSOR_TEMP,
-                            temperatureValue,
-                            Calendar.getInstance().getTimeInMillis());
+                                                                    temperatureValue,
+                                                                    Calendar.getInstance().getTimeInMillis());
                 }
             } catch (VirtualFireAlarmException e) {
                 String errorMsg =
                         "CertificateManagementService failure oo Signature-Verification/Decryption was unsuccessful.";
                 log.error(errorMsg, e);
             }
+        } else {
+            String errorMsg =
+                    "MQTT message [" + mqttMessage.toString() + "] was received without the topic information.";
+            log.warn(errorMsg);
         }
     }
 
@@ -196,8 +202,7 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 
         MqttMessage pushMessage = new MqttMessage();
         String publishTopic =
-                serverName + File.separator + deviceOwner + File.separator +
-                        VirtualFireAlarmConstants.DEVICE_TYPE + File.separator + deviceId;
+                serverName + "/" + deviceOwner + "/" + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
 
         try {
             PublicKey devicePublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);

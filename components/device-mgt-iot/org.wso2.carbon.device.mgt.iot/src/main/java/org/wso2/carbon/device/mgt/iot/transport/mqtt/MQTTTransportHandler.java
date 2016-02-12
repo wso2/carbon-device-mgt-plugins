@@ -68,7 +68,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
 
     public static final int DEFAULT_MQTT_QUALITY_OF_SERVICE = QoS_0;
     // Prefix to the Will-Topic to which a message is published if client loses its connection.
-    private static final String DISCONNECTION_WILL_TOPIC_PREFIX = "Disconnection" + File.separator;
+    private static final String DISCONNECTION_WILL_TOPIC_PREFIX = "Disconnection/";
     // Will-Message of the client to be published if connection is lost.
     private static final String DISCONNECTION_WILL_MSG = "Lost-Connection";
 

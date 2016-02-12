@@ -40,9 +40,7 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
     private static final String serverName =
             DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
 
-    private static final String subscribeTopic =
-            serverName + File.separator + "+" + File.separator + RaspberrypiConstants.DEVICE_TYPE +
-                    File.separator + "+" + File.separator + "publisher";
+    private static final String subscribeTopic = serverName + "/+/" + RaspberrypiConstants.DEVICE_TYPE + "/+/publisher";
 
     private static final String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
@@ -89,9 +87,9 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
         if(messageParams.length != 0) {
             String topic = messageParams[0];
             // owner and the deviceId are extracted from the MQTT topic to which the messgae was received.
-            String ownerAndId = topic.replace(serverName + File.separator, "");
-            ownerAndId = ownerAndId.replace(File.separator + RaspberrypiConstants.DEVICE_TYPE + File.separator, ":");
-            ownerAndId = ownerAndId.replace(File.separator + "publisher", "");
+            String ownerAndId = topic.replace(serverName + "/", "");
+            ownerAndId = ownerAndId.replace("/" + RaspberrypiConstants.DEVICE_TYPE + "/", ":");
+            ownerAndId = ownerAndId.replace("/publisher", "");
 
             String owner = ownerAndId.split(":")[0];
             String deviceId = ownerAndId.split(":")[1];
