@@ -42,6 +42,7 @@ public class WindowsUtils {
         mobileDevice.setOsVersion(rs.getString(WindowsPluginConstants.LATITUDE));
         return mobileDevice;
     }
+    
     public static Feature getMobileFeature() {
         Feature feature = new Feature();
         return feature;
