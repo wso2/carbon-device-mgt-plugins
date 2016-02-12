@@ -87,13 +87,12 @@ public class ArduinoMQTTConnector extends MQTTTransportHandler {
     @Override
     public void processIncomingMessage(MqttMessage message, String... messageParams) throws TransportHandlerException {
         if(messageParams.length != 0) {
+            // owner and the deviceId are extracted from the MQTT topic to which the message was received.
+            // <Topic> = [ServerName/Owner/DeviceType/DeviceId]
             String topic = messageParams[0];
-            // owner and the deviceId are extracted from the MQTT topic to which the messgae was received.
-            String ownerAndId = topic.replace(serverName + "/", "");
-            ownerAndId = ownerAndId.replace("/" + ArduinoConstants.DEVICE_TYPE + "/", ":");
-
-            String owner = ownerAndId.split(":")[0];
-            String deviceId = ownerAndId.split(":")[1];
+            String[] topicParams = topic.split("/");
+            String owner = topicParams[1];
+            String deviceId = topicParams[3];
 
             if (log.isDebugEnabled()) {
                 log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");

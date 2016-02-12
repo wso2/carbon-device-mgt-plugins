@@ -724,9 +724,7 @@ public class VirtualFireAlarmControllerService {
                 VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = getSensorEventTableName(sensor);
         try {
-            List<Record> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName,
-                                                                                query);
-
+            List<Record> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName, query);
             Collections.sort(records, new Comparator<Record>() {
                 @Override
                 public int compare(Record o1, Record o2) {
@@ -750,8 +748,7 @@ public class VirtualFireAlarmControllerService {
             }
             return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
         } catch (AnalyticsException e) {
-            String errorMsg =
-                    "Error on retrieving stats on table " + sensorTableName + " with query " + query;
+            String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
             log.error(errorMsg);
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return sensorDatas.toArray(new SensorData[sensorDatas.size()]);

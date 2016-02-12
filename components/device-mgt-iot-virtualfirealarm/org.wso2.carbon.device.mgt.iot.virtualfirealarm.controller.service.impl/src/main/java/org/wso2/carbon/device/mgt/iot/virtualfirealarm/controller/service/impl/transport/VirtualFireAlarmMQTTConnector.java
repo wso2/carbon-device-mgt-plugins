@@ -64,7 +64,7 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
     // subscription topic: <SERVER_NAME>/+/virtual_firealarm/+/publisher
     // wildcard (+) is in place for device_owner & device_id
     private static String subscribeTopic =
-            serverName + "/+/" + VirtualFireAlarmConstants.DEVICE_TYPE + "/+/" + "publisher";
+            serverName + "/+/" + VirtualFireAlarmConstants.DEVICE_TYPE + "/+/publisher";
 
     private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
@@ -123,15 +123,12 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
     @Override
     public void processIncomingMessage(MqttMessage mqttMessage, String... messageParams) {
         if (messageParams.length != 0) {
+            // owner and the deviceId are extracted from the MQTT topic to which the message was received.
+            // <Topic> = [ServerName/Owner/DeviceType/DeviceId/"publisher"]
             String topic = messageParams[0];
-            // owner and the deviceId are extracted from the MQTT topic to which the messgae was received.
-            String ownerAndId = topic.replace(serverName + "/", "");
-            ownerAndId = ownerAndId.replace("/" + VirtualFireAlarmConstants.DEVICE_TYPE + "/",
-                                            ":");
-            ownerAndId = ownerAndId.replace("/publisher", "");
-
-            String owner = ownerAndId.split(":")[0];
-            String deviceId = ownerAndId.split(":")[1];
+            String[] topicParams = topic.split("/");
+            String owner = topicParams[1];
+            String deviceId = topicParams[3];
 
             if (log.isDebugEnabled()) {
                 log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
