@@ -115,9 +115,8 @@ public class WindowsDeviceManager implements DeviceManager {
     public TenantConfiguration getConfiguration() throws DeviceManagementException {
         Resource resource;
         try {
-            String windowsTenantRegistryPath =
-                    MobileDeviceManagementUtil.getPlatformConfigPath(DeviceManagementConstants.
-                            MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+            String windowsTenantRegistryPath = MobileDeviceManagementUtil.
+                    getPlatformConfigPath(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
             resource = MobileDeviceManagementUtil.getRegistryResource(windowsTenantRegistryPath);
             if (resource != null) {
                 JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
