@@ -32,8 +32,8 @@ public class VirtualFireAlarmConstants {
 
     public static final String SENSOR_TEMP = "temperature";
     //sensor events sumerized table name for temperature
-    public static final String TEMPERATURE_EVENT_TABLE = "ORG_WSO2_IOT_DEVICES_TEMPERATURE";
+    public static final String TEMPERATURE_EVENT_TABLE = "DEVICE_TEMPERATURE_SUMMARY";
     public static final String SENSOR_HUMIDITY = "humidity";
     //sensor events summerized table name for humidity
-    public static final String HUMIDITY_EVENT_TABLE = "ORG_WSO2_IOT_DEVICES_HUMIDITY";
+    public static final String HUMIDITY_EVENT_TABLE = "DEVICE_HUMIDITY_SUMMARY";
 }
