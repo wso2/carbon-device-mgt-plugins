@@ -11,9 +11,7 @@
   ],
   "payloadData": [
     {"name" : "sessionId", "type" : "STRING"},
-    {"name" : "word", "type" : "STRING"}
+    {"name" : "word", "type" : "STRING"},
+    {"name" : "status", "type" : "STRING"}
   ]
 }
-
-
-				                                    		

@@ -161,17 +161,19 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
                     payloadData = gpsValues;
                     sensorName = AndroidSenseConstants.SENSOR_GPS;
                 } else if (sensor.key.equals("word")) {
-                    streamDef = AndroidSenseConstants.WORD_COUNT_STREAM_DEFINITION;
-                    String[] values = sensor.value.split(",");
-                    String sessionId = values[0];
-                    String keyword = values[1];
-                    int occurrence = Integer.parseInt(values[2]);
-                    sensorName = AndroidSenseConstants.SENSOR_WORDCOUNT;
                     try {
+                        streamDef = AndroidSenseConstants.WORD_COUNT_STREAM_DEFINITION;
+                        String[] values = sensor.value.split(",");
+                        String sessionId = values[0];
+                        String keyword = values[1];
+                        int occurrence = Integer.parseInt(values[2]);
+                        String status = values[3];
+                        sensorName = AndroidSenseConstants.SENSOR_WORDCOUNT;
+
                         if (occurrence > 0) {
-                            payloadData = new Object[]{sessionId, keyword};
+                            payloadData = new Object[]{sessionId, keyword, status};
                             for (int i = 0; i < occurrence; i++) {
-                                Long timestamp = Long.parseLong(values[2 + occurrence]);
+                                Long timestamp = Long.parseLong(values[3 + occurrence]);
                                 publishDataToDAS(owner, deviceId, timestamp, sensorName, streamDef,
                                                  sensor.value, payloadData);
 
@@ -179,7 +181,8 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
                             continue;
                         }
                     } catch (ArrayIndexOutOfBoundsException e) {
-                        log.error("Timestamp does not match the occurence sensor values are sent from the device.");
+                        log.error(
+                                "Timestamp does not match the occurence sensor values are sent from the device.");
                     }
                     continue;
                 } else {
