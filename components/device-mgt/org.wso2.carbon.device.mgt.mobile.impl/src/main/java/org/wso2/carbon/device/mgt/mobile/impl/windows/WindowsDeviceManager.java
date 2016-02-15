@@ -121,8 +121,8 @@ public class WindowsDeviceManager implements DeviceManager {
             if (resource != null) {
                 JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
                 Unmarshaller unmarshaller = context.createUnmarshaller();
-                return (TenantConfiguration) unmarshaller.unmarshal(
-                        new StringReader(new String((byte[]) resource.getContent(), Charset.
+                return (TenantConfiguration) unmarshaller.unmarshal(new StringReader(
+                        new String((byte[]) resource.getContent(), Charset.
                                 forName(MobilePluginConstants.CHARSET_UTF8))));
             }
             return null;
@@ -134,7 +134,8 @@ public class WindowsDeviceManager implements DeviceManager {
                     "Error occurred while parsing the Windows configuration : " + e.getMessage(), e);
         } catch (RegistryException e) {
             throw new DeviceManagementException(
-                    "Error occurred while retrieving the Registry resource of Windows configuration : " + e.getMessage(), e);
+                    "Error occurred while retrieving the Registry resource of Windows configuration : " +
+                            e.getMessage(), e);
         }
     }
 
