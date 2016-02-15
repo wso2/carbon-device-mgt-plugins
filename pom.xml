@@ -49,7 +49,7 @@
         <!--Device Specific IoT Components-->
         <module>components/device-mgt-iot-androidsense</module>
         <module>components/device-mgt-iot-arduino</module>
-        <module>components/device-mgt-iot-camera</module>
+        <!--<module>components/device-mgt-iot-camera</module>-->
         <module>components/device-mgt-iot-digitaldisplay</module>
         <module>components/device-mgt-iot-droneanalyzer</module>
         <module>components/device-mgt-iot-raspberrypi</module>

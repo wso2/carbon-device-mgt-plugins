@@ -18,24 +18,25 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:cxf="http://cxf.apache.org/core"
+       xmlns:jaxrs="http://cxf.apache.org/jaxrs"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-         http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
-
-
+         http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
     <jaxrs:server id="AndroidSenseController" address="/">
-        <jaxrs:features>
-            <cxf:logging/>
-        </jaxrs:features>
         <jaxrs:serviceBeans>
             <bean id="AndroidSenseControllerService"
-                  class="org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.AndroidSenseControllerService"/>
+                  class="org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.AndroidSenseControllerService">
+                <property name="androidSenseMQTTConnector" ref="mqttConnectorBean"/>
+            </bean>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
         </jaxrs:providers>
     </jaxrs:server>
+
+    <bean id="mqttConnectorBean"
+          class="org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.transport.AndroidSenseMQTTConnector">
+    </bean>
 
 </beans>
 

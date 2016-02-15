@@ -33,6 +33,6 @@ public class ArduinoConstants {
     //type of the sensor
     public static final String SENSOR_TEMPERATURE = "temperature";
     //sensor events summerized table name
-    public static final String TEMPERATURE_EVENT_TABLE = "ORG_WSO2_IOT_DEVICES_TEMPERATURE";
+    public static final String TEMPERATURE_EVENT_TABLE = "DEVICE_TEMPERATURE_SUMMARY";
 
 }

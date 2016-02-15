@@ -33,6 +33,7 @@
     <property name="Proximity_dir" value="Proximity"/>
     <property name="Pressure_dir" value="Pressure"/>
     <property name="Rotation_dir" value="Rotation"/>
+    <property name="Wordcounter_dir" value="WordCount"/>
 
     <target name="clean">
         <delete dir="${target-dir}" />
@@ -69,6 +70,9 @@
         </zip>
         <zip destfile="${target-dir}/${Proximity_dir}.car">
             <zipfileset dir="${src-dir}/${Proximity_dir}"/>
+        </zip>
+        <zip destfile="${target-dir}/${Wordcounter_dir}.car">
+            <zipfileset dir="${src-dir}/${Wordcounter_dir}"/>
         </zip>
     </target>
 </project>
