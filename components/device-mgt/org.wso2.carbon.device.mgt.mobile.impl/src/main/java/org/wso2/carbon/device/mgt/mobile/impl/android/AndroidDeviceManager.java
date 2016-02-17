@@ -69,7 +69,7 @@ public class AndroidDeviceManager implements DeviceManager {
         } catch (LicenseManagementException e) {
             log.error("Error occurred while adding default license for Android devices", e);
         } catch (DeviceManagementException e) {
-            log.error("Error occurred while adding supported device features for Android platform", e);
+            throw new IllegalStateException("Error occurred while adding Android features to the DB.");
         }
     }
 
@@ -101,13 +101,14 @@ public class AndroidDeviceManager implements DeviceManager {
             status = true;
         } catch (MobileDeviceMgtPluginException e) {
             throw new DeviceManagementException(
-                    "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
+                    "Error occurred while retrieving the Registry instance : ", e);
         } catch (RegistryException e) {
             throw new DeviceManagementException(
-                    "Error occurred while persisting the Registry resource of Android Configuration : " + e.getMessage(), e);
+                    "Error occurred while persisting the Registry resource of Android Configuration : "
+                            + e.getMessage(), e);
         } catch (JAXBException e) {
             throw new DeviceManagementException(
-                    "Error occurred while parsing the Android configuration : " + e.getMessage(), e);
+                    "Error occurred while parsing the Android configuration : ", e);
         }
         return status;
     }
@@ -130,13 +131,13 @@ public class AndroidDeviceManager implements DeviceManager {
             return null;
         } catch (MobileDeviceMgtPluginException e) {
             throw new DeviceManagementException(
-                    "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
+                    "Error occurred while retrieving the Registry instance : ", e);
         } catch (JAXBException e) {
             throw new DeviceManagementException(
-                    "Error occurred while parsing the Android configuration : " + e.getMessage(), e);
+                    "Error occurred while parsing the Android configuration : ", e);
         } catch (RegistryException e) {
             throw new DeviceManagementException(
-                    "Error occurred while retrieving the Registry resource of Android Configuration : " + e.getMessage(), e);
+                    "Error occurred while retrieving the Registry resource of Android Configuration : ", e);
         }
     }
 
