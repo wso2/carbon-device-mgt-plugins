@@ -134,8 +134,7 @@ public class WindowsDeviceManager implements DeviceManager {
                     "Error occurred while parsing the Windows configuration : ", e);
         } catch (RegistryException e) {
             throw new DeviceManagementException(
-                    "Error occurred while retrieving the Registry resource of Windows configuration : " +
-                            e.getMessage(), e);
+                    "Error occurred while retrieving the Registry resource of Windows configuration : ", e);
         }
     }
 
