@@ -104,8 +104,7 @@ public class AndroidDeviceManager implements DeviceManager {
                     "Error occurred while retrieving the Registry instance : ", e);
         } catch (RegistryException e) {
             throw new DeviceManagementException(
-                    "Error occurred while persisting the Registry resource of Android Configuration : "
-                            + e.getMessage(), e);
+                    "Error occurred while persisting the Registry resource of Android Configuration : ", e);
         } catch (JAXBException e) {
             throw new DeviceManagementException(
                     "Error occurred while parsing the Android configuration : ", e);
