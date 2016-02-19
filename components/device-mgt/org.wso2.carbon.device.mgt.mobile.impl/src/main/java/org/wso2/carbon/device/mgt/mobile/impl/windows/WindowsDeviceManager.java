@@ -100,13 +100,13 @@ public class WindowsDeviceManager implements DeviceManager {
             status = true;
         } catch (MobileDeviceMgtPluginException e) {
             throw new DeviceManagementException(
-                    "Error occurred while retrieving the Registry instance : ", e);
+                    "Error occurred while retrieving the Registry instance", e);
         } catch (RegistryException e) {
             throw new DeviceManagementException(
-                    "Error occurred while persisting the Registry resource of Windows configuration : ", e);
+                    "Error occurred while persisting the Registry resource of Windows configuration", e);
         } catch (JAXBException e) {
             throw new DeviceManagementException(
-                    "Error occurred while parsing the Windows configuration : ", e);
+                    "Error occurred while parsing the Windows configuration", e);
         }
         return status;
     }
@@ -128,13 +128,13 @@ public class WindowsDeviceManager implements DeviceManager {
             return null;
         } catch (MobileDeviceMgtPluginException e) {
             throw new DeviceManagementException(
-                    "Error occurred while retrieving the Registry instance : ", e);
+                    "Error occurred while retrieving the Registry instance", e);
         } catch (JAXBException e) {
             throw new DeviceManagementException(
-                    "Error occurred while parsing the Windows configuration : ", e);
+                    "Error occurred while parsing the Windows configuration", e);
         } catch (RegistryException e) {
             throw new DeviceManagementException(
-                    "Error occurred while retrieving the Registry resource of Windows configuration : ", e);
+                    "Error occurred while retrieving the Registry resource of Windows configuration", e);
         }
     }
 
@@ -153,8 +153,8 @@ public class WindowsDeviceManager implements DeviceManager {
             WindowsDAOFactory.commitTransaction();
         } catch (MobileDeviceManagementDAOException e) {
             WindowsDAOFactory.rollbackTransaction();
-            throw new DeviceManagementException("Error while updating the enrollment of the Windows device : " +
-                    device.getDeviceIdentifier(), e);
+            throw new DeviceManagementException("Error occurred while updating the enrollment of the " +
+                    "Windows device : " + device.getDeviceIdentifier(), e);
         } finally {
             WindowsDAOFactory.closeConnection();
         }
@@ -303,7 +303,7 @@ public class WindowsDeviceManager implements DeviceManager {
             }
         } catch (MobileDeviceManagementDAOException e) {
             WindowsDAOFactory.rollbackTransaction();
-            throw new DeviceManagementException("Error while enrolling the windows device : "
+            throw new DeviceManagementException("Error occurred while enrolling the windows device : "
                     + device.getDeviceIdentifier(), e);
         }
         return status;
