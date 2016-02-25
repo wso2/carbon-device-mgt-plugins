@@ -197,7 +197,7 @@
             <artifactId>gson</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-codec</groupId>
+            <groupId>commons-codec.wso2</groupId>
             <artifactId>commons-codec</artifactId>
             <scope>provided</scope>
         </dependency>
