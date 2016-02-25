@@ -20,6 +20,13 @@ function onRequest(context) {
     var log = new Log("stats.js");
     var operationModule = require("/app/modules/operation.js").operationModule;
     var device = context.unit.params.device;
-    var monitor_operations = JSON.stringify(operationModule.getMonitorOperations(device.type));
+    var monitor_operations;
+    try {
+        monitor_operations = JSON.stringify(operationModule.getMonitorOperations(device.type));
+    } catch (e) {
+        log.error("Monitor operation loading failed.");
+        monitor_operations = null;
+    }
+
     return {"monitor_operations": monitor_operations, "device": device};
 }

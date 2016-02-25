@@ -16,7 +16,6 @@
  * under the License.
  */
 
-
 function onRequest(context) {
     var log = new Log("detail.js");
     var deviceType = context.uriParams.deviceType;
@@ -27,8 +26,10 @@ function onRequest(context) {
         var device = deviceModule.viewDevice(deviceType, deviceId);
 
         if (device && device.status != "error") {
-            log.info(device);
             return {"device": device};
+        } else {
+            response.sendError(404, "Device Id " + deviceId + "of type " + deviceType + " cannot be found!");
+            exit();
         }
     }
 }
