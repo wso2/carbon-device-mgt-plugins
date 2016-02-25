@@ -280,7 +280,7 @@ public class VirtualFireAlarmControllerService {
     @Path("controller/buzz")
     @Feature(code = "buzz", name = "Buzzer On / Off", type = "operation",
              description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
-    public void switchBulb(@HeaderParam("owner") String owner,
+    public void switchBuzzer(@HeaderParam("owner") String owner,
                            @HeaderParam("deviceId") String deviceId,
                            @HeaderParam("protocol") String protocol,
                            @FormParam("state") String state,
@@ -349,88 +349,6 @@ public class VirtualFireAlarmControllerService {
         }
 
         response.setStatus(Response.Status.OK.getStatusCode());
-    }
-
-
-    /**
-     * This is an API called/used from within the Server(Front-End) or by a device Owner. It sends a control command
-     * to the VirtualFirealarm device to 'tell what's its current humidity reading'. The method also takes in the
-     * protocol to be used to connect-to and send the command to the device.
-     *
-     * @param owner    the name of the owner(username) of the device to which the control-command is to be sent.
-     * @param deviceId the ID of the VirtualFirealarm device on which the humidity reading is be read-from.
-     * @param protocol the protocol (HTTP, MQTT, XMPP) to be used to connect-to & send the message to the device.
-     * @param response the HTTP servlet response object received  by default as part of the HTTP call to this API.
-     * @return an instance of the 'SensorRecord' object that holds the last updated humidity of the VirtualFirealarm
-     * whose humidity reading was requested.
-     */
-    @GET
-    @Path("controller/humidity")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Feature(code = "humidity", name = "Humidity", type = "monitor",
-             description = "Read Humidity Readings from Virtual Fire Alarm")
-    public SensorRecord requestHumidity(@HeaderParam("owner") String owner,
-                                        @HeaderParam("deviceId") String deviceId,
-                                        @HeaderParam("protocol") String protocol,
-                                        @Context HttpServletResponse response) {
-        //TODO::Need to use Web-Sockets to reply messages.
-        SensorRecord sensorRecord = null;
-        DeviceValidator deviceValidator = new DeviceValidator();
-        try {
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(
-                    deviceId, VirtualFireAlarmConstants.DEVICE_TYPE))) {
-                response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-            }
-        } catch (DeviceManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        }
-
-        String protocolString = protocol.toUpperCase();
-
-        if (log.isDebugEnabled()) {
-            log.debug("Sending request to read humidity value of device [" + deviceId + "] via " + protocolString);
-        }
-
-        try {
-            switch (protocolString) {
-                case HTTP_PROTOCOL:
-                    String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
-                    if (deviceHTTPEndpoint == null) {
-                        response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
-                    }
-
-                    String humidityValue = VirtualFireAlarmServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
-                                                                                           VirtualFireAlarmConstants
-                                                                                                   .HUMIDITY_CONTEXT,
-                                                                                           false);
-                    SensorDataManager.getInstance().setSensorRecord(deviceId,
-                                                                    VirtualFireAlarmConstants.SENSOR_TEMP,
-                                                                    humidityValue,
-                                                                    Calendar.getInstance().getTimeInMillis());
-                    break;
-
-                case MQTT_PROTOCOL:
-                    String mqttResource = VirtualFireAlarmConstants.HUMIDITY_CONTEXT.replace("/", "");
-                    virtualFireAlarmMQTTConnector.publishDeviceData(owner, deviceId, mqttResource, "");
-                    break;
-
-                case XMPP_PROTOCOL:
-                    String xmppResource = VirtualFireAlarmConstants.HUMIDITY_CONTEXT.replace("/", "");
-                    virtualFireAlarmXMPPConnector.publishDeviceData(owner, deviceId, xmppResource, "");
-                    break;
-
-                default:
-                    response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
-            }
-            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-                                                                           VirtualFireAlarmConstants.SENSOR_HUMIDITY);
-        } catch (DeviceManagementException | DeviceControllerException | TransportHandlerException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        }
-
-        response.setStatus(Response.Status.OK.getStatusCode());
-        return sensorRecord;
     }
 
     /**
@@ -704,7 +622,7 @@ public class VirtualFireAlarmControllerService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    public SensorData[] getVirtualFireAlarmDeviceStats(@PathParam("deviceId") String deviceId,
+    public SensorData[] getVirtualFirealarmStats(@PathParam("deviceId") String deviceId,
                                                    @PathParam("sensorName") String sensor,
                                                    @QueryParam("username") String user,
                                                    @QueryParam("from") long from,
@@ -724,7 +642,9 @@ public class VirtualFireAlarmControllerService {
                 VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = getSensorEventTableName(sensor);
         try {
-            List<Record> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName, query);
+            List<Record> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName,
+                                                                                query);
+
             Collections.sort(records, new Comparator<Record>() {
                 @Override
                 public int compare(Record o1, Record o2) {
@@ -748,7 +668,8 @@ public class VirtualFireAlarmControllerService {
             }
             return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
         } catch (AnalyticsException e) {
-            String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
+            String errorMsg =
+                    "Error on retrieving stats on table " + sensorTableName + " with query " + query;
             log.error(errorMsg);
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
