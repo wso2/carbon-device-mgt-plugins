@@ -31,6 +31,7 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.dao.ArduinoDAO;
+import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.feature.ArduinoFeatureManager;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dto.IotDevice;
@@ -47,11 +48,11 @@ public class ArduinoManager implements DeviceManager {
 
     private static final IotDeviceManagementDAOFactory iotDeviceManagementDAOFactory = new ArduinoDAO();
     private static final Log log = LogFactory.getLog(ArduinoManager.class);
-
+    private ArduinoFeatureManager arduinoFeatureManager = new ArduinoFeatureManager();
 
     @Override
     public FeatureManager getFeatureManager() {
-        return null;
+        return arduinoFeatureManager;
     }
 
     @Override

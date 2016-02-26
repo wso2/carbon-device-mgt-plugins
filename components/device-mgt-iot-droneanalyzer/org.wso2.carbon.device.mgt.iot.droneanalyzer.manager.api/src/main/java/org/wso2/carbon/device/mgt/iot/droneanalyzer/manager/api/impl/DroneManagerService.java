@@ -18,7 +18,6 @@
 package org.wso2.carbon.device.mgt.iot.droneanalyzer.manager.api.impl;
 
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
@@ -58,7 +57,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-@DeviceType( value = "drone_analyzer")
 public class DroneManagerService {
 
     private static org.apache.commons.logging.Log log = LogFactory.getLog(DroneManagerService.class);

@@ -65,9 +65,6 @@ public class ArduinoDeviceDAOImpl implements IotDeviceDAO{
 					iotDevice.setIotDeviceName(resultSet.getString(
 							ArduinoConstants.DEVICE_PLUGIN_DEVICE_NAME));
 					Map<String, String> propertyMap = new HashMap<String, String>();
-					
-
-
 					iotDevice.setDeviceProperties(propertyMap);
 
 					if (log.isDebugEnabled()) {

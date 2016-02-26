@@ -35,6 +35,7 @@ import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOF
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dto.IotDevice;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao.VirtualFireAlarmDAO;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.feature.VirtualFirealarmFeatureManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,11 +48,11 @@ public class VirtualFireAlarmManager implements DeviceManager {
 
     private static final IotDeviceManagementDAOFactory iotDeviceManagementDAOFactory = new VirtualFireAlarmDAO();
     private static final Log log = LogFactory.getLog(VirtualFireAlarmManager.class);
-
+    private FeatureManager virtualFirealarmFeatureManager = new VirtualFirealarmFeatureManager();
 
     @Override
     public FeatureManager getFeatureManager() {
-        return null;
+        return virtualFirealarmFeatureManager;
     }
 
     @Override

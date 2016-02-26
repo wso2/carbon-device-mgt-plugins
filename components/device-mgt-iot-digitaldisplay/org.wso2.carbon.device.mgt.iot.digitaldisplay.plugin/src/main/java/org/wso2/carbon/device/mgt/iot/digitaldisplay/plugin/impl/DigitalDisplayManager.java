@@ -26,6 +26,7 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.impl.dao.DigitalDisplayDAO;
+import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.impl.feature.DigitalDisplayFeatureManager;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactoryInterface;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dto.IotDevice;
@@ -42,12 +43,10 @@ public class DigitalDisplayManager implements DeviceManager {
 
     private static final IotDeviceManagementDAOFactoryInterface iotDeviceManagementDAOFactory = new DigitalDisplayDAO();
     private static final Log log = LogFactory.getLog(DigitalDisplayManager.class);
-
-
-
+    private FeatureManager featureManager = new DigitalDisplayFeatureManager();
     @Override
     public FeatureManager getFeatureManager() {
-        return null;
+        return featureManager;
     }
 
     @Override

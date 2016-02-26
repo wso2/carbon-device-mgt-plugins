@@ -21,7 +21,6 @@ package org.wso2.carbon.device.mgt.iot.digitaldisplay.manager.api;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -47,7 +46,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
-@DeviceType(value = "digital_display")
 public class DigitalDisplayManagerService {
 
 	private static Log log = LogFactory.getLog(DigitalDisplayManagerService.class);

@@ -196,7 +196,7 @@
 
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
-            <artifactId>org.wso2.carbon.apimgt.webapp.publisher</artifactId>
+            <artifactId>org.wso2.carbon.device.mgt.extensions</artifactId>
             <scope>provided</scope>
         </dependency>
 

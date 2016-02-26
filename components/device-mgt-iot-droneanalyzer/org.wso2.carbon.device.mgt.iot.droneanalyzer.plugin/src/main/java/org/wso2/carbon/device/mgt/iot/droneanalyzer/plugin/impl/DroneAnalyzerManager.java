@@ -25,6 +25,7 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl.dao.DroneAnalyzerDAO;
+import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl.feature.DroneAnalyzerFeatureManager;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.iot.util.iotdevice.dto.IotDevice;
@@ -40,10 +41,10 @@ public class DroneAnalyzerManager implements DeviceManager {
 
     private static final IotDeviceManagementDAOFactory iotDeviceManagementDAOFactory = new DroneAnalyzerDAO();
     private static final Log log = LogFactory.getLog(DroneAnalyzerManager.class);
-
+    private FeatureManager droneFeatureManager = new DroneAnalyzerFeatureManager();
     @Override
     public FeatureManager getFeatureManager() {
-        return null;
+        return droneFeatureManager;
     }
 
     @Override

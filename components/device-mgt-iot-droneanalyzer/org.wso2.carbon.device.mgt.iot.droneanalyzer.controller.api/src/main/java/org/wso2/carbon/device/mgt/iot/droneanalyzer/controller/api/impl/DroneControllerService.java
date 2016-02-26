@@ -19,9 +19,9 @@ package org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl;
 
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.device.DeviceType;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.iot.DeviceValidator;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.util.DroneAnalyzerServiceUtils;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
