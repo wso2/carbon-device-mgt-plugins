@@ -88,13 +88,8 @@ public class IotDeviceTypeConfigurationManager {
 					iotDeviceTypeConfig.setApiApplicationName(iotDeviceTypeConfig.getType());
 				}
 				iotDeviceTypeConfigMap.put(iotDeviceTypeConfig.getType(), iotDeviceTypeConfig);
-
-
-			}
-			ApisAppClient.getInstance().setBase64EncodedConsumerKeyAndSecret(iotDeviceTypeConfigList);
-
-
-		} catch (Exception e) {
+            }
+        } catch (Exception e) {
 			String error = "Error occurred while initializing device configurations";
 			log.error(error);
 		}
