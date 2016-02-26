@@ -346,10 +346,17 @@ public class VirtualFireAlarmServiceUtils {
             log.error(errorMsg);
             throw new VirtualFireAlarmException(errorMsg, e);
         } catch (KeystoreException e) {
-            String errorMsg = "An error occurred whilst trying to retrieve certificate for deviceId [" + deviceId +
-                    "] with alias: [" + alias + "]";
-            log.error(errorMsg);
-            throw new VirtualFireAlarmException(errorMsg, e);
+            String errorMsg;
+            if (e.getMessage().contains("NULL_CERT")) {
+                errorMsg = "The Device-View page might have been accessed prior to the device being started.";
+                log.error(errorMsg);
+                throw new VirtualFireAlarmException(errorMsg, e);
+            } else {
+                errorMsg = "An error occurred whilst trying to retrieve certificate for deviceId [" + deviceId +
+                        "] with alias: [" + alias + "]";
+                log.error(errorMsg);
+                throw new VirtualFireAlarmException(errorMsg, e);
+            }
         }
         return clientPublicKey;
     }
