@@ -19,15 +19,11 @@ package org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl;
 
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
-import org.wso2.carbon.device.mgt.iot.DeviceValidator;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.util.DroneAnalyzerServiceUtils;
-import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.controller.DroneController;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.controller.impl.DroneControllerImpl;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -75,16 +71,6 @@ public class DroneControllerService {
     public Response droneController(@HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
                                     @FormParam("action") String action, @FormParam("duration") String duration,
                                     @FormParam("speed") String speed){
-        try {
-            DeviceValidator deviceValidator = new DeviceValidator();
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
-                    DroneConstants.DEVICE_TYPE))) {
-                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
-            }
-        } catch (DeviceManagementException e) {
-            log.error("DeviceValidation Failed for deviceId: " + deviceId + " of user: " + owner);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
         try {
             DroneAnalyzerServiceUtils.sendControlCommand(droneController, deviceId, action, Double.valueOf(speed),
                     Double.valueOf(duration));

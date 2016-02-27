@@ -21,18 +21,17 @@ package org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl.dao;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
+import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.exception.DroneAnalyzerDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl.dao.impl.DroneAnalyzerDeviceDAOImpl;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceDAO;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactoryInterface;
-
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 
-public class DroneAnalyzerDAO extends IotDeviceManagementDAOFactory implements IotDeviceManagementDAOFactoryInterface {
+public class DroneAnalyzerDAO {
 
     private static final Log log = LogFactory.getLog(DroneAnalyzerDAO.class);
     static DataSource dataSource;
@@ -43,37 +42,41 @@ public class DroneAnalyzerDAO extends IotDeviceManagementDAOFactory implements I
     }
 
     public static void initDroneAnalyzerDAO() {
-        dataSource = getDataSourceMap().get(DroneConstants.DEVICE_TYPE);
+        try {
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup(DroneConstants.DATA_SOURCE_NAME);
+        } catch (NamingException e) {
+            log.error("Error while looking up the data source: " + DroneConstants.DATA_SOURCE_NAME);
+        }
     }
 
-    @Override
-    public IotDeviceDAO getIotDeviceDAO() {
+    public DroneAnalyzerDeviceDAOImpl getDeviceDAO() {
         return new DroneAnalyzerDeviceDAOImpl();
     }
 
-    public static void beginTransaction() throws IotDeviceManagementDAOException {
+    public static void beginTransaction() throws DroneAnalyzerDeviceMgtPluginException {
         try {
             Connection conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             currentConnection.set(conn);
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while retrieving datasource connection", e);
+            throw new DroneAnalyzerDeviceMgtPluginException("Error occurred while retrieving datasource connection", e);
         }
     }
 
-    public static Connection getConnection() throws IotDeviceManagementDAOException {
+    public static Connection getConnection() throws DroneAnalyzerDeviceMgtPluginException {
 
         if (currentConnection != null && currentConnection.get() == null) {
             try {
                 currentConnection.set(dataSource.getConnection());
             } catch (SQLException e) {
-                throw new IotDeviceManagementDAOException("Error occurred while retrieving data source connection", e);
+                throw new DroneAnalyzerDeviceMgtPluginException("Error occurred while retrieving data source connection", e);
             }
         }
         return currentConnection.get();
     }
 
-    public static void commitTransaction() throws IotDeviceManagementDAOException {
+    public static void commitTransaction() throws DroneAnalyzerDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -85,14 +88,13 @@ public class DroneAnalyzerDAO extends IotDeviceManagementDAOFactory implements I
                 }
             }
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while committing the transaction", e);
+            throw new DroneAnalyzerDeviceMgtPluginException("Error occurred while committing the transaction", e);
         } finally {
             closeConnection();
         }
     }
 
-    public static void closeConnection() throws IotDeviceManagementDAOException {
-
+    public static void closeConnection() throws DroneAnalyzerDeviceMgtPluginException {
         Connection con = currentConnection.get();
         if (con != null) {
             try {
@@ -104,7 +106,7 @@ public class DroneAnalyzerDAO extends IotDeviceManagementDAOFactory implements I
         currentConnection.remove();
     }
 
-    public static void rollbackTransaction() throws IotDeviceManagementDAOException {
+    public static void rollbackTransaction() throws DroneAnalyzerDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -116,7 +118,7 @@ public class DroneAnalyzerDAO extends IotDeviceManagementDAOFactory implements I
                 }
             }
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while rollback the transaction", e);
+            throw new DroneAnalyzerDeviceMgtPluginException("Error occurred while rollback the transaction", e);
         } finally {
             closeConnection();
         }

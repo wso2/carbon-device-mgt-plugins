@@ -26,7 +26,7 @@ import org.wso2.carbon.device.mgt.iot.config.server.datasource.DataStore;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceManagementConfiguration;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceMgtServerInfo;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
+import org.wso2.carbon.device.mgt.iot.util.IotDeviceManagementUtil;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.XMLConstants;
@@ -128,8 +128,6 @@ public class DeviceManagementConfigurationManager {
 
 
     private class IotConfigValidationEventHandler implements ValidationEventHandler {
-
-
         @Override
         public boolean handleEvent(ValidationEvent event) {
             String error = "\nEVENT" + "\nSEVERITY:  " + event.getSeverity()
@@ -142,8 +140,6 @@ public class DeviceManagementConfigurationManager {
                     + "\n    OBJECT:  " + event.getLocator().getObject()
                     + "\n    NODE:  " + event.getLocator().getNode()
                     + "\n    URL:  " + event.getLocator().getURL();
-
-
             log.error(error);
             return true;
         }

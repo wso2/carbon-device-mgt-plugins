@@ -36,5 +36,6 @@ public class DroneConstants {
     public final static String FRONT = "front";
     public final static String CLOCK_WISE = "clockwise";
     public final static String COUNTER_CLOCKWISE = "counterClockwise";
+    public static final String DATA_SOURCE_NAME = "jdbc/DroneAnalyzerDM_DB";
 
 }

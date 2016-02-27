@@ -24,14 +24,13 @@ import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
-import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api.exception.DigitalDisplayException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api.util.DigitalDisplayMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.constants.DigitalDisplayConstants;
+import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
@@ -51,7 +50,7 @@ public class DigitalDisplayControllerService {
     private static DigitalDisplayMQTTConnector digitalDisplayMQTTConnector;
 
     private boolean waitForServerStartup() {
-        while (!DeviceManagement.isServerReady()) {
+        while (!IoTServerStartupListener.isServerReady()) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

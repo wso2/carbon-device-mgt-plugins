@@ -26,9 +26,6 @@ public class IoTCommonDataHolder {
 	private static IoTCommonDataHolder thisInstance = new IoTCommonDataHolder();
 	String trustStoreLocaiton;
 	String trustStorePassword;
-
-	private DataBridgeReceiverService dataBridgeReceiverService;
-
 	private IoTCommonDataHolder() {
 
 	}
@@ -52,14 +49,5 @@ public class IoTCommonDataHolder {
 
 	public String getTrustStorePassword(){
 		return trustStorePassword;
-	}
-
-	public DataBridgeReceiverService getDataBridgeReceiverService() {
-		return dataBridgeReceiverService;
-	}
-
-	public void setDataBridgeReceiverService(
-			DataBridgeReceiverService dataBridgeReceiverService) {
-        this.dataBridgeReceiverService = dataBridgeReceiverService;
 	}
 }

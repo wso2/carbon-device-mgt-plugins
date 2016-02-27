@@ -28,13 +28,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wso2.carbon.device.mgt.iot.config.devicetype.IotDeviceTypeConfigurationManager;
-import org.wso2.carbon.device.mgt.iot.config.devicetype.datasource.IotDeviceTypeConfig;
 import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ApiManagerConfig;
 import org.wso2.carbon.device.mgt.iot.exception.IoTException;
 import org.wso2.carbon.device.mgt.iot.util.IoTUtil;
-
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -80,23 +77,9 @@ public class ApisAppClient {
 		if (!isApiManagerEnabled) return null;
 		String consumerKeyAndSecret = deviceTypeToApiAppMap.get(deviceType);
 		if (consumerKeyAndSecret == null) {
-			ArrayList<IotDeviceTypeConfig> iotDeviceTypeConfigs = new ArrayList<>();
-			IotDeviceTypeConfigurationManager deviceTypeConfigurationManager =
-					IotDeviceTypeConfigurationManager.getInstance();
-			IotDeviceTypeConfig deviceTypeConfig = null;
-			if (deviceTypeConfigurationManager != null) {
-				deviceTypeConfig = deviceTypeConfigurationManager.getIotDeviceTypeConfigMap().get(
-						deviceType);
-			}
-			if (deviceTypeConfig != null) {
-				iotDeviceTypeConfigs.add(deviceTypeConfig);
-			} else {
-				deviceTypeConfig = new IotDeviceTypeConfig();
-				deviceTypeConfig.setType(deviceType);
-				deviceTypeConfig.setApiApplicationName(deviceType);
-				iotDeviceTypeConfigs.add(deviceTypeConfig);
-			}
-			setBase64EncodedConsumerKeyAndSecret(iotDeviceTypeConfigs);
+			List<String> deviceTypes = new ArrayList<>();
+			deviceTypes.add(deviceType);
+			setBase64EncodedConsumerKeyAndSecret(deviceTypes);
 			consumerKeyAndSecret = deviceTypeToApiAppMap.get(deviceType);
 			if (consumerKeyAndSecret == null) {
 				log.warn("There is no API application for the device type " + deviceType);
@@ -105,7 +88,7 @@ public class ApisAppClient {
 		return consumerKeyAndSecret;
 	}
 
-	public void setBase64EncodedConsumerKeyAndSecret(List<IotDeviceTypeConfig> iotDeviceTypeConfigList) {
+	public void setBase64EncodedConsumerKeyAndSecret(List<String> deviceTypes) {
 		if(!isApiManagerEnabled) return;
 
 		URL loginURL = null;
@@ -183,9 +166,8 @@ public class ApisAppClient {
 						(prodConsumerKey + ":" + prodConsumerSecret).getBytes())));
             }
 
-            for (IotDeviceTypeConfig iotDeviceTypeConfig : iotDeviceTypeConfigList) {
-                String deviceType = iotDeviceTypeConfig.getType();
-                String deviceTypeApiApplicationName = iotDeviceTypeConfig.getApiApplicationName();
+            for (String deviceType : deviceTypes) {
+                String deviceTypeApiApplicationName = deviceType;
                 String base64EncodedString = subscriptionMap.get(deviceTypeApiApplicationName);
                 if (base64EncodedString != null && base64EncodedString.length() != 0) {
                     deviceTypeToApiAppMap.put(deviceType, base64EncodedString);

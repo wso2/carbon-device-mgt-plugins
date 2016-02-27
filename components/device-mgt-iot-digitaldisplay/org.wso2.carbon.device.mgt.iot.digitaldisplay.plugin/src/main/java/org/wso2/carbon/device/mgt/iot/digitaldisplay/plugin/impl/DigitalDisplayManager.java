@@ -25,14 +25,9 @@ import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
+import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.exception.DigitalDisplayDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.impl.dao.DigitalDisplayDAO;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.impl.feature.DigitalDisplayFeatureManager;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactoryInterface;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dto.IotDevice;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,7 +36,7 @@ import java.util.List;
  */
 public class DigitalDisplayManager implements DeviceManager {
 
-    private static final IotDeviceManagementDAOFactoryInterface iotDeviceManagementDAOFactory = new DigitalDisplayDAO();
+    private static final DigitalDisplayDAO digitalDisplayDAO = new DigitalDisplayDAO();
     private static final Log log = LogFactory.getLog(DigitalDisplayManager.class);
     private FeatureManager featureManager = new DigitalDisplayFeatureManager();
     @Override
@@ -52,32 +47,28 @@ public class DigitalDisplayManager implements DeviceManager {
     @Override
     public boolean saveConfiguration(TenantConfiguration tenantConfiguration)
             throws DeviceManagementException {
-        //TODO implement this
         return false;
     }
 
     @Override
     public TenantConfiguration getConfiguration() throws DeviceManagementException {
-        //TODO implement this
         return null;
     }
 
     @Override
     public boolean enrollDevice(Device device) throws DeviceManagementException {
         boolean status;
-        IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new DigitalDisplay device : " + device.getDeviceIdentifier());
             }
             DigitalDisplayDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO().addIotDevice(
-                    iotDevice);
+            status = digitalDisplayDAO.getDeviceDAO().addDevice(device);
             DigitalDisplayDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (DigitalDisplayDeviceMgtPluginException e) {
             try {
                 DigitalDisplayDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (DigitalDisplayDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -91,19 +82,17 @@ public class DigitalDisplayManager implements DeviceManager {
     @Override
     public boolean modifyEnrollment(Device device) throws DeviceManagementException {
         boolean status;
-        IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Modifying the DigitalDisplay device enrollment data");
             }
             DigitalDisplayDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO()
-                    .updateIotDevice(iotDevice);
+            status = digitalDisplayDAO.getDeviceDAO().updateDevice(device);
             DigitalDisplayDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (DigitalDisplayDeviceMgtPluginException e) {
             try {
                 DigitalDisplayDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (DigitalDisplayDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -123,13 +112,12 @@ public class DigitalDisplayManager implements DeviceManager {
                 log.debug("Dis-enrolling DigitalDisplay device : " + deviceId);
             }
             DigitalDisplayDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO()
-                    .deleteIotDevice(deviceId.getId());
+            status = digitalDisplayDAO.getDeviceDAO().deleteDevice(deviceId.getId());
             DigitalDisplayDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (DigitalDisplayDeviceMgtPluginException e) {
             try {
                 DigitalDisplayDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (DigitalDisplayDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device dis enrol transaction :" + deviceId.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -147,13 +135,11 @@ public class DigitalDisplayManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Checking the enrollment of DigitalDisplay device : " + deviceId.getId());
             }
-            IotDevice iotDevice =
-                    iotDeviceManagementDAOFactory.getIotDeviceDAO().getIotDevice(
-                            deviceId.getId());
+            Device iotDevice = digitalDisplayDAO.getDeviceDAO().getDevice(deviceId.getId());
             if (iotDevice != null) {
                 isEnrolled = true;
             }
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (DigitalDisplayDeviceMgtPluginException e) {
             String msg = "Error while checking the enrollment status of DigitalDisplay device : " +
                     deviceId.getId();
             log.error(msg, e);
@@ -180,10 +166,8 @@ public class DigitalDisplayManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Getting the details of DigitalDisplay device : " + deviceId.getId());
             }
-            IotDevice iotDevice = iotDeviceManagementDAOFactory.getIotDeviceDAO().
-                    getIotDevice(deviceId.getId());
-            device = IotDeviceManagementUtil.convertToDevice(iotDevice);
-        } catch (IotDeviceManagementDAOException e) {
+            device = digitalDisplayDAO.getDeviceDAO().getDevice(deviceId.getId());
+        } catch (DigitalDisplayDeviceMgtPluginException e) {
             String msg = "Error while fetching the DigitalDisplay device : " + deviceId.getId();
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);
@@ -225,20 +209,18 @@ public class DigitalDisplayManager implements DeviceManager {
     @Override
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device) throws DeviceManagementException {
         boolean status;
-        IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug(
                         "updating the details of DigitalDisplay device : " + deviceIdentifier);
             }
             DigitalDisplayDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO()
-                    .updateIotDevice(iotDevice);
+            status = digitalDisplayDAO.getDeviceDAO().updateDevice(device);
             DigitalDisplayDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (DigitalDisplayDeviceMgtPluginException e) {
             try {
                 DigitalDisplayDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (DigitalDisplayDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device info transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -252,20 +234,13 @@ public class DigitalDisplayManager implements DeviceManager {
 
     @Override
     public List<Device> getAllDevices() throws DeviceManagementException {
-        List<Device> devices = null;
+        List<Device> devices;
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Fetching the details of all DigitalDisplay devices");
             }
-            List<IotDevice> iotDevices =
-                    iotDeviceManagementDAOFactory.getIotDeviceDAO().getAllIotDevices();
-            if (iotDevices != null) {
-                devices = new ArrayList<Device>();
-                for (IotDevice iotDevice : iotDevices) {
-                    devices.add(IotDeviceManagementUtil.convertToDevice(iotDevice));
-                }
-            }
-        } catch (IotDeviceManagementDAOException e) {
+            devices = digitalDisplayDAO.getDeviceDAO().getAllDevices();
+        } catch (DigitalDisplayDeviceMgtPluginException e) {
             String msg = "Error while fetching all DigitalDisplay devices.";
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);

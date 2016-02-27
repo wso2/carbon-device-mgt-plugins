@@ -23,9 +23,7 @@ import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfiguratio
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.exception.IoTException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
 import org.wso2.carbon.utils.CarbonUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;

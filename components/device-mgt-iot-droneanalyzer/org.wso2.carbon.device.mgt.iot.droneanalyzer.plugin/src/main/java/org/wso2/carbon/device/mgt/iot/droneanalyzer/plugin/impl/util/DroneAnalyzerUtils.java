@@ -19,8 +19,18 @@ package org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.Map;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
+import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.exception.DroneAnalyzerDeviceMgtPluginException;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Contains utility methods used by Drone Analyzer plugin.
@@ -28,11 +38,71 @@ import java.util.Map;
 public class DroneAnalyzerUtils {
     private static Log log = LogFactory.getLog(DroneAnalyzerUtils.class);
 
-    public static String getDeviceProperty(Map<String, String> deviceProperties, String property) {
-        String deviceProperty = deviceProperties.get(property);
-        if (deviceProperty == null) {
-            return "";
+    public static String getDeviceProperty(List<Device.Property> deviceProperties, String propertyKey) {
+        String deviceProperty = "";
+        for(Device.Property property :deviceProperties){
+            if(propertyKey.equals(property.getName())){
+                deviceProperty = property.getValue();
+            }
         }
         return deviceProperty;
+    }
+
+    public static Device.Property getProperty(String property, String value) {
+        if (property != null) {
+            Device.Property prop = new Device.Property();
+            prop.setName(property);
+            prop.setValue(value);
+            return prop;
+        }
+        return null;
+    }
+
+    public static void cleanupResources(Connection conn, PreparedStatement stmt, ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                log.warn("Error occurred while closing result set", e);
+            }
+        }
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                log.warn("Error occurred while closing prepared statement", e);
+            }
+        }
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                log.warn("Error occurred while closing database connection", e);
+            }
+        }
+    }
+
+    public static void cleanupResources(PreparedStatement stmt, ResultSet rs) {
+        cleanupResources(null, stmt, rs);
+    }
+
+    /**
+     * Creates the device management schema.
+     */
+    public static void setupDeviceManagementSchema() throws DroneAnalyzerDeviceMgtPluginException {
+        try {
+            Context ctx = new InitialContext();
+            DataSource dataSource = (DataSource) ctx.lookup(DroneConstants.DATA_SOURCE_NAME);
+            DeviceSchemaInitializer initializer =
+                    new DeviceSchemaInitializer(dataSource);
+            log.info("Initializing device management repository database schema");
+            initializer.createRegistryDatabase();
+
+        } catch (NamingException e) {
+            log.error("Error while looking up the data source: " + DroneConstants.DATA_SOURCE_NAME);
+        } catch (Exception e) {
+            throw new DroneAnalyzerDeviceMgtPluginException("Error occurred while initializing Iot Device " +
+                                                                     "Management database schema", e);
+        }
     }
 }

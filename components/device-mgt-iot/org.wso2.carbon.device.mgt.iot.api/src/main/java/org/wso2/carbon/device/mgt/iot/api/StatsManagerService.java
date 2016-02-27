@@ -24,8 +24,6 @@ import org.wso2.carbon.analytics.datasource.commons.Record;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
-import org.wso2.carbon.device.mgt.iot.analytics.statistics.dto.DeviceUsageDTO;
-
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;

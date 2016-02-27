@@ -24,14 +24,9 @@ import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
+import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.exception.DroneAnalyzerDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl.dao.DroneAnalyzerDAO;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl.feature.DroneAnalyzerFeatureManager;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dto.IotDevice;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +34,7 @@ import java.util.List;
  */
 public class DroneAnalyzerManager implements DeviceManager {
 
-    private static final IotDeviceManagementDAOFactory iotDeviceManagementDAOFactory = new DroneAnalyzerDAO();
+    private static final DroneAnalyzerDAO droneAnalyzerDAO = new DroneAnalyzerDAO();
     private static final Log log = LogFactory.getLog(DroneAnalyzerManager.class);
     private FeatureManager droneFeatureManager = new DroneAnalyzerFeatureManager();
     @Override
@@ -63,19 +58,17 @@ public class DroneAnalyzerManager implements DeviceManager {
     @Override
     public boolean enrollDevice(Device device) throws DeviceManagementException {
         boolean status;
-        IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new drone device : " + device.getDeviceIdentifier());
             }
             DroneAnalyzerDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO().addIotDevice(
-                    iotDevice);
+            status = droneAnalyzerDAO.getDeviceDAO().addDevice(device);
             DroneAnalyzerDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (DroneAnalyzerDeviceMgtPluginException e) {
             try {
                 DroneAnalyzerDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (DroneAnalyzerDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -89,19 +82,17 @@ public class DroneAnalyzerManager implements DeviceManager {
     @Override
     public boolean modifyEnrollment(Device device) throws DeviceManagementException {
         boolean status;
-        IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Modifying the Virtual Firealarm device enrollment data");
             }
             DroneAnalyzerDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO()
-                    .updateIotDevice(iotDevice);
+            status = droneAnalyzerDAO.getDeviceDAO().updateDevice(device);
             DroneAnalyzerDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (DroneAnalyzerDeviceMgtPluginException e) {
             try {
                 DroneAnalyzerDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (DroneAnalyzerDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -121,13 +112,12 @@ public class DroneAnalyzerManager implements DeviceManager {
                 log.debug("Dis-enrolling drone device : " + deviceId);
             }
             DroneAnalyzerDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO()
-                    .deleteIotDevice(deviceId.getId());
+            status = droneAnalyzerDAO.getDeviceDAO().deleteIotDevice(deviceId.getId());
             DroneAnalyzerDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (DroneAnalyzerDeviceMgtPluginException e) {
             try {
                 DroneAnalyzerDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (DroneAnalyzerDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device dis enrol transaction :" + deviceId.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -145,11 +135,11 @@ public class DroneAnalyzerManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Checking the enrollment of Drone device : " + deviceId.getId());
             }
-            IotDevice iotDevice = iotDeviceManagementDAOFactory.getIotDeviceDAO().getIotDevice(deviceId.getId());
+            Device iotDevice = droneAnalyzerDAO.getDeviceDAO().getDevice(deviceId.getId());
             if (iotDevice != null) {
                 isEnrolled = true;
             }
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (DroneAnalyzerDeviceMgtPluginException e) {
             String msg = "Error while checking the enrollment status of Drone device : " +
                     deviceId.getId();
             log.error(msg, e);
@@ -176,10 +166,8 @@ public class DroneAnalyzerManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Getting the details of Drone device : " + deviceId.getId());
             }
-            IotDevice iotDevice = iotDeviceManagementDAOFactory.getIotDeviceDAO().
-                    getIotDevice(deviceId.getId());
-            device = IotDeviceManagementUtil.convertToDevice(iotDevice);
-        } catch (IotDeviceManagementDAOException e) {
+            device = droneAnalyzerDAO.getDeviceDAO().getDevice(deviceId.getId());
+        } catch (DroneAnalyzerDeviceMgtPluginException e) {
             String msg = "Error while fetching the Drone device : " + deviceId.getId();
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);
@@ -216,20 +204,18 @@ public class DroneAnalyzerManager implements DeviceManager {
     @Override
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device) throws DeviceManagementException {
         boolean status;
-        IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug(
                         "updating the details of Drone device : " + deviceIdentifier);
             }
             DroneAnalyzerDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO()
-                    .updateIotDevice(iotDevice);
+            status = droneAnalyzerDAO.getDeviceDAO().updateDevice(device);
             DroneAnalyzerDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (DroneAnalyzerDeviceMgtPluginException e) {
             try {
                 DroneAnalyzerDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (DroneAnalyzerDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device info transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -248,15 +234,8 @@ public class DroneAnalyzerManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Fetching the details of all Drone devices");
             }
-            List<IotDevice> iotDevices =
-                    iotDeviceManagementDAOFactory.getIotDeviceDAO().getAllIotDevices();
-            if (iotDevices != null) {
-                devices = new ArrayList<Device>();
-                for (IotDevice iotDevice : iotDevices) {
-                    devices.add(IotDeviceManagementUtil.convertToDevice(iotDevice));
-                }
-            }
-        } catch (IotDeviceManagementDAOException e) {
+            devices = droneAnalyzerDAO.getDeviceDAO().getAllDevices();
+        } catch (DroneAnalyzerDeviceMgtPluginException e) {
             String msg = "Error while fetching all Drone devices.";
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);

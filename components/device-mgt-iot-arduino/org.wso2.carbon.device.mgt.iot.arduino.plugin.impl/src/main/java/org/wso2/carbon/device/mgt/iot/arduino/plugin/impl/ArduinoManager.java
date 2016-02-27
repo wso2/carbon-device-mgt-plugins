@@ -30,14 +30,9 @@ import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
+import org.wso2.carbon.device.mgt.iot.arduino.plugin.exception.ArduinoDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.dao.ArduinoDAO;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.feature.ArduinoFeatureManager;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dto.IotDevice;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,7 +41,7 @@ import java.util.List;
  */
 public class ArduinoManager implements DeviceManager {
 
-    private static final IotDeviceManagementDAOFactory iotDeviceManagementDAOFactory = new ArduinoDAO();
+    private static final ArduinoDAO arduinoDAO = new ArduinoDAO();
     private static final Log log = LogFactory.getLog(ArduinoManager.class);
     private ArduinoFeatureManager arduinoFeatureManager = new ArduinoFeatureManager();
 
@@ -71,19 +66,17 @@ public class ArduinoManager implements DeviceManager {
     @Override
     public boolean enrollDevice(Device device) throws DeviceManagementException {
         boolean status;
-        IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new Arduino device : " + device.getDeviceIdentifier());
             }
             ArduinoDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO().addIotDevice(
-                    iotDevice);
+            status = arduinoDAO.getDeviceDAO().addDevice(device);
             ArduinoDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (ArduinoDeviceMgtPluginException e) {
             try {
                 ArduinoDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (ArduinoDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -97,19 +90,17 @@ public class ArduinoManager implements DeviceManager {
     @Override
     public boolean modifyEnrollment(Device device) throws DeviceManagementException {
         boolean status;
-        IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Modifying the Arduino device enrollment data");
             }
             ArduinoDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO()
-                    .updateIotDevice(iotDevice);
+            status = arduinoDAO.getDeviceDAO().updateDevice(device);
             ArduinoDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (ArduinoDeviceMgtPluginException e) {
             try {
                 ArduinoDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (ArduinoDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -129,13 +120,12 @@ public class ArduinoManager implements DeviceManager {
                 log.debug("Dis-enrolling Arduino device : " + deviceId);
             }
             ArduinoDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO()
-                    .deleteIotDevice(deviceId.getId());
+            status = arduinoDAO.getDeviceDAO().deleteDevice(deviceId.getId());
             ArduinoDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (ArduinoDeviceMgtPluginException e) {
             try {
                 ArduinoDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (ArduinoDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device dis enrol transaction :" + deviceId.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -153,13 +143,11 @@ public class ArduinoManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Checking the enrollment of Arduino device : " + deviceId.getId());
             }
-            IotDevice iotDevice =
-                    iotDeviceManagementDAOFactory.getIotDeviceDAO().getIotDevice(
-                            deviceId.getId());
+            Device iotDevice = arduinoDAO.getDeviceDAO().getDevice(deviceId.getId());
             if (iotDevice != null) {
                 isEnrolled = true;
             }
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (ArduinoDeviceMgtPluginException e) {
             String msg = "Error while checking the enrollment status of Arduino device : " +
                     deviceId.getId();
             log.error(msg, e);
@@ -186,10 +174,8 @@ public class ArduinoManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Getting the details of Arduino device : " + deviceId.getId());
             }
-            IotDevice iotDevice = iotDeviceManagementDAOFactory.getIotDeviceDAO().
-                    getIotDevice(deviceId.getId());
-            device = IotDeviceManagementUtil.convertToDevice(iotDevice);
-        } catch (IotDeviceManagementDAOException e) {
+            device = arduinoDAO.getDeviceDAO().getDevice(deviceId.getId());
+        } catch (ArduinoDeviceMgtPluginException e) {
             String msg = "Error while fetching the Arduino device : " + deviceId.getId();
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);
@@ -231,20 +217,18 @@ public class ArduinoManager implements DeviceManager {
     @Override
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device) throws DeviceManagementException {
         boolean status;
-        IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug(
                         "updating the details of Arduino device : " + deviceIdentifier);
             }
             ArduinoDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO()
-                    .updateIotDevice(iotDevice);
+            status = arduinoDAO.getDeviceDAO().updateDevice(device);
             ArduinoDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (ArduinoDeviceMgtPluginException e) {
             try {
                 ArduinoDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (ArduinoDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device info transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -258,20 +242,13 @@ public class ArduinoManager implements DeviceManager {
 
     @Override
     public List<Device> getAllDevices() throws DeviceManagementException {
-        List<Device> devices = null;
+        List<Device> devices;
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Fetching the details of all Arduino devices");
             }
-            List<IotDevice> iotDevices =
-                    iotDeviceManagementDAOFactory.getIotDeviceDAO().getAllIotDevices();
-            if (iotDevices != null) {
-                devices = new ArrayList<Device>();
-                for (IotDevice iotDevice : iotDevices) {
-                    devices.add(IotDeviceManagementUtil.convertToDevice(iotDevice));
-                }
-            }
-        } catch (IotDeviceManagementDAOException e) {
+            devices = arduinoDAO.getDeviceDAO().getAllDevices();
+        } catch (ArduinoDeviceMgtPluginException e) {
             String msg = "Error while fetching all Arduino devices.";
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);

@@ -20,20 +20,17 @@ package org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceDAO;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactoryInterface;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.exception.RaspberrypiDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao.impl.RaspberrypiDeviceDAOImpl;
-
-
-
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class RaspberrypiDAO extends IotDeviceManagementDAOFactory implements IotDeviceManagementDAOFactoryInterface {
+public class RaspberrypiDAO {
 
     private static final Log log = LogFactory.getLog(RaspberrypiDAO.class);
     static DataSource dataSource;
@@ -43,36 +40,41 @@ public class RaspberrypiDAO extends IotDeviceManagementDAOFactory implements Iot
         initRaspberrypiDAO();
     }
 
-    @Override public IotDeviceDAO getIotDeviceDAO() {
+    public RaspberrypiDeviceDAOImpl getDeviceDAO() {
         return new RaspberrypiDeviceDAOImpl();
     }
 
     public static void initRaspberrypiDAO() {
-        dataSource = getDataSourceMap().get(RaspberrypiConstants.DEVICE_TYPE);
+        try {
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup(RaspberrypiConstants.DATA_SOURCE_NAME);
+        } catch (NamingException e) {
+            log.error("Error while looking up the data source: " + RaspberrypiConstants.DATA_SOURCE_NAME);
+        }
     }
 
-    public static void beginTransaction() throws IotDeviceManagementDAOException {
+    public static void beginTransaction() throws RaspberrypiDeviceMgtPluginException {
         try {
             Connection conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             currentConnection.set(conn);
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while retrieving datasource connection", e);
+            throw new RaspberrypiDeviceMgtPluginException("Error occurred while retrieving datasource connection", e);
         }
     }
 
-    public static Connection getConnection() throws IotDeviceManagementDAOException {
+    public static Connection getConnection() throws RaspberrypiDeviceMgtPluginException {
         if (currentConnection.get() == null) {
             try {
                 currentConnection.set(dataSource.getConnection());
             } catch (SQLException e) {
-                throw new IotDeviceManagementDAOException("Error occurred while retrieving data source connection", e);
+                throw new RaspberrypiDeviceMgtPluginException("Error occurred while retrieving data source connection", e);
             }
         }
         return currentConnection.get();
     }
 
-    public static void commitTransaction() throws IotDeviceManagementDAOException {
+    public static void commitTransaction() throws RaspberrypiDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -84,14 +86,13 @@ public class RaspberrypiDAO extends IotDeviceManagementDAOFactory implements Iot
                 }
             }
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while committing the transaction", e);
+            throw new RaspberrypiDeviceMgtPluginException("Error occurred while committing the transaction", e);
         } finally {
             closeConnection();
         }
     }
 
-    public static void closeConnection() throws IotDeviceManagementDAOException {
-
+    public static void closeConnection() throws RaspberrypiDeviceMgtPluginException {
         Connection con = currentConnection.get();
         if (con != null) {
             try {
@@ -103,7 +104,7 @@ public class RaspberrypiDAO extends IotDeviceManagementDAOFactory implements Iot
         currentConnection.remove();
     }
 
-    public static void rollbackTransaction() throws IotDeviceManagementDAOException {
+    public static void rollbackTransaction() throws RaspberrypiDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -115,7 +116,7 @@ public class RaspberrypiDAO extends IotDeviceManagementDAOFactory implements Iot
                 }
             }
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while rollback the transaction", e);
+            throw new RaspberrypiDeviceMgtPluginException("Error occurred while rollback the transaction", e);
         } finally {
             closeConnection();
         }

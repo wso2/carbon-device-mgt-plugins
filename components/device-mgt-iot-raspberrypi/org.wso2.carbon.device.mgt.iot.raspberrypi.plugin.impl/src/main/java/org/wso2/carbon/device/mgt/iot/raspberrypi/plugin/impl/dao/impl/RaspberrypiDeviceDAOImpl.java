@@ -20,219 +20,172 @@ package org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceDAO;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.util.IotDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dto.IotDevice;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.exception.RaspberrypiDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.util.RaspberrypiUtils;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao.RaspberrypiDAO;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Implements IotDeviceDAO for Raspberrypi Devices.
+ * Implements CRUD for Raspberrypi Devices.
  */
-public class RaspberrypiDeviceDAOImpl implements IotDeviceDAO{
-	
+public class RaspberrypiDeviceDAOImpl {
 
-	    private static final Log log = LogFactory.getLog(RaspberrypiDeviceDAOImpl.class);
+	private static final Log log = LogFactory.getLog(RaspberrypiDeviceDAOImpl.class);
 
-	    @Override
-	    public IotDevice getIotDevice(String iotDeviceId)
-	            throws IotDeviceManagementDAOException {
-	        Connection conn = null;
-	        PreparedStatement stmt = null;
-	        IotDevice iotDevice = null;
-	        ResultSet resultSet = null;
-	        try {
-	            conn = RaspberrypiDAO.getConnection();
-	            String selectDBQuery =
-						"SELECT RASPBERRYPI_DEVICE_ID, DEVICE_NAME" +
-						" FROM RASPBERRYPI_DEVICE WHERE RASPBERRYPI_DEVICE_ID = ?";
-	            stmt = conn.prepareStatement(selectDBQuery);
-	            stmt.setString(1, iotDeviceId);
-	            resultSet = stmt.executeQuery();
+	public Device getDevice(String iotDeviceId) throws RaspberrypiDeviceMgtPluginException {
+		Connection conn;
+		PreparedStatement stmt = null;
+		Device device = null;
+		ResultSet resultSet = null;
+		try {
+			conn = RaspberrypiDAO.getConnection();
+			String selectDBQuery =
+					"SELECT RASPBERRYPI_DEVICE_ID, DEVICE_NAME FROM RASPBERRYPI_DEVICE WHERE RASPBERRYPI_DEVICE_ID = ?";
+			stmt = conn.prepareStatement(selectDBQuery);
+			stmt.setString(1, iotDeviceId);
+			resultSet = stmt.executeQuery();
 
-	            if (resultSet.next()) {
-					iotDevice = new IotDevice();
-					iotDevice.setIotDeviceName(resultSet.getString(
-							RaspberrypiConstants.DEVICE_PLUGIN_DEVICE_NAME));
-					Map<String, String> propertyMap = new HashMap<String, String>();
-					
-
-
-					iotDevice.setDeviceProperties(propertyMap);
-
-					if (log.isDebugEnabled()) {
-						log.debug("Raspberrypi device " + iotDeviceId + " data has been fetched from " +
-						          "Raspberrypi database.");
-					}
+			if (resultSet.next()) {
+				device = new Device();
+				device.setName(resultSet.getString(RaspberrypiConstants.DEVICE_PLUGIN_DEVICE_NAME));
+				if (log.isDebugEnabled()) {
+					log.debug("Raspberrypi device " + iotDeviceId + " data has been fetched from " +
+							  "Raspberrypi database.");
 				}
-	        } catch (SQLException e) {
-	            String msg = "Error occurred while fetching Raspberrypi device : '" + iotDeviceId + "'";
-	            log.error(msg, e);
-	            throw new IotDeviceManagementDAOException(msg, e);
-	        } finally {
-	            IotDeviceManagementDAOUtil.cleanupResources(stmt, resultSet);
-				RaspberrypiDAO.closeConnection();
-	        }
-
-	        return iotDevice;
-	    }
-
-	    @Override
-	    public boolean addIotDevice(IotDevice iotDevice)
-	            throws IotDeviceManagementDAOException {
-	        boolean status = false;
-	        Connection conn = null;
-	        PreparedStatement stmt = null;
-	        try {
-	            conn = RaspberrypiDAO.getConnection();
-	            String createDBQuery =
-						"INSERT INTO RASPBERRYPI_DEVICE(RASPBERRYPI_DEVICE_ID, DEVICE_NAME) VALUES (?, ?)";
-
-	            stmt = conn.prepareStatement(createDBQuery);
-				stmt.setString(1, iotDevice.getIotDeviceId());
-				stmt.setString(2,iotDevice.getIotDeviceName());
-				if (iotDevice.getDeviceProperties() == null) {
-					iotDevice.setDeviceProperties(new HashMap<String, String>());
-				}
-			
-				
-				int rows = stmt.executeUpdate();
-				if (rows > 0) {
-					status = true;
-					if (log.isDebugEnabled()) {
-						log.debug("Raspberrypi device " + iotDevice.getIotDeviceId() + " data has been" +
-						          " added to the Raspberrypi database.");
-					}
-				}
-	        } catch (SQLException e) {
-	            String msg = "Error occurred while adding the Raspberrypi device '" +
-	                         iotDevice.getIotDeviceId() + "' to the Raspberrypi db.";
-	            log.error(msg, e);
-	            throw new IotDeviceManagementDAOException(msg, e);
-	        } finally {
-	            IotDeviceManagementDAOUtil.cleanupResources(stmt, null);
-	        }
-	        return status;
-	    }
-
-	    @Override
-	    public boolean updateIotDevice(IotDevice iotDevice)
-	            throws IotDeviceManagementDAOException {
-	        boolean status = false;
-	        Connection conn = null;
-	        PreparedStatement stmt = null;
-	        try {
-	            conn = RaspberrypiDAO.getConnection();
-	            String updateDBQuery =
-						"UPDATE RASPBERRYPI_DEVICE SET  DEVICE_NAME = ? WHERE RASPBERRYPI_DEVICE_ID = ?";
-
-				stmt = conn.prepareStatement(updateDBQuery);
-
-				if (iotDevice.getDeviceProperties() == null) {
-					iotDevice.setDeviceProperties(new HashMap<String, String>());
-				}
-				stmt.setString(1, iotDevice.getIotDeviceName());
-	
-				stmt.setString(2, iotDevice.getIotDeviceId());
-				int rows = stmt.executeUpdate();
-				if (rows > 0) {
-					status = true;
-					if (log.isDebugEnabled()) {
-						log.debug("Raspberrypi device " + iotDevice.getIotDeviceId() + " data has been" +
-						          " modified.");
-					}
-				}
-	        } catch (SQLException e) {
-	            String msg = "Error occurred while modifying the Raspberrypi device '" +
-	                         iotDevice.getIotDeviceId() + "' data.";
-	            log.error(msg, e);
-	            throw new IotDeviceManagementDAOException(msg, e);
-	        } finally {
-	            IotDeviceManagementDAOUtil.cleanupResources(stmt, null);
-	        }
-	        return status;
-	    }
-
-	    @Override
-	    public boolean deleteIotDevice(String iotDeviceId)
-	            throws IotDeviceManagementDAOException {
-	        boolean status = false;
-	        Connection conn = null;
-	        PreparedStatement stmt = null;
-	        try {
-	            conn = RaspberrypiDAO.getConnection();
-	            String deleteDBQuery =
-						"DELETE FROM RASPBERRYPI_DEVICE WHERE RASPBERRYPI_DEVICE_ID = ?";
-				stmt = conn.prepareStatement(deleteDBQuery);
-				stmt.setString(1, iotDeviceId);
-				int rows = stmt.executeUpdate();
-				if (rows > 0) {
-					status = true;
-					if (log.isDebugEnabled()) {
-						log.debug("Raspberrypi device " + iotDeviceId + " data has deleted" +
-						          " from the Raspberrypi database.");
-					}
-				}
-	        } catch (SQLException e) {
-	            String msg = "Error occurred while deleting Raspberrypi device " + iotDeviceId;
-	            log.error(msg, e);
-	            throw new IotDeviceManagementDAOException(msg, e);
-	        } finally {
-	            IotDeviceManagementDAOUtil.cleanupResources(stmt, null);
-	        }
-	        return status;
-	    }
-
-	    @Override
-	    public List<IotDevice> getAllIotDevices()
-	            throws IotDeviceManagementDAOException {
-
-	        Connection conn = null;
-	        PreparedStatement stmt = null;
-	        ResultSet resultSet = null;
-	        IotDevice iotDevice;
-	        List<IotDevice> iotDevices = new ArrayList<IotDevice>();
-
-	        try {
-	            conn = RaspberrypiDAO.getConnection();
-	            String selectDBQuery =
-						"SELECT RASPBERRYPI_DEVICE_ID, DEVICE_NAME " +
-						"FROM RASPBERRYPI_DEVICE";
-				stmt = conn.prepareStatement(selectDBQuery);
-				resultSet = stmt.executeQuery();
-				while (resultSet.next()) {
-					iotDevice = new IotDevice();
-					iotDevice.setIotDeviceId(resultSet.getString(RaspberrypiConstants.DEVICE_PLUGIN_DEVICE_ID));
-					iotDevice.setIotDeviceName(resultSet.getString(RaspberrypiConstants.DEVICE_PLUGIN_DEVICE_NAME));
-
-					Map<String, String> propertyMap = new HashMap<String, String>();
-
-					iotDevice.setDeviceProperties(propertyMap);
-					iotDevices.add(iotDevice);
-				}
-	            if (log.isDebugEnabled()) {
-	                log.debug("All Raspberrypi device details have fetched from Raspberrypi database.");
-	            }
-	            return iotDevices;
-	        } catch (SQLException e) {
-	            String msg = "Error occurred while fetching all Raspberrypi device data'";
-	            log.error(msg, e);
-	            throw new IotDeviceManagementDAOException(msg, e);
-	        } finally {
-	            IotDeviceManagementDAOUtil.cleanupResources(stmt, resultSet);
-				RaspberrypiDAO.closeConnection();
-	        }
-	        
-	    }
-
+			}
+		} catch (SQLException e) {
+			String msg = "Error occurred while fetching Raspberrypi device : '" + iotDeviceId + "'";
+			log.error(msg, e);
+			throw new RaspberrypiDeviceMgtPluginException(msg, e);
+		} finally {
+			RaspberrypiUtils.cleanupResources(stmt, resultSet);
+			RaspberrypiDAO.closeConnection();
+		}
+		return device;
 	}
+
+	public boolean addDevice(Device device) throws RaspberrypiDeviceMgtPluginException {
+		boolean status = false;
+		Connection conn;
+		PreparedStatement stmt = null;
+		try {
+			conn = RaspberrypiDAO.getConnection();
+			String createDBQuery =
+					"INSERT INTO RASPBERRYPI_DEVICE(RASPBERRYPI_DEVICE_ID, DEVICE_NAME) VALUES (?, ?)";
+
+			stmt = conn.prepareStatement(createDBQuery);
+			stmt.setString(1, device.getDeviceIdentifier());
+			stmt.setString(2, device.getName());
+			int rows = stmt.executeUpdate();
+			if (rows > 0) {
+				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Raspberrypi device " + device.getDeviceIdentifier() + " data has been" +
+							  " added to the Raspberrypi database.");
+				}
+			}
+		} catch (SQLException e) {
+			String msg = "Error occurred while adding the Raspberrypi device '" +
+						 device.getDeviceIdentifier() + "' to the Raspberrypi db.";
+			log.error(msg, e);
+			throw new RaspberrypiDeviceMgtPluginException(msg, e);
+		} finally {
+			RaspberrypiUtils.cleanupResources(stmt, null);
+		}
+		return status;
+	}
+
+	public boolean updateDevice(Device device) throws RaspberrypiDeviceMgtPluginException {
+		boolean status = false;
+		Connection conn;
+		PreparedStatement stmt = null;
+		try {
+			conn = RaspberrypiDAO.getConnection();
+			String updateDBQuery = "UPDATE RASPBERRYPI_DEVICE SET  DEVICE_NAME = ? WHERE RASPBERRYPI_DEVICE_ID = ?";
+			stmt = conn.prepareStatement(updateDBQuery);
+			stmt.setString(1, device.getName());
+			stmt.setString(2, device.getDeviceIdentifier());
+			int rows = stmt.executeUpdate();
+			if (rows > 0) {
+				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Raspberrypi device " + device.getDeviceIdentifier() + " data has been" +
+							  " modified.");
+				}
+			}
+		} catch (SQLException e) {
+			String msg = "Error occurred while modifying the Raspberrypi device '" + device.getDeviceIdentifier()
+					+ "' data.";
+			log.error(msg, e);
+			throw new RaspberrypiDeviceMgtPluginException(msg, e);
+		} finally {
+			RaspberrypiUtils.cleanupResources(stmt, null);
+		}
+		return status;
+	}
+
+	public boolean deleteDevice(String iotDeviceId) throws RaspberrypiDeviceMgtPluginException {
+		boolean status = false;
+		Connection conn;
+		PreparedStatement stmt = null;
+		try {
+			conn = RaspberrypiDAO.getConnection();
+			String deleteDBQuery = "DELETE FROM RASPBERRYPI_DEVICE WHERE RASPBERRYPI_DEVICE_ID = ?";
+			stmt = conn.prepareStatement(deleteDBQuery);
+			stmt.setString(1, iotDeviceId);
+			int rows = stmt.executeUpdate();
+			if (rows > 0) {
+				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Raspberrypi device " + iotDeviceId + " data has deleted" +
+							  " from the Raspberrypi database.");
+				}
+			}
+		} catch (SQLException e) {
+			String msg = "Error occurred while deleting Raspberrypi device " + iotDeviceId;
+			log.error(msg, e);
+			throw new RaspberrypiDeviceMgtPluginException(msg, e);
+		} finally {
+			RaspberrypiUtils.cleanupResources(stmt, null);
+		}
+		return status;
+	}
+
+	public List<Device> getAllDevices() throws RaspberrypiDeviceMgtPluginException {
+		Connection conn;
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		Device device;
+		List<Device> devices = new ArrayList<>();
+		try {
+			conn = RaspberrypiDAO.getConnection();
+			String selectDBQuery = "SELECT RASPBERRYPI_DEVICE_ID, DEVICE_NAME FROM RASPBERRYPI_DEVICE";
+			stmt = conn.prepareStatement(selectDBQuery);
+			resultSet = stmt.executeQuery();
+			while (resultSet.next()) {
+				device = new Device();
+				device.setDeviceIdentifier(resultSet.getString(RaspberrypiConstants.DEVICE_PLUGIN_DEVICE_ID));
+				device.setName(resultSet.getString(RaspberrypiConstants.DEVICE_PLUGIN_DEVICE_NAME));
+				devices.add(device);
+			}
+			if (log.isDebugEnabled()) {
+				log.debug("All Raspberrypi device details have fetched from Raspberrypi database.");
+			}
+			return devices;
+		} catch (SQLException e) {
+			String msg = "Error occurred while fetching all Raspberrypi device data'";
+			log.error(msg, e);
+			throw new RaspberrypiDeviceMgtPluginException(msg, e);
+		} finally {
+			RaspberrypiUtils.cleanupResources(stmt, resultSet);
+			RaspberrypiDAO.closeConnection();
+		}
+	}
+}

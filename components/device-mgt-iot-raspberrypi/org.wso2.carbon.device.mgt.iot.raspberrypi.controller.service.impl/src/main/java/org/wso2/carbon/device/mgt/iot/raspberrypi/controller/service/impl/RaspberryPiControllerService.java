@@ -25,12 +25,9 @@ import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
-import org.wso2.carbon.device.mgt.iot.DeviceManagement;
-import org.wso2.carbon.device.mgt.iot.DeviceValidator;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.dto.DeviceData;
@@ -40,6 +37,8 @@ import org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.util.R
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
+import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -76,7 +75,7 @@ public class RaspberryPiControllerService {
     private RaspberryPiMQTTConnector raspberryPiMQTTConnector;
 
     private boolean waitForServerStartup() {
-        while (!DeviceManagement.isServerReady()) {
+        while (!IoTServerStartupListener.isServerReady()) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -166,19 +165,6 @@ public class RaspberryPiControllerService {
                            @HeaderParam("protocol") String protocol, @FormParam("state") String state,
                            @Context HttpServletResponse response) {
 
-        try {
-            DeviceValidator deviceValidator = new DeviceValidator();
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
-                                                                                   RaspberrypiConstants.DEVICE_TYPE))) {
-                response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-                return;
-            }
-        } catch (DeviceManagementException e) {
-            log.error("DeviceValidation Failed for deviceId: " + deviceId + " of user: " + owner);
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            return;
-        }
-
         String switchToState = state.toUpperCase();
 
         if (!switchToState.equals(RaspberrypiConstants.STATE_ON) && !switchToState.equals(
@@ -232,17 +218,6 @@ public class RaspberryPiControllerService {
                                            @HeaderParam("protocol") String protocol,
                                            @Context HttpServletResponse response) {
         SensorRecord sensorRecord = null;
-
-        DeviceValidator deviceValidator = new DeviceValidator();
-        try {
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
-                                                                                   RaspberrypiConstants.DEVICE_TYPE))) {
-                response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-            }
-        } catch (DeviceManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        }
-
         String protocolString = protocol.toUpperCase();
 
         if (log.isDebugEnabled()) {
@@ -285,47 +260,31 @@ public class RaspberryPiControllerService {
         String deviceId = dataMsg.deviceId;
         String deviceIp = dataMsg.reply;            //TODO:: Get IP from request
         float temperature = dataMsg.value;
+        String registeredIp = deviceToIpMap.get(deviceId);
 
-        try {
-            DeviceValidator deviceValidator = new DeviceValidator();
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(deviceId,
-                                                                                   RaspberrypiConstants.DEVICE_TYPE))) {
-                response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-                log.warn("Temperature data Received from unregistered raspberrypi device [" + deviceId +
-                                 "] for owner [" + owner + "]");
-                return;
-            }
+        if (registeredIp == null) {
+            log.warn("Unregistered IP: Temperature Data Received from an un-registered IP " + deviceIp +
+                             " for device ID - " + deviceId);
+            response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
+            return;
+        } else if (!registeredIp.equals(deviceIp)) {
+            log.warn("Conflicting IP: Received IP is " + deviceIp + ". Device with ID " + deviceId +
+                             " is already registered under some other IP. Re-registration required");
+            response.setStatus(Response.Status.CONFLICT.getStatusCode());
+            return;
+        }
 
-            String registeredIp = deviceToIpMap.get(deviceId);
+        if (log.isDebugEnabled()) {
+            log.debug("Received Pin Data Value: " + temperature + " degrees C");
+        }
+        SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
+                                                        String.valueOf(temperature),
+                                                        Calendar.getInstance().getTimeInMillis());
 
-            if (registeredIp == null) {
-                log.warn("Unregistered IP: Temperature Data Received from an un-registered IP " + deviceIp +
-                                 " for device ID - " + deviceId);
-                response.setStatus(Response.Status.PRECONDITION_FAILED.getStatusCode());
-                return;
-            } else if (!registeredIp.equals(deviceIp)) {
-                log.warn("Conflicting IP: Received IP is " + deviceIp + ". Device with ID " + deviceId +
-                                 " is already registered under some other IP. Re-registration required");
-                response.setStatus(Response.Status.CONFLICT.getStatusCode());
-                return;
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("Received Pin Data Value: " + temperature + " degrees C");
-            }
-            SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
-                                                            String.valueOf(temperature),
-                                                            Calendar.getInstance().getTimeInMillis());
-
-            if (!RaspberrypiServiceUtils.publishToDAS(dataMsg.owner, dataMsg.deviceId, dataMsg.value)) {
-                response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-                log.warn("An error occured whilst trying to publish temperature data of raspberrypi with ID [" +
-                                 deviceId + "] of owner [" + owner + "]");
-            }
-
-        } catch (DeviceManagementException e) {
-            String errorMsg = "Validation attempt for deviceId [" + deviceId + "] of owner [" + owner + "] failed.\n";
-            log.error(errorMsg + Response.Status.INTERNAL_SERVER_ERROR.getReasonPhrase() + "\n" + e.getErrorMessage());
+        if (!RaspberrypiServiceUtils.publishToDAS(dataMsg.owner, dataMsg.deviceId, dataMsg.value)) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            log.warn("An error occured whilst trying to publish temperature data of raspberrypi with ID [" +
+                             deviceId + "] of owner [" + owner + "]");
         }
     }
 

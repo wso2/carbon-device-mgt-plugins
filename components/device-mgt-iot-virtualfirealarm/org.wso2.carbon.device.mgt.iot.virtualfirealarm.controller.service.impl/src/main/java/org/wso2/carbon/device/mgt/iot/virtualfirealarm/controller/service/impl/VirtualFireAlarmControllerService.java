@@ -32,13 +32,12 @@ import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
-import org.wso2.carbon.device.mgt.iot.DeviceManagement;
-import org.wso2.carbon.device.mgt.iot.DeviceValidator;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
+import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.dto.DeviceData;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.dto.SensorData;
@@ -102,7 +101,7 @@ public class VirtualFireAlarmControllerService {
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
 
     private boolean waitForServerStartup() {
-        while (!DeviceManagement.isServerReady()) {
+        while (!IoTServerStartupListener.isServerReady()) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -285,20 +284,6 @@ public class VirtualFireAlarmControllerService {
                            @HeaderParam("protocol") String protocol,
                            @FormParam("state") String state,
                            @Context HttpServletResponse response) {
-
-        try {
-            DeviceValidator deviceValidator = new DeviceValidator();
-            if (!deviceValidator.isExist(owner, SUPER_TENANT,
-                                         new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE))) {
-                response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-                return;
-            }
-        } catch (DeviceManagementException e) {
-            log.error("DeviceValidation Failed for deviceId: " + deviceId + " of user: " + owner);
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            return;
-        }
-
         String switchToState = state.toUpperCase();
 
         if (!switchToState.equals(VirtualFireAlarmConstants.STATE_ON) && !switchToState.equals(
@@ -376,15 +361,6 @@ public class VirtualFireAlarmControllerService {
                                         @Context HttpServletResponse response) {
         //TODO::Need to use Web-Sockets to reply messages.
         SensorRecord sensorRecord = null;
-        DeviceValidator deviceValidator = new DeviceValidator();
-        try {
-            if (!deviceValidator.isExist(owner, SUPER_TENANT, new DeviceIdentifier(
-                    deviceId, VirtualFireAlarmConstants.DEVICE_TYPE))) {
-                response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-            }
-        } catch (DeviceManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        }
 
         String protocolString = protocol.toUpperCase();
 
@@ -456,17 +432,6 @@ public class VirtualFireAlarmControllerService {
                                            @HeaderParam("protocol") String protocol,
                                            @Context HttpServletResponse response) {
         SensorRecord sensorRecord = null;
-
-        DeviceValidator deviceValidator = new DeviceValidator();
-        try {
-            if (!deviceValidator.isExist(owner, SUPER_TENANT,
-                                         new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE))) {
-                response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-            }
-        } catch (DeviceManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        }
-
         String protocolString = protocol.toUpperCase();
 
         if (log.isDebugEnabled()) {

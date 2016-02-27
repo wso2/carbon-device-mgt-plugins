@@ -33,5 +33,5 @@ public class DigitalDisplayConstants {
     public final static String GET_CONTENTLIST_CONSTANT = "get_content_list";
     public final static String GET_DEVICE_STATUS_CONSTANT = "get_device_status";
     public final static String PUBLISH_TOPIC = "wso2/iot/%s/digital_display/%s/digital_display_subscriber";
-
+    public static final String DATA_SOURCE_NAME = "jdbc/DigitalDisplayDM_DB";
 }

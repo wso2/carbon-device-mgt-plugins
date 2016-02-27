@@ -19,11 +19,11 @@ package org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl;
 
 
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.transport.DroneAnalyzerXMPPConnector;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.trasformer.MessageTransformer;
+import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -57,7 +57,7 @@ public class DroneRealTimeService {
     }
 
     private boolean waitForServerStartup() {
-        while (!DeviceManagement.isServerReady()) {
+        while (!IoTServerStartupListener.isServerReady()) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
