@@ -26,6 +26,9 @@ function onRequest(context) {
 
         if (device && device.status != "error") {
             return {"device": device};
+        } else {
+            response.sendError(404, "Device Id " + deviceId + "of type " + deviceType + " cannot be found!");
+            exit();
         }
     }
 }

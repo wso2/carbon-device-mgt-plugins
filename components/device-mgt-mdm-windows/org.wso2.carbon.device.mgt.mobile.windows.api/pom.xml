@@ -227,7 +227,7 @@
             <artifactId>core</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-codec</groupId>
+            <groupId>commons-codec.wso2</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
         <dependency>

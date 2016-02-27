@@ -25,16 +25,15 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
-import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
 import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
 import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
+import org.wso2.carbon.device.mgt.iot.digitaldisplay.manager.api.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.constants.DigitalDisplayConstants;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -49,27 +48,20 @@ import java.util.UUID;
 public class DigitalDisplayManagerService {
 
 	private static Log log = LogFactory.getLog(DigitalDisplayManagerService.class);
-	//TODO; replace this tenant domain
-	private final String SUPER_TENANT = "carbon.super";
 	@Context  //injected response proxy supporting multiple thread
 	private HttpServletResponse response;
 
 	@Path("manager/device/register")
-	@PUT
-	public boolean register(@QueryParam("deviceId") String deviceId,
-							@QueryParam("name") String name, @QueryParam("owner") String owner) {
-
-		DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
-
+	@POST
+	public boolean register(@QueryParam("deviceId") String deviceId, @QueryParam("name") String name) {
 		DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
 		deviceIdentifier.setId(deviceId);
 		deviceIdentifier.setType(DigitalDisplayConstants.DEVICE_TYPE);
 		try {
-			if (deviceManagement.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
+			if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
 				response.setStatus(Response.Status.CONFLICT.getStatusCode());
 				return false;
 			}
-
 			Device device = new Device();
 			device.setDeviceIdentifier(deviceId);
 			EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
@@ -79,9 +71,9 @@ public class DigitalDisplayManagerService {
 			enrolmentInfo.setOwnership(EnrolmentInfo.OwnerShip.BYOD);
 			device.setName(name);
 			device.setType(DigitalDisplayConstants.DEVICE_TYPE);
-			enrolmentInfo.setOwner(owner);
+			enrolmentInfo.setOwner(APIUtil.getAuthenticatedUser());
 			device.setEnrolmentInfo(enrolmentInfo);
-			boolean added = deviceManagement.getDeviceManagementService().enrollDevice(device);
+			boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
 			if (added) {
 				response.setStatus(Response.Status.OK.getStatusCode());
 			} else {
@@ -92,22 +84,17 @@ public class DigitalDisplayManagerService {
 		} catch (DeviceManagementException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 			return false;
-		} finally {
-			deviceManagement.endTenantFlow();
 		}
 	}
 
-	@Path("manager/device/remove/{device_id}")
+	@Path("manager/device/{device_id}")
 	@DELETE
-	public void removeDevice(@PathParam("device_id") String deviceId,
-							 @Context HttpServletResponse response) {
-
-		DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
+	public void removeDevice(@PathParam("device_id") String deviceId, @Context HttpServletResponse response) {
 		DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
 		deviceIdentifier.setId(deviceId);
 		deviceIdentifier.setType(DigitalDisplayConstants.DEVICE_TYPE);
 		try {
-			boolean removed = deviceManagement.getDeviceManagementService().disenrollDevice(
+			boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(
 					deviceIdentifier);
 			if (removed) {
 				response.setStatus(Response.Status.OK.getStatusCode());
@@ -116,34 +103,24 @@ public class DigitalDisplayManagerService {
 			}
 		} catch (DeviceManagementException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		} finally {
-			deviceManagement.endTenantFlow();
 		}
 	}
 
-	@Path("manager/device/update/{device_id}")
-	@POST
+	@Path("manager/device/{device_id}")
+	@PUT
 	public boolean updateDevice(@PathParam("device_id") String deviceId,
 								@QueryParam("name") String name,
 								@Context HttpServletResponse response) {
-
-		DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
-
 		DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
 		deviceIdentifier.setId(deviceId);
 		deviceIdentifier.setType(DigitalDisplayConstants.DEVICE_TYPE);
 		try {
-			Device device = deviceManagement.getDeviceManagementService().getDevice(deviceIdentifier);
+			Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
 			device.setDeviceIdentifier(deviceId);
-
-			// device.setDeviceTypeId(deviceTypeId);
 			device.getEnrolmentInfo().setDateOfLastUpdate(new Date().getTime());
-
 			device.setName(name);
 			device.setType(DigitalDisplayConstants.DEVICE_TYPE);
-
-			boolean updated = deviceManagement.getDeviceManagementService().modifyEnrollment(device);
-
+			boolean updated = APIUtil.getDeviceManagementService().modifyEnrollment(device);
 			if (updated) {
 				response.setStatus(Response.Status.OK.getStatusCode());
 
@@ -154,8 +131,6 @@ public class DigitalDisplayManagerService {
 		} catch (DeviceManagementException e) {
 			log.error(e.getErrorMessage());
 			return false;
-		} finally {
-			deviceManagement.endTenantFlow();
 		}
 	}
 
@@ -164,37 +139,29 @@ public class DigitalDisplayManagerService {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Device getDevice(@PathParam("device_id") String deviceId) {
-
-		DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
 		DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
 		deviceIdentifier.setId(deviceId);
 		deviceIdentifier.setType(DigitalDisplayConstants.DEVICE_TYPE);
-
 		try {
-			return deviceManagement.getDeviceManagementService().getDevice(deviceIdentifier);
+			return APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
 		} catch (DeviceManagementException ex) {
 			log.error("Error occurred while retrieving device with Id " + deviceId + "\n" + ex);
 			return null;
-		} finally {
-			deviceManagement.endTenantFlow();
 		}
 	}
 
 	@Path("manager/device/{sketch_type}/download")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response downloadSketch(@QueryParam("owner") String owner,
-								   @QueryParam("deviceName") String deviceName,
+	public Response downloadSketch(@QueryParam("deviceName") String deviceName,
 								   @PathParam("sketch_type") String
 										   sketchType) {
-
 		try {
-			ZipArchive zipFile = createDownloadFile(owner, deviceName, sketchType);
+			ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
 			Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
 			response.type("application/zip");
 			response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
 			return response.build();
-
 		} catch (IllegalArgumentException ex) {
 			return Response.status(400).entity(ex.getMessage()).build();//bad request
 		} catch (DeviceManagementException ex) {
@@ -213,33 +180,25 @@ public class DigitalDisplayManagerService {
 		if (owner == null) {
 			throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
 		}
-
 		//create new device id
 		String deviceId = shortUUID();
-
 		KeyGenerationUtil.createApplicationKeys("digital_display");
-
 		TokenClient accessTokenClient = new TokenClient(DigitalDisplayConstants.DEVICE_TYPE);
 		AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
-
 		//create token
 		String accessToken = accessTokenInfo.getAccess_token();
 		String refreshToken = accessTokenInfo.getRefresh_token();
 		//adding registering data
-
 		boolean status;
-
 		//Register the device with CDMF
-		status = register(deviceId, deviceName, owner);
-
+		status = register(deviceId, deviceName);
 		if (!status) {
 			String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;
 			throw new DeviceManagementException(msg);
 		}
-
 		ZipUtil ziputil = new ZipUtil();
-		ZipArchive zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, deviceName, accessToken,
-				refreshToken);
+		ZipArchive zipFile = ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(), sketchType, deviceId,
+												   deviceName, accessToken, refreshToken);
 		zipFile.setDeviceId(deviceId);
 		return zipFile;
 	}

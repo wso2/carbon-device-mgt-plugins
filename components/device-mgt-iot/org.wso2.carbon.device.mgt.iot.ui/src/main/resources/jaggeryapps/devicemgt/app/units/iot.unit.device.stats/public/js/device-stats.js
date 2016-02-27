@@ -16,7 +16,6 @@
  * under the License.
  */
 
-var graph;
 var xAxis;
 
 var deviceType = $("#details").data("devicetype");
@@ -27,8 +26,8 @@ var appContext = $("#details").data("appcontext");
 var marker_1 = appContext + '/public/iot.unit.device.stats/images/map-marker-1.png';
 var marker_2 = appContext + '/public/iot.unit.device.stats/images/map-marker-2.png';
 
-var map;
-var mapPoints = [], mapPaths = [], mapMarkers = [];
+var map, mapPoints = [], mapPaths = [], mapMarkers = [];
+var palette = new Rickshaw.Color.Palette({scheme: 'classic9'});
 
 function initMap() {
     if ($('#map').length) {
@@ -48,10 +47,7 @@ function formatDates() {
 
 function getDateString(timeStamp) {
     var monthNames = [
-        "Jan", "Feb", "Mar",
-        "Apr", "May", "Jun", "Jul",
-        "Aug", "Sept", "Oct",
-        "Nov", "Dec"
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"
     ];
 
     var date = new Date(parseInt(timeStamp));
@@ -60,25 +56,24 @@ function getDateString(timeStamp) {
     if (monthIndex < 10) {
         monthIndex = "0" + monthIndex;
     }
-    var year = date.getFullYear();
 
+    var year = date.getFullYear();
     var hours = date.getHours();
     var amPm = hours < 12 ? "AM" : "PM";
+
     if (hours > 12) {
         hours -= 12;
     }
     if (hours == 0) {
         hours = 12;
     }
-    return day + '-'
-           + monthNames[monthIndex - 1] + '-'
-           + year + ' ' + hours + ':' + date.getMinutes() + amPm;
+
+    return day + '-' + monthNames[monthIndex - 1] + '-' + year + ' ' + hours + ':' +
+           date.getMinutes() + amPm;
 }
 
 $(window).on('resize', function () {
-    if (graph) {
-        location.reload(false);
-    }
+    location.reload(false);
 });
 
 $(document).ready(function () {
@@ -88,41 +83,97 @@ $(document).ready(function () {
 
 function updateGraphs() {
     var tv = 5000;
-
-    var fields = [];
+    var graphs = {};
     for (var op in monitor_operations) {
-        if (monitor_operations[op].name == 'gps') {
+        var op_name = monitor_operations[op].name;
+        if (op_name == 'gps') {
             $('#map').removeClass('hidden');
         } else {
-            fields.push({name: monitor_operations[op].name});
+            var x_label = '', y_label = '';
+            if (monitor_operations[op].ui_unit) {
+                var graph_data = monitor_operations[op].ui_unit.data;
+                for (var d in graph_data) {
+                    if (graph_data[d].hasOwnProperty("column")) {
+                        if (graph_data[d]["column"]["ui-mapping"] == 'x-axis') {
+                            x_label = graph_data[d]["column"]["label"];
+                        } else if (graph_data[d]["column"]["ui-mapping"] == 'y-axis') {
+                            y_label = graph_data[d]["column"]["label"];
+                        }
+                    }
+                }
+            }
+            var graph_html = '<div class="chartWrapper" id="chartWrapper-' + op_name + '">' +
+                             '<div id="y_axis-' + op_name + '" class="custom_y_axis">' + y_label + '</div>' +
+                             '<div class="legend_container">' +
+                             '<div id="smoother-' + op_name + '" title="Smoothing"></div>' +
+                             '<div id="legend-' + op_name + '"></div>' +
+                             '</div>' +
+                             '<div id="chart-' + op_name + '" class="custom_rickshaw_graph"></div>' +
+                             '<div class="custom_x_axis">' + x_label + '</div>' +
+                             '</div>';
+            $("#div-chart").append(graph_html);
+
+            var graph = new Rickshaw.Graph({
+                element: document.getElementById("chart-" + op_name),
+                width: $("#chartWrapper").width() - 50,
+                height: 300,
+                renderer: 'line',
+                padding: {top: 0.2, left: 0.0, right: 0.0, bottom: 0.2},
+                series: new Rickshaw.Series.FixedDuration([{name: monitor_operations[op].name}], undefined, {
+                    timeInterval: 10000,
+                    maxDataPoints: 20,
+                    color: palette.color(),
+                    timeBase: new Date().getTime() / 1000
+                })
+            });
+
+            graph.render();
+
+            xAxis = new Rickshaw.Graph.Axis.Time({
+                graph: graph
+            });
+
+            xAxis.render();
+
+            var y_ticks = new Rickshaw.Graph.Axis.Y({
+                graph: graph,
+                orientation: 'left',
+                height: 300,
+                tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+                element: document.getElementById('y_axis-' + op_name)
+            });
+
+            var legend = new Rickshaw.Graph.Legend({
+                graph: graph,
+                element: document.getElementById('legend-' + op_name)
+            });
+
+            var hoverDetail = new Rickshaw.Graph.HoverDetail({
+                graph: graph,
+                formatter: function (series, x, y) {
+                    var date = '<span class="date">' +
+                               moment(x * 1000).format('Do MMM YYYY h:mm:ss a') + '</span>';
+                    var swatch = '<span class="detail_swatch" style="background-color: ' +
+                                 series.color + '"></span>';
+                    return swatch + series.name + ": " + parseInt(y) + '<br>' + date;
+                }
+            });
+
+            graphs[op_name] = graph;
         }
     }
-
-    // instantiate our graph!
-    graph = new Rickshaw.Graph({
-        element: document.getElementById("chart"),
-        width: $("#chartWrapper").width() - 50,
-        height: 300,
-        renderer: 'line',
-        padding: {top: 0.2, left: 0.0, right: 0.0, bottom: 0.2},
-        series: new Rickshaw.Series.FixedDuration(fields, undefined, {
-            timeInterval: 10000,
-            maxDataPoints: 20,
-            timeBase: new Date().getTime() / 1000
-        })
-    });
 
     var iv = setInterval(function () {
 
         var getStatsRequest = $.ajax({
-            url: appContext + "/api/operations/" + deviceType + "/stats?deviceId=" + deviceId,
-            method: "get"
-        });
+                                         url: appContext + "/api/operations/" + deviceType +
+                                              "/stats?deviceId=" + deviceId,
+                                         method: "get"
+                                     });
 
         getStatsRequest.done(function (data) {
             var stats = data.data;
             var lastUpdate = -1;
-            var graphVals = {};
             for (var s in stats) {
                 var val = stats[s];
                 if (!val) {
@@ -170,12 +221,14 @@ function updateGraphs() {
                         mapPoints.splice(0, 1);
                     }
                 } else {
+                    var graphVals = {};
                     for (var key in val) {
                         graphVals[key] = val[key];
+                        graphs[key].series.addData(graphVals);
+                        graphs[key].render();
                     }
                 }
             }
-            graph.series.addData(graphVals);
 
             if (lastUpdate == -1) {
                 $('#last_seen').text("Not seen recently");
@@ -183,62 +236,15 @@ function updateGraphs() {
 
             var timeDiff = new Date().getTime() - lastUpdate;
             if (timeDiff < tv * 2) {
-                graph.render();
                 $('#last_seen').text("Last seen: A while ago");
             } else if (timeDiff < 60 * 1000) {
-                graph.render();
                 $('#last_seen').text("Last seen: Less than a minute ago");
             } else if (timeDiff < 60 * 60 * 1000) {
-                $('#last_seen').text("Last seen: " + Math.round(timeDiff / (60 * 1000)) + " minutes ago");
+                $('#last_seen').text("Last seen: " + Math.round(timeDiff / (60 * 1000))
+                                     + " minutes ago");
             } else {
                 $('#last_seen').text("Last seen: " + getDateString(lastUpdate));
             }
         });
-
-        //var data = {Temperature: Math.floor(Math.random() * (50 - 20) + 20)};
-        //
-        //graph.series.addData(data);
-        //graph.render();
-
     }, tv);
-
-    graph.render();
-
-    xAxis = new Rickshaw.Graph.Axis.Time({
-        graph: graph
-    });
-
-    xAxis.render();
-
-    var y_ticks = new Rickshaw.Graph.Axis.Y({
-        graph: graph,
-        orientation: 'left',
-        height: 300,
-        tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-        element: document.getElementById('y_axis')
-    });
-
-    var legend = new Rickshaw.Graph.Legend({
-        graph: graph,
-        element: document.getElementById('legend')
-    });
-
-    var hoverDetail = new Rickshaw.Graph.HoverDetail({
-        graph: graph
-    });
-
-    var shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
-        graph: graph,
-        legend: legend
-    });
-
-    var order = new Rickshaw.Graph.Behavior.Series.Order({
-        graph: graph,
-        legend: legend
-    });
-
-    var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
-        graph: graph,
-        legend: legend
-    });
 }

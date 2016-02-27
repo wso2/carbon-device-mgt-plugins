@@ -13,12 +13,10 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-
 	<servlet-mapping>
 		<servlet-name>CXFServlet</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
-
 	<context-param>
 		<param-name>isAdminService</param-name>
 		<param-value>false</param-value>
@@ -49,6 +47,4 @@
 		<param-name>managed-api-isSecured</param-name>
 		<param-value>true</param-value>
 	</context-param>
-
-
 </web-app>

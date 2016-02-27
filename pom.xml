@@ -368,7 +368,7 @@
             <!--IoT Server specific dependencies-->
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-                            <!--Common IoT Server Specific Impl $ API-->
+            <!--Common IoT Server Specific Impl $ API-->
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -384,7 +384,7 @@
             </dependency>
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-                            <!--Android sense DeviceType Impl, API and Agent-->
+            <!--Android sense DeviceType Impl, API and Agent-->
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -405,7 +405,7 @@
             </dependency>
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-                        <!--Arduino DeviceType Impl, API and Agent-->
+            <!--Arduino DeviceType Impl, API and Agent-->
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -431,7 +431,7 @@
                 <type>war</type>
             </dependency>
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-                        <!--Digital Display DeviceType Impl, API and Agent-->
+            <!--Digital Display DeviceType Impl, API and Agent-->
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -452,7 +452,7 @@
             </dependency>
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-                              <!--Drone DeviceType Impl, API and Agent-->
+            <!--Drone DeviceType Impl, API and Agent-->
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -475,7 +475,7 @@
             </dependency>
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-                            <!--RaspberryPi DeviceType Impl, API and Agent-->
+            <!--RaspberryPi DeviceType Impl, API and Agent-->
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -496,7 +496,7 @@
             </dependency>
 
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-                            <!--VirtualFireAlarm DeviceType Impl, API and Agent-->
+            <!--VirtualFireAlarm DeviceType Impl, API and Agent-->
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -648,11 +648,6 @@
                 <artifactId>jsr311-api</artifactId>
                 <version>${javax.ws.rs.version}</version>
                 <!--<scope>provided</scope>-->
-            </dependency>
-            <dependency>
-                <groupId>commons-codec</groupId>
-                <artifactId>commons-codec</artifactId>
-                <version>${commons-codec.version}</version>
             </dependency>
 
             <dependency>
@@ -1218,6 +1213,12 @@
                 <artifactId>gcm-server</artifactId>
                 <version>${gcm.server.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-codec.wso2</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${version.commons.codec}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -1265,7 +1266,7 @@
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Commons -->
-        <carbon.commons.version>4.4.8</carbon.commons.version>
+        <carbon.commons.version>4.4.9</carbon.commons.version>
 
         <!-- Carbon API Management -->
         <carbon.api.mgt.version>4.3.2-SNAPSHOT</carbon.api.mgt.version>
@@ -1305,10 +1306,10 @@
         <jetty.version>8.1.3.v20120416</jetty.version>
 
         <!--Carbon Analytics-->
-        <carbon.analytics.common.version>5.0.5</carbon.analytics.common.version>
-        <carbon.analytics.common.version.range>[5.0.5,6.0.0)</carbon.analytics.common.version.range>
-        <carbon.analytics.version>1.0.4</carbon.analytics.version>
-        <carbon.analytics.version.range>[1.0.4,2.0.0]</carbon.analytics.version.range>
+        <carbon.analytics.common.version>5.0.11-SNAPSHOT</carbon.analytics.common.version>
+        <carbon.analytics.common.version.range>[5.0.11,6.0.0)</carbon.analytics.common.version.range>
+        <carbon.analytics.version>1.0.6-SNAPSHOT</carbon.analytics.version>
+        <carbon.analytics.version.range>[1.0.6,2.0.0]</carbon.analytics.version.range>
 
         <!-- Third Party Dependencies-->
         <spongycastle.version>1.51.0.0</spongycastle.version>
@@ -1338,8 +1339,10 @@
         <httpclient.version>4.3.1.wso2v2</httpclient.version>
         <javaee-web-api.version>6.0</javaee-web-api.version>
 
-	<!-- Release plugin ID for github-->
-	<project.scm.id>github-scm</project.scm.id>
+        <!-- Release plugin ID for github-->
+        <project.scm.id>github-scm</project.scm.id>
+
+        <version.commons.codec>1.4.0.wso2v1</version.commons.codec>
     </properties>
 
     <scm>
@@ -1539,5 +1542,5 @@
             <name>GCM Server repository - GitHub</name>
             <url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
         </repository>
-	</repositories>
+    </repositories>
 </project>

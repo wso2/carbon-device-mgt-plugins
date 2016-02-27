@@ -23,20 +23,17 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
-import org.wso2.carbon.device.mgt.iot.DeviceManagement;
 import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
 import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
+import org.wso2.carbon.device.mgt.iot.droneanalyzer.manager.api.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
-import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.controller.DroneController;
-import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.controller.impl.DroneControllerImpl;
 import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -55,47 +52,36 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class DroneManagerService {
 
     private static org.apache.commons.logging.Log log = LogFactory.getLog(DroneManagerService.class);
-    private static final String SUPER_TENANT = "carbon.super";
     @Context  //injected response proxy supporting multiple thread
     private HttpServletResponse response;
-    private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
-    private DroneController droneController = new DroneControllerImpl();
-    /*	---------------------------------------------------------------------------------------
-                                Device management specific APIs
-             Also contains utility methods required for the execution of these APIs
-         ---------------------------------------------------------------------------------------	*/
+
     @Path("manager/device/register")
-    @PUT
-    public boolean register(@QueryParam("deviceId") String deviceId,
-                            @QueryParam("name") String name, @QueryParam("owner") String owner) {
-        DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
+    @POST
+    public boolean register(@QueryParam("deviceId") String deviceId, @QueryParam("name") String name) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
         try {
-            if (deviceManagement.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
+            if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
                 response.setStatus(Response.Status.CONFLICT.getStatusCode());
                 return false;
             }
             Device device = new Device();
             device.setDeviceIdentifier(deviceId);
             EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
-
             enrolmentInfo.setDateOfEnrolment(new Date().getTime());
             enrolmentInfo.setDateOfLastUpdate(new Date().getTime());
             enrolmentInfo.setStatus(EnrolmentInfo.Status.ACTIVE);
             enrolmentInfo.setOwnership(EnrolmentInfo.OwnerShip.BYOD);
-
             device.setName(name);
             device.setType(DroneConstants.DEVICE_TYPE);
-            enrolmentInfo.setOwner(owner);
+            enrolmentInfo.setOwner(APIUtil.getAuthenticatedUser());
             device.setEnrolmentInfo(enrolmentInfo);
-            boolean added = deviceManagement.getDeviceManagementService().enrollDevice(device);
+            boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
             if (added) {
                 response.setStatus(Response.Status.OK.getStatusCode());
             } else {
@@ -105,51 +91,43 @@ public class DroneManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
-        } finally {
-            deviceManagement.endTenantFlow();
         }
     }
 
-    @Path("manager/device/remove/{device_id}")
+    @Path("manager/device/{device_id}")
     @DELETE
     public void removeDevice(@PathParam("device_id") String deviceId, @Context HttpServletResponse response) {
-        DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
         try {
-            boolean removed = deviceManagement.getDeviceManagementService().disenrollDevice(
+            boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(
                     deviceIdentifier);
             if (removed) {
                 response.setStatus(Response.Status.OK.getStatusCode());
-
             } else {
                 response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
 
             }
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        } finally {
-            deviceManagement.endTenantFlow();
         }
-
     }
 
-    @Path("manager/device/update/{device_id}")
-    @POST
+    @Path("manager/device/{device_id}")
+    @PUT
     public boolean updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name,
                                 @Context HttpServletResponse response) {
-        DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
         try {
-            Device device = deviceManagement.getDeviceManagementService().getDevice(deviceIdentifier);
+            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
             device.setDeviceIdentifier(deviceId);
             device.getEnrolmentInfo().setDateOfLastUpdate(new Date().getTime());
             device.setName(name);
             device.setType(DroneConstants.DEVICE_TYPE);
-            boolean updated = deviceManagement.getDeviceManagementService().modifyEnrollment(device);
+            boolean updated = APIUtil.getDeviceManagementService().modifyEnrollment(device);
             if (updated) {
                 response.setStatus(Response.Status.OK.getStatusCode());
             } else {
@@ -159,8 +137,6 @@ public class DroneManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
-        } finally {
-            deviceManagement.endTenantFlow();
         }
     }
 
@@ -169,29 +145,24 @@ public class DroneManagerService {
     @Consumes("application/json")
     @Produces("application/json")
     public Device getDevice(@PathParam("device_id") String deviceId) {
-        DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
         try {
-            return deviceManagement.getDeviceManagementService().getDevice(deviceIdentifier);
-
+            return APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return null;
-        } finally {
-            deviceManagement.endTenantFlow();
         }
     }
 
-    @Path("manager/devices/{username}")
+    @Path("manager/devices")
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    public Device[] getDroneDevices(@PathParam("username") String username) {
-        DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
+    public Device[] getDroneDevices() {
         try {
-            List<Device> userDevices = deviceManagement.getDeviceManagementService().getDevicesOfUser(username);
+            List<Device> userDevices = APIUtil.getDeviceManagementService().getDevicesOfUser(APIUtil.getAuthenticatedUser());
             ArrayList<Device> userDevicesforDrone = new ArrayList<>();
             for (Device device : userDevices) {
                 if (device.getType().equals(DroneConstants.DEVICE_TYPE) &&
@@ -204,8 +175,6 @@ public class DroneManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return null;
-        } finally {
-            deviceManagement.endTenantFlow();
         }
     }
 
@@ -214,29 +183,26 @@ public class DroneManagerService {
     @Path("manager/device/{sketch_type}/download")
     @GET
     @Produces("application/octet-stream")
-    public Response downloadSketch(@QueryParam("owner") String owner, @QueryParam("deviceName") String deviceName,
+    public Response downloadSketch(@QueryParam("deviceName") String deviceName,
                                    @PathParam("sketch_type") String sketchType) {
-        if (owner == null) {
-            return Response.status(400).build();//bad request
-        }
         //create new device id
         String deviceId = shortUUID();
         //create token
         String token = UUID.randomUUID().toString();
         String refreshToken = UUID.randomUUID().toString();
         //adding registering data
-        boolean status = register(deviceId, deviceName, owner);
+        boolean status = register(deviceId, deviceName);
         if (!status) {
             return Response.status(500).entity(
                     "Error occurred while registering the device with " + "id: " + deviceId
-                            + " owner:" + owner).build();
+                            + " owner:" + APIUtil.getAuthenticatedUser()).build();
 
         }
         ZipUtil ziputil = new ZipUtil();
         ZipArchive zipFile;
         try {
-            zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, deviceName, token,
-                                            refreshToken);
+            zipFile = ziputil.createZipFile(APIUtil.getAuthenticatedUser(), APIUtil.getTenantDomainOftheUser(),
+                                            sketchType, deviceId, deviceName, token, refreshToken);
         } catch (DeviceManagementException ex) {
             return Response.status(500).entity("Error occurred while creating zip file").build();
         }
@@ -247,11 +213,10 @@ public class DroneManagerService {
 
     @Path("manager/device/{sketch_type}/generate_link")
     @GET
-    public Response generateSketchLink(@QueryParam("owner") String owner,
-                                       @QueryParam("deviceName") String deviceName,
+    public Response generateSketchLink(@QueryParam("deviceName") String deviceName,
                                        @PathParam("sketch_type") String sketchType) {
         try {
-            ZipArchive zipFile = createDownloadFile(owner, deviceName, sketchType);
+            ZipArchive zipFile = createDownloadFile(deviceName, sketchType);
             Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
             return rb.build();
         } catch (IllegalArgumentException ex) {
@@ -265,22 +230,19 @@ public class DroneManagerService {
         }
     }
 
-    private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
+    private ZipArchive createDownloadFile(String deviceName, String sketchType)
             throws DeviceManagementException, AccessTokenException, DeviceControllerException {
-        if (owner == null) {
-            throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
-        }
         KeyGenerationUtil.createApplicationKeys("drone");
         //create new device id
         String deviceId = shortUUID();
         TokenClient accessTokenClient = new TokenClient(DroneConstants.DEVICE_TYPE);
-        AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
+        AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(APIUtil.getAuthenticatedUser(), deviceId);
         //create token
         String accessToken = accessTokenInfo.getAccess_token();
         String refreshToken = accessTokenInfo.getRefresh_token();
         //adding registering data
         XmppAccount newXmppAccount = new XmppAccount();
-        newXmppAccount.setAccountName(owner + "_" + deviceId);
+        newXmppAccount.setAccountName(APIUtil.getAuthenticatedUser() + "_" + deviceId);
         newXmppAccount.setUsername(deviceId);
         newXmppAccount.setPassword(accessToken);
         newXmppAccount.setEmail(deviceId + "@wso2.com");
@@ -292,7 +254,7 @@ public class DroneManagerService {
             if (!status) {
                 String msg =
                         "XMPP Account was not created for device - " + deviceId + " of owner - " +
-                                owner +
+                                APIUtil.getAuthenticatedUser() +
                                 ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot" +
                                 ".common.config.server.configs";
                 log.warn(msg);
@@ -300,15 +262,15 @@ public class DroneManagerService {
             }
         }
         //Register the device with CDMF
-        status = register(deviceId, deviceName, owner);
+        status = register(deviceId, deviceName);
         if (!status) {
             String msg = "Error occurred while registering the device with " + "id: " + deviceId
-                    + " owner:" + owner;
+                    + " owner:" + APIUtil.getAuthenticatedUser();
             throw new DeviceManagementException(msg);
         }
         ZipUtil ziputil = new ZipUtil();
-        ZipArchive zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, deviceName,
-                                                   accessToken, refreshToken);
+        ZipArchive zipFile = ziputil.createZipFile(APIUtil.getAuthenticatedUser(), APIUtil.getTenantDomainOftheUser(),
+                                                   sketchType, deviceId, deviceName, accessToken, refreshToken);
         zipFile.setDeviceId(deviceId);
         return zipFile;
     }

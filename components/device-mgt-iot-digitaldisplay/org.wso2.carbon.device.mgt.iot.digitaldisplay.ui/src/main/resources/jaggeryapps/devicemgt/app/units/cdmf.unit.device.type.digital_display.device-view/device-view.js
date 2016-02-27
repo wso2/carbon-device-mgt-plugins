@@ -31,8 +31,10 @@ function onRequest(context) {
         var device = deviceModule.viewDevice(deviceType, deviceId);
 
         if (device && device.status != "error") {
-            log.info(device);
-            return {"device": device, "port" : port, "host" : host , "sessionId" : sessionId};
+            return {"device": device};
+        } else {
+            response.sendError(404, "Device Id " + deviceId + "of type " + deviceType + " cannot be found!");
+            exit();
         }
     }
 }

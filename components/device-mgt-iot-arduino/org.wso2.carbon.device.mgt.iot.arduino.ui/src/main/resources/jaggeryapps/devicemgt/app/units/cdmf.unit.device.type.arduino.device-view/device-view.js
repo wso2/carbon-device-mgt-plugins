@@ -25,7 +25,7 @@ function onRequest(context) {
         var deviceModule = require("/app/modules/device.js").deviceModule;
         var device = deviceModule.viewDevice(deviceType, deviceId);
 
-        if (device) {
+        if (device && device.status != "error") {
             var viewModel = {};
             var deviceInfo = device.properties.DEVICE_INFO;
             if (deviceInfo != undefined && String(deviceInfo.toString()).length > 0) {
@@ -35,9 +35,10 @@ function onRequest(context) {
                 viewModel.vendor = device.properties.VENDOR;
             }
             device.viewModel = viewModel;
+            return {"device": device};
+        } else {
+            response.sendError(404, "Device Id " + deviceId + "of type " + deviceType + " cannot be found!");
+            exit();
         }
-        context.device = device;
-
-        return context;
     }
 }
