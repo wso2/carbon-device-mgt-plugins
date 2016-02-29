@@ -344,7 +344,7 @@ public class VirtualFireAlarmServiceUtils {
         } catch (VirtualFireAlarmException e) {
             String errorMsg = "Could not retrieve CertificateManagementService from the runtime.";
             if(log.isDebugEnabled()){
-                log.error(errorMsg);
+                log.debug(errorMsg);
             }
             throw new VirtualFireAlarmException(errorMsg, e);
         } catch (KeystoreException e) {
@@ -352,14 +352,14 @@ public class VirtualFireAlarmServiceUtils {
             if (e.getMessage().contains("NULL_CERT")) {
                 errorMsg = "The Device-View page might have been accessed prior to the device being started.";
                 if(log.isDebugEnabled()){
-                    log.error(errorMsg);
+                    log.debug(errorMsg);
                 }
                 throw new VirtualFireAlarmException(errorMsg, e);
             } else {
                 errorMsg = "An error occurred whilst trying to retrieve certificate for deviceId [" + deviceId +
                         "] with alias: [" + alias + "]";
                 if(log.isDebugEnabled()){
-                    log.error(errorMsg);
+                    log.debug(errorMsg);
                 }
                 throw new VirtualFireAlarmException(errorMsg, e);
             }
