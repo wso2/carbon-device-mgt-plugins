@@ -73,7 +73,7 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
      */
     private VirtualFireAlarmMQTTConnector() {
         super(iotServerSubscriber, VirtualFireAlarmConstants.DEVICE_TYPE,
-              MqttConfig.getInstance().getMqttQueueEndpoint(), subscribeTopic);
+                MqttConfig.getInstance().getMqttQueueEndpoint(), subscribeTopic);
     }
 
     /**
@@ -143,8 +143,8 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 
                 // the MQTT-messages from VirtualFireAlarm devices are in the form {"Msg":<MESSAGE>, "Sig":<SIGNATURE>}
                 actualMessage = VirtualFireAlarmServiceUtils.extractMessageFromPayload(mqttMessage.toString(),
-                                                                                       serverPrivateKey,
-                                                                                       clientPublicKey);
+                        serverPrivateKey,
+                        clientPublicKey);
                 if (log.isDebugEnabled()) {
                     log.debug("MQTT: Received Message [" + actualMessage + "] topic: [" + topic + "]");
                 }
@@ -163,8 +163,8 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
                 } else if (actualMessage.contains("TEMPERATURE")) {
                     String temperatureValue = actualMessage.split(":")[1];
                     SensorDataManager.getInstance().setSensorRecord(deviceId, VirtualFireAlarmConstants.SENSOR_TEMP,
-                                                                    temperatureValue,
-                                                                    Calendar.getInstance().getTimeInMillis());
+                            temperatureValue,
+                            Calendar.getInstance().getTimeInMillis());
                 }
             } catch (VirtualFireAlarmException e) {
                 String errorMsg =
@@ -207,8 +207,8 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 
             String actualMessage = resource + ":" + state;
             String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage,
-                                                                                    devicePublicKey,
-                                                                                    serverPrivateKey);
+                    devicePublicKey,
+                    serverPrivateKey);
 
             pushMessage.setPayload(encryptedMsg.getBytes(StandardCharsets.UTF_8));
             pushMessage.setQos(DEFAULT_MQTT_QUALITY_OF_SERVICE);
@@ -221,6 +221,7 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
                     "[" + deviceOwner + "].";
             log.error(errorMsg);
             throw new TransportHandlerException(errorMsg, e);
+
         }
     }
 
@@ -239,14 +240,14 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
                     } catch (MqttException e) {
                         if (log.isDebugEnabled()) {
                             log.warn("Unable to 'STOP' MQTT connection at broker at: " + mqttBrokerEndPoint
-                                             + " for device-type - " + VirtualFireAlarmConstants.DEVICE_TYPE, e);
+                                    + " for device-type - " + VirtualFireAlarmConstants.DEVICE_TYPE, e);
                         }
 
                         try {
                             Thread.sleep(timeoutInterval);
                         } catch (InterruptedException e1) {
                             log.error("MQTT-Terminator: Thread Sleep Interrupt Exception at device-type - " +
-                                              VirtualFireAlarmConstants.DEVICE_TYPE, e1);
+                                    VirtualFireAlarmConstants.DEVICE_TYPE, e1);
                         }
                     }
                 }
