@@ -57,6 +57,10 @@
                     <br/>
 
                     <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
+                        <div id="invalid-username-error-msg" class="alert alert-danger hidden"
+                             role="alert">
+                            <i class="icon fw fw-error"></i><span></span>
+                        </div>
                         <div class="control-group">
                             <div class="controls">
                                 <input class="new-device-name" style="color:#3f3f3f;padding:5px"
@@ -80,7 +84,15 @@
             </div>
         </div>
     </div>
-
+    <div id="device-agent-downloading-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>Device Agent will downloading shortly.</h3>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="device-400-content" class="hide">
         <div class="modal-content">
             <div class="row">
