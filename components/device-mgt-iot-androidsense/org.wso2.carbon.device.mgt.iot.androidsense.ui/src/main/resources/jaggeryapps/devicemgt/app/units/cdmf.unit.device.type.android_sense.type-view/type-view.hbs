@@ -17,7 +17,7 @@
     <h3 class="uppercase">What it Does</h3>
     <hr>
     <p class="grey margin-top">Connect an Android device to WSO2 IoT Server and visualize sensor
-                               data.</p>
+        data.</p>
     <br>
 
     <h3 class="uppercase">What You Need</h3>
@@ -25,19 +25,19 @@
     <p class="grey margin-top">You should have an Android Device to get started.</p>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">STEP 01</span>&nbsp;&nbsp;&nbsp;Go ahead and click [Enroll
-                                                                          Device].
+            Device].
         </li>
         <li class="padding-top-double"><span class="circle">STEP 02</span>&nbsp;&nbsp;&nbsp;You can either scan the QR
-                                                                          code or directly download
-                                                                          Android agent.
+            code or directly download
+            Android agent.
         </li>
         <li class="padding-top-double"><span class="circle">STEP 03</span>&nbsp;&nbsp;&nbsp;Install
-                                                                          Android agent into
-                                                                          your Android Device.
+            Android agent into
+            your Android Device.
         </li>
         <li class="padding-top-double"><span class="circle">STEP 04</span>&nbsp;&nbsp;&nbsp;Proceed
-                                                                          to [Prepare]
-                                                                          section.
+            to [Prepare]
+            section.
     </ul>
     <br>
 
@@ -155,41 +155,41 @@
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Connect
-                                                                     Android device to network.
+            Android device to network.
         </li>
         <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Start Android
-                                                                     Sense app in
-                                                                     your device.
+            Sense app in
+            your device.
         </li>
         <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Fill login
-                                                                     form with the
-                                                                     credentials.
+            form with the
+            credentials.
             <i>(Use server URL as [&nbsp;https://&lt;WSO2_IoT_SERVER_HOST&gt;:&lt;HTTPS_SERVER_PORT&gt;&nbsp;]
-               and click on
+                and click on
                 <strong>Register Device</strong> button.)</i>
         </li>
         <li>
-        <a href="{{@unit.publicUri}}/images/registerView.png" target="_blank"
-           class="padding-top-double">
-            <img src="{{@unit.publicUri}}/images/registerView.png" class="img-responsive">
-        </a>
+            <a href="{{@unit.publicUri}}/images/registerView.png" target="_blank"
+               class="padding-top-double">
+                <img src="{{@unit.publicUri}}/images/registerView.png" class="img-responsive">
+            </a>
         </li>
 
         <li class="padding-top-double"><span class="circle">04</span>&nbsp;&nbsp;&nbsp;Once the
-                                                                     device is enrolled,
-                                                                     click on <strong>[+]</strong>
-                                                                     button to select
-                                                                     the sensors.
+            device is enrolled,
+            click on <strong>[+]</strong>
+            button to select
+            the sensors.
             <a href="{{@unit.publicUri}}/images/selectSensorView.png" target="_blank"
                class="padding-top-double">
                 <img src="{{@unit.publicUri}}/images/selectSensorView.png" class="img-responsive">
             </a>
         </li>
         <li class="padding-top-double"><span class="circle">05</span>&nbsp;&nbsp;&nbsp;Click on <i>[Publish
-                                                                                                   data]</i>
-                                                                     button
-                                                                     to publish sensor readings to
-                                                                     IoT server.
+            data]</i>
+            button
+            to publish sensor readings to
+            IoT server.
             <a href="{{@unit.publicUri}}/images/publishDataView.png" target="_blank"
                class="padding-top-double">
                 <img src="{{@unit.publicUri}}/images/publishDataView.png" class="img-responsive">
@@ -210,7 +210,7 @@
             </span>
             &nbsp;&nbsp;&nbsp;You can view all your connected devices <a
                 href="{{@app.context}}/devices">[Device
-                                                                                                              Management]</a>
+            Management]</a>
             page.
         </li>
         <li class="padding-top-double">
@@ -226,7 +226,7 @@
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>&nbsp;&nbsp;&nbsp;For historical analytics of sensor data navigate to device
-                   analytics page.
+            analytics page.
         </li>
     </ul>
     <br/>
@@ -266,6 +266,15 @@
                         <a class="btn btn-operations" onclick="downloadAgent()">Download Now</a>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+    <div id="device-agent-downloading-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>Device Agent will downloading shortly.</h3>
+                </div>
             </div>
         </div>
     </div>

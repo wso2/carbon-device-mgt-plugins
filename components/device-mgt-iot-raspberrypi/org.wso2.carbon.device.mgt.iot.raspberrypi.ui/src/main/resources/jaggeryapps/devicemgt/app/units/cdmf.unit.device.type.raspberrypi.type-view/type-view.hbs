@@ -23,21 +23,21 @@
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">ITEM 01</span>&nbsp;&nbsp;&nbsp;Raspberry
-                                                                          Pi with SD Card(Internet
-                                                                          Enabled [Wifi or Ethernet]).
+            Pi with SD Card(Internet
+            Enabled [Wifi or Ethernet]).
         </li>
         <li class="padding-top-double"><span class="circle">ITEM 02</span>&nbsp;&nbsp;&nbsp;Adafruit DHT11 Temperature
-                                                                          Sensor.
+            Sensor.
         </li>
         <li class="padding-top-double"><span class="circle">ITEM 03</span>&nbsp;&nbsp;&nbsp;LED
-                                                                          Bulb.
+            Bulb.
         </li>
         <li class="padding-top-double"><span class="circle">ITEM 04</span>&nbsp;&nbsp;&nbsp;Resister
-                                                                          (eg
+            (eg
             : 470 ohm).
         </li>
         <li class="padding-top-double"><span class="circle">STEP 05</span>&nbsp;&nbsp;&nbsp;Proceed
-                                                                          to [Prepare]
+            to [Prepare]
             section.
     </ul>
     <br>
@@ -54,6 +54,10 @@
                     <br/>
 
                     <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
+                        <div id="invalid-username-error-msg" class="alert alert-danger hidden"
+                             role="alert">
+                            <i class="icon fw fw-error"></i><span></span>
+                        </div>
                         <div class="control-group">
                             <div class="controls">
                                 <input class="new-device-name" style="color:#3f3f3f;padding:5px"
@@ -76,6 +80,16 @@
                             &nbsp;&nbsp;
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="device-agent-downloading-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>Device Agent will downloading shortly.</h3>
                 </div>
             </div>
         </div>
@@ -173,29 +187,29 @@
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Connect
-                                                                     RaspberryPi, DHT11 Temperature
-                                                                     sensor and LED as per the
-                                                                     schematic below.
+            RaspberryPi, DHT11 Temperature
+            sensor and LED as per the
+            schematic below.
         </li>
         <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Ensure your
-                                                                     RaspberryPi
-                                                                     Board can connect to Internet.
+            RaspberryPi
+            Board can connect to Internet.
         </li>
         <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Download
-                                                                     RaspberryPi Agent
-                                                                     via [Download Agent] button above.
-                                                                     (Alternatively you can use the
-                                                                     "curl" command to directly
-                                                                     download the Agent to your
-                                                                     RaspberryPi.)
+            RaspberryPi Agent
+            via [Download Agent] button above.
+            (Alternatively you can use the
+            "curl" command to directly
+            download the Agent to your
+            RaspberryPi.)
         </li>
         <li class="padding-top-double"><span class="circle">04</span>&nbsp;&nbsp;&nbsp;Copy
-                                                                     downloaded Agent into
-                                                                     your RaspberryPi.
+            downloaded Agent into
+            your RaspberryPi.
         </li>
         <li class="padding-top-double"><span class="circle">05</span>&nbsp;&nbsp;&nbsp;Unzip the downloaded Agent and
-                                                                     start terminal to run below
-                                                                     commands.
+            start terminal to run below
+            commands.
         </li>
 
 
@@ -241,23 +255,23 @@
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can view
-                                                                     all your connected
-                                                                     devices at <a
+            all your connected
+            devices at <a
                     href="{{@app.context}}/devices">[Device
-                                                    Management]</a>
-                                                                     page.
+                Management]</a>
+            page.
         </li>
         <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Select one of
-                                                                     connected devices and check for
-                                                                     available
-                                                                     control operations and monitor
-                                                                     Real-Time data.
+            connected devices and check for
+            available
+            control operations and monitor
+            Real-Time data.
         </li>
         <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can also
-                                                                     view analytics of
-                                                                     the data published to
-                                                                     IoT-Server by navigating
-                                                                     to Device Analytics page.
+            view analytics of
+            the data published to
+            IoT-Server by navigating
+            to Device Analytics page.
         </li>
     </ul>
     <br/>
@@ -315,6 +329,7 @@
         .grey-bg {
             background-color: #f6f4f4;
         }
+
         .doc-link {
             background: #11375B;
             padding: 20px;

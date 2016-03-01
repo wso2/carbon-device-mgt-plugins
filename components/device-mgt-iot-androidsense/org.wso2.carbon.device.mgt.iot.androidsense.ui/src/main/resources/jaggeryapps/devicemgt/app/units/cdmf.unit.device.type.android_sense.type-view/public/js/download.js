@@ -56,12 +56,12 @@ function showPopup() {
             deviceType = this.value;
         }
     });
-    if (deviceType == 'virtual_firealarm'){
+    if (deviceType == 'virtual_firealarm') {
         $('.sketchType').remove();
         $('input[name="sketchType"][value="virtual_firealarm"]').prop('checked', true);
         $("label[for='virtual_firealarm']").text("Simple Agent");
         $("label[for='virtual_firealarm_advanced']").text("Advanced Agent");
-    }else{
+    } else {
         $('.sketchTypes').remove();
     }
 }
@@ -116,7 +116,7 @@ function attachEvents() {
                         doAction(data);
                     }
                 );
-            }else if(deviceName){
+            } else if (deviceName) {
                 $('.controls').append('<label for="deviceName" generated="true" class="error" style="display: inline-block;">Please enter at least 4 characters.</label>');
                 $('.control-group').removeClass('success').addClass('error');
             } else {
@@ -134,7 +134,15 @@ function attachEvents() {
 
 //Device owner removed.
 function downloadAgent() {
+
     $('#downloadForm').submit();
+    hidePopup();
+    $(modalPopupContent).html($('#device-agent-downloading-content').html());
+    showPopup();
+    setTimeout(function () {
+        hidePopup();
+    }, 1000);
+
 
 }
 
