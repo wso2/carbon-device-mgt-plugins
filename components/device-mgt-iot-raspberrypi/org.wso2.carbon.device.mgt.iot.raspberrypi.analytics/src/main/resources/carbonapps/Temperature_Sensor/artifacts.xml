@@ -18,7 +18,7 @@
   -->
 
 <artifacts>
-    <artifact name="IoTServer_Sensors_CAPP" version="1.0.0" type="carbon/application">        
+    <artifact name="Temperature_Sensor_CAPP" version="1.0.0" type="carbon/application">
 
 		<dependency artifact="Eventstream_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
 		<dependency artifact="Eventstore_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
