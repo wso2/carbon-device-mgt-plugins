@@ -94,6 +94,7 @@ public class ZipUtil {
 
         Map<String, String> contextParams = new HashMap<>();
         contextParams.put("SERVER_NAME", serverName);
+        contextParams.put("SERVER_IP", iotServerIP);
 		contextParams.put("DEVICE_OWNER", owner);
 		contextParams.put("DEVICE_ID", deviceId);
 		contextParams.put("DEVICE_NAME", deviceName);
