@@ -36,20 +36,20 @@ function showPopup() {
     $(modalPopup).show();
     setPopupMaxHeight();
     $('#downloadForm').validate({
-                                    rules: {
-                                        deviceName: {
-                                            minlength: 4,
-                                            required: true
-                                        }
-                                    },
-                                    highlight: function (element) {
-                                        $(element).closest('.control-group').removeClass('success').addClass('error');
-                                    },
-                                    success: function (element) {
-                                        $(element).closest('.control-group').removeClass('error').addClass('success');
-                                        $('label[for=deviceName]').remove();
-                                    }
-                                });
+        rules: {
+            deviceName: {
+                minlength: 4,
+                required: true
+            }
+        },
+        highlight: function (element) {
+            $(element).closest('.control-group').removeClass('success').addClass('error');
+        },
+        success: function (element) {
+            $(element).closest('.control-group').removeClass('error').addClass('success');
+            $('label[for=deviceName]').remove();
+        }
+    });
     var deviceType = "";
     $('.deviceType').each(function () {
         if (this.value != "") {
@@ -107,20 +107,24 @@ function attachEvents() {
             if (deviceName && deviceName.length >= 4) {
                 payload.deviceName = deviceName;
                 invokerUtil.post(
-                        downloadDeviceAPI,
-                        payload,
-                        function (data, textStatus, jqxhr) {
-                            doAction(data);
-                        },
-                        function (data) {
-                            doAction(data);
-                        }
+                    downloadDeviceAPI,
+                    payload,
+                    function (data, textStatus, jqxhr) {
+                        doAction(data);
+                    },
+                    function (data) {
+                        doAction(data);
+                    }
                 );
             } else if (deviceName) {
-                $('.controls').append('<label for="deviceName" generated="true" class="error" style="display: inline-block;">Please enter at least 4 characters.</label>');
+                $('.controls').append('<label for="deviceName" generated="true" class="error" ' +
+                                      'style="display: inline-block;">Please enter at least 4' +
+                                      ' characters.</label>');
                 $('.control-group').removeClass('success').addClass('error');
             } else {
-                $('.controls').append('<label for="deviceName" generated="true" class="error" style="display: inline-block;">This field is required.</label>');
+                $('.controls').append('<label for="deviceName" generated="true" class="error" ' +
+                                      'style="display: inline-block;">This field is required.' +
+                                      '</label>');
                 $('.control-group').removeClass('success').addClass('error');
             }
         });
@@ -134,7 +138,6 @@ function attachEvents() {
 
 //Device owner removed.
 function downloadAgent() {
-
     $('#downloadForm').submit();
     hidePopup();
     $(modalPopupContent).html($('#device-agent-downloading-content').html());
@@ -142,8 +145,6 @@ function downloadAgent() {
     setTimeout(function () {
         hidePopup();
     }, 1000);
-
-
 }
 
 function doAction(data) {
@@ -151,7 +152,6 @@ function doAction(data) {
     if (data.status == null) {
         document.write(data);
     }
-
     if (data.status == "200") {
         $(modalPopupContent).html($('#download-device-modal-content-links').html());
         $("input#download-device-url").val(data.responseText);
