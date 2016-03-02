@@ -109,10 +109,14 @@ function attachEvents() {
                     }
                 );
             }else if(deviceName){
-                $('.controls').append('<label for="deviceName" generated="true" class="error" style="display: inline-block;">Please enter at least 4 characters.</label>');
+                $('.controls').append('<label for="deviceName" generated="true" class="error" ' +
+                                      'style="display: inline-block;">Please enter at least 4 ' +
+                                      'characters.</label>');
                 $('.control-group').removeClass('success').addClass('error');
             } else {
-                $('.controls').append('<label for="deviceName" generated="true" class="error" style="display: inline-block;">This field is required.</label>');
+                $('.controls').append('<label for="deviceName" generated="true" class="error" ' +
+                                      'style="display: inline-block;">This field is required.' +
+                                      '</label>');
                 $('.control-group').removeClass('success').addClass('error');
             }
         });
@@ -120,7 +124,6 @@ function attachEvents() {
         $("a#download-device-cancel-link").click(function () {
             hidePopup();
         });
-
     });
 }
 
