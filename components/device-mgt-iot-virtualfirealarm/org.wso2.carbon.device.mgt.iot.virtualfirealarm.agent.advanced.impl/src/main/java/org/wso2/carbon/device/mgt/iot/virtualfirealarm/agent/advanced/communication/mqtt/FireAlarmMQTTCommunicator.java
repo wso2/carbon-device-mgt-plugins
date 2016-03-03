@@ -117,7 +117,10 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
         String securePayLoad;
 
         try {
-            receivedMessage = AgentUtilOperations.extractMessageFromPayload(message.toString());
+            receivedMessage = message.toString();
+            if(!receivedMessage.contains("POLICY")){
+                receivedMessage = AgentUtilOperations.extractMessageFromPayload(receivedMessage);
+            }
             log.info(AgentConstants.LOG_APPENDER + "Message [" + receivedMessage + "] was received");
         } catch (AgentCoreOperationException e) {
             log.warn(AgentConstants.LOG_APPENDER + "Could not extract message from payload.", e);
