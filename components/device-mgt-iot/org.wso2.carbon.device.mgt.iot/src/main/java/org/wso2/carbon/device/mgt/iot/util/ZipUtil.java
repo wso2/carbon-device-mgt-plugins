@@ -31,31 +31,30 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class ZipUtil {
 
-	private static final String HTTPS_PORT_PROPERTY = "httpsPort";
-	private static final String HTTP_PORT_PROPERTY = "httpPort";
+    private static final String HTTPS_PORT_PROPERTY = "httpsPort";
+    private static final String HTTP_PORT_PROPERTY = "httpPort";
 
-	private static final String LOCALHOST = "localhost";
-	private static final String HTTPS_PROTOCOL_APPENDER = "https://";
-	private static final String HTTP_PROTOCOL_APPENDER = "http://";
+    private static final String LOCALHOST = "localhost";
+    private static final String HTTPS_PROTOCOL_APPENDER = "https://";
+    private static final String HTTP_PROTOCOL_APPENDER = "http://";
 
-	public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
-	                                String deviceId, String deviceName, String token,
-	                                String refreshToken)
-			throws DeviceManagementException {
+    public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
+                                    String deviceId, String deviceName, String token,
+                                    String refreshToken)
+            throws DeviceManagementException {
 
-		if (owner == null || deviceType == null) {
-			throw new DeviceManagementException("Invalid parameters for `owner` or `deviceType`");
-		}
+        if (owner == null || deviceType == null) {
+            throw new DeviceManagementException("Invalid parameters for `owner` or `deviceType`");
+        }
 
-		String sep = File.separator;
-		String sketchFolder = "repository" + sep + "resources" + sep + "sketches";
-		String archivesPath = CarbonUtils.getCarbonHome() + sep + sketchFolder + sep + "archives" + sep + deviceId;
-		String templateSketchPath = sketchFolder + sep + deviceType;
+        String sep = File.separator;
+        String sketchFolder = "repository" + sep + "resources" + sep + "sketches";
+        String archivesPath = CarbonUtils.getCarbonHome() + sep + sketchFolder + sep + "archives" + sep + deviceId;
+        String templateSketchPath = sketchFolder + sep + deviceType;
 
-		String serverName = DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
+        String serverName = DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
         String iotServerIP;
         try {
             iotServerIP = IoTUtil.getHostName();
@@ -65,54 +64,54 @@ public class ZipUtil {
         String httpsServerPort = System.getProperty(HTTPS_PORT_PROPERTY);
         String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
 
-		String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
-		String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
+        String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
+        String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
 
-		String apimHost =
-				DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
-						.getServerURL();
+        String apimHost =
+                DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
+                        .getServerURL();
 
-		String apimGatewayPort =
-				DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
-						.getGatewayPort();
+        String apimGatewayPort =
+                DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
+                        .getGatewayPort();
 
-		String apimEndpoint = apimHost + ":" + apimGatewayPort;
-		String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
+        String apimEndpoint = apimHost + ":" + apimGatewayPort;
+        String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
 
-		if (mqttEndpoint.contains(LOCALHOST)) {
-			mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
-		}
+        if (mqttEndpoint.contains(LOCALHOST)) {
+            mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
+        }
 
-		String xmppEndpoint = XmppConfig.getInstance().getXmppEndpoint();
+        String xmppEndpoint = XmppConfig.getInstance().getXmppEndpoint();
 
-		int indexOfChar = xmppEndpoint.lastIndexOf(":");
-		if (indexOfChar != -1) {
-			xmppEndpoint = xmppEndpoint.substring(0, indexOfChar);
-		}
+        int indexOfChar = xmppEndpoint.lastIndexOf(":");
+        if (indexOfChar != -1) {
+            xmppEndpoint = xmppEndpoint.substring(0, indexOfChar);
+        }
 
-		xmppEndpoint = xmppEndpoint + ":" + XmppConfig.getInstance().getSERVER_CONNECTION_PORT();
+        xmppEndpoint = xmppEndpoint + ":" + XmppConfig.getInstance().getSERVER_CONNECTION_PORT();
 
         Map<String, String> contextParams = new HashMap<>();
         contextParams.put("SERVER_NAME", serverName);
         contextParams.put("SERVER_IP", iotServerIP);
-		contextParams.put("DEVICE_OWNER", owner);
-		contextParams.put("DEVICE_ID", deviceId);
-		contextParams.put("DEVICE_NAME", deviceName);
-		contextParams.put("HTTPS_EP", httpsServerEP);
-		contextParams.put("HTTP_EP", httpServerEP);
-		contextParams.put("APIM_EP", apimEndpoint);
-		contextParams.put("MQTT_EP", mqttEndpoint);
-		contextParams.put("XMPP_EP", xmppEndpoint);
-		contextParams.put("DEVICE_TOKEN", token);
-		contextParams.put("DEVICE_REFRESH_TOKEN", refreshToken);
+        contextParams.put("DEVICE_OWNER", owner);
+        contextParams.put("DEVICE_ID", deviceId);
+        contextParams.put("DEVICE_NAME", deviceName);
+        contextParams.put("HTTPS_EP", httpsServerEP);
+        contextParams.put("HTTP_EP", httpServerEP);
+        contextParams.put("APIM_EP", apimEndpoint);
+        contextParams.put("MQTT_EP", mqttEndpoint);
+        contextParams.put("XMPP_EP", xmppEndpoint);
+        contextParams.put("DEVICE_TOKEN", token);
+        contextParams.put("DEVICE_REFRESH_TOKEN", refreshToken);
 
-		ZipArchive zipFile;
-		try {
-			zipFile = IotDeviceManagementUtil.getSketchArchive(archivesPath, templateSketchPath, contextParams);
-		} catch (IOException e) {
-			throw new DeviceManagementException("Zip File Creation Failed", e);
-		}
+        ZipArchive zipFile;
+        try {
+            zipFile = IotDeviceManagementUtil.getSketchArchive(archivesPath, templateSketchPath, contextParams);
+        } catch (IOException e) {
+            throw new DeviceManagementException("Zip File Creation Failed", e);
+        }
 
-		return zipFile;
-	}
+        return zipFile;
+    }
 }
