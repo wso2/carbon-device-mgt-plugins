@@ -27,15 +27,15 @@
     } else if (deviceType == "android") {
         var serviceUrl = "/mdm-android-agent/operation/device-info";
     }
-    if(serviceUrl){
+    if (serviceUrl) {
         invokerUtil.post(serviceUrl, payload,
-            function(message){
+            function (message) {
                 console.log(message);
             }, function (message) {
                 console.log(message);
             });
     }
-    $(document).ready(function(){
+    $(document).ready(function () {
         $(".panel-body").removeClass("hidden");
         $("#loading-content").remove();
 
@@ -67,29 +67,29 @@
         var deviceType = operationsLog.data("device-type");
 
         $.template("operations-log", deviceListingSrc, function (template) {
-            var serviceURL = "/devicemgt_admin/operations/"+deviceType+"/"+deviceId;
+            var serviceURL = "/devicemgt_admin/operations/" + deviceType + "/" + deviceId;
 
             var successCallback = function (data) {
                 data = JSON.parse(data);
                 $('#operations-spinner').addClass('hidden');
                 var viewModel = {};
                 viewModel.operations = data;
-                if(data.length > 0){
+                if (data.length > 0) {
                     var content = template(viewModel);
-                    if(!update) {
+                    if (!update) {
                         $("#operations-log-container").html(content);
                         operationTable = $('#operations-log-table').datatables_extended();
-                    }else{
+                    } else {
                         $('#operations-log-table').dataTable().fnClearTable();
-                        for(var i=0; i < data.length; i++) {
+                        for (var i = 0; i < data.length; i++) {
                             var status;
-                            if(data[i].status == "COMPLETED") {
+                            if (data[i].status == "COMPLETED") {
                                 status = "<span><i class='fw fw-ok icon-success'></i> Completed</span>";
-                            } else if(data[i].status == "PENDING") {
+                            } else if (data[i].status == "PENDING") {
                                 status = "<span><i class='fw fw-warning icon-warning'></i> Pending</span>";
-                            } else if(data[i].status == "ERROR") {
+                            } else if (data[i].status == "ERROR") {
                                 status = "<span><i class='fw fw-error icon-danger'></i> Error</span>";
-                            } else if(data[i].status == "IN_PROGRESS") {
+                            } else if (data[i].status == "IN_PROGRESS") {
                                 status = "<span><i class='fw fw-ok icon-warning'></i> In Progress</span>";
                             }
 
@@ -104,9 +104,9 @@
 
             };
             invokerUtil.get(serviceURL,
-                successCallback, function(message){
+                successCallback, function (message) {
                     console.log(message);
-            });
+                });
         });
 
     }
@@ -118,13 +118,13 @@
         var deviceType = applicationsList.data("device-type");
 
         $.template("application-list", deviceListingSrc, function (template) {
-            var serviceURL = "/devicemgt_admin/operations/"+deviceType+"/"+deviceId+"/apps";
+            var serviceURL = "/devicemgt_admin/operations/" + deviceType + "/" + deviceId + "/apps";
 
             var successCallback = function (data) {
                 data = JSON.parse(data);
                 $('#apps-spinner').addClass('hidden');
                 var viewModel = {};
-                if(data != null && data.length > 0) {
+                if (data != null && data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
                         data[i].name = data[i].name.replace(/[^\w\s]/gi, ' ');
                         data[i].name = data[i].name.replace(/[0-9]/g, ' ');
@@ -132,16 +132,16 @@
                 }
                 viewModel.applications = data;
                 viewModel.deviceType = deviceType;
-                if(data.length > 0){
+                if (data.length > 0) {
                     var content = template(viewModel);
                     $("#applications-list-container").html(content);
                 }
 
             };
             invokerUtil.get(serviceURL,
-                successCallback, function(message){
+                successCallback, function (message) {
                     console.log(message);
-            });
+                });
         });
     }
 
@@ -153,14 +153,14 @@
         var activePolicy = null;
 
         $.template("policy-view", policySrc, function (template) {
-            var serviceURLPolicy ="/devicemgt_admin/policies/"+deviceType+"/"+deviceId+"/active-policy"
-            var serviceURLCompliance = "/devicemgt_admin/policies/"+deviceType+"/"+deviceId;
+            var serviceURLPolicy = "/devicemgt_admin/policies/" + deviceType + "/" + deviceId + "/active-policy"
+            var serviceURLCompliance = "/devicemgt_admin/policies/" + deviceType + "/" + deviceId;
 
             var successCallbackCompliance = function (data) {
                 var viewModel = {};
                 viewModel.policy = activePolicy;
                 viewModel.deviceType = deviceType;
-                if(data != null && data.complianceFeatures!= null && data.complianceFeatures != undefined && data.complianceFeatures.length > 0) {
+                if (data != null && data.complianceFeatures != null && data.complianceFeatures != undefined && data.complianceFeatures.length > 0) {
                     viewModel.compliance = "NON-COMPLIANT";
                     viewModel.complianceFeatures = data.complianceFeatures;
                     var content = template(viewModel);
@@ -177,19 +177,19 @@
             var successCallbackPolicy = function (data) {
                 data = JSON.parse(data);
                 $('#policy-spinner').addClass('hidden');
-                if(data != null && data.active == true){
+                if (data != null && data.active == true) {
                     activePolicy = data;
                     invokerUtil.get(serviceURLCompliance,
-                        successCallbackCompliance, function(message){
+                        successCallbackCompliance, function (message) {
                             console.log(message);
-                    });
+                        });
                 }
             };
 
             invokerUtil.get(serviceURLPolicy,
-                successCallbackPolicy, function(message){
+                successCallbackPolicy, function (message) {
                     console.log(message);
-            });
+                });
         });
 
     }

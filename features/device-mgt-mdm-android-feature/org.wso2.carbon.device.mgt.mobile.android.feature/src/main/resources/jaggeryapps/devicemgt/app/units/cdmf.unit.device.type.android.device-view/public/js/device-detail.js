@@ -21,14 +21,13 @@
     var deviceIdentifier = deviceId.data("deviceid");
     var deviceType = deviceId.data("type");
     var payload = [deviceIdentifier];
-    var operationTable;
     var serviceUrl = "/mdm-android-agent/operation/device-info";
     invokerUtil.post(serviceUrl, payload,
-                     function (message) {
-                         console.log(message);
-                     }, function (message) {
-                console.log(message);
-            });
+        function (message) {
+            console.log(message);
+        }, function (message) {
+            console.log(message);
+        });
     $(document).ready(function () {
         $(".panel-body").removeClass("hidden");
         $("#loading-content").remove();
@@ -69,9 +68,9 @@
 
             };
             invokerUtil.get(serviceURL,
-                            successCallback, function (message) {
-                        console.log(message);
-                    });
+                successCallback, function (message) {
+                    console.log(message);
+                });
         });
     }
 
