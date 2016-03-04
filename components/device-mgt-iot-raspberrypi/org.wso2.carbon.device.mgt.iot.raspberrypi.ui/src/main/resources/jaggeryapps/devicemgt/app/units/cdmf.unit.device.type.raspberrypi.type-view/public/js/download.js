@@ -134,7 +134,7 @@ function downloadAgent() {
             deviceName = this.value;
         }
     });
-    var deviceNameFormat = /^[^~?!#$:;%^*`+={}\[\]\\()|<>,'"0-9]{1,30}$/;
+    var deviceNameFormat = /^[^~?!#$:;%^*`+={}\[\]\\()|<>,'"]{1,30}$/;
     if (deviceName && deviceNameFormat.test(deviceName)) {
         $('#downloadForm').submit();
         hidePopup();
