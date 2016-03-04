@@ -222,6 +222,7 @@
 .custom_y_axis {
     position: absolute;
     width: 40px;
+    margin-top: -20px;
 }
 
 .custom_slider {
