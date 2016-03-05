@@ -16,7 +16,7 @@
  * under the License.
  */
 
-object_maker.init(config_api.config_3dobject_holder, $("#objectHolder").width(), $("#objectHolder").width()/1.5);
+object_maker.init(config_api.config_3dobject_holder, $("#objectHolder").width(), $("#objectHolder").width() / 1.5);
 object_maker.animate();
 var flight_dynamics = new flight_dynamics();
 $("#window_size").slider({
@@ -73,21 +73,21 @@ $('#connectionOpen').on('click', function () {
 $("#xmppConnectionOpen").on('click', function () {
     $('#xmppConnectionOpen').toggleClass('active');
     if ($('#xmppConnectionOpen').html() === "Start") {
-        sendMessage("Start the process", function(state){
-            console.log("sending message to server..."+ state);
-            if(state<2){
+        sendMessage("Start the process", function (state) {
+            console.log("sending message to server..." + state);
+            if (state < 2) {
                 $('#xmppConnectionOpen').html("Stop");
-            }else{
+            } else {
                 $('#xmppConnectionOpen').html("Start");
             }
         });
 
     } else if ($('#xmppConnectionOpen').html() === "Stop") {
-        closeSocket(function(state){
-            console.log("closing WebSocket..."+ state);
-            if(state<2){
+        closeSocket(function (state) {
+            console.log("closing WebSocket..." + state);
+            if (state < 2) {
                 $('#xmppConnectionOpen').html("Stop");
-            }else{
+            } else {
                 $('#xmppConnectionOpen').html("Start");
             }
         });
@@ -96,14 +96,17 @@ $("#xmppConnectionOpen").on('click', function () {
 });
 
 $('.btn-minimize').parent().parent().next('.box-content').hide();
+
 var webSocket;
-config_api.realtime_plotting_data_window["attitude"] = new Queue();
 var current_status = {};
-function openSocket(wssAddress) {
+
+config_api.realtime_plotting_data_window["attitude"] = new Queue();
+
+function openSocket(wssAddress, sessionId) {
     if (webSocket !== undefined && webSocket.readyState == 1) {
         writeResponse("WebSocket is already opened.");
     } else {
-        webSocket = new WebSocket(wssAddress+config_api.web_socket_endpoint);
+        webSocket = new WebSocket(wssAddress + config_api.web_socket_endpoint + sessionId);
     }
     webSocket.onopen = function (event) {
         if (event === undefined) {
@@ -130,14 +133,14 @@ function openSocket(wssAddress) {
 }
 
 function sendMessage(message, callback) {
-    if(webSocket.readyState<2){
+    if (webSocket.readyState < 2) {
         webSocket.send(message);
     }
     callback(webSocket.readyState);
 }
 
 function closeSocket(callback) {
-    if(webSocket.readyState<2){
+    if (webSocket.readyState < 2) {
         webSocket.close();
     }
     callback(webSocket.readyState);
@@ -150,4 +153,3 @@ function writeResponse(text) {
 window.onbeforeunload = function () {
     webSocket.close();
 };
-

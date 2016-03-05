@@ -26,13 +26,17 @@ import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.transpor
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.trasformer.MessageTransformer;
 
 import javax.websocket.*;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-@ServerEndpoint("/datastream/drone_status")
+@ServerEndpoint("/datastream/{sessionId}")
 public class DroneRealTimeService {
 
     private static org.apache.commons.logging.Log log = LogFactory.getLog(DroneRealTimeService.class);
+    private static Map<String, Session> clientSessions = new HashMap<>();
     private MessageTransformer messageController;
     private DroneAnalyzerXMPPConnector xmppConnector;
 
@@ -67,55 +71,72 @@ public class DroneRealTimeService {
         return false;
     }
 
+    /**
+     * This method will be invoked when a client requests for a
+     * WebSocket connection.
+     *
+     * @param userSession the userSession which is opened.
+     */
     @OnOpen
-    public void onOpen(Session session){
-        log.info(session.getId() + " has opened a connection");
+    public void onOpen(Session userSession, @PathParam("sessionId") String sessionId){
+        log.info(userSession.getId() + " has opened a connection");
         try {
-            session.getBasicRemote().sendText("Connection Established");
+            clientSessions.put(sessionId, userSession);
+            userSession.getBasicRemote().sendText("Connection Established");
         } catch (IOException e) {
             log.error( e.getMessage()+"\n"+ e);
         }
     }
 
+    /**
+     * This method will be invoked when a client send a message
+     * @param message message coming form client
+     * @param session the session which is opened.
+     */
     @OnMessage
+    @SuppressWarnings("InfiniteLoopStatement")
     public void onMessage(String message, Session session){
             while(true){
                 try{
                     if((messageController !=null) && (!messageController.isEmptyQueue())){
-                        String message1 = messageController.getMessage();
-                        session.getBasicRemote().sendText(message1);
+                        String droneCurrentStatus = messageController.getMessage();
+                        session.getBasicRemote().sendText(droneCurrentStatus);
                     }
                     Thread.sleep(DroneConstants.MINIMUM_TIME_DURATION);
-                } catch (IOException ex) {
-                    log.error(ex.getMessage() + "\n" + ex);
-                } catch (InterruptedException e) {
-                    log.error(e.getMessage(), e);
+                } catch (IOException | InterruptedException ex) {
+                    log.error(ex.getMessage(), ex);
                 }
             }
     }
 
+    /**
+     * This method will be invoked when a client closes a WebSocket
+     * connection.
+     *
+     * @param session the session which is opened.
+     */
     @OnClose
     public void onClose(Session session){
-        try {
             xmppConnector.disconnect();
+            clientSessions.values().remove(session);
             log.info("XMPP connection is disconnected");
-        }
-        catch (Exception e) {
-            log.error(e.getMessage() + "\n" + e);
-        }
-        log.info("Session " + session.getId() + " has ended");
     }
 
+    /**
+     * This method will be invoked when connection terminate unexpectedly
+     *
+     * @param session the session which is opened.
+     */
     @OnError
     public void onError(Session session, Throwable t) {
         try {
-            session.getBasicRemote().sendText("Connection closed");
+            clientSessions.values().remove(session);
             xmppConnector.disconnect();
-            log.info("XMPP connection is disconnected");
-        } catch (Exception e) {
-            log.error(e.getMessage()+"\n"+ e);
+            session.getBasicRemote().sendText("Connection closed");
+        } catch (IOException e) {
+            log.error("Connection has been corrupted unexpectedly, "+ e);
         }
-        log.info("Session " + session.getId() + " has ended");
+        log.info("XMPP connection is disconnected");
     }
 
 }

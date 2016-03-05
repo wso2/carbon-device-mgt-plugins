@@ -18,13 +18,14 @@
 
 package org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.controller;
 
+/**
+ * This is an interface which can be used to implement device specific drone controller
+ */
 public interface DroneController {
     boolean takeoff();
     boolean land();
     boolean up(double speed, double duration);
     boolean down(double speed, double duration);
-    boolean left(double speed, double duration);
-    boolean right(double speed, double duration);
     boolean front(double speed, double duration);
     boolean back(double speed, double duration);
     boolean clockwise(double speed, double duration);

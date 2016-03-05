@@ -21,5 +21,6 @@ function onRequest (context) {
     var wssAddress = serverAddress.getWSSAddress();
     var httpsAddress = serverAddress.getHTTPSAddress();
     var device = context.unit.params.device;
-    return { "device": device, "wssAddress":  wssAddress, "httpsAddress": httpsAddress};
+    var sessionId = session.getId();
+    return { "device": device, "wssAddress":  wssAddress, "httpsAddress": httpsAddress, "sessionId": sessionId};
 }

@@ -20,37 +20,24 @@ package org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.util;
 
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
-import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.transport.DroneAnalyzerXMPPConnector;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.controller.DroneController;
-import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
-
-import java.io.File;
 
 public class DroneAnalyzerServiceUtils {
 
-    private static final String SUPER_TENANT = "carbon.super";
     private static org.apache.commons.logging.Log log = LogFactory.getLog(DroneAnalyzerServiceUtils.class);
 
-    public static void sendCommandViaXMPP(String deviceOwner, String deviceId, String resource,
-                                          String state, DroneAnalyzerXMPPConnector droneXMPPConnector)
-            throws DeviceManagementException, TransportHandlerException {
-
-        String xmppServerDomain = XmppConfig.getInstance().getXmppEndpoint();
-        int indexOfChar = xmppServerDomain.lastIndexOf(File.separator);
-        if (indexOfChar != -1) {
-            xmppServerDomain = xmppServerDomain.substring((indexOfChar + 1), xmppServerDomain.length());
-        }
-        indexOfChar = xmppServerDomain.indexOf(":");
-        if (indexOfChar != -1) {
-            xmppServerDomain = xmppServerDomain.substring(0, indexOfChar);
-        }
-        String clientToConnect = deviceId + "@" + xmppServerDomain + File.separator + deviceOwner;
-        String message = resource.replace("/", "") + ":" + state;
-        droneXMPPConnector.publishDeviceData(clientToConnect, message, "CONTROL-REQUEST");
-    }
-
+    /**
+     * Send controlling command to device
+     *
+     * @param controller device specific controller implementation
+     * @param deviceId   unique identifier for each device
+     * @param action     which action to be executed on device e.g.: land, take off, up, down and so on..
+     * @param duration   duration which will execute given action e.g.:  up, down and so on..
+     * @param speed      at what speed given action is being executed e.g.:  up, down and so on..
+     * @return status
+     * @throws DeviceManagementException
+     */
     public static boolean sendControlCommand(DroneController controller, String deviceId, String action,
                                              double speed, double duration)
             throws DeviceManagementException {
@@ -75,11 +62,8 @@ public class DroneAnalyzerServiceUtils {
                 case DroneConstants.DOWN:
                     controlState = controller.down(speed, duration);
                     break;
-                case DroneConstants.FRONT:
-                    controlState = controller.back(speed, duration);
-                    break;
                 case DroneConstants.FORWARD:
-                    controlState = controller.clockwise(speed, duration);
+                    controlState = controller.front(speed, duration);
                     break;
                 case DroneConstants.UP:
                     controlState = controller.up(speed, duration);
