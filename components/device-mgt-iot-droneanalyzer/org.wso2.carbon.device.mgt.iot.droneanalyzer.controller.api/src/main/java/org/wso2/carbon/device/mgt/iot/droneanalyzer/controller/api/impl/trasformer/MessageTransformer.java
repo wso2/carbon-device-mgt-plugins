@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.trasformer;
 
-
 import org.apache.commons.collections4.queue.CircularFifoQueue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,67 +24,74 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonProcessingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
-import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.MessageConfig;
+import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.constants.MessageConfig;
 
 import java.io.IOException;
-
 
 public class MessageTransformer {
 
     private Log log = LogFactory.getLog(MessageTransformer.class);
     private CircularFifoQueue<String> sharedQueue;
 
-    private String outboundMessageFormatForSimulator = "{\"quatanium_val\":[%f, %f, %f, %f]," +
-            "\"basicParam\":{\"velocity\":[%f, %f, %f], \"global_location\":[%f, %f, %f]},\"battery_level\":%f, \"device_type\":\"SIMULATOR\"}";
-    private String outboundMessageFormatForIrisDrone = "{\"quatanium_val\":[%f, %f, %f]," +
-            "\"basicParam\":{\"velocity\":[%f, %f, %f], \"global_location\":[%f, %f, %f]},\"battery_level\":%f," +
-            "\"device_type\":\"IRIS_DRONE\"}";
-
     public MessageTransformer(){
-        sharedQueue = new CircularFifoQueue<String>(DroneConstants.MAXIMUM_BUFFERE_SIZE_OF_SHARED_QUEUE);
+        sharedQueue = new CircularFifoQueue<>(DroneConstants.MAXIMUM_BUFFERE_SIZE_OF_SHARED_QUEUE);
     }
 
-    private void messageTranslaterForSimulator(JsonNode inbound_message){
-        JsonNode node = inbound_message;
+    /**
+     * Translate incoming message into fixed message format. In this case simulator
+     *
+     * @param inbound_message incoming message from drone simulator through XMPP server
+     */
+    private void messageTranslatorForSimulator(JsonNode inbound_message){
         String outboundMessage;
         try {
-            JsonNode velocity = node.get(MessageConfig.OUT_BASIC_PARAM_VAL).get(MessageConfig.OUT_BASIC_PARAM_VELOCITY);
-            JsonNode globalLocation = node.get(MessageConfig.OUT_BASIC_PARAM_VAL).get(
+            JsonNode velocity = inbound_message.get(MessageConfig.OUT_BASIC_PARAM_VAL)
+                    .get(MessageConfig.OUT_BASIC_PARAM_VELOCITY);
+            JsonNode globalLocation = inbound_message.get(MessageConfig.OUT_BASIC_PARAM_VAL).get(
                     MessageConfig.OUT_BASIC_PARAM_GLOBAL_LOCATION);
-            JsonNode quataniumVals = node.get(MessageConfig.OUT_QUATANNIM_VAL);
-            JsonNode batteryLevel = node.get(MessageConfig.OUT_BATTERY_LEVEL);
-            outboundMessage = String.format(outboundMessageFormatForSimulator, sTd(quataniumVals.get(0)),
-                    sTd(quataniumVals.get(1)), sTd(quataniumVals.get(2)), sTd(quataniumVals.get(0)),
-                    sTd(velocity.get(0)), sTd(velocity.get(1)), sTd(velocity.get(2)), sTd(globalLocation.get(0)),
-                    sTd(globalLocation.get(1)), sTd(globalLocation.get(2)), sTd(batteryLevel));
+            JsonNode quataniumVals = inbound_message.get(MessageConfig.OUT_QUATANNIM_VAL);
+            JsonNode batteryLevel = inbound_message.get(MessageConfig.OUT_BATTERY_LEVEL);
+            outboundMessage = String.format(MessageConfig.OUTBOUND_MESSAGE_FORMAT_FOR_SIMULATOR,
+                    sTd(quataniumVals.get(0)), sTd(quataniumVals.get(1)), sTd(quataniumVals.get(2)),
+                    sTd(quataniumVals.get(0)), sTd(velocity.get(0)), sTd(velocity.get(1)), sTd(velocity.get(2)),
+                    sTd(globalLocation.get(0)), sTd(globalLocation.get(1)), sTd(globalLocation.get(2)),
+                    sTd(batteryLevel));
             sharedQueue.add(outboundMessage);
         } catch (Exception e) {
             log.error(e.getMessage()+",\n"+ e);
         }
     }
 
-    private void messageTranslaterForIRISDrone(JsonNode inbound_message){
-        JsonNode node = inbound_message;
+    /**
+     * Translate incoming message into fixed message format. In this case IRIS+ Drone
+     *
+     * @param inbound_message incoming message from IRIS+ Drone through XMPP server
+     */
+    private void messageTranslatorForIRISDrone(JsonNode inbound_message){
         String outboundMessage;
         try {
-
-            JsonNode velocity = node.get(MessageConfig.OUT_BASIC_PARAM_VAL).get(MessageConfig.OUT_BASIC_PARAM_VELOCITY);
-            JsonNode globalLocation = node.get(MessageConfig.OUT_BASIC_PARAM_VAL).get(
+            JsonNode velocity = inbound_message.get(MessageConfig.OUT_BASIC_PARAM_VAL)
+                    .get(MessageConfig.OUT_BASIC_PARAM_VELOCITY);
+            JsonNode globalLocation = inbound_message.get(MessageConfig.OUT_BASIC_PARAM_VAL).get(
                     MessageConfig.OUT_BASIC_PARAM_GLOBAL_LOCATION);
-            JsonNode quataniumVals = node.get(MessageConfig.OUT_QUATANNIM_VAL);
-            JsonNode batteryLevel = node.get(MessageConfig.OUT_BATTERY_LEVEL);
-            outboundMessage = String.format(outboundMessageFormatForIrisDrone, sTd(quataniumVals.get(0)),
-                    sTd(quataniumVals.get(1)), sTd(quataniumVals.get(2)), sTd(velocity.get(0)),
-                    sTd(velocity.get(1)), sTd(velocity.get(2)), sTd(globalLocation.get(0)),
+            JsonNode quataniumVals = inbound_message.get(MessageConfig.OUT_QUATANNIM_VAL);
+            JsonNode batteryLevel = inbound_message.get(MessageConfig.OUT_BATTERY_LEVEL);
+            outboundMessage = String.format(MessageConfig.OUTBOUND_MESSAGE_FORMAT_FOR_IRISDRONE,
+                    sTd(quataniumVals.get(0)), sTd(quataniumVals.get(1)), sTd(quataniumVals.get(2)),
+                    sTd(velocity.get(0)), sTd(velocity.get(1)), sTd(velocity.get(2)), sTd(globalLocation.get(0)),
                     sTd(globalLocation.get(1)), sTd(globalLocation.get(2)), sTd(batteryLevel));
             sharedQueue.add(outboundMessage);
-
         }catch (Exception e) {
             log.error(e.getMessage()+",\n"+ e);
         }
     }
 
-    public void messageTranslater(String inbound_message){
+    /**
+     * This will identify where dose this message come from?
+     *
+     * @param inbound_message incoming message which is coming from XMPP server
+     */
+    public void messageTranslator(String inbound_message){
         JsonNode actualMessage;
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -93,10 +99,10 @@ public class MessageTransformer {
             JsonNode deviceType = actualMessage.get(MessageConfig.IN_DEVICE_TYPE);
             switch (deviceType.getTextValue()) {
                 case MessageConfig.IN_IRIS_DRONE:
-                    messageTranslaterForIRISDrone(actualMessage);
+                    messageTranslatorForIRISDrone(actualMessage);
                     break;
                 case MessageConfig.IN_SIMULATOR:
-                    messageTranslaterForSimulator(actualMessage);
+                    messageTranslatorForSimulator(actualMessage);
                     break;
                 default:
                     if(log.isDebugEnabled()){
@@ -116,19 +122,15 @@ public class MessageTransformer {
     }
 
     public String getMessage() {
-       try{
-           if(sharedQueue.isEmpty() || sharedQueue == null){
+        if(sharedQueue.isEmpty() || sharedQueue == null){
+               log.warn("There is no more messages to send");
                return "";
-           }
-           return sharedQueue.remove();
-       }catch(Exception e) {
-           log.error("There is no more messages to send or internal server error has been occurred, \n"+ e );
-           return "";
-       }
+        }
+        return sharedQueue.remove();
     }
 
     public boolean isEmptyQueue(){
-        return sharedQueue != null? sharedQueue.isEmpty():false;
+        return sharedQueue != null && sharedQueue.isEmpty();
     }
 
 }

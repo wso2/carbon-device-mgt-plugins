@@ -6,7 +6,7 @@
                         <div>
                             <div class="col-md-2 col-sm-2 col-xs-1">
                                 <button  class="btn btn-primary" data-dismiss="modal" id="connectionOpen"
-                                         onclick="openSocket('{{wssAddress}}');">Connect to XMPP Server</button>
+                                         onclick="openSocket('{{wssAddress}}', '{{sessionId}}');">Connect to XMPP Server</button>
                             </div>
                             <div class="col-md-2 col-sm-2 col-xs-1">
                                 <button  class="btn btn-primary" data-dismiss="modal" id="xmppConnectionOpen">Start</button>
@@ -230,6 +230,7 @@
                         </div>
                     </div>
                 </div>
+
 {{#zone "bottomJs"}}
     {{js  "/js/d3.min.js" }}
     {{js "/js/3dobject_controller/three.min.js" }}

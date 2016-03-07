@@ -33,8 +33,6 @@ import java.util.concurrent.TimeUnit;
 
 public class DroneAnalyzerXMPPConnector extends XMPPTransportHandler {
     private static Log log = LogFactory.getLog(DroneAnalyzerXMPPConnector.class);
-
-    private static String xmppServerIP;
     private static String xmppAdminUsername;
     private static String xmppAdminPassword;
     private static String xmppAdminAccountJID;
@@ -47,6 +45,11 @@ public class DroneAnalyzerXMPPConnector extends XMPPTransportHandler {
         this.messageTransformer = messageTransformer;
     }
 
+    /**
+     * {@inheritDoc}
+     * Device-type specific implementation to connect to the XMPP server.
+     * This method is called to initiate a MQTT communication.
+     */
     @Override
     public void connect() {
         Runnable connector = new Runnable() {
@@ -71,27 +74,36 @@ public class DroneAnalyzerXMPPConnector extends XMPPTransportHandler {
         connectorServiceHandler = service.scheduleAtFixedRate(connector, 0, timeoutInterval, TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * Initialize connection with XMPP server
+     */
     public void initConnector() {
-        xmppServerIP = XmppConfig.getInstance().getXmppServerIP();
+        String xmppServerIP = XmppConfig.getInstance().getXmppServerIP();
         xmppAdminUsername = XmppConfig.getInstance().getXmppUsername();
         xmppAdminPassword = XmppConfig.getInstance().getXmppPassword();
         xmppAdminAccountJID = xmppAdminUsername + "@" + xmppServerIP;
     }
 
+    /**
+     * {@inheritDoc}
+     * Device-type specific implementation to process incoming messages. This is the specific
+     * method signature of the overloaded "processIncomingMessage" method that gets called from the messageArrived()
+     * callback of the "XMPPTransportHandler".
+     */
     @Override
     public void processIncomingMessage(Message message) throws TransportHandlerException {
         try{
             String from = message.getFrom();
             String inbound_message = message.getBody();
             int indexOfSlash = from.indexOf("/");
-            if(indexOfSlash==0){
+            if(indexOfSlash == 0){
                 if(log.isDebugEnabled()){
                     log.debug("Required resource not available.");
                 }
             }else{
                 String resource = from.substring(indexOfSlash + 1, from.length());
                 if ((inbound_message != null)&&(resource.equals(DroneConstants.MESSAGE_RESOURCE)) ){
-                    messageTransformer.messageTranslater(inbound_message);
+                    messageTransformer.messageTranslator(inbound_message);
                 } else {
                     if(log.isDebugEnabled()){
                         log.debug("Message is empty or it is not belongs to " + xmppAdminUsername);
@@ -105,6 +117,10 @@ public class DroneAnalyzerXMPPConnector extends XMPPTransportHandler {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * Device-type specific implementation to publish data to the device.
+     */
     @Override
     public void publishDeviceData(String... publishData) throws TransportHandlerException {
         String xmppJID = publishData[0];
@@ -113,6 +129,9 @@ public class DroneAnalyzerXMPPConnector extends XMPPTransportHandler {
         sendXMPPMessage(xmppJID, xmppMessage, xmppSubject);
     }
 
+    /**
+     * Disconnect from XMPP server
+     */
     public void disconnect(){
         Runnable stopConnection = new Runnable() {
             public void run() {
@@ -137,21 +156,33 @@ public class DroneAnalyzerXMPPConnector extends XMPPTransportHandler {
         terminatorThread.start();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void processIncomingMessage() throws TransportHandlerException {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void processIncomingMessage(Message message, String... messageParams) throws TransportHandlerException {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void publishDeviceData() throws TransportHandlerException {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void publishDeviceData(Message publishData) throws TransportHandlerException {
 

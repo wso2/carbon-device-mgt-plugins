@@ -19,7 +19,8 @@ function onRequest (context) {
     var log = new Log("statistics.js");
     var serverAddress = require("/app/modules/serverAddress.js").serverAddress;
     var wssAddress = serverAddress.getWSSAddress();
-    var httpsAddress = serverAddress.getHPPSTSAddress();
+    var httpsAddress = serverAddress.getHTTPSAddress();
     var device = context.unit.params.device;
-    return { "device": device, "wssAddress":  wssAddress, "httpsAddress": httpsAddress};
+    var sessionId = session.getId();
+    return { "device": device, "wssAddress":  wssAddress, "httpsAddress": httpsAddress, "sessionId": sessionId};
 }

@@ -26,14 +26,12 @@ public class DroneConstants {
     public static final String DEVICE_TYPE = "drone_analyzer";
     public static final int MINIMUM_TIME_DURATION = 150;
     public static final int MAXIMUM_BUFFERE_SIZE_OF_SHARED_QUEUE = 10;
-    public static final String DEVICE_ID = "drone_type1";
     public final static String TAKE_OFF = "takeoff";
     public final static String LAND = "land";
     public final static String UP = "up";
     public final static String DOWN = "down";
     public final static String BACK = "back";
     public final static String FORWARD = "forward";
-    public final static String FRONT = "front";
     public final static String CLOCK_WISE = "clockwise";
     public final static String COUNTER_CLOCKWISE = "counterClockwise";
 
