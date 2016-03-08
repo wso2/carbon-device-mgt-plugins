@@ -79,8 +79,8 @@ public class VirtualFireAlarmManagerService {
      */
     private static String shortUUID() {
         UUID uuid = UUID.randomUUID();
-        long l = ByteBuffer.wrap(uuid.toString().getBytes(StandardCharsets.UTF_8)).getLong();
-        return Long.toString(l, Character.MAX_RADIX);
+        long aLong = ByteBuffer.wrap(uuid.toString().getBytes(StandardCharsets.UTF_8)).getLong();
+        return Long.toString(aLong, Character.MAX_RADIX);
     }
 
     /**
