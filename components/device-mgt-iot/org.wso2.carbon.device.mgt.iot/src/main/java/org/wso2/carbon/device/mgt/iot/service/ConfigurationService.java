@@ -24,28 +24,23 @@ import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceMgtServerIn
 
 public interface ConfigurationService {
 
-
     /**
-     * Retrieve all configurations in devicemgt-config.xml
-     *
-     * @return Complete set of configurations
+     * Retrieve all configurations in devicemgt-config.xml.
+     * @return Complete set of configurations.
      */
     DeviceManagementConfiguration getDeviceCloudMgtConfig();
 
-
     /**
-     * Retrieve control queue configurations
-     *
-     * @param name of the control queue
-     * @return control queue configs
+     * Retrieve control queue configurations.
+     * @param name of the control queue.
+     * @return control queue configs.
      */
     ControlQueue getControlQueue(String name);
 
-
     /**
-     * Retrieve device management server information
-     *
-     * @return device management server information
+     * Retrieve device management server information.
+     * @return device management server information.
      */
     DeviceMgtServerInfo getDeviceManagementServerInfo();
+
 }

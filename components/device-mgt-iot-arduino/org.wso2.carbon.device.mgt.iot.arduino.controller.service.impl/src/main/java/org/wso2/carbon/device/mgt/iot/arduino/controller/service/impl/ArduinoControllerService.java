@@ -64,8 +64,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 
-@API( name="arduino", version="1.0.0", context="/arduino")
-@DeviceType( value = "arduino")
+@API(name = "arduino", version = "1.0.0", context = "/arduino")
+@DeviceType(value = "arduino")
 public class ArduinoControllerService {
 
     public static final String HTTP_PROTOCOL = "HTTP";
@@ -117,8 +117,7 @@ public class ArduinoControllerService {
      * @param arduinoMQTTConnector an object of type "ArduinoMQTTConnector" specific for this ArduinoControllerService
      */
     @SuppressWarnings("unused")
-    public void setArduinoMQTTConnector(
-            final ArduinoMQTTConnector arduinoMQTTConnector) {
+    public void setArduinoMQTTConnector(final ArduinoMQTTConnector arduinoMQTTConnector) {
         Runnable connector = new Runnable() {
             public void run() {
                 if (waitForServerStartup()) {
@@ -188,8 +187,7 @@ public class ArduinoControllerService {
      */
     @Path("controller/bulb")
     @POST
-    @Feature( code="bulb", name="Control Bulb", type="operation",
-            description="Control Bulb on Arduino Uno")
+    @Feature(code = "bulb", name = "Control Bulb", type = "operation", description = "Control Bulb on Arduino Uno")
     public void switchBulb(@HeaderParam("owner") String owner,
                            @HeaderParam("deviceId") String deviceId,
                            @HeaderParam("protocol") String protocol,
@@ -203,7 +201,7 @@ public class ArduinoControllerService {
         if (deviceControlList == null) {
             deviceControlList = new LinkedList<>();
             deviceControlList.add(operation);
-            internalControlsQueue.put(deviceId,deviceControlList);
+            internalControlsQueue.put(deviceId, deviceControlList);
         } else {
             deviceControlList.add(operation);
         }
@@ -222,8 +220,8 @@ public class ArduinoControllerService {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Feature( code="readtemperature", name="Temperature", type="monitor",
-            description="Request temperature reading from Arduino agent")
+    @Feature(code = "readtemperature", name = "Temperature", type = "monitor",
+            description = "Request temperature reading from Arduino agent")
     public SensorRecord requestTemperature(@HeaderParam("owner") String owner,
                                            @HeaderParam("deviceId") String deviceId,
                                            @HeaderParam("protocol") String protocol,
@@ -232,8 +230,8 @@ public class ArduinoControllerService {
 
         try {
             sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-                    ArduinoConstants.SENSOR_TEMPERATURE);
-        } catch ( DeviceControllerException e) {
+                                                                           ArduinoConstants.SENSOR_TEMPERATURE);
+        } catch (DeviceControllerException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
 
@@ -262,8 +260,8 @@ public class ArduinoControllerService {
         if (!ArduinoServiceUtils.publishToDAS(dataMsg.owner, dataMsg.deviceId, dataMsg.value)) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             log.warn("An error occured whilst trying to publish pin data of Arduino with ID [" +
-                             deviceId +
-                             "] of owner [" + owner + "]");
+                     deviceId +
+                     "] of owner [" + owner + "]");
         }
 
     }
@@ -292,8 +290,7 @@ public class ArduinoControllerService {
                 response.setStatus(HttpStatus.SC_ACCEPTED);
 
             } catch (NoSuchElementException ex) {
-                result = "There are no more controls for device " + deviceId + " of owner " +
-                        owner;
+                result = "There are no more controls for device " + deviceId + " of owner " + owner;
                 response.setStatus(HttpStatus.SC_NO_CONTENT);
             }
         }
@@ -328,12 +325,13 @@ public class ArduinoControllerService {
         if (!ArduinoServiceUtils.publishToDAS(dataMsg.owner, dataMsg.deviceId, dataMsg.value)) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             log.warn("An error occured whilst trying to publish temperature data of Arduino with ID [" + deviceId +
-                                 "] of owner [" + owner + "]");
+                     "] of owner [" + owner + "]");
         }
     }
 
     /**
      * Retreive Sensor data for the device type
+     *
      * @param deviceId
      * @param user
      * @param from
@@ -360,7 +358,7 @@ public class ArduinoControllerService {
         DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
                 .getOSGiService(DeviceAnalyticsService.class, null);
         String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
-                ArduinoConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+                       ArduinoConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = ArduinoConstants.TEMPERATURE_EVENT_TABLE;
         try {
             List<Record> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName,
