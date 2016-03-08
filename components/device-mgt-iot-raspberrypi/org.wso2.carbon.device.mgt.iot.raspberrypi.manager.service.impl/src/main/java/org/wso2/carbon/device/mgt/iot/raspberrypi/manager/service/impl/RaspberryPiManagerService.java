@@ -21,7 +21,6 @@ package org.wso2.carbon.device.mgt.iot.raspberrypi.manager.service.impl;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -239,7 +238,6 @@ public class RaspberryPiManagerService {
             throws DeviceManagementException, AccessTokenException, DeviceControllerException {
         //create new device id
         String deviceId = shortUUID();
-        KeyGenerationUtil.createApplicationKeys("raspberry");
         TokenClient accessTokenClient = new TokenClient(RaspberrypiConstants.DEVICE_TYPE);
         AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
         //create token

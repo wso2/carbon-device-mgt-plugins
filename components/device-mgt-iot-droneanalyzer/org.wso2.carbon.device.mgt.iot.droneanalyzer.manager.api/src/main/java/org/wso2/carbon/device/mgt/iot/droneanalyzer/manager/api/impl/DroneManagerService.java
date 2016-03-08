@@ -18,7 +18,6 @@
 package org.wso2.carbon.device.mgt.iot.droneanalyzer.manager.api.impl;
 
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -232,7 +231,6 @@ public class DroneManagerService {
 
     private ZipArchive createDownloadFile(String deviceName, String sketchType)
             throws DeviceManagementException, AccessTokenException, DeviceControllerException {
-        KeyGenerationUtil.createApplicationKeys("drone");
         //create new device id
         String deviceId = shortUUID();
         TokenClient accessTokenClient = new TokenClient(DroneConstants.DEVICE_TYPE);

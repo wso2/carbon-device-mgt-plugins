@@ -20,10 +20,10 @@ package org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.analytics.datasource.commons.Record;
-import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.analytics.common.AnalyticsDataRecord;
+import org.wso2.carbon.device.mgt.analytics.exception.DeviceManagementAnalyticsException;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
@@ -38,7 +38,6 @@ import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiCo
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -319,12 +318,11 @@ public class RaspberryPiControllerService {
                 RaspberrypiConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = RaspberrypiConstants.TEMPERATURE_EVENT_TABLE;
         try {
-            List<Record> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName,
-                                                                                query);
+            List<AnalyticsDataRecord> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName, query);
 
-            Collections.sort(records, new Comparator<Record>() {
+            Collections.sort(records, new Comparator<AnalyticsDataRecord>() {
                 @Override
-                public int compare(Record o1, Record o2) {
+                public int compare(AnalyticsDataRecord o1, AnalyticsDataRecord o2) {
                     long t1 = (Long) o1.getValue("time");
                     long t2 = (Long) o2.getValue("time");
                     if (t1 < t2) {
@@ -337,16 +335,15 @@ public class RaspberryPiControllerService {
                 }
             });
 
-            for (Record record : records) {
+            for (AnalyticsDataRecord record : records) {
                 SensorData sensorData = new SensorData();
                 sensorData.setTime((long) record.getValue("time"));
                 sensorData.setValue("" + (float) record.getValue(RaspberrypiConstants.SENSOR_TEMPERATURE));
                 sensorDatas.add(sensorData);
             }
             return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-        } catch (AnalyticsException e) {
-            String errorMsg =
-                    "Error on retrieving stats on table " + sensorTableName + " with query " + query;
+        } catch (DeviceManagementAnalyticsException e) {
+            String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
             log.error(errorMsg);
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return sensorDatas.toArray(new SensorData[sensorDatas.size()]);

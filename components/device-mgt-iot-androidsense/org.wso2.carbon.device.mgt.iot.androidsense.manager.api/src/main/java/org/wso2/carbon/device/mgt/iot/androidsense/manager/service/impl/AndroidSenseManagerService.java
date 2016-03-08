@@ -20,8 +20,7 @@ package org.wso2.carbon.device.mgt.iot.androidsense.manager.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -39,7 +38,6 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.Date;
 
-@API( name="android_sense_mgt", version="1.0.0", context="/android_sense_mgt")
 public class AndroidSenseManagerService {
 
     private static Log log = LogFactory.getLog(AndroidSenseManagerService.class);
@@ -49,8 +47,7 @@ public class AndroidSenseManagerService {
 
     @Path("manager/device")
     @POST
-    public boolean register(@FormParam("deviceId") String deviceId,
-                            @FormParam("deviceName") String deviceName) {
+    public boolean register(@FormParam("deviceId") String deviceId, @FormParam("deviceName") String deviceName) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
@@ -60,7 +57,6 @@ public class AndroidSenseManagerService {
                 getTokens(APIUtil.getAuthenticatedUser(), deviceId, response);
                 return true;
             }
-            KeyGenerationUtil.createApplicationKeys("android_sense");
             getTokens(APIUtil.getAuthenticatedUser(), deviceId, response);
             Device device = new Device();
             device.setDeviceIdentifier(deviceId);
@@ -86,13 +82,14 @@ public class AndroidSenseManagerService {
         } catch (AccessTokenException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
     @Path("manager/device/{device_id}")
     @DELETE
-    public void removeDevice(@PathParam("device_id") String deviceId,
-                             @Context HttpServletResponse response) {
+    public void removeDevice(@PathParam("device_id") String deviceId, @Context HttpServletResponse response) {
 
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
@@ -108,13 +105,14 @@ public class AndroidSenseManagerService {
             }
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
     @Path("manager/device/{device_id}")
     @PUT
-    public boolean updateDevice(
-            @PathParam("device_id") String deviceId, @QueryParam("name") String name,
+    public boolean updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name,
             @Context HttpServletResponse response) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
@@ -135,6 +133,8 @@ public class AndroidSenseManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -142,8 +142,7 @@ public class AndroidSenseManagerService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    public Device getDevice(
-            @PathParam("device_id") String deviceId) {
+    public Device getDevice(@PathParam("device_id") String deviceId) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
@@ -152,6 +151,8 @@ public class AndroidSenseManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return null;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -168,8 +169,9 @@ public class AndroidSenseManagerService {
             return rb.build();
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
-
     }
 
     public void getTokens(String owner, String deviceId, HttpServletResponse response)

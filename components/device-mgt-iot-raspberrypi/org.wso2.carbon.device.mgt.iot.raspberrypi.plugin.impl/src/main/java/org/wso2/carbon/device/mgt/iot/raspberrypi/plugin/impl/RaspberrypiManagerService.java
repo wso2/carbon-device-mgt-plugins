@@ -46,12 +46,7 @@ public class RaspberrypiManagerService implements DeviceManagementService {
 
 	@Override
 	public boolean isSharedWithAllTenants() {
-		return true;
-	}
-
-	@Override
-	public String[] getSharedTenantsDomain() {
-		return new String[0];
+		return false;
 	}
 
 	@Override

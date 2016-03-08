@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.device.mgt.iot.arduino.manager.service.impl;
 
-import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -56,11 +56,9 @@ public class ArduinoManagerService {
     @Context  //injected response proxy supporting multiple thread
     private HttpServletResponse response;
 
-    @Path("manager/device/register")
+    @Path("manager/device")
     @POST
-    public boolean register(@QueryParam("deviceId") String deviceId,
-                            @QueryParam("name") String name) {
-
+    public boolean register(@QueryParam("deviceId") String deviceId, @QueryParam("name") String name) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(ArduinoConstants.DEVICE_TYPE);
@@ -90,6 +88,8 @@ public class ArduinoManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -110,6 +110,8 @@ public class ArduinoManagerService {
             }
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -137,6 +139,8 @@ public class ArduinoManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -153,6 +157,8 @@ public class ArduinoManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return null;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -162,7 +168,8 @@ public class ArduinoManagerService {
     @Produces(MediaType.APPLICATION_JSON)
     public Device[] getArduinoDevices() {
         try {
-            List<Device> userDevices = APIUtil.getDeviceManagementService().getDevicesOfUser(APIUtil.getAuthenticatedUser());
+            List<Device> userDevices = APIUtil.getDeviceManagementService().getDevicesOfUser(
+                    APIUtil.getAuthenticatedUser());
             ArrayList<Device> userDevicesforArduino = new ArrayList<>();
             for (Device device : userDevices) {
                 if (device.getType().equals(ArduinoConstants.DEVICE_TYPE) &&
@@ -174,6 +181,8 @@ public class ArduinoManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return null;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -196,8 +205,9 @@ public class ArduinoManagerService {
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (DeviceControllerException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
-
     }
 
     @Path("manager/device/{sketch_type}/generate_link")
@@ -216,6 +226,8 @@ public class ArduinoManagerService {
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (DeviceControllerException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -226,7 +238,6 @@ public class ArduinoManagerService {
         }
         //create new device id
         String deviceId = shortUUID();
-        KeyGenerationUtil.createApplicationKeys("arduino");
         TokenClient accessTokenClient = new TokenClient(ArduinoConstants.DEVICE_TYPE);
         AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
         //create token

@@ -21,10 +21,10 @@ package org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.analytics.datasource.commons.Record;
-import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.analytics.common.AnalyticsDataRecord;
+import org.wso2.carbon.device.mgt.analytics.exception.DeviceManagementAnalyticsException;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
@@ -38,13 +38,10 @@ import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -68,10 +65,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @DeviceType( value = "arduino")
 public class ArduinoControllerService {
 
-    public static final String HTTP_PROTOCOL = "HTTP";
-    public static final String MQTT_PROTOCOL = "MQTT";
-    //TODO; replace this tenant domain
-    private static final String SUPER_TENANT = "carbon.super";
     private static Log log = LogFactory.getLog(ArduinoControllerService.class);
     private static Map<String, LinkedList<String>> replyMsgQueue = new HashMap<>();
     private static Map<String, LinkedList<String>> internalControlsQueue = new HashMap<>();
@@ -137,238 +130,170 @@ public class ArduinoControllerService {
         connectorThread.start();
     }
 
-    /*	---------------------------------------------------------------------------------------
-                    Device specific APIs - Control APIs + Data-Publishing APIs
-        ---------------------------------------------------------------------------------------	*/
-
-    /**
-     * @param owner
-     * @param deviceId
-     * @param deviceIP
-     * @param devicePort
-     * @param response
-     * @param request
-     * @return
-     */
-    @Path("controller/register/{owner}/{deviceId}/{ip}/{port}")
+    @Path("controller/register/device/{deviceId}/{ip}/{port}")
     @POST
-    public String registerDeviceIP(@PathParam("owner") String owner,
-                                   @PathParam("deviceId") String deviceId,
-                                   @PathParam("ip") String deviceIP,
-                                   @PathParam("port") String devicePort,
-                                   @Context HttpServletResponse response,
+    public String registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
+                                   @PathParam("port") String devicePort, @Context HttpServletResponse response,
                                    @Context HttpServletRequest request) {
-
-        //TODO:: Need to get IP from the request itself
         String result;
-
-        if (log.isDebugEnabled()) {
-            log.debug("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId + " of owner: " + owner);
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId + " of owner: ");
+            }
+            String deviceHttpEndpoint = deviceIP + ":" + devicePort;
+            deviceToIpMap.put(deviceId, deviceHttpEndpoint);
+            result = "Device-IP Registered";
+            response.setStatus(Response.Status.OK.getStatusCode());
+            if (log.isDebugEnabled()) {
+                log.debug(result);
+            }
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
-
-        String deviceHttpEndpoint = deviceIP + ":" + devicePort;
-        deviceToIpMap.put(deviceId, deviceHttpEndpoint);
-
-        result = "Device-IP Registered";
-        response.setStatus(Response.Status.OK.getStatusCode());
-
-        if (log.isDebugEnabled()) {
-            log.debug(result);
-        }
-
         return result;
     }
 
-    /**
-     * @param owner
-     * @param deviceId
-     * @param protocol
-     * @param state
-     * @param response
-     */
-    @Path("controller/bulb")
+    @Path("controller/device/{deviceId}/bulb")
     @POST
-    @Feature( code="bulb", name="Control Bulb", type="operation",
-            description="Control Bulb on Arduino Uno")
-    public void switchBulb(@HeaderParam("owner") String owner,
-                           @HeaderParam("deviceId") String deviceId,
-                           @HeaderParam("protocol") String protocol,
-                           @FormParam("state") String state,
-                           @Context HttpServletResponse response) {
-
-        LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
-
-        String operation = "BULB:" + state.toUpperCase();
-        log.info(operation);
-        if (deviceControlList == null) {
-            deviceControlList = new LinkedList<>();
-            deviceControlList.add(operation);
-            internalControlsQueue.put(deviceId,deviceControlList);
-        } else {
-            deviceControlList.add(operation);
+    @Feature(code = "bulb", name = "Control Bulb", type = "operation", description = "Control Bulb on Arduino Uno")
+    public void switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
+                           @QueryParam("state") String state, @Context HttpServletResponse response) {
+        try {
+            LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
+            String operation = "BULB:" + state.toUpperCase();
+            log.info(operation);
+            if (deviceControlList == null) {
+                deviceControlList = new LinkedList<>();
+                deviceControlList.add(operation);
+                internalControlsQueue.put(deviceId, deviceControlList);
+            } else {
+                deviceControlList.add(operation);
+            }
+            response.setStatus(Response.Status.OK.getStatusCode());
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
-
-        response.setStatus(Response.Status.OK.getStatusCode());
     }
 
-    /**
-     * @param owner
-     * @param deviceId
-     * @param protocol
-     * @param response
-     * @return
-     */
-    @Path("controller/readtemperature")
+    @Path("controller/device/{deviceId}/temperature")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Feature( code="readtemperature", name="Temperature", type="monitor",
-            description="Request temperature reading from Arduino agent")
-    public SensorRecord requestTemperature(@HeaderParam("owner") String owner,
-                                           @HeaderParam("deviceId") String deviceId,
-                                           @HeaderParam("protocol") String protocol,
+    @Feature( code="temperature", name="Temperature", type="monitor", description="Request temperature reading from Arduino agent")
+    public SensorRecord requestTemperature(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
                                            @Context HttpServletResponse response) {
-        SensorRecord sensorRecord = null;
-
         try {
-            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-                    ArduinoConstants.SENSOR_TEMPERATURE);
-        } catch ( DeviceControllerException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        }
-
-        response.setStatus(Response.Status.OK.getStatusCode());
-        return sensorRecord;
-    }
-
-    /**
-     * @param dataMsg
-     * @param response
-     */
-    @Path("controller/pushdata")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void pushData(final DeviceData dataMsg, @Context HttpServletResponse response) {
-
-        String owner = dataMsg.owner;
-        String deviceId = dataMsg.deviceId;
-        float pinData = dataMsg.value;
-
-        SensorDataManager.getInstance().setSensorRecord(deviceId,
-                                                        ArduinoConstants.SENSOR_TEMPERATURE,
-                                                        String.valueOf(pinData),
-                                                        Calendar.getInstance().getTimeInMillis());
-
-        if (!ArduinoServiceUtils.publishToDAS(dataMsg.owner, dataMsg.deviceId, dataMsg.value)) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.warn("An error occured whilst trying to publish pin data of Arduino with ID [" +
-                             deviceId +
-                             "] of owner [" + owner + "]");
-        }
-
-    }
-
-    /**
-     * @param owner
-     * @param deviceId
-     * @param response
-     * @return
-     */
-    @Path("controller/readcontrols")
-    @GET
-    public String readControls(@HeaderParam("owner") String owner,
-                               @HeaderParam("deviceId") String deviceId,
-                               @HeaderParam("protocol") String protocol,
-                               @Context HttpServletResponse response) {
-        String result;
-        LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
-
-        if (deviceControlList == null) {
-            result = "No controls have been set for device " + deviceId + " of owner " + owner;
-            response.setStatus(HttpStatus.SC_NO_CONTENT);
-        } else {
+            SensorRecord sensorRecord = null;
             try {
-                result = deviceControlList.remove();
-                response.setStatus(HttpStatus.SC_ACCEPTED);
-
-            } catch (NoSuchElementException ex) {
-                result = "There are no more controls for device " + deviceId + " of owner " +
-                        owner;
-                response.setStatus(HttpStatus.SC_NO_CONTENT);
+                sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
+                                                                               ArduinoConstants.SENSOR_TEMPERATURE);
+            } catch (DeviceControllerException e) {
+                response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             }
+            response.setStatus(Response.Status.OK.getStatusCode());
+            return sensorRecord;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
-
-        if (log.isDebugEnabled()) {
-            log.debug(result);
-        }
-
-        return result;
     }
 
-
-    /**
-     * @param dataMsg
-     * @param response
-     */
-    @Path("controller/push_temperature")
+    @Path("controller/sensor")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void pushTemperatureData(final DeviceData dataMsg,
-                                    @Context HttpServletResponse response,
+    public void pushData(DeviceData dataMsg, @Context HttpServletResponse response) {
+        try {
+            String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+            String deviceId = dataMsg.deviceId;
+            float pinData = dataMsg.value;
+            SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
+                                                            String.valueOf(pinData),
+                                                            Calendar.getInstance().getTimeInMillis());
+            if (!ArduinoServiceUtils.publishToDAS(owner, dataMsg.deviceId, dataMsg.value)) {
+                response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+                log.warn("An error occured whilst trying to publish pin data of Arduino with ID [" +
+                                 deviceId + "] of owner [" + owner + "]");
+            }
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+        }
+    }
+
+    @Path("controller/device/{deviceId}/controls")
+    @GET
+    public String readControls(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
+                               @Context HttpServletResponse response) {
+        try {
+            String result;
+            LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
+            String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+            if (deviceControlList == null) {
+                result = "No controls have been set for device " + deviceId + " of owner " + owner;
+                response.setStatus(HttpStatus.SC_NO_CONTENT);
+            } else {
+                try {
+                    result = deviceControlList.remove();
+                    response.setStatus(HttpStatus.SC_ACCEPTED);
+
+                } catch (NoSuchElementException ex) {
+                    result = "There are no more controls for device " + deviceId + " of owner " + owner;
+                    response.setStatus(HttpStatus.SC_NO_CONTENT);
+                }
+            }
+            if (log.isDebugEnabled()) {
+                log.debug(result);
+            }
+            return result;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+        }
+    }
+
+    @Path("controller/temperature")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void pushTemperatureData(final DeviceData dataMsg, @Context HttpServletResponse response,
                                     @Context HttpServletRequest request) {
-        String owner = dataMsg.owner;
-        String deviceId = dataMsg.deviceId;
-        float temperature = dataMsg.value;
-
-        SensorDataManager.getInstance().setSensorRecord(deviceId,
-                                                        ArduinoConstants.SENSOR_TEMPERATURE,
-                                                        String.valueOf(temperature),
-                                                        Calendar.getInstance().getTimeInMillis());
-
-        if (!ArduinoServiceUtils.publishToDAS(dataMsg.owner, dataMsg.deviceId, dataMsg.value)) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.warn("An error occured whilst trying to publish temperature data of Arduino with ID [" + deviceId +
+        try {
+            String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+            String deviceId = dataMsg.deviceId;
+            float temperature = dataMsg.value;
+            SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
+                                                            String.valueOf(temperature),
+                                                            Calendar.getInstance().getTimeInMillis());
+            if (!ArduinoServiceUtils.publishToDAS(owner, dataMsg.deviceId, dataMsg.value)) {
+                response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+                log.warn("An error occured whilst trying to publish temperature data of Arduino with ID [" + deviceId +
                                  "] of owner [" + owner + "]");
+            }
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
     /**
      * Retreive Sensor data for the device type
-     * @param deviceId
-     * @param user
-     * @param from
-     * @param to
-     * @return
      */
     @Path("controller/stats/device/{deviceId}/sensors/temperature")
     @GET
     @Consumes("application/json")
     @Produces("application/json")
     public SensorData[] getArduinoTemperatureStats(@PathParam("deviceId") String deviceId,
-                                                   @QueryParam("username") String user,
                                                    @QueryParam("from") long from,
                                                    @QueryParam("to") long to) {
-
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
-
         List<SensorData> sensorDatas = new ArrayList<>();
-        PrivilegedCarbonContext.startTenantFlow();
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        //TODO - get the JWT from api manager.
-        ctx.setTenantDomain("carbon.super", true);
         DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
                 .getOSGiService(DeviceAnalyticsService.class, null);
-        String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
+        String query = "deviceId:" + deviceId + " AND deviceType:" +
                 ArduinoConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = ArduinoConstants.TEMPERATURE_EVENT_TABLE;
         try {
-            List<Record> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName,
-                                                                                query);
-
-            Collections.sort(records, new Comparator<Record>() {
+            List<AnalyticsDataRecord> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName, query);
+            Collections.sort(records, new Comparator<AnalyticsDataRecord>() {
                 @Override
-                public int compare(Record o1, Record o2) {
+                public int compare(AnalyticsDataRecord o1, AnalyticsDataRecord o2) {
                     long t1 = (Long) o1.getValue("time");
                     long t2 = (Long) o2.getValue("time");
                     if (t1 < t2) {
@@ -380,17 +305,15 @@ public class ArduinoControllerService {
                     }
                 }
             });
-
-            for (Record record : records) {
+            for (AnalyticsDataRecord record : records) {
                 SensorData sensorData = new SensorData();
                 sensorData.setTime((long) record.getValue("time"));
                 sensorData.setValue("" + (float) record.getValue(ArduinoConstants.SENSOR_TEMPERATURE));
                 sensorDatas.add(sensorData);
             }
             return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-        } catch (AnalyticsException e) {
-            String errorMsg =
-                    "Error on retrieving stats on table " + sensorTableName + " with query " + query;
+        } catch (DeviceManagementAnalyticsException e) {
+            String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
             log.error(errorMsg);
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return sensorDatas.toArray(new SensorData[sensorDatas.size()]);

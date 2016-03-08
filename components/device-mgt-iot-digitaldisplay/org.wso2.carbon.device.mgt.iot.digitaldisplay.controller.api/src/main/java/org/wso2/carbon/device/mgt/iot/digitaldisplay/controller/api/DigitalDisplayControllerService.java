@@ -44,7 +44,6 @@ import javax.ws.rs.core.Response;
 @DeviceType(value = "digital_display")
 public class DigitalDisplayControllerService {
 
-
     private static Log log = LogFactory.getLog(DigitalDisplayControllerService.class);
 
     private static DigitalDisplayMQTTConnector digitalDisplayMQTTConnector;

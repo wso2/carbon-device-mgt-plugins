@@ -21,13 +21,13 @@ package org.wso2.carbon.device.mgt.iot.digitaldisplay.manager.api;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
 import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
-import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.manager.api.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
@@ -51,7 +51,7 @@ public class DigitalDisplayManagerService {
 	@Context  //injected response proxy supporting multiple thread
 	private HttpServletResponse response;
 
-	@Path("manager/device/register")
+	@Path("manager/device")
 	@POST
 	public boolean register(@QueryParam("deviceId") String deviceId, @QueryParam("name") String name) {
 		DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
@@ -84,6 +84,8 @@ public class DigitalDisplayManagerService {
 		} catch (DeviceManagementException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 			return false;
+		} finally {
+			PrivilegedCarbonContext.endTenantFlow();
 		}
 	}
 
@@ -103,6 +105,8 @@ public class DigitalDisplayManagerService {
 			}
 		} catch (DeviceManagementException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+		} finally {
+			PrivilegedCarbonContext.endTenantFlow();
 		}
 	}
 
@@ -131,6 +135,8 @@ public class DigitalDisplayManagerService {
 		} catch (DeviceManagementException e) {
 			log.error(e.getErrorMessage());
 			return false;
+		} finally {
+			PrivilegedCarbonContext.endTenantFlow();
 		}
 	}
 
@@ -147,6 +153,8 @@ public class DigitalDisplayManagerService {
 		} catch (DeviceManagementException ex) {
 			log.error("Error occurred while retrieving device with Id " + deviceId + "\n" + ex);
 			return null;
+		} finally {
+			PrivilegedCarbonContext.endTenantFlow();
 		}
 	}
 
@@ -172,6 +180,8 @@ public class DigitalDisplayManagerService {
 			return Response.status(500).entity(ex.getMessage()).build();
 		} catch (IOException ex) {
 			return Response.status(500).entity(ex.getMessage()).build();
+		} finally {
+			PrivilegedCarbonContext.endTenantFlow();
 		}
 	}
 
@@ -182,7 +192,6 @@ public class DigitalDisplayManagerService {
 		}
 		//create new device id
 		String deviceId = shortUUID();
-		KeyGenerationUtil.createApplicationKeys("digital_display");
 		TokenClient accessTokenClient = new TokenClient(DigitalDisplayConstants.DEVICE_TYPE);
 		AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
 		//create token

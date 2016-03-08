@@ -20,9 +20,9 @@ package org.wso2.carbon.device.mgt.iot.api;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.analytics.datasource.commons.Record;
-import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.analytics.common.AnalyticsDataRecord;
+import org.wso2.carbon.device.mgt.analytics.exception.DeviceManagementAnalyticsException;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletResponse;
@@ -66,11 +66,11 @@ import java.util.List;
         String query = "owner:" + user + " AND deviceId:" + identifier + " AND deviceType:" + type +
                     " AND time : [" + fromDate + " TO " + toDate + "]";
         try {
-            List<Record> records = deviceAnalyticsService.getAllEventsForDevice(table, query);
+            List<AnalyticsDataRecord> records = deviceAnalyticsService.getAllEventsForDevice(table, query);
 
-            Collections.sort(records, new Comparator<Record>() {
+            Collections.sort(records, new Comparator<AnalyticsDataRecord>() {
                 @Override
-                public int compare(Record o1, Record o2) {
+                public int compare(AnalyticsDataRecord o1, AnalyticsDataRecord o2) {
                     long t1 = (Long) o1.getValue("time");
                     long t2 = (Long) o2.getValue("time");
                     if (t1 < t2) {
@@ -83,14 +83,14 @@ import java.util.List;
                 }
             });
 
-            for (Record record : records) {
+            for (AnalyticsDataRecord record : records) {
                 DeviceUsageDTO deviceUsageDTO = new DeviceUsageDTO();
                 deviceUsageDTO.setTime("" + (long)record.getValue("time"));
                 deviceUsageDTO.setValue("" + (float) record.getValue(column.toLowerCase()));
                 deviceUsageDTOs.add(deviceUsageDTO);
             }
             return deviceUsageDTOs.toArray(new DeviceUsageDTO[deviceUsageDTOs.size()]);
-        } catch (AnalyticsException e) {
+        } catch (DeviceManagementAnalyticsException e) {
             String errorMsg= "Error on retrieving stats on table " + table + " with query " + query;
             log.error(errorMsg);
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());

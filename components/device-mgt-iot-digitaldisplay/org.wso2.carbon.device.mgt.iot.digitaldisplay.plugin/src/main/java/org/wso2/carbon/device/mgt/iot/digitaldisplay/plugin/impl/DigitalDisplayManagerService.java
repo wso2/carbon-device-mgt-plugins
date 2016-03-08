@@ -37,17 +37,12 @@ public class DigitalDisplayManagerService implements DeviceManagementService{
 
 	@Override
 	public String getProviderTenantDomain() {
-		return "carbon.super";
+		return "bar.com";
 	}
 
 	@Override
 	public boolean isSharedWithAllTenants() {
-		return true;
-	}
-
-	@Override
-	public String[] getSharedTenantsDomain() {
-		return new String[0];
+		return false;
 	}
 
 	@Override

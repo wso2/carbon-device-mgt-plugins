@@ -19,7 +19,6 @@
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.manager.service.impl;
 
 import org.apache.commons.io.FileUtils;
-import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -228,7 +227,6 @@ public class VirtualFireAlarmManagerService {
             throws DeviceManagementException, AccessTokenException, DeviceControllerException {
         //create new device id
         String deviceId = shortUUID();
-        KeyGenerationUtil.createApplicationKeys("virtual_firealarm");
         TokenClient accessTokenClient = new TokenClient(VirtualFireAlarmConstants.DEVICE_TYPE);
         AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
         //create token

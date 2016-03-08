@@ -20,15 +20,14 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.analytics.datasource.commons.Record;
-import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.analytics.common.AnalyticsDataRecord;
+import org.wso2.carbon.device.mgt.analytics.exception.DeviceManagementAnalyticsException;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
@@ -49,7 +48,6 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.u
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.scep.ContentType;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.scep.SCEPOperation;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -616,12 +614,11 @@ public class VirtualFireAlarmControllerService {
                 VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = getSensorEventTableName(sensor);
         try {
-            List<Record> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName,
-                                                                                query);
+            List<AnalyticsDataRecord> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName, query);
 
-            Collections.sort(records, new Comparator<Record>() {
+            Collections.sort(records, new Comparator<AnalyticsDataRecord>() {
                 @Override
-                public int compare(Record o1, Record o2) {
+                public int compare(AnalyticsDataRecord o1, AnalyticsDataRecord o2) {
                     long t1 = (Long) o1.getValue("time");
                     long t2 = (Long) o2.getValue("time");
                     if (t1 < t2) {
@@ -634,14 +631,14 @@ public class VirtualFireAlarmControllerService {
                 }
             });
 
-            for (Record record : records) {
+            for (AnalyticsDataRecord record : records) {
                 SensorData sensorData = new SensorData();
                 sensorData.setTime((long) record.getValue("time"));
                 sensorData.setValue("" + (float) record.getValue(sensor));
                 sensorDatas.add(sensorData);
             }
             return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-        } catch (AnalyticsException e) {
+        } catch (DeviceManagementAnalyticsException e) {
             String errorMsg =
                     "Error on retrieving stats on table " + sensorTableName + " with query " + query;
             log.error(errorMsg);
@@ -654,7 +651,6 @@ public class VirtualFireAlarmControllerService {
 
     /**
      * get the event table from the sensor name.
-     * TODO : this needs to be managed with sensor management.
      * @param sensorName
      * @return
      */

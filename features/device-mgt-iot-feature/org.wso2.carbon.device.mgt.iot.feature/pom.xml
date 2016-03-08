@@ -173,9 +173,6 @@
 								<bundleDef>
 									org.igniterealtime.smack.wso2:smackx:${smackx.wso2.version}
 								</bundleDef>
-								<bundleDef>
-									net.sf.ehcache.wso2:ehcache
-								</bundleDef>
 							</bundles>
 							<importFeatures>
 								<importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}
