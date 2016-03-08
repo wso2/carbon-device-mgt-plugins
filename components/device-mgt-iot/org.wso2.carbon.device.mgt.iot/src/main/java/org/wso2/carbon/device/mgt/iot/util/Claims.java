@@ -16,42 +16,43 @@
  * under the License.
  */
 package org.wso2.carbon.device.mgt.iot.util;
+
 public class Claims {
 
-	private String dialectUrl;
-	private String description;
-	private String claimUrl;
-	private String value;
+    private String dialectUrl;
+    private String description;
+    private String claimUrl;
+    private String value;
 
-	public String getDialectUrl() {
-		return dialectUrl;
-	}
+    public String getDialectUrl() {
+        return dialectUrl;
+    }
 
-	public void setDialectUrl(String dialectUrl) {
-		this.dialectUrl = dialectUrl;
-	}
+    public void setDialectUrl(String dialectUrl) {
+        this.dialectUrl = dialectUrl;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getClaimUrl() {
-		return claimUrl;
-	}
+    public String getClaimUrl() {
+        return claimUrl;
+    }
 
-	public void setClaimUrl(String claimUrl) {
-		this.claimUrl = claimUrl;
-	}
+    public void setClaimUrl(String claimUrl) {
+        this.claimUrl = claimUrl;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

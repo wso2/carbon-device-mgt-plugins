@@ -27,31 +27,30 @@ import java.net.URLDecoder;
 
 public class ResourceFileLoader {
 
-	private static Log log = LogFactory.getLog(ResourceFileLoader.class);
-	private String filePath;
+    private static Log log = LogFactory.getLog(ResourceFileLoader.class);
+    private String filePath;
 
-	public ResourceFileLoader(String fileName) {
-		String path = ResourceFileLoader.class.getClassLoader().getResource("").getPath();
+    public ResourceFileLoader(String fileName) {
+        String path = ResourceFileLoader.class.getClassLoader().getResource("").getPath();
 
-		String fullPath = path;
-		try {
-			fullPath = URLDecoder.decode(path, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
+        String fullPath = path;
+        try {
+            fullPath = URLDecoder.decode(path, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
 
-		}
-		//log.info(fullPath);
-		String pathArr[] = fullPath.split("/WEB-INF/classes/");
-		filePath = pathArr[0] + fileName;
+        }
+        //log.info(fullPath);
+        String pathArr[] = fullPath.split("/WEB-INF/classes/");
+        filePath = pathArr[0] + fileName;
+    }
 
-	}
+    public String getPath() {
+        return filePath;
+    }
 
-	public String getPath() {
-		return filePath;
-	}
-
-	public File getFile() {
-		File file = new File(filePath);
-		return file;
-	}
+    public File getFile() {
+        File file = new File(filePath);
+        return file;
+    }
 
 }

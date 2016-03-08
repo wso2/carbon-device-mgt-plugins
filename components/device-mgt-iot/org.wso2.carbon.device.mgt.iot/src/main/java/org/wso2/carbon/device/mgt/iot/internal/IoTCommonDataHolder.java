@@ -23,43 +23,43 @@ import org.wso2.carbon.databridge.core.DataBridgeReceiverService;
 
 public class IoTCommonDataHolder {
 
-	private static IoTCommonDataHolder thisInstance = new IoTCommonDataHolder();
-	String trustStoreLocaiton;
-	String trustStorePassword;
+    private static IoTCommonDataHolder thisInstance = new IoTCommonDataHolder();
+    String trustStoreLocaiton;
+    String trustStorePassword;
 
-	private DataBridgeReceiverService dataBridgeReceiverService;
+    private DataBridgeReceiverService dataBridgeReceiverService;
 
-	private IoTCommonDataHolder() {
+    private IoTCommonDataHolder() {
 
-	}
+    }
 
-	public void initialize(){
-		setTrustStore();
-	}
+    public void initialize() {
+        setTrustStore();
+    }
 
-	public static IoTCommonDataHolder getInstance() {
-		return thisInstance;
-	}
+    public static IoTCommonDataHolder getInstance() {
+        return thisInstance;
+    }
 
-	private  void setTrustStore(){
-		this.trustStoreLocaiton = ServerConfiguration.getInstance().getFirstProperty("Security.TrustStore.Location");
-		this.trustStorePassword = ServerConfiguration.getInstance().getFirstProperty("Security.TrustStore.Password");
-	}
+    private void setTrustStore() {
+        this.trustStoreLocaiton = ServerConfiguration.getInstance().getFirstProperty("Security.TrustStore.Location");
+        this.trustStorePassword = ServerConfiguration.getInstance().getFirstProperty("Security.TrustStore.Password");
+    }
 
-	public String getTrustStoreLocation(){
-		return trustStoreLocaiton;
-	}
+    public String getTrustStoreLocation() {
+        return trustStoreLocaiton;
+    }
 
-	public String getTrustStorePassword(){
-		return trustStorePassword;
-	}
+    public String getTrustStorePassword() {
+        return trustStorePassword;
+    }
 
-	public DataBridgeReceiverService getDataBridgeReceiverService() {
-		return dataBridgeReceiverService;
-	}
+    public DataBridgeReceiverService getDataBridgeReceiverService() {
+        return dataBridgeReceiverService;
+    }
 
-	public void setDataBridgeReceiverService(
-			DataBridgeReceiverService dataBridgeReceiverService) {
+    public void setDataBridgeReceiverService(
+            DataBridgeReceiverService dataBridgeReceiverService) {
         this.dataBridgeReceiverService = dataBridgeReceiverService;
-	}
+    }
 }

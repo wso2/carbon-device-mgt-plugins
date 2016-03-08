@@ -36,8 +36,8 @@ public class DeviceValidator {
 
     // private static Log log = LogFactory.getLog(DeviceValidator.class);
     static {
-        int cacheSize = DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getDeviceUserValidator()
-                .getCacheSize();
+        int cacheSize = DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().
+                getDeviceUserValidator().getCacheSize();
         cache = new LRUMap(cacheSize);
     }
 

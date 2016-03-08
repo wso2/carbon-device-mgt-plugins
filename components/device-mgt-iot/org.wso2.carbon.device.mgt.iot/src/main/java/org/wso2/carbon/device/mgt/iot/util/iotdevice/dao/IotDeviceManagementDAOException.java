@@ -23,58 +23,58 @@ package org.wso2.carbon.device.mgt.iot.util.iotdevice.dao;
  */
 public class IotDeviceManagementDAOException extends Exception {
 
-	private String message;
-	private static final long serialVersionUID = 2021891706072918865L;
+    private String message;
+    private static final long serialVersionUID = 2021891706072918865L;
 
-	/**
-	 * Constructs a new IotDeviceManagementDAOException with the specified detail message and
-	 * nested exception.
-	 *
-	 * @param message         error message
-	 * @param nestedException exception
-	 */
-	public IotDeviceManagementDAOException(String message, Exception nestedException) {
-		super(message, nestedException);
-		setErrorMessage(message);
-	}
+    /**
+     * Constructs a new IotDeviceManagementDAOException with the specified detail message and
+     * nested exception.
+     *
+     * @param message         error message
+     * @param nestedException exception
+     */
+    public IotDeviceManagementDAOException(String message, Exception nestedException) {
+        super(message, nestedException);
+        setErrorMessage(message);
+    }
 
-	/**
-	 * Constructs a new IotDeviceManagementDAOException with the specified detail message
-	 * and cause.
-	 *
-	 * @param message the detail message.
-	 * @param cause   the cause of this exception.
-	 */
-	public IotDeviceManagementDAOException(String message, Throwable cause) {
-		super(message, cause);
-		setErrorMessage(message);
-	}
+    /**
+     * Constructs a new IotDeviceManagementDAOException with the specified detail message
+     * and cause.
+     *
+     * @param message the detail message.
+     * @param cause   the cause of this exception.
+     */
+    public IotDeviceManagementDAOException(String message, Throwable cause) {
+        super(message, cause);
+        setErrorMessage(message);
+    }
 
-	/**
-	 * Constructs a new IotDeviceManagementDAOException with the specified detail message.
-	 *
-	 * @param message the detail message.
-	 */
-	public IotDeviceManagementDAOException(String message) {
-		super(message);
-		setErrorMessage(message);
-	}
+    /**
+     * Constructs a new IotDeviceManagementDAOException with the specified detail message.
+     *
+     * @param message the detail message.
+     */
+    public IotDeviceManagementDAOException(String message) {
+        super(message);
+        setErrorMessage(message);
+    }
 
-	/**
-	 * Constructs a new IotDeviceManagementDAOException with the specified and cause.
-	 *
-	 * @param cause the cause of this exception.
-	 */
-	public IotDeviceManagementDAOException(Throwable cause) {
-		super(cause);
-	}
+    /**
+     * Constructs a new IotDeviceManagementDAOException with the specified and cause.
+     *
+     * @param cause the cause of this exception.
+     */
+    public IotDeviceManagementDAOException(Throwable cause) {
+        super(cause);
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public void setErrorMessage(String errorMessage) {
-		this.message = errorMessage;
-	}
+    public void setErrorMessage(String errorMessage) {
+        this.message = errorMessage;
+    }
 
 }

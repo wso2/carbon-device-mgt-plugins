@@ -74,6 +74,7 @@ public class DeviceManagementConfiguration {
 
     /**
      * Gets the value of the ServerInfo property of the device management configurations manager
+     *
      * @return possible object is
      * {@link DeviceMgtServerInfo }
      */

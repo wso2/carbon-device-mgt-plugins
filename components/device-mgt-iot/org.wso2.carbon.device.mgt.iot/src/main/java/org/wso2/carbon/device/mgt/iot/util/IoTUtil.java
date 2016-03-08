@@ -52,63 +52,65 @@ public class IoTUtil {
     public static final String HOST_NAME = "HostName";
     private static final Log log = LogFactory.getLog(IoTUtil.class);
 
-	/**
-	 * Return a http client instance
-	 * @param port - server port
-	 * @param protocol- service endpoint protocol http/https
-	 * @return
-	 */
-	public static HttpClient getHttpClient(int port, String protocol)
-			throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException,
-				   KeyManagementException {
-		SchemeRegistry registry = new SchemeRegistry();
+    /**
+     * Return a http client instance
+     *
+     * @param port      - server port
+     * @param protocol- service endpoint protocol http/https
+     * @return
+     */
+    public static HttpClient getHttpClient(int port, String protocol)
+            throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException,
+                   KeyManagementException {
+        SchemeRegistry registry = new SchemeRegistry();
 
-		if ("https".equals(protocol)) {
-			System.setProperty("javax.net.ssl.trustStrore", IoTCommonDataHolder.getInstance().getTrustStoreLocation());
-			System.setProperty("javax.net.ssl.trustStorePassword", IoTCommonDataHolder.getInstance().getTrustStorePassword());
+        if ("https".equals(protocol)) {
+            System.setProperty("javax.net.ssl.trustStrore", IoTCommonDataHolder.getInstance().getTrustStoreLocation());
+            System.setProperty("javax.net.ssl.trustStorePassword",
+                               IoTCommonDataHolder.getInstance().getTrustStorePassword());
 
-			if (port >= 0) {
-				registry.register(new Scheme("https", port, SSLSocketFactory.getSocketFactory()));
-			} else {
-				registry.register(new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));
-			}
-		} else if ("http".equals(protocol)) {
-			if (port >= 0) {
-				registry.register(new Scheme("http", port, PlainSocketFactory.getSocketFactory()));
-			} else {
-				registry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-			}
-		}
-		HttpParams params = new BasicHttpParams();
-		PoolingClientConnectionManager tcm = new PoolingClientConnectionManager(registry);
-		HttpClient client = new DefaultHttpClient(tcm, params);
-		return client;
-	}
+            if (port >= 0) {
+                registry.register(new Scheme("https", port, SSLSocketFactory.getSocketFactory()));
+            } else {
+                registry.register(new Scheme("https", 443, SSLSocketFactory.getSocketFactory()));
+            }
+        } else if ("http".equals(protocol)) {
+            if (port >= 0) {
+                registry.register(new Scheme("http", port, PlainSocketFactory.getSocketFactory()));
+            } else {
+                registry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+            }
+        }
+        HttpParams params = new BasicHttpParams();
+        PoolingClientConnectionManager tcm = new PoolingClientConnectionManager(registry);
+        HttpClient client = new DefaultHttpClient(tcm, params);
+        return client;
+    }
 
-	public static String getResponseString(HttpResponse httpResponse) throws IoTException {
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
-			String readLine;
-			String response = "";
-			while (((readLine = br.readLine()) != null)) {
-				response += readLine;
-			}
-			return response;
-		} catch (IOException e) {
-			throw new IoTException("Error while reading the response from the remote. "
-														+ e.getMessage(), e);
-		} finally {
-			EntityUtils.consumeQuietly(httpResponse.getEntity());
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					log.warn("Error while closing the connection! " + e.getMessage());
-				}
-			}
-		}
-	}
+    public static String getResponseString(HttpResponse httpResponse) throws IoTException {
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new InputStreamReader(httpResponse.getEntity().getContent()));
+            String readLine;
+            String response = "";
+            while (((readLine = br.readLine()) != null)) {
+                response += readLine;
+            }
+            return response;
+        } catch (IOException e) {
+            throw new IoTException("Error while reading the response from the remote. "
+                                   + e.getMessage(), e);
+        } finally {
+            EntityUtils.consumeQuietly(httpResponse.getEntity());
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    log.warn("Error while closing the connection! " + e.getMessage());
+                }
+            }
+        }
+    }
 
     public static String getHostName() throws IoTException {
         String hostName = ServerConfiguration.getInstance().getFirstProperty(HOST_NAME);

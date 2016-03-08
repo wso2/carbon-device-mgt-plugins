@@ -55,7 +55,9 @@ public class IoTEventsStatisticsClient {
 			throws IoTEventsStatisticsException {
 
 		if (dataSource == null) {
-			throw new IoTEventsStatisticsException("BAM data source hasn't been initialized. Ensure that the data source is properly configured in the APIUsageTracker configuration.");
+			throw new IoTEventsStatisticsException("BAM data source hasn't been initialized. Ensure that the data " +
+                                                   "source is properly configured in the APIUsageTracker " +
+                                                   "configuration.");
 		}
 
 		Connection connection = null;

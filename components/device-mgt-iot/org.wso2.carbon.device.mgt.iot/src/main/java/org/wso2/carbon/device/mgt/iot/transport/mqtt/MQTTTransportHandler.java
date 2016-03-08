@@ -235,7 +235,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
             }
         } catch (MqttException ex) {
             String errorMsg = "MQTT Exception occurred whilst client [" + clientId + "] tried to subscribe to " +
-                    "topic: [" + subscribeTopic + "]";
+                              "topic: [" + subscribeTopic + "]";
             log.error(errorMsg);
             throw new TransportHandlerException(errorMsg, ex);
         }
@@ -265,7 +265,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
             }
         } catch (MqttException ex) {
             String errorMsg = "MQTT Client Error whilst client [" + clientId + "] tried to publish to queue at " +
-                    "[" + mqttBrokerEndPoint + "] under topic [" + topic + "]";
+                              "[" + mqttBrokerEndPoint + "] under topic [" + topic + "]";
             log.info(errorMsg);
             throw new TransportHandlerException(errorMsg, ex);
         }
@@ -292,7 +292,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
             }
         } catch (MqttException ex) {
             String errorMsg = "MQTT Client Error whilst client [" + clientId + "] tried to publish to queue at " +
-                    "[" + mqttBrokerEndPoint + "] under topic [" + topic + "]";
+                              "[" + mqttBrokerEndPoint + "] under topic [" + topic + "]";
             log.info(errorMsg);
             throw new TransportHandlerException(errorMsg, ex);
         }
@@ -318,7 +318,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
     public void connectionLost(Throwable throwable) {
         if (log.isDebugEnabled()) {
             log.warn("Connection for client: " + this.clientId + " to " + this.mqttBrokerEndPoint + " was lost." +
-                             "\nThis was due to - " + throwable.getMessage());
+                     "\nThis was due to - " + throwable.getMessage());
         }
 
         Thread reconnectThread = new Thread() {
@@ -349,7 +349,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
                     processIncomingMessage(mqttMessage, topic);
                 } catch (TransportHandlerException e) {
                     log.error("An error occurred when trying to process received MQTT message [" + mqttMessage + "] " +
-                                      "for topic [" + topic + "].", e);
+                              "for topic [" + topic + "].", e);
                 }
             }
         };
@@ -373,10 +373,10 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
                     if (iMqttDeliveryToken.getMessage() != null) {
                         String message = iMqttDeliveryToken.getMessage().toString();
                         log.debug("Message to client [" + client + "] under topic (" + topic +
-                                          ") was delivered successfully with the delivery message: '" + message + "'");
+                                  ") was delivered successfully with the delivery message: '" + message + "'");
                     } else {
                         log.debug("Message to client [" + client + "] under topic (" + topic +
-                                          ") was delivered successfully.");
+                                  ") was delivered successfully.");
                     }
                 }
             } else {

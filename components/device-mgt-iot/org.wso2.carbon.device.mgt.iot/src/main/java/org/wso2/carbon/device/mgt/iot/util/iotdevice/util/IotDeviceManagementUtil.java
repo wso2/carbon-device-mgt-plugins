@@ -52,7 +52,7 @@ public class IotDeviceManagementUtil {
             return docBuilder.parse(file);
         } catch (Exception e) {
             throw new DeviceManagementException("Error occurred while parsing file, while converting " +
-                    "to a org.w3c.dom.Document : " + e.getMessage(), e);
+                                                "to a org.w3c.dom.Document : " + e.getMessage(), e);
         }
     }
 
@@ -132,11 +132,11 @@ public class IotDeviceManagementUtil {
 
             for (String templateFile : templateFiles) {
                 parseTemplate(templateSketchPath + sep + templateFile, archivesPath + sep + templateFile,
-                        contextParams);
+                              contextParams);
             }
 
-	        templateFiles.add("sketch.properties");         // ommit copying the props file
-	        copyFolder(new File(sketchPath), new File(archivesPath), templateFiles);
+            templateFiles.add("sketch.properties");         // ommit copying the props file
+            copyFolder(new File(sketchPath), new File(archivesPath), templateFiles);
 
         } catch (IOException ex) {
             throw new DeviceManagementException(

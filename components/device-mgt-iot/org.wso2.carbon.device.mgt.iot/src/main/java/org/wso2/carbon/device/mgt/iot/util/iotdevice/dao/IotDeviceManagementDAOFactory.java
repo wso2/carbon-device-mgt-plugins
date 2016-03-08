@@ -52,12 +52,12 @@ public abstract class IotDeviceManagementDAOFactory implements IotDeviceManageme
         isInitialized = true;
     }
 
-
     /**
      * Resolve data source from the data source definition.
+     *
      * @return data source resolved from the data source definition
      */
-    public static DataSource resolveDataSource(String dataSourceName) throws IotDeviceMgtPluginException{
+    public static DataSource resolveDataSource(String dataSourceName) throws IotDeviceMgtPluginException {
 
         DataSource dataSource = null;
         try {
@@ -65,7 +65,7 @@ public abstract class IotDeviceManagementDAOFactory implements IotDeviceManageme
             dataSource = (DataSource) ctx.lookup(dataSourceName);
         } catch (NamingException e) {
             throw new IotDeviceMgtPluginException("Error while looking up the data " +
-                                                          "source: " + dataSourceName);
+                                                  "source: " + dataSourceName);
         }
         return dataSource;
     }
@@ -73,4 +73,5 @@ public abstract class IotDeviceManagementDAOFactory implements IotDeviceManageme
     public static Map<String, DataSource> getDataSourceMap() {
         return dataSourceMap;
     }
+
 }

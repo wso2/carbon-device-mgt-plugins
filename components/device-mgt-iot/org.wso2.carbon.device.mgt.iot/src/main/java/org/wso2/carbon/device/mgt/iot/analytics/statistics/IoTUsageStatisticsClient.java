@@ -89,7 +89,9 @@ public class IoTUsageStatisticsClient {
 			throws IoTUsageStatisticsException {
 
 		if (dataSource == null) {
-			throw new IoTUsageStatisticsException("BAM data source hasn't been initialized. Ensure that the data source is properly configured in the APIUsageTracker configuration.");
+			throw new IoTUsageStatisticsException("BAM data source hasn't been initialized. Ensure that the data " +
+                                                  "source is properly configured in the APIUsageTracker " +
+                                                  "configuration.");
 		}
 
 		Connection connection = null;

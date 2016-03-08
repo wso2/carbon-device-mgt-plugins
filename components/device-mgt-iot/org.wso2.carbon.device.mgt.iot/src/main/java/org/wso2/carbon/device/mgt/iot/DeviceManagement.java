@@ -40,17 +40,17 @@ import java.util.Map;
 
 public class DeviceManagement {
 
-	private static Log log = LogFactory.getLog(DeviceManagement.class);
+    private static Log log = LogFactory.getLog(DeviceManagement.class);
     private static volatile boolean serverReady = false;
     private PrivilegedCarbonContext ctx;
-	private String tenantDomain;
+    private String tenantDomain;
 
-	public DeviceManagement(String tenantDomain){
-		this.tenantDomain=tenantDomain;
-		PrivilegedCarbonContext.startTenantFlow();
-		ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-		ctx.setTenantDomain(tenantDomain, true);
-	}
+    public DeviceManagement(String tenantDomain) {
+        this.tenantDomain = tenantDomain;
+        PrivilegedCarbonContext.startTenantFlow();
+        ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        ctx.setTenantDomain(tenantDomain, true);
+    }
 
     public static boolean isServerReady() {
         return serverReady;
@@ -60,100 +60,92 @@ public class DeviceManagement {
         DeviceManagement.serverReady = serverReady;
     }
 
-	public boolean isExist(String owner, DeviceIdentifier deviceIdentifier)
-			throws DeviceManagementException {
+    public boolean isExist(String owner, DeviceIdentifier deviceIdentifier)
+            throws DeviceManagementException {
 
-		DeviceManagementProviderService dmService = getDeviceManagementService();
-		if (dmService.isEnrolled(deviceIdentifier)) {
-			Device device=dmService.getDevice(deviceIdentifier);
-				if (device.getEnrolmentInfo().getOwner().equals(owner)) {
-					return true;
-				}
-		}
+        DeviceManagementProviderService dmService = getDeviceManagementService();
+        if (dmService.isEnrolled(deviceIdentifier)) {
+            Device device = dmService.getDevice(deviceIdentifier);
+            if (device.getEnrolmentInfo().getOwner().equals(owner)) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public DeviceManagementProviderService getDeviceManagementService() {
+    public DeviceManagementProviderService getDeviceManagementService() {
 
-		DeviceManagementProviderService dmService;
-		dmService =(DeviceManagementProviderService) ctx.getOSGiService(DeviceManagementProviderService.class, null);
-		return dmService;
-	}
+        DeviceManagementProviderService dmService;
+        dmService = (DeviceManagementProviderService) ctx.getOSGiService(DeviceManagementProviderService.class, null);
+        return dmService;
+    }
 
-	public void endTenantFlow(){
+    public void endTenantFlow() {
 
-		PrivilegedCarbonContext.endTenantFlow();
-	}
-
-
-
-	public Device[] getActiveDevices(String username)
-			throws DeviceManagementException {
+        PrivilegedCarbonContext.endTenantFlow();
+    }
 
 
-		List<Device> devices = getDeviceManagementService().getDevicesOfUser(
-				username);
-		List<Device> activeDevices = new ArrayList<>();
-		if (devices != null) {
-			for (Device device : devices) {
-				if (device.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.ACTIVE)) {
-					activeDevices.add(device);
-				}
-			}
-		}
-		return activeDevices.toArray(new Device[]{});
-	}
+    public Device[] getActiveDevices(String username)
+            throws DeviceManagementException {
 
-	public int getActiveDeviceCount(String username)
-			throws DeviceManagementException {
+        List<Device> devices = getDeviceManagementService().getDevicesOfUser(
+                username);
+        List<Device> activeDevices = new ArrayList<>();
+        if (devices != null) {
+            for (Device device : devices) {
+                if (device.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.ACTIVE)) {
+                    activeDevices.add(device);
+                }
+            }
+        }
+        return activeDevices.toArray(new Device[]{});
+    }
 
+    public int getActiveDeviceCount(String username)
+            throws DeviceManagementException {
 
-		List<Device> devices = getDeviceManagementService().getDevicesOfUser(username);
+        List<Device> devices = getDeviceManagementService().getDevicesOfUser(username);
+        if (devices != null) {
+            List<Device> activeDevices = new ArrayList<>();
+            for (Device device : devices) {
+                if (device.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.ACTIVE)) {
+                    activeDevices.add(device);
+                }
+            }
+            return activeDevices.size();
+        }
+        return 0;
+    }
 
+    public ZipArchive getSketchArchive(String archivesPath, String templateSketchPath, Map contextParams)
+            throws DeviceManagementException {
+        /*  create a context and add data */
 
-		if (devices != null) {
-			List<Device> activeDevices = new ArrayList<>();
-			for (Device device : devices) {
-				if (device.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.ACTIVE)) {
-					activeDevices.add(device);
-				}
-			}
-			return activeDevices.size();
-		}
-		return 0;
-	}
+        try {
+            return IotDeviceManagementUtil.getSketchArchive(archivesPath, templateSketchPath,
+                                                            contextParams);
+        } catch (IOException e) {
+            throw new DeviceManagementException("Zip File Creation Failed", e);
+        }
+    }
 
-	public ZipArchive getSketchArchive(String archivesPath, String templateSketchPath, Map contextParams)
-			throws DeviceManagementException {
-		/*  create a context and add data */
+    public DeviceTypes[] getDeviceTypes(int tenantId)
+            throws DeviceManagementDAOException {
 
-		try {
-			return IotDeviceManagementUtil.getSketchArchive(archivesPath, templateSketchPath,
-			                                                contextParams);
-		} catch (IOException e) {
-			throw new DeviceManagementException("Zip File Creation Failed",e);
-		}
-	}
+        List<DeviceType> deviceTypes = DeviceManagementDAOFactory.getDeviceTypeDAO().getDeviceTypes(tenantId);
+        DeviceTypes dTypes[] = new DeviceTypes[deviceTypes.size()];
+        int iter = 0;
+        for (DeviceType type : deviceTypes) {
 
-	public DeviceTypes[] getDeviceTypes(int tenantId)
-			throws DeviceManagementDAOException {
+            DeviceTypes dt = new DeviceTypes();
+            dt.setName(type.getName());
+            dTypes[iter] = dt;
+            iter++;
 
-
-		List<DeviceType> deviceTypes = DeviceManagementDAOFactory.getDeviceTypeDAO().getDeviceTypes(tenantId);
-		DeviceTypes dTypes[] = new DeviceTypes[deviceTypes.size()];
-		int iter = 0;
-		for (DeviceType type : deviceTypes) {
-
-			DeviceTypes dt = new DeviceTypes();
-			dt.setName(type.getName());
-			dTypes[iter] = dt;
-			iter++;
-
-		}
-		return dTypes;
-
-
-	}
+        }
+        return dTypes;
+    }
 
 }

@@ -27,9 +27,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for DataStore complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType name="DataStore">
  *   &lt;complexContent>
@@ -47,18 +47,16 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DataStore", propOrder = {
-    "name",
-    "enabled",
-    "publisherClass",
-    "serverURL",
-    "port",
-    "username",
-    "password"
+        "name",
+        "enabled",
+        "publisherClass",
+        "serverURL",
+        "port",
+        "username",
+        "password"
 })
 public class DataStore {
 
@@ -79,11 +77,9 @@ public class DataStore {
 
     /**
      * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getName() {
         return name;
@@ -91,11 +87,9 @@ public class DataStore {
 
     /**
      * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setName(String value) {
         this.name = value;
@@ -103,7 +97,6 @@ public class DataStore {
 
     /**
      * Gets the value of the enabled property.
-     * 
      */
     public boolean isEnabled() {
         return enabled;
@@ -111,7 +104,6 @@ public class DataStore {
 
     /**
      * Sets the value of the enabled property.
-     * 
      */
     public void setEnabled(boolean value) {
         this.enabled = value;
@@ -119,11 +111,9 @@ public class DataStore {
 
     /**
      * Gets the value of the publisherClass property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPublisherClass() {
         return publisherClass;
@@ -131,11 +121,9 @@ public class DataStore {
 
     /**
      * Sets the value of the publisherClass property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPublisherClass(String value) {
         this.publisherClass = value;
@@ -143,11 +131,9 @@ public class DataStore {
 
     /**
      * Gets the value of the serverURL property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getServerURL() {
         return serverURL;
@@ -155,11 +141,9 @@ public class DataStore {
 
     /**
      * Sets the value of the serverURL property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setServerURL(String value) {
         this.serverURL = value;
@@ -167,7 +151,6 @@ public class DataStore {
 
     /**
      * Gets the value of the port property.
-     * 
      */
     public short getPort() {
         return port;
@@ -175,7 +158,6 @@ public class DataStore {
 
     /**
      * Sets the value of the port property.
-     * 
      */
     public void setPort(short value) {
         this.port = value;
@@ -183,11 +165,9 @@ public class DataStore {
 
     /**
      * Gets the value of the username property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getUsername() {
         return username;
@@ -195,11 +175,9 @@ public class DataStore {
 
     /**
      * Sets the value of the username property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setUsername(String value) {
         this.username = value;
@@ -207,11 +185,9 @@ public class DataStore {
 
     /**
      * Gets the value of the password property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPassword() {
         return password;
@@ -219,11 +195,9 @@ public class DataStore {
 
     /**
      * Sets the value of the password property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPassword(String value) {
         this.password = value;

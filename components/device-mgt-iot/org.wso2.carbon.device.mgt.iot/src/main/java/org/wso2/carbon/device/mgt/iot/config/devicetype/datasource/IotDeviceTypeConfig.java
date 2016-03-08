@@ -28,9 +28,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for IotDeviceTypeConfig complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType name="IotDeviceTypeConfig">
  *   &lt;complexContent>
@@ -44,13 +44,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "IotDeviceTypeConfig", propOrder = {
-    "datasourceName",
-    "apiApplicationName"
+        "datasourceName",
+        "apiApplicationName"
 })
 public class IotDeviceTypeConfig {
 
@@ -63,11 +61,9 @@ public class IotDeviceTypeConfig {
 
     /**
      * Gets the value of the datasourceName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getDatasourceName() {
         return datasourceName;
@@ -75,11 +71,9 @@ public class IotDeviceTypeConfig {
 
     /**
      * Sets the value of the datasourceName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setDatasourceName(String value) {
         this.datasourceName = value;
@@ -87,11 +81,9 @@ public class IotDeviceTypeConfig {
 
     /**
      * Gets the value of the apiApplicationName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getApiApplicationName() {
         return apiApplicationName;
@@ -99,11 +91,9 @@ public class IotDeviceTypeConfig {
 
     /**
      * Sets the value of the apiApplicationName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setApiApplicationName(String value) {
         this.apiApplicationName = value;
@@ -111,11 +101,9 @@ public class IotDeviceTypeConfig {
 
     /**
      * Gets the value of the type property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getType() {
         return type;
@@ -123,11 +111,9 @@ public class IotDeviceTypeConfig {
 
     /**
      * Sets the value of the type property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setType(String value) {
         this.type = value;
