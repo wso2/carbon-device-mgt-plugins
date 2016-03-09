@@ -22,6 +22,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl.util.RaspberrypiServiceUtils;
@@ -29,6 +34,7 @@ import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiCo
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.io.File;
 import java.util.Calendar;
@@ -40,7 +46,7 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
     private static final String serverName =
             DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
 
-    private static final String subscribeTopic = serverName + "/+/" + RaspberrypiConstants.DEVICE_TYPE + "/+/publisher";
+    private static final String subscribeTopic = serverName + "/" + RaspberrypiConstants.DEVICE_TYPE + "/+/publisher";
 
     private static final String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
@@ -89,20 +95,39 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
             // <Topic> = [ServerName/Owner/DeviceType/DeviceId/"publisher"]
             String topic = messageParams[0];
             String[] topicParams = topic.split("/");
-            String owner = topicParams[1];
-            String deviceId = topicParams[3];
+            String deviceId = topicParams[2];
             String receivedMessage = message.toString();
 
             if (log.isDebugEnabled()) {
-                log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
+                log.debug("Received MQTT message for: [DEVICE.ID-" + deviceId + "]");
                 log.debug("Message [" + receivedMessage + "] topic: [" + topic + "]");
             }
 
             if (receivedMessage.contains("PUBLISHER")) {
                 float temperature = Float.parseFloat(receivedMessage.split(":")[2]);
 
-                if (!RaspberrypiServiceUtils.publishToDAS(owner, deviceId, temperature)) {
-                    log.error("MQTT Subscriber: Publishing data to DAS failed.");
+                try {
+                    PrivilegedCarbonContext.startTenantFlow();
+                    PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                    DeviceManagementProviderService deviceManagementProviderService =
+                            (DeviceManagementProviderService) ctx.getOSGiService(DeviceManagementProviderService.class, null);
+                    if (deviceManagementProviderService != null) {
+                        DeviceIdentifier identifier = new DeviceIdentifier(deviceId, RaspberrypiConstants.DEVICE_TYPE);
+                        Device device = deviceManagementProviderService.getDevice(identifier);
+                        if (device != null) {
+                            String owner = device.getEnrolmentInfo().getOwner();
+                            ctx.setTenantDomain(MultitenantUtils.getTenantDomain(owner), true);
+                            ctx.setUsername(owner);
+                            if (!RaspberrypiServiceUtils.publishToDAS(deviceId, temperature)) {
+                                log.error("MQTT Subscriber: Publishing data to DAS failed.");
+                            }
+                        }
+                    }
+                } catch (DeviceManagementException e) {
+                    log.error("Failed to retreive the device managment service for device type " +
+                                      RaspberrypiConstants.DEVICE_TYPE, e);
+                } finally {
+                    PrivilegedCarbonContext.endTenantFlow();
                 }
 
                 if (log.isDebugEnabled()) {
@@ -112,8 +137,7 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
             } else if (receivedMessage.contains("TEMPERATURE")) {
                 String temperatureValue = receivedMessage.split(":")[1];
                 SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
-                        temperatureValue,
-                        Calendar.getInstance().getTimeInMillis());
+                        temperatureValue, Calendar.getInstance().getTimeInMillis());
             }
         }
     }

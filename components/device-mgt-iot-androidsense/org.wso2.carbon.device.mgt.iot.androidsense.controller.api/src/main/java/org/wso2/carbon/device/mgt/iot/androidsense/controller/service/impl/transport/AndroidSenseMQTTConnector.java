@@ -282,8 +282,7 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
                         Object metaData[] = {owner, AndroidSenseConstants.DEVICE_TYPE, deviceId, time};
                         if (streamDefinition != null && payloadData != null && payloadData.length > 0) {
                             try {
-                                SensorDataManager.getInstance().setSensorRecord(deviceId, sensorName, sensorValue,
-                                                                                time);
+                                SensorDataManager.getInstance().setSensorRecord(deviceId, sensorName, sensorValue, time);
                                 deviceAnalyticsService.publishEvent(streamDefinition, "1.0.0", metaData,
                                                                     new Object[0], payloadData);
                             } catch (DataPublisherConfigurationException e) {

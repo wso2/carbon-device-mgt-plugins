@@ -19,6 +19,7 @@ package org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl;
 
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api.impl.util.DroneAnalyzerServiceUtils;
@@ -35,50 +36,47 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DroneControllerService {
 
     private static org.apache.commons.logging.Log log = LogFactory.getLog(DroneControllerService.class);
-    private static final String SUPER_TENANT = "carbon.super";
     @Context  //injected response proxy supporting multiple thread
     private HttpServletResponse response;
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
     private DroneController droneController = new DroneControllerImpl();
 
-    /*	---------------------------------------------------------------------------------------
-                    Device specific APIs - Control APIs + Data-Publishing APIs
-            Also contains utility methods required for the execution of these APIs
-         ---------------------------------------------------------------------------------------	*/
-    @Path("controller/register/{owner}/{deviceId}/{ip}/{port}")
+
+    @Path("controller/register/{deviceId}/{ip}/{port}")
     @POST
-    public Response registerDeviceIP(@PathParam("owner") String owner, @PathParam("deviceId") String deviceId,
-                                   @PathParam("ip") String deviceIP,
-                                   @PathParam("port") String devicePort,
-                                   @Context HttpServletResponse response) {
-        String result;
-        log.info("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId + " of owner: " + owner);
-        String deviceHttpEndpoint = deviceIP + ":" + devicePort;
-        deviceToIpMap.put(deviceId, deviceHttpEndpoint);
-        result = "Device-IP Registered";
-        response.setStatus(Response.Status.OK.getStatusCode());
-        if (log.isDebugEnabled()) {
-            log.debug(result);
+    public Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
+                                   @PathParam("port") String devicePort, @Context HttpServletResponse response) {
+        try {
+            String result;
+            String deviceHttpEndpoint = deviceIP + ":" + devicePort;
+            deviceToIpMap.put(deviceId, deviceHttpEndpoint);
+            result = "Device-IP Registered";
+            response.setStatus(Response.Status.OK.getStatusCode());
+            if (log.isDebugEnabled()) {
+                log.debug(result);
+            }
+            return Response.ok(Response.Status.OK.getStatusCode()).build();
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
-        log.info(owner + deviceId + deviceIP + devicePort );
-        return Response.ok(Response.Status.OK.getStatusCode()).build();
     }
 
-    @Path("controller/send_command")
+    @Path("controller/device/{deviceId}/send_command")
     @POST
     /*@Feature( code="send_command", name="Send Command", type="operation",
             description="Send Commands to Drone")*/
-    public Response droneController(@HeaderParam("owner") String owner, @HeaderParam("deviceId") String deviceId,
+    public Response droneController(@PathParam("deviceId") String deviceId,
                                     @FormParam("action") String action, @FormParam("duration") String duration,
                                     @FormParam("speed") String speed){
         try {
             DroneAnalyzerServiceUtils.sendControlCommand(droneController, deviceId, action, Double.valueOf(speed),
                     Double.valueOf(duration));
             return Response.status(Response.Status.ACCEPTED).build();
-
         } catch (DeviceManagementException e) {
-           log.error("Drone command didn't success. Try again, \n"+ e);
+            log.error("Drone command didn't success. Try again, \n"+ e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 }

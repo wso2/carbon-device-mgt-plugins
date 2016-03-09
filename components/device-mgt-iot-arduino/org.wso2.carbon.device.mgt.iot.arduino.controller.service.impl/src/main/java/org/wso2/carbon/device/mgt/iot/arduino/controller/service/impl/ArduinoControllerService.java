@@ -41,6 +41,7 @@ import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -110,8 +111,7 @@ public class ArduinoControllerService {
      * @param arduinoMQTTConnector an object of type "ArduinoMQTTConnector" specific for this ArduinoControllerService
      */
     @SuppressWarnings("unused")
-    public void setArduinoMQTTConnector(
-            final ArduinoMQTTConnector arduinoMQTTConnector) {
+    public void setArduinoMQTTConnector(final ArduinoMQTTConnector arduinoMQTTConnector) {
         Runnable connector = new Runnable() {
             public void run() {
                 if (waitForServerStartup()) {
@@ -157,7 +157,7 @@ public class ArduinoControllerService {
     @POST
     @Feature(code = "bulb", name = "Control Bulb", type = "operation", description = "Control Bulb on Arduino Uno")
     public void switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
-                           @QueryParam("state") String state, @Context HttpServletResponse response) {
+                           @FormParam("state") String state, @Context HttpServletResponse response) {
         try {
             LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
             String operation = "BULB:" + state.toUpperCase();
@@ -208,7 +208,7 @@ public class ArduinoControllerService {
             SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
                                                             String.valueOf(pinData),
                                                             Calendar.getInstance().getTimeInMillis());
-            if (!ArduinoServiceUtils.publishToDAS(owner, dataMsg.deviceId, dataMsg.value)) {
+            if (!ArduinoServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
                 response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
                 log.warn("An error occured whilst trying to publish pin data of Arduino with ID [" +
                                  deviceId + "] of owner [" + owner + "]");
@@ -259,7 +259,7 @@ public class ArduinoControllerService {
             SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
                                                             String.valueOf(temperature),
                                                             Calendar.getInstance().getTimeInMillis());
-            if (!ArduinoServiceUtils.publishToDAS(owner, dataMsg.deviceId, dataMsg.value)) {
+            if (!ArduinoServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
                 response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
                 log.warn("An error occured whilst trying to publish temperature data of Arduino with ID [" + deviceId +
                                  "] of owner [" + owner + "]");

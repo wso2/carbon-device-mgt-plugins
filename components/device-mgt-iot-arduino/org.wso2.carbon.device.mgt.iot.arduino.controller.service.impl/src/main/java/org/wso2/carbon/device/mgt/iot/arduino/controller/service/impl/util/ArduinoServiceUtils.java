@@ -28,8 +28,13 @@ import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.exception.DataPublisherConfigurationException;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
+import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.ws.rs.HttpMethod;
 import java.io.BufferedReader;
@@ -191,18 +196,22 @@ public class ArduinoServiceUtils {
         return completeResponse.toString();
     }
 
-    public static boolean publishToDAS(String owner, String deviceId, float temperature) {
+    public static boolean publishToDAS(String deviceId, float temperature) {
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx.getOSGiService(
-                DeviceAnalyticsService.class, null);
+        String owner = ctx.getUsername();
         Object metdaData[] = {owner, ArduinoConstants.DEVICE_TYPE, deviceId, System.currentTimeMillis()};
         Object payloadData[] = {temperature};
-
-        try {
-            deviceAnalyticsService.publishEvent(TEMPERATURE_STREAM_DEFINITION, "1.0.0", metdaData, new Object[0], payloadData);
-        } catch (DataPublisherConfigurationException e) {
-            return false;
+        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
+                .getOSGiService(DeviceAnalyticsService.class, null);
+        if (deviceAnalyticsService != null) {
+            try {
+                deviceAnalyticsService.publishEvent(TEMPERATURE_STREAM_DEFINITION, "1.0.0", metdaData,
+                                                    new Object[0], payloadData);
+            } catch (DataPublisherConfigurationException e) {
+                return false;
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 }

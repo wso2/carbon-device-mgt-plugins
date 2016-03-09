@@ -105,7 +105,6 @@ public class AndroidSenseControllerService {
 		return false;
 	}
 
-
 	/**
 	 * Service to push all the sensor data collected by the Android. Called by the Android device
 	 *
@@ -204,17 +203,17 @@ public class AndroidSenseControllerService {
 							log.error("Invalid sensor value is sent from the device");
 							continue;
 						}
+				}
+				Object metaData[] = {dataMsg.owner, AndroidSenseConstants.DEVICE_TYPE, dataMsg.deviceId, sensor.time};
+				if (streamDef != null && payloadData != null && payloadData.length > 0) {
+					try {
+						SensorDataManager.getInstance()
+								.setSensorRecord(dataMsg.deviceId, sensorName, sensor.value, sensor.time);
+						deviceAnalyticsService.publishEvent(streamDef, "1.0.0", metaData, new Object[0], payloadData);
+					} catch (DataPublisherConfigurationException e) {
+						response.setStatus(Response.Status.UNSUPPORTED_MEDIA_TYPE.getStatusCode());
 					}
-					Object metaData[] = {dataMsg.owner, AndroidSenseConstants.DEVICE_TYPE, dataMsg.deviceId, sensor.time};
-					if (streamDef != null && payloadData != null && payloadData.length > 0) {
-						try {
-							SensorDataManager.getInstance()
-									.setSensorRecord(dataMsg.deviceId, sensorName, sensor.value, sensor.time);
-							deviceAnalyticsService.publishEvent(streamDef, "1.0.0", metaData, new Object[0], payloadData);
-						} catch (DataPublisherConfigurationException e) {
-							response.setStatus(Response.Status.UNSUPPORTED_MEDIA_TYPE.getStatusCode());
-						}
-					}
+				}
 			}
 		} finally {
 			PrivilegedCarbonContext.endTenantFlow();
@@ -326,8 +325,7 @@ public class AndroidSenseControllerService {
 	/**
 	 * End point which is called by Front-end js to get Accelerometer data from the server.
 	 * @param deviceId The registered device id
-	 * @param response the HTTP servlet response object received  by default as part of the HTTP
-	 *                 call to this API.
+	 * @param response the HTTP servlet response object received  by default as part of the HTTP call to this API.
 	 * @return This method returns a SensorRecord object.
 	 */
 	@Path("controller/device/{deviceId}/sensors/accelerometer")
@@ -518,7 +516,7 @@ public class AndroidSenseControllerService {
 	@POST
 	@Feature(code = "keywords", name = "Add Keywords", description = "Send keywords to the device",
 			 type = "operation")
-	public void sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords,
+	public void sendKeyWords(@PathParam("deviceId") String deviceId, @FormParam("keywords") String keywords,
 							 @Context HttpServletResponse response) {
 		try {
 			String username = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
@@ -544,7 +542,7 @@ public class AndroidSenseControllerService {
 	@POST
 	@Feature(code = "threshold", name = "Add a Threshold", description = "Set a threshold for word in the device",
 			 type = "operation")
-	public void sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold,
+	public void sendThreshold(@PathParam("deviceId") String deviceId, @FormParam("threshold") String threshold,
 							  @Context HttpServletResponse response) {
 		try {
 			String username = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
