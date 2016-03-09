@@ -25,7 +25,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * <p>Java class for DeviceCloudConfig complex type.
  * <p/>
@@ -74,6 +73,7 @@ public class DeviceManagementConfiguration {
 
     /**
      * Gets the value of the ServerInfo property of the device management configurations manager
+     *
      * @return possible object is
      * {@link DeviceMgtServerInfo }
      */

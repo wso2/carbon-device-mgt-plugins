@@ -24,18 +24,15 @@ import java.util.Map;
 
 public class IotDevice implements Serializable {
 
-    /**
-	 * 
-	 */
     private static final long serialVersionUID = 1L;
-	private String iotDeviceId;
+    private String iotDeviceId;
     private String iotDeviceName;
     private Map<String, String> deviceProperties;
 
-    public void setIotDeviceName(String iotDeviceName){
-        this.iotDeviceName=iotDeviceName;
-
+    public void setIotDeviceName(String iotDeviceName) {
+        this.iotDeviceName = iotDeviceName;
     }
+
     public String getIotDeviceName() {
         return iotDeviceName;
     }

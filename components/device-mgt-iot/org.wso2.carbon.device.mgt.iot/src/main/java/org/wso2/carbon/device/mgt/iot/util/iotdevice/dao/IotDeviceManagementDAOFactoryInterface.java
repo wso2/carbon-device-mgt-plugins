@@ -21,5 +21,5 @@ package org.wso2.carbon.device.mgt.iot.util.iotdevice.dao;
 public interface IotDeviceManagementDAOFactoryInterface {
 
     IotDeviceDAO getIotDeviceDAO();
-    
+
 }

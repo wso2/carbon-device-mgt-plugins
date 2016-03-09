@@ -22,69 +22,60 @@ import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfiguratio
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ControlQueue;
 
 public class MqttConfig {
-	private String mqttQueueEndpoint;
-	private String mqttQueueUsername;
-	private String mqttQueuePassword;
-	private boolean isEnabled;
+    private String mqttQueueEndpoint;
+    private String mqttQueueUsername;
+    private String mqttQueuePassword;
+    private boolean isEnabled;
+    private static final String MQTT_QUEUE_CONFIG_NAME = "MQTT";
+    private static final String LOCALHOST = "localhost";
+    private static final String PORT_OFFSET_PROPERTY = "portOffset";
+    private ControlQueue mqttControlQueue;
+    private static MqttConfig mqttConfig = new MqttConfig();
 
-	private static final String MQTT_QUEUE_CONFIG_NAME = "MQTT";
-	private static final String LOCALHOST = "localhost";
-	private static final String PORT_OFFSET_PROPERTY = "portOffset";
+    public String getMqttQueueEndpoint() {
+        return mqttQueueEndpoint;
+    }
 
-	private ControlQueue mqttControlQueue;
+    public String getMqttQueueUsername() {
+        return mqttQueueUsername;
+    }
 
-	private static MqttConfig mqttConfig = new MqttConfig();
+    public String getMqttQueuePassword() {
+        return mqttQueuePassword;
+    }
 
-	public String getMqttQueueEndpoint() {
-		return mqttQueueEndpoint;
-	}
+    public ControlQueue getMqttControlQueue() {
+        return mqttControlQueue;
+    }
 
-	public String getMqttQueueUsername() {
-		return mqttQueueUsername;
-	}
+    public boolean isEnabled() {
+        return isEnabled;
+    }
 
-	public String getMqttQueuePassword() {
-		return mqttQueuePassword;
-	}
+    public static String getMqttQueueConfigName() {
+        return MQTT_QUEUE_CONFIG_NAME;
+    }
 
-	public ControlQueue getMqttControlQueue() {
-		return mqttControlQueue;
-	}
+    private MqttConfig() {
 
-	public boolean isEnabled() {
-		return isEnabled;
-	}
+        mqttControlQueue = DeviceManagementConfigurationManager.getInstance().getControlQueue(MQTT_QUEUE_CONFIG_NAME);
+        int portOffset = Integer.parseInt(System.getProperty(PORT_OFFSET_PROPERTY));
+        String brokerURL = mqttControlQueue.getServerURL();
 
-	public static String getMqttQueueConfigName() {
-		return MQTT_QUEUE_CONFIG_NAME;
-	}
-
-	private MqttConfig() {
-		mqttControlQueue = DeviceManagementConfigurationManager.getInstance().getControlQueue(MQTT_QUEUE_CONFIG_NAME);
-
-		int portOffset = Integer.parseInt(System.getProperty(PORT_OFFSET_PROPERTY));
-		String brokerURL = mqttControlQueue.getServerURL();
-
-
-		if (portOffset != 0 && brokerURL.contains(LOCALHOST)) {
-			// if using the internal MB (meaning URL is localhost and there is a portOffset)
-			//          then increment port accordingly
-			int mqttPort = mqttControlQueue.getPort();
-			mqttPort = mqttPort + portOffset;
-			mqttQueueEndpoint = mqttControlQueue.getServerURL() + ":" + mqttPort;
-
-		} else {
-			mqttQueueEndpoint = mqttControlQueue.getServerURL() + ":" + mqttControlQueue.getPort();
-		}
-
-		mqttQueueUsername = mqttControlQueue.getUsername();
-		mqttQueuePassword = mqttControlQueue.getPassword();
-		isEnabled = mqttControlQueue.isEnabled();
-	}
-
-
-	public static MqttConfig getInstance() {
-		return mqttConfig;
-	}
-
+        if (portOffset != 0 && brokerURL.contains(LOCALHOST)) {
+            // if using the internal MB (meaning URL is localhost and there is a portOffset)
+            //          then increment port accordingly
+            int mqttPort = mqttControlQueue.getPort();
+            mqttPort = mqttPort + portOffset;
+            mqttQueueEndpoint = mqttControlQueue.getServerURL() + ":" + mqttPort;
+        } else {
+            mqttQueueEndpoint = mqttControlQueue.getServerURL() + ":" + mqttControlQueue.getPort();
+        }
+        mqttQueueUsername = mqttControlQueue.getUsername();
+        mqttQueuePassword = mqttControlQueue.getPassword();
+        isEnabled = mqttControlQueue.isEnabled();
+    }
+    public static MqttConfig getInstance() {
+        return mqttConfig;
+    }
 }

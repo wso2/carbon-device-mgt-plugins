@@ -29,17 +29,15 @@ import javax.sql.DataSource;
 import java.io.File;
 
 /**
- *
  * Provides methods for initializing the database script.
- *
  */
 public final class IotDeviceManagementSchemaInitializer extends DatabaseCreator {
 
     private static final Log log = LogFactory.getLog(IotDeviceManagementSchemaInitializer.class);
     private static final String setupSQLScriptBaseLocation =
             CarbonUtils.getCarbonHome() + File.separator + "dbscripts" + File.separator
-                    + IotPluginConstants.IOT_DB_SCRIPTS_FOLDER +
-                    File.separator + "plugins" + File.separator;
+            + IotPluginConstants.IOT_DB_SCRIPTS_FOLDER +
+            File.separator + "plugins" + File.separator;
     private String pluginType;
 
     public String getPluginType() {

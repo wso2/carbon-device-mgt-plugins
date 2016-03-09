@@ -100,7 +100,7 @@ public class IotDeviceManagementServiceComponent {
                 if (log.isDebugEnabled()) {
                     log.debug(
                             "-Dsetup is enabled. Iot Device management repository schema initialization is about " +
-                                    "to begin");
+                            "to begin");
                 }
                 try {
                     for (String pluginType : dsConfigMap.keySet()) {
@@ -122,16 +122,13 @@ public class IotDeviceManagementServiceComponent {
             IoTUsageStatisticsClient.initializeDataSource();
             IoTEventsStatisticsClient.initializeDataSource();
             UserManagement.registerApiAccessRoles();
-
-            bundleContext.registerService(DeviceTypeService.class.getName(),
-                                          new DeviceTypeServiceImpl(), null);
-
-            bundleContext.registerService(ConfigurationService.class.getName(),
-                                          new ConfigurationServiceImpl(), null);
+            bundleContext.registerService(DeviceTypeService.class.getName(), new DeviceTypeServiceImpl(), null);
+            bundleContext.registerService(ConfigurationService.class.getName(), new ConfigurationServiceImpl(), null);
 
             if (log.isDebugEnabled()) {
                 log.debug("Iot Device Management Service Component has been successfully activated");
             }
+
         } catch (Throwable e) {
             log.error("Error occurred while activating Iot Device Management Service Component", e);
         }
@@ -148,7 +145,7 @@ public class IotDeviceManagementServiceComponent {
             }
         } catch (DeviceControllerException e) {
             String errorMsg = "An error occurred whilst trying to delete all existing XMPP login sessions at " +
-                    "[" + xmppConfig.getXmppEndpoint() + "].";
+                              "[" + xmppConfig.getXmppEndpoint() + "].";
             log.error(errorMsg, e);
         }
 
@@ -160,7 +157,7 @@ public class IotDeviceManagementServiceComponent {
 
     protected void setDataSourceService(DataSourceService dataSourceService) {
         /* This is to avoid iot device management component getting initialized before the
-		underlying datasources
+        underlying datasources
         are registered */
         if (log.isDebugEnabled()) {
             log.debug("Data source service set to mobile service component");
@@ -198,7 +195,6 @@ public class IotDeviceManagementServiceComponent {
 
         }
         UserManagement.setRealmService(realmService);
-
     }
 
     /**

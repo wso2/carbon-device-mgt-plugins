@@ -43,19 +43,17 @@ import java.util.List;
  * Class responsible for the iot device manager configuration initialization.
  */
 public class DeviceManagementConfigurationManager {
-    private static final Log log = LogFactory.getLog(DeviceManagementConfigurationManager.class);
 
+    private static final Log log = LogFactory.getLog(DeviceManagementConfigurationManager.class);
     private static final String DEVICE_MGT_CONFIG_XML_NAME = "devicemgt-config.xml";
     private static final String DEVICE_MGT_ROOT_DIRECTORY = "iot";
     private final String XMLCONFIGS_FILE_LOCATION =
             CarbonUtils.getCarbonConfigDirPath() + File.separator +
-                    DEVICE_MGT_ROOT_DIRECTORY + File.separator + DEVICE_MGT_CONFIG_XML_NAME;
-
+            DEVICE_MGT_ROOT_DIRECTORY + File.separator + DEVICE_MGT_CONFIG_XML_NAME;
     private static final String IOT_DEVICE_CONFIG_XSD_NAME = "devicemgt-config.xsd";
     private final String XSDCONFIGS_FILE_LOCATION =
             CarbonUtils.getCarbonConfigDirPath() + File.separator +
-                    DEVICE_MGT_ROOT_DIRECTORY + File.separator + IOT_DEVICE_CONFIG_XSD_NAME;
-
+            DEVICE_MGT_ROOT_DIRECTORY + File.separator + IOT_DEVICE_CONFIG_XSD_NAME;
     private DeviceManagementConfiguration currentDeviceManagementConfiguration;
     private static DeviceManagementConfigurationManager deviceConfigurationManager =
             new DeviceManagementConfigurationManager();
@@ -98,8 +96,6 @@ public class DeviceManagementConfigurationManager {
                     return dataStore;
 
                 }
-
-
             }
         }
         return null;
@@ -126,24 +122,20 @@ public class DeviceManagementConfigurationManager {
         return null;
     }
 
-
     private class IotConfigValidationEventHandler implements ValidationEventHandler {
-
 
         @Override
         public boolean handleEvent(ValidationEvent event) {
             String error = "\nEVENT" + "\nSEVERITY:  " + event.getSeverity()
-                    + "\nMESSAGE:  " + event.getMessage()
-                    + "\nLINKED EXCEPTION:  " + event.getLinkedException()
-                    + "\nLOCATOR"
-                    + "\n    LINE NUMBER:  " + event.getLocator().getLineNumber()
-                    + "\n    COLUMN NUMBER:  " + event.getLocator().getColumnNumber()
-                    + "\n    OFFSET:  " + event.getLocator().getOffset()
-                    + "\n    OBJECT:  " + event.getLocator().getObject()
-                    + "\n    NODE:  " + event.getLocator().getNode()
-                    + "\n    URL:  " + event.getLocator().getURL();
-
-
+                           + "\nMESSAGE:  " + event.getMessage()
+                           + "\nLINKED EXCEPTION:  " + event.getLinkedException()
+                           + "\nLOCATOR"
+                           + "\n    LINE NUMBER:  " + event.getLocator().getLineNumber()
+                           + "\n    COLUMN NUMBER:  " + event.getLocator().getColumnNumber()
+                           + "\n    OFFSET:  " + event.getLocator().getOffset()
+                           + "\n    OBJECT:  " + event.getLocator().getObject()
+                           + "\n    NODE:  " + event.getLocator().getNode()
+                           + "\n    URL:  " + event.getLocator().getURL();
             log.error(error);
             return true;
         }

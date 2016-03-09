@@ -19,18 +19,18 @@ package org.wso2.carbon.device.mgt.iot.util;
 
 public class Role {
 
-	private String roleName;
+    private String roleName;
 
-	public Role(String roleName) {
-		this.roleName = roleName;
-	}
+    public Role(String roleName) {
+        this.roleName = roleName;
+    }
 
-	public String getRoleName() {
-		return roleName;
-	}
+    public String getRoleName() {
+        return roleName;
+    }
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
 
 }

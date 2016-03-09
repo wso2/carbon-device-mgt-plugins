@@ -24,12 +24,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * <p>Java class for ApiManagerConfig complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType name="ApiManagerConfig">
  *   &lt;complexContent>
@@ -51,22 +50,20 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ApiManagerConfig", propOrder = {
-    "enabled",
-    "accessTokenURL",
-    "serverURL",
-    "serverPort",
-    "gatewayPort",
-    "loginURL",
-    "subscriptionListURL",
-    "username",
-    "password",
-    "deviceGrantType",
-    "deviceScopes"
+        "enabled",
+        "accessTokenURL",
+        "serverURL",
+        "serverPort",
+        "gatewayPort",
+        "loginURL",
+        "subscriptionListURL",
+        "username",
+        "password",
+        "deviceGrantType",
+        "deviceScopes"
 })
 public class ApiManagerConfig {
 
@@ -95,7 +92,6 @@ public class ApiManagerConfig {
 
     /**
      * Gets the value of the enabled property.
-     * 
      */
     public boolean isEnabled() {
         return enabled;
@@ -103,7 +99,6 @@ public class ApiManagerConfig {
 
     /**
      * Sets the value of the enabled property.
-     * 
      */
     public void setEnabled(boolean value) {
         this.enabled = value;
@@ -111,11 +106,9 @@ public class ApiManagerConfig {
 
     /**
      * Gets the value of the accessTokenURL property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getAccessTokenURL() {
         return accessTokenURL;
@@ -123,11 +116,9 @@ public class ApiManagerConfig {
 
     /**
      * Sets the value of the accessTokenURL property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setAccessTokenURL(String value) {
         this.accessTokenURL = value;
@@ -135,11 +126,9 @@ public class ApiManagerConfig {
 
     /**
      * Gets the value of the serverURL property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getServerURL() {
         return serverURL;
@@ -147,11 +136,9 @@ public class ApiManagerConfig {
 
     /**
      * Sets the value of the serverURL property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setServerURL(String value) {
         this.serverURL = value;
@@ -159,11 +146,9 @@ public class ApiManagerConfig {
 
     /**
      * Gets the value of the serverPort property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getServerPort() {
         return serverPort;
@@ -171,11 +156,9 @@ public class ApiManagerConfig {
 
     /**
      * Sets the value of the serverPort property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setServerPort(String value) {
         this.serverPort = value;
@@ -183,11 +166,9 @@ public class ApiManagerConfig {
 
     /**
      * Gets the value of the gatewayPort property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getGatewayPort() {
         return gatewayPort;
@@ -195,11 +176,9 @@ public class ApiManagerConfig {
 
     /**
      * Sets the value of the gatewayPort property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setGatewayPort(String value) {
         this.gatewayPort = value;
@@ -207,11 +186,9 @@ public class ApiManagerConfig {
 
     /**
      * Gets the value of the loginURL property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getLoginURL() {
         return loginURL;
@@ -219,11 +196,9 @@ public class ApiManagerConfig {
 
     /**
      * Sets the value of the loginURL property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setLoginURL(String value) {
         this.loginURL = value;
@@ -231,11 +206,9 @@ public class ApiManagerConfig {
 
     /**
      * Gets the value of the subscriptionListURL property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getSubscriptionListURL() {
         return subscriptionListURL;
@@ -243,11 +216,9 @@ public class ApiManagerConfig {
 
     /**
      * Sets the value of the subscriptionListURL property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setSubscriptionListURL(String value) {
         this.subscriptionListURL = value;
@@ -255,11 +226,9 @@ public class ApiManagerConfig {
 
     /**
      * Gets the value of the username property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getUsername() {
         return username;
@@ -267,11 +236,9 @@ public class ApiManagerConfig {
 
     /**
      * Sets the value of the username property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setUsername(String value) {
         this.username = value;
@@ -279,11 +246,9 @@ public class ApiManagerConfig {
 
     /**
      * Gets the value of the password property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPassword() {
         return password;
@@ -291,11 +256,9 @@ public class ApiManagerConfig {
 
     /**
      * Sets the value of the password property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPassword(String value) {
         this.password = value;
@@ -303,11 +266,9 @@ public class ApiManagerConfig {
 
     /**
      * Gets the value of the deviceGrantType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getDeviceGrantType() {
         return deviceGrantType;
@@ -315,11 +276,9 @@ public class ApiManagerConfig {
 
     /**
      * Sets the value of the deviceGrantType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setDeviceGrantType(String value) {
         this.deviceGrantType = value;
@@ -327,11 +286,9 @@ public class ApiManagerConfig {
 
     /**
      * Gets the value of the deviceScopes property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getDeviceScopes() {
         return deviceScopes;
@@ -339,11 +296,9 @@ public class ApiManagerConfig {
 
     /**
      * Sets the value of the deviceScopes property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setDeviceScopes(String value) {
         this.deviceScopes = value;

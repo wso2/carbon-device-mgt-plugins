@@ -21,231 +21,229 @@ import java.util.ArrayList;
 
 public class User {
 
-	private String userName;
-	private String roleName;
-	private String firstName;
-	private String email;
-	private String lastName;
-	private String streatAddress;
-	private String locality;
-	private String region;
-	private String postalCode;
-	private String country;
-	private String hone;
-	private String im;
-	private String organization;
-	private String url;
-	private String title;
-	private String mobile;
-	private String nickName;
-	private String dateOfBirth;
-	private String gender;
-	private String accountStatus;
-	private String challengeQuestion;
-	private String identityClaimUri;
-	private String tempEmailAddress;
+    private String userName;
+    private String roleName;
+    private String firstName;
+    private String email;
+    private String lastName;
+    private String streatAddress;
+    private String locality;
+    private String region;
+    private String postalCode;
+    private String country;
+    private String hone;
+    private String im;
+    private String organization;
+    private String url;
+    private String title;
+    private String mobile;
+    private String nickName;
+    private String dateOfBirth;
+    private String gender;
+    private String accountStatus;
+    private String challengeQuestion;
+    private String identityClaimUri;
+    private String tempEmailAddress;
+    private ArrayList<Claims> claimList;
 
+    public User(String userName) {
+        this.userName = userName;
+    }
 
-	private ArrayList<Claims> claimList;
+    public User(String userName, String roleName) {
+        this.userName = userName;
+        this.roleName = roleName;
+    }
 
-	public User(String userName) {
-		this.userName = userName;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public User(String userName, String roleName) {
-		this.userName = userName;
-		this.roleName = roleName;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public String getUserName() {
-		return userName;
-	}
+    public String getRoleName() {
+        return roleName;
+    }
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
 
-	public String getRoleName() {
-		return roleName;
-	}
+    public ArrayList<Claims> getClaimList() {
+        return claimList;
+    }
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
+    public void setClaimList(ArrayList<Claims> claimList) {
+        this.claimList = claimList;
+    }
 
-	public ArrayList<Claims> getClaimList() {
-		return claimList;
-	}
+    public String getFirstName() {
+        return firstName;
+    }
 
-	public void setClaimList(ArrayList<Claims> claimList) {
-		this.claimList = claimList;
-	}
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 
-	public String getFirstName() {
-		return firstName;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getLastName() {
+        return lastName;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
-	public String getLastName() {
-		return lastName;
-	}
+    public String getStreatAddress() {
+        return streatAddress;
+    }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+    public void setStreatAddress(String streatAddress) {
+        this.streatAddress = streatAddress;
+    }
 
-	public String getStreatAddress() {
-		return streatAddress;
-	}
+    public String getLocality() {
+        return locality;
+    }
 
-	public void setStreatAddress(String streatAddress) {
-		this.streatAddress = streatAddress;
-	}
+    public void setLocality(String locality) {
+        this.locality = locality;
+    }
 
-	public String getLocality() {
-		return locality;
-	}
+    public String getRegion() {
+        return region;
+    }
 
-	public void setLocality(String locality) {
-		this.locality = locality;
-	}
+    public void setRegion(String region) {
+        this.region = region;
+    }
 
-	public String getRegion() {
-		return region;
-	}
+    public String getPostalCode() {
+        return postalCode;
+    }
 
-	public void setRegion(String region) {
-		this.region = region;
-	}
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
 
-	public String getPostalCode() {
-		return postalCode;
-	}
+    public String getCountry() {
+        return country;
+    }
 
-	public void setPostalCode(String postalCode) {
-		this.postalCode = postalCode;
-	}
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-	public String getCountry() {
-		return country;
-	}
+    public String getHone() {
+        return hone;
+    }
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
+    public void setHone(String hone) {
+        this.hone = hone;
+    }
 
-	public String getHone() {
-		return hone;
-	}
+    public String getIm() {
+        return im;
+    }
 
-	public void setHone(String hone) {
-		this.hone = hone;
-	}
+    public void setIm(String im) {
+        this.im = im;
+    }
 
-	public String getIm() {
-		return im;
-	}
+    public String getOrganization() {
+        return organization;
+    }
 
-	public void setIm(String im) {
-		this.im = im;
-	}
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
 
-	public String getOrganization() {
-		return organization;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setOrganization(String organization) {
-		this.organization = organization;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getMobile() {
+        return mobile;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
-	public String getMobile() {
-		return mobile;
-	}
+    public String getNickName() {
+        return nickName;
+    }
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 
-	public String getNickName() {
-		return nickName;
-	}
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
 
-	public String getDateOfBirth() {
-		return dateOfBirth;
-	}
+    public String getGender() {
+        return gender;
+    }
 
-	public void setDateOfBirth(String dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
-	}
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
-	public String getGender() {
-		return gender;
-	}
+    public String getAccountStatus() {
+        return accountStatus;
+    }
 
-	public void setGender(String gender) {
-		this.gender = gender;
-	}
+    public void setAccountStatus(String accountStatus) {
+        this.accountStatus = accountStatus;
+    }
 
-	public String getAccountStatus() {
-		return accountStatus;
-	}
+    public String getChallengeQuestion() {
+        return challengeQuestion;
+    }
 
-	public void setAccountStatus(String accountStatus) {
-		this.accountStatus = accountStatus;
-	}
+    public void setChallengeQuestion(String challengeQuestion) {
+        this.challengeQuestion = challengeQuestion;
+    }
 
-	public String getChallengeQuestion() {
-		return challengeQuestion;
-	}
+    public String getIdentityClaimUri() {
+        return identityClaimUri;
+    }
 
-	public void setChallengeQuestion(String challengeQuestion) {
-		this.challengeQuestion = challengeQuestion;
-	}
+    public void setIdentityClaimUri(String identityClaimUri) {
+        this.identityClaimUri = identityClaimUri;
+    }
 
-	public String getIdentityClaimUri() {
-		return identityClaimUri;
-	}
+    public String getTempEmailAddress() {
+        return tempEmailAddress;
+    }
 
-	public void setIdentityClaimUri(String identityClaimUri) {
-		this.identityClaimUri = identityClaimUri;
-	}
-
-	public String getTempEmailAddress() {
-		return tempEmailAddress;
-	}
-
-	public void setTempEmailAddress(String tempEmailAddress) {
-		this.tempEmailAddress = tempEmailAddress;
-	}
+    public void setTempEmailAddress(String tempEmailAddress) {
+        this.tempEmailAddress = tempEmailAddress;
+    }
 }

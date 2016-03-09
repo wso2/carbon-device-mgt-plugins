@@ -52,13 +52,10 @@ public class IotDeviceTypeConfigurationManager {
 	private static final String DEVICE_MGT_ROOT_DIRECTORY = "iot";
 	private IoTDeviceTypeConfigManager currentIoTDeviceTypeConfig;
 	private static IotDeviceTypeConfigurationManager iotDeviceConfigManager = new IotDeviceTypeConfigurationManager();
-
 	private final String iotDeviceMgtConfigXMLPath = CarbonUtils.getCarbonConfigDirPath()
 			+ File.separator + DEVICE_MGT_ROOT_DIRECTORY + File.separator + DEVICE_TYPE_CONFIG_XML_NAME;
-
 	private final String iotDeviceMgtConfigXSDPath = CarbonUtils.getCarbonConfigDirPath()
 			+ File.separator + DEVICE_MGT_ROOT_DIRECTORY + File.separator + DEVICE_TYPE_CONFIG_XSD_NAME;
-
 	HashMap<String,IotDeviceTypeConfig> iotDeviceTypeConfigMap = new HashMap<String,IotDeviceTypeConfig>();
 
 	public static IotDeviceTypeConfigurationManager getInstance() {
@@ -66,8 +63,6 @@ public class IotDeviceTypeConfigurationManager {
 	}
 
 	public synchronized void initConfig() throws DeviceManagementException {
-
-
 		try {
 			SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 			Schema schema = sf.newSchema(new File(iotDeviceMgtConfigXSDPath));
@@ -99,19 +94,11 @@ public class IotDeviceTypeConfigurationManager {
 		return currentIoTDeviceTypeConfig;
 	}
 
-
 	public Map<String,IotDeviceTypeConfig> getIotDeviceTypeConfigMap(){
-
-
-
 		return Collections.unmodifiableMap(iotDeviceTypeConfigMap);
 	}
 
-
-
 	private class IotConfigValidationEventHandler implements ValidationEventHandler {
-
-
 		@Override
 		public boolean handleEvent(ValidationEvent event) {
 			String error= "\nEVENT" +"\nSEVERITY:  " + event.getSeverity()
@@ -124,13 +111,9 @@ public class IotDeviceTypeConfigurationManager {
 					+"\n    OBJECT:  " + event.getLocator().getObject()
 					+"\n    NODE:  " + event.getLocator().getNode()
 					+"\n    URL:  " + event.getLocator().getURL();
-
-
 			log.error(error);
 			return true;
 		}
 	}
-
-
 
 }

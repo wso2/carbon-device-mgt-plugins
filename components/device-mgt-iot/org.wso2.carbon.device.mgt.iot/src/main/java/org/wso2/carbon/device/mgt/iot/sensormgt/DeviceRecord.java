@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @XmlRootElement
-public class DeviceRecord implements Serializable{
+public class DeviceRecord implements Serializable {
     private Map<String, SensorRecord> sensorDataList = new HashMap<>();
 
     public DeviceRecord(String sensorName, String sensorValue, long time) {
@@ -37,7 +37,7 @@ public class DeviceRecord implements Serializable{
         return sensorDataList;
     }
 
-    public void addDeviceRecord(String sensorName, String sensorValue, long time){
+    public void addDeviceRecord(String sensorName, String sensorValue, long time) {
         sensorDataList.put(sensorName, new SensorRecord(sensorValue, time));
     }
 }

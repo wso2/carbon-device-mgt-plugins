@@ -35,22 +35,19 @@ import java.util.List;
 
 public class IoTUsageStatisticsClient {
 
-	private static final Log log = LogFactory.getLog(IoTUsageStatisticsClient.class);
+    private static final Log log = LogFactory.getLog(IoTUsageStatisticsClient.class);
+    private static final String DATA_SOURCE_NAME = "jdbc/WSO2IOT_STATS_DB";
+    private static volatile DataSource dataSource = null;
 
-	private static final String DATA_SOURCE_NAME = "jdbc/WSO2IOT_STATS_DB";
-
-	private static volatile DataSource dataSource = null;
-
-
-	public static void initializeDataSource() throws IoTUsageStatisticsException {
-		try {
-			Context ctx = new InitialContext();
-			dataSource = (DataSource) ctx.lookup(DATA_SOURCE_NAME);
-		} catch (NamingException e) {
-			throw new IoTUsageStatisticsException("Error while looking up the data " +
-														  "source: " + DATA_SOURCE_NAME);
-		}
-	}
+    public static void initializeDataSource() throws IoTUsageStatisticsException {
+        try {
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup(DATA_SOURCE_NAME);
+        } catch (NamingException e) {
+            throw new IoTUsageStatisticsException("Error while looking up the data " +
+                                                  "source: " + DATA_SOURCE_NAME);
+        }
+    }
 //
 //	public List<DeviceUsageDTO> getTemperatureData(String user, String deviceId, String fromDate,
 //												   String toDate)
@@ -84,93 +81,95 @@ public class IoTUsageStatisticsClient {
 //							  toDate);
 //	}
 
-	public List<DeviceUsageDTO> getDeviceStats(String table, String valueColumn, String owner,
-												String deviceId, String fromDate, String toDate)
-			throws IoTUsageStatisticsException {
+    public List<DeviceUsageDTO> getDeviceStats(String table, String valueColumn, String owner,
+                                               String deviceId, String fromDate, String toDate)
+            throws IoTUsageStatisticsException {
 
-		if (dataSource == null) {
-			throw new IoTUsageStatisticsException("BAM data source hasn't been initialized. Ensure that the data source is properly configured in the APIUsageTracker configuration.");
-		}
+        if (dataSource == null) {
+            throw new IoTUsageStatisticsException("BAM data source hasn't been initialized. Ensure that the data " +
+                                                  "source is properly configured in the APIUsageTracker " +
+                                                  "configuration.");
+        }
 
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet rs = null;
-		try {
-			connection = dataSource.getConnection();
-			statement = connection.createStatement();
-			String query = null;
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet rs = null;
 
-			String ownerString = "";
-			if (owner != null) {
-				ownerString = String.format("owner = '%s' AND ", owner);
-			}
+        try {
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            String query = null;
+            String ownerString = "";
 
-			if (fromDate != null && toDate != null) {
-				//fromDate = getConvertedTime(fromDate);
-				//toDate = getConvertedTime(toDate);
-				query = String.format(
-						"SELECT * FROM %s WHERE " + ownerString + "deviceid = '%s' AND `time` "
-								+ "BETWEEN '%s' AND '%s'", table, deviceId, fromDate, toDate);
-			} else if (fromDate != null) {
-				//fromDate = getConvertedTime(fromDate);
-				query = String.format(
-						"SELECT * FROM %s WHERE " + ownerString + "deviceid = '%s' AND `time` >= "
-								+ "'%s'", table, deviceId, fromDate);
-			} else if (toDate != null) {
-				//toDate = getConvertedTime(toDate);
-				query = String.format(
-						"SELECT * FROM %s WHERE " + ownerString + "deviceid = '%s' AND `time` <= "
-								+ "'%s'", table, deviceId, toDate);
-			}
+            if (owner != null) {
+                ownerString = String.format("owner = '%s' AND ", owner);
+            }
 
-			log.info("query: " + query);
+            if (fromDate != null && toDate != null) {
+                //fromDate = getConvertedTime(fromDate);
+                //toDate = getConvertedTime(toDate);
+                query = String.format(
+                        "SELECT * FROM %s WHERE " + ownerString + "deviceid = '%s' AND `time` " + "BETWEEN '%s' AND " +
+                        "'%s'", table, deviceId, fromDate, toDate);
+            } else if (fromDate != null) {
+                //fromDate = getConvertedTime(fromDate);
+                query = String.format(
+                        "SELECT * FROM %s WHERE " + ownerString + "deviceid = '%s' AND `time` >= "
+                        +                                         "'%s'", table, deviceId, fromDate);
+            } else if (toDate != null) {
+                //toDate = getConvertedTime(toDate);
+                query = String.format(
+                        "SELECT * FROM %s WHERE " + ownerString + "deviceid = '%s' AND `time` <= "
+                        +                                         "'%s'", table, deviceId, toDate);
+            }
 
-			if (query == null) {
-				return null;
-			}
+            log.info("query: " + query);
 
-			List<DeviceUsageDTO> deviceUsageDTOs = new ArrayList<DeviceUsageDTO>();
-			rs = statement.executeQuery(query);
-			while (rs.next()) {
-				DeviceUsageDTO deviceUsageDTO = new DeviceUsageDTO();
-				deviceUsageDTO.setTime(rs.getString("TIME"));
-				deviceUsageDTO.setValue(rs.getString(valueColumn));
+            if (query == null) {
+                return null;
+            }
 
-				deviceUsageDTOs.add(deviceUsageDTO);
+            List<DeviceUsageDTO> deviceUsageDTOs = new ArrayList<DeviceUsageDTO>();
+            rs = statement.executeQuery(query);
+            while (rs.next()) {
+                DeviceUsageDTO deviceUsageDTO = new DeviceUsageDTO();
+                deviceUsageDTO.setTime(rs.getString("TIME"));
+                deviceUsageDTO.setValue(rs.getString(valueColumn));
 
-			}
+                deviceUsageDTOs.add(deviceUsageDTO);
 
-			return deviceUsageDTOs;
+            }
+            return deviceUsageDTOs;
 
-		} catch (Exception e) {
+        } catch (Exception e) {
 //			throw new IoTUsageStatisticsException(
 //					"Error occurred while querying from JDBC database", e);
-			//Exception hiding to avoid GC error
-			log.error("Error occurred while querying from JDBC database: " + e.getMessage());
-			return new ArrayList<>();
-		} finally {
-			if (rs != null) {
-				try {
-					rs.close();
-				} catch (SQLException ignore) {
+            //Exception hiding to avoid GC error
+            log.error("Error occurred while querying from JDBC database: " + e.getMessage());
+            return new ArrayList<>();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException ignore) {
 
-				}
-			}
-			if (statement != null) {
-				try {
-					statement.close();
-				} catch (SQLException ignore) {
+                }
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ignore) {
 
-				}
-			}
-			if (connection != null) {
-				try {
-					connection.close();
-				} catch (SQLException ignore) {
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException ignore) {
 
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 
 }

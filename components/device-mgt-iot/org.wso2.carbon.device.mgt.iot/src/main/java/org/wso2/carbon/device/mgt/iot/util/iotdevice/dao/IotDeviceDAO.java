@@ -28,48 +28,48 @@ import java.util.List;
  */
 public interface IotDeviceDAO {
 
-	/**
-	 * Fetches a IotDevice from Iot database.
-	 *
-	 * @param iotDeviceId Id of the Iot-Device.
-	 * @return IotDevice corresponding to given device-id.
-	 * @throws IotDeviceManagementDAOException
-	 */
-	IotDevice getIotDevice(String iotDeviceId) throws IotDeviceManagementDAOException;
+    /**
+     * Fetches a IotDevice from Iot database.
+     *
+     * @param iotDeviceId Id of the Iot-Device.
+     * @return IotDevice corresponding to given device-id.
+     * @throws IotDeviceManagementDAOException
+     */
+    IotDevice getIotDevice(String iotDeviceId) throws IotDeviceManagementDAOException;
 
-	/**
-	 * Adds a new IotDevice to the MDM database.
-	 *
-	 * @param iotDevice IotDevice to be added.
-	 * @return The status of the operation.
-	 * @throws IotDeviceManagementDAOException
-	 */
-	boolean addIotDevice(IotDevice iotDevice) throws IotDeviceManagementDAOException;
+    /**
+     * Adds a new IotDevice to the MDM database.
+     *
+     * @param iotDevice IotDevice to be added.
+     * @return The status of the operation.
+     * @throws IotDeviceManagementDAOException
+     */
+    boolean addIotDevice(IotDevice iotDevice) throws IotDeviceManagementDAOException;
 
-	/**
-	 * Updates IotDevice information in MDM database.
-	 *
-	 * @param iotDevice IotDevice to be updated.
-	 * @return The status of the operation.
-	 * @throws IotDeviceManagementDAOException
-	 */
-	boolean updateIotDevice(IotDevice iotDevice) throws IotDeviceManagementDAOException;
+    /**
+     * Updates IotDevice information in MDM database.
+     *
+     * @param iotDevice IotDevice to be updated.
+     * @return The status of the operation.
+     * @throws IotDeviceManagementDAOException
+     */
+    boolean updateIotDevice(IotDevice iotDevice) throws IotDeviceManagementDAOException;
 
-	/**
-	 * Deletes a given IotDevice from MDM database.
-	 *
-	 * @param mblDeviceId Id of IotDevice to be deleted.
-	 * @return The status of the operation.
-	 * @throws IotDeviceManagementDAOException
-	 */
-	boolean deleteIotDevice(String mblDeviceId) throws IotDeviceManagementDAOException;
+    /**
+     * Deletes a given IotDevice from MDM database.
+     *
+     * @param mblDeviceId Id of IotDevice to be deleted.
+     * @return The status of the operation.
+     * @throws IotDeviceManagementDAOException
+     */
+    boolean deleteIotDevice(String mblDeviceId) throws IotDeviceManagementDAOException;
 
-	/**
-	 * Fetches all IotDevices from MDM database.
-	 *
-	 * @return List of IotDevices.
-	 * @throws IotDeviceManagementDAOException
-	 */
-	List<IotDevice> getAllIotDevices() throws IotDeviceManagementDAOException;
+    /**
+     * Fetches all IotDevices from MDM database.
+     *
+     * @return List of IotDevices.
+     * @throws IotDeviceManagementDAOException
+     */
+    List<IotDevice> getAllIotDevices() throws IotDeviceManagementDAOException;
 
 }

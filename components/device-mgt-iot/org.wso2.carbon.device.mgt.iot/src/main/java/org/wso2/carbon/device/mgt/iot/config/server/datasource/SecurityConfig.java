@@ -27,9 +27,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for SecurityConfig complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType name="SecurityConfig">
  *   &lt;complexContent>
@@ -42,13 +42,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SecurityConfig", propOrder = {
-    "clientTrustStore",
-    "password"
+        "clientTrustStore",
+        "password"
 })
 public class SecurityConfig {
 
@@ -59,11 +57,9 @@ public class SecurityConfig {
 
     /**
      * Gets the value of the clientTrustStore property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getClientTrustStore() {
         return clientTrustStore;
@@ -71,11 +67,9 @@ public class SecurityConfig {
 
     /**
      * Sets the value of the clientTrustStore property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setClientTrustStore(String value) {
         this.clientTrustStore = value;
@@ -83,11 +77,9 @@ public class SecurityConfig {
 
     /**
      * Gets the value of the password property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPassword() {
         return password;
@@ -95,11 +87,9 @@ public class SecurityConfig {
 
     /**
      * Sets the value of the password property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPassword(String value) {
         this.password = value;

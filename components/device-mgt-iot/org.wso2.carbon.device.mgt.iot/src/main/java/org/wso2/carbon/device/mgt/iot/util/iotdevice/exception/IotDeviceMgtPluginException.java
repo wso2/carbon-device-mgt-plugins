@@ -18,7 +18,7 @@
 package org.wso2.carbon.device.mgt.iot.util.iotdevice.exception;
 
 
-public class IotDeviceMgtPluginException extends Exception{
+public class IotDeviceMgtPluginException extends Exception {
 
     private static final long serialVersionUID = -2297311387874900305L;
     private String errorMessage;

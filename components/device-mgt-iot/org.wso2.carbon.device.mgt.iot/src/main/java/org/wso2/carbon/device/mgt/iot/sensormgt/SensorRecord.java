@@ -23,24 +23,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @XmlRootElement
-public class SensorRecord implements Serializable{
-	//sensor value float, int, boolean all should be converted into string
-	private String sensorValue;
-	private long time;
+public class SensorRecord implements Serializable {
+    //sensor value float, int, boolean all should be converted into string
+    private String sensorValue;
+    private long time;
 
-	public SensorRecord(String sensorValue, long time) {
-		this.sensorValue = sensorValue;
-		this.time = time;
-	}
+    public SensorRecord(String sensorValue, long time) {
+        this.sensorValue = sensorValue;
+        this.time = time;
+    }
 
-	@XmlElement
-	public String getSensorValue() {
-		return sensorValue;
-	}
+    @XmlElement
+    public String getSensorValue() {
+        return sensorValue;
+    }
 
-	@XmlElement
-	public long getTime() {
-		return time;
-	}
+    @XmlElement
+    public long getTime() {
+        return time;
+    }
 
 }

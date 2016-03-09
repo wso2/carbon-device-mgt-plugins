@@ -18,5 +18,5 @@
 package org.wso2.carbon.device.mgt.iot.util.iotdevice.constants;
 
 public class IotPluginConstants {
-	public static final String IOT_DB_SCRIPTS_FOLDER = "cdm";
+    public static final String IOT_DB_SCRIPTS_FOLDER = "cdm";
 }

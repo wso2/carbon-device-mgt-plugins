@@ -25,9 +25,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for DeviceUserValidatorConfig complex type.
- *
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- *
+ * <p/>
  * <pre>
  * &lt;complexType name="DeviceMgtServerInfo">
  *   &lt;complexContent>
@@ -40,8 +40,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- *
- *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DeviceMgtServerInfo", propOrder = {
@@ -57,6 +55,7 @@ public class DeviceMgtServerInfo {
 
     /**
      * Gets the domain of the current DeviceManagement Server Instance
+     *
      * @return the domain of the current device-management server instance. [eg: wso2.iotserver.com]
      */
     public String getDomain() {
@@ -65,6 +64,7 @@ public class DeviceMgtServerInfo {
 
     /**
      * Sets the domain of the current DeviceManagement Server Instance
+     *
      * @param domain the domain of the current device-management server instance. [eg: wso2.iotserver.com]
      */
     public void setDomain(String domain) {
@@ -73,6 +73,7 @@ public class DeviceMgtServerInfo {
 
     /**
      * Gets the name of the current DeviceManagement Server Instance
+     *
      * @return the name of the current device-management server instance. [eg: "WSO2-US-IoT"]
      */
     public String getName() {
@@ -81,6 +82,7 @@ public class DeviceMgtServerInfo {
 
     /**
      * Sets the name of the current DeviceManagement Server Instance
+     *
      * @param name the name of the current device-management server instance. [eg: "WSO2-US-IoT"]
      */
     public void setName(String name) {

@@ -24,12 +24,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * <p>Java class for DeviceUserValidatorConfig complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType name="DeviceUserValidatorConfig">
  *   &lt;complexContent>
@@ -42,13 +41,11 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DeviceUserValidatorConfig", propOrder = {
-    "cacheSize",
-    "ttl"
+        "cacheSize",
+        "ttl"
 })
 public class DeviceUserValidatorConfig {
 
@@ -59,11 +56,9 @@ public class DeviceUserValidatorConfig {
 
     /**
      * Gets the value of the cacheSize property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link int }
-     *     
+     *
+     * @return possible object is
+     * {@link int }
      */
     public int getCacheSize() {
         return cacheSize;
@@ -71,11 +66,9 @@ public class DeviceUserValidatorConfig {
 
     /**
      * Sets the value of the cacheSize property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link int }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link int }
      */
     public void setCacheSize(int value) {
         this.cacheSize = value;
@@ -83,11 +76,9 @@ public class DeviceUserValidatorConfig {
 
     /**
      * Gets the value of the ttl property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link int }
-     *     
+     *
+     * @return possible object is
+     * {@link int }
      */
     public int getTTL() {
         return ttl;
@@ -95,11 +86,9 @@ public class DeviceUserValidatorConfig {
 
     /**
      * Sets the value of the ttl property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link int }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link int }
      */
     public void setTTL(int value) {
         this.ttl = value;

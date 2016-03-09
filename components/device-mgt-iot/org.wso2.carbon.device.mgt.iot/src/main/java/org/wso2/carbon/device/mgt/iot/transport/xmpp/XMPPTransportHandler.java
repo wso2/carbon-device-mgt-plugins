@@ -52,18 +52,16 @@ import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
  * provided by jivesoftware/igniterealtime.
  */
 public abstract class XMPPTransportHandler implements TransportHandler<Message> {
-    private static final Log log = LogFactory.getLog(XMPPTransportHandler.class);
 
+    private static final Log log = LogFactory.getLog(XMPPTransportHandler.class);
     protected String server;
     protected int timeoutInterval;    // millis
-
     //TODO:: Shouldnt be hard-coded. Need to be read from configs
     private static final int DEFAULT_XMPP_PORT = 5222;
     private XMPPConnection connection;
     private int port;
     private PacketFilter filter;
     private PacketListener listener;
-
 
     /**
      * Constructor for XMPPTransportHandler passing only the server-IP.
@@ -135,7 +133,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
      */
     private void initXMPPClient() {
         log.info(String.format("Initializing connection to XMPP Server at %1$s via port " +
-                                       "%2$d.", server, port));
+                               "%2$d.", server, port));
         SmackConfiguration.setPacketReplyTimeout(timeoutInterval);
         ConnectionConfiguration config = new ConnectionConfiguration(server, port);
 //		TODO:: Need to enable SASL-Authentication appropriately
@@ -160,7 +158,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
         } catch (XMPPException xmppExcepion) {
             String errorMsg =
                     "Connection attempt to the XMPP Server at " + server + " via port " + port +
-                            " failed.";
+                    " failed.";
             log.info(errorMsg);
             throw new TransportHandlerException(errorMsg, xmppExcepion);
         }
@@ -193,21 +191,20 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
             } catch (XMPPException xmppException) {
                 String errorMsg =
                         "Login attempt to the XMPP Server at " + server + " with username - " +
-                                username + " failed.";
+                        username + " failed.";
                 log.info(errorMsg);
                 throw new TransportHandlerException(errorMsg, xmppException);
             }
         } else {//TODO:: Log not required
             String errorMsg =
                     "Not connected to XMPP-Server to attempt Login. Please 'connectToServer' " +
-                            "before Login";
+                    "before Login";
             if (log.isDebugEnabled()) {
                 log.debug(errorMsg);
             }
             throw new TransportHandlerException(errorMsg);
         }
     }
-
 
     /**
      * Sets a filter for all the incoming XMPP-Messages on the Sender's JID (XMPP-Account ID).
@@ -231,7 +228,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                                 processIncomingMessage(xmppMessage);
                             } catch (TransportHandlerException e) {
                                 log.error("An error occurred when trying to process received XMPP message " +
-                                                  "[" + xmppMessage.getBody() + "].", e);
+                                          "[" + xmppMessage.getBody() + "].", e);
                             }
                         }
                     };
@@ -240,10 +237,8 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                 }
             }
         };
-
         connection.addPacketListener(listener, filter);
     }
-
 
     /**
      * Sets a filter for all the incoming XMPP-Messages on the Receiver's JID (XMPP-Account ID).
@@ -267,7 +262,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                                 processIncomingMessage(xmppMessage);
                             } catch (TransportHandlerException e) {
                                 log.error("An error occurred when trying to process received XMPP message " +
-                                                  "[" + xmppMessage.getBody() + "].", e);
+                                          "[" + xmppMessage.getBody() + "].", e);
                             }
                         }
                     };
@@ -276,10 +271,8 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                 }
             }
         };
-
         connection.addPacketListener(listener, filter);
     }
-
 
     /**
      * Sets a filter for all the incoming XMPP-Messages on the From-JID & To-JID (XMPP-Account IDs)
@@ -318,7 +311,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                                 processIncomingMessage(xmppMessage);
                             } catch (TransportHandlerException e) {
                                 log.error("An error occurred when trying to process received XMPP message " +
-                                                  "[" + xmppMessage.getBody() + "].", e);
+                                          "[" + xmppMessage.getBody() + "].", e);
                             }
                         }
                     };
@@ -327,10 +320,8 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                 }
             }
         };
-
         connection.addPacketListener(listener, filter);
     }
-
 
     /**
      * Sends an XMPP message. Calls the overloaded method with Subject set to "Reply-From-Device"
@@ -342,7 +333,6 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
     protected void sendXMPPMessage(String JID, String message) {
         sendXMPPMessage(JID, message, "XMPP-Message");
     }
-
 
     /**
      * Overloaded method to send an XMPP message. Includes the subject to be mentioned in the
@@ -361,7 +351,6 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
         sendXMPPMessage(JID, xmppMessage);
     }
 
-
     /**
      * Sends an XMPP message.
      *
@@ -374,8 +363,7 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
             log.debug("Message: '" + xmppMessage.getBody() + "' sent to XMPP JID [" + JID + "] sent successfully.");
         }
     }
-
-
+    
     /**
      * Closes the connection to the XMPP Server.
      */

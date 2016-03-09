@@ -25,7 +25,6 @@ public class StartupListener implements ServerStartupObserver {
 
     @Override
     public void completingServerStartup() {
-
     }
 
     @Override

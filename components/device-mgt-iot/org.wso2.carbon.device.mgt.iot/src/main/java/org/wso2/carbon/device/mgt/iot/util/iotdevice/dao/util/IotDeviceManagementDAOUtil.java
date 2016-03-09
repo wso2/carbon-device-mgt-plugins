@@ -71,7 +71,7 @@ public class IotDeviceManagementDAOUtil {
      * @param dataSource Iot data source
      */
     public static void setupIotDeviceManagementSchema(DataSource dataSource, String pluginType) throws
-                                                                             IotDeviceMgtPluginException {
+                                                                                                IotDeviceMgtPluginException {
         IotDeviceManagementSchemaInitializer initializer =
                 new IotDeviceManagementSchemaInitializer(dataSource, pluginType);
         log.info("Initializing iot device management repository database schema");
@@ -79,7 +79,7 @@ public class IotDeviceManagementDAOUtil {
             initializer.createRegistryDatabase();
         } catch (Exception e) {
             throw new IotDeviceMgtPluginException("Error occurred while initializing Iot Device " +
-                                                "Management database schema", e);
+                                                  "Management database schema", e);
         }
     }
 
