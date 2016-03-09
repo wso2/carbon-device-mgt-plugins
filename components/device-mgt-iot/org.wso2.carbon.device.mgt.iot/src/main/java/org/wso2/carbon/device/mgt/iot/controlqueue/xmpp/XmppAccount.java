@@ -19,6 +19,7 @@
 package org.wso2.carbon.device.mgt.iot.controlqueue.xmpp;
 
 public class XmppAccount {
+
     private String username;
     private String password;
     private String accountName;

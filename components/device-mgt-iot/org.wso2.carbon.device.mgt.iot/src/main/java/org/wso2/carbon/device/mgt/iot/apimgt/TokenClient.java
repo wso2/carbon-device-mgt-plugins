@@ -19,7 +19,6 @@
 
 package org.wso2.carbon.device.mgt.iot.apimgt;
 
-
 import java.io.IOException;
 
 
@@ -43,7 +42,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class TokenClient {
 
     private static Log log = LogFactory.getLog(TokenClient.class);
@@ -65,24 +63,20 @@ public class TokenClient {
                 .getDeviceGrantType();
         scope = "device_scope";
         appToken = ApisAppClient.getInstance().getBase64EncodedConsumerKeyAndSecret(deviceType);
-
     }
 
     public AccessTokenInfo getAccessToken(String username, String deviceId)
             throws AccessTokenException {
-
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("grant_type", grantType));
         params.add(new BasicNameValuePair("device_id", deviceId));
         params.add(new BasicNameValuePair("device_type", deviceType));
         params.add(new BasicNameValuePair("username", username));
         params.add(new BasicNameValuePair("scope", scope));
-
         return getTokenInfo(params);
     }
 
     public AccessTokenInfo getAccessToken(String refreshToken) throws AccessTokenException {
-
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("grant_type", "refresh_token"));
         params.add(new BasicNameValuePair("refresh_token", refreshToken));
@@ -91,7 +85,6 @@ public class TokenClient {
     }
 
     private AccessTokenInfo getTokenInfo(List<NameValuePair> nameValuePairs) throws AccessTokenException {
-
         try {
             URL tokenUrl = new URL(tokenURL);
             HttpClient httpClient = null;
@@ -142,6 +135,3 @@ public class TokenClient {
         }
     }
 }
-
-
-

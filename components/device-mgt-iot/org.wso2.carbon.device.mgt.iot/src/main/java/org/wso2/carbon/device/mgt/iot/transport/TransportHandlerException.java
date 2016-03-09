@@ -19,8 +19,8 @@
 package org.wso2.carbon.device.mgt.iot.transport;
 
 public class TransportHandlerException extends Exception {
-    private static final long serialVersionUID = 2736466230451105440L;
 
+    private static final long serialVersionUID = 2736466230451105440L;
     private String errorMessage;
 
     public String getErrorMessage() {

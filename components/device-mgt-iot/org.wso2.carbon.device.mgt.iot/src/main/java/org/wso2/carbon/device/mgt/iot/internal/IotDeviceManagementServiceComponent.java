@@ -122,16 +122,13 @@ public class IotDeviceManagementServiceComponent {
             IoTUsageStatisticsClient.initializeDataSource();
             IoTEventsStatisticsClient.initializeDataSource();
             UserManagement.registerApiAccessRoles();
-
-            bundleContext.registerService(DeviceTypeService.class.getName(),
-                                          new DeviceTypeServiceImpl(), null);
-
-            bundleContext.registerService(ConfigurationService.class.getName(),
-                                          new ConfigurationServiceImpl(), null);
+            bundleContext.registerService(DeviceTypeService.class.getName(), new DeviceTypeServiceImpl(), null);
+            bundleContext.registerService(ConfigurationService.class.getName(), new ConfigurationServiceImpl(), null);
 
             if (log.isDebugEnabled()) {
                 log.debug("Iot Device Management Service Component has been successfully activated");
             }
+
         } catch (Throwable e) {
             log.error("Error occurred while activating Iot Device Management Service Component", e);
         }
@@ -198,7 +195,6 @@ public class IotDeviceManagementServiceComponent {
 
         }
         UserManagement.setRealmService(realmService);
-
     }
 
     /**

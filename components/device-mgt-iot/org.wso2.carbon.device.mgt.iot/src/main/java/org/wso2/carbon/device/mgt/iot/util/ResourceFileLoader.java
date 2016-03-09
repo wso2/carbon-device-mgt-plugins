@@ -39,7 +39,6 @@ public class ResourceFileLoader {
         } catch (UnsupportedEncodingException e) {
 
         }
-        //log.info(fullPath);
         String pathArr[] = fullPath.split("/WEB-INF/classes/");
         filePath = pathArr[0] + fileName;
     }

@@ -25,7 +25,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * <p>Java class for IotDeviceTypeConfig complex type.
  * <p/>
@@ -50,6 +49,7 @@ import javax.xml.bind.annotation.XmlType;
         "datasourceName",
         "apiApplicationName"
 })
+
 public class IotDeviceTypeConfig {
 
     @XmlElement(name = "DatasourceName", required = true)

@@ -46,7 +46,6 @@ import java.nio.charset.StandardCharsets;
 public class XmppServerClient {
 
     private static final Log log = LogFactory.getLog(XmppServerClient.class);
-
     private static final String XMPP_SERVER_API_CONTEXT = "/plugins/restapi/v1";
     private static final String XMPP_USERS_API = "/users";
     private static final String XMPP_SESSIONS_API = "/sessions";
@@ -55,7 +54,6 @@ public class XmppServerClient {
     @SuppressWarnings("unused")
     private static final String APPLICATION_JSON_MT = "application/json";
     private static final String DEVICEMGT_CONFIG_FILE = "devicemgt-config.xml";
-
     private String xmppEndpoint;
     private String xmppUsername;
     private String xmppPassword;
@@ -154,7 +152,6 @@ public class XmppServerClient {
         }
     }
 
-
     public boolean doesXMPPUserAccountExist(String username) throws DeviceControllerException {
         if (xmppEnabled) {
             String xmppCheckUserAPIEndpoint = xmppEndpoint + XMPP_SERVER_API_CONTEXT + XMPP_USERS_API + "/" + username;
@@ -219,7 +216,6 @@ public class XmppServerClient {
         }
     }
 
-
     public JSONArray getAllCurrentUserSessions() throws DeviceControllerException {
         if (xmppEnabled) {
             JSONArray xmppSessions;
@@ -283,10 +279,8 @@ public class XmppServerClient {
         }
     }
 
-
     public void deleteCurrentXmppSessions() throws DeviceControllerException {
         JSONArray xmppSessionsArray;
-
         try {
             xmppSessionsArray = getAllCurrentUserSessions();
         } catch (DeviceControllerException e) {

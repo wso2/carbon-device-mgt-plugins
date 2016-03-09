@@ -21,7 +21,6 @@ package org.wso2.carbon.device.mgt.iot.exception;
 
 public class AccessTokenException extends Exception {
 
-
     public AccessTokenException(String message) {
         super(message);
     }

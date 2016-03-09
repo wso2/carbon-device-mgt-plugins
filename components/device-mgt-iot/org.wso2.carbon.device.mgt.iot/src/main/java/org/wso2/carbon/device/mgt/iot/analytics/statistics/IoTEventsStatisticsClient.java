@@ -36,11 +36,8 @@ import java.util.List;
 public class IoTEventsStatisticsClient {
 
 	private static final Log log = LogFactory.getLog(IoTEventsStatisticsClient.class);
-
 	private static final String DATA_SOURCE_NAME = "jdbc/WSO2IOT_STATS_DB";
-
 	private static volatile DataSource dataSource = null;
-
 
 	public static void initializeDataSource() throws IoTEventsStatisticsException {
 		try {
@@ -75,15 +72,14 @@ public class IoTEventsStatisticsClient {
 
 			String ownerString = "";
 			ownerString = String.format(" AND owner = '%s'", owner);
-
 			String limitString = "";
+
 			if(recordLimit > 0){
 				limitString = String.format(" LIMIT %d", recordLimit);
 			}
 
 			query = String.format("SELECT * FROM %s WHERE 1=1 %s ORDER BY `time` DESC %s"
 										  ,table, ownerString, limitString);
-
 			log.info("query: " + query);
 
 			if (query == null) {
@@ -92,6 +88,7 @@ public class IoTEventsStatisticsClient {
 
 			List<DeviceEventsDTO> DeviceEventsDTOs = new ArrayList<DeviceEventsDTO>();
 			rs = statement.executeQuery(query);
+
 			while (rs.next()) {
 				DeviceEventsDTO DeviceEventsDTO = new DeviceEventsDTO();
 				DeviceEventsDTO.setTime(rs.getString("TIME"));
@@ -99,11 +96,8 @@ public class IoTEventsStatisticsClient {
 				//(id + type) uniquely identifies a device
 				DeviceEventsDTO.setDeviceId(rs.getString("DEVICEID"));
 				DeviceEventsDTO.setDeviceType(rs.getString("DEVICETYPE"));
-
 				DeviceEventsDTOs.add(DeviceEventsDTO);
-
 			}
-
 			return DeviceEventsDTOs;
 
 		} catch (Exception e) {

@@ -53,9 +53,9 @@ public class ZipUtil {
         String sketchFolder = "repository" + sep + "resources" + sep + "sketches";
         String archivesPath = CarbonUtils.getCarbonHome() + sep + sketchFolder + sep + "archives" + sep + deviceId;
         String templateSketchPath = sketchFolder + sep + deviceType;
-
         String serverName = DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
         String iotServerIP;
+
         try {
             iotServerIP = IoTUtil.getHostName();
         } catch (IoTException e) {
@@ -67,13 +67,11 @@ public class ZipUtil {
         String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
         String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
 
-        String apimHost =
-                DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
-                        .getServerURL();
+        String apimHost = DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
+                .getServerURL();
 
-        String apimGatewayPort =
-                DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
-                        .getGatewayPort();
+        String apimGatewayPort = DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
+                .getGatewayPort();
 
         String apimEndpoint = apimHost + ":" + apimGatewayPort;
         String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();

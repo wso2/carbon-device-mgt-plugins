@@ -45,4 +45,5 @@ public interface ConfigurationService {
      * @return device management server information
      */
     DeviceMgtServerInfo getDeviceManagementServerInfo();
+
 }

@@ -44,8 +44,6 @@ public class User {
     private String challengeQuestion;
     private String identityClaimUri;
     private String tempEmailAddress;
-
-
     private ArrayList<Claims> claimList;
 
     public User(String userName) {

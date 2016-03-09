@@ -48,30 +48,26 @@ import java.nio.charset.StandardCharsets;
  * library provided by Eclipse Org.
  */
 public abstract class MQTTTransportHandler implements MqttCallback, TransportHandler<MqttMessage> {
-    private static final Log log = LogFactory.getLog(MQTTTransportHandler.class);
 
+    private static final Log log = LogFactory.getLog(MQTTTransportHandler.class);
     private MqttClient client;
     private String clientId;
     private MqttConnectOptions options;     // options to be set to the client-connection.
     // topic to which a will-message is automatically published by the broker upon the device losing its connection.
     private String clientWillTopic;
-
     protected String mqttBrokerEndPoint;
     protected int timeoutInterval;          // interval to use for reconnection attempts etc.
     protected String subscribeTopic;
-
     // Quality of Service Levels for MQTT Subscription and Publishing.
     public static final int QoS_0 = 0;      // At-Most Once
     @SuppressWarnings("unused")
     public static final int QoS_1 = 1;      // At-Least Once
     public static final int QoS_2 = 2;      // Exactly Once
-
     public static final int DEFAULT_MQTT_QUALITY_OF_SERVICE = QoS_0;
     // Prefix to the Will-Topic to which a message is published if client loses its connection.
     private static final String DISCONNECTION_WILL_TOPIC_PREFIX = "Disconnection/";
     // Will-Message of the client to be published if connection is lost.
     private static final String DISCONNECTION_WILL_MSG = "Lost-Connection";
-
 
     /**
      * Constructor for the MQTTTransportHandler which takes in the owner, type of the device and the MQTT Broker URL
@@ -113,7 +109,6 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
         this.initMQTTClient();
     }
 
-
     /**
      * Initializes the MQTT-Client. Creates a client using the given MQTT-broker endpoint and the clientId (which is
      * constructed by a concatenation of [deviceOwner]:[deviceType]). Also sets the client's options parameter with
@@ -128,7 +123,6 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
             log.error(errorMsg, ex);
             //TODO:: Throw the error out
         }
-
         options = new MqttConnectOptions();
         options.setKeepAliveInterval(120);              // set the keep alive interval to 120 seconds by default.
         options.setCleanSession(true);                  // sets clean session to true by default.

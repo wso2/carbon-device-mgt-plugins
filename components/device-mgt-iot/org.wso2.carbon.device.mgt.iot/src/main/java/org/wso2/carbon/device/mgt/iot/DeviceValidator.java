@@ -33,15 +33,13 @@ public class DeviceValidator {
 
     private static Log log = LogFactory.getLog(DeviceValidator.class);
     private static LRUMap cache;
+    private PrivilegedCarbonContext ctx;
 
-    // private static Log log = LogFactory.getLog(DeviceValidator.class);
     static {
         int cacheSize = DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().
                 getDeviceUserValidator().getCacheSize();
         cache = new LRUMap(cacheSize);
     }
-
-    private PrivilegedCarbonContext ctx;
 
     public boolean isExist(String owner, String tenantDomain, DeviceIdentifier deviceId)
             throws DeviceManagementException {

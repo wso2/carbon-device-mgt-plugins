@@ -47,14 +47,12 @@ public class ApisAppClient {
 
 	private static ConcurrentHashMap<String, String> deviceTypeToApiAppMap = new ConcurrentHashMap<>();
 	private static ApisAppClient instance =null;
-
 	private String loginEndpoint;
 	private String subscriptionListEndpoint;
 	private static Log log = LogFactory.getLog(ApisAppClient.class);
 	private boolean isApiManagerEnabled;
 
 	public static ApisAppClient getInstance(){
-
 		if(instance==null){
 			instance= new ApisAppClient();
 		}
@@ -67,11 +65,9 @@ public class ApisAppClient {
 		String serverUrl=apiManagerConfig.getServerURL();
 		String serverPort=apiManagerConfig.getServerPort();
 		isApiManagerEnabled = apiManagerConfig.isEnabled();
-
 		String loginURL = serverUrl+":"+serverPort+apiManagerConfig.getLoginURL();
 		loginEndpoint= loginURL+"?action=login&username="+apiManagerConfig.getUsername()
 				+"&password="+apiManagerConfig.getPassword();
-
 		String subscriptionListUrl=serverUrl+":"+serverPort+apiManagerConfig.getSubscriptionListURL();
 		subscriptionListEndpoint=subscriptionListUrl+"?action=getAllSubscriptions";
 	}
@@ -107,7 +103,6 @@ public class ApisAppClient {
 
 	public void setBase64EncodedConsumerKeyAndSecret(List<IotDeviceTypeConfig> iotDeviceTypeConfigList) {
 		if(!isApiManagerEnabled) return;
-
 		URL loginURL = null;
 		try {
 			loginURL = new URL(loginEndpoint);
@@ -134,9 +129,8 @@ public class ApisAppClient {
 				log.debug(response);
 			}
 			JSONObject jsonObject = new JSONObject(response);
-
-
 			boolean apiError = jsonObject.getBoolean("error");
+
 			if(!apiError){
 				String cookie = httpResponse.getHeaders("Set-Cookie")[0].getValue().split(";")[0];
 				HttpGet getMethod=new HttpGet(subscriptionListEndpoint);
@@ -162,13 +156,11 @@ public class ApisAppClient {
 			return;
 		}
 
-
         try {
             JSONArray jsonSubscriptions = apiJsonResponse.getJSONObject("subscriptions").getJSONArray("applications");
-
             HashMap<String, String> subscriptionMap = new HashMap<>();
-            for (int n = 0; n < jsonSubscriptions.length(); n++) {
 
+            for (int n = 0; n < jsonSubscriptions.length(); n++) {
                 JSONObject object = jsonSubscriptions.getJSONObject(n);
                 String appName = object.getString("name");
 				String prodConsumerKey = null;
@@ -195,7 +187,5 @@ public class ApisAppClient {
         } catch (JSONException e) {
             log.error("Json exception: " + e.getMessage(), e);
         }
-
-
 	}
 }

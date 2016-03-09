@@ -22,18 +22,16 @@ import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfiguratio
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ControlQueue;
 
 public class XmppConfig {
+
     private String xmppServerIP;
     private int xmppServerPort;
     private String xmppEndpoint;
     private String xmppUsername;
     private String xmppPassword;
     private boolean isEnabled;
-
     private static final String XMPP_QUEUE_CONFIG_NAME = "XMPP";
     private final int SERVER_CONNECTION_PORT = 5222;
-
     private ControlQueue xmppControlQueue;
-
     private static XmppConfig xmppConfig = new XmppConfig();
 
     public String getXmppServerIP() {
@@ -71,9 +69,9 @@ public class XmppConfig {
     private XmppConfig() {
         xmppControlQueue = DeviceManagementConfigurationManager.getInstance().getControlQueue(
                 XMPP_QUEUE_CONFIG_NAME);
-
         xmppServerIP = xmppControlQueue.getServerURL();
         int indexOfChar = xmppServerIP.lastIndexOf('/');
+
         if (indexOfChar != -1) {
             xmppServerIP = xmppServerIP.substring((indexOfChar + 1), xmppServerIP.length());
         }

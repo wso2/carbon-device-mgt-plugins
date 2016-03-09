@@ -241,7 +241,6 @@ public class IotDeviceManagementUtil {
     private static void copyFolder(File src, File dest, List<String> excludeFileNames) throws IOException {
 
         if (src.isDirectory()) {
-
             //if directory not exists, create it
             if (!dest.exists() && !dest.mkdirs()) {
                 String message = "Could not create directory at path: " + dest;
@@ -251,7 +250,6 @@ public class IotDeviceManagementUtil {
 
             //list all the directory contents
             String files[] = src.list();
-
             if (files == null) {
                 log.warn("There are no files insides the directory " + src.getAbsolutePath());
                 return;
@@ -275,13 +273,10 @@ public class IotDeviceManagementUtil {
             //Use bytes stream to support all file types
             InputStream in = null;
             OutputStream out = null;
-
             try {
                 in = new FileInputStream(src);
                 out = new FileOutputStream(dest);
-
                 byte[] buffer = new byte[1024];
-
                 int length;
                 //copy the file content in bytes
                 while ((length = in.read(buffer)) > 0) {
@@ -326,12 +321,9 @@ public class IotDeviceManagementUtil {
 
         try {
             final int BUFFER = 2048;
-
             FileOutputStream dest = new FileOutputStream(new File(srcFolder + ".zip"));
-
             out = new ZipOutputStream(new BufferedOutputStream(dest));
             byte data[] = new byte[BUFFER];
-
             File subDir = new File(srcFolder);
             String subdirList[] = subDir.list();
 

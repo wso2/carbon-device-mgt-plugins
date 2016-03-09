@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.device.mgt.iot.exception;
 
-
 public class UnauthorizedException extends Exception {
 
     public UnauthorizedException(String message) {

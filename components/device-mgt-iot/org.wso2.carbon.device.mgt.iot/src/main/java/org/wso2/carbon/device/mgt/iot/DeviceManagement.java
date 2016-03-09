@@ -82,10 +82,8 @@ public class DeviceManagement {
     }
 
     public void endTenantFlow() {
-
         PrivilegedCarbonContext.endTenantFlow();
     }
-
 
     public Device[] getActiveDevices(String username)
             throws DeviceManagementException {

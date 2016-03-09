@@ -36,8 +36,8 @@ import java.util.List;
 import java.util.Map;
 
 public class UserManagement {
-    private static Log log = LogFactory.getLog(UserManagement.class);
 
+    private static Log log = LogFactory.getLog(UserManagement.class);
     public static final String GIVEN_NAME = UserCoreConstants.ClaimTypeURIs.GIVEN_NAME;
     public static final String EMAIL_ADDRESS = UserCoreConstants.ClaimTypeURIs.EMAIL_ADDRESS;
     public static final String SURNAME = UserCoreConstants.ClaimTypeURIs.SURNAME;
@@ -57,13 +57,9 @@ public class UserManagement {
     public static final String DATE_OF_BIRTH = UserCoreConstants.ClaimTypeURIs.DATE_OF_BIRTH;
     public static final String GENDER = UserCoreConstants.ClaimTypeURIs.GENDER;
     public static final String ACCOUNT_STATUS = UserCoreConstants.ClaimTypeURIs.ACCOUNT_STATUS;
-    public static final String CHALLENGE_QUESTION_URI
-            = UserCoreConstants.ClaimTypeURIs.CHALLENGE_QUESTION_URI;
-    public static final String IDENTITY_CLAIM_URI
-            = UserCoreConstants.ClaimTypeURIs.IDENTITY_CLAIM_URI;
-    public static final String TEMPORARY_EMAIL_ADDRESS
-            = UserCoreConstants.ClaimTypeURIs.TEMPORARY_EMAIL_ADDRESS;
-
+    public static final String CHALLENGE_QUESTION_URI = UserCoreConstants.ClaimTypeURIs.CHALLENGE_QUESTION_URI;
+    public static final String IDENTITY_CLAIM_URI = UserCoreConstants.ClaimTypeURIs.IDENTITY_CLAIM_URI;
+    public static final String TEMPORARY_EMAIL_ADDRESS = UserCoreConstants.ClaimTypeURIs.TEMPORARY_EMAIL_ADDRESS;
     private static final String DEVICE_API_ACCESS_ROLE_NAME = "deviceRole";
     private static final String DEVICE_USER_API_ACCESS_ROLE_NAME = "deviceUser";
     private static RealmService realmService;
@@ -85,21 +81,14 @@ public class UserManagement {
             }
             return users.length;
         } catch (UserStoreException e) {
-            String msg
-                    =
-                    "Error occurred while retrieving the list of users that exist within the " +
-                    "current tenant";
+            String msg = "Error occurred while retrieving the list of users that exist within the current tenant";
             log.error(msg, e);
             return 0;
         }
     }
 
-
-    //===========================================================================
-    //TODO: Below methods are implemented to support jaggery code upon removal of org.wso2.carbon
-    // .device.mgt.user.core from CDMF
-    //===========================================================================
-
+    /*TODO: Below methods are implemented to support jaggery code upon removal of org.wso2.carbon
+     .device.mgt.user.core from CDMF*/
     private static UserStoreManager getUserStoreManager() throws UserStoreException {
 
         UserStoreManager userStoreManager;
@@ -130,9 +119,9 @@ public class UserManagement {
         UserStoreManager userStoreManager = getUserStoreManager();
         String[] userNames;
         ArrayList usersList = new ArrayList();
-
         userNames = userStoreManager.getUserListOfRole(roleName);
         User newUser;
+
         for (String userName : userNames) {
             newUser = new User(userName);
             Claim[] claims = userStoreManager.getUserClaimValues(userName, null);
@@ -145,7 +134,6 @@ public class UserManagement {
             setUserClaims(newUser, claimMap);
             usersList.add(newUser);
         }
-
         return usersList;
     }
 
@@ -155,13 +143,12 @@ public class UserManagement {
         ArrayList<Role> rolesList = new ArrayList<Role>();
         Role newRole;
         UserStoreManager userStoreManager = getUserStoreManager();
-
         roleNames = userStoreManager.getRoleNames();
+
         for (String roleName : roleNames) {
             newRole = new Role(roleName);
             rolesList.add(newRole);
         }
-
         return rolesList;
     }
 
@@ -170,11 +157,10 @@ public class UserManagement {
         UserStoreManager userStoreManager;
         String[] userNames;
         ArrayList usersList = new ArrayList();
-
         userStoreManager = getUserStoreManager();
-
         userNames = userStoreManager.listUsers("", -1);
         User newUser;
+
         for (String userName : userNames) {
             newUser = new User(userName);
             Claim[] claims = userStoreManager.getUserClaimValues(userName, null);
@@ -187,7 +173,6 @@ public class UserManagement {
             setUserClaims(newUser, claimMap);
             usersList.add(newUser);
         }
-
         return usersList;
     }
 
@@ -196,17 +181,15 @@ public class UserManagement {
         User user;
         userStoreManager = getUserStoreManager();
         user = new User(username);
-
         Claim[] claims = userStoreManager.getUserClaimValues(username, null);
         Map<String, String> claimMap = new HashMap<String, String>();
+
         for (Claim claim : claims) {
             String claimURI = claim.getClaimUri();
             String value = claim.getValue();
             claimMap.put(claimURI, value);
         }
-
         setUserClaims(user, claimMap);
-
         return user;
     }
 

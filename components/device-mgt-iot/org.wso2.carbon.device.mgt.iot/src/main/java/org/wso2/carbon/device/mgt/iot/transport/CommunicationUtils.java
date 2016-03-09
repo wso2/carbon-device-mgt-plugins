@@ -41,12 +41,10 @@ import java.security.SignatureException;
  */
 public class CommunicationUtils {
     private static final Log log = LogFactory.getLog(TransportUtils.class);
-
     // The Signature Algorithm used.
     private static final String SIGNATURE_ALG = "SHA1withRSA";
     // The Encryption Algorithm and the Padding used.
     private static final String CIPHER_PADDING = "RSA/ECB/PKCS1Padding";
-
 
     /**
      * Encrypts the message with the key that's passed in.
@@ -129,10 +127,8 @@ public class CommunicationUtils {
             log.error(errorMsg);
             throw new TransportHandlerException(errorMsg, e);
         }
-
         return signedEncodedString;
     }
-
 
     /**
      * Verifies some signed-data against the a Public-Key to ensure that it was produced by the holder of the
@@ -173,10 +169,8 @@ public class CommunicationUtils {
             log.error(errorMsg);
             throw new TransportHandlerException(errorMsg, e);
         }
-
         return verified;
     }
-
 
     /**
      * Encrypts the message with the key that's passed in.
@@ -220,7 +214,6 @@ public class CommunicationUtils {
             log.error(errorMsg);
             throw new TransportHandlerException(errorMsg, e);
         }
-
         return decryptedMessage;
     }
 }

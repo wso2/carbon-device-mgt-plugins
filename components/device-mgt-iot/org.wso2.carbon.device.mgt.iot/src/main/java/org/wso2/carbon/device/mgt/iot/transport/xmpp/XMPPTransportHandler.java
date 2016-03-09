@@ -52,11 +52,10 @@ import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
  * provided by jivesoftware/igniterealtime.
  */
 public abstract class XMPPTransportHandler implements TransportHandler<Message> {
-    private static final Log log = LogFactory.getLog(XMPPTransportHandler.class);
 
+    private static final Log log = LogFactory.getLog(XMPPTransportHandler.class);
     protected String server;
     protected int timeoutInterval;    // millis
-
     //TODO:: Shouldnt be hard-coded. Need to be read from configs
     private static final int DEFAULT_XMPP_PORT = 5222;
     private XMPPConnection connection;
@@ -238,7 +237,6 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                 }
             }
         };
-
         connection.addPacketListener(listener, filter);
     }
 
@@ -273,7 +271,6 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                 }
             }
         };
-
         connection.addPacketListener(listener, filter);
     }
 
@@ -323,7 +320,6 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                 }
             }
         };
-
         connection.addPacketListener(listener, filter);
     }
 
@@ -337,7 +333,6 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
     protected void sendXMPPMessage(String JID, String message) {
         sendXMPPMessage(JID, message, "XMPP-Message");
     }
-
 
     /**
      * Overloaded method to send an XMPP message. Includes the subject to be mentioned in the

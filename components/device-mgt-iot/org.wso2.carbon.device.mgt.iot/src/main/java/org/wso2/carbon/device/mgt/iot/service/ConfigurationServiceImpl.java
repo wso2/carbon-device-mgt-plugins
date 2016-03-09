@@ -39,4 +39,5 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     public DeviceMgtServerInfo getDeviceManagementServerInfo() {
         return DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo();
     }
+
 }

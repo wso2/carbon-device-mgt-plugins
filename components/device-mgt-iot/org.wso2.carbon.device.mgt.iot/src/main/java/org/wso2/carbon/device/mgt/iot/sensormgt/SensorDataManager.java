@@ -49,7 +49,6 @@ public class SensorDataManager {
      * @return if success returns true
      */
     public boolean setSensorRecord(String deviceId, String sensorName, String sensorValue, long time) {
-
         DeviceRecord deviceRecord = deviceMap.get(deviceId);
         if (deviceRecord == null) {
             deviceRecord = new DeviceRecord(sensorName, sensorValue, time);
