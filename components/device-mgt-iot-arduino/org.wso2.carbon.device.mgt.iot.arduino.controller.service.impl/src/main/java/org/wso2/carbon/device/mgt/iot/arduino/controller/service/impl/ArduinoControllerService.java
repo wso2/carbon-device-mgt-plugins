@@ -135,7 +135,7 @@ public class ArduinoControllerService {
     public String registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
                                    @PathParam("port") String devicePort, @Context HttpServletResponse response,
                                    @Context HttpServletRequest request) {
-        String result;
+        String result = "Device-IP registeration failed";
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId + " of owner: ");
@@ -233,7 +233,6 @@ public class ArduinoControllerService {
                 try {
                     result = deviceControlList.remove();
                     response.setStatus(HttpStatus.SC_ACCEPTED);
-
                 } catch (NoSuchElementException ex) {
                     result = "There are no more controls for device " + deviceId + " of owner " + owner;
                     response.setStatus(HttpStatus.SC_NO_CONTENT);

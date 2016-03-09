@@ -75,8 +75,7 @@ public class AndroidSenseControllerService {
 	 *                                      communications of any connected Android Sense device-type
 	 */
 	@SuppressWarnings("Unused")
-	public void setAndroidSenseMQTTConnector(
-			final AndroidSenseMQTTConnector androidSenseMQTTConnector) {
+	public void setAndroidSenseMQTTConnector(final AndroidSenseMQTTConnector androidSenseMQTTConnector) {
 		Runnable connector = new Runnable() {
 			public void run() {
 				if (waitForServerStartup()) {

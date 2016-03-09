@@ -21,6 +21,7 @@ package org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
@@ -30,12 +31,13 @@ import org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api.util.Digital
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.constants.DigitalDisplayConstants;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
-
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
@@ -89,20 +91,18 @@ public class DigitalDisplayControllerService {
      * Restart the running browser in the given digital display.
      *
      * @param deviceId  id of the controlling digital display
-     * @param owner     owner of the digital display
      * @param sessionId web socket id of the method invoke client
      * @param response  response type of the method
      */
-    @Path("/restart-browser")
+    @Path("device/{deviceId}/restart-browser")
     @POST
     @Feature(code = "restart-browser", name = "Restart Browser", type = "operation",
             description = "Restart Browser in Digital Display")
-    public void restartBrowser(@HeaderParam("deviceId") String deviceId,
-                               @HeaderParam("owner") String owner,
-                               @HeaderParam("sessionId") String sessionId,
+    public void restartBrowser(@PathParam("deviceId") String deviceId,
+                               @QueryParam("sessionId") String sessionId,
                                @Context HttpServletResponse response) {
-
         try {
+            String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
             sendCommandViaMQTT(owner, deviceId, sessionId + "::" + DigitalDisplayConstants.RESTART_BROWSER_CONSTANT + "::", "");
             response.setStatus(Response.Status.OK.getStatusCode());
         } catch (DeviceManagementException e) {
@@ -111,9 +111,9 @@ public class DigitalDisplayControllerService {
         } catch (DigitalDisplayException e) {
             log.error(e);
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-
+        }finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
-
     }
 
     /**

@@ -47,7 +47,7 @@ public class AndroidSenseManagerService {
 
     @Path("manager/device")
     @POST
-    public boolean register(@FormParam("deviceId") String deviceId, @FormParam("deviceName") String deviceName) {
+    public boolean register(@QueryParam("deviceId") String deviceId, @QueryParam("deviceName") String deviceName) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
@@ -90,7 +90,6 @@ public class AndroidSenseManagerService {
     @Path("manager/device/{device_id}")
     @DELETE
     public void removeDevice(@PathParam("device_id") String deviceId, @Context HttpServletResponse response) {
-
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);

@@ -123,33 +123,12 @@ public class ArduinoServiceUtils {
         return responseMsg;
     }
 
-
-    public static boolean sendCommandViaMQTT(String deviceOwner, String deviceId, String resource,
-                                             String state) throws DeviceManagementException {
-
-        /*boolean result;
-        DeviceController deviceController = new DeviceController();
-
-        try {
-            result = deviceController.publishMqttControl(deviceOwner, ArduinoConstants.DEVICE_TYPE, deviceId, resource, state);
-        } catch (DeviceControllerException e) {
-            String errorMsg = "Error whilst trying to publish to MQTT Queue";
-            log.error(errorMsg);
-            throw new DeviceManagementException(errorMsg, e);
-        }
-        return result;*/
-        return false;
-    }
-
 	/*	---------------------------------------------------------------------------------------
                     Utility methods relevant to creating and sending http requests
  		---------------------------------------------------------------------------------------	*/
 
 	/* This methods creates and returns a http connection object */
-
-    public static HttpURLConnection getHttpConnection(String urlString) throws
-                                                                        DeviceManagementException {
-
+    public static HttpURLConnection getHttpConnection(String urlString) throws DeviceManagementException {
         URL connectionUrl = null;
         HttpURLConnection httpConnection;
 
@@ -213,9 +192,7 @@ public class ArduinoServiceUtils {
     }
 
     public static boolean publishToDAS(String owner, String deviceId, float temperature) {
-        PrivilegedCarbonContext.startTenantFlow();
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        ctx.setTenantDomain(SUPER_TENANT, true);
         DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx.getOSGiService(
                 DeviceAnalyticsService.class, null);
         Object metdaData[] = {owner, ArduinoConstants.DEVICE_TYPE, deviceId, System.currentTimeMillis()};
@@ -225,8 +202,6 @@ public class ArduinoServiceUtils {
             deviceAnalyticsService.publishEvent(TEMPERATURE_STREAM_DEFINITION, "1.0.0", metdaData, new Object[0], payloadData);
         } catch (DataPublisherConfigurationException e) {
             return false;
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
         }
         return true;
     }

@@ -117,8 +117,7 @@ public class ArduinoManagerService {
 
     @Path("manager/device/{device_id}")
     @PUT
-    public boolean updateDevice(@PathParam("device_id") String deviceId,
-                                @QueryParam("name") String name,
+    public boolean updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name,
                                 @Context HttpServletResponse response) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
@@ -194,8 +193,7 @@ public class ArduinoManagerService {
         try {
             ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), customDeviceName, sketchType);
             Response.ResponseBuilder rb = Response.ok(zipFile.getZipFile());
-            rb.header("Content-Disposition",
-                      "attachment; filename=\"" + zipFile.getFileName() + "\"");
+            rb.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
             return rb.build();
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request

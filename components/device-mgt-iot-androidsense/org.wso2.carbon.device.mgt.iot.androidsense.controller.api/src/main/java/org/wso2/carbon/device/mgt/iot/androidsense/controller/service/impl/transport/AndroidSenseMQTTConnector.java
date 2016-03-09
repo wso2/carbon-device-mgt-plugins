@@ -27,6 +27,10 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.exception.DataPublisherConfigurationException;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.util.DeviceData;
 import org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.util.SensorData;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
@@ -35,6 +39,7 @@ import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
@@ -102,12 +107,11 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
             log.error(errorMsg);
             throw new TransportHandlerException(errorMsg);
         }
-        String deviceOwner = publishData[0];
-        String deviceId = publishData[1];
-        String operation = publishData[2];
-        String resource = publishData[3];
+        String deviceId = publishData[0];
+        String operation = publishData[1];
+        String resource = publishData[2];
         MqttMessage pushMessage = new MqttMessage();
-        String publishTopic = "wso2/" + deviceOwner + "/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command";
+        String publishTopic = "wso2/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command";
         if (operation.equals("add")) {
             publishTopic = publishTopic + "/words";
         } else if (operation.equals("remove")) {
@@ -127,13 +131,10 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
     @Override
     public void processIncomingMessage(MqttMessage mqttMessage, String... strings) throws TransportHandlerException {
         String[] topic = strings[0].split("/");
-        String owner = topic[1];
         String deviceId = topic[3];
-
         if (log.isDebugEnabled()) {
-            log.debug("Received MQTT message for: [OWNER -" + owner + "] & [DEVICE.ID-" + deviceId + "]");
+            log.debug("Received MQTT message for:  & [DEVICE.ID-" + deviceId + "]");
         }
-
         try {
             Gson gson = new Gson();
             String actualMessage = mqttMessage.toString();
@@ -174,7 +175,7 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
                             payloadData = new Object[]{sessionId, keyword, status};
                             for (int i = 0; i < occurrence; i++) {
                                 Long timestamp = Long.parseLong(values[3 + occurrence]);
-                                publishDataToDAS(owner, deviceId, timestamp, sensorName, streamDef,
+                                publishDataToDAS(deviceId, timestamp, sensorName, streamDef,
                                                  sensor.value, payloadData);
 
                             }
@@ -254,7 +255,7 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
                         continue;
                     }
                 }
-                publishDataToDAS(owner, deviceId, sensor.time, sensorName, streamDef, sensor.value, payloadData);
+                publishDataToDAS(deviceId, sensor.time, sensorName, streamDef, sensor.value, payloadData);
             }
         } catch (JsonSyntaxException e) {
             throw new TransportHandlerException("Invalid message format " + mqttMessage.toString());
@@ -263,20 +264,37 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
         }
     }
 
-    private void publishDataToDAS(String owner, String deviceId, Long time, String sensorName,
+    private void publishDataToDAS(String deviceId, Long time, String sensorName,
                                   String streamDefinition, String sensorValue, Object payloadData[]) {
-        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
-                .getOSGiService(DeviceAnalyticsService.class, null);
-        Object metaData[] = {owner, AndroidSenseConstants.DEVICE_TYPE, deviceId, time};
-        if (streamDefinition != null && payloadData != null && payloadData.length > 0) {
-            try {
-                SensorDataManager.getInstance().setSensorRecord(deviceId, sensorName, sensorValue, time);
-                deviceAnalyticsService.publishEvent(streamDefinition, "1.0.0", metaData,
-                                                    new Object[0], payloadData);
-            } catch (DataPublisherConfigurationException e) {
-                log.error("Data publisher configuration failed - " + e);
+        try {
+            PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+            DeviceManagementProviderService deviceManagementProviderService = (DeviceManagementProviderService) ctx
+                    .getOSGiService(DeviceManagementProviderService.class, null);
+            if (deviceManagementProviderService != null) {
+                DeviceIdentifier identifier = new DeviceIdentifier(deviceId, AndroidSenseConstants.DEVICE_TYPE);
+                Device device = deviceManagementProviderService.getDevice(identifier);
+                if (device != null) {
+                    String owner = device.getEnrolmentInfo().getOwner();
+                    ctx.setTenantDomain(MultitenantUtils.getTenantDomain(owner), true);
+                    DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
+                            .getOSGiService(DeviceAnalyticsService.class, null);
+                    if (deviceAnalyticsService != null) {
+                        Object metaData[] = {owner, AndroidSenseConstants.DEVICE_TYPE, deviceId, time};
+                        if (streamDefinition != null && payloadData != null && payloadData.length > 0) {
+                            try {
+                                SensorDataManager.getInstance().setSensorRecord(deviceId, sensorName, sensorValue,
+                                                                                time);
+                                deviceAnalyticsService.publishEvent(streamDefinition, "1.0.0", metaData,
+                                                                    new Object[0], payloadData);
+                            } catch (DataPublisherConfigurationException e) {
+                                log.error("Data publisher configuration failed - " + e);
+                            }
+                        }
+                    }
+                }
             }
+        } catch (DeviceManagementException e) {
+            log.error("Failed to load device management service.", e);
         }
     }
 
@@ -296,7 +314,6 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
     public void publishDeviceData(MqttMessage publishData) throws TransportHandlerException {
 
     }
-
 
     @Override
     public void disconnect () {
