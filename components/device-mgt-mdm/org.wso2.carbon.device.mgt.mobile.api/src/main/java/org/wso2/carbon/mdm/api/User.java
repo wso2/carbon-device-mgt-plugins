@@ -765,9 +765,8 @@ public class User {
         ResponsePayload responsePayload = new ResponsePayload();
         try {
             byte[] decodedNewPassword = Base64.decodeBase64(credentials.getNewPassword());
-            byte[] decodedOldPassword = Base64.decodeBase64(credentials.getOldPassword());
-            userStoreManager.updateCredential(credentials.getUsername(), new String(
-                    decodedNewPassword, "UTF-8"), new String(decodedOldPassword, "UTF-8"));
+            userStoreManager.updateCredentialByAdmin(credentials.getUsername(), new String(
+                    decodedNewPassword, "UTF-8"));
             responsePayload.setStatusCode(HttpStatus.SC_CREATED);
             responsePayload.setMessageFromServer("User password by username: " + credentials.getUsername() +
                                                  " was successfully changed.");
