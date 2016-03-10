@@ -8,7 +8,7 @@
         <p class="page-sub-title">Register</p>
 
         <p>Create new account on IoT Server (All fields are required.)</p>
-        <hr />
+        <hr/>
         <!-- validation -->
         <div class="wr-validation-summary hidden alert alert-danger">
             <strong></strong>
@@ -18,51 +18,54 @@
                 </span>
             </button>
         </div>
-        <form method="POST" class="form-login-box" action="{{@app.context}}" id="registerForm">
+        <div class="form-login-box" id="registerForm" data-context="{{@app.context}}">
+            <div id="user-create-error-msg" class="alert alert-danger hidden" role="alert">
+                <i class="icon fw fw-error"></i><span></span>
+            </div>
             <div class="form-group">
-                <label for="first_name">First Name</label>
-                <input type="text" id="first_name" name="first_name" class="form-control"
-                       placeholder="First Name" />
+                <label for="first_name" class="wr-input-label">First Name</label>
+                <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First Name"
+                       data-regex="{{usernameJSRegEx}}" data-lengthmsg="{{usernameHelpText}}"
+                       data-errormsg="{{usernameRegExViolationErrorMsg}}"/>
             </div>
 
             <div class="form-group">
-                <label for="last_name">Last Name</label>
-                <input type="text" id="last_name" name="last_name" class="form-control"
-                       placeholder="Last Name" />
+                <label for="last_name" class="wr-input-label">Last Name</label>
+                <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Last Name"
+                       data-regex="{{usernameJSRegEx}}" data-errormsg="{{usernameRegExViolationErrorMsg}}"/>
             </div>
 
             <div class="form-group">
-                <label for="user_name">Username</label>
-                <input type="text" id="user_name" name="user_name" class="form-control"
-                       placeholder="Username" />
+                <label for="user_name" class="wr-input-label">Username ( {{usernameHelpText}} )</label>
+                <input type="text" id="user_name" name="user_name" class="form-control" placeholder="Username"
+                       data-regex="{{usernameJSRegEx}}" data-errormsg="{{usernameRegExViolationErrorMsg}}"/>
             </div>
 
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="text" id="email" name="email" class="form-control"
-                       placeholder="Email" />
+                <label for="email" class="wr-input-label">Email</label>
+                <input type="text" id="email" name="email" class="form-control" placeholder="Email"
+                       data-regex="{{emailJSRegEx}}" data-errormsg="{{emailRegExViolationErrorMsg}}"/>
             </div>
 
             <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password" class="wr-input-label">Password</label>
                 <input type="password" id="password" name="password" class="form-control"
-                       placeholder="Password" />
+                       placeholder="Password"/>
             </div>
 
             <div class="form-group">
-                <label for="password_confirmation">Confirm Password</label>
+                <label for="password_confirmation" class="wr-input-label">Confirm Password</label>
                 <input type="password" id="password_confirmation" name="password_confirmation"
-                       class="form-control" placeholder="Confirm Password" />
+                       class="form-control" placeholder="Confirm Password"/>
             </div>
-
 
             <div class="wr-input-control">
-                <button class="wr-btn" id="add-user-btn" type="submit">Register</button>
+                <button class="wr-btn" id="add-user-btn">Register</button>
                 <button class="wr-btn" onclick="document.location.href='{{@app.context}}/login';">
                     Cancel
                 </button>
             </div>
-        </form>
+        </div>
 
     </div>
 {{/zone}}
