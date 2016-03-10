@@ -1334,7 +1334,7 @@
         <gcm.server.version>1.0.2</gcm.server.version>
         <!--<commons-json.version>2.0.0.wso2v1</commons-json.version>-->
         <commons-json.version>3.0.0.wso2v1</commons-json.version>
-        <commons-collections.version>3.2.1</commons-collections.version>
+        <commons-collections.version>3.2.2</commons-collections.version>
         <commons-configuration.version>1.8</commons-configuration.version>
         <httpclient.version>4.3.1.wso2v2</httpclient.version>
         <javaee-web-api.version>6.0</javaee-web-api.version>
