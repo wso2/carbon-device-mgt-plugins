@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.device.mgt.iot.droneanalyzer.manager.api.impl;
 
 import org.apache.commons.logging.LogFactory;
@@ -91,7 +92,6 @@ public class DroneManagerService {
             enrolmentInfo.setDateOfEnrolment(new Date().getTime());
             enrolmentInfo.setDateOfLastUpdate(new Date().getTime());
             enrolmentInfo.setStatus(EnrolmentInfo.Status.ACTIVE);
-            enrolmentInfo.setOwnership(EnrolmentInfo.OwnerShip.BYOD);
 
             device.setName(name);
             device.setType(DroneConstants.DEVICE_TYPE);
