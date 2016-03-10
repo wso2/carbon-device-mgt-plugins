@@ -1,73 +1,84 @@
     <div class="row">
         <div class="col-md-12">
             <!-- content -->
-            <div id="config-save-form" class="container col-centered wr-content">
-                <br>
-                <h1 class="page-sub-title">
-                    Platform Configurations
-                </h1>
+            <div id="config-save-form" class="container col-centered">
                 <br>
                 General and Platform Specific Server Settings for the Tenant
                 <br>
                 <br>
                 <div class="wr-advance-operations">
-                    <div class="row no-gutter">
+                    <div class="row no-gutter" id="typeDiv" typeData="{{#each types}}{{name}},{{/each}}">
                         <div class="wr-hidden-operations-nav col-lg-4">
-                            <a href="javascript:void(0)" onclick="showAdvanceOperation('general', this)" class="selected">
+                            <a id="generalConfigLink" href="javascript:void(0)" onclick="showAdvanceOperation('general', this)" class="selected">
                                 <span class="wr-hidden-operations-icon fw-stack">
                                     <i class="fw fw-settings fw-stack-2x"></i>
                                 </span>
                                 General Configurations
                             </a>
-                            <a href="javascript:void(0)" onclick="showAdvanceOperation('android', this)">
-                                <span class="wr-hidden-operations-icon fw-stack">
-                                    <i class="fw fw-android fw-stack-2x"></i>
-                                </span>
-                                Android Configurations
-                            </a>
-                            <a href="javascript:void(0)" onclick="showAdvanceOperation('ios', this)">
-                                <span class="wr-hidden-operations-icon fw-stack">
-                                    <i class="fw fw-apple fw-stack-2x"></i>
-                                </span>
-                                iOS Configurations
-                            </a>
-                            <a href="javascript:void(0)" onclick="showAdvanceOperation('windows', this)">
-                                <span class="wr-hidden-operations-icon fw-stack">
-                                    <i class="fw fw-windows fw-stack-2x"></i>
-                                </span>
-                                Windows Configurations
-                            </a>
+                            <div id="supportedPlatforms" class="hidden"
+                                {{#each types}}
+                                    {{#equal name "android"}} data-android-id={{id}}
+                                         data-android="true"
+                                    {{/equal}}
+                                    {{#equal name "ios"}} data-ios-id={{id}}
+                                         data-ios="true"
+                                    {{/equal}}
+                                    {{#equal name "windows"}}
+                                 data-windows="true" data-windows-id={{id}}
+                                    {{/equal}}
+                                {{/each}}
+                                    ></div>
+                                    <a id="androidConfigLink" href="javascript:void(0)" onclick="showAdvanceOperation('android', this)">
+                                        <span class="wr-hidden-operations-icon fw-stack">
+                                            <i class="fw fw-android fw-stack-2x"></i>
+                                        </span>
+                                        Android Configurations
+                                    </a>
+                                    <a id="iosConfigLink" href="javascript:void(0)" onclick="showAdvanceOperation('ios', this)">
+                                        <span class="wr-hidden-operations-icon fw-stack">
+                                            <i class="fw fw-apple fw-stack-2x"></i>
+                                        </span>
+                                        iOS Configurations
+                                    </a>
+                                    <a id="windowsConfigLink" href="javascript:void(0)" onclick="showAdvanceOperation('windows', this)">
+                                        <span class="wr-hidden-operations-icon fw-stack">
+                                            <i class="fw fw-windows fw-stack-2x"></i>
+                                        </span>
+                                        Windows Configurations
+                                    </a>
                         </div>
 
                         <div class="wr-hidden-operations-content col-lg-8">
+                            <!-- error -->
+                            <div data-operation="error" class="wr-hidden-operation alert alert-danger" role="alert">
+                                <div id="platform-config-main-error-msg" class="panel panel-default">
+                                    <i class="icon fw fw-error"></i><span></span>
+                                </div>
+                            </div>
                             <!-- general -->
                             <div class="wr-hidden-operation" data-operation="general" style="display: block">
                                 <div class="panel panel-default">
-                                    <div id="general-config-heading" class="panel-heading" role="tab">
-                                        <h2 class="sub-title panel-title">
-                                            Policy Monitoring
-                                            <hr>
-                                        </h2>
-                                    </div>
                                     <div id="email-config-body" class="panel-collapse panel-body" role="tabpanel">
                                         <div id="email-config-error-msg" class="alert alert-danger hidden" role="alert">
                                             <i class="icon fw fw-error"></i><span></span>
                                         </div>
+                                        <h4>
+                                            Policy Compliance Monitoring
+                                            <hr>
+                                        </h4>
                                         <div class="wr-input-control">
-                                            <label class="wr-input-label" for="email-config-host">
-                                                Monitoring Frequency
-                                                <span class="helper" title="SMTP Server Host">
+                                            <label class="wr-input-label" for="config-frequency">
+                                                Compliance Monitoring Time Interval*
+                                                <span class="helper" title="Time Interval after which EMM server will contact devices and monitor the compliance of policies applied to them">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                                 <br>
-                                                ( Should be in milliseconds )
+                                                ( Should be in seconds )
                                             </label>
-                                            <input id="monitoring-config-frequency" type="text" class="form-control" placeholder="[ Required Field ]">
+                                            <input id="monitoring-config-frequency" type="text" class="form-control" >
                                         </div>
                                         <div class="wr-input-control wr-btn-grp">
-                                            <button id="save-general-btn" class="wr-btn">
-                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            </button>
+                                            <button id="save-general-btn" class="wr-btn">Save</button>
                                         </div>
                                     </div>
                                     <!--<div id="general-config-heading" class="panel-heading" role="tab">
@@ -148,69 +159,68 @@
                                         <div id="android-config-error-msg" class="alert alert-danger hidden" role="alert">
                                             <i class="icon fw fw-error"></i><span></span>
                                         </div>
-
+                                        <h4>
+                                            Communication Protocol Configuration
+                                            <hr>
+                                        </h4>
                                         <div class="wr-input-control">
                                             <label class="wr-input-label" for="android-config-notifier">
-                                                Notifier Type
-                                                <span class="helper" title="Notifier type for the agent to contact EMM server">
+                                                Type of Communication
+                                                <span class="helper" title="Communication method of android agent to contact EMM server">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
                                             <select id="android-config-notifier" class="form-control" data-default="0">
-                                                <option value="1">LOCAL</option>
-                                                <option value="2">GCM</option>
+                                                <option value="1">Local Polling</option>
+                                                <option value="2">Google Cloud Messaging ( GCM )</option>
                                             </select>
                                         </div>
 
                                         <div id="local-inputs">
                                             <div class="wr-input-control">
                                                 <label class="wr-input-label" for="android-config-notifier-frequency">
-                                                    Notifier Frequency
-                                                    <span class="helper" title="Notifier frequency for the agent to contact EMM server">
+                                                    Polling Interval*
+                                                    <span class="helper" title="Time interval after which Android agent will contact EMM server each time to fetch data">
                                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                     </span>
                                                     <br>
-                                                    ( Should be in milliseconds )
+                                                    ( Should be in seconds )
                                                 </label>
-                                                <input id="android-config-notifier-frequency" type="text" class="form-control" placeholder="[ Required Field ]">
+                                                <input id="android-config-notifier-frequency" type="text" class="form-control" >
                                             </div>
                                         </div>
 
                                         <div id="gcm-inputs">
                                             <div class="wr-input-control">
                                                 <label class="wr-input-label" for="android-config-gcm-api-key">
-                                                    API Key
+                                                    API Key*
                                                     <span class="helper" title="GCM API Key">
                                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                     </span>
                                                 </label>
-                                                <input id="android-config-gcm-api-key" type="text" class="form-control" placeholder="[ Required Field ]">
+                                                <input id="android-config-gcm-api-key" type="text" class="form-control" >
                                             </div>
 
                                             <div class="wr-input-control">
                                                 <label class="wr-input-label" for="android-config-gcm-sender-id">
-                                                    Sender ID
+                                                    Sender ID*
                                                     <span class="helper" title="GCM Sender ID">
                                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                     </span>
                                                 </label>
-                                                <input id="android-config-gcm-sender-id" type="text" class="form-control" placeholder="[ Required Field ]">
+                                                <input id="android-config-gcm-sender-id" type="text" class="form-control">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div id="wifi-heading" class="panel-heading" role="tab">
-                                        <h2 class="sub-title panel-title">
-                                            End User License Agreement (EULA)
+                                        <h4>
+                                            End User License Agreement ( EULA )
                                             <hr>
-                                        </h2>
-                                    </div>
+                                        </h4>
 
-                                    <div id="wifi-body" class="panel-collapse panel-body" role="tabpanel" aria-labelledby="wifi-body">
                                         <div class="wr-input-control">
                                             <textarea id="android-eula" type="text" class="form-control"></textarea>
                                         </div>
                                         <div class="wr-input-control wr-btn-grp">
-                                            <button id="save-android-btn" class="wr-btn">&nbsp;&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                            <button id="save-android-btn" class="wr-btn">Save</button>
                                         </div>
                                     </div>
                                 </div>
@@ -220,134 +230,124 @@
                             <!-- ios -->
                             <div class="wr-hidden-operation" data-operation="ios">
                                 <div class="panel panel-default operation-data" data-operation="wifi" data-operation-code="WIFI">
-                                    <div id="ios-heading" class="panel-heading" role="tab">
-                                        <h2 class="sub-title panel-title">
+                                    <div id="wifi-body" class="panel-collapse panel-body" role="tabpanel" aria-labelledby="ios-body">
+                                        <div id="ios-config-error-msg" class="alert alert-danger hidden" role="alert">
+                                            <i class="icon fw fw-error"></i><span></span>
+                                        </div>
+                                        <h4>
                                             iOS SCEP Certificate Configurations
                                             <hr>
-                                        </h2>
-                                    </div>
-                                    <div id="ios-config-error-msg" class="alert alert-danger hidden" role="alert">
-                                        <i class="icon fw fw-error"></i><span></span>
-                                    </div>
-                                    <div id="wifi-body" class="panel-collapse panel-body" role="tabpanel" aria-labelledby="ios-body">
+                                        </h4>
                                         <div id="ios-scep-config-error-msg" class="alert alert-danger hidden" role="alert">
                                             <i class="icon fw fw-error"></i><span></span>
                                         </div>
 
                                         <div class="wr-input-control">
                                             <label class="wr-input-label" for="ios-config-country">
-                                                Country (C)
-                                                <span class="helper" title="Country">
+                                                Country (C)*
+                                                <span class="helper" title="Country code (ex: LK, US)">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
-                                            <input id="ios-config-country" type="text" class="form-control" placeholder="[ Required Field ]">
+                                            <input id="ios-config-country" type="text" class="form-control">
                                         </div>
 
                                         <div class="wr-input-control">
                                             <label class="wr-input-label" for="ios-config-state">
-                                                State (ST)
+                                                State (ST)*
                                                 <span class="helper" title="State">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
-                                            <input id="ios-config-state" type="text" class="form-control" placeholder="[ Required Field ]">
+                                            <input id="ios-config-state" type="text" class="form-control">
                                         </div>
 
                                         <div class="wr-input-control">
                                             <label class="wr-input-label" for="ios-config-locality">
-                                                Locality (L)
+                                                Locality (L)*
                                                 <span class="helper" title="Locality">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
-                                            <input id="ios-config-locality" type="text" class="form-control" placeholder="[ Required Field ]">
+                                            <input id="ios-config-locality" type="text" class="form-control">
                                         </div>
 
                                         <div class="wr-input-control">
                                             <label class="wr-input-label" for="ios-config-organization">
-                                                Organization (O)
-                                                <span class="helper" title="Organization">
+                                                Organization (O)*
+                                                <span class="helper" title="Organization Name">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
-                                            <input id="ios-config-organization" type="text" class="form-control" placeholder="[ Required Field ]">
+                                            <input id="ios-config-organization" type="text" class="form-control">
                                         </div>
 
                                         <div class="wr-input-control">
                                             <label class="wr-input-label" for="ios-config-organization-unit">
-                                                Organization Unit (OU)
+                                                Organization Unit (OU)*
                                                 <span class="helper" title="Organization Unit">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
-                                            <input id="ios-config-organization-unit" type="text" class="form-control" placeholder="[ Required Field ]">
+                                            <input id="ios-config-organization-unit" type="text" class="form-control">
                                         </div>
-                                    </div>
 
-                                    <div id="wifi-heading" class="panel-heading" role="tab">
-                                        <h2 class="sub-title panel-title">
+                                        <h4>
                                             iOS Profile Configurations
                                             <hr>
-                                        </h2>
-                                    </div>
+                                        </h4>
 
-                                    <div id="wifi-body" class="panel-collapse panel-body" role="tabpanel" aria-labelledby="wifi-body">
                                         <div id="ios-profile-conf-error-msg" class="alert alert-danger hidden" role="alert">
                                             <i class="icon fw fw-error"></i><span></span>
                                         </div>
                                         <div class="wr-input-control">
                                             <label class="wr-input-label" for="ios-org-display-name">
-                                                Organization Display Name
-                                                <span class="helper" title="Organization">
+                                                Organization Display Name*
+                                                <span class="helper" title="Organization display name">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
-                                            <input id="ios-org-display-name" type="text" class="form-control" placeholder="[ Required Field ]">
+                                            <input id="ios-org-display-name" type="text" class="form-control">
                                         </div>
-                                    </div>
 
-                                    <div id="wifi-heading" class="panel-heading" role="tab">
-                                        <h2 class="sub-title panel-title">
+                                        <h4>
                                             iOS MDM Configurations
                                             <hr>
-                                        </h2>
-                                    </div>
+                                        </h4>
 
-                                    <div id="wifi-body" class="panel-collapse panel-body" role="tabpanel" aria-labelledby="wifi-body">
                                         <div id="ios-mdm-config-error-msg" class="alert alert-danger hidden" role="alert">
                                             <i class="icon fw fw-error"></i><span></span>
                                         </div>
                                         <div class="wr-input-control">
                                             <label class="wr-input-label" for="ios-config-mdm-certificate">
-                                               MDM Certificate
+                                                MDM Certificate*
                                                 <span class="helper" title="Upload MDM Certificate">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label><br>
                                             <label class="wr-input-label" id="mdm-cert-file-name">
                                             </label>
-                                            <input id="ios-config-mdm-certificate" type="file" class="form-control" placeholder="[ Required Field ]">
+                                            <input id="ios-config-mdm-certificate" type="file" class="form-control">
                                         </div>
 
                                         <div class="wr-input-control">
                                             <label class="wr-input-label" for="ios-config-mdm-certificate-password">
-                                                MDM Certificate Password
+                                                MDM Certificate Password*
                                                 <span class="helper" title="MDM Certificate Password">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
-                                            <input id="ios-config-mdm-certificate-password" type="password" class="form-control" placeholder="[ Required Field ]">
+                                            <input id="ios-config-mdm-certificate-password" type="password" class="form-control">
                                         </div>
 
                                         <div class="wr-input-control">
                                             <label class="wr-input-label" for="ios-config-mdm-certificate-topic-id">
-                                                MDM Certificate Topic ID
+                                                MDM Certificate Topic ID*
                                                 <span class="helper" title="MDM Certificate Topic ID">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
-                                            <input id="ios-config-mdm-certificate-topic-id" type="text" class="form-control" placeholder="[ Required Field ]">
+                                            <input id="ios-config-mdm-certificate-topic-id" type="text" class="form-control">
                                         </div>
 
                                         <div class="wr-input-control">
@@ -362,39 +362,35 @@
                                                 <option value="2">Developer</option>
                                             </select>
                                         </div>
-                                    </div>
 
-                                    <div id="wifi-heading" class="panel-heading" role="tab">
-                                        <h2 class="sub-title panel-title">
+                                        <h4>
                                             iOS APNS Configurations
                                             <hr>
-                                        </h2>
-                                    </div>
+                                        </h4>
 
-                                    <div id="wifi-body" class="panel-collapse panel-body" role="tabpanel" aria-labelledby="wifi-body">
                                         <div id="ios-apns-config-error-msg" class="alert alert-danger hidden" role="alert">
                                             <i class="icon fw fw-error"></i><span></span>
                                         </div>
                                         <div class="wr-input-control">
                                             <label class="wr-input-label" for="ios-config-apns-certificate">
-                                                APNS Certificate
+                                                APNS Certificate*
                                                 <span class="helper" title="Upload APNS Certificate">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label><br>
                                             <label class="wr-input-label" id="apns-cert-file-name">
                                             </label>
-                                            <input id="ios-config-apns-certificate" type="file" class="form-control" placeholder="[ Required Field ]">
+                                            <input id="ios-config-apns-certificate" type="file" class="form-control">
                                         </div>
 
                                         <div class="wr-input-control">
                                             <label class="wr-input-label" for="ios-config-apns-certificate-password">
-                                                APNS Certificate Password
-                                                <span class="helper" title="MDM Certificate Password">
+                                                APNS Certificate Password*
+                                                <span class="helper" title="APNS Certificate Password">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
-                                            <input id="ios-config-apns-certificate-password" type="password" class="form-control" placeholder="[ Required Field ]">
+                                            <input id="ios-config-apns-certificate-password" type="password" class="form-control">
                                         </div>
 
                                         <div class="wr-input-control">
@@ -409,20 +405,17 @@
                                                 <option value="2">Developer</option>
                                             </select>
                                         </div>
-                                    </div>
-                                    <div id="wifi-heading" class="panel-heading" role="tab">
-                                        <h2 class="sub-title panel-title">
+
+                                        <h4>
                                             End User License Agreement (EULA)
                                             <hr>
-                                        </h2>
-                                    </div>
+                                        </h4>
 
-                                    <div id="wifi-body" class="panel-collapse panel-body" role="tabpanel" aria-labelledby="wifi-body">
                                         <div class="wr-input-control">
                                             <textarea id="ios-eula" type="text" class="form-control"></textarea>
                                         </div>
                                         <div class="wr-input-control wr-btn-grp">
-                                            <button id="save-ios-btn" class="wr-btn">&nbsp;&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                            <button id="save-ios-btn" class="wr-btn">Save</button>
                                         </div>
                                     </div>
                                 </div>
@@ -436,34 +429,32 @@
                                         <div id="windows-config-error-msg" class="alert alert-danger hidden" role="alert">
                                             <i class="icon fw fw-error"></i><span></span>
                                         </div>
-
+                                        <h4>
+                                            Device Polling Configuration
+                                            <hr>
+                                        </h4>
                                         <div id="local-inputs">
                                             <div class="wr-input-control">
                                                 <label class="wr-input-label" for="windows-config-notifier-frequency">
-                                                    Notifier Frequency
-                                                    <span class="helper" title="Notifier frequency for the agent to contact EMM server">
+                                                    Polling Interval*
+                                                    <span class="helper" title="Time interval after which windows agent will contact EMM server each time to fetch data">
                                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                     </span>
                                                     <br>
-                                                    ( Should be in minutes )
+                                                    ( Should be in seconds )
                                                 </label>
-                                                <input id="windows-config-notifier-frequency" type="text" class="form-control" placeholder="[ Required Field ]">
+                                                <input id="windows-config-notifier-frequency" type="text" class="form-control">
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div id="wifi-heading" class="panel-heading" role="tab">
-                                        <h2 class="sub-title panel-title">
-                                            End User License Agreement (EULA)
+                                        <h4>
+                                            End User License Agreement ( EULA )
                                             <hr>
-                                        </h2>
-                                    </div>
-                                    <div id="wifi-body" class="panel-collapse panel-body" role="tabpanel" aria-labelledby="wifi-body">
+                                        </h4>
                                         <div class="wr-input-control">
                                             <textarea id="windows-eula" type="text" class="form-control"></textarea>
                                         </div>
                                         <div class="wr-input-control wr-btn-grp">
-                                            <button id="save-windows-btn" class="wr-btn">&nbsp;&nbsp;&nbsp;&nbsp;Save&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                            <button id="save-windows-btn" class="wr-btn">Save</button>
                                         </div>
                                     </div>
                                 </div>

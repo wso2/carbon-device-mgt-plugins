@@ -22,12 +22,20 @@ var stepForwardFrom = {};
 var stepBackFrom = {};
 var policy = {};
 var configuredOperations = [];
+var currentlyEffected = {};
 
 // Constants to define platform types available
 var platformTypeConstants = {
     "ANDROID": "android",
     "IOS": "ios",
     "WINDOWS": "windows"
+};
+
+// Constants to define platform types ids.
+var platformTypeIds = {
+    "ANDROID": 1,
+    "IOS": 3,
+    "WINDOWS": 2
 };
 
 // Constants to define Android Operation Constants
@@ -49,7 +57,7 @@ var windowsOperationConstants = {
     "CAMERA_OPERATION": "camera",
     "CAMERA_OPERATION_CODE": "CAMERA",
     "ENCRYPT_STORAGE_OPERATION": "encrypt-storage",
-    "ENCRYPT_STORAGE_OPERATION_CODE": "ENCRYPT_STORAGE",
+    "ENCRYPT_STORAGE_OPERATION_CODE": "ENCRYPT_STORAGE"
 };
 
 // Constants to define iOS Operation Constants
@@ -110,8 +118,16 @@ skipStep["policy-platform"] = function (policyPayloadObj) {
     var actionInput = $("#action-input");
     var policyNameInput = $("#policy-name-input");
     var policyDescriptionInput = $("#policy-description-input");
-    userRoleInput.val(policyPayloadObj.roles).trigger("change");
-    userInput.val(policyPayloadObj.users).trigger("change");
+    currentlyEffected["roles"] = policyPayloadObj.roles;
+    currentlyEffected["users"] = policyPayloadObj.users;
+    userRoleInput.val(currentlyEffected["roles"]).trigger("change");
+    userInput.val(currentlyEffected["users"]).trigger("change");
+
+    if (currentlyEffected["users"].length > 0) {
+        $("#users-radio-btn").prop("checked", true)
+        $("#users-select-field").show();
+        $("#user-roles-select-field").hide();
+    }
     ownershipInput.val(policyPayloadObj.ownershipType);
     actionInput.val(policyPayloadObj.compliance);
     policyNameInput.val(policyPayloadObj["policyName"]);
@@ -143,7 +159,7 @@ skipStep["policy-platform"] = function (policyPayloadObj) {
                     $(".operation-data").filterByData("operation-code", configuredOperation).
                         find(".panel-title .wr-input-control.switch input[type=checkbox]").each(function () {
                             $(this).click();
-                    });
+                        });
                 }
             });
         },
@@ -204,15 +220,14 @@ validateStep["policy-profile"] = function () {
                     if (!$.isNumeric(passcodePolicyMaxPasscodeAgeInDays)) {
                         validationStatus = {
                             "error": true,
-                            "subErrorMsg": "Provided passcode age is not a number. Please check.",
+                            "subErrorMsg": "Provided passcode age is not a number.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
                     } else if (!inputIsValidAgainstRange(passcodePolicyMaxPasscodeAgeInDays, 1, 730)) {
                         validationStatus = {
                             "error": true,
-                            "subErrorMsg": "Provided passcode age is not " +
-                                "with in the range of 1-to-730. Please check.",
+                            "subErrorMsg": "Provided passcode age is not with in the range of 1-to-730.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
@@ -226,15 +241,14 @@ validateStep["policy-profile"] = function () {
                         if (!$.isNumeric(passcodePolicyPasscodeHistory)) {
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "Provided passcode history is not a number. Please check.",
+                                "subErrorMsg": "Provided passcode history is not a number.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
                         } else if (!inputIsValidAgainstRange(passcodePolicyPasscodeHistory, 1, 50)) {
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "Provided passcode history is not " +
-                                    "with in the range of 1-to-50. Please check.",
+                                "subErrorMsg": "Provided passcode history is not with in the range of 1-to-50.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -333,15 +347,14 @@ validateStep["policy-profile"] = function () {
                     if (!$.isNumeric(passcodePolicyMaxPasscodeAgeInDays)) {
                         validationStatus = {
                             "error": true,
-                            "subErrorMsg": "Provided passcode age is not a number. Please check.",
+                            "subErrorMsg": "Provided passcode age is not a number.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
                     } else if (!inputIsValidAgainstRange(passcodePolicyMaxPasscodeAgeInDays, 1, 730)) {
                         validationStatus = {
                             "error": true,
-                            "subErrorMsg": "Provided passcode age is not " +
-                            "with in the range of 1-to-730. Please check.",
+                            "subErrorMsg": "Provided passcode age is not with in the range of 1-to-730.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
@@ -355,15 +368,14 @@ validateStep["policy-profile"] = function () {
                         if (!$.isNumeric(passcodePolicyPasscodeHistory)) {
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "Provided passcode history is not a number. Please check.",
+                                "subErrorMsg": "Provided passcode history is not a number.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
                         } else if (!inputIsValidAgainstRange(passcodePolicyPasscodeHistory, 1, 50)) {
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "Provided passcode history is not " +
-                                "with in the range of 1-to-50. Please check.",
+                                "subErrorMsg": "Provided passcode history is not with in the range of 1-to-50.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -433,14 +445,14 @@ validateStep["policy-profile"] = function () {
                     if (!$.isNumeric(passcodePolicyMaxPasscodeAgeInDays)) {
                         validationStatus = {
                             "error": true,
-                            "subErrorMsg": "Provided passcode age is not a number. Please check.",
+                            "subErrorMsg": "Provided passcode age is not a number.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
                     } else if (!inputIsValidAgainstRange(passcodePolicyMaxPasscodeAgeInDays, 1, 730)) {
                         validationStatus = {
                             "error": true,
-                            "subErrorMsg": "Provided passcode age is not with in the range of 1-to-730. Please check.",
+                            "subErrorMsg": "Provided passcode age is not with in the range of 1-to-730.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
@@ -454,15 +466,14 @@ validateStep["policy-profile"] = function () {
                         if (!$.isNumeric(passcodePolicyPasscodeHistory)) {
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "Provided passcode history is not a number. Please check.",
+                                "subErrorMsg": "Provided passcode history is not a number.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
                         } else if (!inputIsValidAgainstRange(passcodePolicyPasscodeHistory, 1, 50)) {
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "Provided passcode history is not " +
-                                    "with in the range of 1-to-50. Please check.",
+                                "subErrorMsg": "Provided passcode history is not with in the range of 1-to-50.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -519,7 +530,9 @@ validateStep["policy-profile"] = function () {
                                     break;
                                 }
                             }
-                            if (duplicatesExist) { break; }
+                            if (duplicatesExist) {
+                                break;
+                            }
                         }
                     }
                     // updating validationStatus
@@ -528,7 +541,7 @@ validateStep["policy-profile"] = function () {
                         validationStatus = {
                             "error": true,
                             "subErrorMsg": "One or more permitted App ID entries in " +
-                                "Autonomous Single App Mode are empty. Please check.",
+                                "Autonomous Single App Mode are empty.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
@@ -536,7 +549,7 @@ validateStep["policy-profile"] = function () {
                         validationStatus = {
                             "error": true,
                             "subErrorMsg": "Duplicate values exist with permitted App ID entries in " +
-                                "Autonomous Single App Mode. Please check.",
+                                "Autonomous Single App Mode.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
@@ -601,7 +614,7 @@ validateStep["policy-profile"] = function () {
                             } else if (!$.isNumeric(wifiProxyPort)) {
                                 validationStatus = {
                                     "error": true,
-                                    "subErrorMsg": "Wi-Fi Proxy Port requires a number input. Please check.",
+                                    "subErrorMsg": "Wi-Fi Proxy Port requires a number input.",
                                     "erroneousFeature": operation
                                 };
                                 continueToCheckNextInputs = false;
@@ -609,7 +622,7 @@ validateStep["policy-profile"] = function () {
                                 validationStatus = {
                                     "error": true,
                                     "subErrorMsg": "Wi-Fi Proxy Port is not within the range " +
-                                        "of valid port numbers. Please check.",
+                                        "of valid port numbers.",
                                     "erroneousFeature": operation
                                 };
                                 continueToCheckNextInputs = false;
@@ -648,7 +661,9 @@ validateStep["policy-profile"] = function () {
                                             break;
                                         }
                                     }
-                                    if (duplicatesExist) { break; }
+                                    if (duplicatesExist) {
+                                        break;
+                                    }
                                 }
                             }
                             // updating validationStatus
@@ -657,7 +672,7 @@ validateStep["policy-profile"] = function () {
                                 validationStatus = {
                                     "error": true,
                                     "subErrorMsg": "One or more Payload Certificate " +
-                                        "Anchor UUIDs are empty. Please check.",
+                                        "Anchor UUIDs are empty.",
                                     "erroneousFeature": operation
                                 };
                                 continueToCheckNextInputs = false;
@@ -665,7 +680,7 @@ validateStep["policy-profile"] = function () {
                                 validationStatus = {
                                     "error": true,
                                     "subErrorMsg": "Duplicate values exist " +
-                                        "with Payload Certificate Anchor UUIDs. Please check.",
+                                        "with Payload Certificate Anchor UUIDs.",
                                     "erroneousFeature": operation
                                 };
                                 continueToCheckNextInputs = false;
@@ -699,7 +714,9 @@ validateStep["policy-profile"] = function () {
                                                 break;
                                             }
                                         }
-                                        if (duplicatesExist) { break; }
+                                        if (duplicatesExist) {
+                                            break;
+                                        }
                                     }
                                 }
                                 // updating validationStatus
@@ -707,7 +724,7 @@ validateStep["policy-profile"] = function () {
                                     // if empty child inputs are present
                                     validationStatus = {
                                         "error": true,
-                                        "subErrorMsg": "One or more TLS Trusted Server Names are empty. Please check.",
+                                        "subErrorMsg": "One or more TLS Trusted Server Names are empty.",
                                         "erroneousFeature": operation
                                     };
                                     continueToCheckNextInputs = false;
@@ -715,7 +732,7 @@ validateStep["policy-profile"] = function () {
                                     validationStatus = {
                                         "error": true,
                                         "subErrorMsg": "Duplicate values exist " +
-                                            "with TLS Trusted Server Names. Please check.",
+                                            "with TLS Trusted Server Names.",
                                         "erroneousFeature": operation
                                     };
                                     continueToCheckNextInputs = false;
@@ -740,8 +757,7 @@ validateStep["policy-profile"] = function () {
                             if (!childInput) {
                                 // if child input field is empty
                                 emptyChildInputCount++;
-                            } else if (!inputIsValidAgainstLength(childInput, 6, 6) &&
-                                !inputIsValidAgainstLength(childInput, 10, 10)) {
+                            } else if (!inputIsValidAgainstLength(childInput, 6, 6) && !inputIsValidAgainstLength(childInput, 10, 10)) {
                                 outOfAllowedLengthCount++;
                             } else if (!inputIsValidAgainstRegExp(/^[a-fA-F0-9]+$/, childInput)) {
                                 invalidAgainstRegExCount++;
@@ -758,7 +774,9 @@ validateStep["policy-profile"] = function () {
                                         break;
                                     }
                                 }
-                                if (duplicatesExist) { break; }
+                                if (duplicatesExist) {
+                                    break;
+                                }
                             }
                         }
                         // updating validationStatus
@@ -766,7 +784,7 @@ validateStep["policy-profile"] = function () {
                             // if empty child inputs are present
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "One or more Roaming Consortium OIs are empty. Please check.",
+                                "subErrorMsg": "One or more Roaming Consortium OIs are empty.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -775,7 +793,7 @@ validateStep["policy-profile"] = function () {
                             validationStatus = {
                                 "error": true,
                                 "subErrorMsg": "One or more Roaming Consortium OIs " +
-                                    "are out of allowed length. Please check.",
+                                    "are out of allowed length.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -784,14 +802,14 @@ validateStep["policy-profile"] = function () {
                             validationStatus = {
                                 "error": true,
                                 "subErrorMsg": "One or more Roaming Consortium OIs " +
-                                    "contain non-hexadecimal characters. Please check.",
+                                    "contain non-hexadecimal characters.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
                         } else if (duplicatesExist) {
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "Duplicate values exist with Roaming Consortium OIs. Please check.",
+                                "subErrorMsg": "Duplicate values exist with Roaming Consortium OIs.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -825,7 +843,9 @@ validateStep["policy-profile"] = function () {
                                         break;
                                     }
                                 }
-                                if (duplicatesExist) { break; }
+                                if (duplicatesExist) {
+                                    break;
+                                }
                             }
                         }
                         // updating validationStatus
@@ -833,14 +853,14 @@ validateStep["policy-profile"] = function () {
                             // if empty child inputs are present
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "One or more NAI Realm Names are empty. Please check.",
+                                "subErrorMsg": "One or more NAI Realm Names are empty.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
                         } else if (duplicatesExist) {
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "Duplicate values exist with NAI Realm Names. Please check.",
+                                "subErrorMsg": "Duplicate values exist with NAI Realm Names.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -894,7 +914,9 @@ validateStep["policy-profile"] = function () {
                                         break;
                                     }
                                 }
-                                if (duplicatesExist) { break; }
+                                if (duplicatesExist) {
+                                    break;
+                                }
                             }
                         }
                         // updating validationStatus
@@ -902,7 +924,7 @@ validateStep["policy-profile"] = function () {
                             // if empty child inputs are present
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "One or more MCC/MNC pairs are empty. Please check.",
+                                "subErrorMsg": "One or more MCC/MNC pairs are empty.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -910,7 +932,7 @@ validateStep["policy-profile"] = function () {
                             // if notNumeric input is present
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "One or more MCC/MNC pairs are not numeric. Please check.",
+                                "subErrorMsg": "One or more MCC/MNC pairs are not numeric.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -919,14 +941,14 @@ validateStep["policy-profile"] = function () {
                             validationStatus = {
                                 "error": true,
                                 "subErrorMsg": "One or more MCC/MNC pairs " +
-                                    "do not fulfill the accepted length of 6 digits. Please check.",
+                                    "do not fulfill the accepted length of 6 digits.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
                         } else if (duplicatesExist) {
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "Duplicate values exist with MCC/MNC pairs. Please check.",
+                                "subErrorMsg": "Duplicate values exist with MCC/MNC pairs.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -954,11 +976,10 @@ validateStep["policy-profile"] = function () {
                 continueToCheckNextInputs = true;
 
                 var emailAddress = $("input#email-address").val();
-                if (emailAddress &&
-                    !inputIsValidAgainstRegExp(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, emailAddress)) {
+                if (emailAddress && !inputIsValidAgainstRegExp(/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/, emailAddress)) {
                     validationStatus = {
                         "error": true,
-                        "subErrorMsg": "Email Address is not valid. Please check.",
+                        "subErrorMsg": "Email Address is not valid.",
                         "erroneousFeature": operation
                     };
                     continueToCheckNextInputs = false;
@@ -978,28 +999,23 @@ validateStep["policy-profile"] = function () {
 
                 if (continueToCheckNextInputs) {
                     var emailIncomingMailServerPort = $("input#email-incoming-mail-server-port").val();
-                    if (!emailIncomingMailServerPort) {
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "Incoming Mail Server Port is empty. You cannot proceed.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
-                    } else if (!$.isNumeric(emailIncomingMailServerPort)) {
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "Incoming Mail Server Port requires a number input. Please check.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
-                    } else if (!inputIsValidAgainstRange(emailIncomingMailServerPort, 0, 65535)) {
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "Incoming Mail Server Port is not within the range " +
-                                "of valid port numbers. Please check.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
+                    if (emailIncomingMailServerPort && emailIncomingMailServerPort != '') {
+                        if (!$.isNumeric(emailIncomingMailServerPort)) {
+                            validationStatus = {
+                                "error": true,
+                                "subErrorMsg": "Incoming Mail Server Port requires a number input.",
+                                "erroneousFeature": operation
+                            };
+                            continueToCheckNextInputs = false;
+                        } else if (!inputIsValidAgainstRange(emailIncomingMailServerPort, 0, 65535)) {
+                            validationStatus = {
+                                "error": true,
+                                "subErrorMsg": "Incoming Mail Server Port is not within the range " +
+                                    "of valid port numbers.",
+                                "erroneousFeature": operation
+                            };
+                            continueToCheckNextInputs = false;
+                        }
                     }
                 }
 
@@ -1017,28 +1033,23 @@ validateStep["policy-profile"] = function () {
 
                 if (continueToCheckNextInputs) {
                     var emailOutgoingMailServerPort = $("input#email-outgoing-mail-server-port").val();
-                    if (!emailOutgoingMailServerPort) {
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "Outgoing Mail Server Port is empty. You cannot proceed.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
-                    } else if (!$.isNumeric(emailOutgoingMailServerPort)) {
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "Outgoing Mail Server Port requires a number input. Please check.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
-                    } else if (!inputIsValidAgainstRange(emailOutgoingMailServerPort, 0, 65535)) {
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "Outgoing Mail Server Port is not within the range " +
-                                "of valid port numbers. Please check.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
+                    if (emailOutgoingMailServerPort && emailOutgoingMailServerPort != '') {
+                        if (!$.isNumeric(emailOutgoingMailServerPort)) {
+                            validationStatus = {
+                                "error": true,
+                                "subErrorMsg": "Outgoing Mail Server Port requires a number input.",
+                                "erroneousFeature": operation
+                            };
+                            continueToCheckNextInputs = false;
+                        } else if (!inputIsValidAgainstRange(emailOutgoingMailServerPort, 0, 65535)) {
+                            validationStatus = {
+                                "error": true,
+                                "subErrorMsg": "Outgoing Mail Server Port is not within the range " +
+                                    "of valid port numbers.",
+                                "erroneousFeature": operation
+                            };
+                            continueToCheckNextInputs = false;
+                        }
                     }
                 }
 
@@ -1067,7 +1078,7 @@ validateStep["policy-profile"] = function () {
                     $(airplayDestinationsGridChildInputs).length == 0) {
                     validationStatus = {
                         "error": true,
-                        "subErrorMsg": "AirPlay settings have zero configurations attached. Please check.",
+                        "subErrorMsg": "AirPlay settings have zero configurations attached.",
                         "erroneousFeature": operation
                     };
                     continueToCheckNextInputs = false;
@@ -1104,7 +1115,9 @@ validateStep["policy-profile"] = function () {
                                         break;
                                     }
                                 }
-                                if (duplicatesExist) { break; }
+                                if (duplicatesExist) {
+                                    break;
+                                }
                             }
                         }
                         // updating validationStatus
@@ -1113,7 +1126,7 @@ validateStep["policy-profile"] = function () {
                             validationStatus = {
                                 "error": true,
                                 "subErrorMsg": "One or more Device Names of " +
-                                    "AirPlay Credentials are empty. Please check.",
+                                    "AirPlay Credentials are empty.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -1122,7 +1135,7 @@ validateStep["policy-profile"] = function () {
                             validationStatus = {
                                 "error": true,
                                 "subErrorMsg": "Duplicate values exist with " +
-                                    "Device Names of AirPlay Credentials. Please check.",
+                                    "Device Names of AirPlay Credentials.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -1161,7 +1174,9 @@ validateStep["policy-profile"] = function () {
                                         break;
                                     }
                                 }
-                                if (duplicatesExist) { break; }
+                                if (duplicatesExist) {
+                                    break;
+                                }
                             }
                         }
                         // updating validationStatus
@@ -1169,7 +1184,7 @@ validateStep["policy-profile"] = function () {
                             // if empty child inputs are present
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "One or more AirPlay Destination fields are empty. Please check.",
+                                "subErrorMsg": "One or more AirPlay Destination fields are empty.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -1178,7 +1193,7 @@ validateStep["policy-profile"] = function () {
                             validationStatus = {
                                 "error": true,
                                 "subErrorMsg": "One or more AirPlay Destination fields " +
-                                    "do not fulfill expected format. Please check.",
+                                    "do not fulfill expected format.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -1186,7 +1201,7 @@ validateStep["policy-profile"] = function () {
                             // if duplicate input is present
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "Duplicate values exist with AirPlay Destinations. Please check.",
+                                "subErrorMsg": "Duplicate values exist with AirPlay Destinations.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -1261,7 +1276,9 @@ validateStep["policy-profile"] = function () {
                                         break;
                                     }
                                 }
-                                if (duplicatesExist) { break; }
+                                if (duplicatesExist) {
+                                    break;
+                                }
                             }
                         }
                         // updating validationStatus
@@ -1269,7 +1286,7 @@ validateStep["policy-profile"] = function () {
                             // if empty child inputs are present
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "One or more Search Setting Scope fields are empty. Please check.",
+                                "subErrorMsg": "One or more Search Setting Scope fields are empty.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -1278,7 +1295,7 @@ validateStep["policy-profile"] = function () {
                             validationStatus = {
                                 "error": true,
                                 "subErrorMsg": "Duplicate values exist with " +
-                                    "Search Setting Search Base and Scope pairs. Please check.",
+                                    "Search Setting Search Base and Scope pairs.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -1327,7 +1344,7 @@ validateStep["policy-profile"] = function () {
                     } else if (!$.isNumeric(calendarAccountPort)) {
                         validationStatus = {
                             "error": true,
-                            "subErrorMsg": "Account Port requires a number input. Please check.",
+                            "subErrorMsg": "Account Port requires a number input.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
@@ -1335,7 +1352,7 @@ validateStep["policy-profile"] = function () {
                         validationStatus = {
                             "error": true,
                             "subErrorMsg": "Account Port is not within the range " +
-                                "of valid port numbers. Please check.",
+                                "of valid port numbers.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
@@ -1394,7 +1411,7 @@ validateStep["policy-profile"] = function () {
                 if ($(apnConfigurationsGridChildInputs).length == 0) {
                     validationStatus = {
                         "error": true,
-                        "subErrorMsg": "APN Settings have zero configurations attached. Please check.",
+                        "subErrorMsg": "APN Settings have zero configurations attached.",
                         "erroneousFeature": operation
                     };
                     continueToCheckNextInputs = false;
@@ -1429,7 +1446,9 @@ validateStep["policy-profile"] = function () {
                                     break;
                                 }
                             }
-                            if (duplicatesExist) { break; }
+                            if (duplicatesExist) {
+                                break;
+                            }
                         }
                     }
                     // updating validationStatus
@@ -1437,7 +1456,7 @@ validateStep["policy-profile"] = function () {
                         // if empty child inputs are present
                         validationStatus = {
                             "error": true,
-                            "subErrorMsg": "One or more APN fields of Configurations are empty. Please check.",
+                            "subErrorMsg": "One or more APN fields of Configurations are empty.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
@@ -1446,7 +1465,7 @@ validateStep["policy-profile"] = function () {
                         validationStatus = {
                             "error": true,
                             "subErrorMsg": "Duplicate values exist with " +
-                                "APN fields of Configurations. Please check.",
+                                "APN fields of Configurations.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
@@ -1515,7 +1534,9 @@ validateStep["policy-profile"] = function () {
                                         break;
                                     }
                                 }
-                                if (duplicatesExist) { break; }
+                                if (duplicatesExist) {
+                                    break;
+                                }
                             }
                         }
                         // updating validationStatus
@@ -1523,7 +1544,7 @@ validateStep["policy-profile"] = function () {
                             // if empty child inputs are present
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "One or more APN fields of APN Configurations are empty. Please check.",
+                                "subErrorMsg": "One or more APN fields of APN Configurations are empty.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -1532,7 +1553,7 @@ validateStep["policy-profile"] = function () {
                             validationStatus = {
                                 "error": true,
                                 "subErrorMsg": "Duplicate values exist with " +
-                                    "APN fields of APN Configurations. Please check.",
+                                    "APN fields of APN Configurations.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -1625,6 +1646,15 @@ stepForwardFrom["policy-profile"] = function () {
     policy["profile"] = operationModule.generateProfile(policy["platform"], configuredOperations);
     // updating next-page wizard title with selected platform
     $("#policy-criteria-page-wizard-title").text("EDIT " + policy["platform"] + " POLICY - " + policy["name"]);
+    // updating ownership type options according to platform
+    if (policy["platform"] == platformTypeConstants["IOS"] ||
+        policy["platform"] == platformTypeConstants["WINDOWS"]) {
+        var ownershipTypeSelectOptions = $("#ownership-input");
+        ownershipTypeSelectOptions.empty();
+        ownershipTypeSelectOptions.append($("<option></option>").
+            attr("value", "BYOD").text("BYOD (Bring Your Own Device)"));
+        ownershipTypeSelectOptions.attr("disabled", true);
+    }
 };
 
 stepForwardFrom["policy-criteria"] = function () {
@@ -1658,6 +1688,44 @@ var inputIsValidAgainstLength = function (input, minLength, maxLength) {
     return (length == minLength || (length > minLength && length < maxLength) || length == maxLength);
 };
 
+validateStep["policy-criteria"] = function () {
+    var validationStatus = {};
+    var selectedAssignees;
+    var selectedField = "Role(s)";
+
+    $("input[type='radio'].select-users-radio").each(function () {
+        if ($(this).is(":checked")) {
+            if ($(this).attr("id") == "users-radio-btn") {
+                selectedAssignees = $("#users-input").val();
+                selectedField = "User(s)";
+            } else if ($(this).attr("id") == "user-roles-radio-btn") {
+                selectedAssignees = $("#user-roles-input").val();
+            }
+            return false;
+        }
+    });
+
+    if (selectedAssignees) {
+        validationStatus["error"] = false;
+    } else {
+        validationStatus["error"] = true;
+        validationStatus["mainErrorMsg"] = selectedField + " is a required field. It cannot be empty";
+    }
+
+    var wizardIsToBeContinued;
+    if (validationStatus["error"]) {
+        wizardIsToBeContinued = false;
+        var mainErrorMsgWrapper = "#policy-criteria-main-error-msg";
+        var mainErrorMsg = mainErrorMsgWrapper + " span";
+        $(mainErrorMsg).text(validationStatus["mainErrorMsg"]);
+        $(mainErrorMsgWrapper).removeClass("hidden");
+    } else {
+        wizardIsToBeContinued = true;
+    }
+
+    return wizardIsToBeContinued;
+};
+
 validateStep["policy-naming"] = function () {
     var validationStatus = {};
 
@@ -1670,7 +1738,7 @@ validateStep["policy-naming"] = function () {
     } else if (!inputIsValidAgainstLength(policyName, 1, 30)) {
         validationStatus["error"] = true;
         validationStatus["mainErrorMsg"] =
-            "Policy name exceeds maximum allowed length. Please check.";
+            "Policy name exceeds maximum allowed length.";
     } else {
         validationStatus["error"] = false;
     }
@@ -1703,7 +1771,7 @@ validateStep["policy-naming-publish"] = function () {
     } else if (!inputIsValidAgainstLength(policyName, 1, 30)) {
         validationStatus["error"] = true;
         validationStatus["mainErrorMsg"] =
-            "Policy name exceeds maximum allowed length. Please check.";
+            "Policy name exceeds maximum allowed length.";
     } else {
         validationStatus["error"] = false;
     }
@@ -1742,6 +1810,10 @@ var updatePolicy = function (policy, state) {
     // traverses key by key in policy["profile"]
     var key;
     for (key in policy["profile"]) {
+        if (policy["platformId"] == platformTypeIds["WINDOWS"] && key == windowsOperationConstants["PASSCODE_POLICY_OPERATION_CODE"]) {
+            policy["profile"][key].enablePassword = true;
+        }
+
         if (policy["profile"].hasOwnProperty(key)) {
             profilePayloads.push({
                 "featureCode": key,
@@ -1750,6 +1822,15 @@ var updatePolicy = function (policy, state) {
             });
         }
     }
+
+    $.each(profilePayloads, function (i, item) {
+        $.each(item.content, function (key, value) {
+            if (value === "" || value === undefined) {
+                item.content[key] = null;
+            }
+        });
+    });
+
     var payload = {
         "policyName": policy["policyName"],
         "description": policy["description"],
@@ -1779,7 +1860,7 @@ var updatePolicy = function (policy, state) {
         payload,
         // on success
         function () {
-            if (state == "save"){
+            if (state == "save") {
                 var policyList = [];
                 policyList.push(getParameterByName("id"));
                 serviceURL = "/devicemgt_admin/policies/inactivate";
@@ -1792,11 +1873,11 @@ var updatePolicy = function (policy, state) {
                         $(".policy-message").removeClass("hidden");
                     },
                     // on error
-                    function () {
-
+                    function (daa) {
+                        console.log(data);
                     }
                 );
-            }else if(state == "publish"){
+            } else if (state == "publish") {
                 var policyList = [];
                 policyList.push(getParameterByName("id"));
                 serviceURL = "/devicemgt_admin/policies/activate";
@@ -1810,8 +1891,8 @@ var updatePolicy = function (policy, state) {
                         $(".policy-message").removeClass("hidden");
                     },
                     // on error
-                    function () {
-
+                    function (data) {
+                        console.log(data);
                     }
                 );
             }
@@ -1859,7 +1940,7 @@ var slideDownPaneAgainstValueSet = function (selectElement, paneID, valueSet) {
         }
         $(paneSelector).slideUp();
         /** now follows the code to reinitialize all inputs of the slidable pane */
-        // reinitializing input fields into the defaults
+            // reinitializing input fields into the defaults
         $(paneSelector + " input").each(
             function () {
                 if ($(this).is("input:text")) {
@@ -1952,19 +2033,19 @@ var getParameterByName = function (name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 };
 
-function formatRepo (user) {
+function formatRepo(user) {
     if (user.loading) {
         return user.text
     }
-    if (!user.username){
+    if (!user.username) {
         return;
     }
     var markup = '<div class="clearfix">' +
-                 '<div clas="col-sm-8">' +
-                 '<div class="clearfix">' +
-                 '<div class="col-sm-3">' + user.username + '</div>';
+        '<div clas="col-sm-8">' +
+        '<div class="clearfix">' +
+        '<div class="col-sm-3">' + user.username + '</div>';
     if (user.firstname) {
-        markup +=  '<div class="col-sm-3"><i class="fa fa-code-fork"></i> ' + user.firstname + '</div>';
+        markup += '<div class="col-sm-3"><i class="fa fa-code-fork"></i> ' + user.firstname + '</div>';
     }
     if (user.emailAddress) {
         markup += '<div class="col-sm-2"><i class="fa fa-star"></i> ' + user.emailAddress + '</div></div>';
@@ -1973,62 +2054,17 @@ function formatRepo (user) {
     return markup;
 }
 
-function formatRepoSelection (user) {
-    return user.username || user.text;;
+function formatRepoSelection(user) {
+    return user.username || user.text;
 }
 
 $(document).ready(function () {
 
     // Adding initial state of wizard-steps.
-    $("#policy-profile-wizard-steps").html($(".wr-steps").html());
-
-    $("select.select2[multiple=multiple]").select2({
-        "tags": true
-    });
-
-    $("#users-input").select2({
-        multiple:true,
-        tags: true,
-        ajax: {
-            url: window.location.origin + "/devicemgt/api/invoker/execute/",
-            method: "POST",
-            dataType: 'json',
-            delay: 250,
-            id: function (user) {
-                return user.username;
-            },
-            data: function (params) {
-                var postData = {};
-                postData.actionMethod = "GET";
-                postData.actionUrl = "/devicemgt_admin/users?q=ad";
-                postData.actionPayload = JSON.stringify({
-                    q: params.term, // search term
-                    page: params.page
-                });
-
-                return JSON.stringify(postData);
-            },
-            processResults: function (data, page) {
-                var newData = [];
-                $.each(data.responseContent, function (index, value) {
-                    value.id = value.username;
-                    newData.push(value);
-                });
-                return {
-                    results: newData
-                };
-            },
-            cache: true
-        },
-        escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-        minimumInputLength: 1,
-        templateResult: formatRepo, // omitted for brevity, see the source of this page
-        templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
-    });
 
     var policyPayloadObj;
     invokerUtil.get(
-        "/devicemgt_admin/policies/" + getParameterByName("id"),
+            "/devicemgt_admin/policies/" + getParameterByName("id"),
         // on success
         function (data) {
             data = JSON.parse(data);
@@ -2036,7 +2072,8 @@ $(document).ready(function () {
             skipStep["policy-platform"](policyPayloadObj);
         },
         // on error
-        function () {
+        function (data) {
+            console.log(data);
             // should be redirected to an error page
         }
     );
@@ -2056,14 +2093,19 @@ $(document).ready(function () {
     });
 
     // Support for special input type "ANY" on user(s) & user-role(s) selection
-    $("#user-roles-input").select2({
-        "tags": true
+    $("#user-roles-input,#user-input").select2({
+        "tags": false
     }).on("select2:select", function (e) {
         if (e.params.data.id == "ANY") {
             $(this).val("ANY").trigger("change");
         } else {
             $("option[value=ANY]", this).prop("selected", false).parent().trigger("change");
         }
+    });
+    $("#policy-profile-wizard-steps").html($(".wr-steps").html());
+
+    $("select.select2[multiple=multiple]").select2({
+        "tags": false
     });
 
     // Maintains an array of configured features of the profile
@@ -2275,4 +2317,5 @@ $(document).ready(function () {
             $("." + nextStep).removeClass("hidden");
         }
     });
+
 });
