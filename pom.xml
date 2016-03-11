@@ -588,7 +588,7 @@
         <carbon.governance.version>4.5.8</carbon.governance.version>
 
         <!-- Device Management -->
-        <carbon.device.mgt.version>1.0.4-SNAPSHOT</carbon.device.mgt.version>
+        <carbon.device.mgt.version>1.0.4</carbon.device.mgt.version>
         <carbon.device.mgt.version.range>[0.8.0, 2.0.0)</carbon.device.mgt.version.range>
 
         <!-- Mobile Device Management -->
@@ -798,5 +798,10 @@
             <name>GCM Server repository - GitHub</name>
             <url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
         </repository>
-	</repositories>
+	<repository>
+	   <id>nexus-releases</id>
+	   <name>WSO2 Release Distribution Repository</name>
+	   <url>http://maven.wso2.org/nexus/content/repositories/orgwso2carbondevicemgt-404/</url>
+	</repository>
+    </repositories>
 </project>
