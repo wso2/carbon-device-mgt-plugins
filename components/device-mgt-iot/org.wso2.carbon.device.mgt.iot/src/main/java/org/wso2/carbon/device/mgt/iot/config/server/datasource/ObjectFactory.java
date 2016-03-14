@@ -64,62 +64,7 @@ public class ObjectFactory {
      *
      */
     public DeviceMgtServerInfo createDeviceMgtServerInfo() { return new DeviceMgtServerInfo(); }
-
-    /**
-     * Create an instance of {@link ApiManagerConfig }
-     * 
-     */
-    public ApiManagerConfig createApiManagerConfig() {
-        return new ApiManagerConfig();
-    }
-
-    /**
-     * Create an instance of {@link ControlQueuesConfig }
-     * 
-     */
-    public ControlQueuesConfig createControlQueuesConfig() {
-        return new ControlQueuesConfig();
-    }
-
-    /**
-     * Create an instance of {@link SecurityConfig }
-     * 
-     */
-    public SecurityConfig createSecurityConfig() {
-        return new SecurityConfig();
-    }
-
-    /**
-     * Create an instance of {@link ControlQueue }
-     * 
-     */
-    public ControlQueue createControlQueue() {
-        return new ControlQueue();
-    }
-
-    /**
-     * Create an instance of {@link DeviceUserValidatorConfig }
-     * 
-     */
-    public DeviceUserValidatorConfig createDeviceUserValidatorConfig() {
-        return new DeviceUserValidatorConfig();
-    }
-
-    /**
-     * Create an instance of {@link DataStore }
-     * 
-     */
-    public DataStore createDataStore() {
-        return new DataStore();
-    }
-
-    /**
-     * Create an instance of {@link DataStoresConfig }
-     * 
-     */
-    public DataStoresConfig createDataStoresConfig() {
-        return new DataStoresConfig();
-    }
+    
 
     /**
      * Create an instance of {@link JAXBElement }{@code <}{@link DeviceManagementConfiguration }{@code >}}

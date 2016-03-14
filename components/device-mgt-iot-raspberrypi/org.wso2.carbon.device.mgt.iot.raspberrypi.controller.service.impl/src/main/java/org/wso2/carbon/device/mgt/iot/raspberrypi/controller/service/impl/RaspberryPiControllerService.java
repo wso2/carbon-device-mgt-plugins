@@ -59,7 +59,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-@API(name = "raspberrypi", version = "1.0.0", context = "/raspberrypi")
+@API(name = "raspberrypi", version = "1.0.0", context = "/raspberrypi", tags = {"raspberrypi"})
 @DeviceType(value = "raspberrypi")
 public class RaspberryPiControllerService {
 

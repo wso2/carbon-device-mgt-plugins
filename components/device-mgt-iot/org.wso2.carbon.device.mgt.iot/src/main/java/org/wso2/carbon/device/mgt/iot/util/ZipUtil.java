@@ -65,16 +65,7 @@ public class ZipUtil {
 
 		String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
 		String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
-
-		String apimHost =
-				DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
-						.getServerURL();
-
-		String apimGatewayPort =
-				DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
-						.getGatewayPort();
-
-		String apimEndpoint = apimHost + ":" + apimGatewayPort;
+		String apimEndpoint = httpsServerEP;
 		String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
 
 		if (mqttEndpoint.contains(LOCALHOST)) {

@@ -50,7 +50,7 @@ import java.util.List;
  * The api for
  */
 @DeviceType(value = "android_sense")
-@API(name = "android_sense", version = "1.0.0", context = "/android_sense")
+@API(name = "android_sense", version = "1.0.0", context = "/android_sense", tags = {"android_sense"})
 public class AndroidSenseControllerService {
 	@Context  //injected response proxy supporting multiple thread
 	private HttpServletResponse response;

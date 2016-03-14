@@ -1218,7 +1218,6 @@
                 <artifactId>commons-codec</artifactId>
                 <version>${version.commons.codec}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 

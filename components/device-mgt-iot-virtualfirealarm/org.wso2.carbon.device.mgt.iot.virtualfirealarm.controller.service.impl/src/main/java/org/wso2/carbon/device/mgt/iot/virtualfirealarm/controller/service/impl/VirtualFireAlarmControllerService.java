@@ -77,7 +77,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * the transport 'Connectors' [XMPP & MQTT] specific to the VirtualFirealarm device-type in order to communicate with
  * such devices and to receive messages form it.
  */
-@API(name = "virtual_firealarm", version = "1.0.0", context = "/virtual_firealarm")
+@API(name = "virtual_firealarm", version = "1.0.0", context = "/virtual_firealarm", tags = "virtual_firealarm")
 @DeviceType(value = "virtual_firealarm")
 @SuppressWarnings("Non-Annoted WebService")
 public class VirtualFireAlarmControllerService {

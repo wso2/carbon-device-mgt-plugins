@@ -22,7 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ControlQueue;
-import org.wso2.carbon.device.mgt.iot.config.server.datasource.DataStore;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceManagementConfiguration;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceMgtServerInfo;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
@@ -90,20 +89,6 @@ public class DeviceManagementConfigurationManager {
         return currentDeviceManagementConfiguration;
     }
 
-    public DataStore getDataStore(String name) {
-        List<DataStore> dataStores = currentDeviceManagementConfiguration.getDataStores().getDataStore();
-        if (dataStores != null) {
-            for (DataStore dataStore : dataStores) {
-                if (dataStore.getName().equals(name)) {
-                    return dataStore;
-
-                }
-
-
-            }
-        }
-        return null;
-    }
 
     public ControlQueue getControlQueue(String name) {
         List<ControlQueue> controlQueues = currentDeviceManagementConfiguration.getControlQueues().getControlQueue();

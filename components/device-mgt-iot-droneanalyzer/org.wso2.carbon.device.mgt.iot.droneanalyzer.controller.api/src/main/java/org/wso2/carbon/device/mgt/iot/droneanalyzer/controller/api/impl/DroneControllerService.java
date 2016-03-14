@@ -31,7 +31,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.concurrent.ConcurrentHashMap;
 
-@API( name="drone_analyzer", version="1.0.0", context="/drone_analyzer")
+@API( name="drone_analyzer", version="1.0.0", context="/drone_analyzer", tags = {"drone_analyzer"})
 @DeviceType( value = "drone_analyzer")
 public class DroneControllerService {
 

@@ -42,7 +42,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 
-@API(name = "digital_display", version = "1.0.0", context = "/digital_display")
+@API(name = "digital_display", version = "1.0.0", context = "/digital_display", tags = {"digital_display"})
 @DeviceType(value = "digital_display")
 public class DigitalDisplayControllerService {
 

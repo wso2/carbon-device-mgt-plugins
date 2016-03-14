@@ -62,7 +62,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 
-@API( name="arduino", version="1.0.0", context="/arduino")
+@API( name="arduino", version="1.0.0", context="/arduino", tags = {"arduino"})
 @DeviceType( value = "arduino")
 public class ArduinoControllerService {
 
