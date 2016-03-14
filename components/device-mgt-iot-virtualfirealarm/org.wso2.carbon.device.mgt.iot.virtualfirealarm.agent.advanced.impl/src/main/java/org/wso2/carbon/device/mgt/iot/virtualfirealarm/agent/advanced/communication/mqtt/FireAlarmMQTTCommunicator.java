@@ -19,7 +19,6 @@
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.communication.mqtt;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -31,9 +30,6 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.exception.
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.mqtt.MQTTTransportHandler;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -132,15 +128,6 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
         // message- "<SIGNAL_TYPE>:<SIGNAL_MODE>" format.(ex: "BULB:ON", "TEMPERATURE", "HUMIDITY")
 
         try {
-            if (isJSONValid(receivedMessage)) {
-                JsonObject jobj = new Gson().fromJson(receivedMessage, JsonObject.class);
-                String type = jobj.get("type").toString();
-
-                if (type.equalsIgnoreCase("\"policy\"")) {
-                    String content = jobj.get("content").toString();
-                    updatePolicy(content);
-                }
-            } else {
                 switch (controlSignal[0].toUpperCase()) {
                     case AgentConstants.BULB_CONTROL:
                         boolean stateToSwitch = controlSignal[1].equals(AgentConstants.CONTROL_ON);
@@ -177,11 +164,14 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                         publishToQueue(humidPublishTopic, securePayLoad);
                         break;
 
+                    case AgentConstants.POLICY_SIGNAL:
+                        String policy = controlSignal[1];
+                        updateCEPPolicy(policy);
+
                     default:
                         log.warn(AgentConstants.LOG_APPENDER + "'" + controlSignal[0] +
                                          "' is invalid and not-supported for this device-type");
                         break;
-                }
             }
         } catch (AgentCoreOperationException e) {
             log.warn(AgentConstants.LOG_APPENDER + "Preparing Secure payload failed", e);
@@ -291,45 +281,13 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
     }
 
 
-    private void updatePolicy(String message) {
+    private void updateCEPPolicy(String message) {
         AgentManager agentManager = AgentManager.getInstance();
         System.out.println(" Message : " + message);
         String fileLocation = agentManager.getRootPath() + AgentConstants.CEP_FILE_NAME;
         message = AgentUtilOperations.formatMessage(message);
-        writeToFile(message, fileLocation);
+        AgentUtilOperations.writeToFile(message, fileLocation);
         agentManager.addToPolicyLog(message);
-    }
-
-
-    private boolean writeToFile(String policy, String fileLocation) {
-        File file = new File(fileLocation);
-        boolean fileCreated = false;
-
-        try (FileOutputStream fop = new FileOutputStream(file)) {
-
-            // if file doesn't exists, then create it
-            if (!file.exists()) {
-                fileCreated = file.createNewFile();
-            }
-
-            if (fileCreated) {
-                // get the content in bytes
-                byte[] contentInBytes = policy.getBytes(StandardCharsets.UTF_8);
-
-                fop.write(contentInBytes);
-                fop.flush();
-                fop.close();
-
-                System.out.println("Done");
-                AgentManager.setUpdated(true);
-                return true;
-            }
-            return false;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
 

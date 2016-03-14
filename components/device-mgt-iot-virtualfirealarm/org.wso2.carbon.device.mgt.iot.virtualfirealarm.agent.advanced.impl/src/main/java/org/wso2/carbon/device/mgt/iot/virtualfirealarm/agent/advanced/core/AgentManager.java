@@ -155,8 +155,8 @@ public class AgentManager {
         }
 
         String siddhiQueryFilePath = rootPath + AgentConstants.CEP_FILE_NAME;
-        initialPolicy = SidhdhiQuery.readFile(siddhiQueryFilePath, StandardCharsets.UTF_8);
         (new Thread(new SidhdhiQuery())).start();
+        initialPolicy = SidhdhiQuery.readFile(siddhiQueryFilePath, StandardCharsets.UTF_8);
 
         //Initializing hardware at that point
         //AgentManger.setDeviceReady() method should invoked from hardware after initialization
