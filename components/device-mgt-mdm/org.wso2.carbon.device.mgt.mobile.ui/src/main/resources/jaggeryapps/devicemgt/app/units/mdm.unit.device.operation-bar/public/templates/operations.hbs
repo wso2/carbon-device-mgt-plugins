@@ -12,10 +12,31 @@
                 <h4>
                     Please select a device or a list of devices to perform an operation.
                 </h4>
+
                 <div class="buttons">
-                    <a href="javascript:hidePopup()" class="btn-operations">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    </a>
+                    <a href="javascript:hidePopup()" class="btn-operations">Ok</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="errorOperationUnexpected" class="operation">
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-5 col-md-6 col-centered">
+                <h3>
+                    <span class="fw-stack">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-error fw-stack-1x"></i>
+                    </span>
+                    Operation cannot be performed !
+                </h3>
+                <h4>
+                    Unexpected error occurred. Please Try again later.
+                </h4>
+
+                <div class="buttons">
+                    <a href="javascript:hidePopup()" class="btn-operations">Ok</a>
                 </div>
             </div>
         </div>
@@ -35,10 +56,9 @@
                 <h4>
                     Operation has been queued successfully to be sent to the device.
                 </h4>
+
                 <div class="buttons">
-                    <a href="javascript:hidePopup()" class="btn-operations">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    </a>
+                    <a href="javascript:hidePopup()" class="btn-operations">Ok</a>
                 </div>
             </div>
         </div>
@@ -59,10 +79,9 @@
                 <h4>
                     Message has been queued to be sent to the device.
                 </h4>
+
                 <div class="buttons">
-                    <a href="javascript:hidePopup()" class="btn-operations">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    </a>
+                    <a href="javascript:hidePopup()" class="btn-operations">Ok</a>
                 </div>
             </div>
         </div>
@@ -88,10 +107,14 @@
                     <h4>
                         {{#equal code "WIPE_DATA"}}
                             {{#equal type "android"}}
-                                Enter PIN code (Optional - This is required only if the device type is BYOD).
+                                Enter PIN code (Optional - This is required only if the device type
+                                is BYOD).
                                 <br><br>
+
                                 <div>
-                                    <input type="password" class="form-control modal-input operationDataKeys" id="pin" data-key="pin"></textarea>
+                                    <input type="password"
+                                           class="form-control modal-input operationDataKeys"
+                                           id="pin" data-key="pin"></textarea>
                                 </div>
                                 <br>
                             {{/equal}}
@@ -99,35 +122,35 @@
                         {{#equal code "NOTIFICATION"}}
                             Type your message below.
                             <br><br>
-                            <div id="notification-error-msg" class="alert alert-danger hidden" role="alert">
+
+                            <div id="notification-error-msg" class="alert alert-danger hidden"
+                                 role="alert">
                                 <i class="icon fw fw-error"></i><span></span>
                             </div>
                             <div>
-                                <textarea class="form-control modal-input operationDataKeys" id="message" data-key="message"></textarea>
+                                <textarea class="form-control modal-input operationDataKeys"
+                                          id="message" data-key="message"></textarea>
                             </div>
                             <br>
                         {{/equal}}
                         {{#equal code "CHANGE_LOCK_CODE"}}
                             Type new lock-code below.
                             <br><br>
-                            <input type="password" class="form-control modal-input operationDataKeys" id="lockcode" data-key="lockCode" placeholder="Enter Lockcode" />
+                            <input type="password"
+                                   class="form-control modal-input operationDataKeys" id="lockcode"
+                                   data-key="lockCode" placeholder="Enter Lockcode"/>
                             <br>
                         {{/equal}}
                         Do you want to perform this operation on selected device(s) ?
                         <br>
                     </h4>
                     <div class="buttons">
-                        <a href="javascript:runOperation('{{code}}')" class="btn-operations">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Yes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </a>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="javascript:hidePopup()" class="btn-operations">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </a>
+                        <a href="javascript:runOperation('{{code}}')" class="btn-operations">Yes</a>
+                        <a href="javascript:hidePopup()" class="btn-operations">No</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 {{/each}}
-<br class="c-both" />
+<br class="c-both"/>

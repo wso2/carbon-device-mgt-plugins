@@ -21,5 +21,6 @@ function onRequest(context) {
     log.debug("calling policy-view-edit-unit");
     var userModule = require("/app/modules/user.js").userModule;
     context.roles = userModule.getRoles().content;
+    context.users = userModule.getUsersByUsername().content;
     return context;
 }

@@ -113,9 +113,6 @@
                             <option value="" selected="selected">
                                 None
                             </option>
-                            <option value="1">01</option>
-                            <option value="2">02</option>
-                            <option value="3">03</option>
                             <option value="4">04</option>
                             <option value="5">05</option>
                             <option value="6">06</option>
@@ -152,26 +149,26 @@
 
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="passcode-policy-max-passcode-age-in-days">
-                            Maximum passcode age in days
+                            Maximum passcode age in days*
                             <span class="helper" title="Number of days after which a passcode must be changed">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
                             ( Should be in between 1-to-730 days or none )
                         </label>
-                        <input id="passcode-policy-max-passcode-age-in-days" type="text" class="form-control operationDataKeys" data-key="passcodePolicyMaxPasscodeAgeInDays" maxlength="3" placeholder="[ Requires Number Input ]">
+                        <input id="passcode-policy-max-passcode-age-in-days" type="text" class="form-control operationDataKeys" data-key="passcodePolicyMaxPasscodeAgeInDays" maxlength="3">
                     </div>
 
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="passcode-policy-passcode-history">
-                            Passcode history
+                            Passcode history*
                             <span class="helper" title="Number of consequent unique passcodes to be used before reuse">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
                             ( Should be in between 1-to-50 passcodes or none )
                         </label>
-                        <input id="passcode-policy-passcode-history" type="text" class="form-control operationDataKeys" data-key="passcodePolicyPasscodeHistory" maxlength="2" placeholder="[ Requires Number Input ]">
+                        <input id="passcode-policy-passcode-history" type="text" class="form-control operationDataKeys" data-key="passcodePolicyPasscodeHistory" maxlength="2">
                     </div>
 
                     <div class="wr-input-control">
@@ -264,7 +261,7 @@
                     <div id="encrypt-storage-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
-                    Un-check following checkbox in case you need to disable storage-encryption.
+                    Un-check following checkbox in case you do not need the device to be encrypted.
                     <br>
                     <br>
                     <div class="wr-input-control">
@@ -326,14 +323,15 @@
                         </div>
                         <div class="wr-input-control">
                             <label class="wr-input-label" for="wifi-ssid">
-                                Service Set Identifier (SSID) *
+                                Service Set Identifier (SSID)*
                                 <span class="helper" title="Identification of the wireless network to be configured.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
-                                <br>
-                                ( should be 1-to-30 characters long )
                             </label>
-                            <input id="wifi-ssid" type="text" class="form-control operationDataKeys" data-key="wifiSSID" maxlength="100" placeholder="[ Required field ]"/>
+                            <label id="wifiSsidValidationText" class="wr-input-label hidden">
+                                Service Set Identifier should be 1-to-30 characters long
+                            </label>
+                            <input id="wifi-ssid" type="text" class="form-control operationDataKeys" data-key="wifiSSID" maxlength="100" placeholder="[ Should be 1-to-30 characters long ]"/>
                         </div>
                         <div class="wr-input-control">
                             <label class="wr-input-label" for="wifi-password">
@@ -342,7 +340,7 @@
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                             </label>
-                            <input id="wifi-password" type="text" class="form-control operationDataKeys" data-key="wifiPassword" maxlength="100" placeholder="[ Optional field ]"/>
+                            <input id="wifi-password" type="password" class="form-control operationDataKeys" data-key="wifiPassword" maxlength="100" />
                         </div>
                     <!--</div>-->
                 </div>
