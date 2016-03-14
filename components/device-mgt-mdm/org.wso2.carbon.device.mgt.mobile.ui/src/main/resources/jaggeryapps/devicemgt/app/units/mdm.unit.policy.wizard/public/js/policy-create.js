@@ -105,17 +105,67 @@ var updateGroupedInputVisibility = function (domElement) {
     }
 };
 
+var validateInline = {};
+var clearInline = {};
+
+var enableInlineError = function (inputField, errorMsg, errorSign) {
+    var fieldIdentifier = "#" + inputField;
+    var errorMsgIdentifier = "#" + inputField + " ." + errorMsg;
+    var errorSignIdentifier = "#" + inputField + " ." + errorSign;
+
+    if (inputField) {
+        $(fieldIdentifier).addClass(" has-error has-feedback");
+    }
+
+    if (errorMsg) {
+        $(errorMsgIdentifier).removeClass(" hidden");
+    }
+
+    if (errorSign) {
+        $(errorSignIdentifier).removeClass(" hidden");
+    }
+};
+
+var disableInlineError = function (inputField, errorMsg, errorSign) {
+    var fieldIdentifier = "#" + inputField;
+    var errorMsgIdentifier = "#" + inputField + " ." + errorMsg;
+    var errorSignIdentifier = "#" + inputField + " ." + errorSign;
+
+    if (inputField) {
+        $(fieldIdentifier).removeClass(" has-error has-feedback");
+    }
+
+    if (errorMsg) {
+        $(errorMsgIdentifier).addClass(" hidden");
+    }
+
+    if (errorSign) {
+        $(errorSignIdentifier).addClass(" hidden");
+    }
+};
+
+/**
+ *clear inline validation messages.
+ */
+clearInline["policy-name"] = function () {
+    disableInlineError("plicynameField", "nameEmpty", "nameError");
+};
+
+
+/**
+ * Validate if provided policy name is valid against RegEx configures.
+ */
 validateInline["policy-name"] = function () {
     var policyName = $("input#policy-name-input").val();
     if (policyName && inputIsValidAgainstLength(policyName, 1, 30)) {
-        $("#policyNameValidationText").removeClass("inline-warning");
+        disableInlineError("plicynameField", "nameEmpty", "nameError");
     } else {
-        $("#policyNameValidationText").addClass("inline-warning");
+        enableInlineError("plicynameField", "nameEmpty", "nameError");
     }
 };
 
 $("#policy-name-input").focus(function () {
-    $("#policyNameValidationText").removeClass("inline-warning");
+    clearInline["policy-name"]();
 });
 
 $("#policy-name-input").blur(function () {
@@ -1113,7 +1163,7 @@ validateStep["policy-profile"] = function () {
                                 // if child input field is empty
                                 emptyChildInputCount++;
                             } else if (!inputIsValidAgainstRegExp(
-                                /([a-z|A-Z|0-9][a-z|A-Z|0-9][:]){5}([a-z|A-Z|0-9][a-z|A-Z|0-9])$/, childInput)) {
+                                    /([a-z|A-Z|0-9][a-z|A-Z|0-9][:]){5}([a-z|A-Z|0-9][a-z|A-Z|0-9])$/, childInput)) {
                                 // if child input field is invalid against RegEx
                                 invalidAgainstRegExCount++
                             }
@@ -2039,7 +2089,30 @@ $(document).ready(function () {
     $("#loading-content").remove();
     $(".policy-platform").removeClass("hidden");
     // Adding initial state of wizard-steps.
-    $("#policy-platform-wizard-steps").html($(".wr-steps").html());
+    $("#policy-profile-wizard-steps").html($(".wr-steps").html());
+
+    policy["platform"] = $("#platform").data("platform");
+    policy["platformId"] = $("#platform").data("platform-id");
+    // updating next-page wizard title with selected platform
+    $("#policy-profile-page-wizard-title").text("ADD " + policy["platform"] + " POLICY");
+
+    var deviceType = policy["platform"];
+    var hiddenOperationsByDeviceType = $("#hidden-operations-" + deviceType);
+    var hiddenOperationsByDeviceTypeCacheKey = deviceType + "HiddenOperations";
+    var hiddenOperationsByDeviceTypeSrc = hiddenOperationsByDeviceType.attr("src");
+
+    setTimeout(
+            function () {
+                $.template(hiddenOperationsByDeviceTypeCacheKey, hiddenOperationsByDeviceTypeSrc, function (template) {
+                    var content = template();
+                    $(".wr-advance-operations").html(content);
+                    $(".wr-advance-operations li.grouped-input").each(function () {
+                        updateGroupedInputVisibility(this);
+                    });
+                });
+            },
+            250 // time delayed for the execution of above function, 250 milliseconds
+    );
 
     $("select.select2[multiple=multiple]").select2({
         "tags": false
