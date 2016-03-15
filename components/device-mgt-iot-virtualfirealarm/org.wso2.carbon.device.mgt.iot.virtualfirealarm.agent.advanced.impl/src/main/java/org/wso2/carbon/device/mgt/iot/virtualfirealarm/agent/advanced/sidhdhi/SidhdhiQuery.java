@@ -26,6 +26,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core.AgentConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core.AgentManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core.AgentUtilOperations;
 import org.wso2.siddhi.core.SiddhiManager;
 import org.wso2.siddhi.core.event.Event;
 import org.wso2.siddhi.core.stream.input.InputHandler;
@@ -50,7 +51,7 @@ import java.nio.file.Paths;
  */
 public class SidhdhiQuery implements Runnable {
     private static final Log log = LogFactory.getLog(SidhdhiQuery.class);
-    final AgentConstants constants = new AgentConstants();
+    public static final String sidhdhiQueryPath = AgentManager.getInstance().getRootPath() + AgentConstants.CEP_FILE_NAME;
 
     //Bam data push client
     private static SiddhiManager siddhiManager = new SiddhiManager();
@@ -66,27 +67,10 @@ public class SidhdhiQuery implements Runnable {
     public void run() {
 
         //Start the execution plan with pre-defined or previously persisted Siddhi query
-
-        String sidhdhiQueryPath =
-                AgentManager.getInstance().getRootPath() + AgentConstants.CEP_FILE_NAME;
-
         File f = new File(sidhdhiQueryPath);
+
         if (!f.exists()) {
-            FileOutputStream out = null;
-            try {
-                out = new FileOutputStream(sidhdhiQueryPath);
-                out.write(AgentConstants.CEP_QUERY.getBytes(StandardCharsets.UTF_8));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (out != null) {
-                    try {
-                        out.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+            AgentUtilOperations.writeToFile(AgentConstants.CEP_QUERY, sidhdhiQueryPath);
         }
 
         StartExecutionPlan startExecutionPlan = new StartExecutionPlan().invoke();
@@ -180,8 +164,6 @@ public class SidhdhiQuery implements Runnable {
         public StartExecutionPlan invoke() {
             String executionPlan;
 
-            String sidhdhiQueryPath =
-                    AgentManager.getInstance().getRootPath() + AgentConstants.CEP_FILE_NAME;
             executionPlan = readFile(sidhdhiQueryPath, StandardCharsets.UTF_8);
 
             //Generating runtime

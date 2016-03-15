@@ -26,11 +26,9 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.exception.
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.CommunicationUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.TransportHandlerException;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -340,6 +338,33 @@ public class AgentUtilOperations {
             }
         }
         return formattedMsg.toString();
+    }
+
+    public static boolean writeToFile(String content, String fileLocation) {
+        File file = new File(fileLocation);
+
+        try (FileOutputStream fop = new FileOutputStream(file)) {
+
+            // if file doesn't exists, then create it
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            // get the content in bytes
+            byte[] contentInBytes = content.getBytes(StandardCharsets.UTF_8);
+
+            fop.write(contentInBytes);
+            fop.flush();
+            fop.close();
+
+            System.out.println("Done");
+            AgentManager.setUpdated(true);
+            return true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }

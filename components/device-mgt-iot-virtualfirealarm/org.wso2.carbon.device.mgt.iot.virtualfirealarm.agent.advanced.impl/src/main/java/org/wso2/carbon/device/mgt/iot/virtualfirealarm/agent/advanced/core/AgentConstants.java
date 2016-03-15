@@ -125,10 +125,10 @@ public class AgentConstants {
 											"select deviceID, max(temp) as maxValue\n" +
 											"group by deviceID\n" +
 											"insert into analyzeStream for expired-events;\n" +
-											"from analyzeStream[maxValue < 50]\n" +
+											"from analyzeStream[maxValue > 50]\n" +
 											"select maxValue\n" +
 											"insert into bulbOnStream;\n" +
-											"from fireAlarmEventStream[temp > 50]\n" +
+											"from fireAlarmEventStream[temp < 50]\n" +
 											"select deviceID, temp\n" +
 											"insert into bulbOffStream;";
 
