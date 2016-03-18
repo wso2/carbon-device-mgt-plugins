@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -72,7 +72,7 @@ public class IotDeviceManagementUtil {
             iotDevice = new IotDevice();
             iotDevice.setIotDeviceId(device.getDeviceIdentifier());
             iotDevice.setIotDeviceName(device.getName());
-            Map<String, String> deviceProperties = new HashMap<String, String>();
+            Map<String, String> deviceProperties = new HashMap<>();
 
             if (device.getProperties() != null) {
 
@@ -92,7 +92,7 @@ public class IotDeviceManagementUtil {
         Device device = null;
         if (iotDevice != null) {
             device = new Device();
-            List<Device.Property> propertyList = new ArrayList<Device.Property>();
+            List<Device.Property> propertyList = new ArrayList<>();
 
             if (iotDevice.getDeviceProperties() != null) {
                 for (Map.Entry<String, String> deviceProperty : iotDevice.getDeviceProperties().entrySet()) {
@@ -109,7 +109,6 @@ public class IotDeviceManagementUtil {
 
     public static ZipArchive getSketchArchive(String archivesPath, String templateSketchPath, Map contextParams)
             throws DeviceManagementException, IOException {
-
         String sep = File.separator;
         String sketchPath = CarbonUtils.getCarbonHome() + sep + templateSketchPath;
 
@@ -121,7 +120,7 @@ public class IotDeviceManagementUtil {
             throw new DeviceManagementException(message);
         }
 
-        String zipFileName = "zipFile.zip";
+        String zipFileName;
 
         try {
             Map<String, List<String>> properties = getProperties(sketchPath + sep + "sketch" + ".properties");
@@ -151,7 +150,7 @@ public class IotDeviceManagementUtil {
             log.error(e);
             throw new DeviceManagementException(message, e);
         }
-        FileUtils.deleteDirectory(new File(archivesPath));//clear folder
+        //FileUtils.deleteDirectory(new File(archivesPath));//clear folder
 
 		/* now get the zip file */
         File zip = new File(archivesPath + ".zip");
@@ -163,15 +162,14 @@ public class IotDeviceManagementUtil {
         InputStream input = null;
 
         try {
-
             input = new FileInputStream(propertyFilePath);
 
             // load a properties file
             prop.load(input);
-            Map<String, List<String>> properties = new HashMap<String, List<String>>();
+            Map<String, List<String>> properties = new HashMap<>();
 
             String templates = prop.getProperty("templates");
-            List<String> list = new ArrayList<String>(Arrays.asList(templates.split(",")));
+            List<String> list = new ArrayList<>(Arrays.asList(templates.split(",")));
             properties.put("templates", list);
 
             final String filename = prop.getProperty("zipfilename");
@@ -180,7 +178,6 @@ public class IotDeviceManagementUtil {
             }};
             properties.put("zipfilename", list);
             return properties;
-
         } finally {
             if (input != null) {
                 try {
@@ -222,29 +219,22 @@ public class IotDeviceManagementUtil {
         //read from file
         FileInputStream inputStream = new FileInputStream(srcFile);
         String content = IOUtils.toString(inputStream, StandardCharsets.UTF_8.toString());
-        Iterator iterator = contextParams.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry mapEntry = (Map.Entry) iterator.next();
+        for (Object o : contextParams.entrySet()) {
+            Map.Entry mapEntry = (Map.Entry) o;
             content = content.replaceAll("\\$\\{" + mapEntry.getKey() + "\\}", mapEntry.getValue().toString());
         }
-        if (inputStream != null) {
-            inputStream.close();
-        }
+        inputStream.close();
         //write to file
         FileOutputStream outputStream = new FileOutputStream(dstFile);
         IOUtils.write(content, outputStream, StandardCharsets.UTF_8.toString());
-        if (outputStream != null) {
-            outputStream.close();
-        }
+        outputStream.close();
     }
 
     private static void copyFolder(File src, File dest, List<String> excludeFileNames) throws IOException {
-
         if (src.isDirectory()) {
             //if directory not exists, create it
             if (!dest.exists() && !dest.mkdirs()) {
                 String message = "Could not create directory at path: " + dest;
-                log.error(message);
                 throw new IOException(message);
             }
 
@@ -289,27 +279,12 @@ public class IotDeviceManagementUtil {
         }
     }
 
-    private static void silentClose(InputStream is) {
-        if (is == null) {
+    private static void silentClose(Closeable stream) {
+        if (stream == null) {
             return;
         }
-
         try {
-            is.close();
-        } catch (IOException e) {
-            // do nothing
-        }
-
-    }
-
-    private static void silentClose(OutputStream os) {
-        if (os == null) {
-            return;
-        }
-
-        try {
-
-            os.close();
+            stream.close();
         } catch (IOException e) {
             // do nothing
         }
@@ -325,14 +300,14 @@ public class IotDeviceManagementUtil {
             out = new ZipOutputStream(new BufferedOutputStream(dest));
             byte data[] = new byte[BUFFER];
             File subDir = new File(srcFolder);
-            String subdirList[] = subDir.list();
+            String subDirs[] = subDir.list();
 
-            if (subdirList == null) {
+            if (subDirs == null) {
                 log.warn("The sub directory " + subDir.getAbsolutePath() + " is empty");
                 return false;
             }
 
-            for (String sd : subdirList) {
+            for (String sd : subDirs) {
                 // get a list of files from current directory
                 File f = new File(srcFolder + "/" + sd);
                 if (f.isDirectory()) {
@@ -343,20 +318,18 @@ public class IotDeviceManagementUtil {
                         return false;
                     }
 
-                    for (int i = 0; i < files.length; i++) {
-                        FileInputStream fi = new FileInputStream(srcFolder + "/" + sd + "/" + files[i]);
+                    for (String file : files) {
+                        FileInputStream fi = new FileInputStream(srcFolder + "/" + sd + "/" + file);
                         origin = new BufferedInputStream(fi, BUFFER);
-                        ZipEntry entry = new ZipEntry(sd + "/" + files[i]);
+                        ZipEntry entry = new ZipEntry(sd + "/" + file);
                         out.putNextEntry(entry);
                         int count;
                         while ((count = origin.read(data, 0, BUFFER)) != -1) {
                             out.write(data, 0, count);
                             out.flush();
                         }
-
                     }
-                } else //it is just a file
-                {
+                } else {
                     FileInputStream fi = new FileInputStream(f);
                     origin = new BufferedInputStream(fi, BUFFER);
                     ZipEntry entry = new ZipEntry(sd);
@@ -366,10 +339,8 @@ public class IotDeviceManagementUtil {
                         out.write(data, 0, count);
                         out.flush();
                     }
-
                 }
             }
-
             out.flush();
         } finally {
             silentClose(origin);
