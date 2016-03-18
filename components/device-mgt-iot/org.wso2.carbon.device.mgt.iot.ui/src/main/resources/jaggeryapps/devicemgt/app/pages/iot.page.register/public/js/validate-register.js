@@ -28,6 +28,17 @@ function inputIsValid(regExp, inputString) {
     return regExp.test(inputString);
 }
 
+/**
+ * Checks if an email address has the valid format or not.
+ *
+ * @param email Email address
+ * @returns {boolean} true if email has the valid format, otherwise false.
+ */
+function emailIsValid(email) {
+    var regExp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    return regExp.test(email);
+}
+
 $(document).ready(function(){
 
     /**
@@ -74,7 +85,7 @@ $(document).ready(function(){
         } else if (!emailAddress) {
             $(errorMsg).text("Email is a required field. It cannot be empty.");
             $(errorMsgWrapper).removeClass("hidden");
-        } else if (!inputIsValid(emailInput.data("regex"), emailAddress)) {
+        } else if (!emailIsValid(emailAddress)) {
             $(errorMsg).text(emailInput.data("errormsg"));
             $(errorMsgWrapper).removeClass("hidden");
         } else if (!password) {
