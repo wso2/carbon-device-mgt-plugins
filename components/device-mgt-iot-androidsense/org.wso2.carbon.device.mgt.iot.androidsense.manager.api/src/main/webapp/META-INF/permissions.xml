@@ -31,7 +31,7 @@
 	<Permission>
 		<name>Get device</name>
 		<path>/device-mgt/user/devices/list</path>
-		<url>/manager/device/{device_id}</url>
+		<url>/manager/device/*</url>
 		<method>GET</method>
 		<scope></scope>
 	</Permission>
@@ -45,21 +45,21 @@
 	<Permission>
 		<name>Remove device</name>
 		<path>/device-mgt/user/devices/remove</path>
-		<url>/manager/device/{device_id}</url>
+		<url>/manager/device/*</url>
 		<method>DELETE</method>
 		<scope></scope>
 	</Permission>
 	<Permission>
 		<name>Download device</name>
 		<path>/device-mgt/user/devices/add</path>
-		<url>/manager/device/{sketch_type}/download</url>
+		<url>/manager/device/*/download</url>
 		<method>GET</method>
 		<scope></scope>
 	</Permission>
 	<Permission>
 		<name>Update device</name>
 		<path>/device-mgt/user/devices/update</path>
-		<url>/manager/device/{device_id}</url>
+		<url>/manager/device/*</url>
 		<method>POST</method>
 		<scope></scope>
 	</Permission>

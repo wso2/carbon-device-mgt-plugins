@@ -45,7 +45,7 @@ public class ArduinoManagerService implements DeviceManagementService {
 
 	@Override
 	public boolean isSharedWithAllTenants() {
-		return false;
+		return true;
 	}
 
 	@Override

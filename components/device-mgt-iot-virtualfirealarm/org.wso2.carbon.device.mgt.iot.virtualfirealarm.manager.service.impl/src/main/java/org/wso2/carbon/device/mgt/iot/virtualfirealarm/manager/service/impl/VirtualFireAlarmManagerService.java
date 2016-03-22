@@ -19,21 +19,27 @@
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.manager.service.impl;
 
 import org.apache.commons.io.FileUtils;
+import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
+import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
+import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
-import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
-import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
-import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.manager.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
+import org.wso2.carbon.device.mgt.jwt.client.extension.JWTClient;
+import org.wso2.carbon.device.mgt.jwt.client.extension.JWTClientManager;
+import org.wso2.carbon.device.mgt.jwt.client.extension.dto.AccessTokenInfo;
+import org.wso2.carbon.device.mgt.jwt.client.extension.exception.JWTClientException;
+import org.wso2.carbon.user.api.UserStoreException;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -58,15 +64,17 @@ import java.util.UUID;
 public class VirtualFireAlarmManagerService {
     @Context  //injected response proxy supporting multiple thread
     private HttpServletResponse response;
+    private static final String KEY_TYPE = "PRODUCTION";
+    private static ApiApplicationKey apiApplicationKey;
 
     @Path("manager/device/register")
     @POST
     public boolean register(@QueryParam("deviceId") String deviceId,
                             @QueryParam("name") String name) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
         try {
+            DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+            deviceIdentifier.setId(deviceId);
+            deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
             if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
                 response.setStatus(Response.Status.CONFLICT.getStatusCode());
                 return false;
@@ -92,6 +100,8 @@ public class VirtualFireAlarmManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -99,10 +109,10 @@ public class VirtualFireAlarmManagerService {
     @DELETE
     public void removeDevice(@PathParam("device_id") String deviceId,
                              @Context HttpServletResponse response) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
         try {
+            DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+            deviceIdentifier.setId(deviceId);
+            deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
             boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(
                     deviceIdentifier);
             if (removed) {
@@ -112,6 +122,8 @@ public class VirtualFireAlarmManagerService {
             }
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -120,10 +132,10 @@ public class VirtualFireAlarmManagerService {
     public boolean updateDevice(@PathParam("device_id") String deviceId,
                                 @QueryParam("name") String name,
                                 @Context HttpServletResponse response) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
         try {
+            DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+            deviceIdentifier.setId(deviceId);
+            deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
             Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
             device.setDeviceIdentifier(deviceId);
             device.getEnrolmentInfo().setDateOfLastUpdate(new Date().getTime());
@@ -139,6 +151,8 @@ public class VirtualFireAlarmManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -147,14 +161,16 @@ public class VirtualFireAlarmManagerService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Device getDevice(@PathParam("device_id") String deviceId) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
         try {
+            DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+            deviceIdentifier.setId(deviceId);
+            deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
             return APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return null;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -177,6 +193,8 @@ public class VirtualFireAlarmManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return null;
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -195,12 +213,18 @@ public class VirtualFireAlarmManagerService {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
         } catch (DeviceManagementException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
-        } catch (AccessTokenException ex) {
+        } catch (JWTClientException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
+        } catch (APIManagerException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        }catch (DeviceControllerException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (IOException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
+        } catch (UserStoreException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -216,20 +240,36 @@ public class VirtualFireAlarmManagerService {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
         } catch (DeviceManagementException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
-        } catch (AccessTokenException ex) {
+        } catch (JWTClientException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (APIManagerException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (DeviceControllerException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
+        } catch (UserStoreException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
     private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
-            throws DeviceManagementException, AccessTokenException, DeviceControllerException {
+            throws DeviceManagementException, APIManagerException, JWTClientException, DeviceControllerException,
+                   UserStoreException {
         //create new device id
         String deviceId = shortUUID();
-        TokenClient accessTokenClient = new TokenClient(VirtualFireAlarmConstants.DEVICE_TYPE);
-        AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
-        //create token
+        if (apiApplicationKey == null) {
+            String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
+                    .getAdminUserName();
+            APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
+            String[] tags = {VirtualFireAlarmConstants.DEVICE_TYPE};
+            apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
+                    VirtualFireAlarmConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
+        }
+        JWTClient jwtClient = JWTClientManager.getInstance().getJWTClient();
+        String scopes = "device_type_" + VirtualFireAlarmConstants.DEVICE_TYPE + " device_" + deviceId;
+        AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
+                                                                   apiApplicationKey.getConsumerSecret(), owner, scopes);
         String accessToken = accessTokenInfo.getAccess_token();
         String refreshToken = accessTokenInfo.getRefresh_token();
         //adding registering data

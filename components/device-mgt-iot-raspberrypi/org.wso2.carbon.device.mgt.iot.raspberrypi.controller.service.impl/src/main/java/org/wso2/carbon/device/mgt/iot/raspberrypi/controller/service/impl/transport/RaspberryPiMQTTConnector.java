@@ -42,11 +42,7 @@ import java.util.UUID;
 
 public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
     private static Log log = LogFactory.getLog(RaspberryPiMQTTConnector.class);
-
-    private static final String serverName =
-            DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
-
-    private static final String subscribeTopic = serverName + "/" + RaspberrypiConstants.DEVICE_TYPE + "/+/publisher";
+    private static final String subscribeTopic = "wso2/" + RaspberrypiConstants.DEVICE_TYPE + "/+/publisher";
 
     private static final String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 

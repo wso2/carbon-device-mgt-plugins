@@ -127,14 +127,21 @@
 			<artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt</groupId>
 			<artifactId>org.wso2.carbon.apimgt.webapp.publisher</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
-
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.jwt.client.extension</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt</groupId>
+			<artifactId>org.wso2.carbon.apimgt.application.extension</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 

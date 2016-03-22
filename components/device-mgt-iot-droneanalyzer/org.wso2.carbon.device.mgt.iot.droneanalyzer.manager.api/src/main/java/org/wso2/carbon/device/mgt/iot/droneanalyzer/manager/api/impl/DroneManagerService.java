@@ -18,21 +18,28 @@
 package org.wso2.carbon.device.mgt.iot.droneanalyzer.manager.api.impl;
 
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
+import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
+import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
-import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
-import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.manager.api.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
-import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
+import org.wso2.carbon.device.mgt.jwt.client.extension.JWTClient;
+import org.wso2.carbon.device.mgt.jwt.client.extension.JWTClientManager;
+import org.wso2.carbon.device.mgt.jwt.client.extension.dto.AccessTokenInfo;
+import org.wso2.carbon.device.mgt.jwt.client.extension.exception.JWTClientException;
+import org.wso2.carbon.user.api.UserStoreException;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -57,14 +64,16 @@ public class DroneManagerService {
     private static org.apache.commons.logging.Log log = LogFactory.getLog(DroneManagerService.class);
     @Context  //injected response proxy supporting multiple thread
     private HttpServletResponse response;
+    private static final String KEY_TYPE = "PRODUCTION";
+    private static ApiApplicationKey apiApplicationKey;
 
     @Path("manager/device/register")
     @POST
     public boolean register(@QueryParam("deviceId") String deviceId, @QueryParam("name") String name) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
         try {
+			DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+			deviceIdentifier.setId(deviceId);
+			deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
             if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
                 response.setStatus(Response.Status.CONFLICT.getStatusCode());
                 return false;
@@ -90,18 +99,19 @@ public class DroneManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
-        }
-    }
+        } finally {
+			PrivilegedCarbonContext.endTenantFlow();
+		}
+	}
 
     @Path("manager/device/{device_id}")
     @DELETE
     public void removeDevice(@PathParam("device_id") String deviceId, @Context HttpServletResponse response) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
         try {
-            boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(
-                    deviceIdentifier);
+			DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+			deviceIdentifier.setId(deviceId);
+			deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
+            boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(deviceIdentifier);
             if (removed) {
                 response.setStatus(Response.Status.OK.getStatusCode());
             } else {
@@ -110,17 +120,19 @@ public class DroneManagerService {
             }
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        }
+        } finally {
+			PrivilegedCarbonContext.endTenantFlow();
+		}
     }
 
     @Path("manager/device/{device_id}")
     @PUT
     public boolean updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name,
                                 @Context HttpServletResponse response) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
         try {
+			DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+			deviceIdentifier.setId(deviceId);
+			deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
             Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
             device.setDeviceIdentifier(deviceId);
             device.getEnrolmentInfo().setDateOfLastUpdate(new Date().getTime());
@@ -136,24 +148,28 @@ public class DroneManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
-        }
-    }
+        } finally {
+			PrivilegedCarbonContext.endTenantFlow();
+		}
+	}
 
     @Path("manager/device/{device_id}")
     @GET
     @Consumes("application/json")
     @Produces("application/json")
     public Device getDevice(@PathParam("device_id") String deviceId) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
         try {
+			DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+			deviceIdentifier.setId(deviceId);
+			deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
             return APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return null;
-        }
-    }
+        } finally {
+			PrivilegedCarbonContext.endTenantFlow();
+		}
+	}
 
     @Path("manager/devices")
     @GET
@@ -174,8 +190,10 @@ public class DroneManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return null;
-        }
-    }
+        } finally {
+			PrivilegedCarbonContext.endTenantFlow();
+		}
+	}
 
 
 
@@ -184,31 +202,35 @@ public class DroneManagerService {
     @Produces("application/octet-stream")
     public Response downloadSketch(@QueryParam("deviceName") String deviceName,
                                    @PathParam("sketch_type") String sketchType) {
-        //create new device id
-        String deviceId = shortUUID();
-        //create token
-        String token = UUID.randomUUID().toString();
-        String refreshToken = UUID.randomUUID().toString();
-        //adding registering data
-        boolean status = register(deviceId, deviceName);
-        if (!status) {
-            return Response.status(500).entity(
-                    "Error occurred while registering the device with " + "id: " + deviceId
-                            + " owner:" + APIUtil.getAuthenticatedUser()).build();
-
-        }
-        ZipUtil ziputil = new ZipUtil();
-        ZipArchive zipFile;
         try {
-            zipFile = ziputil.createZipFile(APIUtil.getAuthenticatedUser(), APIUtil.getTenantDomainOftheUser(),
-                                            sketchType, deviceId, deviceName, token, refreshToken);
-        } catch (DeviceManagementException ex) {
-            return Response.status(500).entity("Error occurred while creating zip file").build();
-        }
-        Response.ResponseBuilder rb = Response.ok(zipFile.getZipFile());
-        rb.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
-        return rb.build();
-    }
+			//create new device id
+			String deviceId = shortUUID();
+			//create token
+			String token = UUID.randomUUID().toString();
+			String refreshToken = UUID.randomUUID().toString();
+			//adding registering data
+			boolean status = register(deviceId, deviceName);
+			if (!status) {
+				return Response.status(500).entity(
+						"Error occurred while registering the device with " + "id: " + deviceId
+								+ " owner:" + APIUtil.getAuthenticatedUser()).build();
+
+			}
+			ZipUtil ziputil = new ZipUtil();
+			ZipArchive zipFile;
+			try {
+				zipFile = ziputil.createZipFile(APIUtil.getAuthenticatedUser(), APIUtil.getTenantDomainOftheUser(),
+												sketchType, deviceId, deviceName, token, refreshToken);
+			} catch (DeviceManagementException ex) {
+				return Response.status(500).entity("Error occurred while creating zip file").build();
+			}
+			Response.ResponseBuilder rb = Response.ok(zipFile.getZipFile());
+			rb.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
+			return rb.build();
+		} finally {
+			PrivilegedCarbonContext.endTenantFlow();
+		}
+	}
 
     @Path("manager/device/{sketch_type}/generate_link")
     @GET
@@ -222,19 +244,37 @@ public class DroneManagerService {
             return Response.status(400).entity(ex.getMessage()).build();
         } catch (DeviceManagementException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
-        } catch (AccessTokenException ex) {
+        } catch (JWTClientException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (DeviceControllerException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
-        }
-    }
+        } catch (APIManagerException ex) {
+			return Response.status(500).entity(ex.getMessage()).build();
+		} catch (UserStoreException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } finally {
+			PrivilegedCarbonContext.endTenantFlow();
+		}
+	}
 
     private ZipArchive createDownloadFile(String deviceName, String sketchType)
-            throws DeviceManagementException, AccessTokenException, DeviceControllerException {
+            throws DeviceManagementException, JWTClientException, APIManagerException, DeviceControllerException,
+                   UserStoreException {
         //create new device id
         String deviceId = shortUUID();
-        TokenClient accessTokenClient = new TokenClient(DroneConstants.DEVICE_TYPE);
-        AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(APIUtil.getAuthenticatedUser(), deviceId);
+        if (apiApplicationKey == null) {
+            String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
+                    .getAdminUserName();
+            APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
+            String[] tags = {DroneConstants.DEVICE_TYPE};
+            apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
+                    DroneConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
+        }
+        JWTClient jwtClient = JWTClientManager.getInstance().getJWTClient();
+		String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+        String scopes = "device_type_" + DroneConstants.DEVICE_TYPE + " device_" + deviceId;
+        AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
+                                                                   apiApplicationKey.getConsumerSecret(), owner, scopes);
         //create token
         String accessToken = accessTokenInfo.getAccess_token();
         String refreshToken = accessTokenInfo.getRefresh_token();
@@ -250,11 +290,8 @@ public class DroneManagerService {
         if (XmppConfig.getInstance().isEnabled()) {
             status = xmppServerClient.createXMPPAccount(newXmppAccount);
             if (!status) {
-                String msg =
-                        "XMPP Account was not created for device - " + deviceId + " of owner - " +
-                                APIUtil.getAuthenticatedUser() +
-                                ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot" +
-                                ".common.config.server.configs";
+                String msg = "XMPP Account was not created for device - " + deviceId + " of owner - " +
+                                APIUtil.getAuthenticatedUser() + ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot.common.config.server.configs";
                 log.warn(msg);
                 throw new DeviceManagementException(msg);
             }

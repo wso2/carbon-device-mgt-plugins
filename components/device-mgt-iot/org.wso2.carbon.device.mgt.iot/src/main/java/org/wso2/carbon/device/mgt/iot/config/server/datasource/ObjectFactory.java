@@ -60,13 +60,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link DeviceManagementConfiguration }
-     *
-     */
-    public DeviceMgtServerInfo createDeviceMgtServerInfo() { return new DeviceMgtServerInfo(); }
-    
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link DeviceManagementConfiguration }{@code >}}
      * 
      */

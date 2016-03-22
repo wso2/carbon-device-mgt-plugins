@@ -36,11 +36,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="ServerInfo" type="{}DeviceMgtServerInfo"/>
- *         &lt;element name="DataStores" type="{}DataStoresConfig"/>
  *         &lt;element name="ControlQueues" type="{}ControlQueuesConfig"/>
- *         &lt;element name="Security" type="{}SecurityConfig"/>
- *         &lt;element name="DeviceUserValidator" type="{}DeviceUserValidatorConfig"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -49,36 +45,13 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DeviceManagementConfigurations", propOrder = {
-        "dmServerInfo",
-        "controlQueues",
-        "security"
+        "controlQueues"
 })
+
 @XmlRootElement(name = "DeviceManagementConfigurations")
 public class DeviceManagementConfiguration {
-    @XmlElement(name = "DMServerInfo", required = true)
-    protected DeviceMgtServerInfo dmServerInfo;
     @XmlElement(name = "ControlQueues", required = true)
     protected ControlQueuesConfig controlQueues;
-    @XmlElement(name = "Security", required = true)
-
-    /**
-     * Gets the value of the ServerInfo property of the device management configurations manager
-     * @return possible object is
-     * {@link DeviceMgtServerInfo }
-     */
-    public DeviceMgtServerInfo getDmServerInfo() {
-        return dmServerInfo;
-    }
-
-    /**
-     * Sets the value of the ServerInfo property.
-     *
-     * @param value allowed object is
-     *              {@link DeviceMgtServerInfo }
-     */
-    public void setDmServerInfo(DeviceMgtServerInfo value) {
-        this.dmServerInfo = value;
-    }
 
     /**
      * Gets the value of the controlQueues property.

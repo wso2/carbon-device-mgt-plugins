@@ -20,7 +20,6 @@ package org.wso2.carbon.device.mgt.iot.service;
 
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ControlQueue;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceManagementConfiguration;
-import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceMgtServerInfo;
 
 public interface ConfigurationService {
 
@@ -40,12 +39,4 @@ public interface ConfigurationService {
      * @return control queue configs
      */
     ControlQueue getControlQueue(String name);
-
-
-    /**
-     * Retrieve device management server information
-     *
-     * @return device management server information
-     */
-    DeviceMgtServerInfo getDeviceManagementServerInfo();
 }

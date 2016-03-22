@@ -135,20 +135,16 @@ public class ArduinoControllerService {
     public String registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
                                    @PathParam("port") String devicePort, @Context HttpServletResponse response,
                                    @Context HttpServletRequest request) {
-        String result = "Device-IP registeration failed";
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId + " of owner: ");
-            }
-            String deviceHttpEndpoint = deviceIP + ":" + devicePort;
-            deviceToIpMap.put(deviceId, deviceHttpEndpoint);
-            result = "Device-IP Registered";
-            response.setStatus(Response.Status.OK.getStatusCode());
-            if (log.isDebugEnabled()) {
-                log.debug(result);
-            }
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
+        String result;
+        if (log.isDebugEnabled()) {
+            log.debug("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId + " of owner: ");
+        }
+        String deviceHttpEndpoint = deviceIP + ":" + devicePort;
+        deviceToIpMap.put(deviceId, deviceHttpEndpoint);
+        result = "Device-IP Registered";
+        response.setStatus(Response.Status.OK.getStatusCode());
+        if (log.isDebugEnabled()) {
+            log.debug(result);
         }
         return result;
     }
@@ -158,21 +154,18 @@ public class ArduinoControllerService {
     @Feature(code = "bulb", name = "Control Bulb", type = "operation", description = "Control Bulb on Arduino Uno")
     public void switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
                            @FormParam("state") String state, @Context HttpServletResponse response) {
-        try {
-            LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
-            String operation = "BULB:" + state.toUpperCase();
-            log.info(operation);
-            if (deviceControlList == null) {
-                deviceControlList = new LinkedList<>();
-                deviceControlList.add(operation);
-                internalControlsQueue.put(deviceId, deviceControlList);
-            } else {
-                deviceControlList.add(operation);
-            }
-            response.setStatus(Response.Status.OK.getStatusCode());
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
+
+        LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
+        String operation = "BULB:" + state.toUpperCase();
+        log.info(operation);
+        if (deviceControlList == null) {
+            deviceControlList = new LinkedList<>();
+            deviceControlList.add(operation);
+            internalControlsQueue.put(deviceId, deviceControlList);
+        } else {
+            deviceControlList.add(operation);
         }
+        response.setStatus(Response.Status.OK.getStatusCode());
     }
 
     @Path("controller/device/{deviceId}/temperature")
@@ -182,39 +175,31 @@ public class ArduinoControllerService {
     @Feature( code="temperature", name="Temperature", type="monitor", description="Request temperature reading from Arduino agent")
     public SensorRecord requestTemperature(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
                                            @Context HttpServletResponse response) {
+        SensorRecord sensorRecord = null;
         try {
-            SensorRecord sensorRecord = null;
-            try {
-                sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-                                                                               ArduinoConstants.SENSOR_TEMPERATURE);
-            } catch (DeviceControllerException e) {
-                response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            }
-            response.setStatus(Response.Status.OK.getStatusCode());
-            return sensorRecord;
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
+            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
+                                                                           ArduinoConstants.SENSOR_TEMPERATURE);
+        } catch (DeviceControllerException e) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         }
+        response.setStatus(Response.Status.OK.getStatusCode());
+        return sensorRecord;
     }
 
     @Path("controller/sensor")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void pushData(DeviceData dataMsg, @Context HttpServletResponse response) {
-        try {
-            String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
-            String deviceId = dataMsg.deviceId;
-            float pinData = dataMsg.value;
-            SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
-                                                            String.valueOf(pinData),
-                                                            Calendar.getInstance().getTimeInMillis());
-            if (!ArduinoServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
-                response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-                log.warn("An error occured whilst trying to publish pin data of Arduino with ID [" +
-                                 deviceId + "] of owner [" + owner + "]");
-            }
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
+        String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+        String deviceId = dataMsg.deviceId;
+        float pinData = dataMsg.value;
+        SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
+                                                        String.valueOf(pinData),
+                                                        Calendar.getInstance().getTimeInMillis());
+        if (!ArduinoServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            log.warn("An error occured whilst trying to publish pin data of Arduino with ID [" +
+                             deviceId + "] of owner [" + owner + "]");
         }
     }
 
@@ -222,29 +207,25 @@ public class ArduinoControllerService {
     @GET
     public String readControls(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
                                @Context HttpServletResponse response) {
-        try {
-            String result;
-            LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
-            String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
-            if (deviceControlList == null) {
-                result = "No controls have been set for device " + deviceId + " of owner " + owner;
+        String result;
+        LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
+        String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+        if (deviceControlList == null) {
+            result = "No controls have been set for device " + deviceId + " of owner " + owner;
+            response.setStatus(HttpStatus.SC_NO_CONTENT);
+        } else {
+            try {
+                result = deviceControlList.remove();
+                response.setStatus(HttpStatus.SC_ACCEPTED);
+            } catch (NoSuchElementException ex) {
+                result = "There are no more controls for device " + deviceId + " of owner " + owner;
                 response.setStatus(HttpStatus.SC_NO_CONTENT);
-            } else {
-                try {
-                    result = deviceControlList.remove();
-                    response.setStatus(HttpStatus.SC_ACCEPTED);
-                } catch (NoSuchElementException ex) {
-                    result = "There are no more controls for device " + deviceId + " of owner " + owner;
-                    response.setStatus(HttpStatus.SC_NO_CONTENT);
-                }
             }
-            if (log.isDebugEnabled()) {
-                log.debug(result);
-            }
-            return result;
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
         }
+        if (log.isDebugEnabled()) {
+            log.debug(result);
+        }
+        return result;
     }
 
     @Path("controller/temperature")
@@ -252,20 +233,16 @@ public class ArduinoControllerService {
     @Consumes(MediaType.APPLICATION_JSON)
     public void pushTemperatureData(final DeviceData dataMsg, @Context HttpServletResponse response,
                                     @Context HttpServletRequest request) {
-        try {
-            String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
-            String deviceId = dataMsg.deviceId;
-            float temperature = dataMsg.value;
-            SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
-                                                            String.valueOf(temperature),
-                                                            Calendar.getInstance().getTimeInMillis());
-            if (!ArduinoServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
-                response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-                log.warn("An error occured whilst trying to publish temperature data of Arduino with ID [" + deviceId +
-                                 "] of owner [" + owner + "]");
-            }
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
+        String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+        String deviceId = dataMsg.deviceId;
+        float temperature = dataMsg.value;
+        SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
+                                                        String.valueOf(temperature),
+                                                        Calendar.getInstance().getTimeInMillis());
+        if (!ArduinoServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
+            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
+            log.warn("An error occured whilst trying to publish temperature data of Arduino with ID [" + deviceId +
+                             "] of owner [" + owner + "]");
         }
     }
 
@@ -316,8 +293,6 @@ public class ArduinoControllerService {
             log.error(errorMsg);
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 

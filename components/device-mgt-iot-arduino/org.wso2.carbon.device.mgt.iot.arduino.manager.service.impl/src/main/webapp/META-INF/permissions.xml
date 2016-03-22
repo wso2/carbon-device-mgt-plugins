@@ -36,13 +36,6 @@
 		<scope></scope>
 	</Permission>
 	<Permission>
-		<name>Add device</name>
-		<path>/device-mgt/user/devices/add</path>
-		<url>/manager/device</url>
-		<method>POST</method>
-		<scope></scope>
-	</Permission>
-	<Permission>
 		<name>Remove device</name>
 		<path>/device-mgt/user/devices/remove</path>
 		<url>/manager/device/{device_id}</url>
@@ -52,7 +45,7 @@
 	<Permission>
 		<name>Download device</name>
 		<path>/device-mgt/user/devices/add</path>
-		<url>/manager/device/{sketch_type}/download</url>
+		<url>/manager/device/download</url>
 		<method>GET</method>
 		<scope></scope>
 	</Permission>
@@ -60,7 +53,7 @@
 		<name>Update device</name>
 		<path>/device-mgt/user/devices/update</path>
 		<url>/manager/device/{device_id}</url>
-		<method>POST</method>
+		<method>PUT</method>
 		<scope></scope>
 	</Permission>
 </PermissionConfiguration>

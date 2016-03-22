@@ -27,9 +27,6 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.iot.androidsense.manager.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
-import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
-import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
-import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.utils.CarbonUtils;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -54,10 +51,9 @@ public class AndroidSenseManagerService {
         try {
             if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
                 response.setStatus(Response.Status.CONFLICT.getStatusCode());
-                getTokens(APIUtil.getAuthenticatedUser(), deviceId, response);
                 return true;
             }
-            getTokens(APIUtil.getAuthenticatedUser(), deviceId, response);
+
             Device device = new Device();
             device.setDeviceIdentifier(deviceId);
             EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
@@ -79,11 +75,6 @@ public class AndroidSenseManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
-        } catch (AccessTokenException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            return false;
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -104,8 +95,6 @@ public class AndroidSenseManagerService {
             }
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -132,8 +121,6 @@ public class AndroidSenseManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -150,8 +137,6 @@ public class AndroidSenseManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return null;
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
@@ -168,20 +153,6 @@ public class AndroidSenseManagerService {
             return rb.build();
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
         }
-    }
-
-    public void getTokens(String owner, String deviceId, HttpServletResponse response)
-            throws AccessTokenException {
-        TokenClient accessTokenClient = new TokenClient(AndroidSenseConstants.DEVICE_TYPE);
-        AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
-
-        String accessToken = accessTokenInfo.getAccess_token();
-        String refreshToken = accessTokenInfo.getRefresh_token();
-
-        response.addHeader("access", accessToken);
-        response.addHeader("refresh", refreshToken);
     }
 }

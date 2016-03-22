@@ -52,8 +52,6 @@ public class ZipUtil {
 		String sketchFolder = "repository" + sep + "resources" + sep + "sketches";
 		String archivesPath = CarbonUtils.getCarbonHome() + sep + sketchFolder + sep + "archives" + sep + deviceId;
 		String templateSketchPath = sketchFolder + sep + deviceType;
-
-		String serverName = DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
         String iotServerIP;
         try {
             iotServerIP = IoTUtil.getHostName();
@@ -82,7 +80,8 @@ public class ZipUtil {
 		xmppEndpoint = xmppEndpoint + ":" + XmppConfig.getInstance().getSERVER_CONNECTION_PORT();
 
         Map<String, String> contextParams = new HashMap<>();
-        contextParams.put("SERVER_NAME", serverName);
+		//TODO:refactor remove and move to device type impl
+        contextParams.put("SERVER_NAME", "wso2");
 		contextParams.put("DEVICE_OWNER", owner);
 		contextParams.put("DEVICE_ID", deviceId);
 		contextParams.put("DEVICE_NAME", deviceName);

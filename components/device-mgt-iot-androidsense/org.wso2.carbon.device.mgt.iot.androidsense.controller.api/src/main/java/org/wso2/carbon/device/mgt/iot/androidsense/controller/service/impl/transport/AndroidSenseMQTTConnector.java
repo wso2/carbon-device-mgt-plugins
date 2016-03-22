@@ -47,10 +47,6 @@ import java.util.UUID;
 @SuppressWarnings("no JAX-WS annotation")
 public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
     private static Log log = LogFactory.getLog(AndroidSenseMQTTConnector.class);
-
-    private static String serverName = DeviceManagementConfigurationManager.getInstance().
-            getDeviceManagementServerInfo().getName();
-
     private static String subscribeTopic = AndroidSenseConstants.MQTT_SUBSCRIBE_WORDS_TOPIC;
     private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 

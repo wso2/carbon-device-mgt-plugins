@@ -21,19 +21,25 @@ package org.wso2.carbon.device.mgt.iot.digitaldisplay.manager.api;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
+import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
+import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
-import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
-import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.manager.api.util.APIUtil;
-import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.constants.DigitalDisplayConstants;
+import org.wso2.carbon.device.mgt.jwt.client.extension.JWTClient;
+import org.wso2.carbon.device.mgt.jwt.client.extension.JWTClientManager;
+import org.wso2.carbon.device.mgt.jwt.client.extension.dto.AccessTokenInfo;
+import org.wso2.carbon.device.mgt.jwt.client.extension.exception.JWTClientException;
+import org.wso2.carbon.user.api.UserStoreException;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -50,6 +56,8 @@ public class DigitalDisplayManagerService {
 	private static Log log = LogFactory.getLog(DigitalDisplayManagerService.class);
 	@Context  //injected response proxy supporting multiple thread
 	private HttpServletResponse response;
+	private static final String KEY_TYPE = "PRODUCTION";
+	private static ApiApplicationKey apiApplicationKey;
 
 	@Path("manager/device")
 	@POST
@@ -174,11 +182,15 @@ public class DigitalDisplayManagerService {
 			return Response.status(400).entity(ex.getMessage()).build();//bad request
 		} catch (DeviceManagementException ex) {
 			return Response.status(500).entity(ex.getMessage()).build();
-		} catch (AccessTokenException ex) {
+		} catch (JWTClientException ex) {
 			return Response.status(500).entity(ex.getMessage()).build();
 		} catch (DeviceControllerException ex) {
 			return Response.status(500).entity(ex.getMessage()).build();
+		} catch (APIManagerException ex) {
+			return Response.status(500).entity(ex.getMessage()).build();
 		} catch (IOException ex) {
+			return Response.status(500).entity(ex.getMessage()).build();
+		} catch (UserStoreException ex) {
 			return Response.status(500).entity(ex.getMessage()).build();
 		} finally {
 			PrivilegedCarbonContext.endTenantFlow();
@@ -186,14 +198,25 @@ public class DigitalDisplayManagerService {
 	}
 
 	private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
-			throws DeviceManagementException, AccessTokenException, DeviceControllerException {
+			throws DeviceManagementException, JWTClientException, DeviceControllerException, APIManagerException,
+				   UserStoreException {
 		if (owner == null) {
 			throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
 		}
 		//create new device id
 		String deviceId = shortUUID();
-		TokenClient accessTokenClient = new TokenClient(DigitalDisplayConstants.DEVICE_TYPE);
-		AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
+		if (apiApplicationKey == null) {
+			String applicationUsername =
+					PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration().getAdminUserName();
+			APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
+			String[] tags = {DigitalDisplayConstants.DEVICE_TYPE};
+			apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
+					DigitalDisplayConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
+		}
+		JWTClient jwtClient = JWTClientManager.getInstance().getJWTClient();
+		String scopes = "device_type_" + DigitalDisplayConstants.DEVICE_TYPE + " device_" + deviceId;
+		AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
+																   apiApplicationKey.getConsumerSecret(), owner, scopes);
 		//create token
 		String accessToken = accessTokenInfo.getAccess_token();
 		String refreshToken = accessTokenInfo.getRefresh_token();

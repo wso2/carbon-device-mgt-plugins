@@ -2,9 +2,9 @@ package org.wso2.carbon.device.mgt.iot.digitaldisplay.manager.api.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
-
 /**
  * This class provides utility functions used by REST-API.
  */
@@ -38,5 +38,17 @@ public class APIUtil {
 			throw new IllegalStateException(msg);
 		}
 		return deviceManagementProviderService;
+	}
+
+	public static APIManagementProviderService getAPIManagementProviderService() {
+		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+		APIManagementProviderService apiManagementProviderService =
+				(APIManagementProviderService) ctx.getOSGiService(APIManagementProviderService.class, null);
+		if (apiManagementProviderService == null) {
+			String msg = "API management provider service has not initialized.";
+			log.error(msg);
+			throw new IllegalStateException(msg);
+		}
+		return apiManagementProviderService;
 	}
 }

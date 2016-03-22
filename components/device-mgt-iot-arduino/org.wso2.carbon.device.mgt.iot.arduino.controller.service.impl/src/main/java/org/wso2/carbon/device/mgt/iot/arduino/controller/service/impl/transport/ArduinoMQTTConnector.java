@@ -35,11 +35,7 @@ import java.util.UUID;
 
 public class ArduinoMQTTConnector extends MQTTTransportHandler {
     private static Log log = LogFactory.getLog(ArduinoMQTTConnector.class);
-
-    private static final String serverName =
-            DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
-
-    private static final String subscribeTopic = serverName + "/" + ArduinoConstants.DEVICE_TYPE + "/#";
+    private static final String subscribeTopic = "wso2/" + ArduinoConstants.DEVICE_TYPE + "/#";
     private static final String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
     private static final String MESSAGE_TO_SEND = "IN";

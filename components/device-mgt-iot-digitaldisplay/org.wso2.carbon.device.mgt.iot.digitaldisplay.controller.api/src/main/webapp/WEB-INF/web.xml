@@ -37,11 +37,11 @@
 
     <context-param>
         <param-name>isSharedWithAllTenants</param-name>
-        <param-value>false</param-value>
+        <param-value>true</param-value>
     </context-param>
     <context-param>
         <param-name>providerTenantDomain</param-name>
-        <param-value>bar.com</param-value>
+        <param-value>carbon.super</param-value>
     </context-param>
     <context-param>
         <param-name>isAdminService</param-name>
@@ -59,7 +59,7 @@
     </context-param>
     <context-param>
         <param-name>managed-api-owner</param-name>
-        <param-value>admin@bar.com</param-value>
+        <param-value>admin</param-value>
     </context-param>
     <context-param>
         <param-name>managed-api-context-template</param-name>

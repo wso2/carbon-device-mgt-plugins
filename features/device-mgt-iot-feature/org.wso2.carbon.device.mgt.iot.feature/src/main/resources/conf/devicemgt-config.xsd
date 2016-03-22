@@ -4,38 +4,7 @@
 
   <xs:complexType name="DeviceManagementConfigurations" >
     <xs:sequence>
-      <xs:element type="DeviceMgtServerInfo" name="DMServerInfo"/>
-      <xs:element type="DataStoresConfig" name="DataStores"/>
       <xs:element type="ControlQueuesConfig" name="ControlQueues"/>
-      <xs:element type="SecurityConfig" name="Security"/>
-      <xs:element type="ApiManagerConfig" name="ApiManager"/>
-      <xs:element type="DeviceUserValidatorConfig" name="DeviceUserValidator"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="DeviceMgtServerInfo">
-    <xs:sequence>
-      <xs:element type="xs:string" name="Name"/>
-      <xs:element type="xs:string" name="Domain"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="DataStoresConfig">
-    <xs:sequence>
-      <xs:element type="DataStore" name="DataStore" maxOccurs="unbounded" minOccurs="0"/>
-    </xs:sequence>
-  </xs:complexType>
-
-
-  <xs:complexType name="DataStore">
-    <xs:sequence>
-      <xs:element type="xs:string" name="Name"/>
-      <xs:element type="xs:boolean" name="Enabled"/>
-      <xs:element type="xs:string" name="PublisherClass"/>
-      <xs:element type="xs:string" name="ServerURL"/>
-      <xs:element type="xs:short" name="Port"/>
-      <xs:element type="xs:string" name="Username"/>
-      <xs:element type="xs:string" name="Password"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -57,35 +26,4 @@
       <xs:element type="xs:string" name="Password"/>
     </xs:sequence>
   </xs:complexType>
-
-  <xs:complexType name="SecurityConfig">
-    <xs:sequence>
-      <xs:element type="xs:string" name="ClientTrustStore"/>
-      <xs:element type="xs:string" name="Password"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="ApiManagerConfig">
-    <xs:sequence>
-      <xs:element type="xs:boolean" name="Enabled"/>
-      <xs:element type="xs:string" name="AccessTokenURL"/>
-      <xs:element type="xs:string" name="ServerURL"/>
-      <xs:element type="xs:string" name="ServerPort"/>
-      <xs:element type="xs:string" name="GatewayPort"/>
-      <xs:element type="xs:string" name="LoginURL"/>
-      <xs:element type="xs:string" name="SubscriptionListURL"/>
-      <xs:element type="xs:string" name="Username"/>
-      <xs:element type="xs:string" name="Password"/>
-      <xs:element type="xs:string" name="DeviceGrantType"/>
-      <xs:element type="xs:string" name="DeviceScopes"/>
-    </xs:sequence>
-  </xs:complexType>
-
-  <xs:complexType name="DeviceUserValidatorConfig">
-    <xs:sequence>
-      <xs:element type="xs:int" name="CacheSize"/>
-      <xs:element type="xs:int" name="TTL"/>
-    </xs:sequence>
-  </xs:complexType>
-
 </xs:schema>

@@ -116,107 +116,103 @@ public class AndroidSenseControllerService {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void addSensorData(DeviceData dataMsg, @Context HttpServletResponse response) {
-		try {
-			PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-			DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
-					.getOSGiService(DeviceAnalyticsService.class, null);
-			SensorData[] sensorData = dataMsg.values;
-			String streamDef = null;
-			Object payloadData[] = null;
-			String sensorName = null;
-			for (SensorData sensor : sensorData) {
-				switch (sensor.key) {
-					case "battery" :
-						streamDef = AndroidSenseConstants.BATTERY_STREAM_DEFINITION;
-						payloadData = new Float[]{Float.parseFloat(sensor.value)};
-						sensorName = AndroidSenseConstants.SENSOR_BATTERY;
-						break;
-					case "GPS" :
-						streamDef = AndroidSenseConstants.GPS_STREAM_DEFINITION;
-						String gpsValue = sensor.value;
-						String gpsValuesString[] = gpsValue.split(",");
-						Float gpsValues[] = new Float[2];
-						gpsValues[0] = Float.parseFloat(gpsValuesString[0]);
-						gpsValues[1] = Float.parseFloat(gpsValuesString[0]);
-						payloadData = gpsValues;
-						sensorName = AndroidSenseConstants.SENSOR_GPS;
-						break;
-					default :
-						try {
-							int androidSensorId = Integer.parseInt(sensor.key);
-							String value = sensor.value;
-							String sensorValueString[] = value.split(",");
-							Float sensorValues[] = new Float[1];
-							switch (androidSensorId) {
-								case 1:
-									streamDef = AndroidSenseConstants.ACCELEROMETER_STREAM_DEFINITION;
-									sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
-											Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
-									payloadData = sensorValues;
-									sensorName = AndroidSenseConstants.SENSOR_ACCELEROMETER;
-									break;
-								case 2:
-									streamDef = AndroidSenseConstants.MAGNETIC_STREAM_DEFINITION;
-									sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
-											Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
-									payloadData = sensorValues;
-									sensorName = AndroidSenseConstants.SENSOR_MAGNETIC;
-									break;
-								case 4:
-									streamDef = AndroidSenseConstants.GYROSCOPE_STREAM_DEFINITION;
-									sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
-											Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
-									payloadData = sensorValues;
-									sensorName = AndroidSenseConstants.SENSOR_GYROSCOPE;
-									break;
-								case 5:
-									streamDef = AndroidSenseConstants.LIGHT_STREAM_DEFINITION;
-									sensorName = AndroidSenseConstants.SENSOR_LIGHT;
-									payloadData = new Float[]{Float.parseFloat(sensorValueString[0])};
-									break;
-								case 6:
-									streamDef = AndroidSenseConstants.PRESSURE_STREAM_DEFINITION;
-									sensorName = AndroidSenseConstants.SENSOR_PRESSURE;
-									payloadData = new Float[]{Float.parseFloat(sensorValueString[0])};
-									break;
-								case 8:
-									streamDef = AndroidSenseConstants.PROXIMITY_STREAM_DEFINITION;
-									sensorName = AndroidSenseConstants.SENSOR_PROXIMITY;
-									payloadData = new Float[]{Float.parseFloat(sensorValueString[0])};
-									break;
-								case 9:
-									streamDef = AndroidSenseConstants.GRAVITY_STREAM_DEFINITION;
-									sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
-											Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
-									payloadData = sensorValues;
-									sensorName = AndroidSenseConstants.SENSOR_GRAVITY;
-									break;
-								case 11:
-									streamDef = AndroidSenseConstants.ROTATION_STREAM_DEFINITION;
-									sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
-											Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
-									payloadData = sensorValues;
-									sensorName = AndroidSenseConstants.SENSOR_ROTATION;
-									break;
-							}
-						} catch (NumberFormatException e) {
-							log.error("Invalid sensor value is sent from the device");
-							continue;
-						}
-				}
-				Object metaData[] = {dataMsg.owner, AndroidSenseConstants.DEVICE_TYPE, dataMsg.deviceId, sensor.time};
-				if (streamDef != null && payloadData != null && payloadData.length > 0) {
+		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+		DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
+				.getOSGiService(DeviceAnalyticsService.class, null);
+		SensorData[] sensorData = dataMsg.values;
+		String streamDef = null;
+		Object payloadData[] = null;
+		String sensorName = null;
+		for (SensorData sensor : sensorData) {
+			switch (sensor.key) {
+				case "battery" :
+					streamDef = AndroidSenseConstants.BATTERY_STREAM_DEFINITION;
+					payloadData = new Float[]{Float.parseFloat(sensor.value)};
+					sensorName = AndroidSenseConstants.SENSOR_BATTERY;
+					break;
+				case "GPS" :
+					streamDef = AndroidSenseConstants.GPS_STREAM_DEFINITION;
+					String gpsValue = sensor.value;
+					String gpsValuesString[] = gpsValue.split(",");
+					Float gpsValues[] = new Float[2];
+					gpsValues[0] = Float.parseFloat(gpsValuesString[0]);
+					gpsValues[1] = Float.parseFloat(gpsValuesString[0]);
+					payloadData = gpsValues;
+					sensorName = AndroidSenseConstants.SENSOR_GPS;
+					break;
+				default :
 					try {
-						SensorDataManager.getInstance()
-								.setSensorRecord(dataMsg.deviceId, sensorName, sensor.value, sensor.time);
-						deviceAnalyticsService.publishEvent(streamDef, "1.0.0", metaData, new Object[0], payloadData);
-					} catch (DataPublisherConfigurationException e) {
-						response.setStatus(Response.Status.UNSUPPORTED_MEDIA_TYPE.getStatusCode());
+						int androidSensorId = Integer.parseInt(sensor.key);
+						String value = sensor.value;
+						String sensorValueString[] = value.split(",");
+						Float sensorValues[] = new Float[1];
+						switch (androidSensorId) {
+							case 1:
+								streamDef = AndroidSenseConstants.ACCELEROMETER_STREAM_DEFINITION;
+								sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
+										Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
+								payloadData = sensorValues;
+								sensorName = AndroidSenseConstants.SENSOR_ACCELEROMETER;
+								break;
+							case 2:
+								streamDef = AndroidSenseConstants.MAGNETIC_STREAM_DEFINITION;
+								sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
+										Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
+								payloadData = sensorValues;
+								sensorName = AndroidSenseConstants.SENSOR_MAGNETIC;
+								break;
+							case 4:
+								streamDef = AndroidSenseConstants.GYROSCOPE_STREAM_DEFINITION;
+								sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
+										Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
+								payloadData = sensorValues;
+								sensorName = AndroidSenseConstants.SENSOR_GYROSCOPE;
+								break;
+							case 5:
+								streamDef = AndroidSenseConstants.LIGHT_STREAM_DEFINITION;
+								sensorName = AndroidSenseConstants.SENSOR_LIGHT;
+								payloadData = new Float[]{Float.parseFloat(sensorValueString[0])};
+								break;
+							case 6:
+								streamDef = AndroidSenseConstants.PRESSURE_STREAM_DEFINITION;
+								sensorName = AndroidSenseConstants.SENSOR_PRESSURE;
+								payloadData = new Float[]{Float.parseFloat(sensorValueString[0])};
+								break;
+							case 8:
+								streamDef = AndroidSenseConstants.PROXIMITY_STREAM_DEFINITION;
+								sensorName = AndroidSenseConstants.SENSOR_PROXIMITY;
+								payloadData = new Float[]{Float.parseFloat(sensorValueString[0])};
+								break;
+							case 9:
+								streamDef = AndroidSenseConstants.GRAVITY_STREAM_DEFINITION;
+								sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
+										Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
+								payloadData = sensorValues;
+								sensorName = AndroidSenseConstants.SENSOR_GRAVITY;
+								break;
+							case 11:
+								streamDef = AndroidSenseConstants.ROTATION_STREAM_DEFINITION;
+								sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
+										Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
+								payloadData = sensorValues;
+								sensorName = AndroidSenseConstants.SENSOR_ROTATION;
+								break;
+						}
+					} catch (NumberFormatException e) {
+						log.error("Invalid sensor value is sent from the device");
+						continue;
 					}
+			}
+			Object metaData[] = {dataMsg.owner, AndroidSenseConstants.DEVICE_TYPE, dataMsg.deviceId, sensor.time};
+			if (streamDef != null && payloadData != null && payloadData.length > 0) {
+				try {
+					SensorDataManager.getInstance()
+							.setSensorRecord(dataMsg.deviceId, sensorName, sensor.value, sensor.time);
+					deviceAnalyticsService.publishEvent(streamDef, "1.0.0", metaData, new Object[0], payloadData);
+				} catch (DataPublisherConfigurationException e) {
+					response.setStatus(Response.Status.UNSUPPORTED_MEDIA_TYPE.getStatusCode());
 				}
 			}
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 	}
 
@@ -241,8 +237,6 @@ public class AndroidSenseControllerService {
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 		return sensorRecord;
 	}
@@ -266,8 +260,6 @@ public class AndroidSenseControllerService {
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 		return sensorRecord;
 	}
@@ -291,8 +283,6 @@ public class AndroidSenseControllerService {
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 		return sensorRecord;
 	}
@@ -316,8 +306,6 @@ public class AndroidSenseControllerService {
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 		return sensorRecord;
 	}
@@ -342,8 +330,6 @@ public class AndroidSenseControllerService {
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 		return sensorRecord;
 	}
@@ -369,8 +355,6 @@ public class AndroidSenseControllerService {
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 		return sensorRecord;
 	}
@@ -396,8 +380,6 @@ public class AndroidSenseControllerService {
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 		return sensorRecord;
 	}
@@ -423,8 +405,6 @@ public class AndroidSenseControllerService {
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 		return sensorRecord;
 	}
@@ -449,8 +429,6 @@ public class AndroidSenseControllerService {
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 		return sensorRecord;
 	}
@@ -477,8 +455,6 @@ public class AndroidSenseControllerService {
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 		return sensorRecord;
 	}
@@ -498,8 +474,6 @@ public class AndroidSenseControllerService {
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 		return sensorRecord;
 	}
@@ -525,8 +499,6 @@ public class AndroidSenseControllerService {
 		} catch (TransportHandlerException e) {
 			log.error(e);
 			response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 	}
 
@@ -551,8 +523,6 @@ public class AndroidSenseControllerService {
 		} catch (TransportHandlerException e) {
 			log.error(e);
 			response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 	}
 
@@ -569,8 +539,6 @@ public class AndroidSenseControllerService {
 		} catch (TransportHandlerException e) {
 			log.error(e);
 			response.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 	}
 
@@ -637,8 +605,6 @@ public class AndroidSenseControllerService {
 			log.error(errorMsg);
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 			return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 	}
 

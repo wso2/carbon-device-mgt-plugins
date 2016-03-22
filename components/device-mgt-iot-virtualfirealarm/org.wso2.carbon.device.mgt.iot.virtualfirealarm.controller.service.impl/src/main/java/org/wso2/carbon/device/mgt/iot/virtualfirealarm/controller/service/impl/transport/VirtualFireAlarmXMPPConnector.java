@@ -63,9 +63,7 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
     }
 
     public void initConnector() {
-        String serverName =
-                DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
-        xmppVFireAlarmAdminUsername = serverName + "_" + VirtualFireAlarmConstants.DEVICE_TYPE;
+        xmppVFireAlarmAdminUsername = "wso2admin_" + VirtualFireAlarmConstants.DEVICE_TYPE;
         xmppServerIP = XmppConfig.getInstance().getXmppServerIP();
         xmppVFireAlarmAdminAccountJID = xmppVFireAlarmAdminUsername + "@" + xmppServerIP;
         createXMPPAccountForDeviceType();
