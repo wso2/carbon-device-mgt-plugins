@@ -48,30 +48,26 @@ import java.nio.charset.StandardCharsets;
  * library provided by Eclipse Org.
  */
 public abstract class MQTTTransportHandler implements MqttCallback, TransportHandler<MqttMessage> {
-    private static final Log log = LogFactory.getLog(MQTTTransportHandler.class);
 
+    private static final Log log = LogFactory.getLog(MQTTTransportHandler.class);
     private MqttClient client;
     private String clientId;
     private MqttConnectOptions options;     // options to be set to the client-connection.
     // topic to which a will-message is automatically published by the broker upon the device losing its connection.
     private String clientWillTopic;
-
     protected String mqttBrokerEndPoint;
     protected int timeoutInterval;          // interval to use for reconnection attempts etc.
     protected String subscribeTopic;
-
     // Quality of Service Levels for MQTT Subscription and Publishing.
     public static final int QoS_0 = 0;      // At-Most Once
     @SuppressWarnings("unused")
     public static final int QoS_1 = 1;      // At-Least Once
     public static final int QoS_2 = 2;      // Exactly Once
-
     public static final int DEFAULT_MQTT_QUALITY_OF_SERVICE = QoS_0;
     // Prefix to the Will-Topic to which a message is published if client loses its connection.
     private static final String DISCONNECTION_WILL_TOPIC_PREFIX = "Disconnection/";
     // Will-Message of the client to be published if connection is lost.
     private static final String DISCONNECTION_WILL_MSG = "Lost-Connection";
-
 
     /**
      * Constructor for the MQTTTransportHandler which takes in the owner, type of the device and the MQTT Broker URL
@@ -113,7 +109,6 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
         this.initMQTTClient();
     }
 
-
     /**
      * Initializes the MQTT-Client. Creates a client using the given MQTT-broker endpoint and the clientId (which is
      * constructed by a concatenation of [deviceOwner]:[deviceType]). Also sets the client's options parameter with
@@ -128,7 +123,6 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
             log.error(errorMsg, ex);
             //TODO:: Throw the error out
         }
-
         options = new MqttConnectOptions();
         options.setKeepAliveInterval(120);              // set the keep alive interval to 120 seconds by default.
         options.setCleanSession(true);                  // sets clean session to true by default.
@@ -235,7 +229,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
             }
         } catch (MqttException ex) {
             String errorMsg = "MQTT Exception occurred whilst client [" + clientId + "] tried to subscribe to " +
-                    "topic: [" + subscribeTopic + "]";
+                              "topic: [" + subscribeTopic + "]";
             log.error(errorMsg);
             throw new TransportHandlerException(errorMsg, ex);
         }
@@ -265,7 +259,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
             }
         } catch (MqttException ex) {
             String errorMsg = "MQTT Client Error whilst client [" + clientId + "] tried to publish to queue at " +
-                    "[" + mqttBrokerEndPoint + "] under topic [" + topic + "]";
+                              "[" + mqttBrokerEndPoint + "] under topic [" + topic + "]";
             log.info(errorMsg);
             throw new TransportHandlerException(errorMsg, ex);
         }
@@ -292,7 +286,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
             }
         } catch (MqttException ex) {
             String errorMsg = "MQTT Client Error whilst client [" + clientId + "] tried to publish to queue at " +
-                    "[" + mqttBrokerEndPoint + "] under topic [" + topic + "]";
+                              "[" + mqttBrokerEndPoint + "] under topic [" + topic + "]";
             log.info(errorMsg);
             throw new TransportHandlerException(errorMsg, ex);
         }
@@ -318,7 +312,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
     public void connectionLost(Throwable throwable) {
         if (log.isDebugEnabled()) {
             log.warn("Connection for client: " + this.clientId + " to " + this.mqttBrokerEndPoint + " was lost." +
-                             "\nThis was due to - " + throwable.getMessage());
+                     "\nThis was due to - " + throwable.getMessage());
         }
 
         Thread reconnectThread = new Thread() {
@@ -349,7 +343,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
                     processIncomingMessage(mqttMessage, topic);
                 } catch (TransportHandlerException e) {
                     log.error("An error occurred when trying to process received MQTT message [" + mqttMessage + "] " +
-                                      "for topic [" + topic + "].", e);
+                              "for topic [" + topic + "].", e);
                 }
             }
         };
@@ -373,10 +367,10 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
                     if (iMqttDeliveryToken.getMessage() != null) {
                         String message = iMqttDeliveryToken.getMessage().toString();
                         log.debug("Message to client [" + client + "] under topic (" + topic +
-                                          ") was delivered successfully with the delivery message: '" + message + "'");
+                                  ") was delivered successfully with the delivery message: '" + message + "'");
                     } else {
                         log.debug("Message to client [" + client + "] under topic (" + topic +
-                                          ") was delivered successfully.");
+                                  ") was delivered successfully.");
                     }
                 }
             } else {

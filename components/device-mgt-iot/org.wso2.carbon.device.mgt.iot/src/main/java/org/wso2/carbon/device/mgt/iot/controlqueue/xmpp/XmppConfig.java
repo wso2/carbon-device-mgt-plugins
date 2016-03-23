@@ -22,74 +22,72 @@ import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfiguratio
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ControlQueue;
 
 public class XmppConfig {
-	private String xmppServerIP;
-	private int xmppServerPort;
-	private String xmppEndpoint;
-	private String xmppUsername;
-	private String xmppPassword;
-	private boolean isEnabled;
 
-	private static final String XMPP_QUEUE_CONFIG_NAME = "XMPP";
-	private final int SERVER_CONNECTION_PORT = 5222;
+    private String xmppServerIP;
+    private int xmppServerPort;
+    private String xmppEndpoint;
+    private String xmppUsername;
+    private String xmppPassword;
+    private boolean isEnabled;
+    private static final String XMPP_QUEUE_CONFIG_NAME = "XMPP";
+    private final int SERVER_CONNECTION_PORT = 5222;
+    private ControlQueue xmppControlQueue;
+    private static XmppConfig xmppConfig = new XmppConfig();
 
-	private ControlQueue xmppControlQueue;
+    public String getXmppServerIP() {
+        return xmppServerIP;
+    }
 
-	private static XmppConfig xmppConfig = new XmppConfig();
+    public int getXmppServerPort() {
+        return xmppServerPort;
+    }
 
-	public String getXmppServerIP() {
-		return xmppServerIP;
-	}
+    public String getXmppEndpoint() {
+        return xmppEndpoint;
+    }
 
-	public int getXmppServerPort() {
-		return xmppServerPort;
-	}
+    public String getXmppUsername() {
+        return xmppUsername;
+    }
 
-	public String getXmppEndpoint() {
-		return xmppEndpoint;
-	}
+    public String getXmppPassword() {
+        return xmppPassword;
+    }
 
-	public String getXmppUsername() {
-		return xmppUsername;
-	}
+    public ControlQueue getXmppControlQueue() {
+        return xmppControlQueue;
+    }
 
-	public String getXmppPassword() {
-		return xmppPassword;
-	}
+    public boolean isEnabled() {
+        return isEnabled;
+    }
 
-	public ControlQueue getXmppControlQueue() {
-		return xmppControlQueue;
-	}
+    public static String getXmppQueueConfigName() {
+        return XMPP_QUEUE_CONFIG_NAME;
+    }
 
-	public boolean isEnabled() {
-		return isEnabled;
-	}
+    private XmppConfig() {
+        xmppControlQueue = DeviceManagementConfigurationManager.getInstance().getControlQueue(
+                XMPP_QUEUE_CONFIG_NAME);
+        xmppServerIP = xmppControlQueue.getServerURL();
+        int indexOfChar = xmppServerIP.lastIndexOf('/');
 
-	public static String getXmppQueueConfigName() {
-		return XMPP_QUEUE_CONFIG_NAME;
-	}
+        if (indexOfChar != -1) {
+            xmppServerIP = xmppServerIP.substring((indexOfChar + 1), xmppServerIP.length());
+        }
 
-	private XmppConfig() {
-		xmppControlQueue = DeviceManagementConfigurationManager.getInstance().getControlQueue(
-				XMPP_QUEUE_CONFIG_NAME);
+        xmppServerPort = xmppControlQueue.getPort();
+        xmppEndpoint = xmppControlQueue.getServerURL() + ":" + xmppServerPort;
+        xmppUsername = xmppControlQueue.getUsername();
+        xmppPassword = xmppControlQueue.getPassword();
+        isEnabled = xmppControlQueue.isEnabled();
+    }
 
-		xmppServerIP = xmppControlQueue.getServerURL();
-		int indexOfChar = xmppServerIP.lastIndexOf('/');
-		if (indexOfChar != -1) {
-			xmppServerIP = xmppServerIP.substring((indexOfChar + 1), xmppServerIP.length());
-		}
+    public static XmppConfig getInstance() {
+        return xmppConfig;
+    }
 
-		xmppServerPort = xmppControlQueue.getPort();
-		xmppEndpoint = xmppControlQueue.getServerURL() + ":" + xmppServerPort;
-		xmppUsername = xmppControlQueue.getUsername();
-		xmppPassword = xmppControlQueue.getPassword();
-		isEnabled = xmppControlQueue.isEnabled();
-	}
-
-	public static XmppConfig getInstance() {
-		return xmppConfig;
-	}
-
-	public int getSERVER_CONNECTION_PORT() {
-		return SERVER_CONNECTION_PORT;
-	}
+    public int getSERVER_CONNECTION_PORT() {
+        return SERVER_CONNECTION_PORT;
+    }
 }

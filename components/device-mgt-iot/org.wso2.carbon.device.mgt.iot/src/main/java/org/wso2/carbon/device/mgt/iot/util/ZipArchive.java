@@ -21,28 +21,29 @@ package org.wso2.carbon.device.mgt.iot.util;
 import java.io.File;
 
 public class ZipArchive {
-	private File zipFile = null;
-	private String fileName = null;
-	private String deviceId = null;
 
-	public ZipArchive(String fileName, File zipFile) {
-		this.fileName = fileName;
-		this.zipFile = zipFile;
-	}
+    private File zipFile = null;
+    private String fileName = null;
+    private String deviceId = null;
 
-	public String getDeviceId() {
-		return deviceId;
-	}
+    public ZipArchive(String fileName, File zipFile) {
+        this.fileName = fileName;
+        this.zipFile = zipFile;
+    }
 
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
-	}
+    public String getDeviceId() {
+        return deviceId;
+    }
 
-	public File getZipFile() {
-		return zipFile;
-	}
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
 
-	public String getFileName() {
-		return fileName;
-	}
+    public File getZipFile() {
+        return zipFile;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
 }

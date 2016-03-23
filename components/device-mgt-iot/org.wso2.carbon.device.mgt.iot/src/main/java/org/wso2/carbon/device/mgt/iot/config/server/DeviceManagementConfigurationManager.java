@@ -40,19 +40,17 @@ import java.util.List;
  * Class responsible for the iot device manager configuration initialization.
  */
 public class DeviceManagementConfigurationManager {
-    private static final Log log = LogFactory.getLog(DeviceManagementConfigurationManager.class);
 
+    private static final Log log = LogFactory.getLog(DeviceManagementConfigurationManager.class);
     private static final String DEVICE_MGT_CONFIG_XML_NAME = "devicemgt-config.xml";
     private static final String DEVICE_MGT_ROOT_DIRECTORY = "iot";
     private final String XMLCONFIGS_FILE_LOCATION =
             CarbonUtils.getCarbonConfigDirPath() + File.separator +
-                    DEVICE_MGT_ROOT_DIRECTORY + File.separator + DEVICE_MGT_CONFIG_XML_NAME;
-
+            DEVICE_MGT_ROOT_DIRECTORY + File.separator + DEVICE_MGT_CONFIG_XML_NAME;
     private static final String IOT_DEVICE_CONFIG_XSD_NAME = "devicemgt-config.xsd";
     private final String XSDCONFIGS_FILE_LOCATION =
             CarbonUtils.getCarbonConfigDirPath() + File.separator +
-                    DEVICE_MGT_ROOT_DIRECTORY + File.separator + IOT_DEVICE_CONFIG_XSD_NAME;
-
+            DEVICE_MGT_ROOT_DIRECTORY + File.separator + IOT_DEVICE_CONFIG_XSD_NAME;
     private DeviceManagementConfiguration currentDeviceManagementConfiguration;
     private static DeviceManagementConfigurationManager deviceConfigurationManager =
             new DeviceManagementConfigurationManager();
@@ -86,7 +84,6 @@ public class DeviceManagementConfigurationManager {
     public DeviceManagementConfiguration getDeviceCloudMgtConfig() {
         return currentDeviceManagementConfiguration;
     }
-
 
     public ControlQueue getControlQueue(String name) {
         List<ControlQueue> controlQueues = currentDeviceManagementConfiguration.getControlQueues().getControlQueue();

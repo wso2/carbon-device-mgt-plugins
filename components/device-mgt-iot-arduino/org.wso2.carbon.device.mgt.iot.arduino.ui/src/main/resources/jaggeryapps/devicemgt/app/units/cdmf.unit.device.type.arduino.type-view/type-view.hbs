@@ -9,54 +9,60 @@
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
     <h4 class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Arduino"
-                                  target="_blank">[ here ]</a> for latest instructions and troubleshooting.</h4>
+                                  target="_blank">[ here ]</a> for latest instructions and
+                         troubleshooting.</h4>
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-
     <h3 class="uppercase">What it Does</h3>
     <hr>
     <p class="grey margin-top">Connect Arduino UNO board to WSO2 IoT Server and visualize sensor
-        data.</p>
+                               data.</p>
     <br>
-
     <h3 class="uppercase">What You Need</h3>
     <hr>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">ITEM 01</span>&nbsp;&nbsp;&nbsp;Arduino UNO Board.
+        <li class="padding-top-double">
+            <span class="circle">ITEM 01</span>
+            &nbsp;&nbsp;&nbsp;Arduino UNO Board.
         </li>
-        <li class="padding-top-double"><span class="circle">ITEM 02</span>&nbsp;&nbsp;&nbsp;Adafruit
-            Wifi Shield for
-            Arduino.
+        <li class="padding-top-double">
+            <span class="circle">ITEM 02</span>
+            &nbsp;&nbsp;&nbsp;Adafruit Wifi Shield for Arduino.
         </li>
-        <li class="padding-top-double"><span class="circle">ITEM 03</span>&nbsp;&nbsp;&nbsp;LED bulb
-            connected to Pin
-            13. <i>(If not available,
-                will use the one on
-                the board.)</i>
+        <li class="padding-top-double">
+            <span class="circle">ITEM 03</span>
+            &nbsp;&nbsp;&nbsp;LED bulb connected to Pin 13.
+            <i>(If not available, will use the one on the board.)</i>
         </li>
-        <li class="padding-top-double"><span class="circle">ITEM 04</span>&nbsp;&nbsp;&nbsp;Resister(
-            e.g 330 ohms )
+        <li class="padding-top-double">
+            <span class="circle">ITEM 04</span>
+            &nbsp;&nbsp;&nbsp;Resister( e.g 330 ohms )
         </li>
-        <li class="padding-top-double"><span class="circle">STEP 05</span>&nbsp;&nbsp;&nbsp;Proceed
-            to [Prepare]
-            section.
-
+        <li class="padding-top-double">
+            <span class="circle">STEP 05</span>
+            &nbsp;&nbsp;&nbsp;Proceed to [Prepare] section.
     </ul>
     <br>
-
     <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin"
-       class="btn-operations" target="_blank"><i class="fw fw-api"></i> View API</a>
-    <a href="#" class="download-link btn-operations"><i class="fw fw-download"></i>Download Sketch</a>
-
+       class="btn-operations" target="_blank">
+        <i class="fw fw-api"></i> View API
+    </a>
+    <a href="#" class="download-link btn-operations">
+        <i class="fw fw-download"></i>Download Sketch
+    </a>
     <div id="download-device-modal-content" class="hide">
         <div class="modal-content">
             <div class="row">
                 <div class="col-md-7  center-container">
                     <h3>Name your device and download the agent from following link.</h3>
                     <br/>
-
-                    <form id="downloadForm" method="GET" action="{{@app.context}}/api/devices/sketch/download">
+                    <form id="downloadForm" method="GET"
+                          action="{{@app.context}}/api/devices/sketch/download">
+                        <div id="invalid-username-error-msg" class="alert alert-danger hidden"
+                             role="alert">
+                            <i class="icon fw fw-error"></i><span></span>
+                        </div>
                         <div class="control-group">
                             <div class="controls">
                                 <input class="new-device-name" style="color:#3f3f3f;padding:5px"
@@ -80,13 +86,20 @@
             </div>
         </div>
     </div>
-
+    <div id="device-agent-downloading-content" class="hide">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col-md-7 col-centered center-container">
+                    <h3>Device Agent will downloading shortly.</h3>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="device-400-content" class="hide">
         <div class="modal-content">
             <div class="row">
                 <div class="col-md-7 col-centered center-container">
                     <h3>Exception at backend. Try Later.</h3>
-
                     <div class="buttons">
                         <a href="#" id="device-400-link" class="btn-operations">
                             OK
@@ -96,13 +109,11 @@
             </div>
         </div>
     </div>
-
     <div id="device-401-content" class="hide">
         <div class="modal-content">
             <div class="row">
                 <div class="col-md-7 col-centered center-container">
                     <h3>You have to log in first.</h3><br/>
-
                     <div class="buttons">
                         <a href="#" id="device-401-link" class="blue-button">
                             Goto Login Page
@@ -115,13 +126,11 @@
             </div>
         </div>
     </div>
-
     <div id="device-403-content" class="hide">
         <div class="modal-content">
             <div class="row">
                 <div class="col-md-7 col-centered center-container">
                     <h3>Action not permitted.</h3><br/>
-
                     <div class="buttons">
                         <a href="#" id="device-403-link" class="btn-operations">
                             OK
@@ -131,13 +140,11 @@
             </div>
         </div>
     </div>
-
     <div id="device-409-content" class="hide">
         <div class="modal-content">
             <div class="row">
                 <div class="col-md-7 col-centered center-container">
                     <h3>Device Sketch does not exist.</h3><br/>
-
                     <div class="buttons">
                         <a href="#" id="device-409-link" class="btn-operations">
                             OK
@@ -153,7 +160,6 @@
             <div class="row">
                 <div class="col-md-7 col-centered center-container">
                     <h3>Unexpected error.</h3><br/>
-
                     <div class="buttons">
                         <a href="#" id="device-unexpected-error-link" class="btn-operations">
                             OK
@@ -171,12 +177,13 @@
     <h3 class="uppercase">Prepare</h3>
     <hr>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;Wifi-Shield
-            mounted onto the Arduino-UNO
-            board
+        <li class="padding-top-double">
+            <span class="circle">01</span>
+            &nbsp;&nbsp;&nbsp;Wifi-Shield mounted onto the Arduino-UNO board
         </li>
-        <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Connect LED
-            bulb to arduino as follows
+        <li class="padding-top-double">
+            <span class="circle">02</span>
+            &nbsp;&nbsp;&nbsp;Connect LED bulb to arduino as follows
             <br/><br/>
             <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
                 <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive">
@@ -184,39 +191,42 @@
             <br/>
         </li>
 
-        <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;Download
-            Arduino-Sketch from
-            [Download Sketch] link above.
+        <li class="padding-top-double">
+            <span class="circle">03</span>
+            &nbsp;&nbsp;&nbsp;Download Arduino-Sketch from [Download Sketch] link above.
         </li>
-        <li class="padding-top-double"><span class="circle">04</span>&nbsp;&nbsp;&nbsp;Unzip the
-            downloaded
-            Arduino Agent
+        <li class="padding-top-double">
+            <span class="circle">04</span>
+            &nbsp;&nbsp;&nbsp;Unzip the downloaded Arduino Agent
         </li>
-        <li class="padding-top-double"><span class="circle">05</span>&nbsp;&nbsp;&nbsp;Create a
-            folder called
-            "ArduinoBoardSketch"
-            and move all source files
+        <li class="padding-top-double">
+            <span class="circle">05</span>
+            &nbsp;&nbsp;&nbsp;Create a folder called "ArduinoBoardSketch" and move all source files
             inside
         </li>
-        <li class="padding-top-double"><span class="circle">06</span>&nbsp;&nbsp;&nbsp;Open
-            ArduinoBoardSketch.h and
-            provide appropriate values for
-            <i>[WLAN_SSID]</i>,<i>[WLAN_PASS]</i>,<i>[SERVICE_PORT]</i>,<i>[server]</i> and <i>[deviceIP]</i> variables according to your network.
-        </li>
-        <li class="padding-top-double"><span class="circle">07</span>&nbsp;&nbsp;&nbsp;Burn the
-            sketch onto your Arduino
-            board and let the program run.
-        </li>
-
         <li class="padding-top-double">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="circle">06</span>
+            &nbsp;&nbsp;&nbsp;Open ArduinoBoardSketch.h and provide appropriate values for
+            <i>[WLAN_SSID]</i>,
+            <i>[WLAN_PASS]</i>,
+            <i>[SERVICE_PORT]</i>,
+            <i>[server]</i> and
+            <i>[deviceIP]</i>
+            variables according to your network.
+        </li>
+        <li class="padding-top-double">
+            <span class="circle">07</span>
+            &nbsp;&nbsp;&nbsp;Burn the sketch onto your Arduino board and let the program run.
+        </li>
+        <li class="padding-top-double">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <span class="fw-stack fw-lg margin-right">
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
             &nbsp;&nbsp;&nbsp;Arduino will publish it's internal temperature to WSO2-IoT-Server
             <br/><br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <span class="fw-stack fw-lg margin-right">
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
@@ -232,24 +242,20 @@
         <h3 class="uppercase">Try Out</h3>
         <hr>
         <ul class="list-unstyled">
-            <li class="padding-top-double"><span class="circle">01</span>&nbsp;&nbsp;&nbsp;You can
-                view all your connected
-                devices at <a
-                        href="{{@app.context}}/devices">[Device
-                    Management]</a>
-                page.
+            <li class="padding-top-double">
+                <span class="circle">01</span>
+                &nbsp;&nbsp;&nbsp;You can view all your connected devices at
+                <a href="{{@app.context}}/devices">[Device Management]</a> page.
             </li>
-            <li class="padding-top-double"><span class="circle">02</span>&nbsp;&nbsp;&nbsp;Select
-                one of connected devices
-                and check for available
-                control operations and
-                monitor Real-Time data.
+            <li class="padding-top-double">
+                <span class="circle">02</span>
+                &nbsp;&nbsp;&nbsp;Select one of connected devices and check for available control
+                operations and monitor Real-Time data.
             </li>
-            <li class="padding-top-double"><span class="circle">03</span>&nbsp;&nbsp;&nbsp;You can
-                also view analytics of
-                the data published to
-                IoT-Server by navigating
-                to Device Analytics page.
+            <li class="padding-top-double">
+                <span class="circle">03</span>
+                &nbsp;&nbsp;&nbsp;You can also view analytics of the data published to IoT-Server by
+                navigating to Device Analytics page.
             </li>
         </ul>
         <br/>
@@ -264,7 +270,6 @@
         </center>
     </div>
 </div>
-
 
 {{#zone "topCss"}}
     <style type="text/css">

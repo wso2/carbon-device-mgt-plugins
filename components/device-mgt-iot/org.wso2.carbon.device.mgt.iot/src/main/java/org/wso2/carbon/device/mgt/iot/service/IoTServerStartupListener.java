@@ -24,7 +24,6 @@ public class IoTServerStartupListener implements ServerStartupObserver {
     private static volatile boolean serverReady = false;
     @Override
     public void completingServerStartup() {
-
     }
 
     @Override

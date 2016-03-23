@@ -27,8 +27,6 @@ import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfiguratio
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.service.ConfigurationService;
-import org.wso2.carbon.device.mgt.iot.service.ConfigurationServiceImpl;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
@@ -57,8 +55,6 @@ public class IotDeviceManagementServiceComponent {
             DeviceManagementConfigurationManager.getInstance().initConfig();
             bundleContext.registerService(ServerStartupObserver.class.getName(), new IoTServerStartupListener(), null);
             IoTCommonDataHolder.getInstance().initialize();
-            bundleContext.registerService(ConfigurationService.class.getName(),
-                                          new ConfigurationServiceImpl(), null);
             if (log.isDebugEnabled()) {
                 log.debug("Iot Device Management Service Component has been successfully activated");
             }
@@ -77,7 +73,7 @@ public class IotDeviceManagementServiceComponent {
             }
         } catch (DeviceControllerException e) {
             String errorMsg = "An error occurred whilst trying to delete all existing XMPP login sessions at " +
-                    "[" + xmppConfig.getXmppEndpoint() + "].";
+                              "[" + xmppConfig.getXmppEndpoint() + "].";
             log.error(errorMsg, e);
         }
 

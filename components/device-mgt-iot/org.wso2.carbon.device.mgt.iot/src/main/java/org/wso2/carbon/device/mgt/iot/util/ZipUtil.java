@@ -29,30 +29,26 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class ZipUtil {
 
-	private static final String HTTPS_PORT_PROPERTY = "httpsPort";
-	private static final String HTTP_PORT_PROPERTY = "httpPort";
+    private static final String HTTPS_PORT_PROPERTY = "httpsPort";
+    private static final String HTTP_PORT_PROPERTY = "httpPort";
 
-	private static final String LOCALHOST = "localhost";
-	private static final String HTTPS_PROTOCOL_APPENDER = "https://";
-	private static final String HTTP_PROTOCOL_APPENDER = "http://";
+    private static final String LOCALHOST = "localhost";
+    private static final String HTTPS_PROTOCOL_APPENDER = "https://";
+    private static final String HTTP_PROTOCOL_APPENDER = "http://";
 
-	public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
-	                                String deviceId, String deviceName, String token,
-	                                String refreshToken)
-			throws DeviceManagementException {
-
-		if (owner == null || deviceType == null) {
-			throw new DeviceManagementException("Invalid parameters for `owner` or `deviceType`");
-		}
+    public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
+                                    String deviceId, String deviceName, String token,
+                                    String refreshToken)
+            throws DeviceManagementException {
 
 		String sep = File.separator;
 		String sketchFolder = "repository" + sep + "resources" + sep + "sketches";
 		String archivesPath = CarbonUtils.getCarbonHome() + sep + sketchFolder + sep + "archives" + sep + deviceId;
 		String templateSketchPath = sketchFolder + sep + deviceType;
         String iotServerIP;
+
         try {
             iotServerIP = IoTUtil.getHostName();
         } catch (IoTException e) {
@@ -65,19 +61,18 @@ public class ZipUtil {
 		String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
 		String apimEndpoint = httpsServerEP;
 		String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
+        if (mqttEndpoint.contains(LOCALHOST)) {
+            mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
+        }
 
-		if (mqttEndpoint.contains(LOCALHOST)) {
-			mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
-		}
+        String xmppEndpoint = XmppConfig.getInstance().getXmppEndpoint();
 
-		String xmppEndpoint = XmppConfig.getInstance().getXmppEndpoint();
+        int indexOfChar = xmppEndpoint.lastIndexOf(":");
+        if (indexOfChar != -1) {
+            xmppEndpoint = xmppEndpoint.substring(0, indexOfChar);
+        }
 
-		int indexOfChar = xmppEndpoint.lastIndexOf(":");
-		if (indexOfChar != -1) {
-			xmppEndpoint = xmppEndpoint.substring(0, indexOfChar);
-		}
-
-		xmppEndpoint = xmppEndpoint + ":" + XmppConfig.getInstance().getSERVER_CONNECTION_PORT();
+        xmppEndpoint = xmppEndpoint + ":" + XmppConfig.getInstance().getSERVER_CONNECTION_PORT();
 
         Map<String, String> contextParams = new HashMap<>();
 		//TODO:refactor remove and move to device type impl

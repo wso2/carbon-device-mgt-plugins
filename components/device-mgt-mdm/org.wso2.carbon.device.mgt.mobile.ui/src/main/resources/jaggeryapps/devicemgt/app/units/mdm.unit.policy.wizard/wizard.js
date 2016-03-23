@@ -28,7 +28,7 @@ function onRequest(context) {
     var typesListResponse = userModule.getPlatforms();
     if (typesListResponse["status"] == "success") {
         for (var type in typesListResponse["content"]) {
-            if (deviceType == typesListResponse["content"][type]["name"]){
+            if (deviceType == typesListResponse["content"][type]["name"]) {
                 wizardPage["type"] = typesListResponse["content"][type];
             }
         }

@@ -46,7 +46,6 @@ import java.nio.charset.StandardCharsets;
 public class XmppServerClient {
 
     private static final Log log = LogFactory.getLog(XmppServerClient.class);
-
     private static final String XMPP_SERVER_API_CONTEXT = "/plugins/restapi/v1";
     private static final String XMPP_USERS_API = "/users";
     private static final String XMPP_SESSIONS_API = "/sessions";
@@ -55,7 +54,6 @@ public class XmppServerClient {
     @SuppressWarnings("unused")
     private static final String APPLICATION_JSON_MT = "application/json";
     private static final String DEVICEMGT_CONFIG_FILE = "devicemgt-config.xml";
-
     private String xmppEndpoint;
     private String xmppUsername;
     private String xmppPassword;
@@ -82,23 +80,23 @@ public class XmppServerClient {
             encodedString = new String(Base64.encodeBase64(encodedString.getBytes(StandardCharsets.UTF_8)));
             String authorizationHeader = "Basic " + encodedString;
             String jsonRequest = "{\n" +
-                    "    \"username\": \"" + newUserAccount.getUsername() + "\"," +
-                    "    \"password\": \"" + newUserAccount.getPassword() + "\"," +
-                    "    \"name\": \"" + newUserAccount.getAccountName() + "\"," +
-                    "    \"email\": \"" + newUserAccount.getEmail() + "\"," +
-                    "    \"properties\": {" +
-                    "        \"property\": [" +
-                    "            {" +
-                    "                \"@key\": \"console.rows_per_page\"," +
-                    "                \"@value\": \"user-summary=8\"" +
-                    "            }," +
-                    "            {" +
-                    "                \"@key\": \"console.order\"," +
-                    "                \"@value\": \"session-summary=1\"" +
-                    "            }" +
-                    "        ]" +
-                    "    }" +
-                    "}";
+                                 "    \"username\": \"" + newUserAccount.getUsername() + "\"," +
+                                 "    \"password\": \"" + newUserAccount.getPassword() + "\"," +
+                                 "    \"name\": \"" + newUserAccount.getAccountName() + "\"," +
+                                 "    \"email\": \"" + newUserAccount.getEmail() + "\"," +
+                                 "    \"properties\": {" +
+                                 "        \"property\": [" +
+                                 "            {" +
+                                 "                \"@key\": \"console.rows_per_page\"," +
+                                 "                \"@value\": \"user-summary=8\"" +
+                                 "            }," +
+                                 "            {" +
+                                 "                \"@key\": \"console.order\"," +
+                                 "                \"@value\": \"session-summary=1\"" +
+                                 "            }" +
+                                 "        ]" +
+                                 "    }" +
+                                 "}";
 
             StringEntity requestEntity;
             try {
@@ -121,7 +119,7 @@ public class XmppServerClient {
                 httpClient = IoTUtil.getHttpClient(xmppUserApiUrl.getPort(), xmppUserApiUrl.getProtocol());
             } catch (Exception e) {
                 log.error("Error on getting a http client for port :" + xmppUserApiUrl.getPort() + " protocol :"
-                                  + xmppUserApiUrl.getProtocol());
+                          + xmppUserApiUrl.getProtocol());
                 return false;
             }
 
@@ -135,7 +133,7 @@ public class XmppServerClient {
                 if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED) {
                     String response = IoTUtil.getResponseString(httpResponse);
                     String errorMsg = "XMPP Server returned status: '" + httpResponse.getStatusLine().getStatusCode() +
-                            "' for account creation with error:\n" + response;
+                                      "' for account creation with error:\n" + response;
                     log.error(errorMsg);
                     throw new DeviceControllerException(errorMsg);
                 } else {
@@ -154,13 +152,12 @@ public class XmppServerClient {
         }
     }
 
-
     public boolean doesXMPPUserAccountExist(String username) throws DeviceControllerException {
         if (xmppEnabled) {
             String xmppCheckUserAPIEndpoint = xmppEndpoint + XMPP_SERVER_API_CONTEXT + XMPP_USERS_API + "/" + username;
             if (log.isDebugEnabled()) {
                 log.debug("The Check-User-Account Endpoint URL of the XMPP Server is set to: " +
-                                  xmppCheckUserAPIEndpoint);
+                          xmppCheckUserAPIEndpoint);
             }
 
             String encodedString = xmppUsername + ":" + xmppPassword;
@@ -181,7 +178,7 @@ public class XmppServerClient {
                 httpClient = IoTUtil.getHttpClient(xmppUserApiUrl.getPort(), xmppUserApiUrl.getProtocol());
             } catch (Exception e) {
                 String errorMsg = "Error on getting a http client for port :" + xmppUserApiUrl.getPort() +
-                        " protocol :" + xmppUserApiUrl.getProtocol();
+                                  " protocol :" + xmppUserApiUrl.getProtocol();
                 log.error(errorMsg);
                 throw new DeviceControllerException(errorMsg, e);
             }
@@ -196,8 +193,8 @@ public class XmppServerClient {
                     String response = IoTUtil.getResponseString(httpResponse);
                     if (log.isDebugEnabled()) {
                         log.debug("XMPP Server returned status: '" + httpResponse.getStatusLine().getStatusCode() +
-                                          "' for checking existence of account [" + username + "] with message:\n" +
-                                          response + "\nProbably, an account with this username does not exist.");
+                                  "' for checking existence of account [" + username + "] with message:\n" +
+                                  response + "\nProbably, an account with this username does not exist.");
                     }
                     return false;
                 }
@@ -218,7 +215,6 @@ public class XmppServerClient {
             throw new DeviceControllerException(warnMsg);
         }
     }
-
 
     public JSONArray getAllCurrentUserSessions() throws DeviceControllerException {
         if (xmppEnabled) {
@@ -247,7 +243,7 @@ public class XmppServerClient {
                 httpClient = IoTUtil.getHttpClient(xmppUserApiUrl.getPort(), xmppUserApiUrl.getProtocol());
             } catch (Exception e) {
                 String errorMsg = "Error on getting a http client for port :" + xmppUserApiUrl.getPort() +
-                        " protocol :" + xmppUserApiUrl.getProtocol();
+                                  " protocol :" + xmppUserApiUrl.getProtocol();
                 log.error(errorMsg);
                 throw new DeviceControllerException(errorMsg, e);
             }
@@ -261,7 +257,7 @@ public class XmppServerClient {
 
                 if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                     String errorMsg = "XMPP Server returned status: '" + httpResponse.getStatusLine().getStatusCode() +
-                            "' for checking current XMPP Sessions.";
+                                      "' for checking current XMPP Sessions.";
                     log.error(errorMsg);
                     throw new DeviceControllerException(errorMsg);
                 }
@@ -283,10 +279,8 @@ public class XmppServerClient {
         }
     }
 
-
     public void deleteCurrentXmppSessions() throws DeviceControllerException {
         JSONArray xmppSessionsArray;
-
         try {
             xmppSessionsArray = getAllCurrentUserSessions();
         } catch (DeviceControllerException e) {
@@ -322,7 +316,7 @@ public class XmppServerClient {
                 httpClient = IoTUtil.getHttpClient(xmppUserApiUrl.getPort(), xmppUserApiUrl.getProtocol());
             } catch (Exception e) {
                 String errorMsg = "Error on getting a http client for port :" + xmppUserApiUrl.getPort() +
-                        " protocol :" + xmppUserApiUrl.getProtocol();
+                                  " protocol :" + xmppUserApiUrl.getProtocol();
                 log.error(errorMsg);
                 throw new DeviceControllerException(errorMsg, e);
             }
@@ -341,14 +335,14 @@ public class XmppServerClient {
                     if (httpResponse.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                         String errorMsg =
                                 "XMPP Server returned status: '" + httpResponse.getStatusLine().getStatusCode() +
-                                        "' for checking current XMPP Sessions.";
+                                "' for checking current XMPP Sessions.";
                         log.error(errorMsg);
                         throw new DeviceControllerException(errorMsg);
                     }
 
                 } catch (IOException e) {
                     String errorMsg = "Error occured whilst trying a 'DELETE' user-session [" + sessionName + "] " +
-                            "at : " + xmppUserSessionsAPIEndpoint;
+                                      "at : " + xmppUserSessionsAPIEndpoint;
                     log.error(errorMsg);
                     throw new DeviceControllerException(errorMsg, e);
                 }

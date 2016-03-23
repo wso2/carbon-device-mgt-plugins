@@ -60,6 +60,7 @@ import java.util.UUID;
  */
 @SuppressWarnings("no JAX-WS annotation")
 public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
+    
 	private static Log log = LogFactory.getLog(VirtualFireAlarmMQTTConnector.class);
 	// subscription topic: <SERVER_NAME>/+/virtual_firealarm/+/publisher
 	// wildcard (+) is in place for device_owner & device_id

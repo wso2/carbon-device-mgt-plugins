@@ -67,6 +67,7 @@ public class VirtualFireAlarmManagerService {
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
 
+
     @Path("manager/device/register")
     @POST
     public boolean register(@QueryParam("deviceId") String deviceId,

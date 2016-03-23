@@ -109,10 +109,14 @@ function attachEvents() {
                     }
                 );
             }else if(deviceName){
-                $('.controls').append('<label for="deviceName" generated="true" class="error" style="display: inline-block;">Please enter at least 4 characters.</label>');
+                $('.controls').append('<label for="deviceName" generated="true" class="error" ' +
+                                      'style="display: inline-block;">Please enter at least 4 ' +
+                                      'characters.</label>');
                 $('.control-group').removeClass('success').addClass('error');
             } else {
-                $('.controls').append('<label for="deviceName" generated="true" class="error" style="display: inline-block;">This field is required.</label>');
+                $('.controls').append('<label for="deviceName" generated="true" class="error" ' +
+                                      'style="display: inline-block;">This field is required.' +
+                                      '</label>');
                 $('.control-group').removeClass('success').addClass('error');
             }
         });
@@ -120,23 +124,28 @@ function attachEvents() {
         $("a#download-device-cancel-link").click(function () {
             hidePopup();
         });
-
     });
 }
 
 function downloadAgent() {
-    $('#downloadForm').submit();
-
     var deviceName;
     $('.new-device-name').each(function () {
         if (this.value != "") {
             deviceName = this.value;
         }
     });
-    if (deviceName && deviceName.length >= 4) {
+    var deviceNameFormat = /^[^~?!#$:;%^*`+={}\[\]\\()|<>,'"]{1,30}$/;
+    if (deviceName && deviceNameFormat.test(deviceName)) {
+        $('#downloadForm').submit();
+        hidePopup();
+        $(modalPopupContent).html($('#device-agent-downloading-content').html());
+        showPopup();
         setTimeout(function () {
             hidePopup();
         }, 1000);
+    }else {
+        $("#invalid-username-error-msg span").text("Invalid device name");
+        $("#invalid-username-error-msg").removeClass("hidden");
     }
 }
 

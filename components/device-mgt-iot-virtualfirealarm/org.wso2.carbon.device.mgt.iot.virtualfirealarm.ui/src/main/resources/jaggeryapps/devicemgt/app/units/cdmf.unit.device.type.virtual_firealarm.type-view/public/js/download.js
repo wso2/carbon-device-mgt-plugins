@@ -22,7 +22,7 @@ var modalPopupContent = modalPopup + " .modalpopup-content";
 var body = "body";
 
 /*
- * set popup maximum height function.
+ * Set popup maximum height function.
  */
 function setPopupMaxHeight() {
     $(modalPopupContent).css('max-height', ($(body).height() - ($(body).height() / 100 * 30)));
@@ -30,9 +30,9 @@ function setPopupMaxHeight() {
 }
 
 /*
- * show popup function.
+ * Shows agent download popup.
  */
-function showPopup() {
+function showAgentDownloadPopup() {
     $(modalPopup).show();
     setPopupMaxHeight();
     $('#downloadForm').validate({
@@ -59,9 +59,9 @@ function showPopup() {
 }
 
 /*
- * hide popup function.
+ * Hides agent download popup.
  */
-function hidePopup() {
+function hideAgentDownloadPopup() {
     $('label[for=deviceName]').remove();
     $('.control-group').removeClass('success').removeClass('error');
     $(modalPopupContent).html('');
@@ -87,7 +87,7 @@ function attachEvents() {
         var downloadDeviceAPI = "/devicemgt/api/devices/sketch/generate_link";
         var payload = {"sketchType": sketchType, "deviceType": deviceType};
         $(modalPopupContent).html($('#download-device-modal-content').html());
-        showPopup();
+        showAgentDownloadPopup();
         var deviceName;
         $("a#download-device-download-link").click(function () {
             $('.new-device-name').each(function () {
@@ -108,35 +108,45 @@ function attachEvents() {
                         doAction(data);
                     }
                 );
-            }else if(deviceName){
-                $('.controls').append('<label for="deviceName" generated="true" class="error" style="display: inline-block;">Please enter at least 4 characters.</label>');
+            } else if (deviceName) {
+                $('.controls').append('<label for="deviceName" generated="true" class="error" ' +
+                                      'style="display: inline-block;">Please enter at least 4 ' +
+                                      'characters.</label>');
                 $('.control-group').removeClass('success').addClass('error');
             } else {
-                $('.controls').append('<label for="deviceName" generated="true" class="error" style="display: inline-block;">This field is required.</label>');
+                $('.controls').append('<label for="deviceName" generated="true" class="error" ' +
+                                      'style="display: inline-block;">This field is required.' +
+                                      '</label>');
                 $('.control-group').removeClass('success').addClass('error');
             }
         });
 
         $("a#download-device-cancel-link").click(function () {
-            hidePopup();
+            hideAgentDownloadPopup();
         });
 
     });
 }
 
 function downloadAgent() {
-    $('#downloadForm').submit();
-
     var deviceName;
     $('.new-device-name').each(function () {
         if (this.value != "") {
             deviceName = this.value;
         }
     });
-    if (deviceName && deviceName.length >= 4) {
+    var deviceNameFormat = /^[^~?!#$:;%^*`+={}\[\]\\()|<>,'"]{1,30}$/;
+    if (deviceName && deviceNameFormat.test(deviceName)) {
+        $('#downloadForm').submit();
+        hideAgentDownloadPopup();
+        $(modalPopupContent).html($('#device-agent-downloading-content').html());
+        showAgentDownloadPopup();
         setTimeout(function () {
-            hidePopup();
+            hideAgentDownloadPopup();
         }, 1000);
+    } else {
+        $("#invalid-username-error-msg span").text("Invalid device name");
+        $("#invalid-username-error-msg").removeClass("hidden");
     }
 }
 
@@ -152,23 +162,23 @@ function doAction(data) {
         $("input#download-device-url").focus(function () {
             $(this).select();
         });
-        showPopup();
+        showAgentDownloadPopup();
     } else if (data.status == "401") {
         $(modalPopupContent).html($('#device-401-content').html());
         $("#device-401-link").click(function () {
             window.location = "/devicemgt/login";
         });
-        showPopup();
+        showAgentDownloadPopup();
     } else if (data == "403") {
         $(modalPopupContent).html($('#device-403-content').html());
         $("#device-403-link").click(function () {
             window.location = "/devicemgt/login";
         });
-        showPopup();
+        showAgentDownloadPopup();
     } else {
         $(modalPopupContent).html($('#device-unexpected-error-content').html());
         $("a#device-unexpected-error-link").click(function () {
-            hidePopup();
+            hideAgentDownloadPopup();
         });
     }
 }

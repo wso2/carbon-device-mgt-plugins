@@ -19,41 +19,42 @@
 package org.wso2.carbon.device.mgt.iot.controlqueue.xmpp;
 
 public class XmppAccount {
-	private String username;
-	private String password;
-	private String accountName;
-	private String email;
 
-	public String getUsername() {
-		return username;
-	}
+    private String username;
+    private String password;
+    private String accountName;
+    private String email;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public String getAccountName() {
-		return accountName;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
-	}
+    public String getAccountName() {
+        return accountName;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
 }

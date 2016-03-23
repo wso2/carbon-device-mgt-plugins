@@ -24,12 +24,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * <p>Java class for ControlQueue complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType name="ControlQueue">
  *   &lt;complexContent>
@@ -48,19 +47,17 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ControlQueue", propOrder = {
-    "name",
-    "enabled",
-    "controlClass",
-    "protocol",
-    "serverURL",
-    "port",
-    "username",
-    "password"
+        "name",
+        "enabled",
+        "controlClass",
+        "protocol",
+        "serverURL",
+        "port",
+        "username",
+        "password"
 })
 public class ControlQueue {
 
@@ -83,11 +80,9 @@ public class ControlQueue {
 
     /**
      * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getName() {
         return name;
@@ -95,11 +90,9 @@ public class ControlQueue {
 
     /**
      * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setName(String value) {
         this.name = value;
@@ -107,7 +100,6 @@ public class ControlQueue {
 
     /**
      * Gets the value of the enabled property.
-     * 
      */
     public boolean isEnabled() {
         return enabled;
@@ -115,7 +107,6 @@ public class ControlQueue {
 
     /**
      * Sets the value of the enabled property.
-     * 
      */
     public void setEnabled(boolean value) {
         this.enabled = value;
@@ -123,11 +114,9 @@ public class ControlQueue {
 
     /**
      * Gets the value of the controlClass property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getControlClass() {
         return controlClass;
@@ -135,11 +124,9 @@ public class ControlQueue {
 
     /**
      * Sets the value of the controlClass property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setControlClass(String value) {
         this.controlClass = value;
@@ -147,11 +134,9 @@ public class ControlQueue {
 
     /**
      * Gets the value of the protocol property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getProtocol() {
         return protocol;
@@ -159,11 +144,9 @@ public class ControlQueue {
 
     /**
      * Sets the value of the protocol property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setProtocol(String value) {
         this.protocol = value;
@@ -171,11 +154,9 @@ public class ControlQueue {
 
     /**
      * Gets the value of the serverURL property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getServerURL() {
         return serverURL;
@@ -183,11 +164,9 @@ public class ControlQueue {
 
     /**
      * Sets the value of the serverURL property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setServerURL(String value) {
         this.serverURL = value;
@@ -195,7 +174,6 @@ public class ControlQueue {
 
     /**
      * Gets the value of the port property.
-     * 
      */
     public short getPort() {
         return port;
@@ -203,7 +181,6 @@ public class ControlQueue {
 
     /**
      * Sets the value of the port property.
-     * 
      */
     public void setPort(short value) {
         this.port = value;
@@ -211,11 +188,9 @@ public class ControlQueue {
 
     /**
      * Gets the value of the username property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getUsername() {
         return username;
@@ -223,11 +198,9 @@ public class ControlQueue {
 
     /**
      * Sets the value of the username property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setUsername(String value) {
         this.username = value;
@@ -235,11 +208,9 @@ public class ControlQueue {
 
     /**
      * Gets the value of the password property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPassword() {
         return password;
@@ -247,11 +218,9 @@ public class ControlQueue {
 
     /**
      * Sets the value of the password property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPassword(String value) {
         this.password = value;

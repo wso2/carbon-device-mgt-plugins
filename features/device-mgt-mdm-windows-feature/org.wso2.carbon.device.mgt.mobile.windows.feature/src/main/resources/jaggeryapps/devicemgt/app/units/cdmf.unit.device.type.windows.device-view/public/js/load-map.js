@@ -16,14 +16,15 @@
  * under the License.
  */
 
-$(document).ready(function(){
-    if (document.getElementById('device-location')){
+$(document).ready(function () {
+    if (document.getElementById('device-location')) {
         loadMap();
     }
 });
 
 function loadMap() {
     var map;
+
     function initialize() {
         var mapOptions = {
             zoom: 18
@@ -31,25 +32,25 @@ function loadMap() {
         var lat = $("#device-location").data("lat");
         var long = $("#device-location").data("long");
 
-        if(lat != null && lat != undefined && lat != "" && long != null && long != undefined && long != "") {
+        if (lat != null && lat != undefined && lat != "" && long != null && long != undefined && long != "") {
             $("#map-error").hide();
             $("#device-location").show();
             map = new google.maps.Map(document.getElementById('device-location'),
                 mapOptions);
 
-            var pos = new google.maps.LatLng(lat,
-                long);
+            var pos = new google.maps.LatLng(lat, long);
             var marker = new google.maps.Marker({
                 position: pos,
                 map: map
             });
 
             map.setCenter(pos);
-        }else{
+        } else {
             $("#device-location").hide();
             $("#map-error").show();
         }
 
     }
+
     google.maps.event.addDomListener(window, 'load', initialize);
 }
