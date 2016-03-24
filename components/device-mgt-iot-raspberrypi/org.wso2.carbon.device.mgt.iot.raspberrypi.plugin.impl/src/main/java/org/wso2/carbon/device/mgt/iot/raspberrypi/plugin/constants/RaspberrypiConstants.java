@@ -34,5 +34,6 @@ public class RaspberrypiConstants {
     public static final String SENSOR_TEMPERATURE = "temperature";
     //sensor events summerized table name
     public static final String TEMPERATURE_EVENT_TABLE = "ORG_WSO2_IOT_DEVICES_TEMPERATURE";
+    public static final String DATA_SOURCE_NAME = "jdbc/RaspberryPiDM_DB";
 
 }

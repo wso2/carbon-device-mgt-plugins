@@ -24,26 +24,17 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
-import org.wso2.carbon.device.mgt.iot.service.DeviceTypeService;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.exception.RaspberrypiDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.RaspberrypiManagerService;
-
+import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.util.RaspberrypiUtils;
 
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.raspberrypi.internal.RaspberrypiManagementServiceComponent"
  * immediate="true"
- * @scr.reference name="org.wso2.carbon.device.mgt.iot.service.DeviceTypeServiceImpl"
- * interface="org.wso2.carbon.device.mgt.iot.service.DeviceTypeService"
- * cardinality="1..1"
- * policy="dynamic"
- * bind="setDeviceTypeService"
- * unbind="unsetDeviceTypeService"
  */
 public class RaspberrypiManagementServiceComponent {
 
-
 	private ServiceRegistration raspberrypiServiceRegRef;
-
-
 	private static final Log log = LogFactory.getLog(RaspberrypiManagementServiceComponent.class);
 
 	protected void activate(ComponentContext ctx) {
@@ -55,16 +46,24 @@ public class RaspberrypiManagementServiceComponent {
 			raspberrypiServiceRegRef =
 					bundleContext.registerService(DeviceManagementService.class.getName(),
 												  new RaspberrypiManagerService(), null);
+			String setupOption = System.getProperty("setup");
+			if (setupOption != null) {
+				if (log.isDebugEnabled()) {
+					log.debug("-Dsetup is enabled. Iot Device management repository schema initialization is about " +
+									  "to begin");
+				}
+				try {
+					RaspberrypiUtils.setupDeviceManagementSchema();
+				} catch (RaspberrypiDeviceMgtPluginException e) {
+					log.error("Exception occurred while initializing device management database schema", e);
+				}
+			}
 			if (log.isDebugEnabled()) {
-				log.debug(
-						"Raspberrypi Device Management Service Component has been successfully " +
-								"activated");
+				log.debug("Raspberrypi Device Management Service Component has been successfully activated");
 			}
 		} catch (Throwable e) {
 			log.error(
-					"Error occurred while activating Raspberrypi Device Management Service " +
-							"Component",
-					e);
+					"Error occurred while activating Raspberrypi Device Management Service Component", e);
 		}
 	}
 
@@ -76,29 +75,11 @@ public class RaspberrypiManagementServiceComponent {
 			if (raspberrypiServiceRegRef != null) {
 				raspberrypiServiceRegRef.unregister();
 			}
-
 			if (log.isDebugEnabled()) {
-				log.debug(
-						"Raspberrypi Device Management Service Component has been successfully " +
-								"de-activated");
+				log.debug("Raspberrypi Device Management Service Component has been successfully de-activated");
 			}
 		} catch (Throwable e) {
-			log.error("Error occurred while de-activating Raspberrypi Device Management bundle",
-					  e);
+			log.error("Error occurred while de-activating Raspberrypi Device Management bundle", e);
 		}
 	}
-
-	protected void setDeviceTypeService(DeviceTypeService deviceTypeService) {
-		/* This is to avoid this component getting initialized before the
-		common registered */
-		if (log.isDebugEnabled()) {
-			log.debug("Data source service set to mobile service component");
-		}
-	}
-
-	protected void unsetDeviceTypeService(DeviceTypeService deviceTypeService) {
-		//do nothing
-	}
-
-
 }

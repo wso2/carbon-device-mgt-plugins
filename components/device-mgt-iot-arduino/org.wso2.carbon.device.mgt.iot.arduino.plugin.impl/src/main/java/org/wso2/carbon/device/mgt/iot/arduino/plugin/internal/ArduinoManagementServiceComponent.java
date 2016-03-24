@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -24,19 +24,12 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
+import org.wso2.carbon.device.mgt.iot.arduino.plugin.exception.ArduinoDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.ArduinoManagerService;
-import org.wso2.carbon.device.mgt.iot.service.DeviceTypeService;
-
-
+import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.util.ArduinoUtils;
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.arduino.internal.ArduinoManagementServiceComponent"
  * immediate="true"
- * @scr.reference name="org.wso2.carbon.device.mgt.iot.service.DeviceTypeServiceImpl"
- * interface="org.wso2.carbon.device.mgt.iot.service.DeviceTypeService"
- * cardinality="1..1"
- * policy="dynamic"
- * bind="setDeviceTypeService"
- * unbind="unsetDeviceTypeService"
  */
 public class ArduinoManagementServiceComponent {
 
@@ -49,12 +42,22 @@ public class ArduinoManagementServiceComponent {
         }
         try {
             BundleContext bundleContext = ctx.getBundleContext();
-
-
             arduinoServiceRegRef =
                     bundleContext.registerService(DeviceManagementService.class.getName(),
                                                   new ArduinoManagerService(), null);
-
+            String setupOption = System.getProperty("setup");
+            if (setupOption != null) {
+                if (log.isDebugEnabled()) {
+                    log.debug(
+                            "-Dsetup is enabled. Iot Device management repository schema initialization is about " +
+                                    "to begin");
+                }
+                try {
+                    ArduinoUtils.setupDeviceManagementSchema();
+                } catch (ArduinoDeviceMgtPluginException e) {
+                    log.error("Exception occurred while initializing device management database schema", e);
+                }
+            }
             if (log.isDebugEnabled()) {
                 log.debug("Arduino Device Management Service Component has been successfully activated");
             }
@@ -80,17 +83,4 @@ public class ArduinoManagementServiceComponent {
             log.error("Error occurred while de-activating Arduino Device Management bundle", e);
         }
     }
-
-    protected void setDeviceTypeService(DeviceTypeService deviceTypeService) {
-		/* This is to avoid this component getting initialized before thecommon registered */
-        if (log.isDebugEnabled()) {
-            log.debug("Data source service set to mobile service component");
-        }
-    }
-
-    protected void unsetDeviceTypeService(DeviceTypeService deviceTypeService)  {
-        //do nothing
-    }
-
-
 }

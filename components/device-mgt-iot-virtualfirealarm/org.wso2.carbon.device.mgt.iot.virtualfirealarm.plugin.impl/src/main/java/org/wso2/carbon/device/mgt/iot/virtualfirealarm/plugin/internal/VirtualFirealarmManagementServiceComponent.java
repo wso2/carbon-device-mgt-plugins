@@ -24,20 +24,14 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
-import org.wso2.carbon.device.mgt.iot.service.DeviceTypeService;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.VirtualFireAlarmManagerService;
-
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFireAlarmUtils;
 
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal
  * .VirtualFirealarmManagementServiceComponent"
  * immediate="true"
- * @scr.reference name="org.wso2.carbon.device.mgt.iot.service.DeviceTypeServiceImpl"
- * interface="org.wso2.carbon.device.mgt.iot.service.DeviceTypeService"
- * cardinality="1..1"
- * policy="dynamic"
- * bind="setDeviceTypeService"
- * unbind="unsetDeviceTypeService"
  */
 public class VirtualFirealarmManagementServiceComponent {
 
@@ -50,17 +44,25 @@ public class VirtualFirealarmManagementServiceComponent {
         }
         try {
             BundleContext bundleContext = ctx.getBundleContext();
-            firealarmServiceRegRef =
-                    bundleContext.registerService(DeviceManagementService.class.getName(),
+            firealarmServiceRegRef = bundleContext.registerService(DeviceManagementService.class.getName(),
                                                   new VirtualFireAlarmManagerService(), null);
-
+            String setupOption = System.getProperty("setup");
+            if (setupOption != null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("-Dsetup is enabled. Iot Device management repository schema initialization is about " +
+                                      "to begin");
+                }
+                try {
+                    VirtualFireAlarmUtils.setupDeviceManagementSchema();
+                } catch (VirtualFirealarmDeviceMgtPluginException e) {
+                    log.error("Exception occurred while initializing device management database schema", e);
+                }
+            }
             if (log.isDebugEnabled()) {
-                log.debug(
-                        "Virtual Firealarm Device Management Service Component has been successfully activated");
+                log.debug("Virtual Firealarm Device Management Service Component has been successfully activated");
             }
         } catch (Throwable e) {
-            log.error(
-                    "Error occurred while activating Virtual Firealarm Device Management Service Component", e);
+            log.error("Error occurred while activating Virtual Firealarm Device Management Service Component", e);
         }
     }
 
@@ -72,27 +74,11 @@ public class VirtualFirealarmManagementServiceComponent {
             if (firealarmServiceRegRef != null) {
                 firealarmServiceRegRef.unregister();
             }
-
             if (log.isDebugEnabled()) {
-                log.debug(
-                        "Virtual Firealarm Device Management Service Component has been successfully de-activated");
+                log.debug("Virtual Firealarm Device Management Service Component has been successfully de-activated");
             }
         } catch (Throwable e) {
-            log.error(
-                    "Error occurred while de-activating Virtual Firealarm Device Management bundle", e);
+            log.error("Error occurred while de-activating Virtual Firealarm Device Management bundle", e);
         }
     }
-
-    protected void setDeviceTypeService(DeviceTypeService deviceTypeService) {
-        /* This is to avoid this component getting initialized before the common registered */
-        if (log.isDebugEnabled()) {
-            log.debug("Data source service set to mobile service component");
-        }
-    }
-
-    protected void unsetDeviceTypeService(DeviceTypeService deviceTypeService) {
-        //do nothing
-    }
-
-
 }

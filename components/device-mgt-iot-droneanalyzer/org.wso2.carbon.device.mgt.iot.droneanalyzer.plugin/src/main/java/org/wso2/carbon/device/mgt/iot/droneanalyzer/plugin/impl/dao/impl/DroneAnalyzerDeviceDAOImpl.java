@@ -20,33 +20,28 @@ package org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl.dao.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConstants;
+import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.exception.DroneAnalyzerDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl.dao.DroneAnalyzerDAO;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceDAO;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.util.IotDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dto.IotDevice;
-
+import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.impl.util.DroneAnalyzerUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 /**
- * Implements IotDeviceDAO for drone analyzer.
+ * Implements CRUD for drone analyzer.
  */
-public class DroneAnalyzerDeviceDAOImpl implements IotDeviceDAO {
+public class DroneAnalyzerDeviceDAOImpl {
 
     private static final Log log = LogFactory.getLog(DroneAnalyzerDeviceDAOImpl.class);
 
-    @Override
-    public IotDevice getIotDevice(String iotDeviceId) throws IotDeviceManagementDAOException {
+    public Device getDevice(String deviceId) throws DroneAnalyzerDeviceMgtPluginException {
         Connection conn = null;
         PreparedStatement stmt = null;
-        IotDevice iotDevice = null;
+        Device device = null;
         ResultSet resultSet = null;
         try {
             conn = DroneAnalyzerDAO.getConnection();
@@ -54,36 +49,30 @@ public class DroneAnalyzerDeviceDAOImpl implements IotDeviceDAO {
                 log.error("Database connection hasn't been created");
             }
             String selectDBQuery =
-                    "SELECT DRONE_DEVICE_ID, DEVICE_NAME" +
-                            " FROM DRONE_DEVICE WHERE DRONE_DEVICE_ID = ?";
+                    "SELECT DRONE_DEVICE_ID, DEVICE_NAME FROM DRONE_DEVICE WHERE DRONE_DEVICE_ID = ?";
             stmt = conn.prepareStatement(selectDBQuery);
-            stmt.setString(1, iotDeviceId);
+            stmt.setString(1, deviceId);
             resultSet = stmt.executeQuery();
 
             if (resultSet.next()) {
-                iotDevice = new IotDevice();
-                iotDevice.setIotDeviceName(resultSet.getString(
-                        DroneConstants.DEVICE_PLUGIN_DEVICE_NAME));
-                Map<String, String> propertyMap = new HashMap<String, String>();
-                iotDevice.setDeviceProperties(propertyMap);
+                device = new Device();
                 if (log.isDebugEnabled()) {
-                    log.debug("Drone device " + iotDeviceId + " data has been fetched from " +
+                    log.debug("Drone device " + deviceId + " data has been fetched from " +
                             "Drone database.");
                 }
             }
         } catch (SQLException e) {
-            String msg = "Error occurred while fetching drone device : '" + iotDeviceId + "'";
+            String msg = "Error occurred while fetching drone device : '" + deviceId + "'";
             log.error(msg, e);
-            throw new IotDeviceManagementDAOException(msg, e);
+            throw new DroneAnalyzerDeviceMgtPluginException(msg, e);
         } finally {
-            IotDeviceManagementDAOUtil.cleanupResources(stmt, resultSet);
+            DroneAnalyzerUtils.cleanupResources(stmt, resultSet);
             DroneAnalyzerDAO.closeConnection();
         }
-        return iotDevice;
+        return device;
     }
 
-    @Override
-    public boolean addIotDevice(IotDevice iotDevice) throws IotDeviceManagementDAOException {
+    public boolean addDevice(Device device) throws DroneAnalyzerDeviceMgtPluginException {
         boolean status = false;
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -91,37 +80,29 @@ public class DroneAnalyzerDeviceDAOImpl implements IotDeviceDAO {
             conn = DroneAnalyzerDAO.getConnection();
             String createDBQuery =
                     "INSERT INTO DRONE_DEVICE(DRONE_DEVICE_ID, DEVICE_NAME) VALUES (?, ?)";
-
             stmt = conn.prepareStatement(createDBQuery);
-            stmt.setString(1, iotDevice.getIotDeviceId());
-            stmt.setString(2,iotDevice.getIotDeviceName());
-            if (iotDevice.getDeviceProperties() == null) {
-                iotDevice.setDeviceProperties(new HashMap<String, String>());
-            }
-
-
+            stmt.setString(1, device.getDeviceIdentifier());
+            stmt.setString(2, device.getName());
             int rows = stmt.executeUpdate();
             if (rows > 0) {
                 status = true;
                 if (log.isDebugEnabled()) {
-                    log.debug("drone device " + iotDevice.getIotDeviceId() + " data has been" +
+                    log.debug("drone device " + device.getDeviceIdentifier() + " data has been" +
                             " added to the drone database.");
                 }
             }
         } catch (SQLException e) {
             String msg = "Error occurred while adding the drone device '" +
-                    iotDevice.getIotDeviceId() + "' to the drone db.";
+                    device.getDeviceIdentifier() + "' to the drone db.";
             log.error(msg, e);
-            throw new IotDeviceManagementDAOException(msg, e);
+            throw new DroneAnalyzerDeviceMgtPluginException(msg, e);
         } finally {
-            IotDeviceManagementDAOUtil.cleanupResources(stmt, null);
+            DroneAnalyzerUtils.cleanupResources(stmt, null);
         }
         return status;
     }
 
-    @Override
-    public boolean updateIotDevice(IotDevice iotDevice)
-            throws IotDeviceManagementDAOException {
+    public boolean updateDevice(Device device) throws DroneAnalyzerDeviceMgtPluginException {
         boolean status = false;
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -130,33 +111,27 @@ public class DroneAnalyzerDeviceDAOImpl implements IotDeviceDAO {
             String updateDBQuery =
                     "UPDATE DRONE_DEVICE SET  DEVICE_NAME = ? WHERE DRONE_DEVICE_ID = ?";
             stmt = conn.prepareStatement(updateDBQuery);
-            if (iotDevice.getDeviceProperties() == null) {
-                iotDevice.setDeviceProperties(new HashMap<String, String>());
-            }
-            stmt.setString(1, iotDevice.getIotDeviceName());
-            stmt.setString(2, iotDevice.getIotDeviceId());
+            stmt.setString(1, device.getName());
+            stmt.setString(2, device.getDeviceIdentifier());
             int rows = stmt.executeUpdate();
             if (rows > 0) {
                 status = true;
                 if (log.isDebugEnabled()) {
-                    log.debug("Drone device " + iotDevice.getIotDeviceId() + " data has been" +
+                    log.debug("Drone device " + device.getDeviceIdentifier() + " data has been" +
                             " modified.");
                 }
             }
         } catch (SQLException e) {
-            String msg = "Error occurred while modifying the Drone device '" +
-                    iotDevice.getIotDeviceId() + "' data.";
+            String msg = "Error occurred while modifying the Drone device '" + device.getDeviceIdentifier() + "' data.";
             log.error(msg, e);
-            throw new IotDeviceManagementDAOException(msg, e);
+            throw new DroneAnalyzerDeviceMgtPluginException(msg, e);
         } finally {
-            IotDeviceManagementDAOUtil.cleanupResources(stmt, null);
+            DroneAnalyzerUtils.cleanupResources(stmt, null);
         }
         return status;
     }
 
-    @Override
-    public boolean deleteIotDevice(String iotDeviceId)
-            throws IotDeviceManagementDAOException {
+    public boolean deleteIotDevice(String iotDeviceId) throws DroneAnalyzerDeviceMgtPluginException {
         boolean status = false;
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -178,24 +153,19 @@ public class DroneAnalyzerDeviceDAOImpl implements IotDeviceDAO {
         } catch (SQLException e) {
             String msg = "Error occurred while deleting drone device " + iotDeviceId;
             log.error(msg, e);
-            throw new IotDeviceManagementDAOException(msg, e);
+            throw new DroneAnalyzerDeviceMgtPluginException(msg, e);
         } finally {
-            IotDeviceManagementDAOUtil.cleanupResources(stmt, null);
+            DroneAnalyzerUtils.cleanupResources(stmt, null);
         }
         return status;
-
     }
 
-    @Override
-    public List<IotDevice> getAllIotDevices()
-            throws IotDeviceManagementDAOException {
-
+    public List<Device> getAllDevices() throws DroneAnalyzerDeviceMgtPluginException {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet resultSet = null;
-        IotDevice iotDevice;
-        List<IotDevice> iotDevices = new ArrayList<IotDevice>();
-
+        Device iotDevice;
+        List<Device> iotDevices = new ArrayList<Device>();
         try {
             conn = DroneAnalyzerDAO.getConnection();
             String selectDBQuery =
@@ -204,14 +174,9 @@ public class DroneAnalyzerDeviceDAOImpl implements IotDeviceDAO {
             stmt = conn.prepareStatement(selectDBQuery);
             resultSet = stmt.executeQuery();
             while (resultSet.next()) {
-                iotDevice = new IotDevice();
-                iotDevice.setIotDeviceId(resultSet.getString(DroneConstants.DEVICE_PLUGIN_DEVICE_ID));
-                iotDevice.setIotDeviceName(resultSet.getString(DroneConstants.DEVICE_PLUGIN_DEVICE_NAME));
-
-                Map<String, String> propertyMap = new HashMap<String, String>();
-
-                iotDevice.setDeviceProperties(propertyMap);
-                iotDevices.add(iotDevice);
+                iotDevice = new Device();
+                iotDevice.setDeviceIdentifier(resultSet.getString(DroneConstants.DEVICE_PLUGIN_DEVICE_ID));
+                iotDevice.setName(resultSet.getString(DroneConstants.DEVICE_PLUGIN_DEVICE_NAME));
             }
             if (log.isDebugEnabled()) {
                 log.debug("All drone device details have fetched from drone database.");
@@ -220,11 +185,10 @@ public class DroneAnalyzerDeviceDAOImpl implements IotDeviceDAO {
         } catch (SQLException e) {
             String msg = "Error occurred while fetching all drone device data'";
             log.error(msg, e);
-            throw new IotDeviceManagementDAOException(msg, e);
+            throw new DroneAnalyzerDeviceMgtPluginException(msg, e);
         } finally {
-            IotDeviceManagementDAOUtil.cleanupResources(stmt, resultSet);
+            DroneAnalyzerUtils.cleanupResources(stmt, resultSet);
             DroneAnalyzerDAO.closeConnection();
         }
-
     }
 }

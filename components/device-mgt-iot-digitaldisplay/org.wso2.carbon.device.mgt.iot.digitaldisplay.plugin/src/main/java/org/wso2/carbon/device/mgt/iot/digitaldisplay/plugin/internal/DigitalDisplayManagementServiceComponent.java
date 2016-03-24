@@ -24,27 +24,17 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
+import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.exception.DigitalDisplayDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.impl.DigitalDisplayManagerService;
-import org.wso2.carbon.device.mgt.iot.service.DeviceTypeService;
+import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.impl.util.DigitalDisplayUtils;
 
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.internal.DigitalDisplayManagementServiceComponent"
  * immediate="true"
- * @scr.reference name="org.wso2.carbon.device.mgt.iot.service.DeviceTypeService"
- * interface="org.wso2.carbon.device.mgt.iot.service.DeviceTypeService"
- * cardinality="1..1"
- * policy="dynamic"
- * bind="setDeviceTypeService"
- * unbind="unsetDeviceTypeService"
  */
-
 public class DigitalDisplayManagementServiceComponent {
-	
 
     private ServiceRegistration digitalDisplayServiceRegRef;
-
-
-
     private static final Log log = LogFactory.getLog(DigitalDisplayManagementServiceComponent.class);
 
     protected void activate(ComponentContext ctx) {
@@ -53,15 +43,21 @@ public class DigitalDisplayManagementServiceComponent {
         }
         try {
             BundleContext bundleContext = ctx.getBundleContext();
-
-
             digitalDisplayServiceRegRef =
                     bundleContext.registerService(DeviceManagementService.class.getName(), new
-                                    DigitalDisplayManagerService(),
-												  null);
-
-
-
+                                    DigitalDisplayManagerService(), null);
+            String setupOption = System.getProperty("setup");
+            if (setupOption != null) {
+                if (log.isDebugEnabled()) {
+                    log.debug("-Dsetup is enabled. Iot Device management repository schema initialization is about " +
+                                    "to begin");
+                }
+                try {
+                    DigitalDisplayUtils.setupDeviceManagementSchema();
+                } catch (DigitalDisplayDeviceMgtPluginException e) {
+                    log.error("Exception occurred while initializing device management database schema", e);
+                }
+            }
             if (log.isDebugEnabled()) {
                 log.debug("Digital Display  Management Service Component has been successfully activated");
             }
@@ -69,7 +65,6 @@ public class DigitalDisplayManagementServiceComponent {
             log.error("Error occurred while activating Digital Display Management Service Component", e);
         }
     }
-
 
     protected void deactivate(ComponentContext ctx) {
         if (log.isDebugEnabled()) {
@@ -79,30 +74,12 @@ public class DigitalDisplayManagementServiceComponent {
             if (digitalDisplayServiceRegRef != null) {
                 digitalDisplayServiceRegRef.unregister();
             }
-
             if (log.isDebugEnabled()) {
-                log.debug(
-                        "DigitalDisplay Management Service Component has been successfully de-activated");
+                log.debug("DigitalDisplay Management Service Component has been successfully de-activated");
             }
         } catch (Throwable e) {
             log.error("Error occurred while de-activating Iot Device Management bundle", e);
         }
     }
-
-
-    protected void setDeviceTypeService(DeviceTypeService deviceTypeService) {
-		/* This is to avoid this component getting initialized before the
-		common registered */
-        if (log.isDebugEnabled()) {
-            log.debug("Data source service set to mobile service component");
-        }
-    }
-
-    protected void unsetDeviceTypeService(DeviceTypeService deviceTypeService)  {
-        //do nothing
-    }
-
-
-
 
 }

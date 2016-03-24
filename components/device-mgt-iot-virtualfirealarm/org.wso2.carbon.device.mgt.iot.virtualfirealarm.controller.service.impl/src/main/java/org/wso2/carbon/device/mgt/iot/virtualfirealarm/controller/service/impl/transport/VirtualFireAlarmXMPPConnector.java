@@ -21,6 +21,7 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.packet.Message;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
@@ -33,6 +34,7 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualF
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.SecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.util.VirtualFireAlarmServiceUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.io.File;
 import java.security.PrivateKey;
@@ -61,9 +63,7 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
     }
 
     public void initConnector() {
-        String serverName =
-                DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
-        xmppVFireAlarmAdminUsername = serverName + "_" + VirtualFireAlarmConstants.DEVICE_TYPE;
+        xmppVFireAlarmAdminUsername = "wso2admin_" + VirtualFireAlarmConstants.DEVICE_TYPE;
         xmppServerIP = XmppConfig.getInstance().getXmppServerIP();
         xmppVFireAlarmAdminAccountJID = xmppVFireAlarmAdminUsername + "@" + xmppServerIP;
         createXMPPAccountForDeviceType();
@@ -164,21 +164,23 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
                 if (log.isDebugEnabled()) {
                     log.debug("XMPP: Received Message [" + actualMessage + "] from: [" + from + "]");
                 }
-
                 if (subject != null) {
                     switch (subject) {
                         case "PUBLISHER":
                             float temperature = Float.parseFloat(actualMessage.split(":")[1]);
-                            if (!VirtualFireAlarmServiceUtils.publishToDAS(owner, deviceId, temperature)) {
+                            PrivilegedCarbonContext.startTenantFlow();
+                            String tenantDomain = MultitenantUtils.getTenantDomain(owner);
+                            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain);
+                            PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(owner);
+                            if (!VirtualFireAlarmServiceUtils.publishToDAS(deviceId, temperature)) {
                                 log.error("XMPP Connector: Publishing VirtualFirealarm data to DAS failed.");
                             }
-
+                            PrivilegedCarbonContext.endTenantFlow();
                             if (log.isDebugEnabled()) {
                                 log.debug("XMPP: Publisher Message [" + actualMessage + "] from [" + from + "] " +
                                                   "was successfully published to DAS");
                             }
                             break;
-
                         case "CONTROL-REPLY":
                             String tempVal = actualMessage.split(":")[1];
                             SensorDataManager.getInstance().setSensorRecord(deviceId,

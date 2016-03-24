@@ -23,9 +23,7 @@ import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfiguratio
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.exception.IoTException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
 import org.wso2.carbon.utils.CarbonUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -45,15 +43,10 @@ public class ZipUtil {
                                     String refreshToken)
             throws DeviceManagementException {
 
-        if (owner == null || deviceType == null) {
-            throw new DeviceManagementException("Invalid parameters for `owner` or `deviceType`");
-        }
-
-        String sep = File.separator;
-        String sketchFolder = "repository" + sep + "resources" + sep + "sketches";
-        String archivesPath = CarbonUtils.getCarbonHome() + sep + sketchFolder + sep + "archives" + sep + deviceId;
-        String templateSketchPath = sketchFolder + sep + deviceType;
-        String serverName = DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
+		String sep = File.separator;
+		String sketchFolder = "repository" + sep + "resources" + sep + "sketches";
+		String archivesPath = CarbonUtils.getCarbonHome() + sep + sketchFolder + sep + "archives" + sep + deviceId;
+		String templateSketchPath = sketchFolder + sep + deviceType;
         String iotServerIP;
 
         try {
@@ -64,18 +57,10 @@ public class ZipUtil {
         String httpsServerPort = System.getProperty(HTTPS_PORT_PROPERTY);
         String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
 
-        String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
-        String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
-
-        String apimHost = DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
-                .getServerURL();
-
-        String apimGatewayPort = DeviceManagementConfigurationManager.getInstance().getDeviceCloudMgtConfig().getApiManager()
-                .getGatewayPort();
-
-        String apimEndpoint = apimHost + ":" + apimGatewayPort;
-        String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
-
+		String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
+		String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
+		String apimEndpoint = httpsServerEP;
+		String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
         if (mqttEndpoint.contains(LOCALHOST)) {
             mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
         }
@@ -90,26 +75,26 @@ public class ZipUtil {
         xmppEndpoint = xmppEndpoint + ":" + XmppConfig.getInstance().getSERVER_CONNECTION_PORT();
 
         Map<String, String> contextParams = new HashMap<>();
-        contextParams.put("SERVER_NAME", serverName);
-        contextParams.put("SERVER_IP", iotServerIP);
-        contextParams.put("DEVICE_OWNER", owner);
-        contextParams.put("DEVICE_ID", deviceId);
-        contextParams.put("DEVICE_NAME", deviceName);
-        contextParams.put("HTTPS_EP", httpsServerEP);
-        contextParams.put("HTTP_EP", httpServerEP);
-        contextParams.put("APIM_EP", apimEndpoint);
-        contextParams.put("MQTT_EP", mqttEndpoint);
-        contextParams.put("XMPP_EP", xmppEndpoint);
-        contextParams.put("DEVICE_TOKEN", token);
-        contextParams.put("DEVICE_REFRESH_TOKEN", refreshToken);
+		//TODO:refactor remove and move to device type impl
+        contextParams.put("SERVER_NAME", "wso2");
+		contextParams.put("DEVICE_OWNER", owner);
+		contextParams.put("DEVICE_ID", deviceId);
+		contextParams.put("DEVICE_NAME", deviceName);
+		contextParams.put("HTTPS_EP", httpsServerEP);
+		contextParams.put("HTTP_EP", httpServerEP);
+		contextParams.put("APIM_EP", apimEndpoint);
+		contextParams.put("MQTT_EP", mqttEndpoint);
+		contextParams.put("XMPP_EP", xmppEndpoint);
+		contextParams.put("DEVICE_TOKEN", token);
+		contextParams.put("DEVICE_REFRESH_TOKEN", refreshToken);
 
-        ZipArchive zipFile;
-        try {
-            zipFile = IotDeviceManagementUtil.getSketchArchive(archivesPath, templateSketchPath, contextParams);
-        } catch (IOException e) {
-            throw new DeviceManagementException("Zip File Creation Failed", e);
-        }
+		ZipArchive zipFile;
+		try {
+			zipFile = IotDeviceManagementUtil.getSketchArchive(archivesPath, templateSketchPath, contextParams);
+		} catch (IOException e) {
+			throw new DeviceManagementException("Zip File Creation Failed", e);
+		}
 
-        return zipFile;
-    }
+		return zipFile;
+	}
 }

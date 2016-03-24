@@ -21,23 +21,27 @@ package org.wso2.carbon.device.mgt.iot.raspberrypi.manager.service.impl;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.apimgt.annotations.device.DeviceType;
-import org.wso2.carbon.apimgt.webapp.publisher.KeyGenerationUtil;
+import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
+import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
+import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
-import org.wso2.carbon.device.mgt.iot.DeviceManagement;
-import org.wso2.carbon.device.mgt.iot.apimgt.AccessTokenInfo;
-import org.wso2.carbon.device.mgt.iot.apimgt.TokenClient;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
-import org.wso2.carbon.device.mgt.iot.exception.AccessTokenException;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.manager.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
+import org.wso2.carbon.device.mgt.jwt.client.extension.JWTClient;
+import org.wso2.carbon.device.mgt.jwt.client.extension.JWTClientManager;
+import org.wso2.carbon.device.mgt.jwt.client.extension.dto.AccessTokenInfo;
+import org.wso2.carbon.device.mgt.jwt.client.extension.exception.JWTClientException;
+import org.wso2.carbon.user.api.UserStoreException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
@@ -59,44 +63,28 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
-@DeviceType(value = "raspberrypi")
 public class RaspberryPiManagerService {
 
     private static Log log = LogFactory.getLog(RaspberryPiManagerService.class);
 
-    //TODO; replace this tenant domain
-    private static final String SUPER_TENANT = "carbon.super";
-
     @Context  //injected response proxy supporting multiple thread
     private HttpServletResponse response;
+    private static final String KEY_TYPE = "PRODUCTION";
+    private static ApiApplicationKey apiApplicationKey;
 
-    public static final String HTTP_PROTOCOL = "HTTP";
-    public static final String MQTT_PROTOCOL = "MQTT";
-
-    private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
-
-    /*	---------------------------------------------------------------------------------------
-                                Device management specific APIs
-                     Also contains utility methods required for the execution of these APIs
-        ---------------------------------------------------------------------------------------	*/
     @Path("manager/device/register")
-    @PUT
+    @POST
     public boolean register(@QueryParam("deviceId") String deviceId,
-                            @QueryParam("name") String name, @QueryParam("owner") String owner) {
-
-        DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
-
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(RaspberrypiConstants.DEVICE_TYPE);
+                            @QueryParam("name") String name) {
         try {
-            if (deviceManagement.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
+            DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+            deviceIdentifier.setId(deviceId);
+            deviceIdentifier.setType(RaspberrypiConstants.DEVICE_TYPE);
+            if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
                 response.setStatus(Response.Status.CONFLICT.getStatusCode());
                 return false;
             }
-
             Device device = new Device();
             device.setDeviceIdentifier(deviceId);
             EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
@@ -105,34 +93,32 @@ public class RaspberryPiManagerService {
             enrolmentInfo.setStatus(EnrolmentInfo.Status.ACTIVE);
             device.setName(name);
             device.setType(RaspberrypiConstants.DEVICE_TYPE);
-            enrolmentInfo.setOwner(owner);
+            enrolmentInfo.setOwner(APIUtil.getAuthenticatedUser());
             device.setEnrolmentInfo(enrolmentInfo);
-            boolean added = deviceManagement.getDeviceManagementService().enrollDevice(device);
+            boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
             if (added) {
                 response.setStatus(Response.Status.OK.getStatusCode());
             } else {
                 response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
             }
-
             return added;
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return false;
         } finally {
-            deviceManagement.endTenantFlow();
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
-    @Path("manager/device/remove/{device_id}")
+    @Path("manager/device/{device_id}")
     @DELETE
     public void removeDevice(@PathParam("device_id") String deviceId,
                              @Context HttpServletResponse response) {
-        DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(RaspberrypiConstants.DEVICE_TYPE);
         try {
-            boolean removed = deviceManagement.getDeviceManagementService().disenrollDevice(
+            DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+            deviceIdentifier.setId(deviceId);
+            deviceIdentifier.setType(RaspberrypiConstants.DEVICE_TYPE);
+            boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(
                     deviceIdentifier);
             if (removed) {
                 response.setStatus(Response.Status.OK.getStatusCode());
@@ -142,36 +128,27 @@ public class RaspberryPiManagerService {
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         } finally {
-            deviceManagement.endTenantFlow();
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
-    @Path("manager/device/update/{device_id}")
-    @POST
+    @Path("manager/device/{device_id}")
+    @PUT
     public boolean updateDevice(@PathParam("device_id") String deviceId,
                                 @QueryParam("name") String name,
                                 @Context HttpServletResponse response) {
-
-        DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
-
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(RaspberrypiConstants.DEVICE_TYPE);
         try {
-            Device device = deviceManagement.getDeviceManagementService().getDevice(deviceIdentifier);
+            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
             device.setDeviceIdentifier(deviceId);
-
-            // device.setDeviceTypeId(deviceTypeId);
             device.getEnrolmentInfo().setDateOfLastUpdate(new Date().getTime());
-
             device.setName(name);
             device.setType(RaspberrypiConstants.DEVICE_TYPE);
-
-            boolean updated = deviceManagement.getDeviceManagementService().modifyEnrollment(device);
-
+            boolean updated = APIUtil.getDeviceManagementService().modifyEnrollment(device);
             if (updated) {
                 response.setStatus(Response.Status.OK.getStatusCode());
-
             } else {
                 response.setStatus(Response.Status.NOT_ACCEPTABLE.getStatusCode());
             }
@@ -180,9 +157,8 @@ public class RaspberryPiManagerService {
             log.error(e.getErrorMessage());
             return false;
         } finally {
-            deviceManagement.endTenantFlow();
+            PrivilegedCarbonContext.endTenantFlow();
         }
-
     }
 
     @Path("manager/device/{device_id}")
@@ -190,33 +166,27 @@ public class RaspberryPiManagerService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Device getDevice(@PathParam("device_id") String deviceId) {
-
-        DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(RaspberrypiConstants.DEVICE_TYPE);
-
         try {
-            return deviceManagement.getDeviceManagementService().getDevice(deviceIdentifier);
+            return APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
         } catch (DeviceManagementException ex) {
             log.error("Error occurred while retrieving device with Id " + deviceId + "\n" + ex);
             return null;
         } finally {
-            deviceManagement.endTenantFlow();
+            PrivilegedCarbonContext.endTenantFlow();
         }
-
     }
 
-    @Path("manager/devices/{username}")
+    @Path("manager/devices")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Device[] getRaspberrypiDevices(@PathParam("username") String username) {
-
-        DeviceManagement deviceManagement = new DeviceManagement(SUPER_TENANT);
-
+    public Device[] getRaspberrypiDevices() {
         try {
-            List<Device> userDevices = deviceManagement.getDeviceManagementService().getDevicesOfUser(username);
+            List<Device> userDevices = APIUtil.getDeviceManagementService().getDevicesOfUser(
+                    APIUtil.getAuthenticatedUser());
             ArrayList<Device> usersRaspberrypiDevices = new ArrayList<>();
             for (Device device : userDevices) {
                 if (device.getType().equals(RaspberrypiConstants.DEVICE_TYPE) &&
@@ -230,113 +200,116 @@ public class RaspberryPiManagerService {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return null;
         } finally {
-            deviceManagement.endTenantFlow();
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
     @Path("manager/device/{sketch_type}/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response downloadSketch(@QueryParam("owner") String owner,
-                                   @QueryParam("deviceName") String deviceName,
-                                   @PathParam("sketch_type") String
+    public Response downloadSketch(@QueryParam("deviceName") String deviceName, @PathParam("sketch_type") String
                                            sketchType) {
-
         try {
-            ZipArchive zipFile = createDownloadFile(owner, deviceName, sketchType);
+            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
             Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
             response.type("application/zip");
             response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
             return response.build();
-
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
         } catch (DeviceManagementException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
-        } catch (AccessTokenException ex) {
+        } catch (JWTClientException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (DeviceControllerException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (IOException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
+        } catch (APIManagerException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (UserStoreException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
 
     @Path("manager/device/{sketch_type}/generate_link")
     @GET
-    public Response generateSketchLink(@QueryParam("owner") String owner,
-                                       @QueryParam("deviceName") String deviceName,
+    public Response generateSketchLink(@QueryParam("deviceName") String deviceName,
                                        @PathParam("sketch_type") String sketchType) {
 
         try {
-            ZipArchive zipFile = createDownloadFile(owner, deviceName, sketchType);
+            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
             Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
             return rb.build();
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
         } catch (DeviceManagementException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
-        } catch (AccessTokenException ex) {
+        } catch (JWTClientException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (DeviceControllerException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
+        } catch (APIManagerException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (UserStoreException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
 
     private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
-            throws DeviceManagementException, AccessTokenException, DeviceControllerException {
-        if (owner == null) {
-            throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
-        }
-
+            throws DeviceManagementException, JWTClientException, APIManagerException, DeviceControllerException,
+                   UserStoreException {
         //create new device id
         String deviceId = shortUUID();
-
-        KeyGenerationUtil.createApplicationKeys("raspberry");
-
-        TokenClient accessTokenClient = new TokenClient(RaspberrypiConstants.DEVICE_TYPE);
-        AccessTokenInfo accessTokenInfo = accessTokenClient.getAccessToken(owner, deviceId);
-
+        if (apiApplicationKey == null) {
+            String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
+                    .getAdminUserName();
+            APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
+            String[] tags = {RaspberrypiConstants.DEVICE_TYPE};
+            apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
+                    RaspberrypiConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
+        }
+        JWTClient jwtClient = JWTClientManager.getInstance().getJWTClient();
+        String scopes = "device_type_" + RaspberrypiConstants.DEVICE_TYPE + " device_" + deviceId;
+        AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
+                                                                   apiApplicationKey.getConsumerSecret(), owner, scopes);
         //create token
         String accessToken = accessTokenInfo.getAccess_token();
         String refreshToken = accessTokenInfo.getRefresh_token();
         //adding registering data
-
         XmppAccount newXmppAccount = new XmppAccount();
         newXmppAccount.setAccountName(owner + "_" + deviceId);
         newXmppAccount.setUsername(deviceId);
         newXmppAccount.setPassword(accessToken);
         newXmppAccount.setEmail(deviceId + "@wso2.com");
-
         XmppServerClient xmppServerClient = new XmppServerClient();
         xmppServerClient.initControlQueue();
         boolean status;
-
         if (XmppConfig.getInstance().isEnabled()) {
             status = xmppServerClient.createXMPPAccount(newXmppAccount);
             if (!status) {
-                String msg =
-                        "XMPP Account was not created for device - " + deviceId + " of owner - " + owner +
+                String msg = "XMPP Account was not created for device - " + deviceId + " of owner - " + owner +
                                 ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot.common.config" +
                                 ".server.configs";
                 log.warn(msg);
                 throw new DeviceManagementException(msg);
             }
         }
-
         //Register the device with CDMF
-        status = register(deviceId, deviceName, owner);
-
+        status = register(deviceId, deviceName);
         if (!status) {
             String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;
             throw new DeviceManagementException(msg);
         }
-
         ZipUtil ziputil = new ZipUtil();
-        ZipArchive zipFile = ziputil.createZipFile(owner, SUPER_TENANT, sketchType, deviceId, deviceName, accessToken,
-                                                   refreshToken);
+        ZipArchive zipFile = ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(), sketchType,
+                                                   deviceId, deviceName, accessToken, refreshToken);
         zipFile.setDeviceId(deviceId);
         return zipFile;
     }

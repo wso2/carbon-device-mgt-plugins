@@ -20,18 +20,18 @@ package org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceDAO;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactoryInterface;
+import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.exception.DigitalDisplayDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.constants.DigitalDisplayConstants;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.impl.dao.impl.DigitalDisplayDeviceDAOImpl;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class DigitalDisplayDAO extends IotDeviceManagementDAOFactory
-        implements IotDeviceManagementDAOFactoryInterface {
+public class DigitalDisplayDAO {
 
     private static final Log log = LogFactory.getLog(DigitalDisplayDAO.class);
     static DataSource dataSource;           // package local variable
@@ -41,38 +41,42 @@ public class DigitalDisplayDAO extends IotDeviceManagementDAOFactory
         initDigitalDisplayDAO();
     }
 
-    @Override
-    public IotDeviceDAO getIotDeviceDAO() {
+    public DigitalDisplayDeviceDAOImpl getDeviceDAO() {
         return new DigitalDisplayDeviceDAOImpl();
     }
 
     public static void initDigitalDisplayDAO(){
-        dataSource = getDataSourceMap().get(DigitalDisplayConstants.DEVICE_TYPE);
+        try {
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup(DigitalDisplayConstants.DATA_SOURCE_NAME);
+        } catch (NamingException e) {
+            log.error("Error while looking up the data source: " + DigitalDisplayConstants.DATA_SOURCE_NAME);
+        }
     }
 
-    public static void beginTransaction() throws IotDeviceManagementDAOException {
+    public static void beginTransaction() throws DigitalDisplayDeviceMgtPluginException {
         try {
             Connection conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             currentConnection.set(conn);
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while retrieving datasource connection", e);
+            throw new DigitalDisplayDeviceMgtPluginException("Error occurred while retrieving datasource connection", e);
         }
     }
 
-    public static Connection getConnection() throws IotDeviceManagementDAOException {
+    public static Connection getConnection() throws DigitalDisplayDeviceMgtPluginException {
         if (currentConnection.get() == null) {
             try {
                 currentConnection.set(dataSource.getConnection());
             } catch (SQLException e) {
-                throw new IotDeviceManagementDAOException("Error occurred while retrieving data source connection",
+                throw new DigitalDisplayDeviceMgtPluginException("Error occurred while retrieving data source connection",
                         e);
             }
         }
         return currentConnection.get();
     }
 
-    public static void commitTransaction() throws IotDeviceManagementDAOException {
+    public static void commitTransaction() throws DigitalDisplayDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -84,14 +88,13 @@ public class DigitalDisplayDAO extends IotDeviceManagementDAOFactory
                 }
             }
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while committing the transaction", e);
+            throw new DigitalDisplayDeviceMgtPluginException("Error occurred while committing the transaction", e);
         } finally {
             closeConnection();
         }
     }
 
-    public static void closeConnection() throws IotDeviceManagementDAOException {
-
+    public static void closeConnection() throws DigitalDisplayDeviceMgtPluginException {
 		Connection con = currentConnection.get();
 		if(con != null){
 			try {
@@ -103,7 +106,7 @@ public class DigitalDisplayDAO extends IotDeviceManagementDAOFactory
         currentConnection.remove();
     }
 
-    public static void rollbackTransaction() throws IotDeviceManagementDAOException {
+    public static void rollbackTransaction() throws DigitalDisplayDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -115,7 +118,7 @@ public class DigitalDisplayDAO extends IotDeviceManagementDAOFactory
                 }
             }
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while rollback the transaction", e);
+            throw new DigitalDisplayDeviceMgtPluginException("Error occurred while rollback the transaction", e);
         } finally {
             closeConnection();
         }

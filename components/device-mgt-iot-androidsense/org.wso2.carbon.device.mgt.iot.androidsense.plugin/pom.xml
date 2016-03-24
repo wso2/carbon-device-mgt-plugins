@@ -57,21 +57,22 @@
                             org.osgi.framework,
                             org.osgi.service.component,
                             org.apache.commons.logging,
-                            javax.xml.bind.*,
-                            javax.naming,
-                            javax.sql,
-                            javax.xml.bind.annotation.*,
-                            javax.xml.parsers,
-                            javax.net,
-                            javax.net.ssl,
-                            org.w3c.dom,
+                            javax.xml.bind.*;resolution:=optional,
+                            javax.naming;resolution:=optional,
+                            javax.sql;resolution:=optional,
+                            javax.xml.bind.annotation.*;resolution:=optional,
+                            javax.xml.parsers;resolution:=optional,
+                            javax.net;resolution:=optional,
+                            javax.net.ssl;resolution:=optional,
+                            org.w3c.dom;resolution:=optional,
                             org.wso2.carbon.device.mgt.common.*,
                             org.wso2.carbon.device.mgt.common,
                             org.wso2.carbon.context.*,
                             org.wso2.carbon.ndatasource.core,
                             org.wso2.carbon.device.mgt.iot.*,
+							org.wso2.carbon.device.mgt.extensions.feature.mgt.*,
+							org.wso2.carbon.utils.*
 						</Import-Package>
-
 						<Export-Package>
 							!org.wso2.carbon.device.mgt.iot.androidsense.plugin.internal,
 							org.wso2.carbon.device.mgt.iot.androidsense.plugin.*
@@ -91,27 +92,25 @@
 			<groupId>org.eclipse.osgi</groupId>
 			<artifactId>org.eclipse.osgi.services</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.logging</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt</groupId>
 			<artifactId>org.wso2.carbon.device.mgt.common</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.wso2.carbon.devicemgt</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.extensions</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.ndatasource.core</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot</artifactId>
+			<groupId>org.wso2.carbon</groupId>
+			<artifactId>org.wso2.carbon.utils</artifactId>
 		</dependency>
 	</dependencies>
-
-
-
 </project>

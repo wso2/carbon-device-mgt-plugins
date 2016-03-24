@@ -34,5 +34,6 @@ public class ArduinoConstants {
     public static final String SENSOR_TEMPERATURE = "temperature";
     //sensor events summerized table name
     public static final String TEMPERATURE_EVENT_TABLE = "DEVICE_TEMPERATURE_SUMMARY";
+    public static final String DATA_SOURCE_NAME = "jdbc/ArduinoDM_DB";
 
 }

@@ -211,21 +211,17 @@ public class RaspberrypiServiceUtils {
         return completeResponse.toString();
     }
 
-    public static boolean publishToDAS(String owner, String deviceId, float temperature) {
-        PrivilegedCarbonContext.startTenantFlow();
+    public static boolean publishToDAS(String deviceId, float temperature) {
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        ctx.setTenantDomain(SUPER_TENANT, true);
         DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx.getOSGiService(
                 DeviceAnalyticsService.class, null);
+        String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
         Object metdaData[] = {owner, RaspberrypiConstants.DEVICE_TYPE, deviceId, System.currentTimeMillis()};
         Object payloadData[] = {temperature};
-
         try {
             deviceAnalyticsService.publishEvent(TEMPERATURE_STREAM_DEFINITION, "1.0.0", metdaData, new Object[0], payloadData);
         } catch (DataPublisherConfigurationException e) {
             return false;
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
         }
         return true;
     }

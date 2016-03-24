@@ -31,9 +31,14 @@ import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.exception.DataPublisherConfigurationException;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
+import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl.exception.VirtualFireAlarmException;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.ws.rs.HttpMethod;
 import java.io.BufferedReader;
@@ -56,8 +61,6 @@ import java.util.concurrent.Future;
 public class VirtualFireAlarmServiceUtils {
     private static final Log log = LogFactory.getLog(VirtualFireAlarmServiceUtils.class);
 
-    //TODO; replace this tenant domain
-    private static final String SUPER_TENANT = "carbon.super";
     private static final String TEMPERATURE_STREAM_DEFINITION = "org.wso2.iot.devices.temperature";
     private static final String JSON_MESSAGE_KEY = "Msg";
     private static final String JSON_SIGNATURE_KEY = "Sig";
@@ -241,32 +244,25 @@ public class VirtualFireAlarmServiceUtils {
         return completeResponse.toString();
     }
 
-    /**
-     *
-     * @param owner
-     * @param deviceId
-     * @param temperature
-     * @return
-     */
-    public static boolean publishToDAS(String owner, String deviceId, float temperature) {
-        PrivilegedCarbonContext.startTenantFlow();
+    public static boolean publishToDAS(String deviceId, float temperature) {
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        ctx.setTenantDomain(SUPER_TENANT, true);
         DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx.getOSGiService(
                 DeviceAnalyticsService.class, null);
-        Object metdaData[] = {owner, VirtualFireAlarmConstants.DEVICE_TYPE, deviceId,
-                System.currentTimeMillis()};
-        Object payloadData[] = {temperature};
-
-        try {
-            deviceAnalyticsService.publishEvent(TEMPERATURE_STREAM_DEFINITION, "1.0.0", metdaData,
-                                                new Object[0], payloadData);
-        } catch (DataPublisherConfigurationException e) {
-            return false;
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
+        if (deviceAnalyticsService != null) {
+            String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+            Object metdaData[] = {owner, VirtualFireAlarmConstants.DEVICE_TYPE, deviceId, System.currentTimeMillis()};
+            Object payloadData[] = {temperature};
+            try {
+                deviceAnalyticsService.publishEvent(TEMPERATURE_STREAM_DEFINITION, "1.0.0", metdaData, new Object[0],
+                                                    payloadData);
+            } catch (DataPublisherConfigurationException e) {
+                return false;
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**

@@ -54,11 +54,6 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
     }
 
     @Override
-    public String[] getSharedTenantsDomain() {
-        return new String[0];
-    }
-
-    @Override
     public void init() throws DeviceManagementException {
         this.deviceManager = new AndroidDeviceManager();
     }
