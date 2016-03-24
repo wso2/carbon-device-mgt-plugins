@@ -20,20 +20,17 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceDAO;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao
-        .IotDeviceManagementDAOFactoryInterface;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao.impl.VirtualFireAlarmDeviceDAOImpl;
-
-
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class VirtualFireAlarmDAO extends IotDeviceManagementDAOFactory implements IotDeviceManagementDAOFactoryInterface {
+public class VirtualFireAlarmDAO {
 
     private static final Log log = LogFactory.getLog(VirtualFireAlarmDAO.class);
     static DataSource dataSource;
@@ -44,35 +41,40 @@ public class VirtualFireAlarmDAO extends IotDeviceManagementDAOFactory implement
     }
 
     public static void initFireAlarmDAO() {
-        dataSource = getDataSourceMap().get(VirtualFireAlarmConstants.DEVICE_TYPE);
+        try {
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup(VirtualFireAlarmConstants.DATA_SOURCE_NAME);
+        } catch (NamingException e) {
+            log.error("Error while looking up the data source: " + VirtualFireAlarmConstants.DATA_SOURCE_NAME);
+        }
     }
 
-    @Override public IotDeviceDAO getIotDeviceDAO() {
+    public VirtualFireAlarmDeviceDAOImpl getDeviceDAO() {
         return new VirtualFireAlarmDeviceDAOImpl();
     }
 
-    public static void beginTransaction() throws IotDeviceManagementDAOException {
+    public static void beginTransaction() throws VirtualFirealarmDeviceMgtPluginException {
         try {
             Connection conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             currentConnection.set(conn);
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while retrieving datasource connection", e);
+            throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while retrieving datasource connection", e);
         }
     }
 
-    public static Connection getConnection() throws IotDeviceManagementDAOException {
+    public static Connection getConnection() throws VirtualFirealarmDeviceMgtPluginException {
         if (currentConnection.get() == null) {
             try {
                 currentConnection.set(dataSource.getConnection());
             } catch (SQLException e) {
-                throw new IotDeviceManagementDAOException("Error occurred while retrieving data source connection", e);
+                throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while retrieving data source connection", e);
             }
         }
         return currentConnection.get();
     }
 
-    public static void commitTransaction() throws IotDeviceManagementDAOException {
+    public static void commitTransaction() throws VirtualFirealarmDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -84,13 +86,13 @@ public class VirtualFireAlarmDAO extends IotDeviceManagementDAOFactory implement
                 }
             }
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while committing the transaction", e);
+            throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while committing the transaction", e);
         } finally {
             closeConnection();
         }
     }
 
-    public static void closeConnection() throws IotDeviceManagementDAOException {
+    public static void closeConnection() throws VirtualFirealarmDeviceMgtPluginException {
 
         Connection con = currentConnection.get();
         if (con != null) {
@@ -103,7 +105,7 @@ public class VirtualFireAlarmDAO extends IotDeviceManagementDAOFactory implement
         currentConnection.remove();
     }
 
-    public static void rollbackTransaction() throws IotDeviceManagementDAOException {
+    public static void rollbackTransaction() throws VirtualFirealarmDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -115,7 +117,7 @@ public class VirtualFireAlarmDAO extends IotDeviceManagementDAOFactory implement
                 }
             }
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while rollback the transaction", e);
+            throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while rollback the transaction", e);
         } finally {
             closeConnection();
         }

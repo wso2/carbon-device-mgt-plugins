@@ -203,7 +203,6 @@
             <groupId>commons-codec.wso2</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.igniterealtime.smack.wso2</groupId>
             <artifactId>smack</artifactId>
@@ -214,18 +213,16 @@
             <artifactId>smackx</artifactId>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
-            <artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
+            <artifactId>org.wso2.carbon.device.mgt.jwt.client.extension</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
-            <artifactId>org.wso2.carbon.apimgt.webapp.publisher</artifactId>
+            <artifactId>org.wso2.carbon.apimgt.application.extension</artifactId>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <build>

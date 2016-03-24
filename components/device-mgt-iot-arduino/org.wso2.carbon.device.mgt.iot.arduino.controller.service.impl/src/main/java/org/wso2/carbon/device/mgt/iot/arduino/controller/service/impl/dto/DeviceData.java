@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceData {
-    @XmlElement(required = true) public String owner;
     @XmlElement(required = true) public String deviceId;
     @XmlElement(required = true) public String reply;
     @XmlElement public Long time;

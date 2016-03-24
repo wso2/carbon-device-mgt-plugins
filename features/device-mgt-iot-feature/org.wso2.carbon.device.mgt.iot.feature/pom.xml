@@ -39,18 +39,15 @@
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
 			<artifactId>org.wso2.carbon.device.mgt.iot</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
 			<artifactId>org.wso2.carbon.device.mgt.iot.api</artifactId>
 			<type>war</type>
 		</dependency>
-
 		<dependency>
 			<groupId>org.json.wso2</groupId>
 			<artifactId>json</artifactId>
 		</dependency>
-
 		<!--Dependencies on XMPP Client Library-->
 		<dependency>
 			<groupId>org.igniterealtime.smack.wso2</groupId>
@@ -60,13 +57,11 @@
 			<groupId>org.igniterealtime.smack.wso2</groupId>
 			<artifactId>smackx</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>net.sf.ehcache.wso2</groupId>
 			<artifactId>ehcache</artifactId>
 			<version>1.5.0.wso2v3</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -146,6 +141,7 @@
 			<plugin>
 				<groupId>org.wso2.maven</groupId>
 				<artifactId>carbon-p2-plugin</artifactId>
+				<version>${carbon.p2.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>p2-feature-generation</id>
@@ -177,9 +173,6 @@
 								</bundleDef>
 								<bundleDef>
 									org.igniterealtime.smack.wso2:smackx:${smackx.wso2.version}
-								</bundleDef>
-								<bundleDef>
-									net.sf.ehcache.wso2:ehcache
 								</bundleDef>
 							</bundles>
 							<importFeatures>

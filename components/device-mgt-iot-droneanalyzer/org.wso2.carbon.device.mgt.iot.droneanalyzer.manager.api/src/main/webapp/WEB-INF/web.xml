@@ -25,7 +25,7 @@
 	</context-param>
 	<context-param>
 		<param-name>doAuthentication</param-name>
-		<param-value>false</param-value>
+		<param-value>true</param-value>
 	</context-param>
 
 	<!--publish to apim-->
@@ -49,9 +49,6 @@
 		<param-name>managed-api-isSecured</param-name>
 		<param-value>true</param-value>
 	</context-param>
-
-
-
 	<!-- Below configuration is used to redirect http requests to https -->
 	<!--<security-constraint>-->
 	<!--<web-resource-collection>-->
@@ -62,6 +59,4 @@
 	<!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
 	<!--</user-data-constraint>-->
 	<!--</security-constraint>-->
-
-
 </web-app>

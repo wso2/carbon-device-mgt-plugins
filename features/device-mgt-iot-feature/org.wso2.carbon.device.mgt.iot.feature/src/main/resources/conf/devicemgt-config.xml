@@ -1,31 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DeviceManagementConfigurations>
-    <DMServerInfo>
-        <Name>WSO2IoTServer</Name>
-        <Domain>wso2.iotserver.com</Domain>
-    </DMServerInfo>
-    <DataStores>
-        <DataStore>
-            <Name>WSO2-BAM</Name>
-            <Enabled>false</Enabled>
-            <PublisherClass>org.wso2.carbon.device.mgt.iot.datastore.impl.ThriftDataStoreConnector</PublisherClass>
-            <ServerURL>tcp://localhost</ServerURL>
-            <Port>7611</Port>
-            <Username>admin</Username>
-            <Password>admin</Password>
-        </DataStore>
-
-        <DataStore>
-            <Name>WSO2-CEP</Name>
-            <Enabled>false</Enabled>
-            <PublisherClass>org.wso2.carbon.device.mgt.iot.datastore.impl.ThriftDataStoreConnector</PublisherClass>
-            <ServerURL>tcp://localhost</ServerURL>
-            <Port>7611</Port>
-            <Username>admin</Username>
-            <Password>admin</Password>
-        </DataStore>
-    </DataStores>
-
     <ControlQueues>
         <ControlQueue>
             <Name>MQTT</Name>
@@ -50,29 +24,4 @@
             <Password>wso2iot123</Password>
         </ControlQueue>
     </ControlQueues>
-
-    <Security>
-        <ClientTrustStore>client-truststore.jks</ClientTrustStore>
-        <Password>wso2carbon</Password>
-    </Security>
-
-    <ApiManager>
-        <Enabled>true</Enabled>
-        <AccessTokenURL>https://localhost:9443/oauth2/token</AccessTokenURL>
-        <ServerURL>https://localhost</ServerURL>
-        <ServerPort>9443</ServerPort>
-        <GatewayPort>8243</GatewayPort>
-        <LoginURL>/api-store/site/blocks/user/login/ajax/login.jag</LoginURL>
-        <SubscriptionListURL>/api-store/site/blocks/subscription/subscription-list/ajax/subscription-list.jag</SubscriptionListURL>
-        <Username>admin</Username>
-        <Password>admin</Password>
-        <DeviceGrantType>devicecloud</DeviceGrantType>
-        <DeviceScopes>PRODUCTION DEVICE</DeviceScopes>
-    </ApiManager>
-
-    <DeviceUserValidator>
-        <CacheSize>1000</CacheSize>
-        <TTL>600</TTL>
-    </DeviceUserValidator>
-
 </DeviceManagementConfigurations>

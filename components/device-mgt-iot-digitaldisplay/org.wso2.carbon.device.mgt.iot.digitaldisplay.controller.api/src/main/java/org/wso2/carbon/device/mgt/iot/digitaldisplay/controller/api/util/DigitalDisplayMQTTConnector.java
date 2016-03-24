@@ -24,7 +24,7 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
     private static Log log = LogFactory.getLog(DigitalDisplayMQTTConnector.class);
     private static final String MQTT_TOPIC_APPENDER = "wso2/iot";
     private static final String subscribeTopic =
-            MQTT_TOPIC_APPENDER + "/+/" + DigitalDisplayConstants.DEVICE_TYPE + "/+/digital_display_publisher";
+            MQTT_TOPIC_APPENDER + "/" + DigitalDisplayConstants.DEVICE_TYPE + "/+/digital_display_publisher";
 
     private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 

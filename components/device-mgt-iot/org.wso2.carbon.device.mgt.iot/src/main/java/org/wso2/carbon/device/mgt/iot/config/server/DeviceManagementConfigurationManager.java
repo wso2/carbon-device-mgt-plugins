@@ -22,13 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.ControlQueue;
-import org.wso2.carbon.device.mgt.iot.config.server.datasource.DataStore;
 import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceManagementConfiguration;
-import org.wso2.carbon.device.mgt.iot.config.server.datasource.DeviceMgtServerInfo;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
+import org.wso2.carbon.device.mgt.iot.util.IotDeviceManagementUtil;
 import org.wso2.carbon.utils.CarbonUtils;
-
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -88,54 +85,31 @@ public class DeviceManagementConfigurationManager {
         return currentDeviceManagementConfiguration;
     }
 
-    public DataStore getDataStore(String name) {
-        List<DataStore> dataStores = currentDeviceManagementConfiguration.getDataStores().getDataStore();
-        if (dataStores != null) {
-            for (DataStore dataStore : dataStores) {
-                if (dataStore.getName().equals(name)) {
-                    return dataStore;
-
-                }
-            }
-        }
-        return null;
-    }
-
     public ControlQueue getControlQueue(String name) {
         List<ControlQueue> controlQueues = currentDeviceManagementConfiguration.getControlQueues().getControlQueue();
         if (controlQueues != null) {
             for (ControlQueue controlQueue : controlQueues) {
                 if (controlQueue.getName().equals(name)) {
                     return controlQueue;
-
                 }
             }
         }
         return null;
     }
 
-    public DeviceMgtServerInfo getDeviceManagementServerInfo() {
-        DeviceMgtServerInfo deviceMgtServerInfo = currentDeviceManagementConfiguration.getDmServerInfo();
-        if (deviceMgtServerInfo != null) {
-            return deviceMgtServerInfo;
-        }
-        return null;
-    }
-
     private class IotConfigValidationEventHandler implements ValidationEventHandler {
-
         @Override
         public boolean handleEvent(ValidationEvent event) {
             String error = "\nEVENT" + "\nSEVERITY:  " + event.getSeverity()
-                           + "\nMESSAGE:  " + event.getMessage()
-                           + "\nLINKED EXCEPTION:  " + event.getLinkedException()
-                           + "\nLOCATOR"
-                           + "\n    LINE NUMBER:  " + event.getLocator().getLineNumber()
-                           + "\n    COLUMN NUMBER:  " + event.getLocator().getColumnNumber()
-                           + "\n    OFFSET:  " + event.getLocator().getOffset()
-                           + "\n    OBJECT:  " + event.getLocator().getObject()
-                           + "\n    NODE:  " + event.getLocator().getNode()
-                           + "\n    URL:  " + event.getLocator().getURL();
+                    + "\n   MESSAGE:  " + event.getMessage()
+                    + "\n   LINKED EXCEPTION:  " + event.getLinkedException()
+                    + "\n   LOCATOR"
+                    + "\n   LINE NUMBER:  " + event.getLocator().getLineNumber()
+                    + "\n   COLUMN NUMBER:  " + event.getLocator().getColumnNumber()
+                    + "\n   OFFSET:  " + event.getLocator().getOffset()
+                    + "\n   OBJECT:  " + event.getLocator().getObject()
+                    + "\n   NODE:  " + event.getLocator().getNode()
+                    + "\n   URL:  " + event.getLocator().getURL();
             log.error(error);
             return true;
         }

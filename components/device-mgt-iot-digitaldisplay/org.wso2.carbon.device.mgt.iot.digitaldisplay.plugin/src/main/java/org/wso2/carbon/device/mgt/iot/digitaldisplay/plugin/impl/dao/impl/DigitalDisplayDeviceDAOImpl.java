@@ -20,219 +20,175 @@ package org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.impl.dao.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.constants.DigitalDisplayConstants;
+import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.exception.DigitalDisplayDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.impl.dao.DigitalDisplayDAO;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceDAO;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.util.IotDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dto.IotDevice;
-
+import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.impl.util.DigitalDisplayUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Implements IotDeviceDAO for digital display Devices.
+ * Implements CRUD for digital display Devices.
  */
-public class DigitalDisplayDeviceDAOImpl implements IotDeviceDAO {
-	
+public class DigitalDisplayDeviceDAOImpl  {
+	private static final Log log = LogFactory.getLog(DigitalDisplayDeviceDAOImpl.class);
 
-	    private static final Log log = LogFactory.getLog(DigitalDisplayDeviceDAOImpl.class);
-
-	    @Override
-	    public IotDevice getIotDevice(String iotDeviceId)
-	            throws IotDeviceManagementDAOException {
-	        Connection conn = null;
-	        PreparedStatement stmt = null;
-	        IotDevice iotDevice = null;
-	        ResultSet resultSet = null;
-	        try {
-	            conn = DigitalDisplayDAO.getConnection();
-	            String selectDBQuery =
-						"SELECT DIGITAL_DISPLAY_DEVICE_ID, DEVICE_NAME" +
-						" FROM DIGITAL_DISPLAY_DEVICE WHERE DIGITAL_DISPLAY_DEVICE_ID = ?";
-	            stmt = conn.prepareStatement(selectDBQuery);
-	            stmt.setString(1, iotDeviceId);
-	            resultSet = stmt.executeQuery();
-
-	            if (resultSet.next()) {
-					iotDevice = new IotDevice();
-					iotDevice.setIotDeviceName(resultSet.getString(
-							DigitalDisplayConstants.DEVICE_PLUGIN_DEVICE_NAME));
-					Map<String, String> propertyMap = new HashMap<String, String>();
-					
-
-
-					iotDevice.setDeviceProperties(propertyMap);
-
-					if (log.isDebugEnabled()) {
-						log.debug("Digital Display device " + iotDeviceId + " data has been fetched from " +
-						          "Digital Display database.");
-					}
+	public Device getDevice(String iotDeviceId) throws DigitalDisplayDeviceMgtPluginException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		Device device = null;
+		ResultSet resultSet = null;
+		try {
+			conn = DigitalDisplayDAO.getConnection();
+			String selectDBQuery =
+					"SELECT DIGITAL_DISPLAY_DEVICE_ID, DEVICE_NAME" +
+					" FROM DIGITAL_DISPLAY_DEVICE WHERE DIGITAL_DISPLAY_DEVICE_ID = ?";
+			stmt = conn.prepareStatement(selectDBQuery);
+			stmt.setString(1, iotDeviceId);
+			resultSet = stmt.executeQuery();
+			if (resultSet.next()) {
+				device = new Device();
+				device.setName(resultSet.getString(
+						DigitalDisplayConstants.DEVICE_PLUGIN_DEVICE_NAME));
+				if (log.isDebugEnabled()) {
+					log.debug("Digital Display device " + iotDeviceId + " data has been fetched from " +
+							  "Digital Display database.");
 				}
-	        } catch (SQLException e) {
-	            String msg = "Error occurred while fetching Digital Display device : '" + iotDeviceId + "'";
-	            log.error(msg, e);
-	            throw new IotDeviceManagementDAOException(msg, e);
-	        } finally {
-	            IotDeviceManagementDAOUtil.cleanupResources(stmt, resultSet);
-				DigitalDisplayDAO.closeConnection();
-	        }
-
-	        return iotDevice;
-	    }
-
-	    @Override
-	    public boolean addIotDevice(IotDevice iotDevice)
-	            throws IotDeviceManagementDAOException {
-	        boolean status = false;
-	        Connection conn = null;
-	        PreparedStatement stmt = null;
-	        try {
-	            conn = DigitalDisplayDAO.getConnection();
-	            String createDBQuery =
-						"INSERT INTO DIGITAL_DISPLAY_DEVICE(DIGITAL_DISPLAY_DEVICE_ID, DEVICE_NAME) VALUES (?, ?)";
-
-	            stmt = conn.prepareStatement(createDBQuery);
-				stmt.setString(1, iotDevice.getIotDeviceId());
-				stmt.setString(2,iotDevice.getIotDeviceName());
-				if (iotDevice.getDeviceProperties() == null) {
-					iotDevice.setDeviceProperties(new HashMap<String, String>());
-				}
-			
-				
-				int rows = stmt.executeUpdate();
-				if (rows > 0) {
-					status = true;
-					if (log.isDebugEnabled()) {
-						log.debug("Digital Display device " + iotDevice.getIotDeviceId() + " data has been" +
-						          " added to the Digital Display database.");
-					}
-				}
-	        } catch (SQLException e) {
-	            String msg = "Error occurred while adding the Digital Display device '" +
-	                         iotDevice.getIotDeviceId() + "' to the Digital Display db.";
-	            log.error(msg, e);
-	            throw new IotDeviceManagementDAOException(msg, e);
-	        } finally {
-	            IotDeviceManagementDAOUtil.cleanupResources(stmt, null);
-	        }
-	        return status;
-	    }
-
-	    @Override
-	    public boolean updateIotDevice(IotDevice iotDevice)
-	            throws IotDeviceManagementDAOException {
-	        boolean status = false;
-	        Connection conn = null;
-	        PreparedStatement stmt = null;
-	        try {
-	            conn = DigitalDisplayDAO.getConnection();
-	            String updateDBQuery =
-						"UPDATE DIGITAL_DISPLAY_DEVICE SET  DEVICE_NAME = ? WHERE DIGITAL_DISPLAY_DEVICE_ID = ?";
-
-				stmt = conn.prepareStatement(updateDBQuery);
-
-				if (iotDevice.getDeviceProperties() == null) {
-					iotDevice.setDeviceProperties(new HashMap<String, String>());
-				}
-				stmt.setString(1, iotDevice.getIotDeviceName());
-	
-				stmt.setString(2, iotDevice.getIotDeviceId());
-				int rows = stmt.executeUpdate();
-				if (rows > 0) {
-					status = true;
-					if (log.isDebugEnabled()) {
-						log.debug("Digital Display device " + iotDevice.getIotDeviceId() + " data has been" +
-						          " modified.");
-					}
-				}
-	        } catch (SQLException e) {
-	            String msg = "Error occurred while modifying the Digital Display device '" +
-	                         iotDevice.getIotDeviceId() + "' data.";
-	            log.error(msg, e);
-	            throw new IotDeviceManagementDAOException(msg, e);
-	        } finally {
-	            IotDeviceManagementDAOUtil.cleanupResources(stmt, null);
-	        }
-	        return status;
-	    }
-
-	    @Override
-	    public boolean deleteIotDevice(String iotDeviceId)
-	            throws IotDeviceManagementDAOException {
-	        boolean status = false;
-	        Connection conn = null;
-	        PreparedStatement stmt = null;
-	        try {
-	            conn = DigitalDisplayDAO.getConnection();
-	            String deleteDBQuery =
-						"DELETE FROM DIGITAL_DISPLAY_DEVICE WHERE DIGITAL_DISPLAY_DEVICE_ID = ?";
-				stmt = conn.prepareStatement(deleteDBQuery);
-				stmt.setString(1, iotDeviceId);
-				int rows = stmt.executeUpdate();
-				if (rows > 0) {
-					status = true;
-					if (log.isDebugEnabled()) {
-						log.debug("Digital Display device " + iotDeviceId + " data has deleted" +
-						          " from the Digital Display database.");
-					}
-				}
-	        } catch (SQLException e) {
-	            String msg = "Error occurred while deleting Digital Display device " + iotDeviceId;
-	            log.error(msg, e);
-	            throw new IotDeviceManagementDAOException(msg, e);
-	        } finally {
-	            IotDeviceManagementDAOUtil.cleanupResources(stmt, null);
-	        }
-	        return status;
-	    }
-
-	    @Override
-	    public List<IotDevice> getAllIotDevices()
-	            throws IotDeviceManagementDAOException {
-
-	        Connection conn = null;
-	        PreparedStatement stmt = null;
-	        ResultSet resultSet = null;
-	        IotDevice iotDevice;
-	        List<IotDevice> iotDevices = new ArrayList<IotDevice>();
-
-	        try {
-	            conn = DigitalDisplayDAO.getConnection();
-	            String selectDBQuery =
-						"SELECT DIGITAL_DISPLAY_DEVICE_ID, DEVICE_NAME " +
-						"FROM DIGITAL_DISPLAY_DEVICE";
-				stmt = conn.prepareStatement(selectDBQuery);
-				resultSet = stmt.executeQuery();
-				while (resultSet.next()) {
-					iotDevice = new IotDevice();
-					iotDevice.setIotDeviceId(resultSet.getString(DigitalDisplayConstants.DEVICE_PLUGIN_DEVICE_ID));
-					iotDevice.setIotDeviceName(resultSet.getString(DigitalDisplayConstants.DEVICE_PLUGIN_DEVICE_NAME));
-
-					Map<String, String> propertyMap = new HashMap<String, String>();
-
-					iotDevice.setDeviceProperties(propertyMap);
-					iotDevices.add(iotDevice);
-				}
-	            if (log.isDebugEnabled()) {
-	                log.debug("All Digital Display device details have fetched from Digital Display database.");
-	            }
-	            return iotDevices;
-	        } catch (SQLException e) {
-	            String msg = "Error occurred while fetching all Digital Display device data'";
-	            log.error(msg, e);
-	            throw new IotDeviceManagementDAOException(msg, e);
-	        } finally {
-	            IotDeviceManagementDAOUtil.cleanupResources(stmt, resultSet);
-				DigitalDisplayDAO.closeConnection();
-	        }
-	        
-	    }
-
+			}
+		} catch (SQLException e) {
+			String msg = "Error occurred while fetching Digital Display device : '" + iotDeviceId + "'";
+			log.error(msg, e);
+			throw new DigitalDisplayDeviceMgtPluginException(msg, e);
+		} finally {
+			DigitalDisplayUtils.cleanupResources(stmt, resultSet);
+			DigitalDisplayDAO.closeConnection();
+		}
+		return device;
 	}
+
+	public boolean addDevice(Device device) throws DigitalDisplayDeviceMgtPluginException {
+		boolean status = false;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = DigitalDisplayDAO.getConnection();
+			String createDBQuery =
+					"INSERT INTO DIGITAL_DISPLAY_DEVICE(DIGITAL_DISPLAY_DEVICE_ID, DEVICE_NAME) VALUES (?, ?)";
+			stmt = conn.prepareStatement(createDBQuery);
+			stmt.setString(1, device.getDeviceIdentifier());
+			stmt.setString(2, device.getName());
+			int rows = stmt.executeUpdate();
+			if (rows > 0) {
+				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Digital Display device " + device.getDeviceIdentifier() + " data has been" +
+							  " added to the Digital Display database.");
+				}
+			}
+		} catch (SQLException e) {
+			String msg = "Error occurred while adding the Digital Display device '" +
+						 device.getDeviceIdentifier() + "' to the Digital Display db.";
+			log.error(msg, e);
+			throw new DigitalDisplayDeviceMgtPluginException(msg, e);
+		} finally {
+			DigitalDisplayUtils.cleanupResources(stmt, null);
+		}
+		return status;
+	}
+
+	public boolean updateDevice(Device device) throws DigitalDisplayDeviceMgtPluginException {
+		boolean status = false;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = DigitalDisplayDAO.getConnection();
+			String updateDBQuery =
+					"UPDATE DIGITAL_DISPLAY_DEVICE SET  DEVICE_NAME = ? WHERE DIGITAL_DISPLAY_DEVICE_ID = ?";
+			stmt = conn.prepareStatement(updateDBQuery);
+			stmt.setString(1, device.getName());
+			stmt.setString(2, device.getDeviceIdentifier());
+			int rows = stmt.executeUpdate();
+			if (rows > 0) {
+				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Digital Display device " + device.getDeviceIdentifier() + " data has been" +
+							  " modified.");
+				}
+			}
+		} catch (SQLException e) {
+			String msg = "Error occurred while modifying the Digital Display device '" +
+						 device.getDeviceIdentifier() + "' data.";
+			log.error(msg, e);
+			throw new DigitalDisplayDeviceMgtPluginException(msg, e);
+		} finally {
+			DigitalDisplayUtils.cleanupResources(stmt, null);
+		}
+		return status;
+	}
+
+	public boolean deleteDevice(String iotDeviceId) throws DigitalDisplayDeviceMgtPluginException {
+		boolean status = false;
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = DigitalDisplayDAO.getConnection();
+			String deleteDBQuery =
+					"DELETE FROM DIGITAL_DISPLAY_DEVICE WHERE DIGITAL_DISPLAY_DEVICE_ID = ?";
+			stmt = conn.prepareStatement(deleteDBQuery);
+			stmt.setString(1, iotDeviceId);
+			int rows = stmt.executeUpdate();
+			if (rows > 0) {
+				status = true;
+				if (log.isDebugEnabled()) {
+					log.debug("Digital Display device " + iotDeviceId + " data has deleted" +
+							  " from the Digital Display database.");
+				}
+			}
+		} catch (SQLException e) {
+			String msg = "Error occurred while deleting Digital Display device " + iotDeviceId;
+			log.error(msg, e);
+			throw new DigitalDisplayDeviceMgtPluginException(msg, e);
+		} finally {
+			DigitalDisplayUtils.cleanupResources(stmt, null);
+		}
+		return status;
+	}
+
+	public List<Device> getAllDevices() throws DigitalDisplayDeviceMgtPluginException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		Device iotDevice;
+		List<Device> iotDevices = new ArrayList<Device>();
+
+		try {
+			conn = DigitalDisplayDAO.getConnection();
+			String selectDBQuery =
+					"SELECT DIGITAL_DISPLAY_DEVICE_ID, DEVICE_NAME FROM DIGITAL_DISPLAY_DEVICE";
+			stmt = conn.prepareStatement(selectDBQuery);
+			resultSet = stmt.executeQuery();
+			while (resultSet.next()) {
+				iotDevice = new Device();
+				iotDevice.setDeviceIdentifier(resultSet.getString(DigitalDisplayConstants.DEVICE_PLUGIN_DEVICE_ID));
+				iotDevice.setName(resultSet.getString(DigitalDisplayConstants.DEVICE_PLUGIN_DEVICE_NAME));
+				iotDevices.add(iotDevice);
+			}
+			if (log.isDebugEnabled()) {
+				log.debug("All Digital Display device details have fetched from Digital Display database.");
+			}
+			return iotDevices;
+		} catch (SQLException e) {
+			String msg = "Error occurred while fetching all Digital Display device data'";
+			log.error(msg, e);
+			throw new DigitalDisplayDeviceMgtPluginException(msg, e);
+		} finally {
+			DigitalDisplayUtils.cleanupResources(stmt, resultSet);
+			DigitalDisplayDAO.closeConnection();
+		}
+	}
+}

@@ -28,14 +28,9 @@ import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dto.IotDevice;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.util.IotDeviceManagementUtil;
+import org.wso2.carbon.device.mgt.iot.androidsense.plugin.exception.AndroidSenseDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.feature.AndroidSenseFeatureManager;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.dao.AndroidSenseDAO;
-
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,13 +39,13 @@ import java.util.List;
  */
 public class AndroidSenseManager implements DeviceManager {
 
-    private static final IotDeviceManagementDAOFactory iotDeviceManagementDAOFactory = new AndroidSenseDAO();
+    private static final AndroidSenseDAO androidSenseDAO = new AndroidSenseDAO();
     private static final Log log = LogFactory.getLog(AndroidSenseManager.class);
-
+    private FeatureManager androidSenseFeatureManager = new AndroidSenseFeatureManager();
 
     @Override
     public FeatureManager getFeatureManager() {
-        return null;
+        return androidSenseFeatureManager;
     }
 
     @Override
@@ -69,19 +64,17 @@ public class AndroidSenseManager implements DeviceManager {
     @Override
     public boolean enrollDevice(Device device) throws DeviceManagementException {
         boolean status;
-        IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new Android device : " + device.getDeviceIdentifier());
             }
             AndroidSenseDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO().addIotDevice(
-                    iotDevice);
+            status = androidSenseDAO.getDeviceDAO().addDevice(device);
             AndroidSenseDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (AndroidSenseDeviceMgtPluginException e) {
             try {
                 AndroidSenseDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (AndroidSenseDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -95,19 +88,17 @@ public class AndroidSenseManager implements DeviceManager {
     @Override
     public boolean modifyEnrollment(Device device) throws DeviceManagementException {
         boolean status;
-        IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Modifying the Android device enrollment data");
             }
             AndroidSenseDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO()
-                    .updateIotDevice(iotDevice);
+            status = androidSenseDAO.getDeviceDAO().updateDevice(device);
             AndroidSenseDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (AndroidSenseDeviceMgtPluginException e) {
             try {
                 AndroidSenseDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (AndroidSenseDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -127,13 +118,12 @@ public class AndroidSenseManager implements DeviceManager {
                 log.debug("Dis-enrolling Android device : " + deviceId);
             }
             AndroidSenseDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO()
-                    .deleteIotDevice(deviceId.getId());
+            status = androidSenseDAO.getDeviceDAO().deleteDevice(deviceId.getId());
             AndroidSenseDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (AndroidSenseDeviceMgtPluginException e) {
             try {
                 AndroidSenseDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (AndroidSenseDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device dis enrol transaction :" + deviceId.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -151,13 +141,11 @@ public class AndroidSenseManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Checking the enrollment of Android device : " + deviceId.getId());
             }
-            IotDevice iotDevice =
-                    iotDeviceManagementDAOFactory.getIotDeviceDAO().getIotDevice(
-                            deviceId.getId());
+            Device iotDevice = androidSenseDAO.getDeviceDAO().getDevice(deviceId.getId());
             if (iotDevice != null) {
                 isEnrolled = true;
             }
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (AndroidSenseDeviceMgtPluginException e) {
             String msg = "Error while checking the enrollment status of Android device : " +
                     deviceId.getId();
             log.error(msg, e);
@@ -184,10 +172,8 @@ public class AndroidSenseManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Getting the details of Android device : " + deviceId.getId());
             }
-            IotDevice iotDevice = iotDeviceManagementDAOFactory.getIotDeviceDAO().
-                    getIotDevice(deviceId.getId());
-            device = IotDeviceManagementUtil.convertToDevice(iotDevice);
-        } catch (IotDeviceManagementDAOException e) {
+            device = androidSenseDAO.getDeviceDAO().getDevice(deviceId.getId());
+        } catch (AndroidSenseDeviceMgtPluginException e) {
             String msg = "Error while fetching the Android device : " + deviceId.getId();
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);
@@ -228,20 +214,18 @@ public class AndroidSenseManager implements DeviceManager {
     @Override
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device) throws DeviceManagementException {
         boolean status;
-        IotDevice iotDevice = IotDeviceManagementUtil.convertToIotDevice(device);
         try {
             if (log.isDebugEnabled()) {
                 log.debug(
                         "updating the details of Android device : " + deviceIdentifier);
             }
             AndroidSenseDAO.beginTransaction();
-            status = iotDeviceManagementDAOFactory.getIotDeviceDAO()
-                    .updateIotDevice(iotDevice);
+            status = androidSenseDAO.getDeviceDAO().updateDevice(device);
             AndroidSenseDAO.commitTransaction();
-        } catch (IotDeviceManagementDAOException e) {
+        } catch (AndroidSenseDeviceMgtPluginException e) {
             try {
                 AndroidSenseDAO.rollbackTransaction();
-            } catch (IotDeviceManagementDAOException iotDAOEx) {
+            } catch (AndroidSenseDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device info transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
             }
@@ -260,15 +244,8 @@ public class AndroidSenseManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Fetching the details of all Android devices");
             }
-            List<IotDevice> iotDevices =
-                    iotDeviceManagementDAOFactory.getIotDeviceDAO().getAllIotDevices();
-            if (iotDevices != null) {
-                devices = new ArrayList<Device>();
-                for (IotDevice iotDevice : iotDevices) {
-                    devices.add(IotDeviceManagementUtil.convertToDevice(iotDevice));
-                }
-            }
-        } catch (IotDeviceManagementDAOException e) {
+            devices = androidSenseDAO.getDeviceDAO().getAllDevices();
+        } catch (AndroidSenseDeviceMgtPluginException e) {
             String msg = "Error while fetching all Android devices.";
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);

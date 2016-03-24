@@ -93,15 +93,14 @@ public class DroneAnalyzerManagerService implements DeviceManagementService {
 
     }
 
+    @Override
     public String getProviderTenantDomain() {
         return "carbon.super";
     }
 
+    @Override
     public boolean isSharedWithAllTenants() {
         return true;
     }
 
-    public String[] getSharedTenantsDomain() {
-        return new String[0];
-    }
 }

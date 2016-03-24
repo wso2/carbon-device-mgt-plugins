@@ -13,7 +13,6 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-
 	<servlet-mapping>
 		<servlet-name>CXFServlet</servlet-name>
 		<url-pattern>/*</url-pattern>
@@ -25,7 +24,7 @@
 	</context-param>
 	<context-param>
 		<param-name>doAuthentication</param-name>
-		<param-value>false</param-value>
+		<param-value>true</param-value>
 	</context-param>
 
 	<!--publish to apim-->
@@ -49,7 +48,4 @@
 		<param-name>managed-api-isSecured</param-name>
 		<param-value>true</param-value>
 	</context-param>
-
-
-
 </web-app>

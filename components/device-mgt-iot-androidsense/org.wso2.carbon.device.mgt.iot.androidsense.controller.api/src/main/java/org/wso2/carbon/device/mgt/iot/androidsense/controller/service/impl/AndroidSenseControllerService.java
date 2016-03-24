@@ -20,15 +20,14 @@ package org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.analytics.datasource.commons.Record;
-import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.device.DeviceType;
-import org.wso2.carbon.apimgt.annotations.device.feature.Feature;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.analytics.common.AnalyticsDataRecord;
 import org.wso2.carbon.device.mgt.analytics.exception.DataPublisherConfigurationException;
+import org.wso2.carbon.device.mgt.analytics.exception.DeviceManagementAnalyticsException;
 import org.wso2.carbon.device.mgt.analytics.service.DeviceAnalyticsService;
-import org.wso2.carbon.device.mgt.iot.DeviceManagement;
+import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
+import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 import org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.transport.AndroidSenseMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.util.DeviceData;
 import org.wso2.carbon.device.mgt.iot.androidsense.controller.service.impl.util.SensorData;
@@ -37,10 +36,12 @@ import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
+import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -61,13 +62,11 @@ import java.util.List;
  * The api for
  */
 @DeviceType(value = "android_sense")
-@API(name = "android_sense", version = "1.0.0", context = "/android_sense")
+@API(name = "android_sense", version = "1.0.0", context = "/android_sense", tags = {"android_sense"})
 public class AndroidSenseControllerService {
 	@Context  //injected response proxy supporting multiple thread
 	private HttpServletResponse response;
 	private static Log log = LogFactory.getLog(AndroidSenseControllerService.class);
-	//TODO; replace this tenant domain
-	private final String SUPER_TENANT = "carbon.super";
 	private static AndroidSenseMQTTConnector androidSenseMQTTConnector;
 
 	/**
@@ -88,8 +87,7 @@ public class AndroidSenseControllerService {
 	 *                                      communications of any connected Android Sense device-type
 	 */
 	@SuppressWarnings("Unused")
-	public void setAndroidSenseMQTTConnector(
-			final AndroidSenseMQTTConnector androidSenseMQTTConnector) {
+	public void setAndroidSenseMQTTConnector(final AndroidSenseMQTTConnector androidSenseMQTTConnector) {
 		Runnable connector = new Runnable() {
 			public void run() {
 				if (waitForServerStartup()) {
@@ -109,7 +107,7 @@ public class AndroidSenseControllerService {
 	}
 
 	private boolean waitForServerStartup() {
-		while (!DeviceManagement.isServerReady()) {
+		while (!IoTServerStartupListener.isServerReady()) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -119,7 +117,6 @@ public class AndroidSenseControllerService {
 		return false;
 	}
 
-
 	/**
 	 * Service to push all the sensor data collected by the Android. Called by the Android device
 	 *
@@ -127,152 +124,128 @@ public class AndroidSenseControllerService {
 	 * @param response the HTTP servlet response object received  by default as part of the HTTP
 	 *                 call to this API
 	 */
-	@Path("controller/sensordata")
+	@Path("controller/sensors")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void pushSensorData(
-			final DeviceData dataMsg, @Context HttpServletResponse response) {
-
-		PrivilegedCarbonContext.startTenantFlow();
+	public void addSensorData(DeviceData dataMsg, @Context HttpServletResponse response) {
 		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-		ctx.setTenantDomain("carbon.super", true);
 		DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
 				.getOSGiService(DeviceAnalyticsService.class, null);
-
 		SensorData[] sensorData = dataMsg.values;
 		String streamDef = null;
 		Object payloadData[] = null;
 		String sensorName = null;
-
 		for (SensorData sensor : sensorData) {
-			if (sensor.key.equals("battery")) {
-				streamDef = AndroidSenseConstants.BATTERY_STREAM_DEFINITION;
-				payloadData = new Float[]{Float.parseFloat(sensor.value)};
-				sensorName = AndroidSenseConstants.SENSOR_BATTERY;
-			} else if (sensor.key.equals("GPS")) {
-				streamDef = AndroidSenseConstants.GPS_STREAM_DEFINITION;
-				String gpsValue = sensor.value;
-				String gpsValuesString[] = gpsValue.split(",");
-				Float gpsValues[] = new Float[2];
-				gpsValues[0] = Float.parseFloat(gpsValuesString[0]);
-				gpsValues[1] = Float.parseFloat(gpsValuesString[0]);
-				payloadData = gpsValues;
-				sensorName = AndroidSenseConstants.SENSOR_GPS;
-			} else {
-
-				try {
-					int androidSensorId = Integer.parseInt(sensor.key);
-					String value = sensor.value;
-					String sensorValueString[] = value.split(",");
-					Float sensorValues[] = new Float[1];
-					switch (androidSensorId) {
-						case 1:
-							streamDef = AndroidSenseConstants.ACCELEROMETER_STREAM_DEFINITION;
-							sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
-									Float.parseFloat(sensorValueString[0]) * Float
-									.parseFloat(sensorValueString[0]);
-							payloadData = sensorValues;
-							sensorName = AndroidSenseConstants.SENSOR_ACCELEROMETER;
-							break;
-						case 2:
-							streamDef = AndroidSenseConstants.MAGNETIC_STREAM_DEFINITION;
-							sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
-									Float.parseFloat(sensorValueString[0]) * Float
-									.parseFloat(sensorValueString[0]);
-							payloadData = sensorValues;
-							sensorName = AndroidSenseConstants.SENSOR_MAGNETIC;
-							break;
-						case 4:
-							streamDef = AndroidSenseConstants.GYROSCOPE_STREAM_DEFINITION;
-							sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
-									Float.parseFloat(sensorValueString[0]) * Float
-									.parseFloat(sensorValueString[0]);
-							payloadData = sensorValues;
-							sensorName = AndroidSenseConstants.SENSOR_GYROSCOPE;
-							break;
-						case 5:
-							streamDef = AndroidSenseConstants.LIGHT_STREAM_DEFINITION;
-							sensorName = AndroidSenseConstants.SENSOR_LIGHT;
-							payloadData = new Float[]{Float.parseFloat(sensorValueString[0])};
-							break;
-						case 6:
-							streamDef = AndroidSenseConstants.PRESSURE_STREAM_DEFINITION;
-							sensorName = AndroidSenseConstants.SENSOR_PRESSURE;
-							payloadData = new Float[]{Float.parseFloat(sensorValueString[0])};
-							break;
-						case 8:
-							streamDef = AndroidSenseConstants.PROXIMITY_STREAM_DEFINITION;
-							sensorName = AndroidSenseConstants.SENSOR_PROXIMITY;
-							payloadData = new Float[]{Float.parseFloat(sensorValueString[0])};
-							break;
-						case 9:
-							streamDef = AndroidSenseConstants.GRAVITY_STREAM_DEFINITION;
-							sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
-									Float.parseFloat(sensorValueString[0]) * Float
-									.parseFloat(sensorValueString[0]);
-							payloadData = sensorValues;
-							sensorName = AndroidSenseConstants.SENSOR_GRAVITY;
-							break;
-						case 11:
-							streamDef = AndroidSenseConstants.ROTATION_STREAM_DEFINITION;
-							sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
-									Float.parseFloat(sensorValueString[0]) * Float
-									.parseFloat(sensorValueString[0]);
-							payloadData = sensorValues;
-							sensorName = AndroidSenseConstants.SENSOR_ROTATION;
-							break;
+			switch (sensor.key) {
+				case "battery" :
+					streamDef = AndroidSenseConstants.BATTERY_STREAM_DEFINITION;
+					payloadData = new Float[]{Float.parseFloat(sensor.value)};
+					sensorName = AndroidSenseConstants.SENSOR_BATTERY;
+					break;
+				case "GPS" :
+					streamDef = AndroidSenseConstants.GPS_STREAM_DEFINITION;
+					String gpsValue = sensor.value;
+					String gpsValuesString[] = gpsValue.split(",");
+					Float gpsValues[] = new Float[2];
+					gpsValues[0] = Float.parseFloat(gpsValuesString[0]);
+					gpsValues[1] = Float.parseFloat(gpsValuesString[0]);
+					payloadData = gpsValues;
+					sensorName = AndroidSenseConstants.SENSOR_GPS;
+					break;
+				default :
+					try {
+						int androidSensorId = Integer.parseInt(sensor.key);
+						String value = sensor.value;
+						String sensorValueString[] = value.split(",");
+						Float sensorValues[] = new Float[1];
+						switch (androidSensorId) {
+							case 1:
+								streamDef = AndroidSenseConstants.ACCELEROMETER_STREAM_DEFINITION;
+								sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
+										Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
+								payloadData = sensorValues;
+								sensorName = AndroidSenseConstants.SENSOR_ACCELEROMETER;
+								break;
+							case 2:
+								streamDef = AndroidSenseConstants.MAGNETIC_STREAM_DEFINITION;
+								sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
+										Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
+								payloadData = sensorValues;
+								sensorName = AndroidSenseConstants.SENSOR_MAGNETIC;
+								break;
+							case 4:
+								streamDef = AndroidSenseConstants.GYROSCOPE_STREAM_DEFINITION;
+								sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
+										Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
+								payloadData = sensorValues;
+								sensorName = AndroidSenseConstants.SENSOR_GYROSCOPE;
+								break;
+							case 5:
+								streamDef = AndroidSenseConstants.LIGHT_STREAM_DEFINITION;
+								sensorName = AndroidSenseConstants.SENSOR_LIGHT;
+								payloadData = new Float[]{Float.parseFloat(sensorValueString[0])};
+								break;
+							case 6:
+								streamDef = AndroidSenseConstants.PRESSURE_STREAM_DEFINITION;
+								sensorName = AndroidSenseConstants.SENSOR_PRESSURE;
+								payloadData = new Float[]{Float.parseFloat(sensorValueString[0])};
+								break;
+							case 8:
+								streamDef = AndroidSenseConstants.PROXIMITY_STREAM_DEFINITION;
+								sensorName = AndroidSenseConstants.SENSOR_PROXIMITY;
+								payloadData = new Float[]{Float.parseFloat(sensorValueString[0])};
+								break;
+							case 9:
+								streamDef = AndroidSenseConstants.GRAVITY_STREAM_DEFINITION;
+								sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
+										Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
+								payloadData = sensorValues;
+								sensorName = AndroidSenseConstants.SENSOR_GRAVITY;
+								break;
+							case 11:
+								streamDef = AndroidSenseConstants.ROTATION_STREAM_DEFINITION;
+								sensorValues[0] = Float.parseFloat(sensorValueString[0]) *
+										Float.parseFloat(sensorValueString[0]) * Float.parseFloat(sensorValueString[0]);
+								payloadData = sensorValues;
+								sensorName = AndroidSenseConstants.SENSOR_ROTATION;
+								break;
+						}
+					} catch (NumberFormatException e) {
+						log.error("Invalid sensor value is sent from the device");
+						continue;
 					}
-				} catch (NumberFormatException e) {
-					log.error("Invalid sensor value is sent from the device");
-					continue;
-				}
-
 			}
-			Object metaData[] = {dataMsg.owner, AndroidSenseConstants.DEVICE_TYPE, dataMsg
-					.deviceId,
-					sensor.time};
+			Object metaData[] = {dataMsg.owner, AndroidSenseConstants.DEVICE_TYPE, dataMsg.deviceId, sensor.time};
 			if (streamDef != null && payloadData != null && payloadData.length > 0) {
 				try {
 					SensorDataManager.getInstance()
-							.setSensorRecord(dataMsg.deviceId, sensorName, sensor.value,
-											 sensor.time);
-					deviceAnalyticsService.publishEvent(streamDef, "1.0.0", metaData, new
-																Object[0],
-														payloadData);
+							.setSensorRecord(dataMsg.deviceId, sensorName, sensor.value, sensor.time);
+					deviceAnalyticsService.publishEvent(streamDef, "1.0.0", metaData, new Object[0], payloadData);
 				} catch (DataPublisherConfigurationException e) {
 					response.setStatus(Response.Status.UNSUPPORTED_MEDIA_TYPE.getStatusCode());
 				}
 			}
-
 		}
-
 	}
 
 
 	/**
 	 * End point which is called by Front-end js to get Light sensor readings from the server.
 	 *
-	 * @param owner    The device owner
 	 * @param deviceId The registered device id
 	 * @param response the HTTP servlet response object received  by default as part of the HTTP
 	 *                 call to this API.
 	 * @return This method returns a SensorRecord object.
 	 */
-	//TODO below endpoints needs to be removed and cep websocket have to be added
-	@Path("controller/readlight")
+	@Path("controller/device/{deviceId}/sensors/light")
 	@GET
 	@Consumes("application/json")
 	@Produces("application/json")
-	@Feature(code = "readlight", name = "Light", description = "Read Light data from the device",
-			 type = "monitor")
-	public SensorRecord readLight(@HeaderParam("owner") String owner,
-								  @HeaderParam("deviceId") String deviceId,
-								  @Context HttpServletResponse response) {
+	@Feature(code = "light", name = "Light", description = "Read Light data from the device", type = "monitor")
+	public SensorRecord getLightData(@PathParam("deviceId") String deviceId, @Context HttpServletResponse response) {
 		SensorRecord sensorRecord = null;
-
 		try {
-			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-														AndroidSenseConstants.SENSOR_LIGHT);
+			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, AndroidSenseConstants.SENSOR_LIGHT);
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
@@ -282,120 +255,87 @@ public class AndroidSenseControllerService {
 
 	/**
 	 * End point which is called by Front-end js to get Battery data from the server.
-	 *
-	 * @param owner    The device owner
 	 * @param deviceId The registered device id
 	 * @param response the HTTP servlet response object received  by default as part of the HTTP
 	 *                 call to this API.
 	 * @return This method returns a SensorRecord object.
 	 */
-	@Path("controller/readbattery")
+	@Path("controller/device/{deviceId}/sensors/battery")
 	@GET
 	@Consumes("application/json")
 	@Produces("application/json")
-	@Feature(code = "readbattery", name = "Battery",
-			 description = "Read Battery data from the device",
-			 type = "monitor")
-	public SensorRecord readBattery(@HeaderParam("owner") String owner,
-									@HeaderParam("deviceId") String deviceId,
-									@Context HttpServletResponse response) {
+	@Feature(code = "battery", name = "Battery", description = "Read Battery data from the device", type = "monitor")
+	public SensorRecord getBattery(@PathParam("deviceId") String deviceId, @Context HttpServletResponse response) {
 		SensorRecord sensorRecord = null;
-
 		try {
-			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-														AndroidSenseConstants.SENSOR_BATTERY);
+			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, AndroidSenseConstants.SENSOR_BATTERY);
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		}
-
 		return sensorRecord;
 	}
 
 	/**
 	 * End point which is called by Front-end js to get GPS data from the server.
-	 *
-	 * @param owner    The device owner
 	 * @param deviceId The registered device id
 	 * @param response the HTTP servlet response object received  by default as part of the HTTP
 	 *                 call to this API.
 	 * @return This method returns a SensorRecord object.
 	 */
-	@Path("controller/readgps")
+	@Path("controller/device/{deviceId}/sensors/gps")
 	@GET
 	@Consumes("application/json")
 	@Produces("application/json")
-	@Feature(code = "readgps", name = "gps", description = "Read GPS data from the device",
-			 type = "monitor")
-	public SensorRecord readGPS(@HeaderParam("owner") String owner,
-								@HeaderParam("deviceId") String deviceId,
-								@Context HttpServletResponse response) {
+	@Feature(code = "gps", name = "gps", description = "Read GPS data from the device", type = "monitor")
+	public SensorRecord getGPS(@PathParam("deviceId") String deviceId, @Context HttpServletResponse response) {
 		SensorRecord sensorRecord = null;
-
 		try {
-			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-														AndroidSenseConstants.SENSOR_GPS);
+			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, AndroidSenseConstants.SENSOR_GPS);
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		}
-
 		return sensorRecord;
 	}
 
 	/**
 	 * End point which is called by Front-end js to get Magnetic data readings from the server.
-	 *
-	 * @param owner    The device owner
 	 * @param deviceId The registered device id
 	 * @param response the HTTP servlet response object received  by default as part of the HTTP
 	 *                 call to this API.
 	 * @return This method returns a SensorRecord object.
 	 */
-	@Path("controller/readmagnetic")
+	@Path("controller/device/{deviceId}/sensors/magnetic")
 	@GET
 	@Consumes("application/json")
 	@Produces("application/json")
-	@Feature(code = "readmagnetic", name = "Magnetic",
-			 description = "Read Magnetic data from the device",
-			 type = "monitor")
-	public SensorRecord readMagnetic(@HeaderParam("owner") String owner,
-									 @HeaderParam("deviceId") String deviceId,
-									 @Context HttpServletResponse response) {
+	@Feature(code = "magnetic", name = "Magnetic", description = "Read Magnetic data from the device", type = "monitor")
+	public SensorRecord readMagnetic(@PathParam("deviceId") String deviceId, @Context HttpServletResponse response) {
 		SensorRecord sensorRecord = null;
-
 		try {
-			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-															AndroidSenseConstants.SENSOR_MAGNETIC);
+			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, AndroidSenseConstants.SENSOR_MAGNETIC);
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		}
-
 		return sensorRecord;
 	}
 
 	/**
 	 * End point which is called by Front-end js to get Accelerometer data from the server.
-	 *
-	 * @param owner    The device owner
 	 * @param deviceId The registered device id
-	 * @param response the HTTP servlet response object received  by default as part of the HTTP
-	 *                 call to this API.
+	 * @param response the HTTP servlet response object received  by default as part of the HTTP call to this API.
 	 * @return This method returns a SensorRecord object.
 	 */
-	@Path("controller/readaccelerometer")
+	@Path("controller/device/{deviceId}/sensors/accelerometer")
 	@GET
 	@Consumes("application/json")
 	@Produces("application/json")
-	@Feature(code = "readaccelerometer", name = "Accelerometer",
-			 description = "Read Accelerometer data from the " +
-					 "device", type = "monitor")
-	public SensorRecord readAccelerometer(@HeaderParam("owner") String owner,
-										  @HeaderParam("deviceId") String deviceId,
-										  @Context HttpServletResponse response) {
+	@Feature(code = "accelerometer", name = "Accelerometer", description = "Read Accelerometer data from the device",
+			 type = "monitor")
+	public SensorRecord readAccelerometer(@PathParam("deviceId") String deviceId, @Context HttpServletResponse response) {
 		SensorRecord sensorRecord = null;
-
 		try {
 			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
 											AndroidSenseConstants.SENSOR_ACCELEROMETER);
@@ -403,31 +343,24 @@ public class AndroidSenseControllerService {
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		}
-
 		return sensorRecord;
 	}
 
 	/**
 	 * End point which is called by Front-end js to get Rotation data from the server.
-	 *
-	 * @param owner    The device owner
 	 * @param deviceId The registered device id
 	 * @param response the HTTP servlet response object received  by default as part of the HTTP
 	 *                 call to this API.
 	 * @return This method returns a SensorRecord object.
 	 */
-	@Path("controller/readrotation")
+	@Path("controller/device/{deviceId}/sensors/rotation")
 	@GET
 	@Consumes("application/json")
 	@Produces("application/json")
-	@Feature(code = "readrotation", name = "Rotation",
-			 description = "Read Rotational Vector data from the device",
+	@Feature(code = "rotation", name = "Rotation", description = "Read Rotational Vector data from the device",
 			 type = "monitor")
-	public SensorRecord readRotation(@HeaderParam("owner") String owner,
-									 @HeaderParam("deviceId") String deviceId,
-									 @Context HttpServletResponse response) {
+	public SensorRecord readRotation(@PathParam("deviceId") String deviceId, @Context HttpServletResponse response) {
 		SensorRecord sensorRecord = null;
-
 		try {
 			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
 											AndroidSenseConstants.SENSOR_ROTATION);
@@ -440,25 +373,19 @@ public class AndroidSenseControllerService {
 
 	/**
 	 * End point which is called by Front-end js to get Proximity data from the server.
-	 *
-	 * @param owner    The device owner
 	 * @param deviceId The registered device id
 	 * @param response the HTTP servlet response object received  by default as part of the HTTP
 	 *                 call to this API.
 	 * @return This method returns a SensorRecord object.
 	 */
-	@Path("controller/readproximity")
+	@Path("controller/device/{deviceId}/sensors/proximity")
 	@GET
 	@Consumes("application/json")
 	@Produces("application/json")
-	@Feature(code = "readproximity", name = "Proximity",
-			 description = "Read Proximity data from the device",
+	@Feature(code = "proximity", name = "Proximity", description = "Read Proximity data from the device",
 			 type = "monitor")
-	public SensorRecord readProximity(@HeaderParam("owner") String owner,
-									  @HeaderParam("deviceId") String deviceId,
-									  @Context HttpServletResponse response) {
+	public SensorRecord readProximity(@PathParam("deviceId") String deviceId, @Context HttpServletResponse response) {
 		SensorRecord sensorRecord = null;
-
 		try {
 			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
 															AndroidSenseConstants.SENSOR_PROXIMITY);
@@ -466,31 +393,24 @@ public class AndroidSenseControllerService {
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		}
-
 		return sensorRecord;
 	}
 
 	/**
 	 * End point which is called by Front-end js to get Gyroscope data from the server.
-	 *
-	 * @param owner    The device owner
 	 * @param deviceId The registered device id
 	 * @param response the HTTP servlet response object received  by default as part of the HTTP
 	 *                 call to this API.
 	 * @return This method returns a SensorRecord object.
 	 */
-	@Path("controller/readgyroscope")
+	@Path("controller/device/{deviceId}/sensors/gyroscope")
 	@GET
 	@Consumes("application/json")
 	@Produces("application/json")
-	@Feature(code = "readgyroscope", name = "Gyroscope",
-			 description = "Read Gyroscope data from the device",
+	@Feature(code = "gyroscope", name = "Gyroscope", description = "Read Gyroscope data from the device",
 			 type = "monitor")
-	public SensorRecord readGyroscope(@HeaderParam("owner") String owner,
-									  @HeaderParam("deviceId") String deviceId,
-									  @Context HttpServletResponse response) {
+	public SensorRecord readGyroscope(@PathParam("deviceId") String deviceId, @Context HttpServletResponse response) {
 		SensorRecord sensorRecord = null;
-
 		try {
 			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
 															AndroidSenseConstants.SENSOR_GYROSCOPE);
@@ -498,30 +418,23 @@ public class AndroidSenseControllerService {
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		}
-
 		return sensorRecord;
 	}
 
 	/**
 	 * End point which is called by Front-end js to get Pressure data from the server.
-	 *
-	 * @param owner    The device owner
 	 * @param deviceId The registered device id
 	 * @param response the HTTP servlet response object received  by default as part of the HTTP
 	 *                 call to this API.
 	 * @return This method returns a SensorRecord object.
 	 */
-	@Path("controller/readpressure")
+	@Path("controller/device/{deviceId}/sensors/pressure")
 	@GET
 	@Consumes("application/json")
 	@Produces("application/json")
-	@Feature(code = "readpressure", name = "Pressure",
-			 description = "Read Pressure data from the device", type = "monitor")
-	public SensorRecord readPressure(@HeaderParam("owner") String owner,
-									 @HeaderParam("deviceId") String deviceId,
-									 @Context HttpServletResponse response) {
+	@Feature(code = "pressure", name = "Pressure", description = "Read Pressure data from the device", type = "monitor")
+	public SensorRecord readPressure(@PathParam("deviceId") String deviceId, @Context HttpServletResponse response) {
 		SensorRecord sensorRecord = null;
-
 		try {
 			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
 															AndroidSenseConstants.SENSOR_PRESSURE);
@@ -529,30 +442,25 @@ public class AndroidSenseControllerService {
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		}
-
 		return sensorRecord;
 	}
 
 	/**
 	 * End point which is called by Front-end js to get Gravity data from the server.
 	 *
-	 * @param owner    The device owner
 	 * @param deviceId The registered device id
 	 * @param response the HTTP servlet response object received  by default as part of the HTTP
 	 *                 call to this API.
 	 * @return This method returns a SensorRecord object.
 	 */
-	@Path("controller/readgravity")
+	@Path("controller/device/{deviceId}/sensors/gravity")
 	@GET
 	@Consumes("application/json")
 	@Produces("application/json")
-	@Feature(code = "readgravity", name = "Gravity",
+	@Feature(code = "gravity", name = "Gravity",
 			 description = "Read Gravity data from the device", type = "monitor")
-	public SensorRecord readGravity(@HeaderParam("owner") String owner,
-									@HeaderParam("deviceId") String deviceId,
-									@Context HttpServletResponse response) {
+	public SensorRecord readGravity(@PathParam("deviceId") String deviceId, @Context HttpServletResponse response) {
 		SensorRecord sensorRecord = null;
-
 		try {
 			sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
 															AndroidSenseConstants.SENSOR_GRAVITY);
@@ -560,26 +468,16 @@ public class AndroidSenseControllerService {
 		} catch (DeviceControllerException e) {
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 		}
-
 		return sensorRecord;
 	}
 
-	/**
-	 * @param owner
-	 * @param deviceId
-	 * @param sessionId
-	 * @param response
-	 * @return
-	 */
-	@Path("controller/getwords")
+	@Path("controller/device/{deviceId}/sensors/words")
 	@GET
 	@Consumes("application/json")
 	@Produces("application/json")
-	@Feature(code = "getwords", name = "Words", description = "Get the key words and occurrences",
+	@Feature(code = "words", name = "Words", description = "Get the key words and occurrences",
 			 type = "monitor")
-	public SensorRecord getWords(@HeaderParam("owner") String owner,
-								 @HeaderParam("deviceId") String deviceId,
-								 @HeaderParam("sessionId") String sessionId,
+	public SensorRecord getWords(@PathParam("deviceId") String deviceId, @QueryParam("sessionId") String sessionId,
 								 @Context HttpServletResponse response) {
 		SensorRecord sensorRecord = null;
 		try {
@@ -594,24 +492,21 @@ public class AndroidSenseControllerService {
 
 	/**
 	 * End point to send the key words to the device
-	 *
-	 * @param owner    The device owner.
+
 	 * @param deviceId The registered device Id.
 	 * @param keywords The key words to be sent. (Comma separated values)
 	 * @param response the HTTP servlet response object received  by default as part of the HTTP
 	 *                 call to this API
 	 */
-	@Path("controller/words")
+	@Path("controller/device/{deviceId}/sensors/words")
 	@POST
 	@Feature(code = "keywords", name = "Add Keywords", description = "Send keywords to the device",
 			 type = "operation")
-	public void sendKeyWords(@HeaderParam("owner") String owner,
-							 @HeaderParam("deviceId") String deviceId,
-							 @HeaderParam("protocol") String protocol,
-							 @FormParam("keywords") String keywords,
+	public void sendKeyWords(@PathParam("deviceId") String deviceId, @FormParam("keywords") String keywords,
 							 @Context HttpServletResponse response) {
 		try {
-			androidSenseMQTTConnector.publishDeviceData(owner, deviceId, "add", keywords);
+			String username = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+			androidSenseMQTTConnector.publishDeviceData(username, deviceId, "add", keywords);
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (TransportHandlerException e) {
 			log.error(e);
@@ -622,23 +517,20 @@ public class AndroidSenseControllerService {
 	/**
 	 * End point to send the key words to the device
 	 *
-	 * @param owner     The device owner.
 	 * @param deviceId  The registered device Id.
 	 * @param threshold The key words to be sent. (Comma separated values)
 	 * @param response  the HTTP servlet response object received  by default as part of the HTTP
 	 *                  call to this API
 	 */
-	@Path("controller/words/threshold")
+	@Path("controller/device/{deviceId}/sensors/words/threshold")
 	@POST
 	@Feature(code = "threshold", name = "Add a Threshold", description = "Set a threshold for word in the device",
 			 type = "operation")
-	public void sendThreshold(@HeaderParam("owner") String owner,
-							  @HeaderParam("deviceId") String deviceId,
-							  @HeaderParam("protocol") String protocol,
-							  @FormParam("threshold") String threshold,
+	public void sendThreshold(@PathParam("deviceId") String deviceId, @FormParam("threshold") String threshold,
 							  @Context HttpServletResponse response) {
 		try {
-			androidSenseMQTTConnector.publishDeviceData(owner, deviceId, "threshold", threshold);
+			String username = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+			androidSenseMQTTConnector.publishDeviceData(username, deviceId, "threshold", threshold);
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (TransportHandlerException e) {
 			log.error(e);
@@ -646,17 +538,15 @@ public class AndroidSenseControllerService {
 		}
 	}
 
-	@Path("controller/words/remove")
-	@POST
+	@Path("controller/device/{deviceId}/sensors/words")
+	@DELETE
 	@Feature(code = "remove", name = "Remove Keywords", description = "Remove the keywords",
 			 type = "operation")
-	public void removeKeyWords(@HeaderParam("owner") String owner,
-							   @HeaderParam("deviceId") String deviceId,
-							   @HeaderParam("protocol") String protocol,
-							   @FormParam("words") String words,
+	public void removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words,
 							   @Context HttpServletResponse response) {
 		try {
-			androidSenseMQTTConnector.publishDeviceData(owner, deviceId, "remove", words);
+			String username = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+			androidSenseMQTTConnector.publishDeviceData(username, deviceId, "remove", words);
 			response.setStatus(Response.Status.OK.getStatusCode());
 		} catch (TransportHandlerException e) {
 			log.error(e);
@@ -667,12 +557,6 @@ public class AndroidSenseControllerService {
 	/**
 	 * Retrieve Sensor data for the device type
 	 *
-	 * @param deviceId
-	 * @param sensor
-	 * @param user
-	 * @param from
-	 * @param to
-	 * @return
 	 */
 	@Path("controller/stats/device/{deviceId}/sensors/{sensorName}")
 	@GET
@@ -680,35 +564,25 @@ public class AndroidSenseControllerService {
 	@Produces("application/json")
 	public SensorData[] getAndroidSenseDeviceStats(@PathParam("deviceId") String deviceId,
 												   @PathParam("sensorName") String sensor,
-												   @QueryParam("username") String user,
 												   @QueryParam("from") long from,
 												   @QueryParam("to") long to) {
-
 		String fromDate = String.valueOf(from);
 		String toDate = String.valueOf(to);
-
+		String user = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
 		List<SensorData> sensorDatas = new ArrayList<>();
-		PrivilegedCarbonContext.startTenantFlow();
 		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-		//TODO - get the JWT from api manager.
-		ctx.setTenantDomain("carbon.super", true);
 		DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
 				.getOSGiService(DeviceAnalyticsService.class, null);
 		String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
-				AndroidSenseConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate +
-				"]";
-
+				AndroidSenseConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
 		if (sensor.equals(AndroidSenseConstants.SENSOR_WORDCOUNT)) {
 			query = "owner:" + user + " AND deviceId:" + deviceId;
 		}
-
-
 		String sensorTableName = getSensorEventTableName(sensor);
 		try {
-			List<Record> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName,
-																				query);
+			List<AnalyticsDataRecord> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName, query);
 			if (sensor.equals(AndroidSenseConstants.SENSOR_WORDCOUNT)) {
-				for (Record record : records) {
+				for (AnalyticsDataRecord record : records) {
 					SensorData sensorData = new SensorData();
 					sensorData.setKey((String)record.getValue("word"));
 					sensorData.setTime((long) record.getValue("occurence"));
@@ -716,9 +590,9 @@ public class AndroidSenseControllerService {
 					sensorDatas.add(sensorData);
 				}
 			} else {
-				Collections.sort(records, new Comparator<Record>() {
+				Collections.sort(records, new Comparator<AnalyticsDataRecord>() {
 					@Override
-					public int compare(Record o1, Record o2) {
+					public int compare(AnalyticsDataRecord o1, AnalyticsDataRecord o2) {
 						long t1 = (Long) o1.getValue("time");
 						long t2 = (Long) o2.getValue("time");
 						if (t1 < t2) {
@@ -730,7 +604,7 @@ public class AndroidSenseControllerService {
 						}
 					}
 				});
-				for (Record record : records) {
+				for (AnalyticsDataRecord record : records) {
 					SensorData sensorData = new SensorData();
 					sensorData.setTime((long) record.getValue("time"));
 					sensorData.setValue("" + (float) record.getValue(sensor));
@@ -738,23 +612,16 @@ public class AndroidSenseControllerService {
 				}
 			}
 			return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-		} catch (AnalyticsException e) {
-			String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " +
-							query;
+		} catch (DeviceManagementAnalyticsException e) {
+			String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
 			log.error(errorMsg);
 			response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
 			return sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-		} finally {
-			PrivilegedCarbonContext.endTenantFlow();
 		}
 	}
 
 	/**
 	 * get the event table from the sensor name.
-	 * TODO : this needs to be managed with sensor management.
-	 *
-	 * @param sensorName
-	 * @return
 	 */
 	private String getSensorEventTableName(String sensorName) {
 		String sensorEventTableName;

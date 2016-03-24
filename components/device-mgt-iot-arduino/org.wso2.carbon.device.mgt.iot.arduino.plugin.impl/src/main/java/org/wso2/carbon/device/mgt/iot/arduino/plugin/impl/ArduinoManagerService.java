@@ -49,11 +49,6 @@ public class ArduinoManagerService implements DeviceManagementService {
 	}
 
 	@Override
-	public String[] getSharedTenantsDomain() {
-		return new String[0];
-	}
-
-	@Override
 	public void init() throws DeviceManagementException {
 		deviceManager=new ArduinoManager();
 

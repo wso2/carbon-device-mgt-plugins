@@ -35,11 +35,7 @@ import java.util.UUID;
 
 public class ArduinoMQTTConnector extends MQTTTransportHandler {
     private static Log log = LogFactory.getLog(ArduinoMQTTConnector.class);
-
-    private static final String serverName =
-            DeviceManagementConfigurationManager.getInstance().getDeviceManagementServerInfo().getName();
-
-    private static final String subscribeTopic = serverName + "/+/" + ArduinoConstants.DEVICE_TYPE + "/#";
+    private static final String subscribeTopic = "wso2/" + ArduinoConstants.DEVICE_TYPE + "/#";
     private static final String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
     private static final String MESSAGE_TO_SEND = "IN";
@@ -91,11 +87,10 @@ public class ArduinoMQTTConnector extends MQTTTransportHandler {
             // <Topic> = [ServerName/Owner/DeviceType/DeviceId]
             String topic = messageParams[0];
             String[] topicParams = topic.split("/");
-            String owner = topicParams[1];
             String deviceId = topicParams[3];
 
             if (log.isDebugEnabled()) {
-                log.debug("Received MQTT message for: [OWNER-" + owner + "] & [DEVICE.ID-" + deviceId + "]");
+                log.debug("Received MQTT message for: [DEVICE.ID-" + deviceId + "]");
             }
 
             int lastIndex = message.toString().lastIndexOf(":");

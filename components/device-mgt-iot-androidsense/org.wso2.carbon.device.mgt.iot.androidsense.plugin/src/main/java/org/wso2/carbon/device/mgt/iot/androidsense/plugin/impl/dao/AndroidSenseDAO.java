@@ -18,20 +18,17 @@ package org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceDAO;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.iot.util.iotdevice.dao.IotDeviceManagementDAOFactoryInterface;
+import org.wso2.carbon.device.mgt.iot.androidsense.plugin.exception.AndroidSenseDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.dao.impl.AndroidSenseDAOImpl;
-
-
-
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class AndroidSenseDAO extends IotDeviceManagementDAOFactory implements IotDeviceManagementDAOFactoryInterface {
+public class AndroidSenseDAO {
 
     private static final Log log = LogFactory.getLog(AndroidSenseDAO.class);
     static DataSource dataSource;
@@ -42,35 +39,40 @@ public class AndroidSenseDAO extends IotDeviceManagementDAOFactory implements Io
     }
 
     public static void initAndroidDAO() {
-        dataSource = getDataSourceMap().get(AndroidSenseConstants.DEVICE_TYPE);
+        try {
+            Context ctx = new InitialContext();
+            dataSource = (DataSource) ctx.lookup(AndroidSenseConstants.DATA_SOURCE_NAME);
+        } catch (NamingException e) {
+            log.error("Error while looking up the data source: " + AndroidSenseConstants.DATA_SOURCE_NAME);
+        }
     }
 
-    @Override public IotDeviceDAO getIotDeviceDAO() {
+    public AndroidSenseDAOImpl getDeviceDAO() {
         return new AndroidSenseDAOImpl();
     }
 
-    public static void beginTransaction() throws IotDeviceManagementDAOException {
+    public static void beginTransaction() throws AndroidSenseDeviceMgtPluginException {
         try {
             Connection conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             currentConnection.set(conn);
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while retrieving datasource connection", e);
+            throw new AndroidSenseDeviceMgtPluginException("Error occurred while retrieving datasource connection", e);
         }
     }
 
-    public static Connection getConnection() throws IotDeviceManagementDAOException {
+    public static Connection getConnection() throws AndroidSenseDeviceMgtPluginException {
         if (currentConnection.get() == null) {
             try {
                 currentConnection.set(dataSource.getConnection());
             } catch (SQLException e) {
-                throw new IotDeviceManagementDAOException("Error occurred while retrieving data source connection", e);
+                throw new AndroidSenseDeviceMgtPluginException("Error occurred while retrieving data source connection", e);
             }
         }
         return currentConnection.get();
     }
 
-    public static void commitTransaction() throws IotDeviceManagementDAOException {
+    public static void commitTransaction() throws AndroidSenseDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -82,13 +84,13 @@ public class AndroidSenseDAO extends IotDeviceManagementDAOFactory implements Io
                 }
             }
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while committing the transaction", e);
+            throw new AndroidSenseDeviceMgtPluginException("Error occurred while committing the transaction", e);
         } finally {
             closeConnection();
         }
     }
 
-    public static void closeConnection() throws IotDeviceManagementDAOException {
+    public static void closeConnection() throws AndroidSenseDeviceMgtPluginException {
 
         Connection con = currentConnection.get();
         if (con != null) {
@@ -101,7 +103,7 @@ public class AndroidSenseDAO extends IotDeviceManagementDAOFactory implements Io
         currentConnection.remove();
     }
 
-    public static void rollbackTransaction() throws IotDeviceManagementDAOException {
+    public static void rollbackTransaction() throws AndroidSenseDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -113,7 +115,7 @@ public class AndroidSenseDAO extends IotDeviceManagementDAOFactory implements Io
                 }
             }
         } catch (SQLException e) {
-            throw new IotDeviceManagementDAOException("Error occurred while rollback the transaction", e);
+            throw new AndroidSenseDeviceMgtPluginException("Error occurred while rollback the transaction", e);
         } finally {
             closeConnection();
         }
