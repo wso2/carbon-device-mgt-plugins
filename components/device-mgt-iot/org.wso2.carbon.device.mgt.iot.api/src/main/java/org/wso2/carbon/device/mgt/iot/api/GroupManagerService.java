@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.iot.api;
 
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
@@ -30,6 +31,7 @@ import org.wso2.carbon.device.mgt.group.common.DeviceGroup;
 import org.wso2.carbon.device.mgt.group.common.GroupManagementException;
 import org.wso2.carbon.device.mgt.group.common.GroupUser;
 import org.wso2.carbon.device.mgt.group.core.providers.GroupManagementServiceProvider;
+import org.wso2.carbon.device.mgt.iot.util.ResponsePayload;
 
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletResponse;
@@ -95,7 +97,7 @@ public class GroupManagerService {
     @POST
     @Consumes("application/json")
     @Produces("application/json")
-    public boolean createGroup(@FormParam("name") String name,
+    public Response createGroup(@FormParam("name") String name,
                                @FormParam("username") String username,
                                @FormParam("description") String description) {
         DeviceGroup group = new DeviceGroup();
@@ -108,24 +110,33 @@ public class GroupManagerService {
         try {
             GroupManagementServiceProvider groupManagementService = this.getServiceProvider();
             int groupId = groupManagementService.createGroup(group, DEFAULT_ADMIN_ROLE, DEFAULT_ADMIN_PERMISSIONS);
-            response.setStatus(Response.Status.OK.getStatusCode());
-            isAdded = (groupId > 0) && groupManagementService.addGroupSharingRole(username, groupId, DEFAULT_OPERATOR_ROLE,
-                                                                                  DEFAULT_OPERATOR_PERMISSIONS);
-            groupManagementService.addGroupSharingRole(username, groupId, DEFAULT_STATS_MONITOR_ROLE,
-                                                       DEFAULT_STATS_MONITOR_PERMISSIONS);
-            groupManagementService.addGroupSharingRole(username, groupId, DEFAULT_VIEW_POLICIES,
-                                                       DEFAULT_VIEW_POLICIES_PERMISSIONS);
-            groupManagementService.addGroupSharingRole(username, groupId, DEFAULT_MANAGE_POLICIES,
-                                                       DEFAULT_MANAGE_POLICIES_PERMISSIONS);
-            groupManagementService.addGroupSharingRole(username, groupId, DEFAULT_VIEW_EVENTS,
-                                                       DEFAULT_VIEW_EVENTS_PERMISSIONS);
+            if (groupId == -2) {
+                ResponsePayload responsePayload = new ResponsePayload();
+                responsePayload.setStatusCode(HttpStatus.SC_CONFLICT);
+                responsePayload.setMessageFromServer("Group name is already exists.");
+                responsePayload.setResponseContent("CONFLICT");
+                return Response.status(HttpStatus.SC_CONFLICT).entity(responsePayload).build();
+            } else {
+                isAdded = (groupId > 0) && groupManagementService.addGroupSharingRole(username, groupId,
+                                                                                      DEFAULT_OPERATOR_ROLE,
+                                                                                      DEFAULT_OPERATOR_PERMISSIONS);
+                groupManagementService.addGroupSharingRole(username, groupId, DEFAULT_STATS_MONITOR_ROLE,
+                                                           DEFAULT_STATS_MONITOR_PERMISSIONS);
+                groupManagementService.addGroupSharingRole(username, groupId, DEFAULT_VIEW_POLICIES,
+                                                           DEFAULT_VIEW_POLICIES_PERMISSIONS);
+                groupManagementService.addGroupSharingRole(username, groupId, DEFAULT_MANAGE_POLICIES,
+                                                           DEFAULT_MANAGE_POLICIES_PERMISSIONS);
+                groupManagementService.addGroupSharingRole(username, groupId, DEFAULT_VIEW_EVENTS,
+                                                           DEFAULT_VIEW_EVENTS_PERMISSIONS);
+                ResponsePayload responsePayload = new ResponsePayload();
+                responsePayload.setStatusCode(HttpStatus.SC_OK);
+                return Response.status(HttpStatus.SC_OK).entity(responsePayload).build();
+            }
         } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
+            return Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         } finally {
             this.endTenantFlow();
         }
-        return isAdded;
     }
 
     @Path("/group/id/{groupId}")
