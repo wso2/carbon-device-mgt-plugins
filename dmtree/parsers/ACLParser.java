@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * This class handles the parsing of ACL Properties in Management Nodes
  */
-public class ACLParser {
+public final class ACLParser {
 
     /**
      * Constants for parsing ACL Strings
@@ -41,7 +41,7 @@ public class ACLParser {
      * @param acl - The ACL string
      * @return - 'True' if valid, or else 'False'
      */
-    public Boolean validateACL(String acl) {
+    public static Boolean validateACL(String acl) {
 
         if (acl == null || acl.isEmpty()) {
             return false;
