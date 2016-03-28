@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dmtree.managementobjects;
+package org.wso2.carbon.mdm.services.android.omadm.dmtree.ddf.standardmos;
 
 import java.io.Serializable;
 

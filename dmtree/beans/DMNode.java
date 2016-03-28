@@ -19,6 +19,7 @@
 package org.wso2.carbon.mdm.services.android.omadm.dmtree.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * The basic building block of the DMTree
@@ -33,5 +34,56 @@ public class DMNode implements Serializable {
     private String value;
     // Runtime properties of the node
     private RTProperty rtProperty;
+    // List of sub nodes
+    private ArrayList<DMNode> subNodes = new ArrayList();
 
+    public DMNode() {}
+
+    public DMNode(String name, String path, String value, RTProperty rtProperty, ArrayList<DMNode> subNodes) {
+        this.name = name;
+        this.path = path;
+        this.value = value;
+        this.rtProperty = rtProperty;
+        this.subNodes = subNodes;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public RTProperty getRtProperty() {
+        return rtProperty;
+    }
+
+    public void setRtProperty(RTProperty rtProperty) {
+        this.rtProperty = rtProperty;
+    }
+
+    public ArrayList<DMNode> getSubNodes() {
+        return subNodes;
+    }
+
+    public void setSubNodes(ArrayList<DMNode> subNodes) {
+        this.subNodes = subNodes;
+    }
 }
