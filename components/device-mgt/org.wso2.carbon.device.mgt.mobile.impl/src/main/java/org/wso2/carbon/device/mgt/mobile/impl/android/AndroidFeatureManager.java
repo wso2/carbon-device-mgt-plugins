@@ -145,101 +145,127 @@ public class AndroidFeatureManager implements FeatureManager {
     //Get the supported feature list.
     private static List<Feature> getSupportedFeatures() {
         List<Feature> supportedFeatures = new ArrayList<Feature>();
+
         Feature feature = new Feature();
         feature.setCode("DEVICE_LOCK");
         feature.setName("Device Lock");
         feature.setDescription("Lock the device");
         supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DEVICE_UNLOCK");
+        feature.setName("Device Unlock");
+        feature.setDescription("Unlock the device");
+        supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("DEVICE_LOCATION");
         feature.setName("Location");
         feature.setDescription("Request coordinates of device location");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("WIFI");
         feature.setName("wifi");
         feature.setDescription("Setting up wifi configuration");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("CAMERA");
         feature.setName("camera");
         feature.setDescription("Enable or disable camera");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("EMAIL");
         feature.setName("Email");
         feature.setDescription("Configure email settings");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("DEVICE_MUTE");
-        feature.setName("mute");
+        feature.setName("Mute");
         feature.setDescription("Enable mute in the device");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("DEVICE_INFO");
         feature.setName("Device info");
         feature.setDescription("Request device information");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("ENTERPRISE_WIPE");
         feature.setName("Enterprise Wipe");
         feature.setDescription("Remove enterprise applications");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("CLEAR_PASSWORD");
         feature.setName("Clear Password");
         feature.setDescription("Clear current password");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("WIPE_DATA");
         feature.setName("Wipe Data");
         feature.setDescription("Factory reset the device");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("APPLICATION_LIST");
         feature.setName("Application List");
         feature.setDescription("Request list of current installed applications");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("CHANGE_LOCK_CODE");
         feature.setName("Change Lock-code");
         feature.setDescription("Change current lock code");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("INSTALL_APPLICATION");
         feature.setName("Install App");
         feature.setDescription("Install Enterprise or Market application");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("UNINSTALL_APPLICATION");
         feature.setName("Uninstall App");
         feature.setDescription("Uninstall application");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("BLACKLIST_APPLICATIONS");
         feature.setName("Blacklist app");
         feature.setDescription("Blacklist applications");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("ENCRYPT_STORAGE");
         feature.setName("Encrypt storage");
         feature.setDescription("Encrypt storage");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("DEVICE_RING");
         feature.setName("Ring");
         feature.setDescription("Ring the device");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("PASSCODE_POLICY");
         feature.setName("Password Policy");
         feature.setDescription("Set passcode policy");
         supportedFeatures.add(feature);
+
         feature = new Feature();
         feature.setCode("NOTIFICATION");
         feature.setName("Message");
         feature.setDescription("Send message");
         supportedFeatures.add(feature);
+
         return supportedFeatures;
     }
 }
