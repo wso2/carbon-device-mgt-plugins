@@ -475,7 +475,7 @@ public class GroupManagerService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    public PaginationResult getDevices(@PathParam("groupId") int groupId,
+    public List<Device> getDevices(@PathParam("groupId") int groupId,
                                        @QueryParam("index") int index,
                                        @QueryParam("limit") int limit) {
         try {
