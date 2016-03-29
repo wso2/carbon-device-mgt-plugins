@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.mdm.api;
 
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.certificate.mgt.core.dao.CertificateManagementDAOException;
@@ -29,19 +30,13 @@ import org.wso2.carbon.device.mgt.common.PaginationRequest;
 import org.wso2.carbon.device.mgt.common.PaginationResult;
 import org.wso2.carbon.mdm.api.common.MDMAPIException;
 import org.wso2.carbon.mdm.api.util.MDMAPIUtils;
+import org.wso2.carbon.mdm.api.util.ResponsePayload;
 import org.wso2.carbon.mdm.beans.EnrollmentCertificate;
+import org.wso2.carbon.mdm.exception.*;
 import org.wso2.carbon.mdm.exception.BadRequestException;
-import org.wso2.carbon.mdm.exception.Message;
+import org.wso2.carbon.mdm.util.MDMUtil;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -50,8 +45,7 @@ import java.util.List;
 /**
  * All the certificate related tasks such as saving certificates, can be done through this endpoint.
  */
-@SuppressWarnings("NonJaxWsWebServices")
-@Produces({"application/json", "application/xml" })
+@Produces({ "application/json", "application/xml" })
 @Consumes({ "application/json", "application/xml" })
 public class Certificate {
 
@@ -71,7 +65,8 @@ public class Certificate {
                                     EnrollmentCertificate[] enrollmentCertificates) throws MDMAPIException {
         MediaType responseMediaType = MDMAPIUtils.getResponseMediaType(acceptHeader);
         CertificateManagementService certificateService;
-        List<org.wso2.carbon.certificate.mgt.core.bean.Certificate> certificates = new ArrayList<>();
+        List<org.wso2.carbon.certificate.mgt.core.bean.Certificate> certificates = new ArrayList<org.wso2.carbon
+                .certificate.mgt.core.bean.Certificate>();
         org.wso2.carbon.certificate.mgt.core.bean.Certificate certificate;
         certificateService = MDMAPIUtils.getCertificateManagementService();
         try {
@@ -184,9 +179,9 @@ public class Certificate {
         try {
             deleted = certificateService.removeCertificate(serialNumber);
             if(deleted){
-                return Response.status(Response.Status.OK).entity(true).type(responseMediaType).build();
+                return Response.status(Response.Status.OK).entity(deleted).type(responseMediaType).build();
             } else {
-                return Response.status(Response.Status.GONE).entity(false).type(responseMediaType).build();
+                return Response.status(Response.Status.GONE).entity(deleted).type(responseMediaType).build();
             }
         } catch (CertificateManagementDAOException e) {
             String msg = "Error occurred while converting PEM file to X509Certificate";

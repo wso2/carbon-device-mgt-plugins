@@ -49,7 +49,7 @@ public class Role {
      * Get user roles (except all internal roles) from system.
      *
      * @return A list of users
-     * @throws org.wso2.carbon.mdm.api.common.MDMAPIException
+     * @throws MDMAPIException
      */
     @GET
     @Produces ({MediaType.APPLICATION_JSON})
@@ -85,7 +85,7 @@ public class Role {
      * Get user roles by user store(except all internal roles) from system.
      *
      * @return A list of users
-     * @throws org.wso2.carbon.mdm.api.common.MDMAPIException
+     * @throws MDMAPIException
      */
     @GET
     @Path ("{userStore}")
@@ -122,7 +122,7 @@ public class Role {
      * Get user roles by providing a filtering criteria(except all internal roles & system roles) from system.
      *
      * @return A list of users
-     * @throws org.wso2.carbon.mdm.api.common.MDMAPIException
+     * @throws MDMAPIException
      */
     @GET
     @Path ("search")
@@ -205,7 +205,7 @@ public class Role {
      * Get user role of the system
      *
      * @return user role
-     * @throws org.wso2.carbon.mdm.api.common.MDMAPIException
+     * @throws MDMAPIException
      */
     @GET
     @Path("role")

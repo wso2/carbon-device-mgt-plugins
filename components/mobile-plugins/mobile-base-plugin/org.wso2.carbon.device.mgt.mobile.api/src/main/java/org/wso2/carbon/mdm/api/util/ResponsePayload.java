@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.mdm.api.util;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -54,21 +55,21 @@ public class ResponsePayload {
         this.responseContent = responseContent;
     }
 
-    private ResponsePayload.ResponsePayloadBuilder getBuilder() {
-        return new ResponsePayload.ResponsePayloadBuilder();
+    private ResponsePayloadBuilder getBuilder() {
+        return new ResponsePayloadBuilder();
     }
 
-    public static ResponsePayload.ResponsePayloadBuilder statusCode(int statusCode) {
+    public static ResponsePayloadBuilder statusCode(int statusCode) {
         ResponsePayload message = new ResponsePayload();
         return message.getBuilder().statusCode(statusCode);
     }
 
-    public static ResponsePayload.ResponsePayloadBuilder messageFromServer(String messageFromServer) {
+    public static ResponsePayloadBuilder messageFromServer(String messageFromServer) {
         ResponsePayload message = new ResponsePayload();
         return message.getBuilder().messageFromServer(messageFromServer);
     }
 
-    public static ResponsePayload.ResponsePayloadBuilder responseContent(String responseContent) {
+    public static ResponsePayloadBuilder responseContent(String responseContent) {
         ResponsePayload message = new ResponsePayload();
         return message.getBuilder().responseContent(responseContent);
     }

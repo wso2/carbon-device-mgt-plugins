@@ -79,7 +79,7 @@ public class Configuration {
 			configurationEntry.setValue(PolicyManagerUtil.getMonitoringFequency());
 			List<ConfigurationEntry> configList = tenantConfiguration.getConfiguration();
 			if (configList == null) {
-				configList = new ArrayList<>();
+				configList = new ArrayList<ConfigurationEntry>();
 			}
 			configList.add(configurationEntry);
 			tenantConfiguration.setConfiguration(configList);
