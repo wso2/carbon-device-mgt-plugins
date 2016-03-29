@@ -37,10 +37,9 @@
     </parent>
 
     <modules>
-        <module>components/device-mgt</module>
-        <!--<module>components/mobile-plugins</module>-->
+        <module>components/mobile-plugins</module>
         <!--<module>components/iot-plugins</module>-->
-        <module>features/device-mgt</module>
+        <module>features/mobile-plugins-feature</module>
     </modules>
 
     <dependencyManagement>

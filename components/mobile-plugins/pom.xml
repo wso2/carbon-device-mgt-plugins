@@ -27,15 +27,14 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
     <artifactId>mobile-plugins</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Mobile Plugins</name>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>android-plugin</module>
-        <module>windows-plugin</module>
+        <!--<module>android-plugin</module>-->
+        <!--<module>windows-plugin</module>-->
         <module>mobile-base-plugin</module>
     </modules>
 
