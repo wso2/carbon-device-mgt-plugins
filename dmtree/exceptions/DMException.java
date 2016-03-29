@@ -21,7 +21,7 @@ package org.wso2.carbon.mdm.services.android.omadm.dmtree.exceptions;
 /**
  * Custom exception class for General DM exceptions
  */
-public class DMException extends Exception {
+public class DMException extends RuntimeException {
 
     private static final long serialVersionUID = 7950151650447893900L;
     private String errorMessage;

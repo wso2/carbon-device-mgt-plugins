@@ -18,8 +18,12 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.dmtree.beans;
 
+import org.wso2.carbon.mdm.services.android.omadm.dmtree.exceptions.DMNodeException;
+import org.wso2.carbon.mdm.services.android.omadm.dmtree.exceptions.DMNodePropertyException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * The basic building block of the DMTree
@@ -43,8 +47,13 @@ public class DMNode implements Serializable {
         this.name = name;
         this.path = path;
         this.value = value;
-        this.rtProperty = rtProperty;
-        this.subNodes = subNodes;
+
+        setRtProperty(rtProperty);
+
+        if (subNodes == null) {
+            subNodes = new ArrayList<>();
+        }
+        setSubNodes(subNodes);
     }
 
     public String getName() {
@@ -68,6 +77,9 @@ public class DMNode implements Serializable {
     }
 
     public void setValue(String value) {
+        if ((value != null) && (!this.subNodes.isEmpty())) {
+            throw new DMNodePropertyException("Cannot add a leaf node into an internal node");
+        }
         this.value = value;
     }
 
@@ -84,6 +96,59 @@ public class DMNode implements Serializable {
     }
 
     public void setSubNodes(ArrayList<DMNode> subNodes) {
-        this.subNodes = subNodes;
+
+        if (subNodes != null)
+        {
+            checkLeafNode();
+            for (DMNode node : subNodes) {
+                if (!(node instanceof DMNode)) {
+                    throw new DMNodePropertyException("Invalid nodes found in the array");
+                }
+            }
+            this.subNodes = subNodes;
+        }
+        else
+        {
+            this.subNodes.clear();
+        }
+    }
+
+    public void addSubNodes(ArrayList<DMNode> dmNodes)
+    {
+        if (dmNodes == null) {
+            return;
+        }
+        checkLeafNode();
+        for (DMNode node : dmNodes) {
+            if (!(node instanceof DMNode)) {
+                throw new IllegalArgumentException("The nodes in the array list are not valid");
+            }
+        }
+        this.subNodes.addAll(dmNodes);
+    }
+
+    public void addSubNodes(DMNode[] dmNodes)
+    {
+        if (dmNodes != null)
+        {
+            checkLeafNode();
+            this.subNodes.addAll(Arrays.asList(dmNodes));
+        }
+    }
+
+    public void addNode(DMNode dmNode)
+    {
+        checkLeafNode();
+        this.subNodes.add(dmNode);
+    }
+
+    /**
+     * This method checks whether there's a value set to the node and if so, breaks the recursion
+     */
+    private void checkLeafNode()
+    {
+        if (this.value != null) {
+            throw new DMNodeException("Cannot add a leaf node into an internal node");
+        }
     }
 }
