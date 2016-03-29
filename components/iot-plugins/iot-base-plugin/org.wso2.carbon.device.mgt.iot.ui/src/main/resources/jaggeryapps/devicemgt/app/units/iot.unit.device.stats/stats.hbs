@@ -1,0 +1,29 @@
+{{#if monitor_operations}}
+    {{#zone "topCss"}}
+        {{css "css/graph.css"}}
+    {{/zone}}
+    <span id="details" data-devicetype="{{device.type}}" data-deviceid="{{device.deviceIdentifier}}"
+          data-monitor="{{monitor_operations}}" data-appcontext="{{@app.context}}"></span>
+    <div id="chartWrapper">
+    </div>
+    <div id="div-chart">
+    </div>
+    <a class="padding-left"
+       href="{{@app.context}}/analytics?deviceId={{device.deviceIdentifier}}&deviceType={{device.type}}&deviceName={{device.name}}">
+                                        <span class="fw-stack">
+                                            <i class="fw fw-ring fw-stack-2x"></i>
+                                            <i class="fw fw-statistics fw-stack-1x"></i>
+                                        </span> View Device Analytics</a>
+    <!-- /statistics -->
+    {{#zone "bottomJs"}}
+        {{js "js/d3.min.js"}}
+        {{js "js/rickshaw.min.js"}}
+        {{js "js/moment.min.js"}}
+        {{js "js/device-stats.js"}}
+    {{/zone}}
+{{else}}
+    <div align="center">
+        <h4 style="color: #D8000C"><i class="icon fw fw-error" style="color: #D8000C"></i>
+            Stats Loading Failed!</h4>
+    </div>
+{{/if}}
