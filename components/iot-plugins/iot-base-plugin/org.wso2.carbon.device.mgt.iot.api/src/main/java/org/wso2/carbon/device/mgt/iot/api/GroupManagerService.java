@@ -27,10 +27,10 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.PaginationRequest;
 import org.wso2.carbon.device.mgt.common.PaginationResult;
-import org.wso2.carbon.device.mgt.group.common.DeviceGroup;
-import org.wso2.carbon.device.mgt.group.common.GroupManagementException;
-import org.wso2.carbon.device.mgt.group.common.GroupUser;
-import org.wso2.carbon.device.mgt.group.core.providers.GroupManagementServiceProvider;
+import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroup;
+import org.wso2.carbon.device.mgt.common.group.mgt.GroupManagementException;
+import org.wso2.carbon.device.mgt.common.group.mgt.GroupUser;
+import org.wso2.carbon.device.mgt.core.service.GroupManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.util.ResponsePayload;
 
 import javax.jws.WebService;
@@ -73,7 +73,7 @@ public class GroupManagerService {
     private HttpServletResponse response;
     private PrivilegedCarbonContext ctx;
 
-    private GroupManagementServiceProvider getServiceProvider() {
+    private GroupManagementProviderService getServiceProvider() {
         String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
         String username = CarbonContext.getThreadLocalCarbonContext().getUsername();
         PrivilegedCarbonContext.startTenantFlow();
@@ -82,7 +82,7 @@ public class GroupManagerService {
         if (log.isDebugEnabled()) {
             log.debug("Getting thread local carbon context for tenant domain: " + tenantDomain);
         }
-        return (GroupManagementServiceProvider) ctx.getOSGiService(GroupManagementServiceProvider.class, null);
+        return (GroupManagementProviderService) ctx.getOSGiService(GroupManagementProviderService.class, null);
     }
 
     private void endTenantFlow() {
@@ -108,7 +108,7 @@ public class GroupManagerService {
         group.setDateOfLastUpdate(new Date().getTime());
         boolean isAdded = false;
         try {
-            GroupManagementServiceProvider groupManagementService = this.getServiceProvider();
+            GroupManagementProviderService groupManagementService = this.getServiceProvider();
             int groupId = groupManagementService.createGroup(group, DEFAULT_ADMIN_ROLE, DEFAULT_ADMIN_PERMISSIONS);
             if (groupId == -2) {
                 ResponsePayload responsePayload = new ResponsePayload();
@@ -151,7 +151,7 @@ public class GroupManagerService {
             return false;
         }
         try {
-            GroupManagementServiceProvider groupManagementService = this.getServiceProvider();
+            GroupManagementProviderService groupManagementService = this.getServiceProvider();
             DeviceGroup group = groupManagementService.getGroup(groupId);
             group.setName(name);
             group.setDescription(description);
@@ -219,7 +219,7 @@ public class GroupManagerService {
                                     @FormParam("username") String username) {
         DeviceGroup[] deviceGroups = null;
         try {
-            List<DeviceGroup> groups = this.getServiceProvider().findGroups(groupName, username);
+            List<DeviceGroup> groups = this.getServiceProvider().findInGroups(groupName, username);
             deviceGroups = new DeviceGroup[groups.size()];
             response.setStatus(Response.Status.OK.getStatusCode());
             groups.toArray(deviceGroups);
@@ -240,7 +240,7 @@ public class GroupManagerService {
                                    @QueryParam("permission") String permission) {
         DeviceGroup[] deviceGroups = null;
         try {
-            GroupManagementServiceProvider groupManagementService = this.getServiceProvider();
+            GroupManagementProviderService groupManagementService = this.getServiceProvider();
             List<DeviceGroup> groups;
             if (permission != null) {
                 groups = groupManagementService.getGroups(username, permission);

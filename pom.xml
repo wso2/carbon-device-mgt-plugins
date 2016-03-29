@@ -38,7 +38,7 @@
 
     <modules>
         <module>components/mobile-plugins</module>
-        <!--<module>components/iot-plugins</module>-->
+        <module>components/iot-plugins</module>
         <module>features/mobile-plugins-feature</module>
     </modules>
 
@@ -1029,6 +1029,10 @@
     </dependencyManagement>
 
     <properties>
+
+        <!-- Java Version Compatibility -->
+        <wso2.maven.compiler.source>1.7</wso2.maven.compiler.source>
+        <wso2.maven.compiler.target>1.7</wso2.maven.compiler.target>
 
         <!--Carbon kernel versions-->
         <carbon.kernel.version>4.4.3</carbon.kernel.version>
