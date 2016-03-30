@@ -39,16 +39,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.plugin.impl</artifactId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.plugin</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.manager.service.impl</artifactId>
-			<type>war</type>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl</artifactId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.api</artifactId>
 			<type>war</type>
 		</dependency>
 		<dependency>
@@ -133,17 +128,7 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.manager.service.impl
-									</artifactId>
-									<type>war</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>${project.build.directory}/maven-shared-archive-resources/webapps/
-                                    </outputDirectory>
-									<destFileName>arduino_mgt.war</destFileName>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl
+									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.api
 									</artifactId>
 									<type>war</type>
 									<overWrite>true</overWrite>
@@ -218,7 +203,7 @@
 							</adviceFile>
 							<bundles>
 								<bundleDef>
-									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.arduino.plugin.impl:${carbon.devicemgt.plugins.version}
+									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.arduino.plugin:${carbon.devicemgt.plugins.version}
 								</bundleDef>
 							</bundles>
 							<importFeatures>

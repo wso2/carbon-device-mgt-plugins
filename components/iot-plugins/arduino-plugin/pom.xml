@@ -35,8 +35,8 @@
 
     <modules>
         <module>org.wso2.carbon.device.mgt.iot.arduino.analytics</module>
-        <module>org.wso2.carbon.device.mgt.iot.arduino.service.impl</module>
-        <module>org.wso2.carbon.device.mgt.iot.arduino.plugin.impl</module>
+        <module>org.wso2.carbon.device.mgt.iot.arduino.api</module>
+        <module>org.wso2.carbon.device.mgt.iot.arduino.plugin</module>
         <module>org.wso2.carbon.device.mgt.iot.arduino.ui</module>
     </modules>
 

@@ -35,7 +35,7 @@ import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.IoTUtil;
 
-import javax.ws.rs.core.MediaType;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -53,6 +53,7 @@ public class XmppServerClient {
     @SuppressWarnings("unused")
     private static final String APPLICATION_JSON_MT = "application/json";
     private static final String DEVICEMGT_CONFIG_FILE = "devicemgt-config.xml";
+    private static final String APPLICATION_JSON = "application/json";
     private String xmppEndpoint;
     private String xmppUsername;
     private String xmppPassword;
@@ -99,7 +100,7 @@ public class XmppServerClient {
 
             StringEntity requestEntity;
             try {
-                requestEntity = new StringEntity(jsonRequest, MediaType.APPLICATION_JSON,
+                requestEntity = new StringEntity(jsonRequest, APPLICATION_JSON,
                                                  StandardCharsets.UTF_8.toString());
             } catch (UnsupportedEncodingException e) {
                 return false;
@@ -249,7 +250,7 @@ public class XmppServerClient {
 
             HttpGet httpGet = new HttpGet(xmppSessionsAPIEndpoint);
             httpGet.addHeader(HttpHeaders.AUTHORIZATION, authorizationHeader);
-            httpGet.addHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+            httpGet.addHeader(HttpHeaders.ACCEPT, APPLICATION_JSON);
 
             try {
                 HttpResponse httpResponse = httpClient.execute(httpGet);

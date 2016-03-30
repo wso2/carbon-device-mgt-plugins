@@ -33,12 +33,12 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl</module>
+        <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin</module>
         <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.ui</module>
         <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.impl</module>
         <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.impl</module>
         <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.analytics</module>
-        <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl</module>
+        <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.api</module>
     </modules>
 
     <build>

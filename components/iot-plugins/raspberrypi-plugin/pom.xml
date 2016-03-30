@@ -33,10 +33,10 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl</module>
+        <module>org.wso2.carbon.device.mgt.iot.raspberrypi.plugin</module>
         <module>org.wso2.carbon.device.mgt.iot.raspberrypi.ui</module>
         <module>org.wso2.carbon.device.mgt.iot.raspberrypi.analytics</module>
-        <module>org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl</module>
+        <module>org.wso2.carbon.device.mgt.iot.raspberrypi.api</module>
     </modules>
 
     <build>

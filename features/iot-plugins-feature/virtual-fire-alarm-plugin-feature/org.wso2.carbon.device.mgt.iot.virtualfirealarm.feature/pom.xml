@@ -39,16 +39,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl</artifactId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.manager.service.impl</artifactId>
-			<type>war</type>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl</artifactId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.api</artifactId>
 			<type>war</type>
 		</dependency>
 		<dependency>
@@ -133,21 +128,12 @@
 							<artifactItems>
 								<artifactItem>
 									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl
+									<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.api
 									</artifactId>
 									<type>war</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/maven-shared-archive-resources/webapps/</outputDirectory>
 									<destFileName>virtual_firealarm.war</destFileName>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.manager.service.impl
-									</artifactId>
-									<type>war</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>${project.build.directory}/maven-shared-archive-resources/webapps/</outputDirectory>
-									<destFileName>virtual_firealarm_mgt.war</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
@@ -245,7 +231,7 @@
 							</adviceFile>
 							<bundles>
 								<bundleDef>
-									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl:${carbon.devicemgt.plugins.version}
+									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin:${carbon.devicemgt.plugins.version}
 								</bundleDef>
 							</bundles>
 							<importFeatures>

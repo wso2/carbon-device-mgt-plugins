@@ -265,7 +265,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.jwt.client.extension</artifactId>
+                <artifactId>org.wso2.carbon.identity.jwt.client.extension</artifactId>
                 <version>${carbon.devicemgt.version}</version>
             </dependency>
             <dependency>
@@ -339,13 +339,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.controller.api</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-                <type>war</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.manager.api</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.api</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
                 <type>war</type>
             </dependency>
@@ -355,24 +349,12 @@
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.arduino.plugin.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.arduino.plugin</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.arduino.service.impl</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-                <type>war</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.arduino.manager.service.impl</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-                <type>war</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.arduino.controller.service.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.arduino.api</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
                 <type>war</type>
             </dependency>
@@ -386,13 +368,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.manager.api</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-                <type>war</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.digitaldisplay.api</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
                 <type>war</type>
             </dependency>
@@ -408,14 +384,7 @@
 
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.manager.api</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-                <type>war</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.api</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
                 <type>war</type>
             </dependency>
@@ -425,18 +394,12 @@
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.plugin</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.manager.service.impl</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-                <type>war</type>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.controller.service.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.api</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
                 <type>war</type>
             </dependency>
@@ -446,20 +409,13 @@
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.manager.service.impl</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-                <type>war</type>
-            </dependency>
-
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.controller.service.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.api</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
                 <type>war</type>
             </dependency>
@@ -480,7 +436,7 @@
             <!-- Camera Plugin -->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.camera.plugin.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.camera.plugin</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->

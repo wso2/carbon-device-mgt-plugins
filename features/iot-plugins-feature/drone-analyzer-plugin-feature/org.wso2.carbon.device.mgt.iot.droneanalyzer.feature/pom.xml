@@ -43,13 +43,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api</artifactId>
-            <version>${carbon.devicemgt.plugins.version}</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.manager.api</artifactId>
+            <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.api</artifactId>
             <version>${carbon.devicemgt.plugins.version}</version>
             <type>war</type>
         </dependency>
@@ -122,21 +116,12 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                                    <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api
+                                    <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.api
                                     </artifactId>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/maven-shared-archive-resources/webapps/</outputDirectory>
                                     <destFileName>drone_analyzer.war</destFileName>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                                    <artifactId>org.wso2.carbon.device.mgt.iot.droneanalyzer.manager.api
-                                    </artifactId>
-                                    <type>war</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${project.build.directory}/maven-shared-archive-resources/webapps/</outputDirectory>
-                                    <destFileName>drone_analyzer_mgt.war</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
