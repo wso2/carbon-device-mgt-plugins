@@ -54,7 +54,6 @@ public class IotDeviceManagementServiceComponent {
             /* Initialize the data source configuration */
             DeviceManagementConfigurationManager.getInstance().initConfig();
             bundleContext.registerService(ServerStartupObserver.class.getName(), new IoTServerStartupListener(), null);
-            IoTCommonDataHolder.getInstance().initialize();
             if (log.isDebugEnabled()) {
                 log.debug("Iot Device Management Service Component has been successfully activated");
             }
