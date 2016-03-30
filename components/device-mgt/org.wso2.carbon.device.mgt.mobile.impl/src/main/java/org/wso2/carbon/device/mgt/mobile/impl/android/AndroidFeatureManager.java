@@ -240,6 +240,204 @@ public class AndroidFeatureManager implements FeatureManager {
         feature.setName("Message");
         feature.setDescription("Send message");
         supportedFeatures.add(feature);
+        feature = new Feature();
+        feature.setCode("DISALLOW_ADJUST_VOLUME");
+        feature.setName("Adjust Volume");
+        feature.setDescription("allow or disallow user to change volume");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_CONFIG_BLUETOOTH");
+        feature.setName("Disallow bluetooth configuration");
+        feature.setDescription("allow or disallow user to change bluetooth configurations");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_CONFIG_CELL_BROADCASTS");
+        feature.setName("Disallow cell broadcast configuration");
+        feature.setDescription("allow or disallow user to change cell broadcast configurations");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_CONFIG_CREDENTIALS");
+        feature.setName("Disallow credential configuration");
+        feature.setDescription("allow or disallow user to change user credentials");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_CONFIG_MOBILE_NETWORKS");
+        feature.setName("Disallow mobile network configure");
+        feature.setDescription("allow or disallow user to change mobile networks configurations");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_CONFIG_TETHERING");
+        feature.setName("Disallow tethering configuration");
+        feature.setDescription("allow or disallow user to change tethering configurations");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_CONFIG_VPN");
+        feature.setName("Disallow VPN configuration");
+        feature.setDescription("allow or disallow user to change VPN configurations");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_CONFIG_WIFI");
+        feature.setName("Disallow WIFI configuration");
+        feature.setDescription("allow or disallow user to change WIFI configurations");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_APPS_CONTROL");
+        feature.setName("Disallow APP control configuration");
+        feature.setDescription("allow or disallow user to change app control");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_CREATE_WINDOWS");
+        feature.setName("Disallow window creation");
+        feature.setDescription("allow or disallow window creation");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_APPS_CONTROL");
+        feature.setName("Disallow APP control configuration");
+        feature.setDescription("allow or disallow user to change app control configurations");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_CROSS_PROFILE_COPY_PASTE");
+        feature.setName("Disallow cross profile copy paste");
+        feature.setDescription("allow or disallow cross profile copy paste");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_DEBUGGING_FEATURES");
+        feature.setName("Disallow debugging features");
+        feature.setDescription("allow or disallow debugging features");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_FACTORY_RESET");
+        feature.setName("Disallow factory reset");
+        feature.setDescription("allow or disallow factory reset");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_ADD_USER");
+        feature.setName("Disallow add user");
+        feature.setDescription("allow or disallow add user");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_INSTALL_APPS");
+        feature.setName("Disallow install apps");
+        feature.setDescription("allow or disallow install apps");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_INSTALL_UNKNOWN_SOURCES");
+        feature.setName("Disallow install unknown sources");
+        feature.setDescription("allow or disallow install unknown sources");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_MODIFY_ACCOUNTS");
+        feature.setName("Disallow modify account");
+        feature.setDescription("allow or disallow modify account");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_MOUNT_PHYSICAL_MEDIA");
+        feature.setName("Disallow mount physical media");
+        feature.setDescription("allow or disallow mount physical media.");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_NETWORK_RESET");
+        feature.setName("Disallow network reset");
+        feature.setDescription("allow or disallow network reset");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_OUTGOING_BEAM");
+        feature.setName("Disallow outgoing beam");
+        feature.setDescription("allow or disallow outgoing beam.");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_OUTGOING_CALLS");
+        feature.setName("Disallow outgoing calls");
+        feature.setDescription("allow or disallow outgoing calls");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_REMOVE_USER");
+        feature.setName("Disallow remove users");
+        feature.setDescription("allow or disallow remove users");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_SAFE_BOOT");
+        feature.setName("Disallow safe boot");
+        feature.setDescription("allow or disallow safe boot");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_SHARE_LOCATION");
+        feature.setName("Disallow share location");
+        feature.setDescription("allow or disallow share location.");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_SMS");
+        feature.setName("Disallow sms");
+        feature.setDescription("allow or disallow sms");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_UNINSTALL_APPS");
+        feature.setName("Disallow uninstall app");
+        feature.setDescription("allow or disallow uninstall app");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_UNMUTE_MICROPHONE");
+        feature.setName("Disallow unmute mic");
+        feature.setDescription("allow or disallow unmute mic");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("DISALLOW_USB_FILE_TRANSFER");
+        feature.setName("Disallow usb file transfer");
+        feature.setDescription("allow or disallow usb file transfer");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("ALLOW_PARENT_PROFILE_APP_LINKING");
+        feature.setName("Disallow parent profile app linking");
+        feature.setDescription("allow or disallow parent profile app linking");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("ENSURE_VERIFY_APPS");
+        feature.setName("Disallow ensure verify apps");
+        feature.setDescription("allow or disallow ensure verify apps");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("AUTO_TIME");
+        feature.setName("Allow auto timing");
+        feature.setDescription("allow or disallow auto timing");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("REMOVE_DEVICE_OWNER");
+        feature.setName("Remove device owner");
+        feature.setDescription("remove device owner");
+        supportedFeatures.add(feature);
+
         return supportedFeatures;
     }
 }
