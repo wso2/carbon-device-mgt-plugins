@@ -141,6 +141,22 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
             String sensorName = null;
             PrivilegedCarbonContext.startTenantFlow();
             PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+            DeviceManagementProviderService deviceManagementProviderService =
+                    (DeviceManagementProviderService) ctx.getOSGiService(DeviceManagementProviderService.class, null);
+            if (deviceManagementProviderService != null) {
+                DeviceIdentifier identifier = new DeviceIdentifier(deviceId, AndroidSenseConstants.DEVICE_TYPE);
+                Device device = deviceManagementProviderService.getDevice(identifier);
+                if (device != null) {
+                    String owner = device.getEnrolmentInfo().getOwner();
+                    ctx.setUsername(owner);
+                    ctx.setTenantDomain(MultitenantUtils.getTenantDomain(owner), true);
+                } else {
+                    return;
+                }
+
+            } else {
+                return;
+            }
             ctx.setTenantDomain("carbon.super", true);
             for (SensorData sensor : sensorData) {
                 if (sensor.key.equals("battery")) {
@@ -254,6 +270,8 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
             }
         } catch (JsonSyntaxException e) {
             throw new TransportHandlerException("Invalid message format " + mqttMessage.toString());
+        } catch (DeviceManagementException e) {
+            throw new TransportHandlerException("Invalid device id " + deviceId);
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
         }

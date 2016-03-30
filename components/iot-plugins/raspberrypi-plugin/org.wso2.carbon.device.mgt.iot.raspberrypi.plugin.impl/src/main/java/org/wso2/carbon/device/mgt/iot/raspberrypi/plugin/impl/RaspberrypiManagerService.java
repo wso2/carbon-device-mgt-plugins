@@ -33,6 +33,7 @@ import java.util.List;
 public class RaspberrypiManagerService implements DeviceManagementService {
 
 	private DeviceManager deviceManager;
+	private final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
 
 	@Override
 	public String getType() {
@@ -41,12 +42,12 @@ public class RaspberrypiManagerService implements DeviceManagementService {
 
 	@Override
 	public String getProviderTenantDomain() {
-		return "carbon.super";
+		return DEVICE_TYPE_PROVIDER_DOMAIN;
 	}
 
 	@Override
 	public boolean isSharedWithAllTenants() {
-		return false;
+		return true;
 	}
 
 	@Override

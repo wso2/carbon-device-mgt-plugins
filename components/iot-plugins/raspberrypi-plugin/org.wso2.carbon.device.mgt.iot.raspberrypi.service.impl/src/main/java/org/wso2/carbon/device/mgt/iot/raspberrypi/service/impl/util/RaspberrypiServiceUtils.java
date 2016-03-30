@@ -45,8 +45,6 @@ import java.util.concurrent.Future;
 public class RaspberrypiServiceUtils {
     private static final Log log = LogFactory.getLog(RaspberrypiServiceUtils.class);
 
-    //TODO; replace this tenant domain
-    private static final String SUPER_TENANT = "carbon.super";
     private static final String TEMPERATURE_STREAM_DEFINITION = "org.wso2.iot.devices.temperature";
 
     public static String sendCommandViaHTTP(final String deviceHTTPEndpoint, String urlContext,

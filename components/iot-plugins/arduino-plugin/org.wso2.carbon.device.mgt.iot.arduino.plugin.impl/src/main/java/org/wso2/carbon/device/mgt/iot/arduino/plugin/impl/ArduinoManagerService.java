@@ -32,6 +32,7 @@ import java.util.List;
 
 public class ArduinoManagerService implements DeviceManagementService {
 	private DeviceManager deviceManager;
+	private final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
 
 	@Override
 	public String getType() {
@@ -40,7 +41,7 @@ public class ArduinoManagerService implements DeviceManagementService {
 
 	@Override
 	public String getProviderTenantDomain() {
-		return "carbon.super";
+		return DEVICE_TYPE_PROVIDER_DOMAIN;
 	}
 
 	@Override

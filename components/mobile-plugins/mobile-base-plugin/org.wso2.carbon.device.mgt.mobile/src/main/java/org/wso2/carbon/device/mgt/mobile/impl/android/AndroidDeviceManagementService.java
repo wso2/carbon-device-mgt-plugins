@@ -34,10 +34,21 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
 
     private DeviceManager deviceManager;
     public static final String DEVICE_TYPE_ANDROID = "android";
+    private static final String SUPER_TENANT_DOMAIN = "carbon.super";
 
     @Override
     public String getType() {
         return AndroidDeviceManagementService.DEVICE_TYPE_ANDROID;
+    }
+
+    @Override
+    public String getProviderTenantDomain() {
+        return SUPER_TENANT_DOMAIN;
+    }
+
+    @Override
+    public boolean isSharedWithAllTenants() {
+        return true;
     }
 
     @Override

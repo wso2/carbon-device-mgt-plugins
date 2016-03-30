@@ -30,7 +30,6 @@ import java.io.File;
 
 public class DroneAnalyzerServiceUtils {
 
-    private static final String SUPER_TENANT = "carbon.super";
     private static org.apache.commons.logging.Log log = LogFactory.getLog(DroneAnalyzerServiceUtils.class);
 
     public static void sendCommandViaXMPP(String deviceOwner, String deviceId, String resource,

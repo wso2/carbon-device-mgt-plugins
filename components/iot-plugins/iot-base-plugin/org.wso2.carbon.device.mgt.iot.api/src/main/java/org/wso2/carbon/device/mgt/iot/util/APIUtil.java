@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.core.service.GroupManagementProviderService;
+import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
 /**
  * This class provides utility functions used by REST-API.
@@ -52,5 +53,17 @@ public class APIUtil {
 			throw new IllegalStateException(msg);
 		}
 		return deviceManagementProviderService;
+	}
+
+	public static PolicyManagerService getPolicyManagerService() {
+		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+		PolicyManagerService policyManagerService =
+				(PolicyManagerService) ctx.getOSGiService(PolicyManagerService.class, null);
+		if (policyManagerService == null) {
+			String msg = "Policy management service has not initialized.";
+			log.error(msg);
+			throw new IllegalStateException(msg);
+		}
+		return policyManagerService;
 	}
 }

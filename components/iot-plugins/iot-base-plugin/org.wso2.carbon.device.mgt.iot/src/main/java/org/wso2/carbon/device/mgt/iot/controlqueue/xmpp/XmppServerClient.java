@@ -33,7 +33,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.exception.IoTException;
 import org.wso2.carbon.device.mgt.iot.util.IoTUtil;
 
 import javax.ws.rs.core.MediaType;
@@ -140,7 +139,7 @@ public class XmppServerClient {
                     EntityUtils.consume(httpResponse.getEntity());
                     return true;
                 }
-            } catch (IOException | IoTException e) {
+            } catch (IOException e) {
                 String errorMsg = "Error occured whilst trying a 'POST' at : " + xmppUsersAPIEndpoint;
                 log.error(errorMsg);
                 throw new DeviceControllerException(errorMsg, e);
@@ -199,7 +198,7 @@ public class XmppServerClient {
                     return false;
                 }
 
-            } catch (IOException | IoTException e) {
+            } catch (IOException e) {
                 String errorMsg = "Error occured whilst trying a 'GET' at : " + xmppCheckUserAPIEndpoint;
                 log.error(errorMsg);
                 throw new DeviceControllerException(errorMsg, e);
@@ -266,7 +265,7 @@ public class XmppServerClient {
                 xmppSessions = new JSONObject(response).getJSONArray("session");
                 return xmppSessions;
 
-            } catch (IOException | IoTException e) {
+            } catch (IOException e) {
                 String errorMsg = "Error occured whilst trying a 'GET' at : " + xmppSessionsAPIEndpoint;
                 log.error(errorMsg);
                 throw new DeviceControllerException(errorMsg, e);
