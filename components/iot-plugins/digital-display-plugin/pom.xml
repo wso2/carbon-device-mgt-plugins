@@ -33,8 +33,7 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.device.mgt.iot.digitaldisplay.controller.api</module>
-        <module>org.wso2.carbon.device.mgt.iot.digitaldisplay.manager.api</module>
+        <module>org.wso2.carbon.device.mgt.iot.digitaldisplay.service.impl</module>
         <module>org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin</module>
         <module>org.wso2.carbon.device.mgt.iot.digitaldisplay.ui</module>
     </modules>

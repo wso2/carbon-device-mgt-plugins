@@ -34,8 +34,7 @@
 
     <modules>
         <module>org.wso2.carbon.device.mgt.iot.droneanalyzer.ui</module>
-        <module>org.wso2.carbon.device.mgt.iot.droneanalyzer.controller.api</module>
-        <module>org.wso2.carbon.device.mgt.iot.droneanalyzer.manager.api</module>
+        <module>org.wso2.carbon.device.mgt.iot.droneanalyzer.service.impl</module>
         <module>org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin</module>
     </modules>
 
