@@ -39,7 +39,7 @@ import javax.ws.rs.core.Response;
 @DeviceType(value = "arduino")
 public interface ArduinoControllerService {
 
-    @Path("register/device/{deviceId}/{ip}/{port}")
+    @Path("device/register/{deviceId}/{ip}/{port}")
     @POST
     Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
                               @PathParam("port") String devicePort, @Context HttpServletRequest request);
@@ -58,16 +58,16 @@ public interface ArduinoControllerService {
                                                                                          "from Arduino agent")
     Response requestTemperature(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol);
 
-    @Path("sensor")
+    @Path("device/sensor")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     Response pushData(DeviceData dataMsg);
 
-    @Path("{deviceId}/controls")
+    @Path("device/{deviceId}/controls")
     @GET
     Response readControls(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol);
 
-    @Path("temperature")
+    @Path("device/temperature")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     Response pushTemperatureData(final DeviceData dataMsg, @Context HttpServletRequest request);
@@ -75,7 +75,7 @@ public interface ArduinoControllerService {
     /**
      * Retreive Sensor data for the device type
      */
-    @Path("stats/device/{deviceId}/sensors/temperature")
+    @Path("device/stats/{deviceId}/sensors/temperature")
     @GET
     @Consumes("application/json")
     @Produces("application/json")
