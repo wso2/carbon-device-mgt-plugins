@@ -33,90 +33,90 @@
 		<path>/device-mgt/user/devices/list</path>
 		<url>/devices/*</url>
 		<method>GET</method>
-		<scope></scope>
+		<scope>virtual_firealarm_user</scope>
 	</Permission>
 	<Permission>
 		<name>Remove device</name>
 		<path>/device-mgt/user/devices/remove</path>
 		<url>/devices/*</url>
 		<method>DELETE</method>
-		<scope></scope>
+		<scope>virtual_firealarm_user</scope>
 	</Permission>
 	<Permission>
 		<name>Download device</name>
 		<path>/device-mgt/user/devices/add</path>
 		<url>/devices/*/download</url>
 		<method>GET</method>
-		<scope></scope>
+		<scope>virtual_firealarm_user</scope>
 	</Permission>
 	<Permission>
 		<name>Update device</name>
 		<path>/device-mgt/user/devices/update</path>
 		<url>/devices/*</url>
 		<method>POST</method>
-		<scope></scope>
+		<scope>virtual_firealarm_user</scope>
 	</Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Get Devices</name>
+        <path>/device-mgt/user/devices</path>
         <url>/devices</url>
         <method>GET</method>
-        <scope></scope>
+        <scope>virtual_firealarm_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Generate Link</name>
+        <path>/device-mgt/user/devices/generate_link</path>
         <url>/devices/*/generate_link</url>
         <method>GET</method>
-        <scope></scope>
+        <scope>virtual_firealarm_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Register Device</name>
+        <path>/device-mgt/user/device/register</path>
         <url>/device/register/*/*/*</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>virtual_firealarm_device</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Control Buzz</name>
+        <path>/device-mgt/user/device/buzz</path>
         <url>/device/*/buzz</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>virtual_firealarm_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Get Temperature</name>
+        <path>/device-mgt/user/device/temperature</path>
         <url>/device/*/temperature</url>
         <method>GET</method>
-        <scope></scope>
+        <scope>virtual_firealarm_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Push Temperature</name>
+        <path>/device-mgt/user/device/temperature</path>
         <url>/device/temperature</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>virtual_firealarm_device</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Get SCEP</name>
+        <path>/device-mgt/user/device/scep</path>
         <url>/device/scep</url>
         <method>GET</method>
-        <scope></scope>
+        <scope>virtual_firealarm_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Push SCEP</name>
+        <path>/device-mgt/user/device/scep</path>
         <url>/device/scep</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>virtual_firealarm_device</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Get Stats</name>
+        <path>/device-mgt/user/device/stats</path>
         <url>/device/stats/*/sensors/*</url>
         <method>GET</method>
-        <scope></scope>
+        <scope>virtual_firealarm_device</scope>
     </Permission>
 </PermissionConfiguration>

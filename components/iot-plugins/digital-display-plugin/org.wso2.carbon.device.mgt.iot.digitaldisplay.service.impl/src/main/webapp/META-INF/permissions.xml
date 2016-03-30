@@ -26,6 +26,7 @@
     it will result 403 error at the runtime.
 -->
 <PermissionConfiguration>
+
 	<APIVersion></APIVersion>
 	<!-- Device related APIs -->
 	<Permission>
@@ -33,105 +34,105 @@
 		<path>/device-mgt/user/devices/list</path>
 		<url>/devices/*</url>
 		<method>GET</method>
-		<scope></scope>
+		<scope>digital_display_user</scope>
 	</Permission>
 	<Permission>
 		<name>Remove device</name>
 		<path>/device-mgt/user/devices/remove</path>
 		<url>/devices/*</url>
 		<method>DELETE</method>
-		<scope></scope>
+		<scope>digital_display_user</scope>
 	</Permission>
 	<Permission>
 		<name>Download device</name>
 		<path>/device-mgt/user/devices/add</path>
 		<url>/devices/*/download</url>
 		<method>GET</method>
-		<scope></scope>
+		<scope>digital_display_user</scope>
 	</Permission>
 	<Permission>
 		<name>Update device</name>
 		<path>/device-mgt/user/devices/update</path>
 		<url>/devices/*</url>
 		<method>POST</method>
-		<scope></scope>
+		<scope>digital_display_user</scope>
 	</Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Restart Browser</name>
+        <path>/device-mgt/user/device</path>
         <url>/device/*/restart-browser</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>digital_display_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Terminate Display</name>
+        <path>/device-mgt/user/device/terminate-display</path>
         <url>/device/*/terminate-display</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>digital_display_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Restart Display</name>
+        <path>/device-mgt/user/device/restart-display</path>
         <url>/device/*/restart-display</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>digital_display_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Edit Sequence</name>
+        <path>/device-mgt/user/device/edit-sequence</path>
         <url>/device/*/edit-sequence</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>digital_display_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Upload Content</name>
+        <path>/device-mgt/user/device/upload-content</path>
         <url>/device/*/upload-content</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>digital_display_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Add Resource</name>
+        <path>/device-mgt/user/device/add-resource</path>
         <url>/device/*/add-resource</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>digital_display_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Remove Resource</name>
+        <path>/device-mgt/user/device/remove-resource</path>
         <url>/device/*/remove-resource</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>digital_display_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Restart Server</name>
+        <path>/device-mgt/user/device/restart-server</path>
         <url>/device/*/restart-server</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>digital_display_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Take Screenshot</name>
+        <path>/device-mgt/user/device/screenshot</path>
         <url>/device/*/screenshot</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>digital_display_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Get Device Stats</name>
+        <path>/device-mgt/user/device/get-device-status</path>
         <url>/device/*/get-device-status</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>digital_display_user</scope>
     </Permission>
     <Permission>
-        <name></name>
-        <path></path>
+        <name>Get Content List</name>
+        <path>/device-mgt/user/device/get-content-list</path>
         <url>/device/*/get-content-list</url>
         <method>POST</method>
-        <scope></scope>
+        <scope>digital_display_user</scope>
     </Permission>
 
 </PermissionConfiguration>

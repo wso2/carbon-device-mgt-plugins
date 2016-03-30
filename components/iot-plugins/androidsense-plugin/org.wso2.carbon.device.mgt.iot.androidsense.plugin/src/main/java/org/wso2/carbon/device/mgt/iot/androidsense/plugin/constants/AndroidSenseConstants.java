@@ -21,7 +21,6 @@ public class AndroidSenseConstants {
     public final static String DEVICE_TYPE = "android_sense";
     public final static String DEVICE_PLUGIN_DEVICE_NAME = "DEVICE_NAME";
     public final static String DEVICE_PLUGIN_DEVICE_ID = "ANDROID_DEVICE_ID";
-    public final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
     //Android Sense Stream definitions.
     public static final String ACCELEROMETER_STREAM_DEFINITION = "org.wso2.iot.devices.accelerometer";
     public static final String BATTERY_STREAM_DEFINITION = "org.wso2.iot.devices.battery";
