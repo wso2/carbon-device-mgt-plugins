@@ -72,11 +72,9 @@
                             org.apache.commons.logging.*,
                             org.json;version="${commons-json.version}",
                             org.wso2.carbon.base.*,
-                            org.wso2.carbon.databridge.*,
                             org.osgi.framework,
                             org.osgi.service.component,
                             javax.xml.bind.*;resolution:=optional,
-                            javax.xml.bind.annotation.*;resolution:=optional,
                             javax.xml.parsers.*;resolution:=optional,
                             javax.crypto,
                             org.apache.tomcat.util.codec.binary,
@@ -84,9 +82,9 @@
                             org.wso2.carbon.core;version="${carbon.kernel.version.range}",
                             org.wso2.carbon.utils.*;version="${carbon.kernel.version.range}",
                             org.wso2.carbon.device.mgt.common.*,
-                            org.wso2.carbon.device.mgt.core.*,
-                            org.wso2.carbon.context.*;version="${carbon.kernel.version.range}",
-                            org.eclipse.paho.client.mqttv3.*;version="${eclipse.paho.version}"
+                            org.eclipse.paho.client.mqttv3.*;version="${eclipse.paho.version}",
+                            javax.ws.rs.core,
+                            javax.xml
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.iot.internal,
