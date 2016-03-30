@@ -37,7 +37,7 @@ public class URLPrinterStartupHandler implements ServerStartupObserver {
 
     @Override
     public void completedServerStartup() {
-        log.info("Device Management Console URL : " + this.getEmmUrl());
+        log.info("EMM Console URL : " + this.getEmmUrl());
     }
 
     private String getEmmUrl() {
@@ -58,7 +58,7 @@ public class URLPrinterStartupHandler implements ServerStartupObserver {
         if (httpsProxyPort > 0) {
             port = httpsProxyPort;
         }
-        return "https://" + hostName + ":" + port + "/devicemgt";
+        return "https://" + hostName + ":" + port + "/emm";
     }
 
 }

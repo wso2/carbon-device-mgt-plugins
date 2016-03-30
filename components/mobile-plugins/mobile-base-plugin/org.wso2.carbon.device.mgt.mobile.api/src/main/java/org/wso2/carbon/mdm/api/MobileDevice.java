@@ -133,7 +133,7 @@ public class MobileDevice {
      * @param user         User Name
      * @param tenantDomain tenant domain
      * @return Device
-     * @throws org.wso2.carbon.mdm.api.common.MDMAPIException
+     * @throws MDMAPIException
      */
     @GET
     @Path("user/{user}/{tenantDomain}")
@@ -184,7 +184,7 @@ public class MobileDevice {
     public List<Device> getDevicesByName(@PathParam("name") String deviceName,
                                          @PathParam("tenantDomain") String tenantDomain) throws MDMAPIException {
 
-        List<org.wso2.carbon.device.mgt.common.Device> devices;
+        List<Device> devices;
         try {
             devices = MDMAPIUtils.getDeviceManagementService().getDevicesByName(deviceName);
         } catch (DeviceManagementException e) {

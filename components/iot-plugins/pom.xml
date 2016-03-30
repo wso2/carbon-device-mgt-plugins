@@ -27,20 +27,18 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
     <artifactId>iot-plugins</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - IoT Plugins</name>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>androidsense-plugin</module>
-        <module>arduino-plugin</module>
-        <module>camera-plugin</module>
-        <module>digital-display-plugin</module>
-        <module>drone-analyzer-plugin</module>
-        <module>raspberrypi-plugin</module>
-        <module>virtual-fire-alarm-plugin</module>
+        <!--<module>androidsense-plugin</module>-->
+        <!--<module>arduino-plugin</module>-->
+        <!--<module>digital-display-plugin</module>-->
+        <!--<module>drone-analyzer-plugin</module>-->
+        <!--<module>raspberrypi-plugin</module>-->
+        <!--<module>virtual-fire-alarm-plugin</module>-->
         <module>iot-base-plugin</module>
     </modules>
 

@@ -22,7 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.common.*;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.core.dto.DeviceType;
@@ -33,7 +36,17 @@ import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -88,22 +101,6 @@ import java.util.List;
     public Device[] getDevicesOfUser(@PathParam("username") String username) {
         try {
             List<Device> devices = this.getServiceProvider().getDevicesOfUser(username);
-            return this.getActiveDevices(devices);
-        } catch (DeviceManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            return null;
-        } finally {
-            this.endTenantFlow();
-        }
-    }
-
-    @Path("/device/user/{username}/ungrouped")
-    @GET
-    @Consumes("application/json")
-    @Produces("application/json")
-    public Device[] getUnGroupedDevices(@PathParam("username") String username){
-        try{
-            List<Device> devices = this.getServiceProvider().getUnGroupedDevices(username);
             return this.getActiveDevices(devices);
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
@@ -200,66 +197,6 @@ import java.util.List;
         } catch (DeviceManagementException e) {
             response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             return null;
-        } finally {
-            this.endTenantFlow();
-        }
-    }
-
-    @Path("/device/enrollment/invitation")
-    @POST
-    @Consumes("application/json")
-    @Produces("application/json")
-    public void sendEnrolmentInvitation(@FormParam("messageBody") String messageBody,
-                                        @FormParam("mailTo") String[] mailTo, @FormParam("ccList") String[] ccList,
-                                        @FormParam("bccList") String[] bccList, @FormParam("subject") String subject,
-                                        @FormParam("firstName") String firstName, @FormParam("enrolmentUrl") String enrolmentUrl,
-                                        @FormParam("title") String title, @FormParam("password") String password,
-                                        @FormParam("userName") String userName){
-        EmailMessageProperties config = new EmailMessageProperties();
-        config.setMessageBody(messageBody);
-        config.setMailTo(mailTo);
-        config.setCcList(ccList);
-        config.setBccList(bccList);
-        config.setSubject(subject);
-        config.setFirstName(firstName);
-        config.setEnrolmentUrl(enrolmentUrl);
-        config.setTitle(title);
-        config.setUserName(userName);
-        config.setPassword(password);
-        try {
-            this.getServiceProvider().sendEnrolmentInvitation(config);
-        } catch (DeviceManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-        } finally {
-            this.endTenantFlow();
-        }
-    }
-
-    @Path("/device/registration/invitation")
-    @POST
-    @Consumes("application/json")
-    @Produces("application/json")
-    public void sendRegistrationEmail(@FormParam("messageBody") String messageBody,
-                                      @FormParam("mailTo") String[] mailTo, @FormParam("ccList") String[] ccList,
-                                      @FormParam("bccList") String[] bccList, @FormParam("subject") String subject,
-                                      @FormParam("firstName") String firstName, @FormParam("enrolmentUrl") String enrolmentUrl,
-                                      @FormParam("title") String title, @FormParam("password") String password,
-                                      @FormParam("userName") String userName){
-        EmailMessageProperties config = new EmailMessageProperties();
-        config.setMessageBody(messageBody);
-        config.setMailTo(mailTo);
-        config.setCcList(ccList);
-        config.setBccList(bccList);
-        config.setSubject(subject);
-        config.setFirstName(firstName);
-        config.setEnrolmentUrl(enrolmentUrl);
-        config.setTitle(title);
-        config.setUserName(userName);
-        config.setPassword(password);
-        try {
-            this.getServiceProvider().sendRegistrationEmail(config);
-        } catch (DeviceManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
         } finally {
             this.endTenantFlow();
         }
@@ -394,10 +331,12 @@ import java.util.List;
     @Produces("application/json")
     boolean modifyEnrollment(@PathParam("type") String type, @PathParam("identifier") String identifier,
                              @FormParam("name") String name, @FormParam("description") String description,
-                             @FormParam("groupId") int groupId, @FormParam("enrollmentId") int enrollmentId,
-                             @FormParam("dateOfEnrolment") long dateOfEnrolment, @FormParam("dateOfLastUpdate") long dateOfLastUpdate,
-                             @FormParam("ownership") EnrolmentInfo.OwnerShip ownership, @FormParam("status") EnrolmentInfo.Status status,
-                             @FormParam("owner") String owner){
+                             @FormParam("enrollmentId") int enrollmentId,
+                             @FormParam("dateOfEnrolment") long dateOfEnrolment,
+                             @FormParam("dateOfLastUpdate") long dateOfLastUpdate,
+                             @FormParam("ownership") EnrolmentInfo.OwnerShip ownership,
+                             @FormParam("status") EnrolmentInfo.Status status,
+                             @FormParam("owner") String owner) {
 
         EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
         enrolmentInfo.setId(enrollmentId);
@@ -412,7 +351,6 @@ import java.util.List;
         device.setDeviceIdentifier(identifier);
         device.setName(name);
         device.setDescription(description);
-        device.setGroupId(groupId);
         device.setEnrolmentInfo(enrolmentInfo);
         try {
             return this.getServiceProvider().modifyEnrollment(device);
@@ -430,10 +368,12 @@ import java.util.List;
     @Produces("application/json")
     boolean enrollDevice(@FormParam("type") String type, @FormParam("identifier") String identifier,
                          @FormParam("name") String name, @FormParam("description") String description,
-                         @FormParam("groupId") int groupId, @FormParam("enrollmentId") int enrollmentId,
-                         @FormParam("dateOfEnrolment") long dateOfEnrolment, @FormParam("dateOfLastUpdate") long dateOfLastUpdate,
-                         @FormParam("ownership") EnrolmentInfo.OwnerShip ownership, @FormParam("status") EnrolmentInfo.Status status,
-                         @FormParam("owner") String owner){
+                         @FormParam("enrollmentId") int enrollmentId,
+                         @FormParam("dateOfEnrolment") long dateOfEnrolment,
+                         @FormParam("dateOfLastUpdate") long dateOfLastUpdate,
+                         @FormParam("ownership") EnrolmentInfo.OwnerShip ownership,
+                         @FormParam("status") EnrolmentInfo.Status status,
+                         @FormParam("owner") String owner) {
 
         EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
         enrolmentInfo.setId(enrollmentId);
@@ -448,7 +388,6 @@ import java.util.List;
         device.setDeviceIdentifier(identifier);
         device.setName(name);
         device.setDescription(description);
-        device.setGroupId(groupId);
         device.setEnrolmentInfo(enrolmentInfo);
         try {
             return this.getServiceProvider().enrollDevice(device);
