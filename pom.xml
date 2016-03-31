@@ -451,7 +451,7 @@
             <!--MDM dependencies-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.mobile.impl</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.mobile</artifactId>
                 <version>${carbon.mobile.device.mgt.version}</version>
             </dependency>
             <dependency>
@@ -1092,8 +1092,8 @@
         <!-- Carbon Analytics -->
         <carbon.analytics.common.version>5.0.11</carbon.analytics.common.version>
         <carbon.analytics.common.version.range>[5.0.11,6.0.0)</carbon.analytics.common.version.range>
-        <carbon.analytics.version>1.0.6-SNAPSHOT</carbon.analytics.version>
-        <carbon.analytics.version.range>[1.0.6,2.0.0]</carbon.analytics.version.range>
+        <carbon.analytics.version>1.0.5</carbon.analytics.version>
+        <carbon.analytics.version.range>[1.0.5,2.0.0]</carbon.analytics.version.range>
 
         <!-- Third Party Dependencies-->
         <spongycastle.version>1.51.0.0</spongycastle.version>
