@@ -21,21 +21,16 @@ package org.wso2.carbon.device.mgt.iot.api;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.PaginationRequest;
-import org.wso2.carbon.device.mgt.common.PaginationResult;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroup;
 import org.wso2.carbon.device.mgt.common.group.mgt.GroupManagementException;
 import org.wso2.carbon.device.mgt.common.group.mgt.GroupUser;
 import org.wso2.carbon.device.mgt.core.service.GroupManagementProviderService;
+import org.wso2.carbon.device.mgt.iot.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.util.ResponsePayload;
 
-import javax.jws.WebService;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -45,12 +40,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.Date;
 import java.util.List;
 
-@WebService
 public class GroupManagerService {
 
     private static final String DEFAULT_ADMIN_ROLE = "admin";
@@ -69,46 +62,21 @@ public class GroupManagerService {
 
     private static Log log = LogFactory.getLog(GroupManagerService.class);
 
-    @Context  //injected response proxy supporting multiple threads
-    private HttpServletResponse response;
-    private PrivilegedCarbonContext ctx;
-
-    private GroupManagementProviderService getServiceProvider() {
-        String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
-        String username = CarbonContext.getThreadLocalCarbonContext().getUsername();
-        PrivilegedCarbonContext.startTenantFlow();
-        ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        ctx.setTenantDomain(tenantDomain, true);
-        if (log.isDebugEnabled()) {
-            log.debug("Getting thread local carbon context for tenant domain: " + tenantDomain);
-        }
-        return (GroupManagementProviderService) ctx.getOSGiService(GroupManagementProviderService.class, null);
-    }
-
-    private void endTenantFlow() {
-        PrivilegedCarbonContext.endTenantFlow();
-        ctx = null;
-        if (log.isDebugEnabled()) {
-            log.debug("Tenant flow ended");
-        }
-    }
-
-    @Path("/group")
+    @Path("/groups")
     @POST
-    @Consumes("application/json")
     @Produces("application/json")
-    public Response createGroup(@FormParam("name") String name,
-                               @FormParam("username") String username,
-                               @FormParam("description") String description) {
+    public Response createGroup(@FormParam("groupName") String groupName,
+                                @FormParam("userName") String username,
+                                @FormParam("description") String description) {
         DeviceGroup group = new DeviceGroup();
-        group.setName(name);
+        group.setName(username);
         group.setDescription(description);
         group.setOwner(username);
         group.setDateOfCreation(new Date().getTime());
         group.setDateOfLastUpdate(new Date().getTime());
         boolean isAdded = false;
         try {
-            GroupManagementProviderService groupManagementService = this.getServiceProvider();
+            GroupManagementProviderService groupManagementService = APIUtil.getGroupManagementProviderService();
             int groupId = groupManagementService.createGroup(group, DEFAULT_ADMIN_ROLE, DEFAULT_ADMIN_PERMISSIONS);
             if (groupId == -2) {
                 ResponsePayload responsePayload = new ResponsePayload();
@@ -134,451 +102,374 @@ public class GroupManagerService {
             }
         } catch (GroupManagementException e) {
             return Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-        } finally {
-            this.endTenantFlow();
         }
     }
 
-    @Path("/group/id/{groupId}")
+    @Path("/groups/{groupId}")
     @PUT
-    @Consumes("application/json")
     @Produces("application/json")
-    public boolean updateGroup(@PathParam("groupId") int groupId, @FormParam("name") String name,
-                               @FormParam("username") String username,
-                               @FormParam("description") String description) {
-        if (!isAuthorized(username, groupId, "/permission/device-mgt/admin/groups/modify")) {
-            response.setStatus(Response.Status.FORBIDDEN.getStatusCode());
-            return false;
-        }
+    public Response updateGroup(@PathParam("groupId") int groupId, @FormParam("groupName") String groupName,
+                                @FormParam("userName") String userName,
+                                @FormParam("description") String description) {
         try {
-            GroupManagementProviderService groupManagementService = this.getServiceProvider();
+            GroupManagementProviderService groupManagementService = APIUtil.getGroupManagementProviderService();
             DeviceGroup group = groupManagementService.getGroup(groupId);
-            group.setName(name);
+            group.setName(groupName);
             group.setDescription(description);
-            group.setOwner(username);
+            group.setOwner(userName);
             group.setDateOfLastUpdate(new Date().getTime());
-            response.setStatus(Response.Status.OK.getStatusCode());
+            Response.status(Response.Status.OK.getStatusCode());
             groupManagementService.updateGroup(group);
-            return true;
+            return Response.status(Response.Status.NO_CONTENT).build();
         } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
             log.error(e.getErrorMessage(), e);
-            return false;
-        } finally {
-            this.endTenantFlow();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @Path("/group/id/{groupId}")
+    @Path("/groups/{groupId}")
     @DELETE
-    @Consumes("application/json")
     @Produces("application/json")
-    public boolean deleteGroup(@PathParam("groupId") int groupId,
-                               @QueryParam("username") String username) {
-        if (!isAuthorized(username, groupId, "/permission/device-mgt/admin/groups/delete")) {
-            response.setStatus(Response.Status.FORBIDDEN.getStatusCode());
-            return false;
+    public Response deleteGroup(@PathParam("groupId") int groupId, @QueryParam("userName") String userName) {
+
+        if (!checkAuthorize(getCurrentUserName(), groupId, "/permission/device-mgt/admin/groups/delete")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
-        boolean isDeleted = false;
+
         try {
-            response.setStatus(Response.Status.OK.getStatusCode());
-            isDeleted = this.getServiceProvider().deleteGroup(groupId);
+            boolean isDeleted = APIUtil.getGroupManagementProviderService().deleteGroup(
+                    groupId);
+            if (isDeleted) {
+                return Response.status(Response.Status.NO_CONTENT).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
         } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
+            log.error(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return isDeleted;
     }
 
-    @Path("/group/id/{groupId}")
+    @Path("/groups/{groupId}")
     @GET
-    @Consumes("application/json")
     @Produces("application/json")
-    public DeviceGroup getGroup(@PathParam("groupId") int groupId,
-                                @FormParam("username") String username) {
-        DeviceGroup deviceGroup = null;
+    public Response getGroup(@PathParam("groupId") int groupId) {
         try {
-            response.setStatus(Response.Status.OK.getStatusCode());
-            deviceGroup = this.getServiceProvider().getGroup(groupId);
+            DeviceGroup deviceGroup = APIUtil.getGroupManagementProviderService().getGroup(
+                    groupId);
+            if (deviceGroup != null) {
+                return Response.status(Response.Status.OK).entity(deviceGroup).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
         } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return deviceGroup;
     }
 
-    @Path("/group/name/{groupName}")
+    @Path("/groups/search")
     @GET
-    @Consumes("application/json")
     @Produces("application/json")
-    public DeviceGroup[] findGroups(@PathParam("groupName") String groupName,
-                                    @FormParam("username") String username) {
-        DeviceGroup[] deviceGroups = null;
+    public Response findGroups(@QueryParam("groupName") String groupName,
+                               @QueryParam("userName") String userName) {
         try {
-            List<DeviceGroup> groups = this.getServiceProvider().findInGroups(groupName, username);
-            deviceGroups = new DeviceGroup[groups.size()];
-            response.setStatus(Response.Status.OK.getStatusCode());
+            List<DeviceGroup> groups = APIUtil.getGroupManagementProviderService()
+                    .findInGroups(groupName, userName);
+            DeviceGroup[] deviceGroups = new DeviceGroup[groups.size()];
             groups.toArray(deviceGroups);
+            return Response.status(Response.Status.OK).entity(deviceGroups).build();
         } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return deviceGroups;
     }
 
-    @Path("/group/user/{username}/all")
+    @Path("/groups")
     @GET
-    @Consumes("application/json")
     @Produces("application/json")
-    public DeviceGroup[] getGroups(@PathParam("username") String username,
-                                   @QueryParam("permission") String permission) {
-        DeviceGroup[] deviceGroups = null;
+    public Response getGroups(@QueryParam("userName") String userName,
+                              @QueryParam("permission") String permission) {
         try {
-            GroupManagementProviderService groupManagementService = this.getServiceProvider();
+            GroupManagementProviderService groupManagementService = APIUtil.getGroupManagementProviderService();
             List<DeviceGroup> groups;
             if (permission != null) {
-                groups = groupManagementService.getGroups(username, permission);
+                groups = groupManagementService.getGroups(userName, permission);
             } else {
-                groups = groupManagementService.getGroups(username);
+                groups = groupManagementService.getGroups(userName);
             }
-            deviceGroups = new DeviceGroup[groups.size()];
-            response.setStatus(Response.Status.OK.getStatusCode());
+            DeviceGroup[] deviceGroups = new DeviceGroup[groups.size()];
             groups.toArray(deviceGroups);
+            return Response.status(Response.Status.OK).entity(deviceGroups).build();
         } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return deviceGroups;
     }
 
-    @Path("/group/user/{username}/all/count")
+    @Path("/groups/count")
     @GET
-    @Consumes("application/json")
     @Produces("application/json")
-    public int getGroupCount(@PathParam("username") String username) {
-        int count = -1;
+    public Response getGroupCount(@QueryParam("userName") String userName) {
         try {
-            response.setStatus(Response.Status.OK.getStatusCode());
-            count = this.getServiceProvider().getGroupCount(username);
+            int count = APIUtil.getGroupManagementProviderService().getGroupCount(userName);
+            return Response.status(Response.Status.OK).entity(count).build();
         } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
-        }
-        return count;
-    }
-
-    @Path("/group/id/{groupId}/share")
-    @POST
-    @Consumes("application/json")
-    @Produces("application/json")
-    public boolean shareGroup(@FormParam("username") String username,
-                              @FormParam("shareUser") String shareUser,
-                              @PathParam("groupId") int groupId,
-                              @FormParam("role") String sharingRole) {
-        if (!isAuthorized(username, groupId, "/permission/device-mgt/admin/groups/share")) {
-            response.setStatus(Response.Status.FORBIDDEN.getStatusCode());
-            return false;
-        }
-        boolean isShared = false;
-        try {
-            response.setStatus(Response.Status.OK.getStatusCode());
-            isShared = this.getServiceProvider().shareGroup(shareUser, groupId, sharingRole);
-        } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
-        }
-        return isShared;
-    }
-
-    @Path("/group/id/{groupId}/unshare")
-    @POST
-    @Consumes("application/json")
-    @Produces("application/json")
-    public boolean unShareGroup(@FormParam("username") String username,
-                                @FormParam("unShareUser") String unShareUser,
-                                @PathParam("groupId") int groupId,
-                                @FormParam("role") String sharingRole) {
-        if (!isAuthorized(username, groupId, "/permission/device-mgt/admin/groups/share")) {
-            response.setStatus(Response.Status.FORBIDDEN.getStatusCode());
-            return false;
-        }
-        boolean isUnShared = false;
-        try {
-            response.setStatus(Response.Status.OK.getStatusCode());
-            isUnShared = this.getServiceProvider().unshareGroup(unShareUser, groupId, sharingRole);
-        } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
-        }
-        return isUnShared;
-    }
-
-    @Path("/group/id/{groupId}/role")
-    @POST
-    @Consumes("application/json")
-    @Produces("application/json")
-    public boolean addSharing(@FormParam("username") String username,
-                              @PathParam("groupId") int groupId,
-                              @FormParam("role") String roleName,
-                              @FormParam("permissions") String[] permissions) {
-        if (!isAuthorized(username, groupId, "/permission/device-mgt/admin/groups/share")) {
-            response.setStatus(Response.Status.FORBIDDEN.getStatusCode());
-            return false;
-        }
-        boolean isAdded = false;
-        try {
-            response.setStatus(Response.Status.OK.getStatusCode());
-            isAdded = this.getServiceProvider().addGroupSharingRole(username, groupId, roleName, permissions);
-        } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
-        }
-        return isAdded;
-    }
-
-    @Path("/group/id/{groupId}/role/{role}")
-    @DELETE
-    @Consumes("application/json")
-    @Produces("application/json")
-    public boolean removeSharing(@QueryParam("username") String username,
-                                 @PathParam("groupId") int groupId,
-                                 @PathParam("role") String roleName) {
-        if (!isAuthorized(username, groupId, "/permission/device-mgt/admin/groups/share")) {
-            response.setStatus(Response.Status.FORBIDDEN.getStatusCode());
-        }
-        boolean isRemoved = false;
-        try {
-            response.setStatus(Response.Status.OK.getStatusCode());
-            isRemoved = this.getServiceProvider().removeGroupSharingRole(groupId, roleName);
-        } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
-        }
-        return isRemoved;
-    }
-
-    @Path("/group/id/{groupId}/role/all")
-    @GET
-    @Consumes("application/json")
-    @Produces("application/json")
-    public String[] getRoles(@PathParam("groupId") int groupId) {
-        String[] rolesArray = null;
-        try {
-            List<String> roles = this.getServiceProvider().getRoles(groupId);
-            rolesArray = new String[roles.size()];
-            response.setStatus(Response.Status.OK.getStatusCode());
-            roles.toArray(rolesArray);
-        } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
-        }
-        return rolesArray;
-    }
-
-    @Path("/group/id/{groupId}/{user}/role/all")
-    @GET
-    @Consumes("application/json")
-    @Produces("application/json")
-    public String[] getRoles(@PathParam("user") String user, @PathParam("groupId") int groupId) {
-        String[] rolesArray = null;
-        try {
-            List<String> roles = this.getServiceProvider().getRoles(user, groupId);
-            rolesArray = new String[roles.size()];
-            response.setStatus(Response.Status.OK.getStatusCode());
-            roles.toArray(rolesArray);
-        } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
-        }
-        return rolesArray;
-    }
-
-    @Path("/group/id/{groupId}/user/all")
-    @GET
-    @Consumes("application/json")
-    @Produces("application/json")
-    public GroupUser[] getUsers(@PathParam("groupId") int groupId) {
-        GroupUser[] usersArray = null;
-        try {
-            List<GroupUser> users = this.getServiceProvider().getUsers(groupId);
-            usersArray = new GroupUser[users.size()];
-            response.setStatus(Response.Status.OK.getStatusCode());
-            users.toArray(usersArray);
-        } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
-        }
-        return usersArray;
-    }
-
-    @Path("/group/id/{groupId}/device/all")
-    @GET
-    @Consumes("application/json")
-    @Produces("application/json")
-    public Device[] getDevices(@PathParam("groupId") int groupId) {
-        Device[] deviceArray = null;
-        try {
-            List<Device> devices = this.getServiceProvider().getDevices(groupId);
-            deviceArray = new Device[devices.size()];
-            response.setStatus(Response.Status.OK.getStatusCode());
-            devices.toArray(deviceArray);
-        } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
-        }
-        return deviceArray;
-    }
-
-    @Path("/group/id/{groupId}/device/count")
-    @GET
-    @Consumes("application/json")
-    @Produces("application/json")
-    public int getDeviceCount(@PathParam("groupId") int groupId) {
-        try {
-            return this.getServiceProvider().getDeviceCount(groupId);
-        } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-            return -1;
-        } finally {
-            this.endTenantFlow();
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    @Path("/group/id/{groupId}/device")
-    @GET
-    @Consumes("application/json")
-    @Produces("application/json")
-    public List<Device> getDevices(@PathParam("groupId") int groupId,
-                                       @QueryParam("index") int index,
-                                       @QueryParam("limit") int limit) {
-        try {
-            PaginationRequest request = new PaginationRequest(index, limit);
-            return this.getServiceProvider().getDevices(groupId, request);
-        } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-            return null;
-        } finally {
-            this.endTenantFlow();
-        }
-    }
-
-    @Path("/group/id/{groupId}/device/assign")
+    @Path("/groups/{groupId}/share")
     @PUT
-    @Consumes("application/json")
     @Produces("application/json")
-    public boolean addDevice(@PathParam("groupId") int groupId,
-                             @FormParam("deviceId") String deviceId,
-                             @FormParam("deviceType") String deviceType,
-                             @FormParam("username") String username) {
-        if (!isAuthorized(username, groupId, "/permission/device-mgt/admin/groups/add_devices")) {
-            response.setStatus(Response.Status.FORBIDDEN.getStatusCode());
-            return false;
+    public Response shareGroup(@FormParam("userName") String userName,
+                               @FormParam("shareUser") String shareUser, @PathParam("groupId") int groupId,
+                               @FormParam("roleName") String sharingRole) {
+        if (!checkAuthorize(getCurrentUserName(), groupId, "/permission/device-mgt/admin/groups/share")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
-        boolean isAdded = false;
+
         try {
-            DeviceIdentifier deviceIdentifier = new DeviceIdentifier(deviceId, deviceType);
-            response.setStatus(Response.Status.OK.getStatusCode());
-            isAdded = this.getServiceProvider().addDevice(deviceIdentifier, groupId);
+            boolean isShared = APIUtil.getGroupManagementProviderService().shareGroup(
+                    shareUser, groupId, sharingRole);
+            if (isShared) {
+                return Response.status(Response.Status.NO_CONTENT).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
         } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return isAdded;
     }
 
-    @Path("/group/id/{groupId}/device/assign")
+    @Path("/groups/{groupId}/unshare")
+    @PUT
+    @Produces("application/json")
+    public Response unShareGroup(@FormParam("userName") String userName,
+                                 @FormParam("unShareUser") String unShareUser,
+                                 @PathParam("groupId") int groupId,
+                                 @FormParam("roleName") String sharingRole) {
+        if (!checkAuthorize(getCurrentUserName(), groupId, "/permission/device-mgt/admin/groups/share")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        try {
+            boolean isUnShared = APIUtil.getGroupManagementProviderService().unshareGroup(
+                    unShareUser, groupId, sharingRole);
+            if (isUnShared) {
+                return Response.status(Response.Status.NO_CONTENT).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (GroupManagementException e) {
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Path("/groups/{groupId}/share/roles/{roleName}/permissions")
+    @PUT
+    @Produces("application/json")
+    public Response addSharing(@QueryParam("userName") String userName, @PathParam("groupId") int groupId,
+                               @PathParam("roleName") String roleName,
+                               @FormParam("permissions") String[] permissions) {
+        if (!checkAuthorize(getCurrentUserName(), groupId, "/permission/device-mgt/admin/groups/share")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        try {
+            boolean isAdded = APIUtil.getGroupManagementProviderService().addGroupSharingRole(
+                    userName, groupId, roleName, permissions);
+            if (isAdded) {
+                return Response.status(Response.Status.NO_CONTENT).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (GroupManagementException e) {
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @DELETE
-    @Consumes("application/json")
+    @Path("/groups/{groupId}/share/roles/{roleName}/permissions")
     @Produces("application/json")
-    public boolean removeDevice(@PathParam("groupId") int groupId,
-                                @FormParam("deviceId") String deviceId,
-                                @FormParam("deviceType") String deviceType,
-                                @FormParam("username") String username) {
-        if (!isAuthorized(username, groupId, "/permission/device-mgt/admin/groups/remove_devices")) {
-            response.setStatus(Response.Status.FORBIDDEN.getStatusCode());
-            return false;
+    public Response removeSharing(@QueryParam("userName") String userName, @PathParam("groupId") int groupId,
+                                  @PathParam("roleName") String roleName) {
+        if (!checkAuthorize(getCurrentUserName(), groupId, "/permission/device-mgt/admin/groups/share")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
-        boolean isRemoved = false;
+
+        try {
+            boolean isRemoved = APIUtil.getGroupManagementProviderService().removeGroupSharingRole(
+                    groupId, roleName);
+            if (isRemoved) {
+                return Response.status(Response.Status.NO_CONTENT).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (GroupManagementException e) {
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GET
+    @Path("/groups/{groupId}/share/roles")
+    @Produces("application/json")
+    public Response getRoles(@PathParam("groupId") int groupId, @QueryParam("userName") String userName) {
+        try {
+            List<String> roles;
+            if (userName != null && !userName.isEmpty()) {
+                roles = APIUtil.getGroupManagementProviderService().getRoles(userName,
+                                                                                               groupId);
+            } else {
+                roles = APIUtil.getGroupManagementProviderService().getRoles(groupId);
+            }
+            String[] rolesArray = new String[roles.size()];
+            roles.toArray(rolesArray);
+            return Response.status(Response.Status.OK).entity(rolesArray).build();
+        } catch (GroupManagementException e) {
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GET
+    @Path("/groups/{groupId}/users")
+    @Produces("application/json")
+    public Response getUsers(@PathParam("groupId") int groupId) {
+        try {
+            List<GroupUser> users = APIUtil.getGroupManagementProviderService().getUsers(
+                    groupId);
+            GroupUser[] usersArray = new GroupUser[users.size()];
+            users.toArray(usersArray);
+            return Response.status(Response.Status.OK).entity(usersArray).build();
+        } catch (GroupManagementException e) {
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GET
+    @Path("/groups/{groupId}/devices/all")
+    @Produces("application/json")
+    public Response getDevices(@PathParam("groupId") int groupId) {
+        try {
+            List<Device> devices = APIUtil.getGroupManagementProviderService().getDevices(
+                    groupId);
+            Device[] deviceArray = new Device[devices.size()];
+            devices.toArray(deviceArray);
+            return Response.status(Response.Status.OK).entity(deviceArray).build();
+        } catch (GroupManagementException e) {
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GET
+    @Path("/groups/{groupId}/devices/count")
+    @Produces("application/json")
+    public Response getDeviceCount(@PathParam("groupId") int groupId) {
+        try {
+            int count = APIUtil.getGroupManagementProviderService().getDeviceCount(groupId);
+            return Response.status(Response.Status.OK).entity(count).build();
+        } catch (GroupManagementException e) {
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PUT
+    @Path("/groups/{groupId}/devices/{deviceType}/{deviceId}")
+    @Produces("application/json")
+    public Response addDevice(@PathParam("groupId") int groupId, @PathParam("deviceId") String deviceId,
+                              @PathParam("deviceType") String deviceType,
+                              @FormParam("userName") String userName) {
+        if (!checkAuthorize(getCurrentUserName(), groupId,
+                            "/permission/device-mgt/admin/groups/add_devices")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
         try {
             DeviceIdentifier deviceIdentifier = new DeviceIdentifier(deviceId, deviceType);
-            response.setStatus(Response.Status.OK.getStatusCode());
-            isRemoved = this.getServiceProvider().removeDevice(deviceIdentifier, groupId);
+            boolean isAdded = APIUtil.getGroupManagementProviderService().addDevice(
+                    deviceIdentifier, groupId);
+            if (isAdded) {
+                return Response.status(Response.Status.NO_CONTENT).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
         } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return isRemoved;
     }
 
-    @Path("/group/id/{groupId}/user/{username}/permissions")
-    @GET
-    @Consumes("application/json")
+    @DELETE
+    @Path("/groups/{groupId}/devices/{deviceType}/{deviceId}")
     @Produces("application/json")
-    public String[] getPermissions(@PathParam("username") String username,
+    public Response removeDevice(@PathParam("groupId") int groupId, @PathParam("deviceId") String deviceId,
+                                 @PathParam("deviceType") String deviceType) {
+        if (!checkAuthorize(getCurrentUserName(), groupId,
+                            "/permission/device-mgt/admin/groups/remove_devices")) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+        try {
+            DeviceIdentifier deviceIdentifier = new DeviceIdentifier(deviceId, deviceType);
+            boolean isRemoved = APIUtil.getGroupManagementProviderService().removeDevice(
+                    deviceIdentifier, groupId);
+            if (isRemoved) {
+                return Response.status(Response.Status.NO_CONTENT).build();
+            } else {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+        } catch (GroupManagementException e) {
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GET
+    @Path("/groups/{groupId}/users/{userName}/permissions")
+    @Produces("application/json")
+    public Response getPermissions(@PathParam("userName") String userName,
                                    @PathParam("groupId") int groupId) {
-        String[] permissions = null;
         try {
-            response.setStatus(Response.Status.OK.getStatusCode());
-            permissions = this.getServiceProvider().getPermissions(username, groupId);
+            String[] permissions = APIUtil.getGroupManagementProviderService()
+                    .getPermissions(userName, groupId);
+            return Response.status(Response.Status.OK).entity(permissions).build();
         } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return permissions;
     }
 
-    @Path("/group/id/{groupId}/user/{username}/authorized")
     @GET
-    @Consumes("application/json")
+    @Path("/groups/{groupId}/users/{userName}/authorized")
     @Produces("application/json")
-    public boolean isAuthorized(@PathParam("username") String username,
-                                @PathParam("groupId") int groupId,
-                                @QueryParam("permission") String permission) {
-        boolean isAuthorized = false;
-        try {
-            response.setStatus(Response.Status.OK.getStatusCode());
-            isAuthorized = this.getServiceProvider().isAuthorized(username, groupId, permission);
-        } catch (GroupManagementException e) {
-            response.setStatus(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode());
-            log.error(e.getErrorMessage(), e);
-        } finally {
-            this.endTenantFlow();
+    public Response isAuthorized(@PathParam("userName") String userName, @PathParam("groupId") int groupId,
+                                 @QueryParam("permission") String permission) {
+        boolean isAuthorized = checkAuthorize(userName, groupId, permission);
+        if (isAuthorized) {
+            return Response.status(Response.Status.OK).build();
+        } else {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return isAuthorized;
+    }
+
+    private boolean checkAuthorize(String userName, int groupId, String permission) {
+        try {
+            return APIUtil.getGroupManagementProviderService().isAuthorized(userName, groupId, permission);
+        } catch (GroupManagementException e) {
+            log.error(e.getMessage(), e);
+            return false;
+        }
+    }
+
+    private String getCurrentUserName() {
+        return PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
     }
 
 }

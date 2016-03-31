@@ -29,9 +29,10 @@ import org.wso2.carbon.device.mgt.iot.droneanalyzer.plugin.constants.DroneConsta
 
 import java.util.List;
 
-
 public class DroneAnalyzerManagerService implements DeviceManagementService {
     private DeviceManager deviceManager;
+    private final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
+
     @Override
     public String getType() {
         return DroneConstants.DEVICE_TYPE;
@@ -95,7 +96,7 @@ public class DroneAnalyzerManagerService implements DeviceManagementService {
 
     @Override
     public String getProviderTenantDomain() {
-        return "carbon.super";
+        return DEVICE_TYPE_PROVIDER_DOMAIN;
     }
 
     @Override

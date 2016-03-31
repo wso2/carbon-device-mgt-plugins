@@ -36,10 +36,21 @@ public class WindowsDeviceManagementService implements DeviceManagementService {
 
     private DeviceManager deviceManager;
     public static final String DEVICE_TYPE_WINDOWS = "windows";
+    private final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
 
     @Override
     public String getType() {
         return WindowsDeviceManagementService.DEVICE_TYPE_WINDOWS;
+    }
+
+    @Override
+    public String getProviderTenantDomain() {
+        return DEVICE_TYPE_PROVIDER_DOMAIN;
+    }
+
+    @Override
+    public boolean isSharedWithAllTenants() {
+        return true;
     }
 
     @Override
