@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.ddf.standardmos;
+package org.wso2.carbon.mdm.services.android.omadm.ddf.standardmos;
 
 /**
  * This class represents the standard 'DevInfo' Management Object

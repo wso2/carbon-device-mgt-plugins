@@ -19,7 +19,7 @@
 package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.exceptions;
 
 /**
- * Custom exception class for DMNode related exceptions
+ * Custom exception class for Node related exceptions
  */
 public class DMNodeException extends DMException {
 

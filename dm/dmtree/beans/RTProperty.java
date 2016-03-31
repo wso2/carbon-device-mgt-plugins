@@ -19,40 +19,34 @@
 package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
+import org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants.FormatProperty;
 import org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants.RTPropertyFormat;
 import org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.parsers.ACLParser;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 
 /**
- * Runtime Properties of a DMNode
+ * Runtime Properties of a Node
  */
 public class RTProperty implements Serializable {
 
     private static final String TYPE_DEFAULT_VALUE = "text/plain";
 
     private String acl;
-    private RTPropertyFormat format;
+    private FormatProperty format = FormatProperty.CHAR;
     private String name;
     private long size;
     private String title;
     private String tStamp;
-    private String verNo;
+    private int verNo;
     private String type = TYPE_DEFAULT_VALUE;
 
     public RTProperty() {}
-
-    public RTProperty(RTPropertyFormat format, String acl, String name, long size, String title, String tStamp, String verNo, String type) {
-        this.format = format;
-        this.acl = acl;
-        this.name = name;
-        this.size = size;
-        this.title = title;
-        this.tStamp = tStamp;
-        this.verNo = verNo;
-        this.type = type;
-    }
 
     public String getAcl() {
         return acl;
@@ -64,11 +58,11 @@ public class RTProperty implements Serializable {
         }
     }
 
-    public RTPropertyFormat getFormat() {
+    public FormatProperty getFormat() {
         return format;
     }
 
-    public void setFormat(RTPropertyFormat format) {
+    public void setFormat(FormatProperty format) {
         this.format = format;
     }
 
@@ -104,12 +98,8 @@ public class RTProperty implements Serializable {
         this.tStamp = tStamp;
     }
 
-    public String getVerNo() {
+    public int getVerNo() {
         return verNo;
-    }
-
-    public void setVerNo(String verNo) {
-        this.verNo = verNo;
     }
 
     public String getType() {
@@ -134,5 +124,19 @@ public class RTProperty implements Serializable {
         return localToStringBuilder.toString();
     }
 
+    public void incrementVerNo() {
+        if (this.verNo == 0xffff) {
+            this.verNo = 0;
+        } else {
+            this.verNo++;
+        }
+    }
+
+    public void updateTimeStamp() {
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyyMMddHHmmssZ");
+        df.setTimeZone(tz);
+        this.tStamp = df.format(new Date());
+    }
 
 }
