@@ -14,14 +14,15 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.syncml;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
 
 /**
- * The interface to handle SyncML messages
+ * Constants to to define the node type
  */
-public interface SyncMLService {
+public enum DMNodeType {
+
+    INTERIOR, LEAF
 
 }

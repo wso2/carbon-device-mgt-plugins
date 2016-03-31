@@ -16,38 +16,23 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
 
 /**
- * Contains all the SyncML status codes
+ * Constants for the 'Access Type' Property in DFProperties
  */
-public enum SyncMLStatusCodes {
-    NONE("0"),
-    IN_PROGRESS("101"),
-    SUCCESS("200"),
-    AUTHENTICATION_ACCEPTED("212"),
-    OPERATION_CANCELED("214"),
-    NOT_EXECUTED("215"),
-    NOT_MODIFIED("304"),
-    INVALID_CREDENTIALS("401"),
-    FORBIDDEN("403"),
-    NOT_FOUND("404"),
-    NOT_ALLOWED("405"),
-    OPTIONAL_FEATURE_NOT_SUPPORTED("406"),
-    MISSING_CREDENTIALS("407"),
-    INCOMPLETE_COMMAND("412"),
-    URI_TOO_LONG("414"),
-    ALREADY_EXISTS("418"),
-    DEVICE_FULL("420"),
-    PERMISSION_DENIED("425"),
-    COMMAND_FAILED("500"),
-    COMMAND_NOT_IMPLEMENTED("501"),
-    SESSION_INTERNAL("506"),
-    ATOMIC_FAILED("507");
+public enum DFPropertyAccessType {
+
+    ADD("Add"),
+    COPY("Copy"),
+    DELETE("Delete"),
+    EXEC("Exec"),
+    GET("Get"),
+    REPLACE("replace");
 
     private final String code;
 
-    SyncMLStatusCodes(String code) {
+    DFPropertyAccessType(String code) {
         this.code = code;
     }
 

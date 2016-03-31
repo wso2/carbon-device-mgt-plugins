@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
 
 /**
  * Constants for the 'Format' Property in DFProperties

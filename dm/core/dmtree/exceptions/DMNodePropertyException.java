@@ -16,12 +16,12 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.exceptions;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions;
 
 /**
- * Custom exception class for Node related exceptions
+ * Custom exception class for Node Property related exceptions
  */
-public class DMNodeException extends DMException {
+public class DMNodePropertyException extends DMNodeException {
 
     private static final long serialVersionUID = 7950151650447893900L;
     private String errorMessage;
@@ -34,26 +34,27 @@ public class DMNodeException extends DMException {
         this.errorMessage = errorMessage;
     }
 
-    public DMNodeException(String msg, Exception nestedEx) {
+    public DMNodePropertyException(String msg, Exception nestedEx) {
         super(msg, nestedEx);
         setErrorMessage(msg);
     }
 
-    public DMNodeException(String message, Throwable cause) {
+    public DMNodePropertyException(String message, Throwable cause) {
         super(message, cause);
         setErrorMessage(message);
     }
 
-    public DMNodeException(String msg) {
+    public DMNodePropertyException(String msg) {
         super(msg);
         setErrorMessage(msg);
     }
 
-    public DMNodeException() {
+    public DMNodePropertyException() {
         super();
     }
 
-    public DMNodeException(Throwable cause) {
+    public DMNodePropertyException(Throwable cause) {
         super(cause);
     }
+
 }

@@ -16,13 +16,23 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants;
+package org.wso2.carbon.mdm.services.android.omadm.service.impl;
+
+import org.wso2.carbon.mdm.services.android.omadm.service.OMADMService;
+
+import javax.ws.rs.core.Response;
 
 /**
- * Constants to to define the node type
+ * The implementation of the OMADMService class
  */
-public enum DMNodeType {
+public class OMADMServiceImpl implements OMADMService {
+    @Override
+    public Response enrollDevice() {
+        return null;
+    }
 
-    INTERIOR, LEAF
-
+    @Override
+    public Response manageDevice() {
+        return null;
+    }
 }

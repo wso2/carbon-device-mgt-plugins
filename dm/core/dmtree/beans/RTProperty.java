@@ -16,12 +16,11 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants.FormatProperty;
-import org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants.RTPropertyFormat;
-import org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.parsers.ACLParser;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants.FormatProperty;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.parsers.ACLParser;
 
 import java.io.Serializable;
 import java.text.DateFormat;

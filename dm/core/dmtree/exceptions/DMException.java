@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.exceptions;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions;
 
 /**
  * Custom exception class for General DM exceptions

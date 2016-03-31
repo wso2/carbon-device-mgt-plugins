@@ -16,23 +16,19 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
 
 /**
- * Constants for the 'Occurrence' Property in DFProperties
+ * Constants for the 'Scope' Property in DFProperties
  */
-public enum DFPropertyOccurrence {
+public enum DFPropertyScope {
 
-    ONE("One"),
-    ZERO_OR_ONE("ZeroOrOne"),
-    ZERO_OR_MORE("ZeroOrMore"),
-    ONE_OR_MORE("OneOrMore"),
-    ZERO_OR_N("ZeroOrN"),
-    ONE_OR_N("OneOrN");
+    PERMANENT("Permanent"),
+    DYNAMIC("Dynamic");
 
     private final String code;
 
-    DFPropertyOccurrence(String code) {
+    DFPropertyScope(String code) {
         this.code = code;
     }
 

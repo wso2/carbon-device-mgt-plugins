@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.parsers;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.parsers;
 
 import java.util.ArrayList;
 import java.util.Arrays;

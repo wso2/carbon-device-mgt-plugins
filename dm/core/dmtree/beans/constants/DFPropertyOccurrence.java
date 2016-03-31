@@ -16,27 +16,28 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
 
 /**
- * Constants for the 'Access Type' Property in DFProperties
+ * Constants for the 'Occurrence' Property in DFProperties
  */
-public enum DFPropertyAccessType {
+public enum DFPropertyOccurrence {
 
-    ADD("Add"),
-    COPY("Copy"),
-    DELETE("Delete"),
-    EXEC("Exec"),
-    GET("Get"),
-    REPLACE("replace");
+    ONE("One"),
+    ZERO_OR_ONE("ZeroOrOne"),
+    ZERO_OR_MORE("ZeroOrMore"),
+    ONE_OR_MORE("OneOrMore"),
+    ZERO_OR_N("ZeroOrN"),
+    ONE_OR_N("OneOrN");
 
     private final String code;
 
-    DFPropertyAccessType(String code) {
+    DFPropertyOccurrence(String code) {
         this.code = code;
     }
 
     public String getCode() {
         return this.code;
     }
+
 }

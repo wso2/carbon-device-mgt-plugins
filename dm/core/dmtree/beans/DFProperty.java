@@ -16,8 +16,9 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans;
 
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants.*;
 import org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants.*;
 
 /**

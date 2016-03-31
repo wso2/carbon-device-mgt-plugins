@@ -16,19 +16,28 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
 
 /**
- * Constants for the 'Scope' Property in DFProperties
+ * Constants for the 'Format' Property in RTProperties
  */
-public enum DFPropertyScope {
+public enum RTPropertyFormat {
 
-    PERMANENT("Permanent"),
-    DYNAMIC("Dynamic");
+    BASE64("b64"),
+    BINARY("bin"),
+    BOOLEAN("bool"),
+    CHAR("chr"),
+    INTEGER("int"),
+    NODE("node"),
+    NULL("null"),
+    XML("xml"),
+    DATE("date"),
+    TIME("time"),
+    FLOAT("float");
 
     private final String code;
 
-    DFPropertyScope(String code) {
+    RTPropertyFormat(String code) {
         this.code = code;
     }
 

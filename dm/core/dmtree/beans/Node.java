@@ -16,11 +16,11 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans;
 
-import org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants.FormatProperty;
-import org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.exceptions.DMNodeException;
-import org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.exceptions.DMNodePropertyException;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants.FormatProperty;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMNodeException;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMNodePropertyException;
 
 import java.util.HashMap;
 import java.util.Map;

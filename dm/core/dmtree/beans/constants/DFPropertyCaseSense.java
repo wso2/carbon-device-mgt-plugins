@@ -14,14 +14,26 @@
  * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.syncml.impl;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
 
 /**
- * This class handles SyncML messages
+ * Constants for the 'Case Sense' Property in DFProperties
  */
-public class SyncMLServiceImpl {
+public enum DFPropertyCaseSense {
+
+    CS("CS"),
+    CIS("CIS");
+
+    private final String code;
+
+    DFPropertyCaseSense(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return this.code;
+    }
 
 }

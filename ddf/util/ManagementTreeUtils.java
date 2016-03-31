@@ -19,7 +19,7 @@
 package org.wso2.carbon.mdm.services.android.omadm.ddf.util;
 
 import org.wso2.carbon.mdm.services.android.omadm.ddf.ManagementTree;
-import org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.Node;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.Node;
 
 import java.util.Map;
 
