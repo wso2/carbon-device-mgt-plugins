@@ -161,7 +161,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.mobile.impl:${carbon.mobile.device.mgt.version}</bundleDef>
+                                <bundleDef>org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.mobile:${carbon.mobile.device.mgt.version}</bundleDef>
                                 <bundleDef>org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.mobile.url.printer:${carbon.mobile.device.mgt.version}</bundleDef>
                             </bundles>
                             <importFeatures>

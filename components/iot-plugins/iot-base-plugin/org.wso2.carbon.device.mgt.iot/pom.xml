@@ -83,8 +83,8 @@
                             org.wso2.carbon.utils.*;version="${carbon.kernel.version.range}",
                             org.wso2.carbon.device.mgt.common.*,
                             org.eclipse.paho.client.mqttv3.*;version="${eclipse.paho.version}",
-                            javax.ws.rs.core,
-                            javax.xml
+                            javax.xml;resolution:=optional,
+                            javax.net.ssl;resolution:=optional
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.iot.internal,
