@@ -36,34 +36,34 @@ import javax.ws.rs.core.Response;
 @DeviceType(value = "virtual_firealarm")
 public interface VirtualFireAlarmManagerService {
 
-    @Path("manager/device/{device_id}")
+    @Path("devices/{device_id}")
     @DELETE
     Response removeDevice(@PathParam("device_id") String deviceId);
 
 
-    @Path("manager/device/{device_id}")
+    @Path("devices/{device_id}")
     @PUT
     Response updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name);
 
-    @Path("manager/device/{device_id}")
+    @Path("devices/{device_id}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response getDevice(@PathParam("device_id") String deviceId);
 
-    @Path("manager/devices")
+    @Path("devices")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response getFirealarmDevices();
 
-    @Path("manager/device/{sketch_type}/download")
+    @Path("devices/{sketch_type}/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     Response downloadSketch(@QueryParam("deviceName") String deviceName, @PathParam("sketch_type") String sketchType);
 
 
-    @Path("manager/device/{sketch_type}/generate_link")
+    @Path("devices/{sketch_type}/generate_link")
     @GET
     Response generateSketchLink(@QueryParam("deviceName") String deviceName,
                                 @PathParam("sketch_type") String sketchType);
