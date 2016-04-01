@@ -18,19 +18,18 @@
 
 package org.wso2.carbon.device.mgt.iot.api;
 
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.PaginationResult;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroup;
 import org.wso2.carbon.device.mgt.common.group.mgt.GroupAlreadyEixistException;
 import org.wso2.carbon.device.mgt.common.group.mgt.GroupManagementException;
 import org.wso2.carbon.device.mgt.common.group.mgt.GroupUser;
 import org.wso2.carbon.device.mgt.core.service.GroupManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.util.APIUtil;
-import org.wso2.carbon.device.mgt.iot.util.ResponsePayload;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -70,7 +69,7 @@ public class GroupManagerService {
     @Produces("application/json")
     public Response createGroup(@FormParam("groupName") String groupName,
                                 @FormParam("description") String description) {
-        String owner = getCurrentUserName();
+        String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
         DeviceGroup group = new DeviceGroup();
         group.setName(groupName);
         group.setDescription(description);
@@ -92,15 +91,11 @@ public class GroupManagerService {
             groupManagementService.addGroupSharingRole(owner, groupName, owner, DEFAULT_VIEW_EVENTS,
                                                        DEFAULT_VIEW_EVENTS_PERMISSIONS);
             return Response.status(Response.Status.CREATED).build();
+        } catch (GroupAlreadyEixistException e) {
+            return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
         } catch (GroupManagementException e) {
             log.error(e.getErrorMessage(), e);
-            return Response.status(HttpStatus.SC_INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-        } catch (GroupAlreadyEixistException e) {
-            ResponsePayload responsePayload = new ResponsePayload();
-            responsePayload.setStatusCode(HttpStatus.SC_CONFLICT);
-            responsePayload.setMessageFromServer("Group name is already exists.");
-            responsePayload.setResponseContent("CONFLICT");
-            return Response.status(HttpStatus.SC_CONFLICT).entity(responsePayload).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -115,7 +110,7 @@ public class GroupManagerService {
             return Response.status(Response.Status.OK).build();
         } catch (GroupManagementException e) {
             log.error(e.getErrorMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -128,7 +123,24 @@ public class GroupManagerService {
             return Response.status(Response.Status.OK).build();
         } catch (GroupManagementException e) {
             log.error(e.getMessage());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+
+    @Path("/groups")
+    @GET
+    @Produces("application/json")
+    public Response getGroups(@QueryParam("start") int startIndex, @PathParam("rowCount") int rowCount) {
+        try {
+            PaginationResult paginationResult = APIUtil.getGroupManagementProviderService().getGroups(startIndex, rowCount);
+            if (paginationResult.getRecordsTotal() > 0) {
+                return Response.status(Response.Status.OK).entity(paginationResult).build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+        } catch (GroupManagementException e) {
+            log.error(e.getMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -145,7 +157,7 @@ public class GroupManagerService {
             }
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -162,7 +174,7 @@ public class GroupManagerService {
             return Response.status(Response.Status.OK).entity(deviceGroups).build();
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -184,7 +196,7 @@ public class GroupManagerService {
             return Response.status(Response.Status.OK).entity(deviceGroups).build();
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -197,7 +209,7 @@ public class GroupManagerService {
             return Response.status(Response.Status.OK).entity(count).build();
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -218,7 +230,7 @@ public class GroupManagerService {
             }
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -238,7 +250,7 @@ public class GroupManagerService {
             }
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -260,7 +272,7 @@ public class GroupManagerService {
             }
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -280,7 +292,7 @@ public class GroupManagerService {
             }
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -301,7 +313,7 @@ public class GroupManagerService {
             return Response.status(Response.Status.OK).entity(rolesArray).build();
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -318,7 +330,7 @@ public class GroupManagerService {
             return Response.status(Response.Status.OK).entity(usersArray).build();
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -335,7 +347,7 @@ public class GroupManagerService {
             return Response.status(Response.Status.OK).entity(deviceArray).build();
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -349,7 +361,7 @@ public class GroupManagerService {
             return Response.status(Response.Status.OK).entity(count).build();
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -371,7 +383,7 @@ public class GroupManagerService {
             }
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -392,7 +404,7 @@ public class GroupManagerService {
             }
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
     }
 
@@ -408,12 +420,8 @@ public class GroupManagerService {
             return Response.status(Response.Status.OK).entity(permissions).build();
         } catch (GroupManagementException e) {
             log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
         }
-    }
-
-    private String getCurrentUserName() {
-        return PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
     }
 
 }
