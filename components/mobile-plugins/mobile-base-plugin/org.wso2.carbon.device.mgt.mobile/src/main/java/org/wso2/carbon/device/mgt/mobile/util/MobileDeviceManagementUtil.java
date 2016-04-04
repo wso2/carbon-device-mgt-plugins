@@ -99,6 +99,7 @@ public class MobileDeviceManagementUtil {
 			mobileDevice.setVendor(getPropertyValue(device, MOBILE_DEVICE_VENDOR));
 			mobileDevice.setLatitude(getPropertyValue(device, MOBILE_DEVICE_LATITUDE));
 			mobileDevice.setLongitude(getPropertyValue(device, MOBILE_DEVICE_LONGITUDE));
+			mobileDevice.setSerial(getPropertyValue(device, MOBILE_DEVICE_SERIAL));
 
 			if (device.getProperties() != null) {
 				Map<String, String> deviceProperties = new HashMap<String, String>();
