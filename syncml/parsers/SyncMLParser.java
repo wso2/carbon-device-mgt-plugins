@@ -22,7 +22,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
-import org.wso2.carbon.mdm.services.android.syncml.beans.*;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
 
 import java.util.ArrayList;
@@ -75,13 +74,13 @@ public class SyncMLParser {
 
 
     /**
-     * Parses the raw SyncML payload and generates a SyncmlDocument object.
+     * Parses the raw SyncML payload and generates a SyncMLDocument object.
      *
      * @param syncmlPayload - Received SyncML payload
-     * @return - SyncmlDocument object generated from the received payload
+     * @return - SyncMLDocument object generated from the received payload
      */
-    public static SyncmlDocument parseSyncmlPayload(Document syncmlPayload) {
-        SyncmlDocument syncmlDocument = new SyncmlDocument();
+    public static SyncMLDocument parseSyncmlPayload(Document syncmlPayload) {
+        SyncMLDocument syncMLDocument = new SyncMLDocument();
         if (syncmlPayload.getElementsByTagName(SYNC_HEADER) == null) {
             throw new IllegalStateException();
         }
@@ -95,9 +94,9 @@ public class SyncMLParser {
         Node syncBody = syncBodyList.item(0);
         SyncmlBody body = generateSyncmlBody(syncBody);
 
-        syncmlDocument.setHeader(header);
-        syncmlDocument.setBody(body);
-        return syncmlDocument;
+        syncMLDocument.setHeader(header);
+        syncMLDocument.setBody(body);
+        return syncMLDocument;
     }
 
     /**

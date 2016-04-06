@@ -19,34 +19,49 @@
 package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans;
 
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants.*;
-import org.wso2.carbon.mdm.services.android.omadm.dm.dmtree.beans.constants.*;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Runtime Properties of a Node
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class DFProperty {
 
+    @XmlElement(name = "AccessType")
     private DFPropertyAccessType accessType;
+    @XmlElement(name = "DefaultValue")
     private String defaultValue;
+    @XmlElement(name = "Description")
     private String description;
+    @XmlElement(name = "DFFormat")
     private FormatProperty format;
-    private DFPropertyOccurrence occurence;
+    @XmlElement(name = "Occurrence")
+    private DFPropertyOccurrence occurrence;
+    @XmlElement(name = "Scope")
     private DFPropertyScope scope;
+    @XmlElement(name = "DFTitle")
     private String dfTitle;
+    @XmlElement(name = "DFType")
     private String dfType;
+    @XmlElement(name = "CaseSense")
     private DFPropertyCaseSense caseSense;
 
     public DFProperty() {
     }
 
     public DFProperty(DFPropertyAccessType accessType, String defaultValue, String description,
-                      FormatProperty format, DFPropertyOccurrence occurence, DFPropertyScope scope,
+                      FormatProperty format, DFPropertyOccurrence occurrence, DFPropertyScope scope,
                       String dfTitle, String dfType, DFPropertyCaseSense caseSense) {
         this.accessType = accessType;
         this.defaultValue = defaultValue;
         this.description = description;
         this.format = format;
-        this.occurence = occurence;
+        this.occurrence = occurrence;
         this.scope = scope;
         this.dfTitle = dfTitle;
         this.dfType = dfType;
@@ -85,12 +100,12 @@ public class DFProperty {
         this.format = format;
     }
 
-    public DFPropertyOccurrence getOccurence() {
-        return occurence;
+    public DFPropertyOccurrence getOccurrence() {
+        return occurrence;
     }
 
-    public void setOccurence(DFPropertyOccurrence occurence) {
-        this.occurence = occurence;
+    public void setOccurrence(DFPropertyOccurrence occurrence) {
+        this.occurrence = occurrence;
     }
 
     public DFPropertyScope getScope() {

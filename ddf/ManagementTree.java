@@ -56,7 +56,7 @@ public class ManagementTree {
         this.verDTD = verDTD;
         if (childNodes != null) {
             setChildNodes(childNodes);
-            generatePaths(this.childNodes, ROOT_NODE_DELIMETER);
+            generatePaths(this.childNodes, this.name);
         }
     }
 
@@ -67,7 +67,7 @@ public class ManagementTree {
         this.verDTD = verDTD;
         if (childNodes != null) {
             setChildNodes(childNodes);
-            generatePaths(this.childNodes, ROOT_NODE_DELIMETER);
+            generatePaths(this.childNodes, this.name);
         }
     }
 
@@ -93,7 +93,7 @@ public class ManagementTree {
         String tempStr;
         for (Node node : nodes) {
             tempStr = currParentURI + NODE_URI_DELIMETER + node.getName();
-            node.setPath(tempStr);
+            node.setPath(currParentURI);
             if (node.getSubNodes() != null) {
                 generatePaths(node.getSubNodes(), tempStr);
             }

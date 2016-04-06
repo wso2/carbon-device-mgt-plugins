@@ -18,29 +18,43 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans;
 
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.adapters.NodeMapAdapter;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants.FormatProperty;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMNodeException;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMNodePropertyException;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * This class represents a Node in the Management Tree
  */
+@XmlRootElement(name = "Node")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Node {
 
     // The name by which the Node is addressed in the Management Tree - Mandatory
+    @XmlElement(name = "NodeName")
     private String name;
     // Path to the node
+    @XmlElement(name = "Path")
     private String path;
     // Value of the node
+    @XmlElement(name = "Path")
     private String value;
     // Runtime properties of the node
     private RTProperty rtProperty = new RTProperty();
     //DF properties of the node
-
+    @XmlElement(name = "DFProperties")
+    private DFProperty dfProperty = new DFProperty();
     // List of sub nodes
+    @XmlElement(name = "Nodes")
+    @XmlJavaTypeAdapter(NodeMapAdapter.class)
     private Map<String, Node> subNodes;
 
     public Node() {}
@@ -53,6 +67,13 @@ public class Node {
         if (subNodes == null) {
             subNodes = new HashMap<>();
         }
+    }
+
+    public Node(String name, String value, RTProperty rtProperty, Map<String, Node> subNodes) {
+        this.name = name;
+        this.value = value;
+        this.rtProperty = rtProperty;
+        this.subNodes = subNodes;
     }
 
     public void setValue(String value, FormatProperty format) {
@@ -70,6 +91,10 @@ public class Node {
 
     public void setRtProperty(RTProperty rtProperty) {
         this.rtProperty = rtProperty;
+    }
+
+    public void setDfProperty(DFProperty dfProperty) {
+        this.dfProperty = dfProperty;
     }
 
     public boolean addNode(Node node) {
@@ -106,6 +131,10 @@ public class Node {
         return rtProperty;
     }
 
+    public DFProperty getDfProperty() {
+        return dfProperty;
+    }
+
     public Map<String, Node> getSubNodes() {
         return subNodes;
     }
@@ -115,7 +144,11 @@ public class Node {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (name != null) {
+            this.name = name;
+        } else {
+            throw new DMNodePropertyException("Node name cannot be null");
+        }
     }
 
     public void setPath(String path) {

@@ -22,6 +22,10 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants.FormatProperty;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.parsers.ACLParser;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,17 +36,27 @@ import java.util.TimeZone;
 /**
  * Runtime Properties of a Node
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class RTProperty implements Serializable {
 
     private static final String TYPE_DEFAULT_VALUE = "text/plain";
 
+    @XmlElement(name = "ACL")
     private String acl;
+    @XmlElement(name = "Format")
     private FormatProperty format = FormatProperty.CHAR;
+    @XmlElement(name = "Name")
     private String name;
+    @XmlElement(name = "Size")
     private long size;
+    @XmlElement(name = "Title")
     private String title;
+    @XmlElement(name = "TStamp")
     private String tStamp;
+    @XmlElement(name = "VerNo")
     private int verNo;
+    @XmlElement(name = "Type")
     private String type = TYPE_DEFAULT_VALUE;
 
     public RTProperty() {}

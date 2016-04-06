@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
 /**
  * Represents a base format of a syncml document
  */
-public class SyncmlDocument {
+public class SyncMLDocument {
     SyncmlHeader header;
     SyncmlBody body;
 

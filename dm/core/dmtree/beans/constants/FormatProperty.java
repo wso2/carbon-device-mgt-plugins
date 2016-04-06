@@ -18,21 +18,36 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
 
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+
 /**
  * Constants for the 'Format' Property in DFProperties
  */
+@XmlEnum
 public enum FormatProperty {
 
+    @XmlEnumValue("b64")
     BASE64("b64"),
+    @XmlEnumValue("bin")
     BINARY("bin"),
+    @XmlEnumValue("bool")
     BOOLEAN("bool"),
+    @XmlEnumValue("chr")
     CHAR("chr"),
+    @XmlEnumValue("int")
     INTEGER("int"),
+    @XmlEnumValue("node")
     NODE("node"),
+    @XmlEnumValue("null")
     NULL("null"),
+    @XmlEnumValue("xml")
     XML("xml"),
+    @XmlEnumValue("date")
     DATE("date"),
+    @XmlEnumValue("time")
     TIME("time"),
+    @XmlEnumValue("float")
     FLOAT("float");
 
     private final String code;

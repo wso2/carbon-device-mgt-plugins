@@ -19,6 +19,7 @@
 package org.wso2.carbon.mdm.services.android.omadm.service.impl;
 
 import org.wso2.carbon.mdm.services.android.omadm.service.OMADMService;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLDocument;
 
 import javax.ws.rs.core.Response;
 
@@ -27,12 +28,14 @@ import javax.ws.rs.core.Response;
  */
 public class OMADMServiceImpl implements OMADMService {
     @Override
-    public Response enrollDevice() {
+    public Response bootstrapDevice(SyncMLDocument syncMLRequest) {
         return null;
     }
 
     @Override
-    public Response manageDevice() {
+    public Response enrollDevice(SyncMLDocument syncMLRequest) {
         return null;
     }
+
+
 }

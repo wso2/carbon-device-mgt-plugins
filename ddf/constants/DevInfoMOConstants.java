@@ -19,15 +19,8 @@
 package org.wso2.carbon.mdm.services.android.omadm.ddf.constants;
 
 /**
- * Contains constants related to the DM-Tree
+ * Contains constants related to the 'DevInfo' Management Object
  */
-public class DMTreeConstants {
+public class DevInfoMOConstants {
 
-    public static final String VERDTD_DEFAULT_VALUE = "1.2";
-
-    public final class StandardMO {
-        public static final String DEV_INFO_MO_NAME = "DevInfo";
-        public static final String DEV_DETAIL_MO_NAME = "DevDetail";
-        public static final String ACC_INFO_MO_NAME = "DMAcc";
-    }
 }

@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.service;
 
+import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLDocument;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
 
 import javax.ws.rs.Consumes;
@@ -33,17 +34,18 @@ import javax.ws.rs.core.Response;
 @Path("/manage")
 public interface OMADMService {
 
-    @Path("/enroll")
+    @Path("/bootstrap")
     @POST
     @Consumes({Constants.APPLICATION_SYNCML, MediaType.APPLICATION_XML})
     @Produces(Constants.APPLICATION_SYNCML)
-    Response enrollDevice();
+    Response bootstrapDevice(SyncMLDocument syncMLRequest);
 
     @Path("/enroll")
     @POST
     @Consumes({Constants.APPLICATION_SYNCML, MediaType.APPLICATION_XML})
     @Produces(Constants.APPLICATION_SYNCML)
-    Response manageDevice();
+    Response enrollDevice(SyncMLDocument syncMLRequest);
+
 
     //TODO : Need to add more proper methods based on the architecture
 

@@ -30,6 +30,10 @@ public class MD5 {
     private static SecureRandom random = null;
     private static MessageDigest md = null;
 
+    /**
+     * Generates a 128-bit nonce
+     * @return Generated nonce as a byte-array
+     */
     public static byte[] getNextNonce()
     {
         byte[] nextNonce = new byte[16];
@@ -44,12 +48,21 @@ public class MD5 {
         return nextNonce;
     }
 
+    /**
+     * Generates a MD5 digest
+     * @param data data to be digested
+     * @return digest as a byte-array
+     */
     public static byte[] digest(byte[] data)
     {
         md.reset();
         return md.digest(data);
     }
 
+    /**
+     * Creates a 'SHA1PRNG' instance
+     * @throws NoSuchAlgorithmException
+     */
     private static void randomGeneratorInit()
             throws NoSuchAlgorithmException
     {

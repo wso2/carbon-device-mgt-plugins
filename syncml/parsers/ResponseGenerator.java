@@ -21,7 +21,6 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.parsers;
 import com.google.gson.Gson;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
-import org.wso2.carbon.mdm.services.android.syncml.beans.*;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
 
 import java.util.ArrayList;
@@ -32,8 +31,8 @@ import java.util.List;
  */
 public class ResponseGenerator {
 
-    private SyncmlDocument syncmlDocument;
-    private SyncmlDocument responseSyncmlDocument;
+    private SyncMLDocument syncMLDocument;
+    private SyncMLDocument responseSyncMLDocument;
     private int headerCommandId = 1;
     private static final int HEADER_STATUS_ID = 0;
     private static final String RESULTS_COMMAND_TEXT = "Results";
@@ -45,14 +44,14 @@ public class ResponseGenerator {
     private List<? extends Operation> operations;
     Gson gson = new Gson();
 
-    public ResponseGenerator(SyncmlDocument syncmlDocument) {
-        this.syncmlDocument = syncmlDocument;
-        responseSyncmlDocument = new SyncmlDocument();
+    public ResponseGenerator(SyncMLDocument syncMLDocument) {
+        this.syncMLDocument = syncMLDocument;
+        responseSyncMLDocument = new SyncMLDocument();
     }
 
     public SyncmlBody generateStatuses() {
-        SyncmlBody sourceSyncmlBody = syncmlDocument.getBody();
-        SyncmlHeader sourceHeader = syncmlDocument.getHeader();
+        SyncmlBody sourceSyncmlBody = syncMLDocument.getBody();
+        SyncmlHeader sourceHeader = syncMLDocument.getHeader();
         StatusTag headerStatus;
         SyncmlBody syncmlBodyReply = new SyncmlBody();
         List<StatusTag> statuses = new ArrayList<>();
