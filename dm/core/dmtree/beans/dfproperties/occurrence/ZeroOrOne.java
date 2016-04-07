@@ -16,17 +16,18 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.ddf.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.dfproperties.occurrence;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
- * Contains constants related to the 'DevInfo' Management Object
+ * The 'One' property of the 'Occurrence' property
  */
-public class DevInfoMOConstants {
-
-    public final class DevId {
-        public static final String NODE_NAME = "DevId";
-        public static final String ACCESS_TYPE = "DevDetail";
-        public static final String ACC_INFO_MO_NAME = "DMAcc";
-    }
-
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "")
+@XmlRootElement(name = "ZeroOrOne")
+public class ZeroOrOne extends AbstractOccurrenceProperty {
 }

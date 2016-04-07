@@ -16,17 +16,28 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.ddf.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.type;
+
+import javax.xml.bind.annotation.*;
 
 /**
- * Contains constants related to the 'DevInfo' Management Object
+ * The 'MIME' property of the 'DFType' property
  */
-public class DevInfoMOConstants {
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+        "value"
+})
+@XmlRootElement(name = "MIME")
+public class MIME extends AbstractTypeProperty {
 
-    public final class DevId {
-        public static final String NODE_NAME = "DevId";
-        public static final String ACCESS_TYPE = "DevDetail";
-        public static final String ACC_INFO_MO_NAME = "DMAcc";
+    @XmlValue
+    protected String value;
+
+    public String getvalue() {
+        return value;
     }
 
+    public void setvalue(String value) {
+        this.value = value;
+    }
 }

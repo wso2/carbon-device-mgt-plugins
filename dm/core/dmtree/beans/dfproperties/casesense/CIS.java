@@ -16,24 +16,18 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.dfproperties.casesense;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
- * Constants for the 'Case Sense' Property in DFProperties
+ * The 'CIS' property of the 'CaseSense' property
  */
-public enum DFPropertyCaseSense {
-
-    CS("CS"),
-    CIS("CIS");
-
-    private final String code;
-
-    DFPropertyCaseSense(String code) {
-        this.code = code;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "")
+@XmlRootElement(name = "CIS")
+public class CIS {
 }

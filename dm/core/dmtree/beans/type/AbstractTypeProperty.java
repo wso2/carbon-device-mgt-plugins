@@ -16,33 +16,10 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.type;
 
 /**
- * Constants for the 'Format' Property in RTProperties
+ * The parent class of the 'DFType' property type
  */
-public enum RTPropertyFormat {
-
-    BASE64("b64"),
-    BINARY("bin"),
-    BOOLEAN("bool"),
-    CHAR("chr"),
-    INTEGER("int"),
-    NODE("node"),
-    NULL("null"),
-    XML("xml"),
-    DATE("date"),
-    TIME("time"),
-    FLOAT("float");
-
-    private final String code;
-
-    RTPropertyFormat(String code) {
-        this.code = code;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
+public class AbstractTypeProperty {
 }

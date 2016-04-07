@@ -16,13 +16,18 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.dfproperties.casesense;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
- * Constants to to define the node type
+ * The 'CS' property of the 'CaseSense' property
  */
-public enum DMNodeType {
-
-    INTERIOR, LEAF
-
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "")
+@XmlRootElement(name = "CS")
+public class CS extends AbstractCaseSenseProperty {
 }

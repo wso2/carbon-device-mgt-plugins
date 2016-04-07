@@ -16,18 +16,18 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.ddf.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.dfproperties.scope;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
- * Contains constants related to the DM-Tree
+ * The 'Dynamic' property of the 'Scope' property
  */
-public class DMTreeConstants {
-
-    public static final String VERDTD_DEFAULT_VALUE = "1.2";
-
-    public final class StandardMO {
-        public static final String DEV_INFO_MO_NAME = "DevInfo";
-        public static final String DEV_DETAIL_MO_NAME = "DevDetail";
-        public static final String ACC_INFO_MO_NAME = "DMAcc";
-    }
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "")
+@XmlRootElement(name = "Dynamic")
+public class Dynamic extends AbstractScopeProperty {
 }

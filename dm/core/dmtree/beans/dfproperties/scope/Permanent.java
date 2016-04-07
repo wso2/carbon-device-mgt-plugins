@@ -16,28 +16,18 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.dfproperties.scope;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
- * Constants for the 'Occurrence' Property in DFProperties
+ * The 'Permanent' property of the 'Scope' property
  */
-public enum DFPropertyOccurrence {
-
-    ONE("One"),
-    ZERO_OR_ONE("ZeroOrOne"),
-    ZERO_OR_MORE("ZeroOrMore"),
-    ONE_OR_MORE("OneOrMore"),
-    ZERO_OR_N("ZeroOrN"),
-    ONE_OR_N("OneOrN");
-
-    private final String code;
-
-    DFPropertyOccurrence(String code) {
-        this.code = code;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "")
+@XmlRootElement(name = "Permanent")
+public class Permanent extends AbstractScopeProperty {
 }

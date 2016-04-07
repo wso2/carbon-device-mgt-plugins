@@ -16,27 +16,30 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.dfproperties.scope;
+
+import javax.xml.bind.annotation.*;
 
 /**
- * Constants for the 'Access Type' Property in DFProperties
+ * The 'Scope' property of the 'DFProperties' property
  */
-public enum DFPropertyAccessType {
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "")
+@XmlRootElement(name = "Scope")
+public class Scope {
 
-    ADD("Add"),
-    COPY("Copy"),
-    DELETE("Delete"),
-    EXEC("Exec"),
-    GET("Get"),
-    REPLACE("replace");
+    @XmlElements({
+            @XmlElement(name = "Permanent", required = true, type = Permanent.class),
+            @XmlElement(name = "Dynamic", required = true, type = Dynamic.class)
+    })
 
-    private final String code;
+    private AbstractScopeProperty scope;
 
-    DFPropertyAccessType(String code) {
-        this.code = code;
+    public AbstractScopeProperty getScope() {
+        return scope;
     }
 
-    public String getCode() {
-        return this.code;
+    public void setScope(AbstractScopeProperty scope) {
+        this.scope = scope;
     }
 }

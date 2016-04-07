@@ -18,141 +18,155 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans;
 
-import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.adapters.NodeMapAdapter;
-import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.constants.FormatProperty;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.dfproperties.DFProperties;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.rtproperties.RTProperties;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMNodeException;
-import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMNodePropertyException;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.util.HashMap;
-import java.util.Map;
+import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class represents a Node in the Management Tree
  */
-@XmlRootElement(name = "Node")
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "", propOrder = {
+        "nodeName",
+        "path",
+        "rtProperties",
+        "dfProperties",
+        "nodes"
+})
 public class Node {
 
-    // The name by which the Node is addressed in the Management Tree - Mandatory
-    @XmlElement(name = "NodeName")
-    private String name;
-    // Path to the node
+    @XmlElement(name = "NodeName", required = true)
+    protected String nodeName;
     @XmlElement(name = "Path")
-    private String path;
-    // Value of the node
-    @XmlElement(name = "Path")
-    private String value;
-    // Runtime properties of the node
-    private RTProperty rtProperty = new RTProperty();
-    //DF properties of the node
+    protected String path;
+    @XmlElement(name = "RTProperties")
+    protected RTProperties rtProperties;
     @XmlElement(name = "DFProperties")
-    private DFProperty dfProperty = new DFProperty();
-    // List of sub nodes
-    @XmlElement(name = "Nodes")
-    @XmlJavaTypeAdapter(NodeMapAdapter.class)
-    private Map<String, Node> subNodes;
+    protected DFProperties dfProperties;
+    @XmlElement(name = "Node")
+    protected List<Node> nodes = new ArrayList<>();
+    @XmlElement(name = "Value")
+    protected String value;
 
     public Node() {}
 
-    public Node(String name, String path, String value, RTProperty rtProperty) {
-        this.name = name;
-        this.path = path;
+    public Node(String nodeName, List<Node> nodes, RTProperties rtProperties) {
+        this.nodeName = nodeName;
+        this.nodes = nodes;
+        this.rtProperties = rtProperties;
+    }
+
+    public Node(String nodeName, RTProperties rtProperties, String value) {
+        this.nodeName = nodeName;
+        this.rtProperties = rtProperties;
         this.value = value;
-        this.rtProperty = rtProperty;
-        if (subNodes == null) {
-            subNodes = new HashMap<>();
-        }
     }
 
-    public Node(String name, String value, RTProperty rtProperty, Map<String, Node> subNodes) {
-        this.name = name;
+    public Node(String nodeName, DFProperties dfProperties, List<Node> nodes) {
+        this.nodeName = nodeName;
+        this.dfProperties = dfProperties;
+        this.nodes = nodes;
+    }
+
+    public Node(String nodeName, DFProperties dfProperties, String value) {
+        this.nodeName = nodeName;
+        this.dfProperties = dfProperties;
         this.value = value;
-        this.rtProperty = rtProperty;
-        this.subNodes = subNodes;
-    }
-
-    public void setValue(String value, FormatProperty format) {
-        if (subNodes != null) {
-            throw new DMNodeException("Cannot set a value to an Interior node");
-        }
-        if (format == FormatProperty.NODE) {
-            throw new DMNodePropertyException("Cannot set format 'node' to a leaf node");
-        }
-        this.value = value;
-        this.rtProperty.setFormat(format);
-        this.rtProperty.incrementVerNo();
-        this.rtProperty.updateTimeStamp();
-    }
-
-    public void setRtProperty(RTProperty rtProperty) {
-        this.rtProperty = rtProperty;
-    }
-
-    public void setDfProperty(DFProperty dfProperty) {
-        this.dfProperty = dfProperty;
     }
 
     public boolean addNode(Node node) {
-        if (value != null) {
-            throw new DMNodeException("Cannot add nodes to a leaf node");
+        checkForValue();
+        if (nodes == null) {
+            nodes = new ArrayList<>();
         }
-        if (subNodes == null) {
-            subNodes = new HashMap<>();
-        }
-        subNodes.put(node.getName(), node);
+        nodes.add(node);
         return true;
     }
 
     public boolean addNodes(Node[] nodes) {
-        for (Node node : nodes) {
-            subNodes.put(node.getName(), node);
+        checkForValue();
+        if (nodes != null) {
+            this.nodes = new ArrayList<>(Arrays.asList(nodes));
+            return true;
         }
-        return true;
+        return false;
     }
 
-    public String getName() {
-        return name;
+    public boolean addNodes(ArrayList<Node> nodes) {
+        checkForValue();
+        if (nodes != null) {
+            this.nodes = nodes;
+            return true;
+        }
+        return false;
+    }
+
+    public void checkForValue() {
+        if (this.value != null) {
+            throw new DMNodeException("Cannot add nodes to a leaf node");
+        }
+    }
+
+    public void checkForSubNodes() {
+        if (this.nodes != null) {
+            throw new DMNodeException("Cannot set a value to an interior node");
+        }
+    }
+
+    public int getChildNodeCount() {
+        return this.nodes.size();
+    }
+
+    public String getNodeName() {
+        return nodeName;
     }
 
     public String getPath() {
         return path;
     }
 
+    public RTProperties getRtProperties() {
+        return rtProperties;
+    }
+
+    public DFProperties getDfProperties() {
+        return dfProperties;
+    }
+
+    public List<Node> getNodes() {
+        return nodes;
+    }
+
     public String getValue() {
         return value;
     }
 
-    public RTProperty getRtProperty() {
-        return rtProperty;
-    }
-
-    public DFProperty getDfProperty() {
-        return dfProperty;
-    }
-
-    public Map<String, Node> getSubNodes() {
-        return subNodes;
-    }
-
-    public Node[] getSubNodesArray() {
-        return subNodes.values().toArray((new Node[0]));
-    }
-
-    public void setName(String name) {
-        if (name != null) {
-            this.name = name;
-        } else {
-            throw new DMNodePropertyException("Node name cannot be null");
-        }
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
     }
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public void setRtProperties(RTProperties rtProperties) {
+        this.rtProperties = rtProperties;
+    }
+
+    public void setDfProperties(DFProperties dfProperties) {
+        this.dfProperties = dfProperties;
+    }
+
+    public void setNodes(List<Node> nodes) {
+        this.nodes = nodes;
     }
 
     public void setValue(String value) {

@@ -61,7 +61,7 @@ public class Constants {
     public static final String META_NAMESPACE = "syncml:metinf";
     public static final String XMLNS = "xmlns";
     public static final String RESULTS = "Results";
-    public static final String CRED_FORMAT = "b64";
+    public static final String CRED_FORMAT = "DFFormatB64";
     public static final String CRED_TYPE = "syncml:auth-md5";
     public static final String SEQUENCE = "Sequence";
     public static final String META_FORMAT_INT = "int";
@@ -176,7 +176,7 @@ public class Constants {
         public static final String META_NAMESPACE = "syncml:metinf";
         public static final String XMLNS = "xmlns";
         public static final String RESULTS = "Results";
-        public static final String CRED_FORMAT = "b64";
+        public static final String CRED_FORMAT = "DFFormatB64";
         public static final String CRED_TYPE = "syncml:auth-md5";
         public static final String SEQUENCE = "Sequence";
         public static final String META_FORMAT_INT = "int";
