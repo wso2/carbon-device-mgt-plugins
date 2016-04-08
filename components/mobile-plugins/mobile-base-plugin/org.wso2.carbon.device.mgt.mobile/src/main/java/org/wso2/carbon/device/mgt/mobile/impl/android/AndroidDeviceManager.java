@@ -143,16 +143,18 @@ public class AndroidDeviceManager implements DeviceManager {
     @Override
     public boolean enrollDevice(Device device) throws DeviceManagementException {
         boolean status = false;
-        MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
+        boolean isEnrolled = this.isEnrolled(
+                new DeviceIdentifier(device.getDeviceIdentifier(), device.getType()));
+
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new Android device : " + device.getDeviceIdentifier());
             }
-            boolean isEnrolled = this.isEnrolled(
-                    new DeviceIdentifier(device.getDeviceIdentifier(), device.getType()));
+
             if (isEnrolled) {
                 this.modifyEnrollment(device);
             } else {
+                MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
                 AndroidDAOFactory.beginTransaction();
                 status = daoFactory.getMobileDeviceDAO().addMobileDevice(mobileDevice);
                 AndroidDAOFactory.commitTransaction();

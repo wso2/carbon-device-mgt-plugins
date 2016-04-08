@@ -116,7 +116,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			stmt.setString(5, mobileDevice.getVendor());
 			stmt.setString(6, mobileDevice.getMobileDeviceId());
 			stmt.setString(7, properties.get(AndroidPluginConstants.DEVICE_NAME));
-			stmt.setString(8, mobileDevice.getLongitude());
+			stmt.setString(8, mobileDevice.getLatitude());
 			stmt.setString(9, mobileDevice.getLongitude());
 			stmt.setString(10, mobileDevice.getImei());
 			stmt.setString(11, mobileDevice.getImsi());
