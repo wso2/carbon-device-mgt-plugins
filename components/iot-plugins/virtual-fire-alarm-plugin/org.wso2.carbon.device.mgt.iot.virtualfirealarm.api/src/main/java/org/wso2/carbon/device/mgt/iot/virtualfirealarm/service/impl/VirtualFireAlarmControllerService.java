@@ -22,6 +22,7 @@ import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.DeviceData;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -55,7 +56,7 @@ public interface VirtualFireAlarmControllerService {
      * @return a custom message indicating whether the DeviceID to IP mapping was successful.
      */
     @POST
-    @Path("device/register/{deviceId}/{ip}/{port}")
+    @Path("register/{deviceId}/{ip}/{port}")
     Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
                                    @PathParam("port") String devicePort, @Context HttpServletRequest request);
 
@@ -71,7 +72,7 @@ public interface VirtualFireAlarmControllerService {
      *                 (Case-Insensitive String)
      */
     @POST
-    @Path("device/{deviceId}/buzz")
+    @Path("{deviceId}/buzz")
     @Feature(code = "buzz", name = "Buzzer On / Off", type = "operation",
             description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
     Response switchBuzzer(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
@@ -88,7 +89,7 @@ public interface VirtualFireAlarmControllerService {
      * whose temperature reading was requested.
      */
     @GET
-    @Path("device/{deviceId}/temperature")
+    @Path("{deviceId}/temperature")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Feature(code = "temperature", name = "Temperature", type = "monitor",
@@ -104,7 +105,7 @@ public interface VirtualFireAlarmControllerService {
      * @param dataMsg the temperature data received from the device in JSON format complying to type 'DeviceData'.
      */
     @POST
-    @Path("device/temperature")
+    @Path("temperature")
     @Consumes(MediaType.APPLICATION_JSON)
     Response pushTemperatureData(final DeviceData dataMsg);
 
@@ -122,7 +123,7 @@ public interface VirtualFireAlarmControllerService {
      * @return an HTTP Response object with either the CA-Cert or the CA-Capabilities according to the operation.
      */
     @GET
-    @Path("device/scep")
+    @Path("scep")
     Response scepRequest(@QueryParam("operation") String operation, @QueryParam("message") String message);
 
 
@@ -139,13 +140,13 @@ public interface VirtualFireAlarmControllerService {
      * @return an HTTP Response object with the signed certificate for the device by the CA of the SCEP Server.
      */
     @POST
-    @Path("device/scep")
+    @Path("scep")
     Response scepRequestPost(@QueryParam("operation") String operation, InputStream inputStream);
 
     /**
-     * Retreive Sensor data for the device type
+     * Retrieve Sensor data for the device type
      */
-    @Path("device/stats/{deviceId}/sensors/{sensorName}")
+    @Path("stats/{deviceId}/sensors/{sensorName}")
     @GET
     @Consumes("application/json")
     @Produces("application/json")
