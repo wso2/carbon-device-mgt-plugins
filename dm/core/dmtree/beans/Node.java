@@ -43,6 +43,8 @@ import java.util.List;
 })
 public class Node {
 
+    private static String NODE_URI_DELIMETER = "/";
+    
     @XmlElement(name = "NodeName", required = true)
     protected String nodeName;
     @XmlElement(name = "Path")
@@ -56,7 +58,8 @@ public class Node {
     @XmlElement(name = "Value")
     protected String value;
 
-    public Node() {}
+    public Node() {
+    }
 
     public Node(String nodeName, List<Node> nodes, RTProperties rtProperties) {
         this.nodeName = nodeName;
@@ -88,6 +91,7 @@ public class Node {
             nodes = new ArrayList<>();
         }
         nodes.add(node);
+        updatePaths(this.nodes, this.nodeName);
         return true;
     }
 
@@ -95,6 +99,7 @@ public class Node {
         checkForValue();
         if (nodes != null) {
             this.nodes = new ArrayList<>(Arrays.asList(nodes));
+            updatePaths(this.nodes, this.nodeName);
             return true;
         }
         return false;
@@ -104,6 +109,7 @@ public class Node {
         checkForValue();
         if (nodes != null) {
             this.nodes = nodes;
+            updatePaths(this.nodes, this.nodeName);
             return true;
         }
         return false;
@@ -123,6 +129,24 @@ public class Node {
 
     public int getChildNodeCount() {
         return this.nodes.size();
+    }
+
+    /**
+     * This recursive method generates absolute paths of each node in the given Node list
+     *
+     * @param treeNodes     node list
+     * @param currParentURI URI of the parent node
+     */
+    public void updatePaths(List<Node> treeNodes, String currParentURI) {
+        String tempStr;
+        for (Node node : treeNodes) {
+            tempStr = currParentURI + NODE_URI_DELIMETER + node.getNodeName();
+            node.setPath(currParentURI);
+            if (node.getNodes() != null) {
+                System.out.println(node.getNodeName() + " : " + node.getPath());
+                updatePaths(node.getNodes(), tempStr);
+            }
+        }
     }
 
     public String getNodeName() {

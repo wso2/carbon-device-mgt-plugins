@@ -81,6 +81,7 @@ public class MgmtTree {
                 throw new DMNodeException("A node with the same node name already exists.");
             }
             this.nodes.add(node);
+            updatePaths(this.nodes, ROOT_NODE_PATH_DELIMETER);
             return true;
         }
         return false;
@@ -92,6 +93,7 @@ public class MgmtTree {
                 throw new DMNodeException("A node with the same node name already exists.");
             }
             this.nodes.add(node);
+            updatePaths(this.nodes, ROOT_NODE_PATH_DELIMETER);
             return true;
         }
         return false;
@@ -99,16 +101,18 @@ public class MgmtTree {
 
     /**
      * This recursive method generates absolute paths of each node in the given Node list
-     * @param treeNodes node list
+     *
+     * @param treeNodes     node list
      * @param currParentURI URI of the parent node
      */
-    public void generatePaths(List<Node> treeNodes, String currParentURI) {
+    public void updatePaths(List<Node> treeNodes, String currParentURI) {
         String tempStr;
         for (Node node : treeNodes) {
             tempStr = currParentURI + NODE_URI_DELIMETER + node.getNodeName();
             node.setPath(currParentURI);
             if (node.getNodes() != null) {
-                generatePaths(node.getNodes(), tempStr);
+                System.out.println(node.getNodeName() + " : " + node.getPath());
+                updatePaths(node.getNodes(), tempStr);
             }
         }
     }
