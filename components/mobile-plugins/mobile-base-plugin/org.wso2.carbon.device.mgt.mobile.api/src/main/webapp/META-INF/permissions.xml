@@ -855,4 +855,167 @@
         <scope>emm_admin</scope>
     </Permission>
     <!-- End of Certificate related APIs -->
+
+    <!-- Group related APIs -->
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups</url>
+        <method>POST</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*</url>
+        <method>PUT</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*</url>
+        <method>DELETE</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/user/*</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/search</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/user/*/all</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/user/*/count</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*/share</url>
+        <method>PUT</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*/unshare</url>
+        <method>PUT</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*/share/roles/*/permissions</url>
+        <method>PUT</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*/share/roles/*/permissions</url>
+        <method>DELETE</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*/share/roles</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*/users</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*/devices/all</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*/devices/count</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*/devices/*/*</url>
+        <method>PUT</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*/devices/*/*</url>
+        <method>DELETE</method>
+        <scope>emm_admin</scope>
+    </Permission>
+
+    <Permission>
+        <name>Group Management</name>
+        <path>/device-mgt/admin/groups</path>
+        <url>/groups/*/*/users/*/permissions</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+    <!-- End of Group related APIs -->
+
 </PermissionConfiguration>
