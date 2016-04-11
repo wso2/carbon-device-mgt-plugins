@@ -45,7 +45,7 @@
 	<Permission>
 		<name>Download device</name>
 		<path>/device-mgt/user/devices/add</path>
-		<url>/devices/*/download</url>
+        <url>/devices/download</url>
 		<method>GET</method>
 		<scope>virtual_firealarm_user</scope>
 	</Permission>
@@ -66,7 +66,7 @@
     <Permission>
         <name>Generate Link</name>
         <path>/device-mgt/user/devices/generate_link</path>
-        <url>/devices/*/generate_link</url>
+        <url>/devices/generate_link</url>
         <method>GET</method>
         <scope>virtual_firealarm_user</scope>
     </Permission>
