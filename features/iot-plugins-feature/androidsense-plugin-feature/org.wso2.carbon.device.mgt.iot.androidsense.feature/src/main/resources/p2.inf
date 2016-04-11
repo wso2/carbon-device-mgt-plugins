@@ -15,3 +15,13 @@ org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../featur
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../database/);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.androidsense_${feature.version}/database/,target:${installFolder}/../../database/,overwrite:true);\
 
+instructions.unconfigure = \
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../conf/device-types/android_sense.json);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/android_sense.war);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/android_sense);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../dbscripts/cdm/plugins/android_sense);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../resources/sketches/android_sense);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../conf/datasources/androidsense-datasources.xml);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../database/AndroidSenseDM_DB.h2.db);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.android_sense.device-view);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.android_sense.type-view);\

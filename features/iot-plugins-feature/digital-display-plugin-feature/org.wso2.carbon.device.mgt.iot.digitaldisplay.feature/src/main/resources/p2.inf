@@ -12,3 +12,14 @@ org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../depl
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.digitaldisplay_${feature.version}/jaggeryapps/,target:${installFolder}/../../deployment/server/jaggeryapps/,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../database/);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.digitaldisplay_${feature.version}/database/,target:${installFolder}/../../database/,overwrite:true);\
+
+instructions.unconfigure = \
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../conf/device-types/digital_display.json);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/digital_display.war);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/digital_display);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../dbscripts/cdm/plugins/digital_display);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../resources/sketches/digital_display);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../conf/datasources/digitaldisplay-datasources.xml);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../database/DigitalDisplayDM_DB.h2.db);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.digital_display.device-view);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.digital_display.type-view);\
