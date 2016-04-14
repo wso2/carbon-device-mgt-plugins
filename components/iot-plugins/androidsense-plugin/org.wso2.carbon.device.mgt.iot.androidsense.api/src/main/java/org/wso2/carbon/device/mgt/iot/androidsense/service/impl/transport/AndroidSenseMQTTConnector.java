@@ -26,7 +26,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.service.DeviceAnalyticsService;
+import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -289,8 +289,8 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
                 if (device != null) {
                     String owner = device.getEnrolmentInfo().getOwner();
                     ctx.setTenantDomain(MultitenantUtils.getTenantDomain(owner), true);
-                    DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
-                            .getOSGiService(DeviceAnalyticsService.class, null);
+                    EventsPublisherService deviceAnalyticsService = (EventsPublisherService) ctx
+                            .getOSGiService(EventsPublisherService.class, null);
                     if (deviceAnalyticsService != null) {
                         Object metaData[] = {owner, AndroidSenseConstants.DEVICE_TYPE, deviceId, time};
                         if (streamDefinition != null && payloadData != null && payloadData.length > 0) {

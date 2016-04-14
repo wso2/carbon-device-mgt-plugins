@@ -12,33 +12,32 @@ import javax.xml.bind.annotation.XmlRootElement;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SensorData {
 
-    @XmlElement public Long time;
-    @XmlElement public String key;
+	@XmlElement public Long time;
+	@XmlElement public String key;
+	@XmlElement public String value;
 
-    public String getValue() {
-        return value;
-    }
+	public String getValue() {
+		return value;
+	}
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-    public String getKey() {
-        return key;
-    }
+	public String getKey() {
+		return key;
+	}
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+	public void setKey(String key) {
+		this.key = key;
+	}
 
-    public Long getTime() {
-        return time;
-    }
+	public Long getTime() {
+		return time;
+	}
 
-    public void setTime(Long time) {
-        this.time = time;
-    }
-
-    @XmlElement public String value;
+	public void setTime(Long time) {
+		this.time = time;
+	}
 
 }

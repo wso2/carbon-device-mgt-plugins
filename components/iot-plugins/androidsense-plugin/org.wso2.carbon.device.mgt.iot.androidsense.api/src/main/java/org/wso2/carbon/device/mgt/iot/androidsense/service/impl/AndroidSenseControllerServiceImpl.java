@@ -20,26 +20,26 @@ package org.wso2.carbon.device.mgt.iot.androidsense.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.analytics.dataservice.commons.SORT;
+import org.wso2.carbon.analytics.dataservice.commons.SortByField;
+import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.AnalyticsDataRecord;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DeviceManagementAnalyticsException;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.service.DeviceAnalyticsService;
+import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.transport.AndroidSenseMQTTConnector;
+import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.DeviceData;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.SensorData;
+import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -100,8 +100,8 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     public Response addSensorData(DeviceData dataMsg) {
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
-                .getOSGiService(DeviceAnalyticsService.class, null);
+        EventsPublisherService deviceAnalyticsService = (EventsPublisherService) ctx
+                .getOSGiService(EventsPublisherService.class, null);
         SensorData[] sensorData = dataMsg.values;
         String streamDef = null;
         Object payloadData[] = null;
@@ -202,7 +202,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     public Response getLightData(String deviceId) {
         try {
-            SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, AndroidSenseConstants
+            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, AndroidSenseConstants
                     .SENSOR_LIGHT);
             return Response.ok().entity(sensorRecord).build();
         } catch (DeviceControllerException e) {
@@ -212,7 +212,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     public Response getBattery(String deviceId) {
         try {
-            SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, AndroidSenseConstants
+            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, AndroidSenseConstants
                     .SENSOR_BATTERY);
             return Response.ok().entity(sensorRecord).build();
         } catch (DeviceControllerException e) {
@@ -222,7 +222,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     public Response getGPS(String deviceId) {
         try {
-            SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, AndroidSenseConstants
+            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, AndroidSenseConstants
                     .SENSOR_GPS);
             return Response.ok().entity(sensorRecord).build();
         } catch (DeviceControllerException e) {
@@ -232,7 +232,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     public Response readMagnetic(String deviceId) {
         try {
-            SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, AndroidSenseConstants
+            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, AndroidSenseConstants
                     .SENSOR_MAGNETIC);
             return Response.ok().entity(sensorRecord).build();
         } catch (DeviceControllerException e) {
@@ -242,7 +242,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     public Response readAccelerometer(String deviceId) {
         try {
-            SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
+            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
                                                                            AndroidSenseConstants.SENSOR_ACCELEROMETER);
             return Response.ok().entity(sensorRecord).build();
         } catch (DeviceControllerException e) {
@@ -252,7 +252,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     public Response readRotation(String deviceId) {
         try {
-            SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
+            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
                                                                            AndroidSenseConstants.SENSOR_ROTATION);
             return Response.ok().entity(sensorRecord).build();
         } catch (DeviceControllerException e) {
@@ -262,7 +262,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     public Response readProximity(String deviceId) {
         try {
-            SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
+            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
                                                                            AndroidSenseConstants.SENSOR_PROXIMITY);
             return Response.ok().entity(sensorRecord).build();
         } catch (DeviceControllerException e) {
@@ -272,7 +272,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     public Response readGyroscope(String deviceId) {
         try {
-            SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
+            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
                                                                            AndroidSenseConstants.SENSOR_GYROSCOPE);
             return Response.ok().entity(sensorRecord).build();
         } catch (DeviceControllerException e) {
@@ -282,7 +282,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     public Response readPressure(String deviceId) {
         try {
-            SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
+            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
                                                                            AndroidSenseConstants.SENSOR_PRESSURE);
             return Response.ok().entity(sensorRecord).build();
         } catch (DeviceControllerException e) {
@@ -292,7 +292,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     public Response readGravity(String deviceId) {
         try {
-            SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
+            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
                                                                            AndroidSenseConstants.SENSOR_GRAVITY);
             return Response.ok().entity(sensorRecord).build();
         } catch (DeviceControllerException e) {
@@ -302,8 +302,8 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     public Response getWords(String deviceId, String sessionId) {
         try {
-            SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-                                                                           AndroidSenseConstants.SENSOR_WORDCOUNT);
+            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
+                                                                                        AndroidSenseConstants.SENSOR_WORDCOUNT);
             return Response.ok().entity(sensorRecord).build();
         } catch (DeviceControllerException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
@@ -344,55 +344,27 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
         String user = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
-        List<SensorData> sensorDatas = new ArrayList<>();
-        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
-                .getOSGiService(DeviceAnalyticsService.class, null);
         String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
                        AndroidSenseConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
         if (sensor.equals(AndroidSenseConstants.SENSOR_WORDCOUNT)) {
             query = "owner:" + user + " AND deviceId:" + deviceId;
         }
         String sensorTableName = getSensorEventTableName(sensor);
+        List<SensorRecord> sensorDatas;
         try {
-            List<AnalyticsDataRecord> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName, query);
             if (sensor.equals(AndroidSenseConstants.SENSOR_WORDCOUNT)) {
-                for (AnalyticsDataRecord record : records) {
-                    SensorData sensorData = new SensorData();
-                    sensorData.setKey((String) record.getValue("word"));
-                    sensorData.setTime((long) record.getValue("occurence"));
-                    sensorData.setValue((String) record.getValue("sessionId"));
-                    sensorDatas.add(sensorData);
-                }
+                List<SortByField> sortByFields = new ArrayList<>();
+                SortByField sortByField = new SortByField("time", SORT.ASC, false);
+                sortByFields.add(sortByField);
+                sensorDatas = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
             } else {
-                Collections.sort(records, new Comparator<AnalyticsDataRecord>() {
-                    @Override
-                    public int compare(AnalyticsDataRecord o1, AnalyticsDataRecord o2) {
-                        long t1 = (Long) o1.getValue("time");
-                        long t2 = (Long) o2.getValue("time");
-                        if (t1 < t2) {
-                            return -1;
-                        } else if (t1 > t2) {
-                            return 1;
-                        } else {
-                            return 0;
-                        }
-                    }
-                });
-                for (AnalyticsDataRecord record : records) {
-                    SensorData sensorData = new SensorData();
-                    sensorData.setTime((long) record.getValue("time"));
-                    sensorData.setValue("" + (float) record.getValue(sensor));
-                    sensorDatas.add(sensorData);
-                }
+                sensorDatas = APIUtil.getAllEventsForDevice(sensorTableName, query, null);
             }
-            SensorData[] sensorDetails = sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-            return Response.ok().entity(sensorDetails).build();
-        } catch (DeviceManagementAnalyticsException e) {
+            return Response.ok().entity(sensorDatas).build();
+        } catch (AnalyticsException e) {
             String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
             log.error(errorMsg);
-            SensorData[] senserDetails = sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(senserDetails).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
         }
     }
 

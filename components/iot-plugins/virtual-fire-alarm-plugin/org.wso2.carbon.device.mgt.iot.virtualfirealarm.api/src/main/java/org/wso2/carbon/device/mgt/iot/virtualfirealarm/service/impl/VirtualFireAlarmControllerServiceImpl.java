@@ -20,26 +20,25 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.analytics.dataservice.commons.SORT;
+import org.wso2.carbon.analytics.dataservice.commons.SortByField;
+import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.AnalyticsDataRecord;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DeviceManagementAnalyticsException;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.service.DeviceAnalyticsService;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.DeviceData;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.SensorData;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport.VirtualFireAlarmMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport.VirtualFireAlarmXMPPConnector;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.SecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.VirtualFireAlarmServiceUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.scep.ContentType;
@@ -52,8 +51,6 @@ import javax.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -253,7 +250,7 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
     }
 
     public Response requestTemperature(String deviceId, String protocol) {
-        SensorRecord sensorRecord = null;
+        org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = null;
         String protocolString = protocol.toUpperCase();
         if (log.isDebugEnabled()) {
             log.debug("Sending request to read virtual-firealarm-temperature of device " +
@@ -405,45 +402,23 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
     }
 
     public Response getVirtualFirealarmStats(String deviceId, String sensor, String user, long from, long to) {
+        String fromDate = String.valueOf(from);
+        String toDate = String.valueOf(to);
+        String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
+                VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+        String sensorTableName = getSensorEventTableName(sensor);
         try {
-            String fromDate = String.valueOf(from);
-            String toDate = String.valueOf(to);
-            List<SensorData> sensorDatas = new ArrayList<>();
-            PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-            DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
-                    .getOSGiService(DeviceAnalyticsService.class, null);
-            String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
-                           VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
-            String sensorTableName = getSensorEventTableName(sensor);
             if (sensorTableName != null) {
-                List<AnalyticsDataRecord> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName, query);
-                Collections.sort(records, new Comparator<AnalyticsDataRecord>() {
-                    @Override
-                    public int compare(AnalyticsDataRecord o1, AnalyticsDataRecord o2) {
-                        long t1 = (Long) o1.getValue("time");
-                        long t2 = (Long) o2.getValue("time");
-                        if (t1 < t2) {
-                            return -1;
-                        } else if (t1 > t2) {
-                            return 1;
-                        } else {
-                            return 0;
-                        }
-                    }
-                });
-                for (AnalyticsDataRecord record : records) {
-                    SensorData sensorData = new SensorData();
-                    sensorData.setTime((long) record.getValue("time"));
-                    sensorData.setValue("" + (float) record.getValue(sensor));
-                    sensorDatas.add(sensorData);
-                }
-                SensorData[] sensorDetails = sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-                return Response.ok().entity(sensorDetails).build();
+                List<SortByField> sortByFields = new ArrayList<>();
+                SortByField sortByField = new SortByField("time", SORT.ASC, false);
+                sortByFields.add(sortByField);
+                List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
+                return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
             }
-        } catch (DeviceManagementAnalyticsException e) {
-            String errorMsg = "Error on retrieving stats on table for sensor name" + sensor;
+        } catch (AnalyticsException e) {
+            String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
             log.error(errorMsg);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
