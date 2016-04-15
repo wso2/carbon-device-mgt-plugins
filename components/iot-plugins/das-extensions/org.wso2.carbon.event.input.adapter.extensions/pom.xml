@@ -65,7 +65,7 @@
             <artifactId>org.wso2.carbon.identity.jwt.client.extension</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.jayway.jsonpath.wso2</groupId>
+            <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
         </dependency>
         <dependency>

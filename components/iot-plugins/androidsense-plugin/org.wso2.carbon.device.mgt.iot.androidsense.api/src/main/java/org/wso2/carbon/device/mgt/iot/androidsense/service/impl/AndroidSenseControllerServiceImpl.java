@@ -74,9 +74,17 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
                 if (waitForServerStartup()) {
                     return;
                 }
+                //The delay is added till the server starts up.
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 AndroidSenseControllerServiceImpl.androidSenseMQTTConnector = androidSenseMQTTConnector;
                 if (MqttConfig.getInstance().isEnabled()) {
-                    androidSenseMQTTConnector.connect();
+                    synchronized (androidSenseMQTTConnector) {
+                        androidSenseMQTTConnector.connect();
+                    }
                 } else {
                     log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
                 }

@@ -38,11 +38,7 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
     @Override
     public List<String> getSupportedMessageFormats() {
         List<String> supportInputMessageTypes = new ArrayList<String>();
-
-        supportInputMessageTypes.add(MessageType.TEXT);
         supportInputMessageTypes.add(MessageType.JSON);
-        supportInputMessageTypes.add(MessageType.XML);
-
         return supportInputMessageTypes;
     }
 
@@ -52,28 +48,23 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
 
         // set topic
         Property topicProperty = new Property(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC);
-        topicProperty.setDisplayName(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC));
+        topicProperty.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC));
         topicProperty.setRequired(true);
-        topicProperty.setHint(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC_HINT));
+        topicProperty.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC_HINT));
         propertyList.add(topicProperty);
 
         //Broker Url
         Property brokerUrl = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_URL);
-        brokerUrl.setDisplayName(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_URL));
+        brokerUrl.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_URL));
         brokerUrl.setRequired(true);
         brokerUrl.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_URL_HINT));
         propertyList.add(brokerUrl);
 
         //DCR endpoint details
         Property dcrUrl = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL);
-        dcrUrl.setDisplayName(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL));
+        dcrUrl.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL));
         dcrUrl.setRequired(false);
-        dcrUrl.setHint(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL_HINT));
+        dcrUrl.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL_HINT));
         propertyList.add(dcrUrl);
 
         //Content Validator details
@@ -83,7 +74,6 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
         contentValidator.setRequired(false);
         contentValidator.setHint(
                 resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME_HINT));
-        propertyList.add(contentValidator);
         contentValidator.setDefaultValue(Constants.DEFAULT);
         propertyList.add(contentValidator);
 
@@ -94,7 +84,6 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
         contentValidatorParams.setRequired(false);
         contentValidatorParams.setHint(
                 resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS_HINT));
-        propertyList.add(contentValidatorParams);
         contentValidatorParams.setDefaultValue(Constants.MQTT_CONTENT_VALIDATION_DEFAULT_PARAMETERS);
         propertyList.add(contentValidatorParams);
 
@@ -103,9 +92,7 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
         userName.setDisplayName(
                 resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME));
         userName.setRequired(false);
-        userName.setHint(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME_HINT));
-        propertyList.add(userName);
+        userName.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME_HINT));
         propertyList.add(userName);
 
         //Broker Required Scopes.
@@ -113,28 +100,23 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
         scopes.setDisplayName(
                 resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES));
         scopes.setRequired(false);
-        scopes.setHint(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES_HINT));
+        scopes.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES_HINT));
         propertyList.add(scopes);
 
         //Broker clear session
         Property clearSession = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION);
-        clearSession.setDisplayName(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION));
+        clearSession.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION));
         clearSession.setRequired(false);
         clearSession.setOptions(new String[]{"true", "false"});
         clearSession.setDefaultValue("true");
-        clearSession.setHint(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION_HINT));
+        clearSession.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION_HINT));
         propertyList.add(clearSession);
 
         // set clientId
         Property clientId = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID);
-        clientId.setDisplayName(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID));
+        clientId.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID));
         clientId.setRequired(false);
-        clientId.setHint(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID_HINT));
+        clientId.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID_HINT));
         propertyList.add(clientId);
 
         return propertyList;

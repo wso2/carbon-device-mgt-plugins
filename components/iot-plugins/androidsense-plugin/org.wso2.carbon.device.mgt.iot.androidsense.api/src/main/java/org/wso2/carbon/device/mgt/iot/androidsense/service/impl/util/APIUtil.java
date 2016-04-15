@@ -10,9 +10,11 @@ import org.wso2.carbon.analytics.dataservice.commons.SortByField;
 import org.wso2.carbon.analytics.dataservice.core.AnalyticsDataServiceUtils;
 import org.wso2.carbon.analytics.datasource.commons.Record;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
+import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
+import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,5 +128,29 @@ public class APIUtil {
 		recordBean.setId(record.getId());
 		recordBean.setValues(record.getValues());
 		return recordBean;
+	}
+
+	public static APIManagementProviderService getAPIManagementProviderService() {
+		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+		APIManagementProviderService apiManagementProviderService =
+				(APIManagementProviderService) ctx.getOSGiService(APIManagementProviderService.class, null);
+		if (apiManagementProviderService == null) {
+			String msg = "API management provider service has not initialized.";
+			log.error(msg);
+			throw new IllegalStateException(msg);
+		}
+		return apiManagementProviderService;
+	}
+
+	public static JWTClientManagerService getJWTClientManagerService() {
+		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+		JWTClientManagerService jwtClientManagerService =
+				(JWTClientManagerService) ctx.getOSGiService(JWTClientManagerService.class, null);
+		if (jwtClientManagerService == null) {
+			String msg = "JWT Client manager service has not initialized.";
+			log.error(msg);
+			throw new IllegalStateException(msg);
+		}
+		return jwtClientManagerService;
 	}
 }

@@ -143,6 +143,9 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
             String scopes = this.mqttBrokerConnectionConfiguration.getBrokerScopes();
             //getJWT Client Parameters.
             if (dcrUrlString != null && !dcrUrlString.isEmpty()) {
+                PrivilegedCarbonContext.startTenantFlow();
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(tenantId, true);
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(username);
                 try {
                     URL dcrUrl = new URL(dcrUrlString);
                     HttpClient httpClient = MQTTUtil.getHttpClient(dcrUrl.getProtocol());
@@ -153,7 +156,6 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                     registrationProfile.setOwner(username);
                     registrationProfile.setTokenScope(Constants.TOKEN_SCOPE);
                     registrationProfile.setApplicationType(Constants.APPLICATION_TYPE);
-                    int tenantId = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId(true);
                     registrationProfile.setClientName(username + "_" + tenantId);
                     String jsonString = registrationProfile.toJSON();
                     StringEntity requestEntity = new StringEntity(jsonString, ContentType.APPLICATION_JSON);
@@ -180,6 +182,8 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                     log.error("Invalid dcrUrl : " + dcrUrlString);
                 } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | IOException  e) {
                     log.error("Failed to create an https connection.", e);
+                } finally {
+                    PrivilegedCarbonContext.endTenantFlow();
                 }
             }
         }
@@ -231,15 +235,16 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
             if (log.isDebugEnabled()) {
                 log.debug("Event received in MQTT Event Adapter - " + msgText);
             }
-            ContentInfo contentInfo;
-            synchronized (contentValidationParams) {
-                contentValidationParams.put(Constants.TOPIC, topic);
-                contentValidationParams.put(Constants.PAYLOAD, msgText);
-                contentInfo = contentValidator.validate(contentValidationParams);
-                contentValidationParams.remove(Constants.TOPIC);
-                contentValidationParams.remove(Constants.PAYLOAD);
-            }
+
             if (contentValidator != null) {
+                ContentInfo contentInfo;
+                synchronized (contentValidationParams) {
+                    contentValidationParams.put(Constants.TOPIC, topic);
+                    contentValidationParams.put(Constants.PAYLOAD, msgText);
+                    contentInfo = contentValidator.validate(contentValidationParams);
+                    contentValidationParams.remove(Constants.TOPIC);
+                    contentValidationParams.remove(Constants.PAYLOAD);
+                }
                 if (contentInfo != null && contentInfo.isValidContent()) {
                     eventAdapterListener.onEvent(contentInfo.getMsgText());
                 }

@@ -16,6 +16,7 @@ import util.AuthenticationInfo;
 
 import javax.websocket.Session;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.rmi.RemoteException;
@@ -32,16 +33,22 @@ public class OAuthTokenValdiator {
 	private static final String QUERY_KEY_VALUE_SEPERATOR = "=";
 	private static final String TOKEN_TYPE = "bearer";
 	private static final String TOKEN_IDENTIFIER = "token";
-	private static OAuthTokenValdiator oAuthTokenValdiator = new OAuthTokenValdiator();
+	private static OAuthTokenValdiator oAuthTokenValdiator;
 
 	public static OAuthTokenValdiator getInstance() {
-		return oAuthTokenValdiator;
+		if (oAuthTokenValdiator == null) {
+			synchronized (OAuthTokenValdiator.class) {
+				if (oAuthTokenValdiator == null) {
+					oAuthTokenValdiator = new OAuthTokenValdiator();
+				}
+			}
+		}
+		return  oAuthTokenValdiator;
 	}
 
 	private OAuthTokenValdiator() {
-		Properties properties = null;
 		try {
-			properties = getWebSocketConfig();
+			Properties properties = getWebSocketConfig();
 			this.stubs = new GenericObjectPool(new OAuthTokenValidaterStubFactory(properties));
 		} catch (IOException e) {
 			log.error("Failed to parse the web socket config file " + WEBSOCKET_CONFIG_LOCATION);
@@ -145,9 +152,12 @@ public class OAuthTokenValdiator {
 	 */
 	private Properties getWebSocketConfig() throws IOException {
 		Properties properties = new Properties();
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(WEBSOCKET_CONFIG_LOCATION);
-		if (inputStream != null) {
-			properties.load(inputStream);
+		File configFile =new File(WEBSOCKET_CONFIG_LOCATION);
+		if (configFile.exists()) {
+			InputStream fileInputStream = new FileInputStream(configFile);
+			if (fileInputStream != null) {
+				properties.load(fileInputStream);
+			}
 		}
 		return properties;
 	}

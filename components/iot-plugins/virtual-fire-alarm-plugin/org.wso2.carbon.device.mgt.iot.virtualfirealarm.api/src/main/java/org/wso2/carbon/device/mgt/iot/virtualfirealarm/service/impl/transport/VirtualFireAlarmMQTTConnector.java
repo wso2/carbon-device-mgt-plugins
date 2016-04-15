@@ -22,6 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
+import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
+import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
@@ -32,9 +36,14 @@ import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.SecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.VirtualFireAlarmServiceUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
+import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
+import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
+import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
+import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -64,6 +73,8 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 	// wildcard (+) is in place for device_owner & device_id
 	private static String subscribeTopic = "wso2/" + VirtualFireAlarmConstants.DEVICE_TYPE + "/+/publisher";
 	private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
+	private static final String KEY_TYPE = "PRODUCTION";
+	private static final String EMPTY_STRING = "";
 
 	/**
 	 * Default constructor for the VirtualFirealarmMQTTConnector.
@@ -83,24 +94,41 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 		Runnable connector = new Runnable() {
 			public void run() {
 				while (!isConnected()) {
+					PrivilegedCarbonContext.startTenantFlow();
+					PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
+							VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN, true);
 					try {
-						String brokerUsername = MqttConfig.getInstance().getMqttQueueUsername();
-						String brokerPassword = MqttConfig.getInstance().getMqttQueuePassword();
-						setUsernameAndPassword(brokerUsername, brokerPassword);
+						String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
+								.getRealmConfiguration().getAdminUserName();
+						PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(applicationUsername);
+						APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
+						String[] tags = {VirtualFireAlarmConstants.DEVICE_TYPE};
+						ApiApplicationKey apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
+								VirtualFireAlarmConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
+						JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
+						String scopes = "device_type_" + VirtualFireAlarmConstants.DEVICE_TYPE + " device_mqtt_connector";
+						AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
+							apiApplicationKey.getConsumerSecret(), applicationUsername, scopes);
+						//create token
+						String accessToken = accessTokenInfo.getAccessToken();
+						setUsernameAndPassword(accessToken, EMPTY_STRING);
 						connectToQueue();
+						subscribeToQueue();
 					} catch (TransportHandlerException e) {
-						log.error("Connection to MQTT Broker at: " + mqttBrokerEndPoint + " failed", e);
+						log.error("Connection/Subscription to MQTT Broker at: " + mqttBrokerEndPoint + " failed", e);
 						try {
 							Thread.sleep(timeoutInterval);
 						} catch (InterruptedException ex) {
 							log.error("MQTT-Connector: Thread Sleep Interrupt Exception.", ex);
 						}
-					}
-
-					try {
-						subscribeToQueue();
-					} catch (TransportHandlerException e) {
-						log.warn("Subscription to MQTT Broker at: " + mqttBrokerEndPoint + " failed", e);
+					} catch (JWTClientException e) {
+						log.error("Failed to retrieve token from JWT Client.", e);
+					} catch (UserStoreException e) {
+						log.error("Failed to retrieve the user.", e);
+					} catch (APIManagerException e) {
+						log.error("Failed to create an application and generate keys.", e);
+					} finally {
+						PrivilegedCarbonContext.endTenantFlow();
 					}
 				}
 			}

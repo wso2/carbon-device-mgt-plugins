@@ -32,7 +32,6 @@ public class HTTPContentValidator implements ContentValidator {
 	@Override
 	public ContentInfo validate(Map<String, String> paramMap) {
 		String deviceId = paramMap.get("deviceId");
-
 		String msg = paramMap.get(HTTPEventAdapterConstants.PAYLOAD_TAG);
 		String deviceIdJsonPath = paramMap.get(HTTPEventAdapterConstants.DEVICE_ID_JSON_PATH);
 		Object res = JsonPath.read(msg, deviceIdJsonPath);

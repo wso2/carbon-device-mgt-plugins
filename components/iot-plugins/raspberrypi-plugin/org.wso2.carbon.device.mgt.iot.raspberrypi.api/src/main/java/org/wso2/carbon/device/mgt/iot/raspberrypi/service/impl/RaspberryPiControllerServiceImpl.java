@@ -72,10 +72,18 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
                     return;
                 }
                 RaspberryPiControllerServiceImpl.this.raspberryPiMQTTConnector = raspberryPiMQTTConnector;
+                //The delay is added for the server starts up.
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 if (MqttConfig.getInstance().isEnabled()) {
-                    raspberryPiMQTTConnector.connect();
+                    synchronized (raspberryPiMQTTConnector) {
+                        raspberryPiMQTTConnector.connect();
+                    }
                 } else {
-                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, RaspberryPiMQTTConnector not started.");
+                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, not started.");
                 }
             }
         };

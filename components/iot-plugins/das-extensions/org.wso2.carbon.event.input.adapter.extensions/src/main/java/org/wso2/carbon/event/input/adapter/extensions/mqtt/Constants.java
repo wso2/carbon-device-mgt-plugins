@@ -30,7 +30,7 @@ public class Constants {
 	public static final String CLIENT_NAME = "client_name";
 	public static final String DEFAULT = "default";
 	public static final String MQTT_CONTENT_VALIDATION_DEFAULT_PARAMETERS =
-			"device_id_json_path:meta_deviceId,device_id_topic_hierarchy_index:2";
+			"device_id_json_path:event.metaData.deviceId,device_id_topic_hierarchy_index:2";
 	public static final String TOPIC = "topic";
 	public static final String PAYLOAD = "payload";
 	public static final String DEVICE_ID_JSON_PATH = "device_id_json_path";

@@ -31,6 +31,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
+import java.io.IOException;
 
 /**
  * Connect to web socket with a tenant
@@ -65,6 +66,12 @@ public class TenantSubscriptionEndpoint extends SubscriptionEndpoint {
                                                                                                       version, session);
             } finally {
                 PrivilegedCarbonContext.endTenantFlow();
+            }
+        } else {
+            try {
+                session.close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, "Unauthorized Access"));
+            } catch (IOException e) {
+                log.error("Failed to disconnect the unauthorized client.");
             }
         }
     }

@@ -32,7 +32,7 @@ public class UIConstants {
     public static final String ADAPTER_UI_COLON = ":";
     public static final String MAXIMUM_TOTAL_HTTP_CONNECTION = "maximumTotalHttpConnection";
     public static final String MAXIMUM_HTTP_CONNECTION_PER_HOST = "maximumHttpConnectionPerHost";
-    public static final String TOKEN_VALIDATION_ENDPOINT_URL = "tokenValidationEndpointUrl";
+    public static final String TOKEN_VALIDATION_ENDPOINT_URL = "tokenValidationEndpoint";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
 }

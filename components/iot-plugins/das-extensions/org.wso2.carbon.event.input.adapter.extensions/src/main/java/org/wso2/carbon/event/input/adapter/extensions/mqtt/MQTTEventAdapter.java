@@ -66,7 +66,7 @@ public class MQTTEventAdapter implements InputEventAdapter {
             String params[] = contentValidationParams.split(",");
             Map<String, String> paramsMap = new HashMap<>();
             for (String param: params) {
-                String paramsKeyAndValue[] = param.split("/_(.+)?/");
+                String paramsKeyAndValue[] = splitOnFirst(param, ':');
                 if (paramsKeyAndValue.length != 2) {
                     throw  new InputEventAdapterException("Invalid parameters for content validation - " + param);
                 }
@@ -93,6 +93,13 @@ public class MQTTEventAdapter implements InputEventAdapter {
         } catch (Throwable t) {
             throw new InputEventAdapterException(t.getMessage(), t);
         }
+    }
+
+    private String[] splitOnFirst(String str, char c) {
+        int idx = str.indexOf(c);
+        String head = str.substring(0, idx);
+        String tail = str.substring(idx + 1);
+        return new String[] { head, tail} ;
     }
 
     @Override

@@ -185,8 +185,16 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                     return;
                 }
                 VirtualFireAlarmControllerServiceImpl.this.virtualFireAlarmMQTTConnector = virtualFireAlarmMQTTConnector;
+                //The delay is added for the server starts up.
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 if (MqttConfig.getInstance().isEnabled()) {
-                    virtualFireAlarmMQTTConnector.connect();
+                    synchronized (virtualFireAlarmMQTTConnector) {
+                        virtualFireAlarmMQTTConnector.connect();
+                    }
                 } else {
                     log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
                 }

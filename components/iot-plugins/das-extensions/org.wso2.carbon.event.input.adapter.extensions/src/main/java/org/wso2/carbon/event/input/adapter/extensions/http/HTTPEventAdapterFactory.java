@@ -54,9 +54,7 @@ public class HTTPEventAdapterFactory extends InputEventAdapterFactory {
 	@Override
 	public List<String> getSupportedMessageFormats() {
 		List<String> supportInputMessageTypes = new ArrayList<String>();
-		supportInputMessageTypes.add(MessageType.XML);
 		supportInputMessageTypes.add(MessageType.JSON);
-		supportInputMessageTypes.add(MessageType.TEXT);
 		return supportInputMessageTypes;
 	}
 

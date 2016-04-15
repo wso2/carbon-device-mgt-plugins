@@ -24,6 +24,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
+import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
+import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
@@ -31,6 +34,7 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
+import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.DeviceData;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.SensorData;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
@@ -38,6 +42,10 @@ import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
+import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
+import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
+import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
+import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.nio.charset.StandardCharsets;
@@ -48,6 +56,8 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
     private static Log log = LogFactory.getLog(AndroidSenseMQTTConnector.class);
     private static String subscribeTopic = AndroidSenseConstants.MQTT_SUBSCRIBE_WORDS_TOPIC;
     private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
+    private static final String KEY_TYPE = "PRODUCTION";
+    private static final String EMPTY_STRING = "";
 
     private AndroidSenseMQTTConnector() {
         super(iotServerSubscriber, AndroidSenseConstants.DEVICE_TYPE,
@@ -59,7 +69,25 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
         Runnable connector = new Runnable() {
             public void run() {
                 while (!isConnected()) {
+                    PrivilegedCarbonContext.startTenantFlow();
+                    PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
+                            AndroidSenseConstants.DEVICE_TYPE_PROVIDER_DOMAIN, true);
                     try {
+                        String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
+                                .getRealmConfiguration().getAdminUserName();
+                        PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(applicationUsername);
+                        APIManagementProviderService apiManagementProviderService = APIUtil
+                                .getAPIManagementProviderService();
+                        String[] tags = {AndroidSenseConstants.DEVICE_TYPE};
+                        ApiApplicationKey apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
+                                AndroidSenseConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
+                        JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
+                        String scopes = "device_type_" + AndroidSenseConstants.DEVICE_TYPE + " device_mqtt_connector";
+                        AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
+                                                                                   apiApplicationKey.getConsumerSecret(), applicationUsername, scopes);
+                        //create token
+                        String accessToken = accessTokenInfo.getAccessToken();
+                        setUsernameAndPassword(accessToken, EMPTY_STRING);
                         connectToQueue();
                         subscribeToQueue();
                     } catch (TransportHandlerException e) {
@@ -69,6 +97,14 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
                         } catch (InterruptedException ex) {
                             log.error("MQTT-Subscriber: Thread Sleep Interrupt Exception.", ex);
                         }
+                    }catch (JWTClientException e) {
+                        log.error("Failed to retrieve token from JWT Client.", e);
+                    } catch (UserStoreException e) {
+                        log.error("Failed to retrieve the user.", e);
+                    } catch (APIManagerException e) {
+                        log.error("Failed to create an application and generate keys.", e);
+                    } finally {
+                        PrivilegedCarbonContext.endTenantFlow();
                     }
                 }
             }
