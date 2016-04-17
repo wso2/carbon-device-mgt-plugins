@@ -81,10 +81,13 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
                         }
                     } catch (JWTClientException e) {
                         log.error("Failed to retrieve token from JWT Client.", e);
+                        return;
                     } catch (UserStoreException e) {
                         log.error("Failed to retrieve the user.", e);
+                        return;
                     } catch (APIManagerException e) {
                         log.error("Failed to create an application and generate keys.", e);
+                        return;
                     } finally {
                         PrivilegedCarbonContext.endTenantFlow();
                     }

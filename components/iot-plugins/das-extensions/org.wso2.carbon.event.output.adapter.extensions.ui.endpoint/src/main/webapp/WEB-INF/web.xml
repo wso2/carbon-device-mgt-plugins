@@ -21,21 +21,4 @@
 
 <web-app>
     <display-name>Output WebSocket</display-name>
-    <servlet>
-        <servlet-name>JAXServlet</servlet-name>
-        <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
-        </servlet-class>
-        <init-param>
-            <param-name>jaxrs.serviceClasses</param-name>
-            <param-value>org.wso2.carbon.servlet.TenantEventRetrievalEndpoint org.wso2.carbon.servlet.SuperTenantEventRetrievalEndpoint</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-
-
-    <servlet-mapping>
-        <servlet-name>JAXServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
 </web-app>

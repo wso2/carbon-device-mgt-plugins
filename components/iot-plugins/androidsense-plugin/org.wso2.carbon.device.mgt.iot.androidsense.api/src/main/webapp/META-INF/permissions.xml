@@ -28,152 +28,67 @@
 <PermissionConfiguration>
 	<APIVersion></APIVersion>
 	<!-- Device related APIs -->
-
-    <Permission>
-		<name>add sensor information</name>
-		<path>/device-mgt/user/device/sensors</path>
-		<url>/device/sensors</url>
-		<method>POST</method>
-		<scope>android_sense_device</scope>
-	</Permission>
 	<Permission>
-		<name>Get light information</name>
-		<path>/device-mgt/user/device/sensors/light</path>
-		<url>/device/*/sensors/light</url>
-		<method>GET</method>
-		<scope>android_sense_user</scope>
-	</Permission>
-	<Permission>
-		<name>Get battery information</name>
-		<path>/device-mgt/user/device/sensors/battery</path>
-		<url>/device/*/sensors/battery</url>
-		<method>GET</method>
-		<scope>android_sense_user</scope>
-	</Permission>
-	<Permission>
-		<name>Get gps information</name>
-		<path>/device-mgt/user/device/sensors/gps</path>
-		<url>/device/*/sensors/gps</url>
-		<method>GET</method>
-		<scope>android_sense_user</scope>
-	</Permission>
-	<Permission>
-		<name>Get magnetic information</name>
-		<path>/device-mgt/user/device/sensors/magnetic</path>
-		<url>/device/*/sensors/magnetic</url>
-		<method>GET</method>
-		<scope>android_sense_user</scope>
-	</Permission>
-	<Permission>
-		<name>Get accelerometer information</name>
-		<path>/device-mgt/user/device/accelerometer</path>
-		<url>/device/*/sensors/accelerometer</url>
-		<method>GET</method>
-		<scope>android_sense_user</scope>
-	</Permission>
-	<Permission>
-		<name>Get rotation information</name>
-		<path>/device-mgt/user/device/sensors/rotation</path>
-		<url>/device/*/sensors/rotation</url>
-		<method>GET</method>
-		<scope>android_sense_user</scope>
-	</Permission>
-	<Permission>
-		<name>Get proximity information</name>
-		<path>/device-mgt/user/device/sensors/proximity</path>
-		<url>/device/*/sensors/proximity</url>
-		<method>GET</method>
-		<scope>android_sense_user</scope>
-	</Permission>
-	<Permission>
-		<name>Get gyroscope information</name>
-		<path>/device-mgt/user/device/gyroscope</path>
-		<url>/device/*/sensors/gyroscope</url>
-		<method>GET</method>
-		<scope>android_sense_user</scope>
-	</Permission>
-	<Permission>
-		<name>Get pressure information</name>
-		<path>/device-mgt/user/device/sensors/pressure</path>
-		<url>/device/*/sensors/pressure</url>
-		<method>GET</method>
-		<scope>android_sense_user</scope>
-	</Permission>
-	<Permission>
-		<name>Get gravity information</name>
-		<path>/device-mgt/user/device/sensors/gravity</path>
-		<url>/device/*/sensors/gravity</url>
-		<method>GET</method>
-		<scope>android_sense_user</scope>
-	</Permission>
-	<Permission>
-		<name>Get words information</name>
-		<path>/device-mgt/user/device/sensors/words</path>
-		<url>/device/*/sensors/words</url>
-		<method>GET</method>
-		<scope>android_sense_user</scope>
-	</Permission>
-	<Permission>
-		<name>Get words information</name>
-		<path>/device-mgt/user/device/sensors/word</path>
-		<url>/device/*/sensors/words</url>
+		<name>Set words</name>
+		<path>/device-mgt/android_sense/word/add</path>
+		<url>/device/*/words</url>
 		<method>POST</method>
 		<scope>android_sense_user</scope>
 	</Permission>
 	<Permission>
 		<name>set word threshold information</name>
-		<path>/device-mgt/user/device/sensors/words/threshold</path>
-		<url>/device/*/sensors/words/threshold</url>
+		<path>/device-mgt/android_sense/threshold</path>
+		<url>/device/*/words/threshold</url>
 		<method>POST</method>
 		<scope>android_sense_user</scope>
 	</Permission>
 	<Permission>
 		<name>delete words</name>
-		<path>/device-mgt/user/device/sensors/words</path>
-		<url>/device/*/sensors/words</url>
+		<path>/device-mgt/android_sense/word/delete</path>
+		<url>/device/*/words</url>
 		<method>DELETE</method>
 		<scope>android_sense_user</scope>
 	</Permission>
 	<Permission>
 		<name>get device stats</name>
-		<path>/device-mgt/user/device/stats</path>
-		<url>/stats/device/*/sensors/*</url>
+		<path>/device-mgt/android_sense/device/stats</path>
+		<url>/stats/*/sensors/*</url>
 		<method>GET</method>
 		<scope>android_sense_device</scope>
 	</Permission>
     <Permission>
         <name>Get device</name>
-        <path>/device-mgt/user/devices/list</path>
+        <path>/device-mgt/android_sense/user/devices/list</path>
         <url>/devices/*</url>
         <method>GET</method>
         <scope>android_sense_user</scope>
     </Permission>
     <Permission>
         <name>Add device</name>
-        <path>/device-mgt/user/devices/add</path>
-        <url>/devices/register</url>
+        <path>/device-mgt/android_sense/user/devices/add</path>
+        <url>/devices/*</url>
         <method>POST</method>
         <scope>android_sense_user</scope>
     </Permission>
     <Permission>
         <name>Remove device</name>
-        <path>/device-mgt/user/devices/remove</path>
+        <path>/device-mgt/android_sense/user/devices/remove</path>
         <url>/devices/*</url>
         <method>DELETE</method>
         <scope>android_sense_user</scope>
     </Permission>
     <Permission>
         <name>Download device</name>
-        <path>/device-mgt/user/devices/add</path>
-        <url>/devices/*/download</url>
+        <path>/device-mgt/android_sense/user/devices/add</path>
+        <url>/devices/download</url>
         <method>GET</method>
         <scope>android_sense_user</scope>
     </Permission>
     <Permission>
         <name>Update device</name>
-        <path>/device-mgt/user/devices/update</path>
+        <path>/device-mgt/android_sense/user/devices/update</path>
         <url>/devices/*</url>
-        <method>POST</method>
+        <method>PUT</method>
         <scope>android_sense_user</scope>
     </Permission>
 

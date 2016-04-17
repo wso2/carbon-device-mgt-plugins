@@ -20,7 +20,7 @@ import oauth.OAuthTokenValdiator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.servlet.ServiceHolder;
+import util.ServiceHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import util.AuthenticationInfo;
 

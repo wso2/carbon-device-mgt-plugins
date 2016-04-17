@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">WSO2-SenseAgent</string>
+    <string name="title_activity_sense_settings">Sense Settings</string>
+    <string name="hostname">Server URL https://host:9443</string>
+    <string name="speakup">Speakup to capture the words</string>
+    <string name="action_settings">DeEnroll</string>
+    <string name="title_activity_activity_select_sensor">ActivitySelectSensor</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

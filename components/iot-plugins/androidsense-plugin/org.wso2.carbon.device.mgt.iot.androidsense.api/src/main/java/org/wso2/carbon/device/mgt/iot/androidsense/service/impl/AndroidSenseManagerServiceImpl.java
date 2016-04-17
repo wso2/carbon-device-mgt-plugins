@@ -27,6 +27,11 @@ import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.utils.CarbonUtils;
+
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.Date;
@@ -35,7 +40,9 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
 
     private static Log log = LogFactory.getLog(AndroidSenseManagerServiceImpl.class);
 
-    public Response register(String deviceId, String deviceName) {
+    @Path("devices/{device_id}")
+    @POST
+    public Response register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
@@ -56,12 +63,12 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
             device.setEnrolmentInfo(enrolmentInfo);
             boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
             if (added) {
-                return Response.ok().build();
+                return Response.ok(true).build();
             } else {
-                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
+                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).entity(false).build();
             }
         } catch (DeviceManagementException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(false).build();
         }
     }
 
@@ -114,7 +121,7 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
         }
     }
 
-    public Response downloadSketch(String sketchType) {
+    public Response downloadSketch() {
         try {
             String sep = File.separator;
             String sketchFolder = "repository" + sep + "resources" + sep + "sketches" + sep + "android_sense" + sep;

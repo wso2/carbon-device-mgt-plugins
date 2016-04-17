@@ -18,10 +18,9 @@
  *
  */
 
-import oauth.OAuthTokenValdiator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.servlet.ServiceHolder;
+import util.ServiceHolder;
 
 import javax.websocket.CloseReason;
 import javax.websocket.Session;

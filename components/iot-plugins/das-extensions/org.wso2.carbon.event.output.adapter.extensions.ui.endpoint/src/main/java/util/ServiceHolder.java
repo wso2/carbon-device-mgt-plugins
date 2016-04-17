@@ -1,4 +1,4 @@
-package org.wso2.carbon.servlet;
+package util;
 
 
 import org.wso2.carbon.context.PrivilegedCarbonContext;
@@ -11,8 +11,7 @@ public class ServiceHolder {
 
     private ServiceHolder(){
         uiOutputCallbackControllerService = (UIOutputCallbackControllerService) PrivilegedCarbonContext
-                .getThreadLocalCarbonContext()
-                .getOSGiService(UIOutputCallbackControllerService.class,null);
+                .getThreadLocalCarbonContext().getOSGiService(UIOutputCallbackControllerService.class, null);
     }
 
     public synchronized static ServiceHolder getInstance(){

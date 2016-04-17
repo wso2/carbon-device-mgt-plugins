@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response;
 @API(name = "android_sense_mgt", version = "1.0.0", context = "/android_sense_mgt", tags = {"android_sense"})
 public interface AndroidSenseManagerService {
 
-    @Path("device/{device_id}")
+    @Path("devices/{device_id}")
     @POST
     Response register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName);
 
@@ -53,10 +53,10 @@ public interface AndroidSenseManagerService {
     @Produces("application/json")
     Response getDevice(@PathParam("device_id") String deviceId);
 
-    @Path("devices/{sketch_type}/download")
+    @Path("devices/download")
     @GET
     @Produces("application/octet-stream")
-    Response downloadSketch(@PathParam("sketch_type") String sketchType);
+    Response downloadSketch();
 
 }
 
