@@ -21,6 +21,9 @@ import org.wso2.carbon.event.input.adapter.extensions.mqtt.Constants;
 
 import java.util.Map;
 
+/**
+ * This holds the configurations related to MQTT Broker.
+ */
 public class MQTTBrokerConnectionConfiguration {
 
     private String brokerUsername = null;

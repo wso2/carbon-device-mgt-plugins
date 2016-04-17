@@ -43,7 +43,7 @@ import java.util.List;
  * This is an android service which publishes the data to the server.
  */
 public class DataPublisherService extends Service {
-    private static final String TAG = "Data Publisher";
+    private static final String TAG = DataPublisherService.class.getName();
     private static String KEY_TAG = "key";
     private static String TIME_TAG = "time";
     private static String VALUE_TAG = "value";

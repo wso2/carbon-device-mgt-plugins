@@ -14,20 +14,27 @@
 
 package org.wso2.carbon.iot.android.sense.util.dto;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
 /**
- * This hold the api defintion that is used as a contract with netflix feign.
+ * This holds the data related to registration.
  */
-@Path("/token")
-public interface TokenIssuerService {
+public class RegisterInfo {
 
-    @POST
-    @Produces(MediaType.APPLICATION_JSON)
-    AccessTokenInfo getToken(@QueryParam("grant_type") String grant, @QueryParam("username") String username,
-            @QueryParam("password") String password);
+    private boolean isRegistered;
+    private String msg;
+
+    public boolean isRegistered() {
+        return isRegistered;
+    }
+
+    public void setIsRegistered(boolean isRegistered) {
+        this.isRegistered = isRegistered;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
 }

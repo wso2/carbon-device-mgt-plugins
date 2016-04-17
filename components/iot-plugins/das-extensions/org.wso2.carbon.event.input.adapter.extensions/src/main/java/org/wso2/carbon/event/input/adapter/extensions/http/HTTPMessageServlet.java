@@ -51,6 +51,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This will act as the event reciver.
+ */
 public class HTTPMessageServlet extends HttpServlet {
 
 	private static final String AUTHORIZATION_HEADER = "Authorization";

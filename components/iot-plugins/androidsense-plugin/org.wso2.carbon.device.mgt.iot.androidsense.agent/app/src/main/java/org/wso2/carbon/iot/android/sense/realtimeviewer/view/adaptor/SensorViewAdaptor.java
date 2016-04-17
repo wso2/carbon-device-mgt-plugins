@@ -30,8 +30,6 @@ import agent.sense.android.iot.carbon.wso2.org.wso2_senseagent.R;
  * Adaptor for populate the ListView.
  * Takes list of Sensor readings
  */
-
-//TODO : Add the location and battery data sections.
 public class SensorViewAdaptor extends BaseAdapter {
 
     private Context context;

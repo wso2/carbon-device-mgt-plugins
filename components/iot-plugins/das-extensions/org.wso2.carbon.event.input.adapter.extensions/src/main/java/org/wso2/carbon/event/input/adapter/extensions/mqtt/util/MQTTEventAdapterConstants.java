@@ -17,6 +17,10 @@
 */
 package org.wso2.carbon.event.input.adapter.extensions.mqtt.util;
 
+
+/**
+ * This holds the constants related to mqtt event adapter.
+ */
 public class MQTTEventAdapterConstants {
 
     public static final String ADAPTER_TYPE_MQTT = "oauth-mqtt";

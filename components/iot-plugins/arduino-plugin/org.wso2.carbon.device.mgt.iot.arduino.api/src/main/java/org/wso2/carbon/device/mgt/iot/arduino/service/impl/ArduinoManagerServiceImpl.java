@@ -45,8 +45,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@API(name = "arduino_mgt", version = "1.0.0", context = "/arduino_mgt", tags = {"arduino"})
-@DeviceType(value = "arduino")
 public class ArduinoManagerServiceImpl implements ArduinoManagerService {
 
     private static final String KEY_TYPE = "PRODUCTION";

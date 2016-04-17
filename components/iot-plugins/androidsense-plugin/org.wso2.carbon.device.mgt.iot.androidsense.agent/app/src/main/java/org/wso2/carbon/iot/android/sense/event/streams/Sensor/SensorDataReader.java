@@ -43,6 +43,7 @@ public class SensorDataReader extends DataReader implements SensorEventListener 
     Context ctx;
     private List<Sensor> sensorList = new ArrayList<>();
     private SupportedSensors supportedSensors = SupportedSensors.getInstance();
+    private static final String TAG = SensorDataReader.class.getName();
 
     public SensorDataReader(Context context) {
         ctx = context;
@@ -63,11 +64,11 @@ public class SensorDataReader extends DataReader implements SensorEventListener 
                 if (senseDataStruct.containsKey(sensor.getName())) {
                     SensorData sensorInfo = senseDataStruct.get(sensor.getName());
                     sensorVector.add(sensorInfo);
-                    Log.d(this.getClass().getName(), "Sensor Name " + sensor.getName() + ", Type " + sensor.getType() + " " +
+                    Log.d(TAG, "Sensor Name " + sensor.getName() + ", Type " + sensor.getType() + " " +
                             ", sensorValue :" + sensorInfo.getSensorValues());
                 }
             } catch (Throwable e) {
-                Log.d(this.getClass().getName(), "error on sensors");
+                Log.d(TAG, "error on sensors");
             }
 
         }
@@ -79,7 +80,7 @@ public class SensorDataReader extends DataReader implements SensorEventListener 
             TimeUnit.MILLISECONDS.sleep(1000);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            Log.e(SensorDataReader.class.getName(), e.getMessage());
+            Log.e(TAG, e.getMessage());
         }
         collectSensorData();
         return sensorVector;
@@ -96,7 +97,7 @@ public class SensorDataReader extends DataReader implements SensorEventListener 
 
     @Override
     public void run() {
-        Log.d(this.getClass().getName(), "running -sensorDataMap");
+        Log.d(TAG, "running -sensorDataMap");
         Vector<SensorData> sensorDatas = getSensorData();
         for (SensorData data : sensorDatas) {
             SenseDataHolder.getSensorDataHolder().add(data);

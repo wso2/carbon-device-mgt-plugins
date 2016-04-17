@@ -3,6 +3,9 @@ package org.wso2.carbon.iot.android.sense.data.publisher;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * This hold the definition of the stream that android sense is publishing to.
+ */
 public class Event {
 
     private String owner;

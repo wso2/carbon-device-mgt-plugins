@@ -30,30 +30,30 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-
+@Path("enrollment")
 @DeviceType(value = "android_sense")
 @API(name = "android_sense_mgt", version = "1.0.0", context = "/android_sense_mgt", tags = {"android_sense"})
 public interface AndroidSenseManagerService {
 
-    @Path("devices/{device_id}")
+    @Path("/devices/{device_id}")
     @POST
     Response register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName);
 
-    @Path("devices/{device_id}")
+    @Path("/devices/{device_id}")
     @DELETE
     Response removeDevice(@PathParam("device_id") String deviceId);
 
-    @Path("devices/{device_id}")
+    @Path("/devices/{device_id}")
     @PUT
     Response updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name);
 
-    @Path("devices/{device_id}")
+    @Path("/devices/{device_id}")
     @GET
     @Consumes("application/json")
     @Produces("application/json")
     Response getDevice(@PathParam("device_id") String deviceId);
 
-    @Path("devices/download")
+    @Path("/devices/download")
     @GET
     @Produces("application/octet-stream")
     Response downloadSketch();

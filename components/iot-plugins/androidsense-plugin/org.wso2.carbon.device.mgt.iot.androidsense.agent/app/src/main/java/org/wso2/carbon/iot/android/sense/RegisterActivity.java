@@ -20,12 +20,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.wso2.carbon.iot.android.sense.data.publisher.DataPublisherReceiver;
 import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.AndroidSenseMQTTHandler;
@@ -37,6 +39,8 @@ import org.wso2.carbon.iot.android.sense.realtimeviewer.sensorlisting.SupportedS
 import org.wso2.carbon.iot.android.sense.util.LocalRegistry;
 import org.wso2.carbon.iot.android.sense.util.SenseClient;
 import org.wso2.carbon.iot.android.sense.util.SenseUtils;
+import org.wso2.carbon.iot.android.sense.util.dto.RegisterInfo;
+
 import agent.sense.android.iot.carbon.wso2.org.wso2_senseagent.R;
 
 
@@ -51,6 +55,7 @@ public class RegisterActivity extends Activity {
     private EditText mMqttPortView;
     private View mProgressView;
     private View mLoginFormView;
+    private Handler mUiHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +96,9 @@ public class RegisterActivity extends Activity {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String username = mUsernameView.getText().toString();
-        String password = mPasswordView.getText().toString();
-        String hostname = mHostView.getText().toString();
+        final String username = mUsernameView.getText().toString();
+        final String password = mPasswordView.getText().toString();
+        final String hostname = mHostView.getText().toString();
         String mqttPort = mMqttPortView.getText().toString();
         boolean cancel = false;
         View focusView = null;
@@ -119,30 +124,57 @@ public class RegisterActivity extends Activity {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            SenseClient client = new SenseClient(getApplicationContext());
-            LocalRegistry.addServerURL(getBaseContext(), hostname);
-            String deviceId = SenseUtils.generateDeviceId(getBaseContext(), getContentResolver());
-            boolean registerStatus = client.register(username, password, deviceId);
-            if (registerStatus) {
-                LocalRegistry.addUsername(getApplicationContext(), username);
-                LocalRegistry.addDeviceId(getApplicationContext(), deviceId);
-                LocalRegistry.addMqttPort(getApplicationContext(), Integer.parseInt(mqttPort));
-                MQTTTransportHandler mqttTransportHandler = AndroidSenseMQTTHandler.getInstance(this);
-                if (!mqttTransportHandler.isConnected()) {
-                    mqttTransportHandler.connect();
+            final int mqttPortNo= Integer.parseInt(mqttPort);
+            Thread myThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    SenseClient client = new SenseClient(getApplicationContext());
+                    LocalRegistry.addServerURL(getBaseContext(), hostname);
+                    String deviceId = SenseUtils.generateDeviceId(getBaseContext(), getContentResolver());
+                    final RegisterInfo registerStatus = client.register(username, password, deviceId, mUiHandler);
+                    mUiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), registerStatus.getMsg(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                    if (registerStatus.isRegistered()) {
+                        LocalRegistry.addUsername(getApplicationContext(), username);
+                        LocalRegistry.addDeviceId(getApplicationContext(), deviceId);
+                        LocalRegistry.addMqttPort(getApplicationContext(), mqttPortNo);
+                        MQTTTransportHandler mqttTransportHandler = AndroidSenseMQTTHandler.getInstance(getApplicationContext());
+                        if (!mqttTransportHandler.isConnected()) {
+                            mqttTransportHandler.connect();
+                        }
+                        SenseScheduleReceiver senseScheduleReceiver = new SenseScheduleReceiver();
+                        senseScheduleReceiver.clearAbortBroadcast();
+                        senseScheduleReceiver.onReceive(getApplicationContext(), null);
+
+                        DataPublisherReceiver dataUploaderReceiver = new DataPublisherReceiver();
+                        dataUploaderReceiver.clearAbortBroadcast();
+                        dataUploaderReceiver.onReceive(getApplicationContext(), null);
+
+                        mUiHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(getApplicationContext(), ActivitySelectSensor.class);
+                                startActivity(intent);
+                            }
+                        });
+
+                    }
+                    mUiHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            showProgress(false);
+                        }
+                    });
+
                 }
-                SenseScheduleReceiver senseScheduleReceiver = new SenseScheduleReceiver();
-                senseScheduleReceiver.clearAbortBroadcast();
-                senseScheduleReceiver.onReceive(this, null);
+            });
+            myThread.start();
 
-                DataPublisherReceiver dataUploaderReceiver = new DataPublisherReceiver();
-                dataUploaderReceiver.clearAbortBroadcast();
-                dataUploaderReceiver.onReceive(this, null);
-
-                Intent intent = new Intent(getApplicationContext(), ActivitySelectSensor.class);
-                startActivity(intent);
-            }
-            showProgress(false);
         }
     }
 

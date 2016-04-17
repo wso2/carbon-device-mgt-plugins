@@ -136,7 +136,7 @@ public class SenseClientAsyncExecutor extends AsyncTask<String, Void, Map<String
             AndroidSenseManagerService androidSenseManagerService = Feign.builder().client(disableHostnameVerification)
                     .requestInterceptor(new OAuthRequestInterceptor(accessTokenInfo.getAccess_token()))
                     .contract(new JAXRSContract()).encoder(new JacksonEncoder()).decoder(new JacksonDecoder())
-                    .target(AndroidSenseManagerService.class, "https://192.168.56.1:8243" + SenseConstants.REGISTER_CONTEXT);
+                    .target(AndroidSenseManagerService.class, endpoint + SenseConstants.REGISTER_CONTEXT);
             boolean registered = androidSenseManagerService.register(deviceId, DEVICE_NAME);
             if (registered) {
                 LocalRegistry.addAccessToken(context, accessTokenInfo.getAccess_token());

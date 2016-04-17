@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy
@@ -14,7 +14,9 @@
  */
 package org.wso2.carbon.event.input.adapter.extensions.http.util;
 
-
+/**
+ * This holds the constants related to HTTP event adapter.
+ */
 public final class HTTPEventAdapterConstants {
 
     private HTTPEventAdapterConstants() {

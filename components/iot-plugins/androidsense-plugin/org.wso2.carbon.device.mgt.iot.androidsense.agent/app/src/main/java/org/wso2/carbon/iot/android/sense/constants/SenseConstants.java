@@ -13,9 +13,12 @@
  */
 package org.wso2.carbon.iot.android.sense.constants;
 
+/**
+ * This hold constants related to android_sense.
+ */
 public class SenseConstants {
     public final static String DEVICE_TYPE = "android_sense";
-    public final static String REGISTER_CONTEXT = "/android_sense_mgt";
+    public final static String REGISTER_CONTEXT = "/android_sense";
     public final static String DCR_CONTEXT = "/dynamic-client-web";
     public final static String TOKEN_ISSUER_CONTEXT = "/oauth2";
     public final static String API_APPLICATION_REGISTRATION_CONTEXT = "/api-application-registration";

@@ -17,6 +17,9 @@
  */
 package org.wso2.carbon.event.input.adapter.extensions.mqtt.exception;
 
+/**
+ * This exception will thrown when content validator is failed to intialiaze.
+ */
 public class MQTTContentValidatorInitializationException extends RuntimeException {
 	private String errMessage;
 

@@ -18,16 +18,16 @@
 
 package org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.wso2.carbon.user.core.Permission;
+import org.wso2.carbon.user.core.authorization.TreeNode;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+/**
+ * This hold the constants related to android sense.
+ */
+public class Constants {
 
-@XmlRootElement
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class DeviceData {
-    @XmlElement(required = true) public String owner;
-    @XmlElement(required = true) public String deviceId;
-    @XmlElement public SensorData[] values;
+	private static final String DEFAULT_PERMISSION_RESOURCE = "/_system/governance/permission/admin/device-mgt/android_sense/user";
+	public static final String DEFAULT_ROLE_NAME = "android_sense_user";
+	public static final Permission DEFAULT_PERMISSION[] = new Permission[]{new Permission(Constants.DEFAULT_PERMISSION_RESOURCE,
+																				   TreeNode.Permission.UI_EXECUTE.toString())};
 }

@@ -26,6 +26,7 @@ import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
+import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.transport.AndroidSenseMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.DeviceData;
@@ -38,6 +39,15 @@ import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +60,9 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
     private static Log log = LogFactory.getLog(AndroidSenseControllerServiceImpl.class);
     private static AndroidSenseMQTTConnector androidSenseMQTTConnector;
 
-
-    public Response sendKeyWords(String deviceId, String keywords) {
+    @Path("device/{deviceId}/words")
+    @POST
+    public Response sendKeyWords(@PathParam("deviceId") String deviceId, @FormParam("keywords") String keywords) {
         try {
             String username = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
             androidSenseMQTTConnector.publishDeviceData(username, deviceId, "add", keywords);
@@ -61,7 +72,9 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
         }
     }
 
-    public Response sendThreshold(String deviceId, String threshold) {
+    @Path("device/{deviceId}/words/threshold")
+    @POST
+    public Response sendThreshold(@PathParam("deviceId") String deviceId, @FormParam("threshold") String threshold) {
         try {
             String username = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
             androidSenseMQTTConnector.publishDeviceData(username, deviceId, "threshold", threshold);
@@ -71,7 +84,9 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
         }
     }
 
-    public Response removeKeyWords(String deviceId, String words) {
+    @Path("device/{deviceId}/words")
+    @DELETE
+    public Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words) {
         try {
             String username = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
             androidSenseMQTTConnector.publishDeviceData(username, deviceId, "remove", words);
@@ -81,7 +96,12 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
         }
     }
 
-    public Response getAndroidSenseDeviceStats(String deviceId, String sensor, long from, long to) {
+    @Path("stats/{deviceId}/sensors/{sensorName}")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response getAndroidSenseDeviceStats(@PathParam("deviceId") String deviceId, @PathParam("sensorName") String sensor,
+                                        @QueryParam("from") long from, @QueryParam("to") long to) {
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
         String user = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();

@@ -28,19 +28,25 @@ import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.Date;
 
+@Path("enrollment")
 public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerService {
 
     private static Log log = LogFactory.getLog(AndroidSenseManagerServiceImpl.class);
 
-    @Path("devices/{device_id}")
+    @Path("/devices/{device_id}")
     @POST
     public Response register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
@@ -60,9 +66,11 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
             device.setName(deviceName);
             device.setType(AndroidSenseConstants.DEVICE_TYPE);
             enrolmentInfo.setOwner(APIUtil.getAuthenticatedUser());
+            enrolmentInfo.setOwnership(EnrolmentInfo.OwnerShip.BYOD);
             device.setEnrolmentInfo(enrolmentInfo);
             boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
             if (added) {
+                APIUtil.registerApiAccessRoles(APIUtil.getAuthenticatedUser());
                 return Response.ok(true).build();
             } else {
                 return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).entity(false).build();
@@ -72,7 +80,9 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
         }
     }
 
-    public Response removeDevice(String deviceId) {
+    @Path("/devices/{device_id}")
+    @DELETE
+    public Response removeDevice(@PathParam("device_id") String deviceId) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
@@ -88,7 +98,9 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
         }
     }
 
-    public Response updateDevice(String deviceId, String name) {
+    @Path("/devices/{device_id}")
+    @PUT
+    public Response updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
@@ -109,7 +121,11 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
         }
     }
 
-    public Response getDevice(String deviceId) {
+    @Path("/devices/{device_id}")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response getDevice(@PathParam("device_id") String deviceId) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
@@ -121,6 +137,9 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
         }
     }
 
+    @Path("/devices/download")
+    @GET
+    @Produces("application/octet-stream")
     public Response downloadSketch() {
         try {
             String sep = File.separator;

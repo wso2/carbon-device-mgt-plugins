@@ -20,9 +20,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import org.wso2.carbon.iot.android.sense.constants.SenseConstants;
+import org.wso2.carbon.iot.android.sense.util.dto.RegisterInfo;
 
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Handler;
 
 /**
  * This Client is used for http communication with the server.
@@ -44,40 +46,39 @@ public class SenseClient {
      * @param deviceId
      * @return
      */
-    public boolean register(String username, String password, String deviceId) {
+    public RegisterInfo register(String username, String password, String deviceId, android.os.Handler mUiHandler) {
         Map<String, String> response = registerWithTimeWait(username, password, deviceId);
         String responseStatus = response.get("status");
+        RegisterInfo registerInfo = new RegisterInfo();
         if (responseStatus.trim().contains(SenseConstants.Request.REQUEST_SUCCESSFUL)) {
-            Toast.makeText(context, "Device Registered", Toast.LENGTH_LONG).show();
-            return true;
+            registerInfo.setMsg("Device Registered");
+            registerInfo.setIsRegistered(true);
+            return registerInfo;
         } else if (responseStatus.trim().contains(SenseConstants.Request.REQUEST_CONFLICT)) {
-            Toast.makeText(context, "Login Successful", Toast.LENGTH_LONG).show();
-            return true;
+            registerInfo.setMsg("Login Successful");
+            registerInfo.setIsRegistered(true);
+            return registerInfo;
         } else {
-            Toast.makeText(context, "Authentication failed, please check your credentials and try again.", Toast
-                    .LENGTH_LONG).show();
-
-            return false;
+            registerInfo.setMsg("Authentication failed, please check your credentials and try again.");
+            registerInfo.setIsRegistered(false);
+            return registerInfo;
         }
     }
 
     public Map<String, String> registerWithTimeWait(String username, String password, String deviceId) {
-        for (int i = 1; i <= SenseConstants.Request.MAX_ATTEMPTS; i++) {
-            Log.d(TAG, "Attempt #" + i + " to register");
-            try {
-                SenseClientAsyncExecutor senseClientAsyncExecutor = new SenseClientAsyncExecutor(context);
-                String endpoint = LocalRegistry.getServerURL(context);
-                senseClientAsyncExecutor.execute(username, password, deviceId, endpoint);
-                Map<String, String> response = senseClientAsyncExecutor.get();
-                if (response != null) {
-                    return response;
-                }
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                Log.e("Send Sensor Data", "Thread Interruption for endpoint " + LocalRegistry.getServerURL(context));
-            } catch (ExecutionException e) {
-                Log.e("Send Sensor Data", "Failed to push data to the endpoint " + LocalRegistry.getServerURL(context));
+        try {
+            SenseClientAsyncExecutor senseClientAsyncExecutor = new SenseClientAsyncExecutor(context);
+            String endpoint = LocalRegistry.getServerURL(context);
+            senseClientAsyncExecutor.execute(username, password, deviceId, endpoint);
+            Map<String, String> response = senseClientAsyncExecutor.get();
+            if (response != null) {
+                return response;
             }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            Log.e("Send Sensor Data", "Thread Interruption for endpoint " + LocalRegistry.getServerURL(context));
+        } catch (ExecutionException e) {
+            Log.e("Send Sensor Data", "Failed to push data to the endpoint " + LocalRegistry.getServerURL(context));
         }
         return null;
     }

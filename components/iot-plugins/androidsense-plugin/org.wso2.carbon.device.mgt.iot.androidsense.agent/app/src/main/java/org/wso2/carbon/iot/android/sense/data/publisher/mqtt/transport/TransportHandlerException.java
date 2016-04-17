@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.iot.android.sense.data.publisher.mqtt.transport;
 
+/**
+ * This exception will be thrown when the mqtt transport fails.
+ */
 public class TransportHandlerException extends Exception {
     private static final long serialVersionUID = 2736466230451105440L;
 

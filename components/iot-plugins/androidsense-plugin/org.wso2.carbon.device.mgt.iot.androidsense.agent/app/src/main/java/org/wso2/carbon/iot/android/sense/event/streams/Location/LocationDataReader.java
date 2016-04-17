@@ -30,7 +30,7 @@ public class LocationDataReader extends DataReader implements LocationListener {
     protected LocationManager locationManager;
     private Context mContext;
     private boolean canGetLocation = false;
-    private static final String TAG = "Location Data";
+    private static final String TAG = LocationDataReader.class.getName();
 
     Location location; // location
     double latitude; // latitude
