@@ -252,18 +252,23 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
      * @see MQTTTransportHandler#publishToQueue(String, String, int, boolean)
      */
     protected void publishToQueue(String topic, MqttMessage message) throws TransportHandlerException {
+        if (!isConnected()) {
+            connectToQueue();
+        }
         try {
             client.publish(topic, message);
             if (log.isDebugEnabled()) {
-                log.debug("Message: " + message.toString() + " to MQTT topic [" + topic + "] published successfully");
+                log.debug(
+                        "Message: " + message.toString() + " to MQTT topic [" + topic + "] published successfully");
             }
         } catch (MqttException ex) {
             String errorMsg = "MQTT Client Error whilst client [" + clientId + "] tried to publish to queue at " +
-                              "[" + mqttBrokerEndPoint + "] under topic [" + topic + "]";
+                    "[" + mqttBrokerEndPoint + "] under topic [" + topic + "]";
             log.info(errorMsg);
             throw new TransportHandlerException(errorMsg, ex);
         }
     }
+
 
     /**
      * This method is used to publish messages to the MQTT-Endpoint to which this client is connected to. It is via

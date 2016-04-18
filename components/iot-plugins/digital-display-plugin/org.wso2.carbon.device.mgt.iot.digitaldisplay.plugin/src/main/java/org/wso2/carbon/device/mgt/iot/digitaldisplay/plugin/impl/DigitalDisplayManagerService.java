@@ -30,7 +30,6 @@ import java.util.List;
 
 public class DigitalDisplayManagerService implements DeviceManagementService{
 	private DeviceManager deviceManager;
-	private final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
 
 	@Override
 	public String getType() {
@@ -39,7 +38,7 @@ public class DigitalDisplayManagerService implements DeviceManagementService{
 
 	@Override
 	public String getProviderTenantDomain() {
-		return DEVICE_TYPE_PROVIDER_DOMAIN;
+		return DigitalDisplayConstants.DEVICE_TYPE_PROVIDER_DOMAIN;
 	}
 
 	@Override

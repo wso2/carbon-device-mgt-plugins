@@ -27,7 +27,7 @@ import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.service.DeviceAnalyticsService;
+import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
 import javax.ws.rs.HttpMethod;
@@ -193,8 +193,8 @@ public class ArduinoServiceUtils {
         String owner = ctx.getUsername();
         Object metdaData[] = {owner, ArduinoConstants.DEVICE_TYPE, deviceId, System.currentTimeMillis()};
         Object payloadData[] = {temperature};
-        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
-                .getOSGiService(DeviceAnalyticsService.class, null);
+        EventsPublisherService deviceAnalyticsService = (EventsPublisherService) ctx
+                .getOSGiService(EventsPublisherService.class, null);
         if (deviceAnalyticsService != null) {
             try {
                 deviceAnalyticsService.publishEvent(TEMPERATURE_STREAM_DEFINITION, "1.0.0", metdaData,
