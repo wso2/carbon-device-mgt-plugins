@@ -40,7 +40,6 @@
         <module>raspberrypi-plugin</module>
         <module>virtual-fire-alarm-plugin</module>
         <module>iot-base-plugin</module>
-        <module>das-extensions</module>
     </modules>
 
     <build>

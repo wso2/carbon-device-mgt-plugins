@@ -295,16 +295,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
-                <artifactId>org.wso2.carbon.event.output.adapter.core</artifactId>
-                <version>${carbon.analytics.common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.analytics-common</groupId>
-                <artifactId>org.wso2.carbon.event.stream.core</artifactId>
-                <version>${carbon.analytics.common.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.agent</artifactId>
                 <version>${carbon.analytics.common.version}</version>
                 <exclusions>
@@ -454,28 +444,11 @@
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
             <!--+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
-
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.event.input.adapter.extensions</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.event.output.adapter.extensions.ui</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-            </dependency>
-
             <!--Carbon Analytics Dependency-->
             <dependency>
                 <groupId>org.wso2.carbon.analytics</groupId>
                 <artifactId>org.wso2.carbon.analytics.datasource.commons</artifactId>
                 <version>${carbon.analytics.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.analytics-common</groupId>
-                <artifactId>org.wso2.carbon.event.input.adapter.core</artifactId>
-                <version>${carbon.analytics.common.version}</version>
             </dependency>
 
             <!--MDM dependencies-->
@@ -1035,45 +1008,6 @@
                 <version>${junit.version}</version>
             </dependency>
 
-            <!--http client dependencies-->
-            <dependency>
-                <groupId>org.apache.httpcomponents.wso2</groupId>
-                <artifactId>httpcore</artifactId>
-                <version>${httpcore.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpclient.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.googlecode.json-simple.wso2</groupId>
-                <artifactId>json-simple</artifactId>
-                <version>${json-simple.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jayway.jsonpath</groupId>
-                <artifactId>json-path</artifactId>
-                <version>${json.path.version}</version>
-            </dependency>
-
-            <!--websocket dependency-->
-            <dependency>
-                <groupId>javax.websocket</groupId>
-                <artifactId>javax.websocket-api</artifactId>
-                <version>${javax.websocket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat</groupId>
-                <artifactId>tomcat-websocket-api</artifactId>
-                <version>${tomcat.websocket.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>javax.ws.rs-api</artifactId>
-                <version>${javax.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1196,17 +1130,6 @@
         <commons-configuration.version>1.8</commons-configuration.version>
 
         <orbit.version.tomcat-servlet-api>7.0.59.wso2v1</orbit.version.tomcat-servlet-api>
-        <!--http client version-->
-        <httpclient.version>4.3.1.wso2v2</httpclient.version>
-        <httpclient.version.range>[4.3.1, 5.0.0)</httpclient.version.range>
-        <httpcore.version>4.3.3.wso2v1</httpcore.version>
-        <!--json version-->
-        <json-simple.version>1.1.wso2v1</json-simple.version>
-        <json.path.version>0.9.1</json.path.version>
-        <!--websocket related lib versions-->
-        <tomcat.websocket.version>7.0.54</tomcat.websocket.version>
-        <javax.websocket.version>1.0</javax.websocket.version>
-        <javax.version>2.0</javax.version>
 
         <!-- Release plugin ID for github-->
         <project.scm.id>github-scm</project.scm.id>
