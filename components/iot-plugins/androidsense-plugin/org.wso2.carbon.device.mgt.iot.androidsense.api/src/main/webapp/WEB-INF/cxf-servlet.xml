@@ -36,6 +36,16 @@
         </jaxrs:providers>
     </jaxrs:server>
 
+    <!--<jaxrs:server id="AndroidSense_Mgt" address="/enrollment/">-->
+        <!--<jaxrs:serviceBeans>-->
+            <!--<bean id="AndroidSenseManagerService"-->
+                  <!--class="org.wso2.carbon.device.mgt.iot.androidsense.service.impl.AndroidSenseManagerServiceImpl"/>-->
+        <!--</jaxrs:serviceBeans>-->
+        <!--<jaxrs:providers>-->
+            <!--<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />-->
+        <!--</jaxrs:providers>-->
+    <!--</jaxrs:server>-->
+
     <bean id="mqttConnectorBean"
           class="org.wso2.carbon.device.mgt.iot.androidsense.service.impl.transport.AndroidSenseMQTTConnector">
     </bean>

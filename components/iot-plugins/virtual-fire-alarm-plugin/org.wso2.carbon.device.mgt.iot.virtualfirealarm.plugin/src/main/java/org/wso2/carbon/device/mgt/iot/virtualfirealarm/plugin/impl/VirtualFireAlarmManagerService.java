@@ -32,7 +32,6 @@ import java.util.List;
 
 public class VirtualFireAlarmManagerService implements DeviceManagementService{
 	private DeviceManager deviceManager;
-	private final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
 
 	@Override
 	public String getType() {
@@ -42,7 +41,7 @@ public class VirtualFireAlarmManagerService implements DeviceManagementService{
 
 	@Override
 	public String getProviderTenantDomain() {
-		return DEVICE_TYPE_PROVIDER_DOMAIN;
+		return VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN;
 	}
 
 	@Override

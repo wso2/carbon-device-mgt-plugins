@@ -70,11 +70,18 @@ public class DigitalDisplayControllerServiceImpl implements DigitalDisplayContro
                     return;
                 }
                 DigitalDisplayControllerServiceImpl.digitalDisplayMQTTConnector = digitalDisplayMQTTConnector;
+                //The delay is added for the server starts up.
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 if (MqttConfig.getInstance().isEnabled()) {
-                    digitalDisplayMQTTConnector.connect();
+                    synchronized (digitalDisplayMQTTConnector) {
+                        digitalDisplayMQTTConnector.connect();
+                    }
                 } else {
-                    log.warn("MQTT disabled in 'devicemgt-config.xml'. " +
-                             "Hence, DigitalDisplayMQTTConnector not started.");
+                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, not started.");
                 }
             }
         };

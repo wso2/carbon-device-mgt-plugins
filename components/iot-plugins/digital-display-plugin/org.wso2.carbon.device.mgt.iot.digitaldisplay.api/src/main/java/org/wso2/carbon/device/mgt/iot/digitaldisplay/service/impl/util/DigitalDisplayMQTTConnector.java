@@ -5,12 +5,21 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONObject;
+import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
+import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
+import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
+import org.wso2.carbon.base.MultitenantConstants;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.service.impl.model.ScreenShotModel;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.service.impl.websocket.DigitalDisplayWebSocketServerEndPoint;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.plugin.constants.DigitalDisplayConstants;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
+import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
+import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
+import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
+import org.wso2.carbon.user.api.UserStoreException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +33,8 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
     private static final String MQTT_TOPIC_APPENDER = "wso2/iot";
     private static final String subscribeTopic =
             MQTT_TOPIC_APPENDER + "/" + DigitalDisplayConstants.DEVICE_TYPE + "/+/digital_display_publisher";
+    private static final String KEY_TYPE = "PRODUCTION";
+    private static final String EMPTY_STRING = "";
 
     private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
@@ -41,24 +52,44 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
         Runnable connector = new Runnable() {
             public void run() {
                 while (!isConnected()) {
+                    PrivilegedCarbonContext.startTenantFlow();
+                    PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
+                            DigitalDisplayConstants.DEVICE_TYPE_PROVIDER_DOMAIN, true);
                     try {
-                        String brokerUsername = MqttConfig.getInstance().getMqttQueueUsername();
-                        String brokerPassword = MqttConfig.getInstance().getMqttQueuePassword();
-                        setUsernameAndPassword(brokerUsername, brokerPassword);
+                        String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
+                                .getRealmConfiguration().getAdminUserName();
+                        PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(applicationUsername);
+                        APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
+                        String[] tags = {DigitalDisplayConstants.DEVICE_TYPE};
+                        ApiApplicationKey apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
+                                DigitalDisplayConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
+                        JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
+                        String scopes = "device_type_" + DigitalDisplayConstants.DEVICE_TYPE + " device_mqtt_connector";
+                        AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
+                            apiApplicationKey.getConsumerSecret(), applicationUsername, scopes);
+                        //create token
+                        String accessToken = accessTokenInfo.getAccessToken();
+                        setUsernameAndPassword(accessToken, EMPTY_STRING);
                         connectToQueue();
+                        subscribeToQueue();
                     } catch (TransportHandlerException e) {
-                        log.error("Connection to MQTT Broker at: " + mqttBrokerEndPoint + " failed", e);
+                        log.error("Connection/Subscription to MQTT Broker at: " + mqttBrokerEndPoint + " failed", e);
                         try {
                             Thread.sleep(timeoutInterval);
                         } catch (InterruptedException ex) {
                             log.error("MQTT-Connector: Thread Sleep Interrupt Exception.", ex);
                         }
-                    }
-
-                    try {
-                        subscribeToQueue();
-                    } catch (TransportHandlerException e) {
-                        log.warn("Subscription to MQTT Broker at: " + mqttBrokerEndPoint + " failed", e);
+                    } catch (JWTClientException e) {
+                        log.error("Failed to retrieve token from JWT Client.", e);
+                        return;
+                    } catch (UserStoreException e) {
+                        log.error("Failed to retrieve the user.", e);
+                        return;
+                    } catch (APIManagerException e) {
+                        log.error("Failed to create an application and generate keys.", e);
+                        return;
+                    } finally {
+                        PrivilegedCarbonContext.endTenantFlow();
                     }
                 }
             }
