@@ -20,23 +20,21 @@ package org.wso2.carbon.device.mgt.iot.arduino.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.analytics.dataservice.commons.SORT;
+import org.wso2.carbon.analytics.dataservice.commons.SortByField;
+import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.AnalyticsDataRecord;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DeviceManagementAnalyticsException;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.service.DeviceAnalyticsService;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.dto.DeviceData;
-import org.wso2.carbon.device.mgt.iot.arduino.service.impl.dto.SensorData;
+import org.wso2.carbon.device.mgt.iot.arduino.service.impl.dto.SensorRecord;
+import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.ArduinoServiceUtils;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -83,10 +81,9 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
 
     @Override
     public Response requestTemperature(String deviceId, String protocol) {
-
         try {
-            SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-                                                                                        ArduinoConstants.SENSOR_TEMPERATURE);
+            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord =
+                    SensorDataManager.getInstance().getSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE);
             return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecord).build();
         } catch (DeviceControllerException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
@@ -157,43 +154,19 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     public Response getArduinoTemperatureStats(String deviceId, long from, long to) {
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
-        List<SensorData> sensorDatas = new ArrayList<>();
-        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
-                .getOSGiService(DeviceAnalyticsService.class, null);
         String query = "deviceId:" + deviceId + " AND deviceType:" +
                        ArduinoConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = ArduinoConstants.TEMPERATURE_EVENT_TABLE;
-        SensorData[] sensorDetails;
         try {
-            List<AnalyticsDataRecord> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName, query);
-            Collections.sort(records, new Comparator<AnalyticsDataRecord>() {
-                @Override
-                public int compare(AnalyticsDataRecord o1, AnalyticsDataRecord o2) {
-                    long t1 = (Long) o1.getValue("time");
-                    long t2 = (Long) o2.getValue("time");
-                    if (t1 < t2) {
-                        return -1;
-                    } else if (t1 > t2) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }
-            });
-            for (AnalyticsDataRecord record : records) {
-                SensorData sensorData = new SensorData();
-                sensorData.setTime((long) record.getValue("time"));
-                sensorData.setValue("" + (float) record.getValue(ArduinoConstants.SENSOR_TEMPERATURE));
-                sensorDatas.add(sensorData);
-            }
-            sensorDetails = sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-            return Response.status(Response.Status.OK.getStatusCode()).entity(sensorDetails).build();
-        } catch (DeviceManagementAnalyticsException e) {
+            List<SortByField> sortByFields = new ArrayList<>();
+            SortByField sortByField = new SortByField("time", SORT.ASC, false);
+            sortByFields.add(sortByField);
+            List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
+            return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
+        } catch (AnalyticsException e) {
             String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
             log.error(errorMsg);
-            sensorDetails = sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(sensorDetails).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
         }
     }
 

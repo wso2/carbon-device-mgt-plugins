@@ -20,20 +20,19 @@ package org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.AnalyticsDataRecord;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DeviceManagementAnalyticsException;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.service.DeviceAnalyticsService;
+import org.wso2.carbon.analytics.dataservice.commons.SORT;
+import org.wso2.carbon.analytics.dataservice.commons.SortByField;
+import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.DeviceData;
-import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.SensorData;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.transport.RaspberryPiMQTTConnector;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.RaspberrypiServiceUtils;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,8 +40,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -75,10 +72,18 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
                     return;
                 }
                 RaspberryPiControllerServiceImpl.this.raspberryPiMQTTConnector = raspberryPiMQTTConnector;
+                //The delay is added for the server starts up.
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 if (MqttConfig.getInstance().isEnabled()) {
-                    raspberryPiMQTTConnector.connect();
+                    synchronized (raspberryPiMQTTConnector) {
+                        raspberryPiMQTTConnector.connect();
+                    }
                 } else {
-                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, RaspberryPiMQTTConnector not started.");
+                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, not started.");
                 }
             }
         };
@@ -123,7 +128,7 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
     }
 
     public Response requestTemperature(@PathParam("deviceId") String deviceId) {
-        SensorRecord sensorRecord = null;
+        org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = null;
         if (log.isDebugEnabled()) {
             log.debug("Sending request to read raspberrypi-temperature of device [" + deviceId + "] via ");
         }
@@ -179,42 +184,19 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
     public Response getArduinoTemperatureStats(String deviceId, String user, long from, long to) {
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
-        List<SensorData> sensorDatas = new ArrayList<>();
-        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx
-                .getOSGiService(DeviceAnalyticsService.class, null);
         String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
                        RaspberrypiConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = RaspberrypiConstants.TEMPERATURE_EVENT_TABLE;
         try {
-            List<AnalyticsDataRecord> records = deviceAnalyticsService.getAllEventsForDevice(sensorTableName, query);
-            Collections.sort(records, new Comparator<AnalyticsDataRecord>() {
-                @Override
-                public int compare(AnalyticsDataRecord o1, AnalyticsDataRecord o2) {
-                    long t1 = (Long) o1.getValue("time");
-                    long t2 = (Long) o2.getValue("time");
-                    if (t1 < t2) {
-                        return -1;
-                    } else if (t1 > t2) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }
-            });
-            for (AnalyticsDataRecord record : records) {
-                SensorData sensorData = new SensorData();
-                sensorData.setTime((long) record.getValue("time"));
-                sensorData.setValue("" + (float) record.getValue(RaspberrypiConstants.SENSOR_TEMPERATURE));
-                sensorDatas.add(sensorData);
-            }
-            SensorData[] sensorDetails =  sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-            return Response.ok().entity(sensorDetails).build();
-        } catch (DeviceManagementAnalyticsException e) {
+            List<SortByField> sortByFields = new ArrayList<>();
+            SortByField sortByField = new SortByField("time", SORT.ASC, false);
+            sortByFields.add(sortByField);
+            List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
+            return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
+        } catch (AnalyticsException e) {
             String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
             log.error(errorMsg);
-            SensorData[] sensorDetails = sensorDatas.toArray(new SensorData[sensorDatas.size()]);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(sensorDetails).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
         }
     }
 

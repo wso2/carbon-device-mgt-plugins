@@ -37,4 +37,5 @@ public class VirtualFireAlarmConstants {
     //sensor events summerized table name for humidity
     public static final String HUMIDITY_EVENT_TABLE = "DEVICE_HUMIDITY_SUMMARY";
     public static final String DATA_SOURCE_NAME = "jdbc/VirtualFireAlarmDM_DB";
+    public final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
 }

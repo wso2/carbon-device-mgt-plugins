@@ -36,7 +36,6 @@ import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
-import org.wso2.carbon.identity.jwt.client.extension.JWTClientManager;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.user.api.UserStoreException;
@@ -210,12 +209,12 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
             apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
                     VirtualFireAlarmConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
         }
-        JWTClient jwtClient = JWTClientManager.getInstance().getJWTClient();
+        JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = "device_type_" + VirtualFireAlarmConstants.DEVICE_TYPE + " device_" + deviceId;
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
                                                                    apiApplicationKey.getConsumerSecret(), owner, scopes);
-        String accessToken = accessTokenInfo.getAccess_token();
-        String refreshToken = accessTokenInfo.getRefresh_token();
+        String accessToken = accessTokenInfo.getAccessToken();
+        String refreshToken = accessTokenInfo.getRefreshToken();
         //adding registering data
         XmppAccount newXmppAccount = new XmppAccount();
         newXmppAccount.setAccountName(owner + "_" + deviceId);
