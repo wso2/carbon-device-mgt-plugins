@@ -232,7 +232,6 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                             }
                         }
                     };
-                    msgProcessThread.setDaemon(true);
                     msgProcessThread.start();
                 }
             }
@@ -266,7 +265,6 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                             }
                         }
                     };
-                    msgProcessThread.setDaemon(true);
                     msgProcessThread.start();
                 }
             }
@@ -315,7 +313,6 @@ public abstract class XMPPTransportHandler implements TransportHandler<Message> 
                             }
                         }
                     };
-                    msgProcessThread.setDaemon(true);
                     msgProcessThread.start();
                 }
             }

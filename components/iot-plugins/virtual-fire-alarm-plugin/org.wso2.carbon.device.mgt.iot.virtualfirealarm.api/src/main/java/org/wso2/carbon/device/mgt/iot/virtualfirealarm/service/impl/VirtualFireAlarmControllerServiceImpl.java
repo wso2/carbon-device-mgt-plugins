@@ -147,7 +147,6 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                     };
 
                     Thread xmppStarterThread = new Thread(xmppStarter);
-                    xmppStarterThread.setDaemon(true);
                     xmppStarterThread.start();
                 } else {
                     log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmXMPPConnector not started.");
@@ -155,7 +154,6 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
             }
         };
         Thread connectorThread = new Thread(connector);
-        connectorThread.setDaemon(true);
         connectorThread.start();
     }
 
@@ -201,7 +199,6 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
             }
         };
         Thread connectorThread = new Thread(connector);
-        connectorThread.setDaemon(true);
         connectorThread.start();
     }
 

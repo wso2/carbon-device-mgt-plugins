@@ -264,7 +264,6 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
         };
 
         Thread terminatorThread = new Thread(stopConnection);
-        terminatorThread.setDaemon(true);
         terminatorThread.start();
     }
 

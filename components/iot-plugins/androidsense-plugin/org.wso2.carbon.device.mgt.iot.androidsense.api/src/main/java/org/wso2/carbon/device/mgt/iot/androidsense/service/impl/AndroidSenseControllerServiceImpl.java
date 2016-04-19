@@ -64,8 +64,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
     @POST
     public Response sendKeyWords(@PathParam("deviceId") String deviceId, @FormParam("keywords") String keywords) {
         try {
-            String username = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
-            androidSenseMQTTConnector.publishDeviceData(username, deviceId, "add", keywords);
+            androidSenseMQTTConnector.publishDeviceData(deviceId, "add", keywords);
             return Response.ok().build();
         } catch (TransportHandlerException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
@@ -76,8 +75,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
     @POST
     public Response sendThreshold(@PathParam("deviceId") String deviceId, @FormParam("threshold") String threshold) {
         try {
-            String username = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
-            androidSenseMQTTConnector.publishDeviceData(username, deviceId, "threshold", threshold);
+            androidSenseMQTTConnector.publishDeviceData(deviceId, "threshold", threshold);
             return Response.ok().build();
         } catch (TransportHandlerException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
@@ -86,10 +84,9 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     @Path("device/{deviceId}/words")
     @DELETE
-    public Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words) {
+    public Response removeKeyWords(@PathParam("deviceId") String deviceId, @FormParam("words") String words) {
         try {
-            String username = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
-            androidSenseMQTTConnector.publishDeviceData(username, deviceId, "remove", words);
+            androidSenseMQTTConnector.publishDeviceData(deviceId, "remove", words);
             return Response.ok().build();
         } catch (TransportHandlerException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
@@ -215,7 +212,6 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
             }
         };
         Thread connectorThread = new Thread(connector);
-        connectorThread.setDaemon(true);
         connectorThread.start();
     }
 
