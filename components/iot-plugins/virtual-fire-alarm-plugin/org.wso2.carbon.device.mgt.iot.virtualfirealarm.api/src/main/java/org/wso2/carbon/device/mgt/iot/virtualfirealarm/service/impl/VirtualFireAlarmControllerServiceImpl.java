@@ -391,6 +391,12 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                 if (waitForServerStartup()) {
                     return;
                 }
+                //The delay is added for the server to starts up.
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 VirtualFireAlarmControllerServiceImpl.this.virtualFireAlarmMQTTConnector = virtualFireAlarmMQTTConnector;
                 if (MqttConfig.getInstance().isEnabled()) {
                     virtualFireAlarmMQTTConnector.connect();

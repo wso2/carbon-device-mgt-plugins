@@ -172,6 +172,12 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
                 if (waitForServerStartup()) {
                     return;
                 }
+                //The delay is added for the server to starts up.
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 RaspberryPiControllerServiceImpl.this.raspberryPiMQTTConnector = raspberryPiMQTTConnector;
                 if (MqttConfig.getInstance().isEnabled()) {
                     raspberryPiMQTTConnector.connect();

@@ -253,6 +253,12 @@ public class DigitalDisplayControllerServiceImpl implements DigitalDisplayContro
                 if (waitForServerStartup()) {
                     return;
                 }
+                //The delay is added for the server to starts up.
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 DigitalDisplayControllerServiceImpl.digitalDisplayMQTTConnector = digitalDisplayMQTTConnector;
                 if (MqttConfig.getInstance().isEnabled()) {
                     digitalDisplayMQTTConnector.connect();

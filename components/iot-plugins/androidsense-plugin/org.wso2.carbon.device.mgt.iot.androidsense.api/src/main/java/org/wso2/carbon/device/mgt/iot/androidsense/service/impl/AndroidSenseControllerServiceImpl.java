@@ -188,7 +188,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
                 if (waitForServerStartup()) {
                     return;
                 }
-                //The delay is added till the server starts up.
+                //The delay is added for the server to starts up.
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
