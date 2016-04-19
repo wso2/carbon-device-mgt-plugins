@@ -18,11 +18,10 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans;
 
-import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMNodeException;
-
 import javax.xml.bind.annotation.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,9 +37,6 @@ import java.util.Map;
 })
 @XmlRootElement(name = "MgmtTree")
 public class MgmtTree {
-
-    private static String NODE_URI_DELIMETER = "/";
-    private static String ROOT_NODE_PATH_DELIMETER = ".";
 
     @XmlElement(name = "VerDTD", required = true)
     protected String verDTD;
@@ -59,6 +55,10 @@ public class MgmtTree {
     @XmlTransient
     private String type;
 
+    // A map to keep track of connected nodes. Used for search operations
+    @XmlTransient
+    Map<String, Node> treeMap = new HashMap<>();
+
     public MgmtTree() {
     }
 
@@ -75,45 +75,63 @@ public class MgmtTree {
         this.mod = mod;
     }
 
-    public boolean addNodes(Node [] nodes) {
-        for (Node node : nodes) {
-            if (this.nodes.contains(node) && node != null) {
-                throw new DMNodeException("A node with the same node name already exists.");
-            }
-            this.nodes.add(node);
-            updatePaths(this.nodes, ROOT_NODE_PATH_DELIMETER);
-            return true;
-        }
-        return false;
+    public List<Node> getNodes() {
+        return nodes;
     }
 
-    public boolean addNodes(ArrayList<Node> nodes) {
-        for (Node node : nodes) {
-            if (this.nodes.contains(node) && node != null) {
-                throw new DMNodeException("A node with the same node name already exists.");
-            }
-            this.nodes.add(node);
-            updatePaths(this.nodes, ROOT_NODE_PATH_DELIMETER);
-            return true;
-        }
-        return false;
+    public Map<String, Node> getTreeMap() {
+        return treeMap;
     }
 
-    /**
-     * This recursive method generates absolute paths of each node in the given Node list
-     *
-     * @param treeNodes     node list
-     * @param currParentURI URI of the parent node
-     */
-    public void updatePaths(List<Node> treeNodes, String currParentURI) {
-        String tempStr;
-        for (Node node : treeNodes) {
-            tempStr = currParentURI + NODE_URI_DELIMETER + node.getNodeName();
-            node.setPath(currParentURI);
-            if (node.getNodes() != null) {
-                System.out.println(node.getNodeName() + " : " + node.getPath());
-                updatePaths(node.getNodes(), tempStr);
-            }
-        }
+    public String getVerDTD() {
+        return verDTD;
+    }
+
+    public void setVerDTD(String verDTD) {
+        this.verDTD = verDTD;
+    }
+
+    public String getMan() {
+        return man;
+    }
+
+    public void setMan(String man) {
+        this.man = man;
+    }
+
+    public String getMod() {
+        return mod;
+    }
+
+    public void setMod(String mod) {
+        this.mod = mod;
+    }
+
+    public void setNodes(List<Node> nodes) {
+        this.nodes = nodes;
+    }
+
+    public URL getPublicPath() {
+        return publicPath;
+    }
+
+    public void setPublicPath(URL publicPath) {
+        this.publicPath = publicPath;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

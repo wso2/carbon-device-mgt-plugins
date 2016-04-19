@@ -24,7 +24,6 @@ import javax.xml.bind.annotation.*;
  * The 'CaseSense' property of the 'DFProperties' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "CaseSense")
 public class CaseSense {
 

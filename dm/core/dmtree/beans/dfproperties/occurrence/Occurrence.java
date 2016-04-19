@@ -24,7 +24,6 @@ import javax.xml.bind.annotation.*;
  * The 'Occurrence' property of the 'DFProperties' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "Occurrence")
 public class Occurrence {
 

@@ -22,29 +22,26 @@ import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.dfpropert
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.rtproperties.RTProperties;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMNodeException;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * This class represents a Node in the Management Tree
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(propOrder = {
         "nodeName",
         "path",
         "rtProperties",
         "dfProperties",
         "nodes"
 })
+@XmlRootElement(name = "Node")
 public class Node {
 
     private static String NODE_URI_DELIMETER = "/";
-    
+
     @XmlElement(name = "NodeName", required = true)
     protected String nodeName;
     @XmlElement(name = "Path")
@@ -90,27 +87,21 @@ public class Node {
         if (nodes == null) {
             nodes = new ArrayList<>();
         }
-        nodes.add(node);
-        updatePaths(this.nodes, this.nodeName);
-        return true;
-    }
-
-    public boolean addNodes(Node[] nodes) {
-        checkForValue();
-        if (nodes != null) {
-            this.nodes = new ArrayList<>(Arrays.asList(nodes));
+        if (this.getDfProperties().getAccessType().getAdd() != null) {
+            nodes.add(node);
             updatePaths(this.nodes, this.nodeName);
             return true;
+        } else {
+            throw new DMNodeException("Parent node doesn't support the given operation.");
         }
-        return false;
     }
 
-    public boolean addNodes(ArrayList<Node> nodes) {
-        checkForValue();
-        if (nodes != null) {
-            this.nodes = nodes;
-            updatePaths(this.nodes, this.nodeName);
-            return true;
+    public boolean removeNode(String nodeName) {
+        for (Node node : this.nodes) {
+            if (node.getNodeName().equalsIgnoreCase(nodeName)) {
+                this.nodes.remove(node);
+                return true;
+            }
         }
         return false;
     }

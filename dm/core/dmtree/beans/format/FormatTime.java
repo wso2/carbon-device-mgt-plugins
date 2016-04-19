@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'time' property of the 'DFFormat' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "time")
 public class FormatTime extends AbstractFormatProperty {
 }

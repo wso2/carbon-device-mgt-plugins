@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'Get' property of the 'AccessType' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "Get")
 public class Get {
 }

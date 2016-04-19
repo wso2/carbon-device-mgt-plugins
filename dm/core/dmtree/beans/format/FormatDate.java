@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'date' property of the 'DFFormat' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "date")
 public class FormatDate extends AbstractFormatProperty {
 }

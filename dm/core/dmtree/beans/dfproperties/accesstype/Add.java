@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'Add' property of the 'AccessType' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "Add")
 public class Add {
 }

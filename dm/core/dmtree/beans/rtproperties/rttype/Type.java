@@ -28,7 +28,6 @@ import javax.xml.bind.annotation.*;
  * The 'Type' property of 'RTProperty' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "Type")
 public class Type {
 

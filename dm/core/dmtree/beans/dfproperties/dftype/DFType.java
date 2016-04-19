@@ -28,7 +28,6 @@ import javax.xml.bind.annotation.*;
  * The 'DFType' property of the 'DFProperties' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "DFType")
 public class DFType {
 

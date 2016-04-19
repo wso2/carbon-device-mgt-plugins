@@ -47,51 +47,41 @@ public class Characteristic implements Serializable {
     private ArrayList<Serializable> children = new ArrayList();
     private String type;
 
-    public Characteristic() {}
+    public Characteristic() {
+    }
 
-    public Characteristic(String type)
-    {
+    public Characteristic(String type) {
         this();
         this.type = type;
     }
 
-    public void add(Characteristic characteristic)
-    {
+    public void add(Characteristic characteristic) {
         this.children.add(characteristic);
     }
 
-    public void add(Parm parm)
-    {
+    public void add(Parm parm) {
         this.children.add(parm);
     }
 
-    public String getType()
-    {
+    public String getType() {
         return this.type;
     }
 
-    public void setType(String type)
-    {
+    public void setType(String type) {
         this.type = type;
     }
 
-    public ArrayList<Serializable> getChildren()
-    {
+    public ArrayList<Serializable> getChildren() {
         return this.children;
     }
 
-    public void removeParm(String parmName)
-    {
+    public void removeParm(String parmName) {
         Parm parm = null;
-        if (this.children != null)
-        {
-            for (Object obj : children)
-            {
-                if ((obj instanceof Parm))
-                {
-                    parm = (Parm)obj;
-                    if (parmName.equalsIgnoreCase(parm.getName()))
-                    {
+        if (this.children != null) {
+            for (Object obj : children) {
+                if ((obj instanceof Parm)) {
+                    parm = (Parm) obj;
+                    if (parmName.equalsIgnoreCase(parm.getName())) {
                         this.children.remove(parm);
                         return;
                     }
@@ -100,17 +90,13 @@ public class Characteristic implements Serializable {
         }
     }
 
-    public void removeCharacteristic(String characName)
-    {
+    public void removeCharacteristic(String characName) {
         Characteristic characteristic = null;
         ArrayList tempArray = new ArrayList();
-        if (this.children != null)
-        {
-            for (Object obj : children)
-            {
-                if ((obj instanceof Characteristic))
-                {
-                    characteristic = (Characteristic)obj;
+        if (this.children != null) {
+            for (Object obj : children) {
+                if ((obj instanceof Characteristic)) {
+                    characteristic = (Characteristic) obj;
                     if (characName.equalsIgnoreCase(characteristic.getType())) {
                         tempArray.add(characteristic);
                     }
@@ -120,16 +106,12 @@ public class Characteristic implements Serializable {
         this.children.removeAll(tempArray);
     }
 
-    public Parm getParm(String parmName)
-    {
+    public Parm getParm(String parmName) {
         Parm parm = null;
-        if (this.children != null)
-        {
-            for (Object obj : children)
-            {
-                if ((obj instanceof Parm))
-                {
-                    parm = (Parm)obj;
+        if (this.children != null) {
+            for (Object obj : children) {
+                if ((obj instanceof Parm)) {
+                    parm = (Parm) obj;
                     if (parmName.equalsIgnoreCase(parm.getName())) {
                         return parm;
                     }
@@ -139,19 +121,14 @@ public class Characteristic implements Serializable {
         return null;
     }
 
-    public int setParm(String parmName, String parmValue, int index)
-    {
+    public int setParm(String parmName, String parmValue, int index) {
         Parm parm = null;
         int i = 0;
-        if (this.children != null)
-        {
-            for (Object obj : children)
-            {
-                if ((obj instanceof Parm))
-                {
-                    parm = (Parm)obj;
-                    if (parmName.equalsIgnoreCase(parm.getName()))
-                    {
+        if (this.children != null) {
+            for (Object obj : children) {
+                if ((obj instanceof Parm)) {
+                    parm = (Parm) obj;
+                    if (parmName.equalsIgnoreCase(parm.getName())) {
                         parm.setValue(parmValue);
                         return i;
                     }
@@ -164,16 +141,12 @@ public class Characteristic implements Serializable {
         return index;
     }
 
-    public Characteristic getCharacteristic(String characName)
-    {
+    public Characteristic getCharacteristic(String characName) {
         Characteristic characteristic = null;
-        if (this.children != null)
-        {
-            for (Object obj : children)
-            {
-                if ((obj instanceof Characteristic))
-                {
-                    characteristic = (Characteristic)obj;
+        if (this.children != null) {
+            for (Object obj : children) {
+                if ((obj instanceof Characteristic)) {
+                    characteristic = (Characteristic) obj;
                     if (characName.equalsIgnoreCase(characteristic.getType())) {
                         return characteristic;
                     }

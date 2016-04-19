@@ -26,27 +26,16 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
- * The Interface for OMA-DM SyncML Message handling
+ * The service class for OMA-DM SyncML Message handling
  */
 @Path("/manage")
-public interface OMADMService {
-
-    @Path("/bootstrap")
+public class OMADMService {
     @POST
     @Consumes({Constants.APPLICATION_SYNCML, MediaType.APPLICATION_XML})
     @Produces(Constants.APPLICATION_SYNCML)
-    Response bootstrapDevice(SyncMLDocument syncMLRequest);
-
-    @Path("/enroll")
-    @POST
-    @Consumes({Constants.APPLICATION_SYNCML, MediaType.APPLICATION_XML})
-    @Produces(Constants.APPLICATION_SYNCML)
-    Response enrollDevice(SyncMLDocument syncMLRequest);
-
-
-    //TODO : Need to add more proper methods based on the architecture
-
+    public String generateReply(SyncMLDocument synMLDoc){
+        return null;
+    }
 }

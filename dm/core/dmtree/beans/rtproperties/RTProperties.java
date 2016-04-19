@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.*;
  * This class represents the 'RTProperties' element in a node
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(propOrder = {
         "acl",
         "format",
         "name",

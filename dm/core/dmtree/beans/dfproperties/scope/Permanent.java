@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'Permanent' property of the 'Scope' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "Permanent")
 public class Permanent extends AbstractScopeProperty {
 }

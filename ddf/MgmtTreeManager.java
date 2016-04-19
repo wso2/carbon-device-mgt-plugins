@@ -31,65 +31,50 @@ public interface MgmtTreeManager {
     /**
      * Adds a node to a given path
      *
-     * @param tree The Management Tree
      * @param node The Node to be added
      * @param path The absolute path of the parent node
      * @return The status of the adding operation
      */
-    boolean addNode(MgmtTree tree, Node node, String path);
-
-    /**
-     * Adds an array of nodes to the root of the tree
-     *
-     * @param tree  The Management Tree
-     * @param nodes The array of nodes to be added
-     * @return The status of the adding operation
-     */
-    boolean addNodes(MgmtTree tree, Node[] nodes);
-
-    /**
-     * Adds a list of nodes to the root of the tree
-     *
-     * @param tree  The Management Tree
-     * @param nodes The node list to be added
-     * @return The status of the adding operation
-     */
-    boolean addNodes(MgmtTree tree, ArrayList<Node> nodes);
+    boolean addNode(Node node, String path);
 
     /**
      * Removes a node in a given path
      *
-     * @param tree The Management Tree
      * @param path The absolute path of the node to be removed
      * @return Status of the remove operation
      */
-    boolean removeNode(MgmtTree tree, String path);
+    boolean removeNode(String path);
 
     /**
      * Gets a node in a given path
      *
-     * @param tree The management tree
      * @param path The absolute path of the node to be retrieved
      * @return The requested node
      */
-    Node getNode(MgmtTree tree, String path);
+    Node getNode(String path);
 
     /**
      * Replaces data of a given node
      *
-     * @param tree  The management tree
      * @param path  The absolute path of the node
      * @param value New data
      * @return The status of the replace operation
      */
-    boolean replaceNodeValue(MgmtTree tree, String path, String value);
+    boolean replaceNodeValue(String path, String value);
 
     /**
      * Counts the number of attached nodes in the tree
      *
-     * @param tree The Management Tree
      * @return Number of nodes attached
      */
-    int nodeCount(MgmtTree tree);
+    int nodeCount();
+
+    /**
+     * Checks for a node's existence in the Management Tree
+     *
+     * @param path Path of the node
+     * @return True if exists or else false
+     */
+    boolean isExistingNode(String path);
 
 }

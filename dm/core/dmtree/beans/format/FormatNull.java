@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'null' property of the 'DFFormat' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "null")
 public class FormatNull extends AbstractFormatProperty {
 }

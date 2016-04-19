@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'CS' property of the 'CaseSense' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "CS")
 public class CS extends AbstractCaseSenseProperty {
 }

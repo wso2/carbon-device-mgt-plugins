@@ -24,7 +24,6 @@ import javax.xml.bind.annotation.*;
  * The 'Scope' property of the 'DFProperties' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "Scope")
 public class Scope {
 

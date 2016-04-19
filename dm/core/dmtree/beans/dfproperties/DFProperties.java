@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.*;
  * This class represents the 'DFProperties' element in a node
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(propOrder = {
         "accessType",
         "defaultValue",
         "description",

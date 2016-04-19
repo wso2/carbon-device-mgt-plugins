@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'Copy' property of the 'AccessType' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "Copy")
 public class Copy {
 }

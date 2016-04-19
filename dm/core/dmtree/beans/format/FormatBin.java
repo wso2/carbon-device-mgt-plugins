@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'bin' property of the 'DFFormat' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "bin")
 public class FormatBin extends AbstractFormatProperty {
 }

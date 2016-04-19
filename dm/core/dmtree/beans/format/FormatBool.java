@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'bool' property of the 'DFFormat' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "bool")
 public class FormatBool extends AbstractFormatProperty {
 }

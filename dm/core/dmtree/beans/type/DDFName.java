@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.*;
  * The 'DDFName' property of the 'DFType' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(propOrder = {
         "value"
 })
 @XmlRootElement(name = "DDFName")

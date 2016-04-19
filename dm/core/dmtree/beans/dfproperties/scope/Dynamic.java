@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'Dynamic' property of the 'Scope' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "Dynamic")
 public class Dynamic extends AbstractScopeProperty {
 }

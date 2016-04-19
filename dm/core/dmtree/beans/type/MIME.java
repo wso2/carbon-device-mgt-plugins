@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.*;
  * The 'MIME' property of the 'DFType' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(propOrder = {
         "value"
 })
 @XmlRootElement(name = "MIME")

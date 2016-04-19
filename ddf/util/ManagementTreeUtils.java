@@ -18,8 +18,10 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.ddf.util;
 
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.Node;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,22 +33,20 @@ public class ManagementTreeUtils {
      * Prints all the node names with their paths
      * @param mgmtTree Management Tree object
      */
-    public static void printTree(ManagementTree mgmtTree) {
-        printNodes(mgmtTree.getChildNodes());
+    public static void printTree(MgmtTree mgmtTree) {
+        printNodes(mgmtTree.getNodes());
     }
 
     /**
-     * Prints node names and their absolute paths of a givel node list
+     * Prints node names and their absolute paths of a given node list
      * @param treeNodes Node list
      */
-    public static void printNodes(Map<String, Node> treeNodes) {
-        Node[] nodes = treeNodes.values().toArray((new Node[0]));
-        String tempStr = "";
-        for (Node node : nodes) {
+    public static void printNodes(List<Node> treeNodes) {
+        for (Node node : treeNodes) {
+            System.out.println(node.getNodeName());
             System.out.println(node.getPath());
-            node.setPath(tempStr);
-            if (node.getSubNodes() != null) {
-                printNodes(node.getSubNodes());
+            if (node.getNodes() != null) {
+                printNodes(node.getNodes());
             }
         }
     }

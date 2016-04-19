@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'One' property of the 'Occurrence' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "OneOrMore")
 public class OneOrMore extends AbstractOccurrenceProperty {
 }

@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'Delete' property of the 'AccessType' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "Delete")
 public class Delete {
 }

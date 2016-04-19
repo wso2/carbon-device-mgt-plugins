@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.*;
  * The 'Format' property of 'RTProperty' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "Format")
 public class Format {
 

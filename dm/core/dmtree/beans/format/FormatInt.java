@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'int' property of the 'DFFormat' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "int")
 public class FormatInt extends AbstractFormatProperty {
 }

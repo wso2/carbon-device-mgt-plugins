@@ -27,7 +27,6 @@ import javax.xml.bind.annotation.XmlType;
  * The 'CIS' property of the 'CaseSense' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "CIS")
 public class CIS {
 }

@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.*;
  * The 'DFFormat' property of the 'DFProperties' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "")
 @XmlRootElement(name = "DFFormat")
 public class DFFormat {
 
