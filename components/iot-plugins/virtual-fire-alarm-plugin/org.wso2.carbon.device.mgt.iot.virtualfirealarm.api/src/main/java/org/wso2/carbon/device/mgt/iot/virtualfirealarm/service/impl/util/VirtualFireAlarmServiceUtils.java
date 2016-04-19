@@ -30,7 +30,7 @@ import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.service.DeviceAnalyticsService;
+import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
@@ -242,8 +242,8 @@ public class VirtualFireAlarmServiceUtils {
 
     public static boolean publishToDAS(String deviceId, float temperature) {
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        DeviceAnalyticsService deviceAnalyticsService = (DeviceAnalyticsService) ctx.getOSGiService(
-                DeviceAnalyticsService.class, null);
+        EventsPublisherService deviceAnalyticsService = (EventsPublisherService) ctx.getOSGiService(
+                EventsPublisherService.class, null);
         if (deviceAnalyticsService != null) {
             String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
             Object metdaData[] = {owner, VirtualFireAlarmConstants.DEVICE_TYPE, deviceId, System.currentTimeMillis()};

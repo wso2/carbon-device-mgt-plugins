@@ -35,7 +35,6 @@ import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
-import org.wso2.carbon.identity.jwt.client.extension.JWTClientManager;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.user.api.UserStoreException;
@@ -188,16 +187,13 @@ public class DigitalDisplayManagerServiceImpl implements DigitalDisplayManagerSe
             apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
                     DigitalDisplayConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
         }
-        JWTClient jwtClient = JWTClientManager.getInstance().getJWTClient();
+        JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = "device_type_" + DigitalDisplayConstants.DEVICE_TYPE + " device_" + deviceId;
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
                                                                    apiApplicationKey.getConsumerSecret(), owner, scopes);
-        //create token
-        String accessToken = accessTokenInfo.getAccess_token();
-        String refreshToken = accessTokenInfo.getRefresh_token();
-        //adding registering data
+        String accessToken = accessTokenInfo.getAccessToken();
+        String refreshToken = accessTokenInfo.getRefreshToken();
         boolean status;
-        //Register the device with CDMF
         status = register(deviceId, deviceName);
         if (!status) {
             String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;

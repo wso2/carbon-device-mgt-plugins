@@ -30,7 +30,6 @@ import java.util.List;
 
 public class AndroidSenseManagerService implements DeviceManagementService {
 	private DeviceManager deviceManager;
-	private static final String SUPER_TENANT_DOMAIN = "carbon.super";
 
 	@Override
 	public String getType() {
@@ -39,7 +38,7 @@ public class AndroidSenseManagerService implements DeviceManagementService {
 
 	@Override
 	public String getProviderTenantDomain() {
-		return SUPER_TENANT_DOMAIN;
+		return AndroidSenseConstants.DEVICE_TYPE_PROVIDER_DOMAIN;
 	}
 
 	@Override
