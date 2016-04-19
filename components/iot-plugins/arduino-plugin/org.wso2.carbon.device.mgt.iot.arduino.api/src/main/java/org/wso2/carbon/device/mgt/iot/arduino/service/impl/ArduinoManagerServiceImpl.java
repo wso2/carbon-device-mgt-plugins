@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.device.mgt.iot.arduino.service.impl;
 
-import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
 import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
@@ -27,7 +26,6 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
-import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
@@ -38,6 +36,16 @@ import org.wso2.carbon.identity.jwt.client.extension.JWTClientManager;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.user.api.UserStoreException;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -46,15 +54,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-@API(name = "arduino_mgt", version = "1.0.0", context = "/arduino_mgt", tags = {"arduino"})
-@DeviceType(value = "arduino")
+@Path("enrollment")
 public class ArduinoManagerServiceImpl implements ArduinoManagerService {
 
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
 
     @Override
-    public Response removeDevice(String deviceId) {
+    @Path("devices/{device_id}")
+    @DELETE
+    public Response removeDevice(@PathParam("device_id") String deviceId) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(ArduinoConstants.DEVICE_TYPE);
@@ -71,7 +80,9 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
     }
 
     @Override
-    public Response updateDevice(String deviceId, String name) {
+    @Path("devices/{device_id}")
+    @PUT
+    public Response updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(ArduinoConstants.DEVICE_TYPE);
@@ -93,7 +104,11 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
     }
 
     @Override
-    public Response getDevice(String deviceId) {
+    @Path("devices/{device_id}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDevice(@PathParam("device_id") String deviceId) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(ArduinoConstants.DEVICE_TYPE);
@@ -106,6 +121,10 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
     }
 
     @Override
+    @Path("devices")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getArduinoDevices() {
         try {
             List<Device> userDevices = APIUtil.getDeviceManagementService().getDevicesOfUser(
@@ -125,7 +144,10 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
     }
 
     @Override
-    public Response downloadSketch(String customDeviceName) {
+    @Path("devices/download")
+    @GET
+    @Produces("application/octet-stream")
+    public Response downloadSketch(@QueryParam("deviceName") String customDeviceName) {
         try {
             ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), customDeviceName);
             Response.ResponseBuilder rb = Response.ok(zipFile.getZipFile());
@@ -147,7 +169,9 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
     }
 
     @Override
-    public Response generateSketchLink(String deviceName) {
+    @Path("devices/generate_link")
+    @GET
+    public Response generateSketchLink(@QueryParam("deviceName") String deviceName) {
         try {
             ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName);
             Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());

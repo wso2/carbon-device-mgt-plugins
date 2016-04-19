@@ -43,6 +43,15 @@ import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.user.api.UserStoreException;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -52,12 +61,146 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Path("enrollment")
 public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService {
 
     private static Log log = LogFactory.getLog(RaspberryPiManagerServiceImpl.class);
-
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
+
+    @Path("devices/{device_id}")
+    @DELETE
+    public Response removeDevice(@PathParam("device_id") String deviceId) {
+        try {
+            DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+            deviceIdentifier.setId(deviceId);
+            deviceIdentifier.setType(RaspberrypiConstants.DEVICE_TYPE);
+            boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(
+                    deviceIdentifier);
+            if (removed) {
+                return Response.ok().build();
+            } else {
+                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
+            }
+        } catch (DeviceManagementException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        }
+    }
+
+    @Path("devices/{device_id}")
+    @PUT
+    public Response updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name) {
+        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+        deviceIdentifier.setId(deviceId);
+        deviceIdentifier.setType(RaspberrypiConstants.DEVICE_TYPE);
+        try {
+            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
+            device.setDeviceIdentifier(deviceId);
+            device.getEnrolmentInfo().setDateOfLastUpdate(new Date().getTime());
+            device.setName(name);
+            device.setType(RaspberrypiConstants.DEVICE_TYPE);
+            boolean updated = APIUtil.getDeviceManagementService().modifyEnrollment(device);
+            if (updated) {
+                return Response.ok().build();
+            } else {
+                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
+            }
+        } catch (DeviceManagementException e) {
+            log.error(e.getErrorMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        }
+    }
+
+    @Path("devices/{device_id}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDevice(@PathParam("device_id") String deviceId) {
+        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+        deviceIdentifier.setId(deviceId);
+        deviceIdentifier.setType(RaspberrypiConstants.DEVICE_TYPE);
+        try {
+            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
+            return Response.ok().entity(device).build();
+        } catch (DeviceManagementException ex) {
+            log.error("Error occurred while retrieving device with Id " + deviceId + "\n" + ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        }
+    }
+
+    @Path("devices")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getRaspberrypiDevices() {
+        try {
+            List<Device> userDevices = APIUtil.getDeviceManagementService().getDevicesOfUser(
+                    APIUtil.getAuthenticatedUser());
+            ArrayList<Device> usersRaspberrypiDevices = new ArrayList<>();
+            for (Device device : userDevices) {
+                if (device.getType().equals(RaspberrypiConstants.DEVICE_TYPE) &&
+                    device.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.ACTIVE)) {
+                    usersRaspberrypiDevices.add(device);
+                }
+            }
+            Device[] devices = usersRaspberrypiDevices.toArray(new Device[]{});
+            return Response.ok().entity(devices).build();
+        } catch (DeviceManagementException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        }
+    }
+
+
+    @Path("devices/{sketch_type}/download")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response downloadSketch(@QueryParam("deviceName") String deviceName,
+                                   @PathParam("sketch_type") String sketchType) {
+        try {
+            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
+            Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
+            response.type("application/zip");
+            response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
+            return response.build();
+        } catch (IllegalArgumentException ex) {
+            return Response.status(400).entity(ex.getMessage()).build();//bad request
+        } catch (DeviceManagementException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (JWTClientException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (DeviceControllerException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (IOException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (APIManagerException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (UserStoreException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        }
+    }
+
+    @Path("devices/{sketch_type}/generate_link")
+    @GET
+    public Response generateSketchLink(@QueryParam("deviceName") String deviceName,
+                                @PathParam("sketch_type") String sketchType) {
+        try {
+            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
+            Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
+            return rb.build();
+        } catch (IllegalArgumentException ex) {
+            return Response.status(400).entity(ex.getMessage()).build();//bad request
+        } catch (DeviceManagementException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (JWTClientException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (DeviceControllerException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (APIManagerException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (UserStoreException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        }
+    }
 
     private boolean register(String deviceId, String name) {
         try {
@@ -83,122 +226,6 @@ public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService 
             return false;
         }
     }
-
-    public Response removeDevice(String deviceId) {
-        try {
-            DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-            deviceIdentifier.setId(deviceId);
-            deviceIdentifier.setType(RaspberrypiConstants.DEVICE_TYPE);
-            boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(
-                    deviceIdentifier);
-            if (removed) {
-                return Response.ok().build();
-            } else {
-                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
-            }
-        } catch (DeviceManagementException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-    }
-
-    public Response updateDevice(String deviceId, String name) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(RaspberrypiConstants.DEVICE_TYPE);
-        try {
-            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
-            device.setDeviceIdentifier(deviceId);
-            device.getEnrolmentInfo().setDateOfLastUpdate(new Date().getTime());
-            device.setName(name);
-            device.setType(RaspberrypiConstants.DEVICE_TYPE);
-            boolean updated = APIUtil.getDeviceManagementService().modifyEnrollment(device);
-            if (updated) {
-                return Response.ok().build();
-            } else {
-                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
-            }
-        } catch (DeviceManagementException e) {
-            log.error(e.getErrorMessage());
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-    }
-
-    public Response getDevice(String deviceId) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(RaspberrypiConstants.DEVICE_TYPE);
-        try {
-            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
-            return Response.ok().entity(device).build();
-        } catch (DeviceManagementException ex) {
-            log.error("Error occurred while retrieving device with Id " + deviceId + "\n" + ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-    }
-
-    public Response getRaspberrypiDevices() {
-        try {
-            List<Device> userDevices = APIUtil.getDeviceManagementService().getDevicesOfUser(
-                    APIUtil.getAuthenticatedUser());
-            ArrayList<Device> usersRaspberrypiDevices = new ArrayList<>();
-            for (Device device : userDevices) {
-                if (device.getType().equals(RaspberrypiConstants.DEVICE_TYPE) &&
-                    device.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.ACTIVE)) {
-                    usersRaspberrypiDevices.add(device);
-                }
-            }
-            Device[] devices = usersRaspberrypiDevices.toArray(new Device[]{});
-            return Response.ok().entity(devices).build();
-        } catch (DeviceManagementException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-    }
-
-    public Response downloadSketch(String deviceName, String sketchType) {
-        try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
-            Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
-            response.type("application/zip");
-            response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
-            return response.build();
-        } catch (IllegalArgumentException ex) {
-            return Response.status(400).entity(ex.getMessage()).build();//bad request
-        } catch (DeviceManagementException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (JWTClientException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (IOException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (APIManagerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (UserStoreException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        }
-    }
-
-    public Response generateSketchLink(String deviceName, String sketchType) {
-
-        try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
-            Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
-            return rb.build();
-        } catch (IllegalArgumentException ex) {
-            return Response.status(400).entity(ex.getMessage()).build();//bad request
-        } catch (DeviceManagementException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (JWTClientException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (APIManagerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (UserStoreException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        }
-    }
-
 
     private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
             throws DeviceManagementException, JWTClientException, APIManagerException, DeviceControllerException,

@@ -71,7 +71,7 @@ public interface RaspberryPiControllerService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    Response getArduinoTemperatureStats(@PathParam("deviceId") String deviceId, @QueryParam("username") String user,
+    Response getRaspberryPiTemperatureStats(@PathParam("deviceId") String deviceId, @QueryParam("username") String user,
                                         @QueryParam("from") long from, @QueryParam("to") long to);
 
 }

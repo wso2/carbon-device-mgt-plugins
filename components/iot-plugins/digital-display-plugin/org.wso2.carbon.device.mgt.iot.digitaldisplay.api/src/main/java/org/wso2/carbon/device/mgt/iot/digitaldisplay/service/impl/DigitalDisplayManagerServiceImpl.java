@@ -40,6 +40,15 @@ import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.user.api.UserStoreException;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -47,11 +56,96 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.UUID;
 
+@Path("enrollment")
 public class DigitalDisplayManagerServiceImpl implements DigitalDisplayManagerService {
 
     private static Log log = LogFactory.getLog(DigitalDisplayManagerServiceImpl.class);
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
+
+    @Path("devices/{device_id}")
+    @DELETE
+    public Response removeDevice(@PathParam("device_id") String deviceId) {
+        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+        deviceIdentifier.setId(deviceId);
+        deviceIdentifier.setType(DigitalDisplayConstants.DEVICE_TYPE);
+        try {
+            boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(
+                    deviceIdentifier);
+            if (removed) {
+                return Response.ok().build();
+            } else {
+                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
+            }
+        } catch (DeviceManagementException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        }
+    }
+
+    @Path("devices/{device_id}")
+    @PUT
+    public Response updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name) {
+        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+        deviceIdentifier.setId(deviceId);
+        deviceIdentifier.setType(DigitalDisplayConstants.DEVICE_TYPE);
+        try {
+            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
+            device.setDeviceIdentifier(deviceId);
+            device.getEnrolmentInfo().setDateOfLastUpdate(new Date().getTime());
+            device.setName(name);
+            device.setType(DigitalDisplayConstants.DEVICE_TYPE);
+            boolean updated = APIUtil.getDeviceManagementService().modifyEnrollment(device);
+            if (updated) {
+                return Response.ok().build();
+            } else {
+                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
+            }
+        } catch (DeviceManagementException e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        }
+    }
+    @Path("devices/{device_id}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getDevice(@PathParam("device_id") String deviceId) {
+        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+        deviceIdentifier.setId(deviceId);
+        deviceIdentifier.setType(DigitalDisplayConstants.DEVICE_TYPE);
+        try {
+            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
+            return Response.ok().entity(device).build();
+        } catch (DeviceManagementException ex) {
+            log.error("Error occurred while retrieving device with Id " + deviceId + "\n" + ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        }
+    }
+    @Path("devices/download")
+    @GET
+    @Produces("application/octet-stream")
+    public Response downloadSketch(@QueryParam("deviceName") String customDeviceName) {
+        try {
+            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), customDeviceName);
+            Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
+            response.type("application/zip");
+            response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
+            return response.build();
+        } catch (IllegalArgumentException ex) {
+            return Response.status(400).entity(ex.getMessage()).build();//bad request
+        } catch (DeviceManagementException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (JWTClientException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (DeviceControllerException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (APIManagerException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (IOException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (UserStoreException ex) {
+            return Response.status(500).entity(ex.getMessage()).build();
+        }
+    }
 
     private boolean register(String deviceId, String name) {
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
@@ -75,81 +169,6 @@ public class DigitalDisplayManagerServiceImpl implements DigitalDisplayManagerSe
             return added;
         } catch (DeviceManagementException e) {
             return false;
-        }
-    }
-
-    public Response removeDevice(String deviceId) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(DigitalDisplayConstants.DEVICE_TYPE);
-        try {
-            boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(
-                    deviceIdentifier);
-            if (removed) {
-                return Response.ok().build();
-            } else {
-                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
-            }
-        } catch (DeviceManagementException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-    }
-
-    public Response updateDevice(String deviceId, String name) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(DigitalDisplayConstants.DEVICE_TYPE);
-        try {
-            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
-            device.setDeviceIdentifier(deviceId);
-            device.getEnrolmentInfo().setDateOfLastUpdate(new Date().getTime());
-            device.setName(name);
-            device.setType(DigitalDisplayConstants.DEVICE_TYPE);
-            boolean updated = APIUtil.getDeviceManagementService().modifyEnrollment(device);
-            if (updated) {
-                return Response.ok().build();
-            } else {
-                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
-            }
-        } catch (DeviceManagementException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-    }
-
-    public Response getDevice(String deviceId) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(DigitalDisplayConstants.DEVICE_TYPE);
-        try {
-            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
-            return Response.ok().entity(device).build();
-        } catch (DeviceManagementException ex) {
-            log.error("Error occurred while retrieving device with Id " + deviceId + "\n" + ex);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-    }
-
-    public Response downloadSketch(String deviceName) {
-        try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName);
-            Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
-            response.type("application/zip");
-            response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
-            return response.build();
-        } catch (IllegalArgumentException ex) {
-            return Response.status(400).entity(ex.getMessage()).build();//bad request
-        } catch (DeviceManagementException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (JWTClientException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (APIManagerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (IOException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (UserStoreException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
         }
     }
 

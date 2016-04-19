@@ -40,6 +40,15 @@ import org.wso2.carbon.identity.jwt.client.extension.JWTClientManager;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.user.api.UserStoreException;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -48,39 +57,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+@Path("enrollment")
 public class DroneManagerServiceImpl implements DroneManagerService {
 
     private static org.apache.commons.logging.Log log = LogFactory.getLog(DroneManagerServiceImpl.class);
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
 
-    private boolean register(String deviceId, String name) {
-        try {
-            DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-            deviceIdentifier.setId(deviceId);
-            deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
-            if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
-                return false;
-            }
-            Device device = new Device();
-            device.setDeviceIdentifier(deviceId);
-            EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
-            enrolmentInfo.setDateOfEnrolment(new Date().getTime());
-            enrolmentInfo.setDateOfLastUpdate(new Date().getTime());
-            enrolmentInfo.setStatus(EnrolmentInfo.Status.ACTIVE);
-            enrolmentInfo.setOwnership(EnrolmentInfo.OwnerShip.BYOD);
-            device.setName(name);
-            device.setType(DroneConstants.DEVICE_TYPE);
-            enrolmentInfo.setOwner(APIUtil.getAuthenticatedUser());
-            device.setEnrolmentInfo(enrolmentInfo);
-            boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
-            return added;
-        } catch (DeviceManagementException e) {
-            return false;
-        }
-    }
-
-    public Response removeDevice(String deviceId) {
+    @Path("devices/{device_id}")
+    @DELETE
+    public Response removeDevice(@PathParam("device_id") String deviceId) {
         try {
             DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
             deviceIdentifier.setId(deviceId);
@@ -96,7 +82,10 @@ public class DroneManagerServiceImpl implements DroneManagerService {
         }
     }
 
-    public Response updateDevice(String deviceId, String name) {
+
+    @Path("devices/{device_id}")
+    @PUT
+    public Response updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name) {
         try {
             DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
             deviceIdentifier.setId(deviceId);
@@ -117,7 +106,11 @@ public class DroneManagerServiceImpl implements DroneManagerService {
         }
     }
 
-    public Response getDevice(String deviceId) {
+    @Path("devices/{device_id}")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response getDevice(@PathParam("device_id") String deviceId) {
         try {
             DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
             deviceIdentifier.setId(deviceId);
@@ -129,6 +122,10 @@ public class DroneManagerServiceImpl implements DroneManagerService {
         }
     }
 
+    @Path("devices")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
     public Response getDroneDevices() {
         try {
             List<Device> userDevices = APIUtil.getDeviceManagementService().getDevicesOfUser(APIUtil.getAuthenticatedUser());
@@ -147,7 +144,11 @@ public class DroneManagerServiceImpl implements DroneManagerService {
         }
     }
 
-    public Response downloadSketch(String deviceName, String sketchType) {
+    @Path("devices/{sketch_type}/download")
+    @GET
+    @Produces("application/octet-stream")
+    public Response downloadSketch(@QueryParam("deviceName") String deviceName, @PathParam("sketch_type") String
+            sketchType) {
 
         //create new device id
         String deviceId = shortUUID();
@@ -173,10 +174,12 @@ public class DroneManagerServiceImpl implements DroneManagerService {
         Response.ResponseBuilder rb = Response.ok(zipFile.getZipFile());
         rb.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
         return rb.build();
-
     }
 
-    public Response generateSketchLink(String deviceName, String sketchType) {
+    @Path("devices/{sketch_type}/generate_link")
+    @GET
+    public Response generateSketchLink(@QueryParam("deviceName") String deviceName,
+                                @PathParam("sketch_type") String sketchType) {
         try {
             ZipArchive zipFile = createDownloadFile(deviceName, sketchType);
             Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
@@ -193,6 +196,32 @@ public class DroneManagerServiceImpl implements DroneManagerService {
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (UserStoreException ex) {
             return Response.status(500).entity(ex.getMessage()).build();
+        }
+    }
+
+    private boolean register(String deviceId, String name) {
+        try {
+            DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+            deviceIdentifier.setId(deviceId);
+            deviceIdentifier.setType(DroneConstants.DEVICE_TYPE);
+            if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
+                return false;
+            }
+            Device device = new Device();
+            device.setDeviceIdentifier(deviceId);
+            EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
+            enrolmentInfo.setDateOfEnrolment(new Date().getTime());
+            enrolmentInfo.setDateOfLastUpdate(new Date().getTime());
+            enrolmentInfo.setStatus(EnrolmentInfo.Status.ACTIVE);
+            enrolmentInfo.setOwnership(EnrolmentInfo.OwnerShip.BYOD);
+            device.setName(name);
+            device.setType(DroneConstants.DEVICE_TYPE);
+            enrolmentInfo.setOwner(APIUtil.getAuthenticatedUser());
+            device.setEnrolmentInfo(enrolmentInfo);
+            boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
+            return added;
+        } catch (DeviceManagementException e) {
+            return false;
         }
     }
 

@@ -31,7 +31,18 @@ import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -51,7 +62,10 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
 
     @Override
-    public Response registerDeviceIP(String deviceId, String deviceIP, String devicePort, HttpServletRequest request) {
+    @Path("device/register/{deviceId}/{ip}/{port}")
+    @POST
+    public Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
+                                     @PathParam("port") String devicePort, @Context HttpServletRequest request) {
         String result;
         if (log.isDebugEnabled()) {
             log.debug("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId + " of owner: ");
@@ -66,7 +80,10 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     }
 
     @Override
-    public Response switchBulb(String deviceId, String protocol, String state) {
+    @Path("device/{deviceId}/bulb")
+    @POST
+    public Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
+                               @FormParam("state") String state) {
 
         LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
         String operation = "BULB:" + state.toUpperCase();
@@ -82,7 +99,12 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     }
 
     @Override
-    public Response requestTemperature(String deviceId, String protocol) {
+    @Path("device/{deviceId}/temperature")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response requestTemperature(@PathParam("deviceId") String deviceId,
+                                       @QueryParam("protocol") String protocol) {
 
         try {
             SensorRecord sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
@@ -94,6 +116,9 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     }
 
     @Override
+    @Path("device/sensor")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response pushData(DeviceData dataMsg) {
         String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
         String deviceId = dataMsg.deviceId;
@@ -110,7 +135,9 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     }
 
     @Override
-    public Response readControls(String deviceId, String protocol) {
+    @Path("device/{deviceId}/controls")
+    @GET
+    public Response readControls(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol) {
         String result;
         LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
         String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
@@ -138,7 +165,10 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     }
 
     @Override
-    public Response pushTemperatureData(final DeviceData dataMsg, HttpServletRequest request) {
+    @Path("device/temperature")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response pushTemperatureData(final DeviceData dataMsg, @Context HttpServletRequest request) {
         String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
         String deviceId = dataMsg.deviceId;
         float temperature = dataMsg.value;
@@ -154,7 +184,12 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     }
 
     @Override
-    public Response getArduinoTemperatureStats(String deviceId, long from, long to) {
+    @Path("device/stats/{deviceId}/sensors/temperature")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response getArduinoTemperatureStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
+                                               @QueryParam("to") long to) {
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
         List<SensorData> sensorDatas = new ArrayList<>();

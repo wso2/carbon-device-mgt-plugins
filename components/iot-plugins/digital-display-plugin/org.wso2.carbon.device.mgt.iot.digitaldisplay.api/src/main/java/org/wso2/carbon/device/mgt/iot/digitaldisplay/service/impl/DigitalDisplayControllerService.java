@@ -21,11 +21,11 @@ package org.wso2.carbon.device.mgt.iot.digitaldisplay.service.impl;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
-import javax.websocket.server.PathParam;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
 @API(name = "digital_display", version = "1.0.0", context = "/digital_display", tags = {"digital_display"})
@@ -54,7 +54,7 @@ public interface DigitalDisplayControllerService {
     @POST
     @Feature(code = "terminate-display", name = "Terminate Display", type = "operation",
             description = "Terminate all running process in Digital Display")
-    Response terminateDisplay(@PathParam("deviceId") String deviceId, @HeaderParam("sessionId") String sessionId);
+    Response terminateDisplay(@HeaderParam("sessionId") String sessionId, @PathParam("deviceId") String deviceId);
 
     /**
      * Reboot running digital display
