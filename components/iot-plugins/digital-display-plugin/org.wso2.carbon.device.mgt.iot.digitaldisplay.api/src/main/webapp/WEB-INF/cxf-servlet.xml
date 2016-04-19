@@ -24,7 +24,7 @@
          http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
 
-    <jaxrs:server id="DigitalDisplayController" address="/controller">
+    <jaxrs:server id="DigitalDisplay" address="/">
         <jaxrs:serviceBeans>
             <bean id="DigitalDisplayManagerControllerService"
                   class="org.wso2.carbon.device.mgt.iot.digitaldisplay.service.impl.DigitalDisplayControllerServiceImpl">

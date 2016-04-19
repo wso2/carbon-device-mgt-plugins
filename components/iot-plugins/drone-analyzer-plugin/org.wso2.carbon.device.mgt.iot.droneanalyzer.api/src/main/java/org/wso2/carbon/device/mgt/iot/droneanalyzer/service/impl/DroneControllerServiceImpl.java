@@ -38,7 +38,10 @@ public class DroneControllerServiceImpl implements DroneControllerService {
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
     private DroneController droneController = new DroneControllerImpl();
 
-    public Response registerDeviceIP(String deviceId, String deviceIP, String devicePort) {
+    @Path("device/register/{deviceId}/{ip}/{port}")
+    @POST
+    public Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
+                              @PathParam("port") String devicePort) {
         String result;
         String deviceHttpEndpoint = deviceIP + ":" + devicePort;
         deviceToIpMap.put(deviceId, deviceHttpEndpoint);
@@ -49,7 +52,10 @@ public class DroneControllerServiceImpl implements DroneControllerService {
         return Response.ok(Response.Status.OK.getStatusCode()).build();
     }
 
-    public Response droneController(String deviceId, String action, String duration, String speed) {
+    @Path("device/{deviceId}/send_command")
+    @POST
+    public Response droneController(@PathParam("deviceId") String deviceId, @FormParam("action") String action,
+                             @FormParam("duration") String duration, @FormParam("speed") String speed) {
         try {
             DroneAnalyzerServiceUtils.sendControlCommand(droneController, deviceId, action, Double.valueOf(speed),
                                                          Double.valueOf(duration));

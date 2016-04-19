@@ -26,7 +26,6 @@ import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.xmpp.XMPPTransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
@@ -182,10 +181,6 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
                             break;
                         case "CONTROL-REPLY":
                             String tempVal = actualMessage.split(":")[1];
-                            SensorDataManager.getInstance().setSensorRecord(deviceId,
-                                                                            VirtualFireAlarmConstants.SENSOR_TEMP,
-                                                                            tempVal,
-                                                                            Calendar.getInstance().getTimeInMillis());
                             break;
 
                         default:

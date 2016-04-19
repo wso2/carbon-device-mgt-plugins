@@ -25,18 +25,25 @@ import org.wso2.carbon.analytics.dataservice.commons.SortByField;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
-import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.DeviceData;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.transport.RaspberryPiMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.RaspberrypiServiceUtils;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -49,49 +56,10 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
     private RaspberryPiMQTTConnector raspberryPiMQTTConnector;
 
-    private boolean waitForServerStartup() {
-        while (!IoTServerStartupListener.isServerReady()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public RaspberryPiMQTTConnector getRaspberryPiMQTTConnector() {
-        return raspberryPiMQTTConnector;
-    }
-
-    public void setRaspberryPiMQTTConnector(
-            final RaspberryPiMQTTConnector raspberryPiMQTTConnector) {
-        Runnable connector = new Runnable() {
-            public void run() {
-                if (waitForServerStartup()) {
-                    return;
-                }
-                RaspberryPiControllerServiceImpl.this.raspberryPiMQTTConnector = raspberryPiMQTTConnector;
-                //The delay is added for the server starts up.
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-                if (MqttConfig.getInstance().isEnabled()) {
-                    synchronized (raspberryPiMQTTConnector) {
-                        raspberryPiMQTTConnector.connect();
-                    }
-                } else {
-                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, not started.");
-                }
-            }
-        };
-        Thread connectorThread = new Thread(connector);
-        connectorThread.start();
-    }
-
-    public Response registerDeviceIP(String deviceId, String deviceIP, String devicePort, HttpServletRequest request) {
+    @Path("device/register/{deviceId}/{ip}/{port}")
+    @POST
+    public Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
+                                     @PathParam("port") String devicePort, @Context HttpServletRequest request) {
         String result;
         if (log.isDebugEnabled()) {
             log.debug("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId);
@@ -105,7 +73,9 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
         return Response.ok().entity(result).build();
     }
 
-    public Response switchBulb(String deviceId, String state) {
+    @Path("device/{deviceId}/bulb")
+    @POST
+    public Response switchBulb(@PathParam("deviceId") String deviceId, @FormParam("state") String state) {
         String switchToState = state.toUpperCase();
         if (!switchToState.equals(RaspberrypiConstants.STATE_ON) && !switchToState.equals(
                 RaspberrypiConstants.STATE_OFF)) {
@@ -126,32 +96,10 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
         return Response.ok().build();
     }
 
-    public Response requestTemperature(@PathParam("deviceId") String deviceId) {
-        org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = null;
-        if (log.isDebugEnabled()) {
-            log.debug("Sending request to read raspberrypi-temperature of device [" + deviceId + "] via ");
-        }
-        try {
-            String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
-            if (deviceHTTPEndpoint == null) {
-                return Response.status(Response.Status.PRECONDITION_FAILED.getStatusCode()).build();
-            }
-            String temperatureValue = RaspberrypiServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
-                                                                                 RaspberrypiConstants
-                                                                                         .TEMPERATURE_CONTEXT,
-                                                                                 false);
-            SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
-                                                            temperatureValue, Calendar.getInstance()
-                                                                    .getTimeInMillis());
-            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-                                                                           RaspberrypiConstants.SENSOR_TEMPERATURE);
-        } catch (DeviceManagementException | DeviceControllerException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-        return Response.ok().entity(sensorRecord).build();
-    }
-
-    public Response pushTemperatureData(final DeviceData dataMsg, HttpServletRequest request) {
+    @Path("device/push_temperature")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response pushTemperatureData(final DeviceData dataMsg, @Context HttpServletRequest request) {
         String owner = dataMsg.owner;
         String deviceId = dataMsg.deviceId;
         String deviceIp = dataMsg.reply;
@@ -169,9 +117,6 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
         if (log.isDebugEnabled()) {
             log.debug("Received Pin Data Value: " + temperature + " degrees C");
         }
-        SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
-                                                        String.valueOf(temperature),
-                                                        Calendar.getInstance().getTimeInMillis());
         if (!RaspberrypiServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
             log.warn("An error occured whilst trying to publish temperature data of raspberrypi with ID [" +
                      deviceId + "] of owner [" + owner + "]");
@@ -180,7 +125,13 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
         return Response.ok().build();
     }
 
-    public Response getArduinoTemperatureStats(String deviceId, String user, long from, long to) {
+    @Path("device/stats/{deviceId}/sensors/temperature")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response getRaspberryPiTemperatureStats(@PathParam("deviceId") String deviceId,
+                                                   @QueryParam("username") String user,
+                                                   @QueryParam("from") long from, @QueryParam("to") long to) {
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
         String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
@@ -197,6 +148,40 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
             log.error(errorMsg);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
         }
+    }
+
+    private boolean waitForServerStartup() {
+        while (!IoTServerStartupListener.isServerReady()) {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public RaspberryPiMQTTConnector getRaspberryPiMQTTConnector() {
+        return raspberryPiMQTTConnector;
+    }
+
+    public void setRaspberryPiMQTTConnector(
+            final RaspberryPiMQTTConnector raspberryPiMQTTConnector) {
+        Runnable connector = new Runnable() {
+            public void run() {
+                if (waitForServerStartup()) {
+                    return;
+                }
+                RaspberryPiControllerServiceImpl.this.raspberryPiMQTTConnector = raspberryPiMQTTConnector;
+                if (MqttConfig.getInstance().isEnabled()) {
+                    raspberryPiMQTTConnector.connect();
+                } else {
+                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, RaspberryPiMQTTConnector not started.");
+                }
+            }
+        };
+        Thread connectorThread = new Thread(connector);
+        connectorThread.start();
     }
 
 }

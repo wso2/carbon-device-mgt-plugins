@@ -21,7 +21,7 @@ function onRequest(context) {
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("id");
 
-    if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
+    if (deviceType && deviceId) {
         var deviceModule = require("/app/modules/device.js").deviceModule;
         var device = deviceModule.viewDevice(deviceType, deviceId);
 
