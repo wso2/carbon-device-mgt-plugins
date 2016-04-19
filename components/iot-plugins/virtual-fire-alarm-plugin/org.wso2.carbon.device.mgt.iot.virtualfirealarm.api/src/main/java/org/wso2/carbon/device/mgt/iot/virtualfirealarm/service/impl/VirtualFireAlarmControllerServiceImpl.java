@@ -27,11 +27,8 @@ import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
-import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.DeviceData;
@@ -60,7 +57,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -87,142 +83,10 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
     // holds a mapping of the IP addresses to Device-IDs for HTTP communication
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
 
-<<<<<<< HEAD
     @POST
     @Path("device/register/{deviceId}/{ip}/{port}")
     public Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
                                      @PathParam("port") String devicePort, @Context HttpServletRequest request) {
-=======
-    private boolean waitForServerStartup() {
-        while (!IoTServerStartupListener.isServerReady()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Fetches the `SecurityManager` specific to this VirtualFirealarm controller service.
-     *
-     * @return the 'SecurityManager' instance bound to the 'securityManager' variable of this service.
-     */
-    @SuppressWarnings("Unused")
-    public SecurityManager getSecurityManager() {
-        return securityManager;
-    }
-
-    /**
-     * Sets the `securityManager` variable of this VirtualFirealarm controller service.
-     *
-     * @param securityManager a 'SecurityManager' object that handles the encryption, decryption, signing and validation
-     *                        of incoming messages from VirtualFirealarm device-types.
-     */
-    @SuppressWarnings("Unused")
-    public void setSecurityManager(SecurityManager securityManager) {
-        this.securityManager = securityManager;
-        securityManager.initVerificationManager();
-    }
-
-    /**
-     * Fetches the `VirtualFireAlarmXMPPConnector` specific to this VirtualFirealarm controller service.
-     *
-     * @return the 'VirtualFireAlarmXMPPConnector' instance bound to the 'virtualFireAlarmXMPPConnector' variable of
-     * this service.
-     */
-    @SuppressWarnings("Unused")
-    public VirtualFireAlarmXMPPConnector getVirtualFireAlarmXMPPConnector() {
-        return virtualFireAlarmXMPPConnector;
-    }
-
-    /**
-     * Sets the `virtualFireAlarmXMPPConnector` variable of this VirtualFirealarm controller service.
-     *
-     * @param virtualFireAlarmXMPPConnector a 'VirtualFireAlarmXMPPConnector' object that handles all XMPP related
-     *                                      communications of any connected VirtualFirealarm device-type
-     */
-    @SuppressWarnings("Unused")
-    public void setVirtualFireAlarmXMPPConnector(
-            final VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector) {
-        Runnable connector = new Runnable() {
-            public void run() {
-                if (waitForServerStartup()) {
-                    return;
-                }
-                VirtualFireAlarmControllerServiceImpl.this.virtualFireAlarmXMPPConnector = virtualFireAlarmXMPPConnector;
-
-                if (XmppConfig.getInstance().isEnabled()) {
-                    Runnable xmppStarter = new Runnable() {
-                        @Override
-                        public void run() {
-                            virtualFireAlarmXMPPConnector.initConnector();
-                            virtualFireAlarmXMPPConnector.connect();
-                        }
-                    };
-
-                    Thread xmppStarterThread = new Thread(xmppStarter);
-                    xmppStarterThread.setDaemon(true);
-                    xmppStarterThread.start();
-                } else {
-                    log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmXMPPConnector not started.");
-                }
-            }
-        };
-        Thread connectorThread = new Thread(connector);
-        connectorThread.setDaemon(true);
-        connectorThread.start();
-    }
-
-    /**
-     * Fetches the `VirtualFireAlarmMQTTConnector` specific to this VirtualFirealarm controller service.
-     *
-     * @return the 'VirtualFireAlarmMQTTConnector' instance bound to the 'virtualFireAlarmMQTTConnector' variable of
-     * this service.
-     */
-    @SuppressWarnings("Unused")
-    public VirtualFireAlarmMQTTConnector getVirtualFireAlarmMQTTConnector() {
-        return virtualFireAlarmMQTTConnector;
-    }
-
-    /**
-     * Sets the `virtualFireAlarmMQTTConnector` variable of this VirtualFirealarm controller service.
-     *
-     * @param virtualFireAlarmMQTTConnector a 'VirtualFireAlarmMQTTConnector' object that handles all MQTT related
-     *                                      communications of any connected VirtualFirealarm device-type
-     */
-    @SuppressWarnings("Unused")
-    public void setVirtualFireAlarmMQTTConnector(
-            final VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector) {
-        Runnable connector = new Runnable() {
-            public void run() {
-                if (waitForServerStartup()) {
-                    return;
-                }
-                VirtualFireAlarmControllerServiceImpl.this.virtualFireAlarmMQTTConnector = virtualFireAlarmMQTTConnector;
-                //The delay is added for the server starts up.
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-                if (MqttConfig.getInstance().isEnabled()) {
-                    synchronized (virtualFireAlarmMQTTConnector) {
-                        virtualFireAlarmMQTTConnector.connect();
-                    }
-                } else {
-                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
-                }
-            }
-        };
-        Thread connectorThread = new Thread(connector);
-        connectorThread.setDaemon(true);
-        connectorThread.start();
-    }
-
-    public Response registerDeviceIP(String deviceId, String deviceIP, String devicePort, HttpServletRequest request) {
->>>>>>> 8a7d4bb6e0a9b94b8a5c9ca8d6d21c3924b2c677
         String result;
         if (log.isDebugEnabled()) {
             log.debug("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId);
@@ -277,53 +141,6 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
         }
     }
 
-<<<<<<< HEAD
-    @GET
-    @Path("device/{deviceId}/temperature")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response requestTemperature(@PathParam("deviceId") String deviceId,
-                                       @QueryParam("protocol") String protocol) {
-        SensorRecord sensorRecord = null;
-=======
-    public Response requestTemperature(String deviceId, String protocol) {
-        org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = null;
->>>>>>> 8a7d4bb6e0a9b94b8a5c9ca8d6d21c3924b2c677
-        String protocolString = protocol.toUpperCase();
-        if (log.isDebugEnabled()) {
-            log.debug("Sending request to read virtual-firealarm-temperature of device " +
-                      "[" + deviceId + "] via " + protocolString);
-        }
-        try {
-            switch (protocolString) {
-                case HTTP_PROTOCOL:
-                    String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
-                    if (deviceHTTPEndpoint == null) {
-                        return Response.status(Response.Status.PRECONDITION_FAILED).build();
-                    }
-                    String temperatureValue = VirtualFireAlarmServiceUtils.sendCommandViaHTTP(
-                            deviceHTTPEndpoint, VirtualFireAlarmConstants.TEMPERATURE_CONTEXT, false);
-                    SensorDataManager.getInstance().setSensorRecord(deviceId, VirtualFireAlarmConstants.SENSOR_TEMP,
-                                                                    temperatureValue,
-                                                                    Calendar.getInstance().getTimeInMillis());
-                    break;
-                case XMPP_PROTOCOL:
-                    String xmppResource = VirtualFireAlarmConstants.TEMPERATURE_CONTEXT.replace("/", "");
-                    virtualFireAlarmMQTTConnector.publishDeviceData(deviceId, xmppResource, "");
-                    break;
-                default:
-                    String mqttResource = VirtualFireAlarmConstants.TEMPERATURE_CONTEXT.replace("/", "");
-                    virtualFireAlarmMQTTConnector.publishDeviceData(deviceId, mqttResource, "");
-                    break;
-            }
-            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId, VirtualFireAlarmConstants
-                    .SENSOR_TEMP);
-            return Response.ok().entity(sensorRecord).build();
-        } catch (DeviceManagementException | DeviceControllerException | TransportHandlerException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
     @POST
     @Path("device/temperature")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -341,9 +158,6 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                      " is already registered under some other IP. Re-registration required");
             return Response.status(Response.Status.CONFLICT).build();
         }
-        SensorDataManager.getInstance().setSensorRecord(deviceId, VirtualFireAlarmConstants.SENSOR_TEMP,
-                                                        String.valueOf(temperature),
-                                                        Calendar.getInstance().getTimeInMillis());
         if (!VirtualFireAlarmServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
@@ -442,7 +256,6 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
         return Response.serverError().build();
     }
 
-<<<<<<< HEAD
     @Path("device/stats/{deviceId}/sensors/{sensorName}")
     @GET
     @Consumes("application/json")
@@ -451,29 +264,26 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                                              @PathParam("sensorName") String sensor,
                                              @QueryParam("username") String user, @QueryParam("from") long from,
                                              @QueryParam("to") long to) {
-=======
-    public Response getVirtualFirealarmStats(String deviceId, String sensor, String user, long from, long to) {
-        String fromDate = String.valueOf(from);
-        String toDate = String.valueOf(to);
-        String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
-                VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
-        String sensorTableName = getSensorEventTableName(sensor);
->>>>>>> 8a7d4bb6e0a9b94b8a5c9ca8d6d21c3924b2c677
-        try {
-            if (sensorTableName != null) {
-                List<SortByField> sortByFields = new ArrayList<>();
-                SortByField sortByField = new SortByField("time", SORT.ASC, false);
-                sortByFields.add(sortByField);
-                List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
-                return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
+            String fromDate = String.valueOf(from);
+            String toDate = String.valueOf(to);
+            String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
+                           VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+            String sensorTableName = getSensorEventTableName(sensor);
+            try {
+                if (sensorTableName != null) {
+                    List<SortByField> sortByFields = new ArrayList<>();
+                    SortByField sortByField = new SortByField("time", SORT.ASC, false);
+                    sortByFields.add(sortByField);
+                    List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
+                    return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
+                }
+            } catch (AnalyticsException e) {
+                String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
+                log.error(errorMsg);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
             }
-        } catch (AnalyticsException e) {
-            String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
-            log.error(errorMsg);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        return Response.status(Response.Status.BAD_REQUEST).build();
-    }
 
     private boolean waitForServerStartup() {
         while (!IoTServerStartupListener.isServerReady()) {

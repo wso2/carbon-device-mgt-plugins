@@ -25,14 +25,12 @@ import org.wso2.carbon.analytics.dataservice.commons.SortByField;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
-import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.DeviceData;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.transport.RaspberryPiMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.RaspberrypiServiceUtils;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 
 import javax.servlet.http.HttpServletRequest;
@@ -98,35 +96,6 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
         return Response.ok().build();
     }
 
-    @Path("device/{deviceId}/readtemperature")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response requestTemperature(@PathParam("deviceId") String deviceId) {
-        org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord = null;
-        if (log.isDebugEnabled()) {
-            log.debug("Sending request to read raspberrypi-temperature of device [" + deviceId + "] via ");
-        }
-        try {
-            String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
-            if (deviceHTTPEndpoint == null) {
-                return Response.status(Response.Status.PRECONDITION_FAILED.getStatusCode()).build();
-            }
-            String temperatureValue = RaspberrypiServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint,
-                                                                                 RaspberrypiConstants
-                                                                                         .TEMPERATURE_CONTEXT,
-                                                                                 false);
-            SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
-                                                            temperatureValue, Calendar.getInstance()
-                                                                    .getTimeInMillis());
-            sensorRecord = SensorDataManager.getInstance().getSensorRecord(deviceId,
-                                                                           RaspberrypiConstants.SENSOR_TEMPERATURE);
-        } catch (DeviceManagementException | DeviceControllerException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-        return Response.ok().entity(sensorRecord).build();
-    }
-
     @Path("device/push_temperature")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -148,9 +117,6 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
         if (log.isDebugEnabled()) {
             log.debug("Received Pin Data Value: " + temperature + " degrees C");
         }
-        SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
-                                                        String.valueOf(temperature),
-                                                        Calendar.getInstance().getTimeInMillis());
         if (!RaspberrypiServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
             log.warn("An error occured whilst trying to publish temperature data of raspberrypi with ID [" +
                      deviceId + "] of owner [" + owner + "]");

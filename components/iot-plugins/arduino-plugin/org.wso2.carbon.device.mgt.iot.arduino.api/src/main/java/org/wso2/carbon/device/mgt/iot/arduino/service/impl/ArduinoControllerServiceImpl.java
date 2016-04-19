@@ -29,8 +29,6 @@ import org.wso2.carbon.device.mgt.iot.arduino.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.ArduinoServiceUtils;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
-import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -44,7 +42,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -96,23 +93,6 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     }
 
     @Override
-    @Path("device/{deviceId}/temperature")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response requestTemperature(@PathParam("deviceId") String deviceId,
-                                       @QueryParam("protocol") String protocol) {
-
-        try {
-            org.wso2.carbon.device.mgt.iot.sensormgt.SensorRecord sensorRecord =
-                    SensorDataManager.getInstance().getSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE);
-            return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecord).build();
-        } catch (DeviceControllerException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-    }
-
-    @Override
     @Path("device/sensor")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -120,9 +100,6 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
         String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
         String deviceId = dataMsg.deviceId;
         float pinData = dataMsg.value;
-        SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
-                                                        String.valueOf(pinData),
-                                                        Calendar.getInstance().getTimeInMillis());
         if (!ArduinoServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
             log.warn("An error occured whilst trying to publish pin data of Arduino with ID [" +
                      deviceId + "] of owner [" + owner + "]");
@@ -169,9 +146,6 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
         String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
         String deviceId = dataMsg.deviceId;
         float temperature = dataMsg.value;
-        SensorDataManager.getInstance().setSensorRecord(deviceId, ArduinoConstants.SENSOR_TEMPERATURE,
-                                                        String.valueOf(temperature),
-                                                        Calendar.getInstance().getTimeInMillis());
         if (!ArduinoServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
             log.warn("An error occured whilst trying to publish temperature data of Arduino with ID [" + deviceId +
                      "] of owner [" + owner + "]");

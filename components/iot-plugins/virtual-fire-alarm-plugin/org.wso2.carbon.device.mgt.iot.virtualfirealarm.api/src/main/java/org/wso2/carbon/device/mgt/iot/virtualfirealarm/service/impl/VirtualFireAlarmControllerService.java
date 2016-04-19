@@ -79,25 +79,6 @@ public interface VirtualFireAlarmControllerService {
                              @FormParam("state") String state);
 
     /**
-     * This is an API called/used from within the Server(Front-End) or by a device Owner. It sends a control command
-     * to the VirtualFirealarm device to 'tell what's its current temperature reading'. The method also takes in the
-     * protocol to be used to connect-to and send the command to the device.
-     *
-     * @param deviceId the ID of the VirtualFirealarm device on which the temperature reading is be read-from.
-     * @param protocol the protocol (HTTP, MQTT, XMPP) to be used to connect-to & send the message to the device.
-     * @return an instance of the 'SensorRecord' object that holds the last updated temperature of the VirtualFirealarm
-     * whose temperature reading was requested.
-     */
-    @GET
-    @Path("device/{deviceId}/temperature")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Feature(code = "temperature", name = "Temperature", type = "monitor",
-            description = "Request Temperature reading from Virtual Fire Alarm")
-    Response requestTemperature(@PathParam("deviceId") String deviceId,
-                                           @QueryParam("protocol") String protocol);
-
-    /**
      * This is an API called/used by the VirtualFirealarm device to publish its temperature to the IoT-Server. The
      * received data from the device is stored in a 'DeviceRecord' under the device's ID in the 'SensorDataManager'
      * of the Server.
