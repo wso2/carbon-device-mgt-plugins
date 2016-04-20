@@ -55,7 +55,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     @Path("device/{deviceId}/words")
     @POST
-    public Response sendKeyWords(@PathParam("deviceId") String deviceId, @FormParam("keywords") String keywords) {
+    public Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords) {
         try {
             androidSenseMQTTConnector.publishDeviceData(deviceId, "add", keywords);
             return Response.ok().build();
@@ -66,7 +66,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     @Path("device/{deviceId}/words/threshold")
     @POST
-    public Response sendThreshold(@PathParam("deviceId") String deviceId, @FormParam("threshold") String threshold) {
+    public Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold) {
         try {
             androidSenseMQTTConnector.publishDeviceData(deviceId, "threshold", threshold);
             return Response.ok().build();
@@ -77,7 +77,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
     @Path("device/{deviceId}/words")
     @DELETE
-    public Response removeKeyWords(@PathParam("deviceId") String deviceId, @FormParam("words") String words) {
+    public Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words) {
         try {
             androidSenseMQTTConnector.publishDeviceData(deviceId, "remove", words);
             return Response.ok().build();
