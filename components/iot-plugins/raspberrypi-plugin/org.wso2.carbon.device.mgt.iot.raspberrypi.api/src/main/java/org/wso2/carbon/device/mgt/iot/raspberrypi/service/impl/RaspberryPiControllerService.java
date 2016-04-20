@@ -51,14 +51,6 @@ public interface RaspberryPiControllerService {
             description = "Switch on/off Raspberry Pi agent's bulb. (On / Off)")
     Response switchBulb(@PathParam("deviceId") String deviceId, @FormParam("state") String state);
 
-    @Path("device/{deviceId}/readtemperature")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Feature(code = "readtemperature", name = "Temperature", type = "monitor",
-            description = "Request temperature reading from Raspberry Pi agent")
-    Response requestTemperature(@PathParam("deviceId") String deviceId);
-
     @Path("device/push_temperature")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -71,7 +63,7 @@ public interface RaspberryPiControllerService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    Response getArduinoTemperatureStats(@PathParam("deviceId") String deviceId, @QueryParam("username") String user,
+    Response getRaspberryPiTemperatureStats(@PathParam("deviceId") String deviceId, @QueryParam("username") String user,
                                         @QueryParam("from") long from, @QueryParam("to") long to);
 
 }

@@ -1,0 +1,38 @@
+{
+  "name": "org.wso2.iot.android.sense",
+  "version": "1.0.0",
+  "nickName": "android_sense_stream",
+  "description": "This hold the device type stream of android sense",
+  "metaData": [
+    {"name": "owner", "type": "STRING"},
+    {"name": "deviceId", "type": "STRING"},
+    {"name": "type", "type": "STRING"},
+    {"name": "timestamp", "type": "LONG"}
+  ],
+  "payloadData": [
+    {"name": "battery", "type": "INT"},
+    {"name": "gps_lat", "type": "DOUBLE"},
+    {"name": "gps_long", "type": "DOUBLE"},
+    {"name": "accelerometer_x", "type": "FLOAT"},
+    {"name": "accelerometer_y", "type": "FLOAT"},
+    {"name": "accelerometer_z", "type": "FLOAT"},
+    {"name": "magnetic_x", "type": "FLOAT"},
+    {"name": "magnetic_y", "type": "FLOAT"},
+    {"name": "magnetic_z", "type": "FLOAT"},
+    {"name": "gyroscope_x", "type": "FLOAT"},
+    {"name": "gyroscope_y", "type": "FLOAT"},
+    {"name": "gyroscope_z", "type": "FLOAT"},
+    {"name": "light", "type": "FLOAT"},
+    {"name": "pressure", "type": "FLOAT"},
+    {"name": "proximity", "type": "FLOAT"},
+    {"name": "gravity_x", "type": "FLOAT"},
+    {"name": "gravity_y", "type": "FLOAT"},
+    {"name": "gravity_z", "type": "FLOAT"},
+    {"name": "rotation_x", "type": "FLOAT"},
+    {"name": "rotation_y", "type": "FLOAT"},
+    {"name": "rotation_z", "type": "FLOAT"},
+    {"name": "word", "type": "STRING"},
+    {"name": "word_sessionId", "type": "STRING"},
+    {"name": "word_status", "type": "STRING"}
+  ]
+}

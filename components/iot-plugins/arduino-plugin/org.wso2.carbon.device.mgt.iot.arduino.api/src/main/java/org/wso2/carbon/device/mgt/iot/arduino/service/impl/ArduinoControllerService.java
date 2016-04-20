@@ -50,14 +50,6 @@ public interface ArduinoControllerService {
     Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
                         @FormParam("state") String state);
 
-    @Path("device/{deviceId}/temperature")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @Feature(code = "temperature", name = "Temperature", type = "monitor", description = "Request temperature reading " +
-                                                                                         "from Arduino agent")
-    Response requestTemperature(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol);
-
     @Path("device/sensor")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

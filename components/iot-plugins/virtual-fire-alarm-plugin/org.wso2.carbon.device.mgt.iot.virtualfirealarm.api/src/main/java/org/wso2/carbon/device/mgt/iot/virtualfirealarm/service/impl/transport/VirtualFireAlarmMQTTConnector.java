@@ -25,14 +25,12 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
 import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
-import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
@@ -138,7 +136,6 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 		};
 
 		Thread connectorThread = new Thread(connector);
-		connectorThread.setDaemon(true);
 		connectorThread.start();
 	}
 
@@ -208,9 +205,6 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 
 				} else if (actualMessage.contains("TEMPERATURE")) {
 					String temperatureValue = actualMessage.split(":")[1];
-					SensorDataManager.getInstance().setSensorRecord(deviceId, VirtualFireAlarmConstants.SENSOR_TEMP,
-																	temperatureValue,
-																	Calendar.getInstance().getTimeInMillis());
 				}
 			} catch (VirtualFireAlarmException e) {
 				String errorMsg =
@@ -299,7 +293,6 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 		};
 
 		Thread terminatorThread = new Thread(stopConnection);
-		terminatorThread.setDaemon(true);
 		terminatorThread.start();
 	}
 

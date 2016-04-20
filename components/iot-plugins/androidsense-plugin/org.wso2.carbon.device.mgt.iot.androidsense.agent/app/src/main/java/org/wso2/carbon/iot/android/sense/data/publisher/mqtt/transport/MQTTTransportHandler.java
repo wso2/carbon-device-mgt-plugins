@@ -81,8 +81,8 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
         this.clientWillTopic = DISCONNECTION_WILL_TOPIC_PREFIX + SenseConstants.DEVICE_TYPE;
         this.mqttBrokerEndPoint = "tcp://" + LocalRegistry.getServerHost(context) + ":" + LocalRegistry.getMqttPort(context);
         this.timeoutInterval = DEFAULT_TIMEOUT_INTERVAL;
-        setUsernameAndPassword(LocalRegistry.getAccessToken(context), "");
         this.initMQTTClient();
+        setUsernameAndPassword(LocalRegistry.getAccessToken(context), "");
     }
 
     /**
@@ -308,7 +308,6 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
                 connect();
             }
         };
-        reconnectThread.setDaemon(true);
         reconnectThread.start();
     }
 
@@ -333,7 +332,6 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
                 }
             }
         };
-        messageProcessorThread.setDaemon(true);
         messageProcessorThread.start();
     }
 

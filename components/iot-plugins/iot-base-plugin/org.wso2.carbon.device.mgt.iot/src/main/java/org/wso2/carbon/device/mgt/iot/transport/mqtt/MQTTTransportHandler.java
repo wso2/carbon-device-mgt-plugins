@@ -322,10 +322,11 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
 
         Thread reconnectThread = new Thread() {
             public void run() {
-                connect();
+                while(isConnected()) {
+                    connect();
+                }
             }
         };
-        reconnectThread.setDaemon(true);
         reconnectThread.start();
     }
 
@@ -352,7 +353,6 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
                 }
             }
         };
-        messageProcessorThread.setDaemon(true);
         messageProcessorThread.start();
     }
 

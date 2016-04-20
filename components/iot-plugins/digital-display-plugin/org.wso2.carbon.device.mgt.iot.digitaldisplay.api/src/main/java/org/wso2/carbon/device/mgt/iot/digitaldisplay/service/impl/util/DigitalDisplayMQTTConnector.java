@@ -96,7 +96,6 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
         };
 
         Thread connectorThread = new Thread(connector);
-        connectorThread.setDaemon(true);
         connectorThread.start();
     }
 
@@ -182,7 +181,6 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
         };
 
         Thread terminatorThread = new Thread(stopConnection);
-        terminatorThread.setDaemon(true);
         terminatorThread.start();
     }
 

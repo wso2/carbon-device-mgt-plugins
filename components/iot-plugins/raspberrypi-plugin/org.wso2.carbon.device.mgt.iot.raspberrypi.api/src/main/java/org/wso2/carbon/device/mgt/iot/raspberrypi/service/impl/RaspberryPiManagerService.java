@@ -32,6 +32,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+@Path("enrollment")
 @API(name = "raspberrypi_mgt", version = "1.0.0", context = "/raspberrypi_mgt", tags = {"raspberrypi"})
 @DeviceType(value = "raspberrypi")
 public interface RaspberryPiManagerService {
@@ -43,7 +44,7 @@ public interface RaspberryPiManagerService {
     @Path("devices/{device_id}")
     @PUT
     Response updateDevice(@PathParam("device_id") String deviceId,
-                                @QueryParam("name") String name);
+                          @QueryParam("name") String name);
 
     @Path("devices/{device_id}")
     @GET
@@ -57,16 +58,15 @@ public interface RaspberryPiManagerService {
     @Produces(MediaType.APPLICATION_JSON)
     Response getRaspberrypiDevices();
 
-
     @Path("devices/{sketch_type}/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    Response downloadSketch(@QueryParam("deviceName") String deviceName, @PathParam("sketch_type") String
-            sketchType);
+    Response downloadSketch(@QueryParam("deviceName") String deviceName,
+                            @PathParam("sketch_type") String sketchType);
 
     @Path("devices/{sketch_type}/generate_link")
     @GET
     Response generateSketchLink(@QueryParam("deviceName") String deviceName,
-                                       @PathParam("sketch_type") String sketchType);
+                                @PathParam("sketch_type") String sketchType);
 
 }
