@@ -107,7 +107,6 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
         };
 
         Thread connectorThread = new Thread(connector);
-        connectorThread.setDaemon(true);
         connectorThread.start();
     }
 

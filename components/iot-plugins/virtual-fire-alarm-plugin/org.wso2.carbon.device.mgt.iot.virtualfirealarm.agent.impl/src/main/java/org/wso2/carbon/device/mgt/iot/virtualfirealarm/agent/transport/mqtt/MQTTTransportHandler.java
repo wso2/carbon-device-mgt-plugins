@@ -294,7 +294,6 @@ public abstract class MQTTTransportHandler
                 connect();
             }
         };
-        reconnectThread.setDaemon(true);
         reconnectThread.start();
     }
 

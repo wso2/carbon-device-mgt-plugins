@@ -55,7 +55,6 @@ public class DroneRealTimeService {
             }
         };
         Thread connectorThread = new Thread(connector);
-        connectorThread.setDaemon(true);
         connectorThread.start();
     }
 

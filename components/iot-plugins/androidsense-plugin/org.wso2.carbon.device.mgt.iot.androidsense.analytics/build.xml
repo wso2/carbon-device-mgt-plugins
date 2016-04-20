@@ -23,17 +23,7 @@
     <property name="target-dir" value="target/carbonapps"/>
     <property name="src-dir" value="src/main/resources/carbonapps"/>
 
-    <property name="GPS_dir" value="GPS"/>
-    <property name="Light_dir" value="Light"/>
-    <property name="Battery_dir" value="Battery"/>
-    <property name="Magnetic_dir" value="Magnetic"/>
-    <property name="Accelerometer_dir" value="Accelerometer"/>
-    <property name="Gravity_dir" value="Gravity"/>
-    <property name="Gyroscope_dir" value="Gyroscope"/>
-    <property name="Proximity_dir" value="Proximity"/>
-    <property name="Pressure_dir" value="Pressure"/>
-    <property name="Rotation_dir" value="Rotation"/>
-    <property name="Wordcounter_dir" value="WordCount"/>
+    <property name="Android_Sense_dir" value="Android_Sense"/>
 
     <target name="clean">
         <delete dir="${target-dir}" />
@@ -41,38 +31,8 @@
 
     <target name="zip" depends="clean">
         <mkdir dir="${target-dir}"/>
-        <zip destfile="${target-dir}/${GPS_dir}.car">
-            <zipfileset dir="${src-dir}/${GPS_dir}"/>
-        </zip>
-        <zip destfile="${target-dir}/${Light_dir}.car">
-            <zipfileset dir="${src-dir}/${Light_dir}"/>
-        </zip>
-        <zip destfile="${target-dir}/${Battery_dir}.car">
-            <zipfileset dir="${src-dir}/${Battery_dir}"/>
-        </zip>
-        <zip destfile="${target-dir}/${Magnetic_dir}.car">
-            <zipfileset dir="${src-dir}/${Magnetic_dir}"/>
-        </zip>
-        <zip destfile="${target-dir}/${Accelerometer_dir}.car">
-            <zipfileset dir="${src-dir}/${Accelerometer_dir}"/>
-        </zip>
-        <zip destfile="${target-dir}/${Gravity_dir}.car">
-            <zipfileset dir="${src-dir}/${Gravity_dir}"/>
-        </zip>
-        <zip destfile="${target-dir}/${Gyroscope_dir}.car">
-            <zipfileset dir="${src-dir}/${Gyroscope_dir}"/>
-        </zip>
-        <zip destfile="${target-dir}/${Pressure_dir}.car">
-            <zipfileset dir="${src-dir}/${Pressure_dir}"/>
-        </zip>
-        <zip destfile="${target-dir}/${Rotation_dir}.car">
-            <zipfileset dir="${src-dir}/${Rotation_dir}"/>
-        </zip>
-        <zip destfile="${target-dir}/${Proximity_dir}.car">
-            <zipfileset dir="${src-dir}/${Proximity_dir}"/>
-        </zip>
-        <zip destfile="${target-dir}/${Wordcounter_dir}.car">
-            <zipfileset dir="${src-dir}/${Wordcounter_dir}"/>
+        <zip destfile="${target-dir}/${Android_Sense_dir}.car">
+            <zipfileset dir="${src-dir}/${Android_Sense_dir}"/>
         </zip>
     </target>
 </project>

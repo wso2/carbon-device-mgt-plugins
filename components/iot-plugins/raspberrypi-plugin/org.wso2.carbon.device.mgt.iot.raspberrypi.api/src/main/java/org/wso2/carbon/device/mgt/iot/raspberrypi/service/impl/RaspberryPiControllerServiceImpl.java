@@ -153,7 +153,7 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
     private boolean waitForServerStartup() {
         while (!IoTServerStartupListener.isServerReady()) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 return true;
             }
@@ -172,6 +172,12 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
                 if (waitForServerStartup()) {
                     return;
                 }
+                //The delay is added for the server to starts up.
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 RaspberryPiControllerServiceImpl.this.raspberryPiMQTTConnector = raspberryPiMQTTConnector;
                 if (MqttConfig.getInstance().isEnabled()) {
                     raspberryPiMQTTConnector.connect();
@@ -181,7 +187,6 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
             }
         };
         Thread connectorThread = new Thread(connector);
-        connectorThread.setDaemon(true);
         connectorThread.start();
     }
 
