@@ -44,13 +44,20 @@
                                 <br>
                             </h4>
 
-                            <form action="{{@app.context}}/api/operations/{{../device.type}}/{{operation}}?deviceId={{../device.deviceIdentifier}}"
-                                  method="post" style="padding-bottom: 20px;">
-                                {{#each params}}
-                                    <input type="text" name="{{this}}" placeholder="{{this}}" class="form-control">
+                            <form action="{{@unit.params.backendApiUri}}{{params.0.uri}}" method="{{method}}" style="padding-bottom: 20px;" id="form-{{operation}}">
+                                {{#each params.0.pathParams}}
+                                    <input type="text" id="{{this}}" placeholder="{{this}}" class="form-control" data-param-type="path" />
                                     <br />
                                 {{/each}}
-                                <button id="btnSend" type="submit" class="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;Send
+                                {{#each params.0.formParams}}
+                                    <input type="text" id="{{this}}" name="{{this}}" placeholder="{{this}}" class="form-control" data-param-type="form" />
+                                    <br />
+                                {{/each}}
+                                {{#each params.0.queryParams}}
+                                    <input type="text" id="{{this}}" placeholder="{{this}}" class="form-control" data-param-type="query" />
+                                    <br />
+                                {{/each}}
+                                <button id="btnSend" type="button" onclick="submitForm('form-{{operation}}')" class="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;Send
                                                        to Device&nbsp;&nbsp;&nbsp;&nbsp;</button>
                                 <label id="lblSending" class="wr-input-label hidden"><i
                                         class="fw fw-lifecycle fw-spin fw-2x"></i> Sending..</label>
@@ -69,6 +76,27 @@
             Operations Loading Failed!</h4>
     </div>
 {{/if}}
+
+<div id="operation-response-template" style="display: none">
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-5 col-md-6 col-centered">
+                <h3>
+                    <span class="fw-stack">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i id="status-icon" class="fw fw-error fw-stack-1x"></i>
+                    </span>
+                    <br>
+                </h3>
+                <h4>
+                    <span id="title"></span>
+                    <br>
+                </h4>
+                <span id="description"></span>
+            </div>
+        </div>
+    </div>
+</div>
 
 {{#zone "bottomJs"}}
     {{js "js/operation-bar.js"}}

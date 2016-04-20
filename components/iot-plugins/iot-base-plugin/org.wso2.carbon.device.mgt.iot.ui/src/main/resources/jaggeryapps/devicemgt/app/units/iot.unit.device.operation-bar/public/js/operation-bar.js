@@ -20,11 +20,75 @@
  * On operation click function.
  * @param selection: Selected operation
  */
-function operationSelect (selection) {
+function operationSelect(selection) {
     $(modalPopupContent).addClass("operation-data");
     $(modalPopupContent).html($(" .operation[data-operation-code=" + selection + "]").html());
     $(modalPopupContent).data("operation-code", selection);
     showPopup();
+}
+
+function submitForm(formId) {
+    var form = $("#" + formId);
+    var uri = form.attr("action");
+    var uriencodedQueryStr = "";
+    var uriencodedFormStr = "";
+    var payload = {};
+    form.find("input").each(function () {
+        var input = $(this);
+        if (input.data("param-type") == "path") {
+            uri = uri.replace("{" + input.attr("id") + "}", input.val());
+        } else if (input.data("param-type") == "query") {
+            var prefix = (uriencodedQueryStr == "") ? "?" : "&";
+            uriencodedQueryStr += prefix + input.attr("id") + "=" + input.val();
+        } else if (input.data("param-type") == "form") {
+            var prefix = (uriencodedFormStr == "") ? "" : "&";
+            uriencodedFormStr += prefix + input.attr("id") + "=" + input.val();
+            //payload[input.attr("id")] = input.val();
+        }
+    });
+    uri += uriencodedQueryStr;
+    var httpMethod = form.attr("method").toUpperCase();
+    var contentType = form.attr("enctype");
+    console.log(payload);
+    if (contentType == undefined || contentType.isEmpty()) {
+        contentType = "application/x-www-form-urlencoded";
+        payload = uriencodedFormStr;
+    }
+    //setting responses callbacks
+    var defaultStatusClasses = "fw fw-stack-1x";
+    var content = $("#operation-response-template").find(".content");
+    var title = content.find("#title");
+    var statusIcon = content.find("#status-icon");
+    var description = content.find("#description");
+    var successCallBack = function (response) {
+        title.html("Response Received!");
+        statusIcon.attr("class", defaultStatusClasses + " fw-success");
+        description.html(response);
+        $(modalPopupContent).html(content.html());
+    };
+    var errorCallBack = function (response) {
+        console.log(response);
+        title.html("An Error Occurred!");
+        statusIcon.attr("class", defaultStatusClasses + " fw-error");
+        var reason = (response.responseText == "null")?response.statusText:response.responseText;
+        description.html(reason);
+        $(modalPopupContent).html(content.html());
+    };
+    //executing http request
+    if (httpMethod == "GET") {
+        invokerUtil.get(uri, successCallBack, errorCallBack, contentType);
+    } else if (httpMethod == "POST") {
+        invokerUtil.post(uri, payload, successCallBack, errorCallBack, contentType);
+    } else if (httpMethod == "PUT") {
+        invokerUtil.put(uri, payload, successCallBack, errorCallBack, contentType);
+    } else if (httpMethod == "DELETE") {
+        invokerUtil.get(uri, successCallBack, errorCallBack, contentType);
+    } else {
+        title.html("An Error Occurred!");
+        statusIcon.attr("class", defaultStatusClasses + " fw-error");
+        description.html("This operation requires http method: " + httpMethod + " which is not supported yet!");
+        $(modalPopupContent).html(content.html());
+    }
 }
 
 $(document).on('submit', 'form', function (e) {
