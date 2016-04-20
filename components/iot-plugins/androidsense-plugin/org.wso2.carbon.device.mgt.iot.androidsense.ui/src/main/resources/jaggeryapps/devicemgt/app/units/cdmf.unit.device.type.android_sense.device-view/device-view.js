@@ -20,13 +20,14 @@ function onRequest(context) {
     var log = new Log("device-view.js");
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("id");
+    var devicemgtProps = require('/app/conf/devicemgt-props.js').config();
 
     if (deviceType && deviceId) {
         var deviceModule = require("/app/modules/device.js").deviceModule;
         var device = deviceModule.viewDevice(deviceType, deviceId);
 
         if (device && device.status != "error") {
-            return {"device": device};
+            return {"device": device, "backendApiUri" : devicemgtProps["httpsURL"] + "/android_sense/"};
         } else {
             response.sendError(404, "Device Id " + deviceId + "of type " + deviceType + " cannot be found!");
             exit();
