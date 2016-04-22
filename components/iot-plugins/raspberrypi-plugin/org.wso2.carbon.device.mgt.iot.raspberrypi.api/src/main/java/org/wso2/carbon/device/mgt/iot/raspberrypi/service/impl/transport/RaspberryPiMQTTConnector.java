@@ -25,7 +25,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
 import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
-import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
@@ -35,7 +34,6 @@ import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.RaspberrypiServiceUtils;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
-import org.wso2.carbon.device.mgt.iot.sensormgt.SensorDataManager;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
 import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
@@ -109,7 +107,6 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
         };
 
         Thread connectorThread = new Thread(connector);
-        connectorThread.setDaemon(true);
         connectorThread.start();
     }
 
@@ -161,8 +158,7 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
 
             } else if (receivedMessage.contains("TEMPERATURE")) {
                 String temperatureValue = receivedMessage.split(":")[1];
-                SensorDataManager.getInstance().setSensorRecord(deviceId, RaspberrypiConstants.SENSOR_TEMPERATURE,
-                        temperatureValue, Calendar.getInstance().getTimeInMillis());
+
             }
         }
     }

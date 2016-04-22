@@ -34,6 +34,7 @@
     <url>http://wso2.org</url>
 
     <modules>
+        <module>iot-analytics-feature</module>
         <module>androidsense-plugin-feature</module>
         <module>arduino-plugin-feature</module>
         <module>digital-display-plugin-feature</module>

@@ -272,10 +272,16 @@ public class AndroidFeatureManager implements FeatureManager {
         feature.setDescription("Reboot the device");
         supportedFeatures.add(feature);
         
-	feature = new Feature();
+	    feature = new Feature();
         feature.setCode("UPGRADE_FIRMWARE");
         feature.setName("Upgrade Firmware");
         feature.setDescription("Upgrade Firmware");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
+        feature.setCode("VPN");
+        feature.setName("Configure VPN");
+        feature.setDescription("Configure VPN settings");
         supportedFeatures.add(feature);
 
         return supportedFeatures;

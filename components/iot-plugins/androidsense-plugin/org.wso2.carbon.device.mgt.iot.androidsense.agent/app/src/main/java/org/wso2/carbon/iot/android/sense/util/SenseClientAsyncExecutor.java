@@ -95,6 +95,7 @@ public class SenseClientAsyncExecutor extends AsyncTask<String, Void, Map<String
         String endpoint = parameters[3];
         Map<String, String> responseMap = new HashMap<>();
         responseMap.put(STATUS, "200");
+        AccessTokenInfo accessTokenInfo = null;
         try {
             //DynamicClientRegistraiton.
             DynamicClientRegistrationService dynamicClientRegistrationService = Feign.builder()
@@ -116,7 +117,7 @@ public class SenseClientAsyncExecutor extends AsyncTask<String, Void, Map<String
                     new BasicAuthRequestInterceptor(oAuthApplicationInfo.getClient_id(), oAuthApplicationInfo.getClient_secret()))
                     .contract(new JAXRSContract()).encoder(new JacksonEncoder()).decoder(new JacksonDecoder())
                     .target(TokenIssuerService.class, endpoint + SenseConstants.TOKEN_ISSUER_CONTEXT);
-            AccessTokenInfo accessTokenInfo = tokenIssuerService.getToken("password", username, password);
+            accessTokenInfo = tokenIssuerService.getToken("password", username, password);
 
             //ApiApplicationRegistration
             ApiApplicationRegistrationService apiApplicationRegistrationService = Feign.builder().client(disableHostnameVerification)
@@ -145,6 +146,10 @@ public class SenseClientAsyncExecutor extends AsyncTask<String, Void, Map<String
             return responseMap;
         } catch (FeignException e) {
             responseMap.put(STATUS, "" + e.status());
+            if (e.status() == 409) {
+                LocalRegistry.addAccessToken(context, accessTokenInfo.getAccess_token());
+                LocalRegistry.addRefreshToken(context, accessTokenInfo.getRefresh_token());
+            }
             return responseMap;
         }
     }

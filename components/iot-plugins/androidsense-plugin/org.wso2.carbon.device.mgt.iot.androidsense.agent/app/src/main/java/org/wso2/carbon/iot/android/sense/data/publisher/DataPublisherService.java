@@ -23,6 +23,7 @@ import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.AndroidSenseMQTTHandler;
 import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.transport.MQTTTransportHandler;
 import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.transport.TransportHandlerException;
@@ -149,7 +150,7 @@ public class DataPublisherService extends Service {
                         for (Event event : events) {
                             event.setOwner(user);
                             event.setDeviceId(deviceId);
-                            jsonArray.put(event.getEvent());
+                            jsonArray.put(new JSONObject().put("event", event.getEvent()));
                         }
                         MQTTTransportHandler mqttTransportHandler = AndroidSenseMQTTHandler.getInstance(context);
                         if (!mqttTransportHandler.isConnected()) {

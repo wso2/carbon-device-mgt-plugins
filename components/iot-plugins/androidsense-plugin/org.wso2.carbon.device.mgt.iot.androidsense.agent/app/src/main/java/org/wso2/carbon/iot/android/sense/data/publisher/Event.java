@@ -11,7 +11,7 @@ public class Event {
     private String owner;
     private String deviceId;
     private String type;
-    private float battery;
+    private int battery;
     private double gps[]; //lat,long
     private float accelerometer[]; //x,y,z
     private float magnetic[]; //x,y,z
@@ -26,11 +26,11 @@ public class Event {
     private String wordStatus;
     private long timestamp;
 
-    private float getBattery() {
+    private int getBattery() {
         return battery;
     }
 
-    public void setBattery(float battery) {
+    public void setBattery(int battery) {
         this.type = "battery";
         this.battery = battery;
     }

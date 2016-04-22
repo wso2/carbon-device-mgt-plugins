@@ -20,12 +20,6 @@ function onRequest(context) {
     var log = new Log("operation.js");
     var operationModule = require("/app/modules/operation.js").operationModule;
     var device = context.unit.params.device;
-    var controlOperations;
-    try {
-        controlOperations = operationModule.getControlOperations(device.type);
-    }catch(e){
-        log.error("Control operation loading failed.");
-        controlOperations = null;
-    }
+    var controlOperations = operationModule.getControlOperations(device.type);
     return {"control_operations": controlOperations, "device": device};
 }
