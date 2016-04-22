@@ -106,8 +106,7 @@ public interface VirtualFireAlarmControllerService {
     @Consumes("application/json")
     @Produces("application/json")
     Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId,
-                                                 @PathParam("sensorName") String sensor,
-                                                 @QueryParam("username") String user, @QueryParam("from") long from,
+                                                 @PathParam("sensorName") String sensor, @QueryParam("from") long from,
                                                  @QueryParam("to") long to);
 
 }

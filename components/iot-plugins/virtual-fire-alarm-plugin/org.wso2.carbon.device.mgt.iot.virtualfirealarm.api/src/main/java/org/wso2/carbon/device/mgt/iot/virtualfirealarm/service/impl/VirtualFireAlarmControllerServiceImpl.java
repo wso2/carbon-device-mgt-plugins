@@ -179,12 +179,11 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
     @Consumes("application/json")
     @Produces("application/json")
     public Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId,
-                                             @PathParam("sensorName") String sensor,
-                                             @QueryParam("username") String user, @QueryParam("from") long from,
+                                             @PathParam("sensorName") String sensor, @QueryParam("from") long from,
                                              @QueryParam("to") long to) {
             String fromDate = String.valueOf(from);
             String toDate = String.valueOf(to);
-            String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
+            String query = "deviceId:" + deviceId + " AND deviceType:" +
                            VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
             String sensorTableName = getSensorEventTableName(sensor);
             try {
@@ -194,7 +193,7 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                 }
                 if (sensorTableName != null) {
                     List<SortByField> sortByFields = new ArrayList<>();
-                    SortByField sortByField = new SortByField("time", SORT.ASC, false);
+                    SortByField sortByField = new SortByField("time", SORT.DESC, true);
                     sortByFields.add(sortByField);
                     List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
                     return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
