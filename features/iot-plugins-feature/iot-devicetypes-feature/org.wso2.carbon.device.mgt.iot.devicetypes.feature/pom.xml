@@ -45,12 +45,6 @@
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.arduino.feature:${carbon.devicemgt.plugins.version}
                                 </includedFeatureDef>
                                 <includedFeatureDef>
-                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.digitaldisplay.feature:${carbon.devicemgt.plugins.version}
-                                </includedFeatureDef>
-                                <includedFeatureDef>
-                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.droneanalyzer.feature:${carbon.devicemgt.plugins.version}
-                                </includedFeatureDef>
-                                <includedFeatureDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.raspberrypi.feature:${carbon.devicemgt.plugins.version}
                                 </includedFeatureDef>
                                 <includedFeatureDef>
