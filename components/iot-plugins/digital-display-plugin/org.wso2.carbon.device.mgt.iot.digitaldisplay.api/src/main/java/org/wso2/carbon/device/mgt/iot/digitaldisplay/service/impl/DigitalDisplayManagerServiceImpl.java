@@ -164,8 +164,7 @@ public class DigitalDisplayManagerServiceImpl implements DigitalDisplayManagerSe
             device.setType(DigitalDisplayConstants.DEVICE_TYPE);
             enrolmentInfo.setOwner(APIUtil.getAuthenticatedUser());
             device.setEnrolmentInfo(enrolmentInfo);
-            boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
-            return added;
+            return APIUtil.getDeviceManagementService().enrollDevice(device);
         } catch (DeviceManagementException e) {
             return false;
         }

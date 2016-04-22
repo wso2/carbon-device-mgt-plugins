@@ -22,7 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.service.impl.exception.DigitalDisplayException;
 import org.wso2.carbon.device.mgt.iot.digitaldisplay.service.impl.util.DigitalDisplayMQTTConnector;

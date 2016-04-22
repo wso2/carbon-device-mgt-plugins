@@ -34,7 +34,7 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
     private static final String subscribeTopic =
             MQTT_TOPIC_APPENDER + "/" + DigitalDisplayConstants.DEVICE_TYPE + "/+/digital_display_publisher";
     private static final String KEY_TYPE = "PRODUCTION";
-    private static final String EMPTY_STRING = "";
+    private static final String EMPTY_STRING = "";//change name to default password
 
     private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 
@@ -101,6 +101,7 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
 
     @Override
     public void processIncomingMessage(MqttMessage message, String... messageParams) {
+        //Add thread pull executor
         String topic = messageParams[0];
         String[] topicParams = topic.split("/");
         String owner = topicParams[2];
@@ -127,9 +128,7 @@ public class DigitalDisplayMQTTConnector extends MQTTTransportHandler {
     }
 
     private void createScreenShot(String sessionId, String picId, int pos, int length, String data) {
-
         ScreenShotModel screenShotModel = screenshots.get(picId);
-
         if (screenShotModel == null) {
             screenShotModel = new ScreenShotModel();
             screenShotModel.setScreenShotData(new String[length + 1]);
