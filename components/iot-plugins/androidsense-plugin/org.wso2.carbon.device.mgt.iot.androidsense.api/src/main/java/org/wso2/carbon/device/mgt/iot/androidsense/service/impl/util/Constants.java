@@ -19,15 +19,14 @@
 package org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util;
 
 import org.wso2.carbon.user.core.Permission;
-import org.wso2.carbon.user.core.authorization.TreeNode;
 
 /**
- * This hold the constants related to android sense.
+ * This hold the constants related to the device type.
  */
 public class Constants {
 
-	private static final String DEFAULT_PERMISSION_RESOURCE = "/_system/governance/permission/admin/device-mgt/android_sense/user";
+	public static final String DEFAULT_PERMISSION_RESOURCE = "/permission/admin/device-mgt/android_sense/user";
 	public static final String DEFAULT_ROLE_NAME = "android_sense_user";
 	public static final Permission DEFAULT_PERMISSION[] = new Permission[]{new Permission(Constants.DEFAULT_PERMISSION_RESOURCE,
-																				   TreeNode.Permission.UI_EXECUTE.toString())};
+		"ui.execute")};
 }

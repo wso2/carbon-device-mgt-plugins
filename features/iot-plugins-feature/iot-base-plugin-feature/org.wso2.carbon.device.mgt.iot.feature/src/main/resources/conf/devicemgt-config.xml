@@ -36,10 +36,10 @@
             <Enabled>false</Enabled>
             <ControlClass>org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient</ControlClass>
             <Protocol>XMPP</Protocol>
-            <ServerURL>http://204.232.188.215</ServerURL>
+            <ServerURL>http://localhost</ServerURL>
             <Port>9090</Port>
             <Username>admin</Username>
-            <Password>wso2iot123</Password>
+            <Password>admin</Password>
         </ControlQueue>
     </ControlQueues>
 </DeviceManagementConfigurations>

@@ -69,6 +69,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
             public void run() {
                 while (!isConnected()) {
                     try {
+
                         connectToQueue();
                         agentManager.updateAgentStatus("Connected to MQTT Queue");
                     } catch (TransportHandlerException e) {
@@ -142,8 +143,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                         String replyTemperature = "Current temperature was read as: '" + currentTemperature + "C'";
                         log.info(AgentConstants.LOG_APPENDER + replyTemperature);
 
-                        String tempPublishTopic = String.format(AgentConstants.MQTT_PUBLISH_TOPIC,
-                                                                serverName, deviceOwner, deviceID);
+                        String tempPublishTopic = String.format(AgentConstants.MQTT_PUBLISH_TOPIC, deviceID);
 
                         replyMessage = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
                         securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
@@ -157,7 +157,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                         log.info(AgentConstants.LOG_APPENDER + replyHumidity);
 
                         String humidPublishTopic = String.format(
-                                AgentConstants.MQTT_PUBLISH_TOPIC, serverName, deviceOwner, deviceID);
+                                AgentConstants.MQTT_PUBLISH_TOPIC, deviceID);
 
                         replyMessage = AgentConstants.HUMIDITY_CONTROL + ":" + currentHumidity;
                         securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
@@ -202,8 +202,6 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                     pushMessage.setRetained(false);
 
                     String topic = String.format(AgentConstants.MQTT_PUBLISH_TOPIC,
-                                                 agentManager.getAgentConfigs().getServerName(),
-                                                 agentManager.getAgentConfigs().getDeviceOwner(),
                                                  agentManager.getAgentConfigs().getDeviceId());
 
                     publishToQueue(topic, pushMessage);

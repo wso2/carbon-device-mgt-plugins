@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -253,8 +254,6 @@ public class VirtualFireAlarmServiceUtils {
                                                     payloadData);
             } catch (DataPublisherConfigurationException e) {
                 return false;
-            } finally {
-                PrivilegedCarbonContext.endTenantFlow();
             }
             return true;
         }
@@ -264,43 +263,39 @@ public class VirtualFireAlarmServiceUtils {
     /**
      *
      * @param message
-     * @param encryptionKey
      * @param signatureKey
      * @return
      * @throws VirtualFireAlarmException
      */
-    public static String prepareSecurePayLoad(String message, Key encryptionKey, PrivateKey signatureKey)
-            throws VirtualFireAlarmException {
-        String encryptedMsg = SecurityManager.encryptMessage(message, encryptionKey);
-        String signedPayload = SecurityManager.signMessage(encryptedMsg, signatureKey);
-
+    public static String prepareSecurePayLoad(String message, PrivateKey signatureKey) throws VirtualFireAlarmException {
+        message = Base64.encodeBase64String(message.getBytes());
+        String signedPayload = SecurityManager.signMessage(message, signatureKey);
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(JSON_MESSAGE_KEY, encryptedMsg);
+        jsonPayload.put(JSON_MESSAGE_KEY, message);
         jsonPayload.put(JSON_SIGNATURE_KEY, signedPayload);
-
         return jsonPayload.toString();
     }
 
     /**
      *
      * @param message
-     * @param decryptionKey
      * @param verifySignatureKey
      * @return
      * @throws VirtualFireAlarmException
      */
-    public static String extractMessageFromPayload(String message, Key decryptionKey, PublicKey verifySignatureKey)
+    public static String extractMessageFromPayload(String message, PublicKey verifySignatureKey)
             throws VirtualFireAlarmException {
         String actualMessage;
 
         JSONObject jsonPayload = new JSONObject(message);
-        Object encryptedMessage = jsonPayload.get(JSON_MESSAGE_KEY);
+        Object encodedMessage = jsonPayload.get(JSON_MESSAGE_KEY);
         Object signedPayload = jsonPayload.get(JSON_SIGNATURE_KEY);
 
-        if (encryptedMessage != null && signedPayload != null) {
+        if (encodedMessage != null && signedPayload != null) {
             if (SecurityManager.verifySignature(
-                    encryptedMessage.toString(), signedPayload.toString(), verifySignatureKey)) {
-                actualMessage = SecurityManager.decryptMessage(encryptedMessage.toString(), decryptionKey);
+                    encodedMessage.toString(), signedPayload.toString(), verifySignatureKey)) {
+                actualMessage = new String(Base64.decodeBase64(encodedMessage.toString()));
+                        //SecurityManager.decryptMessage(encryptedMessage.toString(), decryptionKey);
             } else {
                 String errorMsg = "The message was not signed by a valid client. Could not verify signature on payload";
                 throw new VirtualFireAlarmException(errorMsg);
@@ -316,17 +311,13 @@ public class VirtualFireAlarmServiceUtils {
 
     /**
      *
-     * @param deviceId
+     * @param alias
      * @return
      * @throws VirtualFireAlarmException
      */
-    public static PublicKey getDevicePublicKey(String deviceId) throws VirtualFireAlarmException {
+    public static PublicKey getDevicePublicKey(String alias) throws VirtualFireAlarmException {
         PublicKey clientPublicKey;
-        String alias = "";
-
         try {
-            alias += deviceId.hashCode();
-
             CertificateManagementService certificateManagementService =
                     VirtualFireAlarmServiceUtils.getCertificateManagementService();
             X509Certificate clientCertificate = (X509Certificate) certificateManagementService.getCertificateByAlias(
@@ -348,7 +339,7 @@ public class VirtualFireAlarmServiceUtils {
                 }
                 throw new VirtualFireAlarmException(errorMsg, e);
             } else {
-                errorMsg = "An error occurred whilst trying to retrieve certificate for deviceId [" + deviceId +
+                errorMsg = "An error occurred whilst trying to retrieve certificate for alias [" + alias +
                         "] with alias: [" + alias + "]";
                 if(log.isDebugEnabled()){
                     log.debug(errorMsg);

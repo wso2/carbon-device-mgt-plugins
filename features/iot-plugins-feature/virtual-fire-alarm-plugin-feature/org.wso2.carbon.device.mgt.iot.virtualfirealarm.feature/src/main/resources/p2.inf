@@ -19,6 +19,8 @@ instructions.unconfigure = \
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../conf/device-types/virtual_firealarm.json);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/virtual_firealarm.war);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/virtual_firealarm);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/virtual_firealarm_scep.war);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/virtual_firealarm_scep);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../dbscripts/cdm/plugins/virtual_firealarm);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../resources/sketches/virtual_firealarm);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../resources/sketches/virtual_firealarm_advanced);\

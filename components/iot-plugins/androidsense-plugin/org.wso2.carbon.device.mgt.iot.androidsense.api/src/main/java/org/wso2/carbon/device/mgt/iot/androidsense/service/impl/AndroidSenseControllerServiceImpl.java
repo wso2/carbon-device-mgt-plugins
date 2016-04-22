@@ -24,6 +24,8 @@ import org.wso2.carbon.analytics.dataservice.commons.SORT;
 import org.wso2.carbon.analytics.dataservice.commons.SortByField;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.transport.AndroidSenseMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.SensorRecord;
@@ -57,9 +59,17 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
     @POST
     public Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords) {
         try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
+                AndroidSenseConstants.DEVICE_TYPE))) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
             androidSenseMQTTConnector.publishDeviceData(deviceId, "add", keywords);
             return Response.ok().build();
         } catch (TransportHandlerException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
@@ -68,9 +78,16 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
     @POST
     public Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold) {
         try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
+                    AndroidSenseConstants.DEVICE_TYPE))) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
             androidSenseMQTTConnector.publishDeviceData(deviceId, "threshold", threshold);
             return Response.ok().build();
         } catch (TransportHandlerException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        } catch (DeviceAccessAuthorizationException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
@@ -79,9 +96,17 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
     @DELETE
     public Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words) {
         try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
+                AndroidSenseConstants.DEVICE_TYPE))) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
             androidSenseMQTTConnector.publishDeviceData(deviceId, "remove", words);
             return Response.ok().build();
         } catch (TransportHandlerException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
@@ -96,13 +121,18 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
         String toDate = String.valueOf(to);
         String user = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
         String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
-                       AndroidSenseConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+                AndroidSenseConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
         if (sensor.equals(AndroidSenseConstants.SENSOR_WORDCOUNT)) {
             query = "owner:" + user + " AND deviceId:" + deviceId;
         }
         String sensorTableName = getSensorEventTableName(sensor);
-        List<SensorRecord> sensorDatas;
+
         try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
+                    AndroidSenseConstants.DEVICE_TYPE))) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
+            List<SensorRecord> sensorDatas;
             if (sensor.equals(AndroidSenseConstants.SENSOR_WORDCOUNT)) {
                 List<SortByField> sortByFields = new ArrayList<>();
                 SortByField sortByField = new SortByField("time", SORT.ASC, false);
@@ -116,6 +146,9 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
             String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
             log.error(errorMsg);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
 

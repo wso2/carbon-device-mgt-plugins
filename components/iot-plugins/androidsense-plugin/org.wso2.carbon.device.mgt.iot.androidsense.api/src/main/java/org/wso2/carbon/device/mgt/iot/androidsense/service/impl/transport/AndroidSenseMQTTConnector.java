@@ -45,7 +45,7 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
     private static String subscribeTopic = AndroidSenseConstants.MQTT_SUBSCRIBE_WORDS_TOPIC;
     private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
     private static final String KEY_TYPE = "PRODUCTION";
-    private static final String EMPTY_STRING = "";
+    private static final String DEFAULT_PASSWORD = "";
 
     private AndroidSenseMQTTConnector() {
         super(iotServerSubscriber, AndroidSenseConstants.DEVICE_TYPE,
@@ -75,9 +75,8 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
                             apiApplicationKey.getConsumerSecret(), applicationUsername, scopes);
                         //create token
                         String accessToken = accessTokenInfo.getAccessToken();
-                        setUsernameAndPassword(accessToken, EMPTY_STRING);
+                        setUsernameAndPassword(accessToken, DEFAULT_PASSWORD);
                         connectToQueue();
-                        subscribeToQueue();
                     } catch (TransportHandlerException e) {
                         log.warn("Connection/Subscription to MQTT Broker at: " + mqttBrokerEndPoint + " failed");
                         try {

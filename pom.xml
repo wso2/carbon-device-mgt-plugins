@@ -423,6 +423,12 @@
                 <version>${carbon.devicemgt.plugins.version}</version>
                 <type>war</type>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.scep.api</artifactId>
+                <version>${carbon.devicemgt.plugins.version}</version>
+                <type>war</type>
+            </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>

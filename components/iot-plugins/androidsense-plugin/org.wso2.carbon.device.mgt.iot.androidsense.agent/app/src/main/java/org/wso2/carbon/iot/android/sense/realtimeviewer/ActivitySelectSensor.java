@@ -176,7 +176,7 @@ public class ActivitySelectSensor extends AppCompatActivity
                 Intent activity = new Intent(getApplicationContext(), RegisterActivity.class);
                 startActivity(activity);
             }
-
+            LocalRegistry.setEnrolled(getApplicationContext(), false);
             LocalRegistry.removeUsername(getApplicationContext());
             LocalRegistry.removeDeviceId(getApplicationContext());
             LocalRegistry.removeServerURL(getApplicationContext());
