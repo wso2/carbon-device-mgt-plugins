@@ -190,10 +190,12 @@ public class APIUtil {
 		UserStoreManager userStoreManager = null;
 		try {
 			userStoreManager = getUserStoreManager();
+			String[] userList = new String[]{user};
 			if (userStoreManager != null) {
-				String[] userList = new String[]{user};
 				if (!userStoreManager.isExistingRole(Constants.DEFAULT_ROLE_NAME)) {
 					userStoreManager.addRole(Constants.DEFAULT_ROLE_NAME, userList, Constants.DEFAULT_PERMISSION);
+				} else {
+					userStoreManager.updateUserListOfRole(Constants.DEFAULT_ROLE_NAME, null, userList);
 				}
 			}
 		} catch (UserStoreException e) {

@@ -65,7 +65,7 @@
     </Permission>
     <Permission>
         <name>Add device</name>
-        <path>/login</path>
+        <path>/device-mgt/user</path>
         <url>/enrollment/devices/*</url>
         <method>POST</method>
         <scope>android_sense_user</scope>
