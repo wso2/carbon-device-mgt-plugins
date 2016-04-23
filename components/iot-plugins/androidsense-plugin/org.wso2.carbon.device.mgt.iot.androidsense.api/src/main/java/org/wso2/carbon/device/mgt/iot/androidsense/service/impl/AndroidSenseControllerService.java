@@ -46,9 +46,8 @@ public interface AndroidSenseControllerService {
      */
     @Path("device/{deviceId}/words")
     @POST
-    @Feature(code = "keywords", name = "Add Keywords", description = "Send keywords to the device",
-            type = "operation")
-    Response sendKeyWords(@PathParam("deviceId") String deviceId, @FormParam("keywords") String keywords);
+    @Feature(code = "keywords", name = "Add Keywords", description = "Send keywords to the device", type = "operation")
+    Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords);
 
     /**
      * End point to send the key words to the device
@@ -60,7 +59,7 @@ public interface AndroidSenseControllerService {
     @POST
     @Feature(code = "threshold", name = "Add a Threshold", description = "Set a threshold for word in the device",
             type = "operation")
-    Response sendThreshold(@PathParam("deviceId") String deviceId, @FormParam("threshold") String threshold);
+    Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold);
 
     @Path("device/{deviceId}/words")
     @DELETE
@@ -71,7 +70,6 @@ public interface AndroidSenseControllerService {
     /**
      * Retrieve Sensor data for the device type
      */
-
     @Path("stats/{deviceId}/sensors/{sensorName}")
     @GET
     @Consumes("application/json")

@@ -34,39 +34,32 @@ import javax.ws.rs.core.Response;
 
 @Path("enrollment")
 @API(name = "virtual_firealarm_mgt", version = "1.0.0", context = "/virtual_firealarm_mgt", tags = "virtual_firealarm")
-@DeviceType(value = "virtual_firealarm")
 public interface VirtualFireAlarmManagerService {
 
-    @Path("devices/{device_id}")
+    @Path("/devices/{device_id}")
     @DELETE
     Response removeDevice(@PathParam("device_id") String deviceId);
 
 
-    @Path("devices/{device_id}")
+    @Path("/devices/{device_id}")
     @PUT
     Response updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name);
 
-    @Path("devices/{device_id}")
+    @Path("/devices/{device_id}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response getDevice(@PathParam("device_id") String deviceId);
 
-    @Path("devices")
+    @Path("/devices")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     Response getFirealarmDevices();
 
-    @Path("devices/download")
+    @Path("/devices/download")
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces("application/zip")
     Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketchType") String sketchType);
-
-
-    @Path("devices/generate_link")
-    @GET
-    Response generateSketchLink(@QueryParam("deviceName") String deviceName,
-                                @QueryParam("sketchType") String sketchType);
 
 }

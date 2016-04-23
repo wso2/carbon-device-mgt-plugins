@@ -56,7 +56,7 @@
 			<EnableIndexing>false</EnableIndexing>
 			<IsPrimaryKey>false</IsPrimaryKey>
 			<EnableScoreParam>false</EnableScoreParam>
-			<Type>INT</Type>
+			<Type>INTEGER</Type>
 		</ColumnDefinition>
     </TableSchema>
 </EventStoreConfiguration>

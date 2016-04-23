@@ -27,19 +27,19 @@
                 android:id="@+id/username"
                 android:inputType="text"
                 android:maxLines="1" android:singleLine="true"
-                android:text="admin"/>
+                />
 
             <EditText android:id="@+id/password" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/prompt_password"
                 android:inputType="textPassword"
                 android:maxLines="1" android:singleLine="true"
-                      android:text="admin"/>
+                />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/hostname"
                 android:id="@+id/hostname"
-                android:text="https://10.10.10.149:9443"
+                android:text="https://localhost:9443"
                 android:inputType="text"
                 android:maxLines="1" android:singleLine="true"/>
 

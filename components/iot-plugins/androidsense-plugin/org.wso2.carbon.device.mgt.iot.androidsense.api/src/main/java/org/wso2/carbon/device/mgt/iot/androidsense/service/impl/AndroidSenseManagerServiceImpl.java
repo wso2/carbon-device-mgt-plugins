@@ -24,9 +24,9 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
+import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
-import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -38,7 +38,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.util.Date;
 
 @Path("enrollment")
@@ -56,7 +55,6 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
             if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
                 return Response.status(Response.Status.CONFLICT.getStatusCode()).build();
             }
-
             Device device = new Device();
             device.setDeviceIdentifier(deviceId);
             EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
@@ -76,6 +74,7 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
                 return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).entity(false).build();
             }
         } catch (DeviceManagementException e) {
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(false).build();
         }
     }
@@ -87,6 +86,9 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
         try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier)) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
             boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(deviceIdentifier);
             if (removed) {
                 return Response.ok().build();
@@ -94,6 +96,10 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
                 return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
             }
         } catch (DeviceManagementException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
@@ -105,6 +111,9 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
         try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier)) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
             Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
             device.setDeviceIdentifier(deviceId);
             device.getEnrolmentInfo().setDateOfLastUpdate(new Date().getTime());
@@ -117,6 +126,10 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
                 return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
             }
         } catch (DeviceManagementException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
@@ -130,26 +143,17 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
         try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier)) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
             Device device =  APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
             return Response.ok().entity(device).build();
         } catch (DeviceManagementException e) {
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-    }
-
-    @Path("/devices/download")
-    @GET
-    @Produces("application/octet-stream")
-    public Response downloadSketch() {
-        try {
-            String sep = File.separator;
-            String sketchFolder = "repository" + sep + "resources" + sep + "sketches" + sep + "android_sense" + sep;
-            String archivesPath = CarbonUtils.getCarbonHome() + sep + sketchFolder;
-            Response.ResponseBuilder rb = Response.ok(new File(archivesPath + sep + "androidsense.apk"));
-            rb.header("Content-Disposition", "attachment; filename=\"" + "androidsense.apk" + "\"");
-            return rb.build();
-        } catch (IllegalArgumentException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
 

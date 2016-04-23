@@ -29,6 +29,7 @@ public class AgentConfiguration {
 	private String deviceId;
 	private String deviceName;
 	private String controllerContext;
+	private String scepContext;
 	private String HTTPS_ServerEndpoint;
 	private String HTTP_ServerEndpoint;
 	private String apimGatewayEndpoint;
@@ -149,6 +150,14 @@ public class AgentConfiguration {
 
 	public void setDataPushInterval(int dataPushInterval) {
 		this.dataPushInterval = dataPushInterval;
+	}
+
+	public String getScepContext() {
+		return scepContext;
+	}
+
+	public void setScepContext(String scepContext) {
+		this.scepContext = scepContext;
 	}
 }
 

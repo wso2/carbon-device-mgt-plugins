@@ -27,6 +27,7 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandlerException;
 
@@ -51,7 +52,7 @@ import java.nio.charset.StandardCharsets;
 public abstract class MQTTTransportHandler
         implements MqttCallback, TransportHandler<MqttMessage> {
     private static final Log log = LogFactory.getLog(MQTTTransportHandler.class);
-
+    private static final String DEFAULT_PASSWORD = "";
     public static final int DEFAULT_MQTT_QUALITY_OF_SERVICE = 0;
 
     private MqttClient client;
@@ -81,6 +82,8 @@ public abstract class MQTTTransportHandler
         this.mqttBrokerEndPoint = mqttBrokerEndPoint;
         this.timeoutInterval = DEFAULT_TIMEOUT_INTERVAL;
         this.initSubscriber();
+        options.setUserName(AgentManager.getInstance().getAgentConfigs().getAuthToken());
+        options.setPassword(DEFAULT_PASSWORD.toCharArray());
     }
 
     /**
@@ -105,6 +108,8 @@ public abstract class MQTTTransportHandler
         this.mqttBrokerEndPoint = mqttBrokerEndPoint;
         this.timeoutInterval = intervalInMillis;
         this.initSubscriber();
+        options.setUserName(AgentManager.getInstance().getAgentConfigs().getAuthToken());
+        options.setPassword(DEFAULT_PASSWORD.toCharArray());
     }
 
     public void setTimeoutInterval(int timeoutInterval) {

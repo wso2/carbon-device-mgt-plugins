@@ -24,9 +24,8 @@ function onRequest(context) {
     if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
         var deviceModule = require("/app/modules/device.js").deviceModule;
         var device = deviceModule.viewDevice(deviceType, deviceId);
-
         if (device && device.status != "error") {
-            return {"device": device};
+            return {"device": device, "backendApiUri" : devicemgtProps["httpsURL"] + "/virtual_firealarm/"};
         } else {
             response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
             exit();

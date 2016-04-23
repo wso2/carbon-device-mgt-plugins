@@ -165,5 +165,4 @@ public class LocationDataReader extends DataReader implements LocationListener {
         }
     }
 
-
 }

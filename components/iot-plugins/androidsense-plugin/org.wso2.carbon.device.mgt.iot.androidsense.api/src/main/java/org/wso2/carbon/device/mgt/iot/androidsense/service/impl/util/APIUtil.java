@@ -13,8 +13,14 @@ import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationService;
+import org.wso2.carbon.device.mgt.common.permission.mgt.PermissionManagementException;
+import org.wso2.carbon.device.mgt.core.permission.mgt.PermissionUtils;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
+import org.wso2.carbon.registry.api.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.api.UserStoreManager;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -30,7 +36,6 @@ import java.util.Map;
 public class APIUtil {
 
 	private static Log log = LogFactory.getLog(APIUtil.class);
-	private static Object lock = new Object();
 
 	public static String getAuthenticatedUser() {
 		PrivilegedCarbonContext threadLocalCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
@@ -66,7 +71,8 @@ public class APIUtil {
 		return analyticsDataAPI;
 	}
 
-	public static List<SensorRecord> getAllEventsForDevice(String tableName, String query, List<SortByField> sortByFields) throws AnalyticsException {
+	public static List<SensorRecord> getAllEventsForDevice(String tableName, String query,
+														   List<SortByField> sortByFields) throws AnalyticsException {
 		int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
 		AnalyticsDataAPI analyticsDataAPI = getAnalyticsDataAPI();
 		int eventCount = analyticsDataAPI.searchCount(tenantId, tableName, query);
@@ -158,37 +164,54 @@ public class APIUtil {
 		return jwtClientManagerService;
 	}
 
+	public static DeviceAccessAuthorizationService getDeviceAccessAuthorizationService() {
+		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+		DeviceAccessAuthorizationService deviceAccessAuthorizationService =
+				(DeviceAccessAuthorizationService) ctx.getOSGiService(DeviceAccessAuthorizationService.class, null);
+		if (deviceAccessAuthorizationService == null) {
+			String msg = "Device Authorization service has not initialized.";
+			log.error(msg);
+			throw new IllegalStateException(msg);
+		}
+		return deviceAccessAuthorizationService;
+	}
+
+
 	public static void registerApiAccessRoles(String user) {
 		UserStoreManager userStoreManager = null;
 		try {
 			userStoreManager = getUserStoreManager();
+			String[] userList = new String[]{user};
 			if (userStoreManager != null) {
-				synchronized (lock) {
-					String[] userList = new String[]{user};
-					if (!userStoreManager.isExistingRole(Constants.DEFAULT_ROLE_NAME)) {
-						userStoreManager.addRole(Constants.DEFAULT_ROLE_NAME, userList, Constants.DEFAULT_PERMISSION);
-					}
+				if (!userStoreManager.isExistingRole(Constants.DEFAULT_ROLE_NAME)) {
+					userStoreManager.addRole(Constants.DEFAULT_ROLE_NAME, userList, Constants.DEFAULT_PERMISSION);
+				} else {
+					userStoreManager.updateUserListOfRole(Constants.DEFAULT_ROLE_NAME, null, userList);
 				}
 			}
 		} catch (UserStoreException e) {
-			log.error("error on wso2 user component");
+			log.error("Error while creating a role and adding a user for android_sense.", e);
 		}
 	}
 
-	private static UserStoreManager getUserStoreManager() throws UserStoreException {
-		int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
-		return getRealmService().getTenantUserRealm(tenantId).getUserStoreManager();
-	}
-
-	public static RealmService getRealmService() {
-		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-		RealmService realmService =
-				(RealmService) ctx.getOSGiService(RealmService.class, null);
-		if (realmService == null) {
-			String msg = "JWT Client manager service has not initialized.";
-			log.error(msg);
+	public static UserStoreManager getUserStoreManager() {
+		RealmService realmService;
+		UserStoreManager userStoreManager;
+		try {
+			PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+			realmService = (RealmService) ctx.getOSGiService(RealmService.class, null);
+			if (realmService == null) {
+				String msg = "Realm service has not initialized.";
+				log.error(msg);
+				throw new IllegalStateException(msg);
+			}
+			int tenantId = ctx.getTenantId();
+			userStoreManager = realmService.getTenantUserRealm(tenantId).getUserStoreManager();
+		} catch (UserStoreException e) {
+			String msg = "Error occurred while retrieving current user store manager";
+			log.error(msg, e);
 			throw new IllegalStateException(msg);
 		}
-		return realmService;
+		return userStoreManager;
 	}
 }

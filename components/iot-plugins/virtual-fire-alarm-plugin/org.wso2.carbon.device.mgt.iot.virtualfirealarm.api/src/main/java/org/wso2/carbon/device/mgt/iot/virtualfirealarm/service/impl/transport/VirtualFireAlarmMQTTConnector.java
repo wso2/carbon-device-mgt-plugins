@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONObject;
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
 import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
@@ -33,9 +34,9 @@ import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.SecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.SecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.VirtualFireAlarmServiceUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
@@ -47,7 +48,6 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Calendar;
 import java.util.UUID;
 
 /**
@@ -73,6 +73,8 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 	private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 	private static final String KEY_TYPE = "PRODUCTION";
 	private static final String EMPTY_STRING = "";
+	private static final String JSON_SERIAL_KEY = "SerialNumber";
+	private static final String JSON_TENANT_KEY = "Tenant";
 
 	/**
 	 * Default constructor for the VirtualFirealarmMQTTConnector.
@@ -99,7 +101,8 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 						String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
 								.getRealmConfiguration().getAdminUserName();
 						PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(applicationUsername);
-						APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
+						APIManagementProviderService apiManagementProviderService = APIUtil
+								.getAPIManagementProviderService();
 						String[] tags = {VirtualFireAlarmConstants.DEVICE_TYPE};
 						ApiApplicationKey apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
 								VirtualFireAlarmConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
@@ -156,17 +159,34 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 			if (log.isDebugEnabled()) {
 				log.debug("Received MQTT message for: [DEVICE.ID-" + deviceId + "]");
 			}
-
+			JSONObject jsonPayload = new JSONObject(mqttMessage.toString());
 			String actualMessage;
 			try {
+				String tenantDomain = (String) jsonPayload.get(JSON_TENANT_KEY);
+				PrivilegedCarbonContext.startTenantFlow();
+				PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+				DeviceManagementProviderService deviceManagementProviderService =
+						(DeviceManagementProviderService) ctx.getOSGiService(DeviceManagementProviderService.class,
+																			 null);
+				ctx.setTenantDomain(tenantDomain, true);
+				if (deviceManagementProviderService != null) {
+					DeviceIdentifier identifier = new DeviceIdentifier(deviceId,
+																	   VirtualFireAlarmConstants.DEVICE_TYPE);
+					Device device = deviceManagementProviderService.getDevice(identifier);
+					if (device != null) {
+						String owner = device.getEnrolmentInfo().getOwner();
+						ctx.setUsername(owner);
+					} else {
+						return;
+					}
+				}
+				Long serialNo = (Long)jsonPayload.get(JSON_SERIAL_KEY);
 				// the hash-code of the deviceId is used as the alias for device certificates during SCEP enrollment.
 				// hence, the same is used here to fetch the device-specific-certificate from the key store.
-				PublicKey clientPublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
-				PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();
+				PublicKey clientPublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey("" + serialNo);
 
 				// the MQTT-messages from VirtualFireAlarm devices are in the form {"Msg":<MESSAGE>, "Sig":<SIGNATURE>}
 				actualMessage = VirtualFireAlarmServiceUtils.extractMessageFromPayload(mqttMessage.toString(),
-																					   serverPrivateKey,
 																					   clientPublicKey);
 				if (log.isDebugEnabled()) {
 					log.debug("MQTT: Received Message [" + actualMessage + "] topic: [" + topic + "]");
@@ -174,30 +194,8 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 
 				if (actualMessage.contains("PUBLISHER")) {
 					float temperature = Float.parseFloat(actualMessage.split(":")[2]);
-					try {
-						PrivilegedCarbonContext.startTenantFlow();
-						PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-						DeviceManagementProviderService deviceManagementProviderService =
-								(DeviceManagementProviderService) ctx
-										.getOSGiService(DeviceManagementProviderService.class, null);
-						if (deviceManagementProviderService != null) {
-							DeviceIdentifier identifier = new DeviceIdentifier(deviceId,
-																			   VirtualFireAlarmConstants.DEVICE_TYPE);
-							Device device = deviceManagementProviderService.getDevice(identifier);
-							if (device != null) {
-								String owner = device.getEnrolmentInfo().getOwner();
-								ctx.setTenantDomain(MultitenantUtils.getTenantDomain(owner), true);
-								ctx.setUsername(owner);
-								if (!VirtualFireAlarmServiceUtils.publishToDAS(deviceId, temperature)) {
-									log.error("MQTT Subscriber: Publishing data to DAS failed.");
-								}
-							}
-						}
-					} catch (DeviceManagementException e) {
-						log.error("Failed to retreive the device managment service for device type " +
-										  VirtualFireAlarmConstants.DEVICE_TYPE, e);
-					} finally {
-						PrivilegedCarbonContext.endTenantFlow();
+					if (!VirtualFireAlarmServiceUtils.publishToDAS(deviceId, temperature)) {
+						log.error("MQTT Subscriber: Publishing data to DAS failed.");
 					}
 					if (log.isDebugEnabled()) {
 						log.debug("MQTT Subscriber: Published data to DAS successfully.");
@@ -210,6 +208,11 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 				String errorMsg =
 						"CertificateManagementService failure oo Signature-Verification/Decryption was unsuccessful.";
 				log.error(errorMsg, e);
+			} catch (DeviceManagementException e) {
+				log.error("Failed to retreive the device managment service for device type " +
+								  VirtualFireAlarmConstants.DEVICE_TYPE, e);
+			} finally {
+				PrivilegedCarbonContext.endTenantFlow();
 			}
 		} else {
 			String errorMsg =
@@ -225,39 +228,30 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 	 */
 	@Override
 	public void publishDeviceData(String... publishData) throws TransportHandlerException {
-		if (publishData.length != 4) {
+		if (publishData.length != 3) {
 			String errorMsg = "Incorrect number of arguments received to SEND-MQTT Message. " +
 					"Need to be [owner, deviceId, resource{BULB/TEMP}, state{ON/OFF or null}]";
 			log.error(errorMsg);
 			throw new TransportHandlerException(errorMsg);
 		}
 
-		String deviceOwner = publishData[0];
-		String deviceId = publishData[1];
-		String resource = publishData[2];
-		String state = publishData[3];
+		String deviceId = publishData[0];
+		String resource = publishData[1];
+		String state = publishData[2];
 
 		MqttMessage pushMessage = new MqttMessage();
 		String publishTopic = "wso2/" + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
 
 		try {
-			PublicKey devicePublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
 			PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();
-
 			String actualMessage = resource + ":" + state;
-			String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage,
-																					devicePublicKey,
-																					serverPrivateKey);
-
+			String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage, serverPrivateKey);
 			pushMessage.setPayload(encryptedMsg.getBytes(StandardCharsets.UTF_8));
 			pushMessage.setQos(DEFAULT_MQTT_QUALITY_OF_SERVICE);
 			pushMessage.setRetained(false);
-
 			publishToQueue(publishTopic, pushMessage);
-
 		} catch (VirtualFireAlarmException e) {
-			String errorMsg = "Preparing Secure payload failed for device - [" + deviceId + "] of owner - " +
-					"[" + deviceOwner + "].";
+			String errorMsg = "Preparing Secure payload failed for device - [" + deviceId + "]";
 			log.error(errorMsg);
 			throw new TransportHandlerException(errorMsg, e);
 		}

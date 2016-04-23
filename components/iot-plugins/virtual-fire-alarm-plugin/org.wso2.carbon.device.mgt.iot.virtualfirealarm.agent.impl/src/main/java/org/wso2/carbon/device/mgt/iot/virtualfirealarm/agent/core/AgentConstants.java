@@ -56,8 +56,8 @@ public class AgentConstants {
  		---------------------------------------------------------------------------------------	*/
 	public static final int DEFAULT_MQTT_RECONNECTION_INTERVAL = 2;        // time in seconds
 	public static final int DEFAULT_MQTT_QUALITY_OF_SERVICE = 0;
-	public static final String MQTT_SUBSCRIBE_TOPIC = "%s/%s/" + DEVICE_TYPE + "/%s";
-	public static final String MQTT_PUBLISH_TOPIC = "%s/%s/" + DEVICE_TYPE + "/%s/publisher";
+	public static final String MQTT_SUBSCRIBE_TOPIC = "wso2/" + DEVICE_TYPE + "/%s";
+	public static final String MQTT_PUBLISH_TOPIC = "wso2/" + DEVICE_TYPE + "/%s/publisher";
 	/*	---------------------------------------------------------------------------------------
 								XMPP Connection specific information
  		---------------------------------------------------------------------------------------	*/
@@ -71,6 +71,7 @@ public class AgentConstants {
 	public static final String DEVICE_ID_PROPERTY = "deviceId";
 	public static final String DEVICE_NAME_PROPERTY = "device-name";
 	public static final String DEVICE_CONTROLLER_CONTEXT_PROPERTY = "controller-context";
+	public static final String DEVICE_SCEP_CONTEXT_PROPERTY = "scep-context";
 	public static final String SERVER_HTTPS_EP_PROPERTY = "https-ep";
 	public static final String SERVER_HTTP_EP_PROPERTY = "http-ep";
 	public static final String APIM_GATEWAY_EP_PROPERTY = "apim-ep";

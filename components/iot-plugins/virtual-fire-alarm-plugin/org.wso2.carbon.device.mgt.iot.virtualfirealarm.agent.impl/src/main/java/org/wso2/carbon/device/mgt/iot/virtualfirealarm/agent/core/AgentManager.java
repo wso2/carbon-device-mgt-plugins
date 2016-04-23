@@ -121,10 +121,7 @@ public class AgentManager {
             log.error("XMPP Endpoint String - " + agentConfigs.getXmppServerEndpoint() +
                               ", provided in the configuration file is invalid.");
         }
-        String mqttTopic = String.format(AgentConstants.MQTT_SUBSCRIBE_TOPIC,
-                                         agentConfigs.getServerName(),
-                                         agentConfigs.getDeviceOwner(),
-                                         agentConfigs.getDeviceId());
+        String mqttTopic = String.format(AgentConstants.MQTT_SUBSCRIBE_TOPIC, agentConfigs.getDeviceId());
 
 //        TransportHandler httpCommunicator = new FireAlarmHTTPCommunicator();
         TransportHandler mqttCommunicator = new FireAlarmMQTTCommunicator(agentConfigs.getDeviceOwner(),

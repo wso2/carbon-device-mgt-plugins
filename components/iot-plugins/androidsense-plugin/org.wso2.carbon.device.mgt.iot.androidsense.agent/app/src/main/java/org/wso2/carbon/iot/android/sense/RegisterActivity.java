@@ -140,6 +140,7 @@ public class RegisterActivity extends Activity {
                     });
 
                     if (registerStatus.isRegistered()) {
+                        LocalRegistry.setEnrolled(getApplicationContext(), true);
                         LocalRegistry.addUsername(getApplicationContext(), username);
                         LocalRegistry.addDeviceId(getApplicationContext(), deviceId);
                         LocalRegistry.addMqttPort(getApplicationContext(), mqttPortNo);
