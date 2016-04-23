@@ -22,6 +22,7 @@ import org.wso2.carbon.user.api.UserStoreManager;
 import org.wso2.carbon.user.core.service.RealmService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -192,10 +193,13 @@ public class APIUtil {
 			userStoreManager = getUserStoreManager();
 			String[] userList = new String[]{user};
 			if (userStoreManager != null) {
+				String rolesOfUser[] = userStoreManager.getRoleListOfUser(user);
 				if (!userStoreManager.isExistingRole(Constants.DEFAULT_ROLE_NAME)) {
 					userStoreManager.addRole(Constants.DEFAULT_ROLE_NAME, userList, Constants.DEFAULT_PERMISSION);
+				} else if (rolesOfUser != null && Arrays.asList(rolesOfUser).contains(Constants.DEFAULT_ROLE_NAME)) {
+					return;
 				} else {
-					userStoreManager.updateUserListOfRole(Constants.DEFAULT_ROLE_NAME, null, userList);
+					userStoreManager.updateUserListOfRole(Constants.DEFAULT_ROLE_NAME, new String[0], userList);
 				}
 			}
 		} catch (UserStoreException e) {
