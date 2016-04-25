@@ -26,6 +26,8 @@ import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
  */
 public class DevDetail {
 
+    // Name of the Management Object
+    public static final String DEVDETAIL = "DevDetail";
     // Maximum depth of the management tree supported by the device
     public static final String URI_MAX_DEPTH = "/URI/MaxDepth";
     // Maximum total length of any URI used to address a node or node property
@@ -49,18 +51,12 @@ public class DevDetail {
             "resources/OMA-SUP-MO_DM_DevDetail-V1_2-20070209-A.xml";
 
     private MgmtTree mgmtTree = null;
-    private String uriMaxDepth;
-    private String uriMaxLen;
-    private String uriMaxSegLen;
-    private String devTyp;
-    private String oem;
-    private String fwVersion;
-    private String swVersion;
-    private String hwVersion;
-    private String lrgObj;
 
     public DevDetail() {
         this.mgmtTree = DDFCommonUtils.generateTree(DEV_DETAIL_DDF_PATH);
+        if (mgmtTree != null) {
+            this.mgmtTree.setName(DEVDETAIL);
+        }
     }
 
     public MgmtTree getTree() {
@@ -68,80 +64,9 @@ public class DevDetail {
             return this.mgmtTree;
         } else {
             this.mgmtTree = DDFCommonUtils.generateTree(DEV_DETAIL_DDF_PATH);
+            this.mgmtTree.setName(DEVDETAIL);
             return this.mgmtTree;
         }
-    }
-
-    public String getUriMaxDepth() {
-        return uriMaxDepth;
-    }
-
-    public void setUriMaxDepth(String uriMaxDepth) {
-        this.uriMaxDepth = uriMaxDepth;
-    }
-
-    public String getUriMaxLen() {
-        return uriMaxLen;
-    }
-
-    public void setUriMaxLen(String uriMaxLen) {
-        this.uriMaxLen = uriMaxLen;
-    }
-
-    public String getUriMaxSegLen() {
-        return uriMaxSegLen;
-    }
-
-    public void setUriMaxSegLen(String uriMaxSegLen) {
-        this.uriMaxSegLen = uriMaxSegLen;
-    }
-
-    public String getDevTyp() {
-        return devTyp;
-    }
-
-    public void setDevTyp(String devTyp) {
-        this.devTyp = devTyp;
-    }
-
-    public String getOem() {
-        return oem;
-    }
-
-    public void setOem(String oem) {
-        this.oem = oem;
-    }
-
-    public String getFwVersion() {
-        return fwVersion;
-    }
-
-    public void setFwVersion(String fwVersion) {
-        this.fwVersion = fwVersion;
-    }
-
-    public String getSwVersion() {
-        return swVersion;
-    }
-
-    public void setSwVersion(String swVersion) {
-        this.swVersion = swVersion;
-    }
-
-    public String getHwVersion() {
-        return hwVersion;
-    }
-
-    public void setHwVersion(String hwVersion) {
-        this.hwVersion = hwVersion;
-    }
-
-    public String getLrgObj() {
-        return lrgObj;
-    }
-
-    public void setLrgObj(String lrgObj) {
-        this.lrgObj = lrgObj;
     }
 
 }

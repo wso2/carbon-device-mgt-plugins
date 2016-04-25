@@ -28,6 +28,8 @@ import java.io.Serializable;
  */
 public class DevInfo implements Serializable {
 
+    // Name of the Management Object
+    public static final String DEVINFO = "DevInfo";
     // Device Identifier
     public static final String DEV_ID = "/DevId";
     // Manufacturer
@@ -43,14 +45,12 @@ public class DevInfo implements Serializable {
             "resources/OMA-SUP-MO_DM_DevInfo-V1_2-20070209-A.xml";
 
     private MgmtTree mgmtTree = null;
-    private String devId;
-    private String manufacturer;
-    private String model;
-    private String deviceModelVersion;
-    private String language;
 
     public DevInfo() {
         this.mgmtTree = DDFCommonUtils.generateTree(DEV_INFO_DDF_PATH);
+        if (mgmtTree != null) {
+            this.mgmtTree.setName(DEVINFO);
+        }
     }
 
     public MgmtTree getTree() {
@@ -58,48 +58,9 @@ public class DevInfo implements Serializable {
             return this.mgmtTree;
         } else {
             this.mgmtTree = DDFCommonUtils.generateTree(DEV_INFO_DDF_PATH);
+            this.mgmtTree.setName(DEVINFO);
             return this.mgmtTree;
         }
-    }
-
-    public String getDevId() {
-        return devId;
-    }
-
-    public void setDevId(String devId) {
-        this.devId = devId;
-    }
-
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public String getDeviceModelVersion() {
-        return deviceModelVersion;
-    }
-
-    public void setDeviceModelVersion(String deviceModelVersion) {
-        this.deviceModelVersion = deviceModelVersion;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
     }
 
 }
