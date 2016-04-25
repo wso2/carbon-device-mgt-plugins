@@ -25,7 +25,7 @@ import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
 /**
  * Represents the header details of a syncml.
  */
-public class SyncmlHeader {
+public class SyncMLHeader {
     private int sessionId = -1;
     private int MsgID = -1;
     private TargetTag target;

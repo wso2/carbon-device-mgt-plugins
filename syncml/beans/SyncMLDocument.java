@@ -25,22 +25,22 @@ import org.w3c.dom.Element;
  * Represents a base format of a syncml document
  */
 public class SyncMLDocument {
-    SyncmlHeader header;
-    SyncmlBody body;
+    SyncMLHeader header;
+    SyncMLBody body;
 
-    public SyncmlHeader getHeader() {
+    public SyncMLHeader getHeader() {
         return header;
     }
 
-    public void setHeader(SyncmlHeader header) {
+    public void setHeader(SyncMLHeader header) {
         this.header = header;
     }
 
-    public SyncmlBody getBody() {
+    public SyncMLBody getBody() {
         return body;
     }
 
-    public void setBody(SyncmlBody body) {
+    public void setBody(SyncMLBody body) {
         this.body = body;
     }
 

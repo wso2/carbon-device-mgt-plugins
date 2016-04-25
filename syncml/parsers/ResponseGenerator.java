@@ -49,13 +49,13 @@ public class ResponseGenerator {
         responseSyncMLDocument = new SyncMLDocument();
     }
 
-    public SyncmlBody generateStatuses() {
-        SyncmlBody sourceSyncmlBody = syncMLDocument.getBody();
-        SyncmlHeader sourceHeader = syncMLDocument.getHeader();
+    public SyncMLBody generateStatuses() {
+        SyncMLBody sourceSyncMLBody = syncMLDocument.getBody();
+        SyncMLHeader sourceHeader = syncMLDocument.getHeader();
         StatusTag headerStatus;
-        SyncmlBody syncmlBodyReply = new SyncmlBody();
+        SyncMLBody syncMLBodyReply = new SyncMLBody();
         List<StatusTag> statuses = new ArrayList<>();
-        List<StatusTag> sourceStatuses = sourceSyncmlBody.getStatus();
+        List<StatusTag> sourceStatuses = sourceSyncMLBody.getStatus();
         if (sourceStatuses.isEmpty()) {
             headerStatus =
                     new StatusTag(headerCommandId, sourceHeader.getMsgID(), HEADER_STATUS_ID,
@@ -74,32 +74,32 @@ public class ResponseGenerator {
                 }
             }
         }
-        if (sourceSyncmlBody.getResults() != null) {
+        if (sourceSyncMLBody.getResults() != null) {
             int ResultCommandId = ++headerCommandId;
             StatusTag resultStatus = new StatusTag(ResultCommandId, sourceHeader.getMsgID(),
-                    sourceSyncmlBody.getResults().getCommandId(), RESULTS_COMMAND_TEXT, null,
+                    sourceSyncMLBody.getResults().getCommandId(), RESULTS_COMMAND_TEXT, null,
                     String.valueOf(Constants.SyncMLResponseCodes.ACCEPTED));
             statuses.add(resultStatus);
         }
-        if (sourceSyncmlBody.getAlert() != null) {
+        if (sourceSyncMLBody.getAlert() != null) {
             int alertCommandId = ++headerCommandId;
             StatusTag alertStatus = new StatusTag(alertCommandId,
                     sourceHeader.getMsgID(),
-                    sourceSyncmlBody.getAlert().getCommandId(),
+                    sourceSyncMLBody.getAlert().getCommandId(),
                     ALERT_COMMAND_TEXT, null,
                     String.valueOf(Constants.SyncMLResponseCodes.ACCEPTED));
             statuses.add(alertStatus);
         }
-        if (sourceSyncmlBody.getReplace() != null) {
+        if (sourceSyncMLBody.getReplace() != null) {
             int replaceCommandId = ++headerCommandId;
             StatusTag replaceStatus = new StatusTag(replaceCommandId, sourceHeader.getMsgID(),
-                    sourceSyncmlBody.getReplace().getCommandId(), REPLACE_COMMAND_TEXT, null,
+                    sourceSyncMLBody.getReplace().getCommandId(), REPLACE_COMMAND_TEXT, null,
                     String.valueOf(Constants.SyncMLResponseCodes.ACCEPTED)
             );
             statuses.add(replaceStatus);
         }
-        if (sourceSyncmlBody.getExec() != null) {
-            List<ExecuteTag> Executes = sourceSyncmlBody.getExec();
+        if (sourceSyncMLBody.getExec() != null) {
+            List<ExecuteTag> Executes = sourceSyncMLBody.getExec();
             for (ExecuteTag exec : Executes) {
                 int execCommandId = ++headerCommandId;
                 StatusTag execStatus = new StatusTag(execCommandId, sourceHeader.getMsgID(),
@@ -108,15 +108,15 @@ public class ResponseGenerator {
                 statuses.add(execStatus);
             }
         }
-        if (sourceSyncmlBody.getGet() != null) {
+        if (sourceSyncMLBody.getGet() != null) {
             int getCommandId = ++headerCommandId;
-            StatusTag execStatus = new StatusTag(getCommandId, sourceHeader.getMsgID(), sourceSyncmlBody
+            StatusTag execStatus = new StatusTag(getCommandId, sourceHeader.getMsgID(), sourceSyncMLBody
                     .getGet().getCommandId(), GET_COMMAND_TEXT, null, String.valueOf(
                     Constants.SyncMLResponseCodes.ACCEPTED));
             statuses.add(execStatus);
         }
-        syncmlBodyReply.setStatus(statuses);
-        return syncmlBodyReply;
+        syncMLBodyReply.setStatus(statuses);
+        return syncMLBodyReply;
     }
 
 }

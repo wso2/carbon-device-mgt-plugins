@@ -21,7 +21,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.exceptions;
 /**
  * The exception class for SyncML IO-related errors
  */
-public class SyncMLIOException extends SyncMLParseException {
+public class SyncMLIOException extends SyncMLException {
     private static final long serialVersionUID = 1L;
 
     public SyncMLIOException(String msg) {

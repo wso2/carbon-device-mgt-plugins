@@ -21,8 +21,8 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.parsers;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLDocument;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncmlBody;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncmlHeader;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLBody;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLHeader;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.exceptions.SyncMLSyntaxException;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
 
@@ -42,9 +42,9 @@ public class SyncMLGenerator {
     public static String generatePayload(SyncMLDocument syncMLDocument) throws SyncMLSyntaxException {
         Document doc = generateDocument();
         Element rootElement = createRootElement(doc);
-        SyncmlHeader header = syncMLDocument.getHeader();
+        SyncMLHeader header = syncMLDocument.getHeader();
         header.buildSyncmlHeaderElement(doc, rootElement);
-        SyncmlBody body = syncMLDocument.getBody();
+        SyncMLBody body = syncMLDocument.getBody();
         body.buildBodyElement(doc, rootElement);
         return transformDocument(doc);
     }

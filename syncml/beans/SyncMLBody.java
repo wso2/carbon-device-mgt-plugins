@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Represents the body details of a syncml.
  */
-public class SyncmlBody {
+public class SyncMLBody {
     GetTag getCommands;
     List<ExecuteTag> exec;
     List<StatusTag> status;

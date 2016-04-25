@@ -18,7 +18,12 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLBody;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLDocument;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLHeader;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.exceptions.SyncMLException;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
 
 import javax.ws.rs.Consumes;
@@ -26,16 +31,33 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * The service class for OMA-DM SyncML Message handling
  */
 @Path("/manage")
 public class OMADMService {
+
+    private static Log log = LogFactory.getLog(OMADMService.class);
+
     @POST
     @Consumes({Constants.APPLICATION_SYNCML, MediaType.APPLICATION_XML})
     @Produces(Constants.APPLICATION_SYNCML)
-    public String generateReply(SyncMLDocument synMLDoc){
+    public Response generateReply(SyncMLDocument syncMLDoc) {
+
+        if (syncMLDoc == null) {
+            String msg = "Error occurred while parsing the SyncML request.";
+            log.error(msg);
+            throw new SyncMLException(msg);
+        }
+
+        SyncMLHeader syncHeader = syncMLDoc.getHeader();
+        SyncMLBody syncBody = syncMLDoc.getBody();
+
+        int messageId = syncHeader.getMsgID();
+        int sessionId = syncHeader.getSessionId();
+
         return null;
     }
 }

@@ -86,13 +86,13 @@ public class SyncMLParser {
         }
         NodeList syncHeaderList = syncmlPayload.getElementsByTagName(SYNC_HEADER);
         Node syncHeader = syncHeaderList.item(0);
-        SyncmlHeader header = generateSyncmlHeader(syncHeader);
+        SyncMLHeader header = generateSyncmlHeader(syncHeader);
         if (syncmlPayload.getElementsByTagName(SYNC_BODY) == null) {
             throw new IllegalStateException();
         }
         NodeList syncBodyList = syncmlPayload.getElementsByTagName(SYNC_BODY);
         Node syncBody = syncBodyList.item(0);
-        SyncmlBody body = generateSyncmlBody(syncBody);
+        SyncMLBody body = generateSyncmlBody(syncBody);
 
         syncMLDocument.setHeader(header);
         syncMLDocument.setBody(body);
@@ -105,14 +105,14 @@ public class SyncMLParser {
      * @param syncHeader - XML node which represents SyncML header
      * @return - SyncmlHeader object
      */
-    private static SyncmlHeader generateSyncmlHeader(Node syncHeader) {
+    private static SyncMLHeader generateSyncmlHeader(Node syncHeader) {
 
         String sessionID = null;
         String messageID = null;
         TargetTag target = null;
         SourceTag source = null;
         CredentialTag credential = null;
-        SyncmlHeader header = new SyncmlHeader();
+        SyncMLHeader header = new SyncMLHeader();
 
         NodeList headerElements = syncHeader.getChildNodes();
         for (int i = 0; i < headerElements.getLength(); i++) {
@@ -169,7 +169,7 @@ public class SyncMLParser {
      * @param syncBody - XML node which represents SyncML body
      * @return - SyncmlBody object
      */
-    private static SyncmlBody generateSyncmlBody(Node syncBody) {
+    private static SyncMLBody generateSyncmlBody(Node syncBody) {
 
         AlertTag alert = null;
         ReplaceTag replace = null;
@@ -194,7 +194,7 @@ public class SyncMLParser {
                 }
             }
         }
-        SyncmlBody body = new SyncmlBody();
+        SyncMLBody body = new SyncMLBody();
         body.setAlert(alert);
         body.setReplace(replace);
         body.setStatus(status);

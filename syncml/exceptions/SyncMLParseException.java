@@ -21,7 +21,8 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.exceptions;
 /**
  * The base exception class for SyncML parsing-related errors
  */
-public class SyncMLParseException extends  RuntimeException {
+public class SyncMLParseException extends  SyncMLException {
+
     static final long serialVersionUID = -4086729973971783390L;
 
     public SyncMLParseException(String msg) {
@@ -35,4 +36,5 @@ public class SyncMLParseException extends  RuntimeException {
     public SyncMLParseException(Throwable cause) {
         super(cause);
     }
+
 }

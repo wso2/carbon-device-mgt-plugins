@@ -19,21 +19,19 @@
 package org.wso2.carbon.mdm.services.android.omadm.syncml.exceptions;
 
 /**
- * The Exception class for SyncML syntax-related errors
+ * The base exception class for general SyncML errors
  */
-public class SyncMLSyntaxException extends SyncMLException {
+public class SyncMLException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
-
-    public SyncMLSyntaxException(String msg) {
+    public SyncMLException(String msg) {
         super(msg);
     }
 
-    public SyncMLSyntaxException(String msg, Throwable cause) {
+    public SyncMLException(String msg, Throwable cause) {
         super(msg, cause);
     }
 
-    public SyncMLSyntaxException(Throwable cause) {
+    public SyncMLException(Throwable cause) {
         super(cause);
     }
 

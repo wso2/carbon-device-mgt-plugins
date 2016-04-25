@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.ddf.standardmos;
 
-import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
-
 /**
  * This class acts as the primary entity that handles all the
  * Standard Management Object instantiation related complexities
