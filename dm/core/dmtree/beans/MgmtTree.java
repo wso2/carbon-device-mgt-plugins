@@ -29,7 +29,7 @@ import java.util.Map;
  * This class represents the OMA Device Management Tree
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(propOrder = {
         "verDTD",
         "man",
         "mod",
@@ -39,13 +39,13 @@ import java.util.Map;
 public class MgmtTree {
 
     @XmlElement(name = "VerDTD", required = true)
-    protected String verDTD;
+    private String verDTD;
     @XmlElement(name = "Man")
-    protected String man;
+    private String man;
     @XmlElement(name = "Mod")
-    protected String mod;
+    private String mod;
     @XmlElement(name = "Node")
-    protected List<Node> nodes = new ArrayList<>();
+    private List<Node> nodes = new ArrayList<>();
 
     // Additional Properties
     @XmlTransient
@@ -54,10 +54,8 @@ public class MgmtTree {
     private String fileName;
     @XmlTransient
     private String type;
-
-    // A map to keep track of connected nodes. Used for search operations
     @XmlTransient
-    Map<String, Node> treeMap = new HashMap<>();
+    private String name;
 
     public MgmtTree() {
     }
@@ -77,10 +75,6 @@ public class MgmtTree {
 
     public List<Node> getNodes() {
         return nodes;
-    }
-
-    public Map<String, Node> getTreeMap() {
-        return treeMap;
     }
 
     public String getVerDTD() {
@@ -134,4 +128,13 @@ public class MgmtTree {
     public void setType(String type) {
         this.type = type;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

@@ -43,17 +43,17 @@ public class Node {
     private static String NODE_URI_DELIMETER = "/";
 
     @XmlElement(name = "NodeName", required = true)
-    protected String nodeName;
+    private String nodeName;
     @XmlElement(name = "Path")
-    protected String path;
+    private String path;
     @XmlElement(name = "RTProperties")
-    protected RTProperties rtProperties;
+    private RTProperties rtProperties;
     @XmlElement(name = "DFProperties")
-    protected DFProperties dfProperties;
+    private DFProperties dfProperties;
     @XmlElement(name = "Node")
-    protected List<Node> nodes = new ArrayList<>();
+    private List<Node> nodes = new ArrayList<>();
     @XmlElement(name = "Value")
-    protected String value;
+    private String value;
 
     public Node() {
     }

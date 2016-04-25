@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.ddf.standardmos;
 
+import org.wso2.carbon.mdm.services.android.omadm.ddf.util.DDFCommonUtils;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
+
 import java.io.Serializable;
 
 /**
@@ -35,21 +38,28 @@ public class DevInfo implements Serializable {
     public static final String DMV = "/DmV";
     // Device language
     public static final String LANG = "/Lang";
+    // Path to the DevInfo DDF file
+    public static final String DEV_INFO_DDF_PATH = "org/wso2/carbon/mdm/services/android/omadm/ddf/" +
+            "resources/OMA-SUP-MO_DM_DevInfo-V1_2-20070209-A.xml";
 
+    private MgmtTree mgmtTree = null;
     private String devId;
     private String manufacturer;
     private String model;
     private String deviceModelVersion;
     private String language;
 
-    public DevInfo() {}
+    public DevInfo() {
+        this.mgmtTree = DDFCommonUtils.generateTree(DEV_INFO_DDF_PATH);
+    }
 
-    public DevInfo(String devId, String manufacturer, String model, String deviceModelVersion, String language) {
-        this.devId = devId;
-        this.manufacturer = manufacturer;
-        this.model = model;
-        this.deviceModelVersion = deviceModelVersion;
-        this.language = language;
+    public MgmtTree getTree() {
+        if (this.mgmtTree != null) {
+            return this.mgmtTree;
+        } else {
+            this.mgmtTree = DDFCommonUtils.generateTree(DEV_INFO_DDF_PATH);
+            return this.mgmtTree;
+        }
     }
 
     public String getDevId() {
@@ -91,4 +101,5 @@ public class DevInfo implements Serializable {
     public void setLanguage(String language) {
         this.language = language;
     }
+
 }

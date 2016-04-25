@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.ddf.standardmos;
 
+import org.wso2.carbon.mdm.services.android.omadm.ddf.util.DDFCommonUtils;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
+
 /**
  * This class represents the standard 'DevInfo' Management Object
  */
@@ -41,7 +44,11 @@ public class DevDetail {
     public static final String HWV = "/HwV";
     // Indicates whether the device supports the OMA DM Large Object Handling specification
     public static final String LRG_OBJ = "/LrgObj";
+    // Path to the DevDetail DDF file
+    public static final String DEV_DETAIL_DDF_PATH = "org/wso2/carbon/mdm/services/android/omadm/ddf/" +
+            "resources/OMA-SUP-MO_DM_DevDetail-V1_2-20070209-A.xml";
 
+    private MgmtTree mgmtTree = null;
     private String uriMaxDepth;
     private String uriMaxLen;
     private String uriMaxSegLen;
@@ -52,19 +59,17 @@ public class DevDetail {
     private String hwVersion;
     private String lrgObj;
 
-    public DevDetail() {}
+    public DevDetail() {
+        this.mgmtTree = DDFCommonUtils.generateTree(DEV_DETAIL_DDF_PATH);
+    }
 
-    public DevDetail(String uriMaxDepth, String uriMaxLen, String uriMaxSegLen, String devTyp, String oem,
-                     String fwVersion, String swVersion, String hwVersion, String lrgObj) {
-        this.uriMaxDepth = uriMaxDepth;
-        this.uriMaxLen = uriMaxLen;
-        this.uriMaxSegLen = uriMaxSegLen;
-        this.devTyp = devTyp;
-        this.oem = oem;
-        this.fwVersion = fwVersion;
-        this.swVersion = swVersion;
-        this.hwVersion = hwVersion;
-        this.lrgObj = lrgObj;
+    public MgmtTree getTree() {
+        if (this.mgmtTree != null) {
+            return this.mgmtTree;
+        } else {
+            this.mgmtTree = DDFCommonUtils.generateTree(DEV_DETAIL_DDF_PATH);
+            return this.mgmtTree;
+        }
     }
 
     public String getUriMaxDepth() {
@@ -138,4 +143,5 @@ public class DevDetail {
     public void setLrgObj(String lrgObj) {
         this.lrgObj = lrgObj;
     }
+
 }

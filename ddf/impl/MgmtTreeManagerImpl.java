@@ -19,6 +19,7 @@
 package org.wso2.carbon.mdm.services.android.omadm.ddf.impl;
 
 import org.wso2.carbon.mdm.services.android.omadm.ddf.MgmtTreeManager;
+import org.wso2.carbon.mdm.services.android.omadm.ddf.standardmos.DMRoot;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.Node;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMException;
@@ -52,8 +53,10 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
             throw new DMException("Node cannot be null.");
         } else {
             node.setPath(path);
-            this.tree.getTreeMap().get(path).addNode(node);
-            this.tree.getTreeMap().put(absolutePath,node);
+            this.tree.getNodes().add(node);
+            DMRoot.getTreeMap().put(this.tree.getName(), this.tree);
+            DMRoot.getNodeMap().get(path).addNode(node);
+            DMRoot.getNodeMap().put(absolutePath,node);
             return true;
         }
     }
@@ -64,7 +67,7 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
         if (!isExistingNode(path)) {
             throw new DMNodeException("No such node exists.");
         } else {
-            Node parentNode = this.tree.getTreeMap().get(URIParser.getParentPath(path));
+            Node parentNode = DMRoot.getNodeMap().get(URIParser.getParentPath(path));
             parentNode.removeNode(URIParser.getNodeName(path));
             return true;
         }
@@ -73,7 +76,7 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
     @Override
     public Node getNode(String path) {
         if (isExistingNode(path)) {
-            return this.tree.getTreeMap().get(path);
+            return DMRoot.getNodeMap().get(path);
         } else {
             throw new DMNodeException("Node doesn't exist.");
         }
@@ -86,12 +89,12 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
 
     @Override
     public int nodeCount() {
-        return this.tree.getTreeMap().size();
+        return DMRoot.getNodeMap().size();
     }
 
     @Override
     public boolean isExistingNode(String path) {
-        if (this.tree.getTreeMap().containsKey(path)) {
+        if (DMRoot.getNodeMap().containsKey(path)) {
             return true;
         }
         return false;
