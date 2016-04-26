@@ -18,17 +18,13 @@
 
 package org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl;
 
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.DeviceManager;
-import org.wso2.carbon.device.mgt.common.app.mgt.Application;
-import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
+import org.wso2.carbon.device.mgt.common.ProvisioningConfig;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
-import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.common.push.notification.PushNotificationConfig;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
-
-import java.util.List;
 
 public class RaspberrypiManagerService implements DeviceManagementService {
 
@@ -37,16 +33,6 @@ public class RaspberrypiManagerService implements DeviceManagementService {
 	@Override
 	public String getType() {
 		return RaspberrypiConstants.DEVICE_TYPE;
-	}
-
-	@Override
-	public String getProviderTenantDomain() {
-		return RaspberrypiConstants.DEVICE_TYPE_PROVIDER_DOMAIN;
-	}
-
-	@Override
-	public boolean isSharedWithAllTenants() {
-		return true;
 	}
 
 	@Override
@@ -64,10 +50,15 @@ public class RaspberrypiManagerService implements DeviceManagementService {
 		return null;
 	}
 
-	@Override
-	public void notifyOperationToDevices(Operation operation, List<DeviceIdentifier> deviceIds)
-			throws DeviceManagementException {
+    @Override
+    public ProvisioningConfig getProvisioningConfig() {
+        return new ProvisioningConfig(RaspberrypiConstants.DEVICE_TYPE_PROVIDER_DOMAIN, true);
+    }
 
-	}
+    @Override
+    public PushNotificationConfig getPushNotificationConfig() {
+        return null;
+    }
+
 
 }
