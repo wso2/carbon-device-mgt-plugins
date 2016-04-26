@@ -113,7 +113,7 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
         }
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                    VirtualFireAlarmConstants.DEVICE_TYPE))) {
+                                                                                                     VirtualFireAlarmConstants.DEVICE_TYPE))) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             switch (protocolString) {
@@ -174,18 +174,17 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
         }
     }
 
-    @Path("device/stats/{deviceId}/sensors/{sensorName}")
+    @Path("device/stats/{deviceId}")
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    public Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId,
-                                             @PathParam("sensorName") String sensor, @QueryParam("from") long from,
+    public Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
                                              @QueryParam("to") long to) {
             String fromDate = String.valueOf(from);
             String toDate = String.valueOf(to);
             String query = "deviceId:" + deviceId + " AND deviceType:" +
                            VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
-            String sensorTableName = getSensorEventTableName(sensor);
+            String sensorTableName = VirtualFireAlarmConstants.TEMPERATURE_EVENT_TABLE;
             try {
                 if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
                         VirtualFireAlarmConstants.DEVICE_TYPE))) {
@@ -193,7 +192,7 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                 }
                 if (sensorTableName != null) {
                     List<SortByField> sortByFields = new ArrayList<>();
-                    SortByField sortByField = new SortByField("time", SORT.DESC, true);
+                    SortByField sortByField = new SortByField("time", SORT.ASC, false);
                     sortByFields.add(sortByField);
                     List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
                     return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
@@ -331,23 +330,5 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
         };
         Thread connectorThread = new Thread(connector);
         connectorThread.start();
-    }
-
-    /**
-     * get the event table from the sensor name.
-     */
-    private String getSensorEventTableName(String sensorName) {
-        String sensorEventTableName;
-        switch (sensorName) {
-            case VirtualFireAlarmConstants.SENSOR_TEMP:
-                sensorEventTableName = VirtualFireAlarmConstants.TEMPERATURE_EVENT_TABLE;
-                break;
-            case VirtualFireAlarmConstants.SENSOR_HUMIDITY:
-                sensorEventTableName = VirtualFireAlarmConstants.HUMIDITY_EVENT_TABLE;
-                break;
-            default:
-                sensorEventTableName = null;
-        }
-        return sensorEventTableName;
     }
 }
