@@ -20,12 +20,16 @@ function onRequest(context) {
     var log = new Log("device-view.js");
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("id");
+    var autoCompleteParams = [
+        {"name" : "deviceId", "value" : deviceId},
+        {"name" : "protocol", "value" : "MQTT"}
+    ];
 
     if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
         var deviceModule = require("/app/modules/device.js").deviceModule;
         var device = deviceModule.viewDevice(deviceType, deviceId);
         if (device && device.status != "error") {
-            return {"device": device, "backendApiUri" : devicemgtProps["httpsURL"] + "/virtual_firealarm/"};
+            return {"device": device, "backendApiUri" : devicemgtProps["httpsURL"] + "/virtual_firealarm/", "autoCompleteParams" : autoCompleteParams};
         } else {
             response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
             exit();
