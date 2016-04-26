@@ -73,36 +73,4 @@ public class WindowsDeviceManagementService implements DeviceManagementService {
 
     }
 
-    @Override
-    public Application[] getApplications(String s, int i, int i2) throws ApplicationManagementException {
-        return new Application[0];
-    }
-
-    @Override
-    public void updateApplicationStatus(DeviceIdentifier deviceIdentifier, Application application,
-                                        String s) throws ApplicationManagementException {
-
-    }
-
-    @Override
-    public String getApplicationStatus(DeviceIdentifier deviceIdentifier,
-                                       Application application) throws ApplicationManagementException {
-        return null;
-    }
-
-    @Override public void installApplicationForDevices(Operation operation, List<DeviceIdentifier> deviceIdentifiers)
-            throws ApplicationManagementException {
-
-    }
-
-    @Override public void installApplicationForUsers(Operation operation, List<String> strings)
-            throws ApplicationManagementException {
-
-    }
-
-    @Override public void installApplicationForUserRoles(Operation operation, List<String> strings)
-            throws ApplicationManagementException {
-
-    }
-
 }
