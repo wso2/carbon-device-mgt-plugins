@@ -16,33 +16,22 @@
  * under the License.
  */
 
+var palette = new Rickshaw.Color.Palette({scheme: "classic9"});
+
 function drawGraph(from, to) {
 	var backendApiUrl = $("#chart").data("backend-api-url") + "?from=" + from + "&to=" + to;
 
 	var successCallback = function (data) {
 		if (data) {
-			data = JSON.parse(data);
-			for (i =1; i < data.length; i++) {
-				if (data[i-1].values.time > data[i].values.time) {
-					alert(i);
-					alert(data[i-1].values.time + "," + data[i].values.time)
-				}
-			}
-			drawLineGraph(data)
+			drawLineGraph(JSON.parse(data));
 		}
 	};
 	invokerUtil.get(backendApiUrl, successCallback, function (message) {
 		console.log(message);
 	});
 }
-var isGraphAdded = false;
+
 function drawLineGraph(data) {
-	$("#chart").empty();
-	$("#slider").empty();
-	$("#x_axis").empty();
-	$("#y_axis").empty();
-	$("#smoother").empty();
-	$("#legend").empty();
 	var chartWrapperElmId = "#div-chart";
 	var graphWidth = $(chartWrapperElmId).width() - 50;
 	if (data.length == 0 || data.length == undefined) {
@@ -50,127 +39,117 @@ function drawLineGraph(data) {
 		return;
 	}
 
-	var graphConfig = {
-		element: document.getElementById("chart"),
-		width: graphWidth,
-		height: 400,
-		strokeWidth: 2,
-		renderer: 'lineplot',
-		interpolation: "linear",
-		unstack: true,
-		stack: false,
-		xScale: d3.time.scale(),
-		min :0,
-		max : 80,
-		padding: {top: 0.2, left: 0.02, right: 0.02, bottom: 0.2},
-		series: []
-	};
+    var graphConfig = {
+        element: document.getElementById("chart"),
+        width: graphWidth,
+        height: 400,
+        strokeWidth: 2,
+        renderer: 'line',
+        interpolation: "linear",
+        unstack: true,
+        stack: false,
+        xScale: d3.time.scale(),
+        padding: {top: 0.2, left: 0.02, right: 0.02, bottom: 0.2},
+        series: []
+    };
 
-	var min = Number.MAX_VALUE;
-	var max = Number.MIN_VALUE;
-	var range_min = 99999, range_max = 0;
-	var chartData = [];
-	var max_val = parseInt(data[0].values.temperature);
-	var min_val = max_val;
-	for (var i = 0; i < data.length; i++) {
-		var y_val = parseInt(data[i].values.temperature);
-		if (y_val > max_val) {
-			max_val = y_val;
-		} else if (y_val < min_val) {
-			min_val = y_val;
-		}
-		chartData.push({
-			x: parseInt(data[i].values.time),
-			y: y_val
-		});
-	}
-	if (range_max < max_val) {
-		range_max = max_val;
-	}
-	if (range_min > min_val) {
-		range_min = min_val;
-	}
-	graphConfig['series'].push({
-		'color': "steelblue",
-		'data': summerizeLine(chartData),
-		'name': "temperature"
-	});
+    var tzOffset = new Date().getTimezoneOffset() * 60;
 
-	if (graphConfig['series'].length == 0) {
-		$("#chart").html("<br/>No data available...");
-		return;
-	}
+    var min = Number.MAX_VALUE;
+    var max = Number.MIN_VALUE;
+    var range_min = 99999, range_max = 0;
+    var max_val = parseInt(data[0].values.temperature);
+    var min_val = max_val;
+    var chartData = [];
+    for (var i = 0; i < data.length; i++) {
+        var y_val = parseInt(data[i].values.temperature);
+        if (y_val > max_val) {
+            max_val = y_val;
+        } else if (y_val < min_val) {
+            min_val = y_val;
+        }
+        chartData.push(
+                {
+                    x: parseInt(data[i].values.time) - tzOffset,
+                    y: y_val
+                }
+        );
+    }
+    if (range_max < max_val) {
+        range_max = max_val;
+    }
+    if (range_min > min_val) {
+        range_min = min_val;
+    }
+    graphConfig['series'].push(
+            {
+                'color': palette.color(),
+                'data': chartData,
+                'name': $("#details").data("devicename"),
+                'scale': d3.scale.linear().domain([Math.min(min, min_val), Math.max(max, max_val)])
+                        .nice()
+            }
+    );
 
-	var graph = new Rickshaw.Graph(graphConfig);
+    if (graphConfig['series'].length == 0) {
+        $(chartWrapperElmId).html("No data available...");
+        return;
+    }
 
-	graph.render();
+    var graph = new Rickshaw.Graph(graphConfig);
 
-	var xAxis = new Rickshaw.Graph.Axis.Time({
-		graph: graph
-	});
+    graph.render();
 
-	xAxis.render();
+    var xAxis = new Rickshaw.Graph.Axis.Time({
+        graph: graph
+    });
 
-	yAxis = new Rickshaw.Graph.Axis.Y({
-		graph: graph,
-		orientation: 'left',
-		height: 300,
-		tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-		element: document.getElementById('y_axis')
-	});
+    xAxis.render();
 
-	yAxis.render();
+    var yAxis = new Rickshaw.Graph.Axis.Y.Scaled({
+        graph: graph,
+        orientation: 'left',
+        element: document.getElementById("y_axis"),
+        width: 40,
+        height: 410,
+        'scale': d3.scale.linear().domain([Math.min(min, range_min), Math.max(max, range_max)]).nice()
+    });
 
-	var slider = new Rickshaw.Graph.RangeSlider.Preview({
-		graph: graph,
-		element: document.getElementById("slider")
-	});
+    yAxis.render();
 
-	var legend = new Rickshaw.Graph.Legend({
-		graph: graph,
-		element: document.getElementById('legend')
-	});
+    var slider = new Rickshaw.Graph.RangeSlider.Preview({
+        graph: graph,
+        element: document.getElementById("slider")
+    });
 
-	var hoverDetail = new Rickshaw.Graph.HoverDetail({
-		graph: graph,
-		formatter: function (series, x, y) {
-			var date = '<span class="date">' +
-				moment((x) * 1000).format('Do MMM YYYY h:mm:ss a') + '</span>';
-			var swatch = '<span class="detail_swatch" style="background-color: ' +
-				series.color + '"></span>';
-			return swatch + series.name + ": " + parseInt(y) + '<br>' + date;
-		}
-	});
+    var legend = new Rickshaw.Graph.Legend({
+        graph: graph,
+        element: document.getElementById('legend')
+    });
 
-	var shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
-		graph: graph,
-		legend: legend
-	});
+    var hoverDetail = new Rickshaw.Graph.HoverDetail({
+        graph: graph,
+        formatter: function (series, x, y) {
+            var date = '<span class="date">' +
+                       moment((x + tzOffset) * 1000).format('Do MMM YYYY h:mm:ss a') + '</span>';
+            var swatch = '<span class="detail_swatch" style="background-color: ' +
+                         series.color + '"></span>';
+            return swatch + series.name + ": " + parseInt(y) + '<br>' + date;
+        }
+    });
 
-	var order = new Rickshaw.Graph.Behavior.Series.Order({
-		graph: graph,
-		legend: legend
-	});
+    var shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
+        graph: graph,
+        legend: legend
+    });
 
-	var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
-		graph: graph,
-		legend: legend
-	});
+    var order = new Rickshaw.Graph.Behavior.Series.Order({
+        graph: graph,
+        legend: legend
+    });
 
-}
-
-function summerizeLine(data) {
-	if (data.length > 1500) {
-		var nData = [];
-		var i = 1;
-		while (i < data.length) {
-			var t_avg = (data[i - 1].x + data[i].x) / 2;
-			var v_avg = (data[i - 1].y + data[i].y) / 2;
-			nData.push({x: t_avg, y: v_avg});
-			i += 2;
-		}
-		return summerizeLine(nData);
-	} else {
-		return data;
-	}
+    var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
+        graph: graph,
+        legend: legend
+    });
 }
