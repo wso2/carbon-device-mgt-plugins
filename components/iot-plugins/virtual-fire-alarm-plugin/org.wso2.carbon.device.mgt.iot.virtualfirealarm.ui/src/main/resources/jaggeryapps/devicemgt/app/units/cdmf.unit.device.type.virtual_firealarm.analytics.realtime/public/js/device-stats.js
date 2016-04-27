@@ -18,27 +18,35 @@
 
 var ws;
 var graph;
-
+var chartData = [];
 var palette = new Rickshaw.Color.Palette({scheme: "classic9"});
 
 $(window).load(function () {
+    var tNow = new Date().getTime() / 1000;
+    for (var i = 0; i < 30; i++) {
+        chartData.push({
+                           x: tNow - (30 - i) * 15,
+                           y: parseFloat(0)
+                       });
+    }
+
     graph = new Rickshaw.Graph({
         element: document.getElementById("chart"),
         width: $("#div-chart").width() - 50,
         height: 300,
         renderer: "line",
         padding: {top: 0.2, left: 0.0, right: 0.0, bottom: 0.2},
-        series: new Rickshaw.Series.FixedDuration([{name: "Temperature"}], undefined, {
-            timeInterval: 10000,
-            maxDataPoints: 20,
-            color: palette.color(),
-            timeBase: new Date().getTime() / 1000
-        })
+        xScale: d3.time.scale(),
+        series: [{
+            'color': palette.color(),
+            'data': chartData,
+            'name': "Temperature"
+        }]
     });
 
     graph.render();
 
-    xAxis = new Rickshaw.Graph.Axis.Time({
+    var xAxis = new Rickshaw.Graph.Axis.Time({
         graph: graph
     });
 
@@ -50,11 +58,6 @@ $(window).load(function () {
         height: 300,
         tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
         element: document.getElementById('y_axis')
-    });
-
-    new Rickshaw.Graph.Legend({
-        graph: graph,
-        element: document.getElementById('legend')
     });
 
     new Rickshaw.Graph.HoverDetail({
@@ -70,7 +73,7 @@ $(window).load(function () {
     connect(websocketUrl)
 });
 
-$(window).unload(function() {
+$(window).unload(function () {
     disconnect();
 });
 
@@ -86,11 +89,12 @@ function connect(target) {
     if (ws) {
         ws.onmessage = function (event) {
             var dataPoint = JSON.parse(event.data);
-            var data = {
-                Temperature: parseFloat(dataPoint[5])
-            };
-            graph.series.addData(data);
-            graph.render();
+            chartData.push({
+                               x: parseInt(dataPoint[4]) / 1000,
+                               y: parseFloat(dataPoint[5])
+                           });
+            chartData.shift();
+            graph.update();
         };
     }
 }
