@@ -70,7 +70,6 @@ public class SensorDataReader extends DataReader implements SensorEventListener 
             } catch (Throwable e) {
                 Log.d(TAG, "error on sensors");
             }
-
         }
         mSensorManager.unregisterListener(this);
     }

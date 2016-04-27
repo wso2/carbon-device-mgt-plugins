@@ -2,7 +2,7 @@
 @Plan:name('android_sense_execution')
 
 /* Enter a unique description for ExecutionPlan */
--- @Plan:description('ExecutionPlan')
+-- @Plan:description('android_sense_execution')
 
 /* define streams/tables and write queries here ... */
 
