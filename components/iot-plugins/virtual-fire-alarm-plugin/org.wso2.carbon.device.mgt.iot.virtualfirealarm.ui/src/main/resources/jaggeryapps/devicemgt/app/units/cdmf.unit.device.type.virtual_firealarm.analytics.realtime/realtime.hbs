@@ -1,4 +1,3 @@
-
 {{#zone "topCss"}}
     {{css "css/graph.css"}}
 {{/zone}}
@@ -17,7 +16,7 @@
     </div>
 </div>
 <a class="padding-left"
-   href="{{@app.context}}/device/analytics/{{device.type}}?id={{device.deviceIdentifier}}&deviceName={{device.name}}">
+   href="{{@app.context}}/device/{{device.type}}/analytics?deviceId={{device.deviceIdentifier}}&deviceName={{device.name}}">
     <span class="fw-stack">
         <i class="fw fw-ring fw-stack-2x"></i>
         <i class="fw fw-statistics fw-stack-1x"></i>
