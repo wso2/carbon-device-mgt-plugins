@@ -84,11 +84,10 @@
         <method>POST</method>
         <scope>virtual_firealarm_device</scope>
     </Permission>
-
     <Permission>
         <name>Get Stats</name>
         <path>/device-mgt/virtual_firealarm/user</path>
-        <url>/device/stats/*/sensors/*</url>
+        <url>/device/stats/*</url>
         <method>GET</method>
         <scope>virtual_firealarm_device</scope>
     </Permission>

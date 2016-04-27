@@ -17,11 +17,12 @@
     </div>
 </div>
 <a class="padding-left"
-   href="{{@app.context}}/analytics?deviceId={{device.deviceIdentifier}}&deviceType={{device.type}}&deviceName={{device.name}}">
-                                    <span class="fw-stack">
-                                        <i class="fw fw-ring fw-stack-2x"></i>
-                                        <i class="fw fw-statistics fw-stack-1x"></i>
-                                    </span> View Device Analytics</a>
+   href="{{@app.context}}/device/analytics/{{device.type}}?id={{device.deviceIdentifier}}&deviceName={{device.name}}">
+    <span class="fw-stack">
+        <i class="fw fw-ring fw-stack-2x"></i>
+        <i class="fw fw-statistics fw-stack-1x"></i>
+    </span> View Device Analytics
+</a>
 <!-- /statistics -->
 {{#zone "bottomJs"}}
     {{js "js/d3.min.js"}}

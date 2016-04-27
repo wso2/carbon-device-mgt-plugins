@@ -50,17 +50,6 @@ var graph = new Rickshaw.Graph({
 
 graph.render();
 
-
-var time = new Rickshaw.Fixtures.Time();
-var seconds = time.unit('second');
-
-var xAxis = new Rickshaw.Graph.Axis.Time({
-    graph: graph,
-    timeUnit: seconds
-});
-
-xAxis.render();
-
 new Rickshaw.Graph.Axis.Y({
     graph: graph,
     orientation: 'left',

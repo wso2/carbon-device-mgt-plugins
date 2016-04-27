@@ -76,14 +76,8 @@ public class APIUtil {
 		if (eventCount == 0) {
 			return null;
 		}
-		AnalyticsDrillDownRequest drillDownRequest = new AnalyticsDrillDownRequest();
-		drillDownRequest.setQuery(query);
-		drillDownRequest.setTableName(tableName);
-		drillDownRequest.setRecordCount(eventCount);
-		if (sortByFields != null) {
-			drillDownRequest.setSortByFields(sortByFields);
-		}
-		List<SearchResultEntry> resultEntries = analyticsDataAPI.drillDownSearch(tenantId, drillDownRequest);
+		List<SearchResultEntry> resultEntries = analyticsDataAPI.search(tenantId, tableName, query, 0, eventCount,
+																		sortByFields);
 		List<String> recordIds = getRecordIds(resultEntries);
 		AnalyticsDataResponse response = analyticsDataAPI.get(tenantId, tableName, 1, null, recordIds);
 		Map<String, SensorRecord> sensorDatas = createSensorData(AnalyticsDataServiceUtils.listRecords(

@@ -97,13 +97,12 @@ public interface VirtualFireAlarmControllerService {
     /**
      * Retrieve Sensor data for the device type
      */
-    @Path("device/stats/{deviceId}/sensors/{sensorName}")
+    @Path("device/stats/{deviceId}")
     @GET
     @Permission(scope = "virtual_firealarm_user", permissions = {"device-mgt/virtual_firealarm/user"})
     @Consumes("application/json")
     @Produces("application/json")
-    Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId,
-                                                 @PathParam("sensorName") String sensor, @QueryParam("from") long from,
+    Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
                                                  @QueryParam("to") long to);
 
 }

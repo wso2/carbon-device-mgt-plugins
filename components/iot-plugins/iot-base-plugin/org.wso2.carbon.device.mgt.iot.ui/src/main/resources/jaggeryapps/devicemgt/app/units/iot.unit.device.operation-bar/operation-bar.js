@@ -20,6 +20,36 @@ function onRequest(context) {
     var log = new Log("operation.js");
     var operationModule = require("/app/modules/operation.js").operationModule;
     var device = context.unit.params.device;
+    var autoCompleteParams = context.unit.params.autoCompleteParams;
     var controlOperations = operationModule.getControlOperations(device.type);
+    var queryParams = [];
+    var formParams = [];
+    var pathParams = [];
+    for (var i = 0; i < controlOperations.length; i++) {
+        var currentParamList = controlOperations[i]["params"];
+        for (var j = 0; j < currentParamList.length; j++) {
+            var currentParam = currentParamList[j];
+            currentParamList[j]["formParams"] = processParams(currentParam["formParams"], autoCompleteParams);
+            currentParamList[j]["queryParams"] = processParams(currentParam["queryParams"], autoCompleteParams);
+            currentParamList[j]["pathParams"] = processParams(currentParam["pathParams"], autoCompleteParams);
+        }
+        controlOperations[i]["params"] = currentParamList;
+    }
     return {"control_operations": controlOperations, "device": device};
+}
+
+function processParams(paramsList, autoCompleteParams) {
+    for (var i = 0; i < paramsList.length; i++) {
+        var paramName = paramsList[i];
+        var paramValue = "";
+        var paramType = "text";
+        for (var k = 0; k < autoCompleteParams.length; k++) {
+            if (paramName == autoCompleteParams[k].name) {
+                paramValue = autoCompleteParams[k].value;
+                paramType = "hidden";
+            }
+        }
+        paramsList[i] = {"name": paramName, "value": paramValue, "type": paramType};
+    }
+    return paramsList;
 }
