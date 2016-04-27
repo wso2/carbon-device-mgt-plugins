@@ -19,23 +19,16 @@
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl;
 
 import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.DeviceData;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.InputStream;
 
 /**
  * This class consists the functions/APIs specific to the "actions" of the VirtualFirealarm device-type. These APIs
@@ -44,7 +37,7 @@ import java.io.InputStream;
  * the transport 'Connectors' [XMPP & MQTT] specific to the VirtualFirealarm device-type in order to communicate with
  * such devices and to receive messages form it.
  */
-@API(name = "virtual_firealarm", version = "1.0.0", context = "/virtual_firealarm", tags = "virtual_firealarm")
+@API(name = "virtual_firealarm", version = "1.0.0", context = "/virtual_firealarm", tags = {"virtual_firealarm"})
 @DeviceType(value = "virtual_firealarm")
 public interface VirtualFireAlarmControllerService {
 
@@ -64,6 +57,7 @@ public interface VirtualFireAlarmControllerService {
      */
     @POST
     @Path("device/register/{deviceId}/{ip}/{port}")
+    @Permission(scope = "virtual_firealarm_admin", permissions = {"device-mgt/virtual_firealarm/admin"})
     Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
                                    @PathParam("port") String devicePort, @Context HttpServletRequest request);
 
@@ -80,6 +74,7 @@ public interface VirtualFireAlarmControllerService {
      */
     @POST
     @Path("device/{deviceId}/buzz")
+    @Permission(scope = "virtual_firealarm_user", permissions = {"device-mgt/virtual_firealarm/user"})
     @Feature(code = "buzz", name = "Buzzer On / Off", type = "operation",
             description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
     Response switchBuzzer(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
@@ -94,6 +89,7 @@ public interface VirtualFireAlarmControllerService {
      */
     @POST
     @Path("device/temperature")
+    @Permission(scope = "virtual_firealarm_admin", permissions = {"device-mgt/virtual_firealarm/admin"})
     @Consumes(MediaType.APPLICATION_JSON)
     Response pushTemperatureData(final DeviceData dataMsg);
     
@@ -103,6 +99,7 @@ public interface VirtualFireAlarmControllerService {
      */
     @Path("device/stats/{deviceId}/sensors/{sensorName}")
     @GET
+    @Permission(scope = "virtual_firealarm_user", permissions = {"device-mgt/virtual_firealarm/user"})
     @Consumes("application/json")
     @Produces("application/json")
     Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId,
