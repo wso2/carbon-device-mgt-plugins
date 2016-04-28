@@ -24,9 +24,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * The 'int' property of the 'DFFormat' property
+ * The 'b64' property of the 'DFFormat' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "int")
-public class FormatInt extends AbstractFormatProperty {
+@XmlRootElement(name = "b64")
+public class B64 extends AbstractFormatProperty {
 }

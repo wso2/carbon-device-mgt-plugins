@@ -24,9 +24,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * The 'bin' property of the 'DFFormat' property
+ * The 'bool' property of the 'DFFormat' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "bin")
-public class FormatBin extends AbstractFormatProperty {
+@XmlRootElement(name = "bool")
+public class Bool extends AbstractFormatProperty {
 }

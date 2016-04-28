@@ -19,6 +19,7 @@
 package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.dfproperties.dfformat;
 
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.format.*;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.format.Float;
 
 import javax.xml.bind.annotation.*;
 
@@ -30,15 +31,15 @@ import javax.xml.bind.annotation.*;
 public class DFFormat {
 
     @XmlElements({
-            @XmlElement(name = "b64", required = true, type = FormatB64.class),
-            @XmlElement(name = "bin", required = true, type = FormatBin.class),
-            @XmlElement(name = "bool", required = true, type = FormatBool.class),
-            @XmlElement(name = "chr", required = true, type = FormatChr.class),
-            @XmlElement(name = "int", required = true, type = FormatInt.class),
-            @XmlElement(name = "null", required = true, type = FormatNull.class),
-            @XmlElement(name = "xml", required = true, type = FormatXml.class),
-            @XmlElement(name = "date", required = true, type = FormatDate.class),
-            @XmlElement(name = "time", required = true, type = FormatTime.class),
+            @XmlElement(name = "b64", required = true, type = B64.class),
+            @XmlElement(name = "bin", required = true, type = Bin.class),
+            @XmlElement(name = "bool", required = true, type = Bool.class),
+            @XmlElement(name = "chr", required = true, type = Chr.class),
+            @XmlElement(name = "int", required = true, type = Int.class),
+            @XmlElement(name = "null", required = true, type = Null.class),
+            @XmlElement(name = "xml", required = true, type = Xml.class),
+            @XmlElement(name = "date", required = true, type = Date.class),
+            @XmlElement(name = "time", required = true, type = Time.class),
             @XmlElement(name = "float", required = true, type = Float.class)
     })
 

@@ -24,9 +24,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * The 'time' property of the 'DFFormat' property
+ * The 'bin' property of the 'DFFormat' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "time")
-public class FormatTime extends AbstractFormatProperty {
+@XmlRootElement(name = "bin")
+public class Bin extends AbstractFormatProperty {
 }

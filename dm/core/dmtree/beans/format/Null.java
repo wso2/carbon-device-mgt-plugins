@@ -28,5 +28,5 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "null")
-public class FormatNull extends AbstractFormatProperty {
+public class Null extends AbstractFormatProperty {
 }

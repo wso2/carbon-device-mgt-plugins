@@ -16,20 +16,17 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.ddf.standardmos;
+package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.format;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
- * This class acts as the primary entity which handles all the
- * Standard Management Object instantiation related complexities
+ * The 'chr' property of the 'DFFormat' property
  */
-public class StandardMOFactory {
-
-    public static DevInfo getDevInfoTree() {
-        return new DevInfo();
-    }
-
-    public static DevDetail getDevDetailTree() {
-        return new DevDetail();
-    }
-
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "chr")
+public class Chr extends AbstractFormatProperty {
 }

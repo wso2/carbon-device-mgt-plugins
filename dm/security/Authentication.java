@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.security;
+package org.wso2.carbon.mdm.services.android.omadm.dm.security;
 
 import org.apache.axiom.om.util.Base64;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.MetaTag;

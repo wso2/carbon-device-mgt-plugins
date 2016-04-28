@@ -59,14 +59,4 @@ public class DevDetail {
         }
     }
 
-    public MgmtTree getTree() {
-        if (this.mgmtTree != null) {
-            return this.mgmtTree;
-        } else {
-            this.mgmtTree = DDFCommonUtils.generateTree(DEV_DETAIL_DDF_PATH);
-            this.mgmtTree.setName(DEVDETAIL);
-            return this.mgmtTree;
-        }
-    }
-
 }

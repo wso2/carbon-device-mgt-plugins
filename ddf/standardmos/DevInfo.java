@@ -53,14 +53,4 @@ public class DevInfo implements Serializable {
         }
     }
 
-    public MgmtTree getTree() {
-        if (this.mgmtTree != null) {
-            return this.mgmtTree;
-        } else {
-            this.mgmtTree = DDFCommonUtils.generateTree(DEV_INFO_DDF_PATH);
-            this.mgmtTree.setName(DEVINFO);
-            return this.mgmtTree;
-        }
-    }
-
 }

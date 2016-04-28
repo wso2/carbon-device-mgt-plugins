@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.security;
+package org.wso2.carbon.mdm.services.android.omadm.dm.security;
 
 /**
  * This class acts as an entity which holds HMAC authentication details

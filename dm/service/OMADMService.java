@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.service;
+package org.wso2.carbon.mdm.services.android.omadm.dm.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,7 +44,7 @@ public class OMADMService {
     @POST
     @Consumes({Constants.APPLICATION_SYNCML, MediaType.APPLICATION_XML})
     @Produces(Constants.APPLICATION_SYNCML)
-    public Response generateReply(SyncMLDocument syncMLDoc) {
+    public Response processRequest(SyncMLDocument syncMLDoc) {
 
         if (syncMLDoc == null) {
             String msg = "Error occurred while parsing the SyncML request.";

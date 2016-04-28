@@ -21,12 +21,11 @@ package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.format;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 /**
- * The 'date' property of the 'DFFormat' property
+ * The 'float' property of the 'DFFormat' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "date")
-public class FormatDate extends AbstractFormatProperty {
+@XmlRootElement(name = "float")
+public class Float {
 }

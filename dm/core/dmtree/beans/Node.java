@@ -82,30 +82,6 @@ public class Node {
         this.value = value;
     }
 
-    public boolean addNode(Node node) {
-        checkForValue();
-        if (nodes == null) {
-            nodes = new ArrayList<>();
-        }
-        if (this.getDfProperties().getAccessType().getAdd() != null) {
-            nodes.add(node);
-            updatePaths(this.nodes, this.nodeName);
-            return true;
-        } else {
-            throw new DMNodeException("Parent node doesn't support the given operation.");
-        }
-    }
-
-    public boolean removeNode(String nodeName) {
-        for (Node node : this.nodes) {
-            if (node.getNodeName().equalsIgnoreCase(nodeName)) {
-                this.nodes.remove(node);
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void checkForValue() {
         if (this.value != null) {
             throw new DMNodeException("Cannot add nodes to a leaf node");

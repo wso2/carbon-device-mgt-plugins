@@ -24,9 +24,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * The 'chr' property of the 'DFFormat' property
+ * The 'int' property of the 'DFFormat' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "chr")
-public class FormatChr extends AbstractFormatProperty {
+@XmlRootElement(name = "int")
+public class Int extends AbstractFormatProperty {
 }

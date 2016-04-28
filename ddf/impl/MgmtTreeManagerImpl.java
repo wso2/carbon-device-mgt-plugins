@@ -54,32 +54,18 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
         } else {
             node.setPath(path);
             this.tree.getNodes().add(node);
-            DMRoot.getTreeMap().put(this.tree.getName(), this.tree);
-            DMRoot.getNodeMap().get(path).addNode(node);
-            DMRoot.getNodeMap().put(absolutePath,node);
             return true;
         }
     }
 
     @Override
     public boolean removeNode(String path) {
-        URIParser.validateUri(path);
-        if (!isExistingNode(path)) {
-            throw new DMNodeException("No such node exists.");
-        } else {
-            Node parentNode = DMRoot.getNodeMap().get(URIParser.getParentPath(path));
-            parentNode.removeNode(URIParser.getNodeName(path));
-            return true;
-        }
+
     }
 
     @Override
     public Node getNode(String path) {
-        if (isExistingNode(path)) {
-            return DMRoot.getNodeMap().get(path);
-        } else {
-            throw new DMNodeException("Node doesn't exist.");
-        }
+
     }
 
     @Override

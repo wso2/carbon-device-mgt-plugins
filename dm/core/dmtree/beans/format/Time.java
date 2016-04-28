@@ -24,9 +24,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * The 'bool' property of the 'DFFormat' property
+ * The 'time' property of the 'DFFormat' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "bool")
-public class FormatBool extends AbstractFormatProperty {
+@XmlRootElement(name = "time")
+public class Time extends AbstractFormatProperty {
 }
