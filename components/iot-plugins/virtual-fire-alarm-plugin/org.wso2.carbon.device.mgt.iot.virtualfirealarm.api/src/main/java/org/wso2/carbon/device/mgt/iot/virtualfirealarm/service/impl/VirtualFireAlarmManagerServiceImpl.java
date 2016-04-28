@@ -19,6 +19,8 @@
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
 import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
@@ -27,6 +29,7 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
+import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
@@ -63,14 +66,18 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
 
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
+    private static Log log = LogFactory.getLog(VirtualFireAlarmManagerServiceImpl.class);
 
-    @Path("devices/{device_id}")
+    @Path("/devices/{device_id}")
     @DELETE
     public Response removeDevice(@PathParam("device_id") String deviceId) {
         try {
             DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
             deviceIdentifier.setId(deviceId);
             deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier)) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
             boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(
                     deviceIdentifier);
             if (removed) {
@@ -79,17 +86,24 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
                 return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
             }
         } catch (DeviceManagementException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
 
-    @Path("devices/{device_id}")
+    @Path("/devices/{device_id}")
     @PUT
     public Response updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name) {
         try {
             DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
             deviceIdentifier.setId(deviceId);
             deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier)) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
             Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
             device.setDeviceIdentifier(deviceId);
             device.getEnrolmentInfo().setDateOfLastUpdate(new Date().getTime());
@@ -102,11 +116,15 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
                 return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
             }
         } catch (DeviceManagementException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
 
-    @Path("devices/{device_id}")
+    @Path("/devices/{device_id}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -115,14 +133,21 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
             DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
             deviceIdentifier.setId(deviceId);
             deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier)) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
             Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
             return Response.ok().entity(device).build();
         } catch (DeviceManagementException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
 
-    @Path("devices")
+    @Path("/devices")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -140,57 +165,44 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
             Device[] devices = userDevicesforFirealarm.toArray(new Device[]{});
             return Response.ok().entity(devices).build();
         } catch (DeviceManagementException e) {
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
 
-    @Path("devices/download")
+    @Path("/devices/download")
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces("application/zip")
     public Response downloadSketch(@QueryParam("deviceName") String deviceName,
                                    @QueryParam("sketchType") String sketchType) {
         try {
             ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
             Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
+            response.status(Response.Status.OK);
             response.type("application/zip");
             response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
-            return response.build();
+            Response resp = response.build();
+            zipFile.getZipFile().delete();
+            return resp;
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
         } catch (DeviceManagementException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (JWTClientException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (APIManagerException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (DeviceControllerException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (IOException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (UserStoreException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        }
-    }
-
-    @Path("devices/generate_link")
-    @GET
-    public Response generateSketchLink(@QueryParam("deviceName") String deviceName,
-                                @QueryParam("sketchType") String sketchType) {
-        try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
-            Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
-            return rb.build();
-        } catch (IllegalArgumentException ex) {
-            return Response.status(400).entity(ex.getMessage()).build();//bad request
-        } catch (DeviceManagementException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (JWTClientException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (APIManagerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (UserStoreException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         }
     }
@@ -215,8 +227,12 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
             enrolmentInfo.setOwner(APIUtil.getAuthenticatedUser());
             device.setEnrolmentInfo(enrolmentInfo);
             boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
+            if (added) {
+                APIUtil.registerApiAccessRoles(APIUtil.getAuthenticatedUser());
+            }
             return added;
         } catch (DeviceManagementException e) {
+            log.error(e.getMessage(), e);
             return false;
         }
     }

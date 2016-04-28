@@ -21,6 +21,7 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.packet.Message;
+import org.json.JSONObject;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
@@ -29,15 +30,14 @@ import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.xmpp.XMPPTransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.SecurityManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.VirtualFireAlarmServiceUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.io.File;
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Calendar;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -52,6 +52,7 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
     private static String xmppVFireAlarmAdminAccountJID;
     private static final String V_FIREALARM_XMPP_PASSWORD = "vfirealarm@123";
     private static final String DEVICEMGT_CONFIG_FILE = "devicemgt-config.xml";
+    private static final String JSON_SERIAL_KEY = "SerialNumber";
 
     private ScheduledFuture<?> connectorServiceHandler;
     private ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
@@ -155,9 +156,15 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
             }
 
             try {
-                PublicKey clientPublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
-                PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();
-                String actualMessage = VirtualFireAlarmServiceUtils.extractMessageFromPayload(message, serverPrivateKey,
+                PrivilegedCarbonContext.startTenantFlow();
+                String tenantDomain = MultitenantUtils.getTenantDomain(owner);
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain);
+                PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(owner);
+
+                JSONObject jsonPayload = new JSONObject(message);
+                Long serialNo = (Long)jsonPayload.get(JSON_SERIAL_KEY);
+                PublicKey clientPublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey("" + serialNo);
+                String actualMessage = VirtualFireAlarmServiceUtils.extractMessageFromPayload(message,
                                                                                        clientPublicKey);
                 if (log.isDebugEnabled()) {
                     log.debug("XMPP: Received Message [" + actualMessage + "] from: [" + from + "]");
@@ -166,10 +173,6 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
                     switch (subject) {
                         case "PUBLISHER":
                             float temperature = Float.parseFloat(actualMessage.split(":")[1]);
-                            PrivilegedCarbonContext.startTenantFlow();
-                            String tenantDomain = MultitenantUtils.getTenantDomain(owner);
-                            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain);
-                            PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(owner);
                             if (!VirtualFireAlarmServiceUtils.publishToDAS(deviceId, temperature)) {
                                 log.error("XMPP Connector: Publishing VirtualFirealarm data to DAS failed.");
                             }
@@ -194,6 +197,8 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
                 String errorMsg =
                         "CertificateManagementService failure oo Signature-Verification/Decryption was unsuccessful.";
                 log.error(errorMsg, e);
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
             }
         } else {
             log.warn("Received XMPP message from client with unexpected JID [" + from + "].");
@@ -215,14 +220,9 @@ public class VirtualFireAlarmXMPPConnector extends XMPPTransportHandler {
         String state = publishData[3];
 
         try {
-            PublicKey devicePublicKey = VirtualFireAlarmServiceUtils.getDevicePublicKey(deviceId);
             PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();
-
             String actualMessage = resource + ":" + state;
-            String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage,
-                                                                                    devicePublicKey,
-                                                                                    serverPrivateKey);
-
+            String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage, serverPrivateKey);
             String clientToConnect = deviceId + "@" + xmppServerIP + File.separator + deviceOwner;
             sendXMPPMessage(clientToConnect, encryptedMsg, "CONTROL-REQUEST");
 

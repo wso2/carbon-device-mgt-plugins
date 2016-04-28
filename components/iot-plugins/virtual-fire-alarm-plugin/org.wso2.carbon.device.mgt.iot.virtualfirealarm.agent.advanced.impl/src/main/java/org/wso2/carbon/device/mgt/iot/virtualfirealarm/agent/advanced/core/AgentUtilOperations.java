@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
@@ -45,6 +46,8 @@ public class AgentUtilOperations {
     private static final Log log = LogFactory.getLog(AgentUtilOperations.class);
     private static final String JSON_MESSAGE_KEY = "Msg";
     private static final String JSON_SIGNATURE_KEY = "Sig";
+    private static final String JSON_SERIAL_KEY = "SerialNumber";
+    private static final String JSON_TENANT_KEY = "Tenant";
 
     /**
      * This method reads the agent specific configurations for the device from the
@@ -88,6 +91,8 @@ public class AgentUtilOperations {
                     AgentConstants.DEVICE_NAME_PROPERTY));
             iotServerConfigs.setControllerContext(properties.getProperty(
                     AgentConstants.DEVICE_CONTROLLER_CONTEXT_PROPERTY));
+            iotServerConfigs.setScepContext(properties.getProperty(
+                    AgentConstants.DEVICE_SCEP_CONTEXT_PROPERTY));
             iotServerConfigs.setHTTPS_ServerEndpoint(properties.getProperty(
                     AgentConstants.SERVER_HTTPS_EP_PROPERTY));
             iotServerConfigs.setHTTP_ServerEndpoint(properties.getProperty(
@@ -176,6 +181,7 @@ public class AgentUtilOperations {
         iotServerConfigs.setDeviceId(AgentConstants.DEFAULT_DEVICE_ID);
         iotServerConfigs.setDeviceName(AgentConstants.DEFAULT_DEVICE_NAME);
         iotServerConfigs.setControllerContext(AgentConstants.DEVICE_CONTROLLER_API_EP);
+        iotServerConfigs.setScepContext(AgentConstants.DEVICE_SCEP_API_EP);
         iotServerConfigs.setHTTPS_ServerEndpoint(AgentConstants.DEFAULT_HTTPS_SERVER_EP);
         iotServerConfigs.setHTTP_ServerEndpoint(AgentConstants.DEFAULT_HTTP_SERVER_EP);
         iotServerConfigs.setApimGatewayEndpoint(AgentConstants.DEFAULT_APIM_GATEWAY_EP);
@@ -203,11 +209,11 @@ public class AgentUtilOperations {
         String serverSecureEndpoint = agentManager.getAgentConfigs().getHTTPS_ServerEndpoint();
         String serverUnSecureEndpoint = agentManager.getAgentConfigs().getHTTP_ServerEndpoint();
         String backEndContext = agentManager.getAgentConfigs().getControllerContext();
-
+        String scepBackEndContext = agentManager.getAgentConfigs().getScepContext();
         String deviceControllerAPIEndpoint = serverSecureEndpoint + backEndContext;
 
         String deviceEnrollmentEndpoint =
-                serverUnSecureEndpoint + backEndContext + AgentConstants.DEVICE_ENROLLMENT_API_EP;
+                serverUnSecureEndpoint + scepBackEndContext + AgentConstants.DEVICE_ENROLLMENT_API_EP;
         agentManager.setEnrollmentEP(deviceEnrollmentEndpoint);
 
         String registerEndpointURL =
@@ -229,21 +235,11 @@ public class AgentUtilOperations {
 
 
     public static String prepareSecurePayLoad(String message) throws AgentCoreOperationException {
-        PublicKey serverPublicKey = EnrollmentManager.getInstance().getServerPublicKey();
         PrivateKey devicePrivateKey = EnrollmentManager.getInstance().getPrivateKey();
-
-        String encryptedMsg;
-        try {
-            encryptedMsg = CommunicationUtils.encryptMessage(message, serverPublicKey);
-        } catch (TransportHandlerException e) {
-            String errorMsg = "Error occurred whilst trying to encryptMessage: [" + message + "]";
-            log.error(errorMsg);
-            throw new AgentCoreOperationException(errorMsg, e);
-        }
-
+        String encodedMessage = Base64.encodeBase64String(message.getBytes());
         String signedPayload;
         try {
-            signedPayload = CommunicationUtils.signMessage(encryptedMsg, devicePrivateKey);
+            signedPayload = CommunicationUtils.signMessage(encodedMessage, devicePrivateKey);
         } catch (TransportHandlerException e) {
             String errorMsg = "Error occurred whilst trying to sign encrypted message of: [" + message + "]";
             log.error(errorMsg);
@@ -251,8 +247,11 @@ public class AgentUtilOperations {
         }
 
         JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(JSON_MESSAGE_KEY, encryptedMsg);
+        jsonPayload.put(JSON_MESSAGE_KEY, encodedMessage);
         jsonPayload.put(JSON_SIGNATURE_KEY, signedPayload);
+        //below statements are temporary fix.
+        jsonPayload.put(JSON_SERIAL_KEY, EnrollmentManager.getInstance().getSCEPCertificate().getSerialNumber());
+        jsonPayload.put(JSON_TENANT_KEY, "carbon.super");
 
         return jsonPayload.toString();
     }
@@ -262,17 +261,15 @@ public class AgentUtilOperations {
         String actualMessage;
 
         PublicKey serverPublicKey = EnrollmentManager.getInstance().getServerPublicKey();
-        PrivateKey devicePrivateKey = EnrollmentManager.getInstance().getPrivateKey();
-
         JSONObject jsonPayload = new JSONObject(message);
-        Object encryptedMessage = jsonPayload.get(JSON_MESSAGE_KEY);
+        Object encodedMessage = jsonPayload.get(JSON_MESSAGE_KEY);
         Object signedPayload = jsonPayload.get(JSON_SIGNATURE_KEY);
         boolean verification;
 
-        if (encryptedMessage != null && signedPayload != null) {
+        if (encodedMessage != null && signedPayload != null) {
             try {
                 verification = CommunicationUtils.verifySignature(
-                        encryptedMessage.toString(), signedPayload.toString(), serverPublicKey);
+                        encodedMessage.toString(), signedPayload.toString(), serverPublicKey);
             } catch (TransportHandlerException e) {
                 String errorMsg =
                         "Error occurred whilst trying to verify signature on received message: [" + message + "]";
@@ -284,21 +281,13 @@ public class AgentUtilOperations {
                     "Need to be JSON - {\"Msg\":\"<ENCRYPTED_MSG>\", \"Sig\":\"<SIGNED_MSG>\"}.";
             throw new AgentCoreOperationException(errorMsg);
         }
-
-        try {
-            if (verification) {
-                actualMessage = CommunicationUtils.decryptMessage(encryptedMessage.toString(), devicePrivateKey);
-            } else {
-                String errorMsg = "Could not verify payload signature. The message was not signed by a valid client";
-                log.error(errorMsg);
-                throw new AgentCoreOperationException(errorMsg);
-            }
-        } catch (TransportHandlerException e) {
-            String errorMsg = "Error occurred whilst trying to decrypt received message: [" + encryptedMessage + "]";
+        if (verification) {
+            actualMessage = new String(Base64.decodeBase64(encodedMessage.toString()), StandardCharsets.UTF_8);
+        } else {
+            String errorMsg = "Could not verify payload signature. The message was not signed by a valid client";
             log.error(errorMsg);
-            throw new AgentCoreOperationException(errorMsg, e);
+            throw new AgentCoreOperationException(errorMsg);
         }
-
         return actualMessage;
     }
 

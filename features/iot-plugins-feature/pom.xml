@@ -37,11 +37,10 @@
         <module>iot-analytics-feature</module>
         <module>androidsense-plugin-feature</module>
         <module>arduino-plugin-feature</module>
-        <module>digital-display-plugin-feature</module>
-        <module>drone-analyzer-plugin-feature</module>
         <module>raspberrypi-plugin-feature</module>
         <module>virtual-fire-alarm-plugin-feature</module>
         <module>iot-base-plugin-feature</module>
+        <module>iot-devicetypes-feature</module>
     </modules>
 
 </project>

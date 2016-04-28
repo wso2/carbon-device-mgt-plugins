@@ -140,10 +140,6 @@ function downloadAgent() {
         $('#downloadForm').submit();
         hideAgentDownloadPopup();
         $(modalPopupContent).html($('#device-agent-downloading-content').html());
-        showAgentDownloadPopup();
-        setTimeout(function () {
-            hideAgentDownloadPopup();
-        }, 1000);
     } else {
         $("#invalid-username-error-msg span").text("Invalid device name");
         $("#invalid-username-error-msg").removeClass("hidden");

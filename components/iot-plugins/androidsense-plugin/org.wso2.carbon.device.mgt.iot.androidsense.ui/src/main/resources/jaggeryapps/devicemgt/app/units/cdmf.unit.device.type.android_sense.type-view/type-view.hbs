@@ -39,8 +39,7 @@
             &nbsp;&nbsp;&nbsp;Proceed to [Prepare] section.
     </ul>
     <br>
-    <a href="#" class="download-link btn-operations" data-devicetype="{{@uriParams.deviceType}}"
-       data-sketchtype="{{@uriParams.deviceType}}" data-url="{{enrollmentURl}}">
+    <a href="#" class="download-link btn-operations">
         <i class="fw fw-mobile fw-inverse fw-lg"></i> Enroll Device</a>
     <br/><br/>
 
@@ -225,7 +224,7 @@
     </center>
 </div>
 
-<div id="qr-code-modal" data-enrollment-url="{{enrollmentURL}}" class="hidden">
+<div id="qr-code-modal" data-enrollment-url="{{hostName}}{{@unit.publicUri}}/asset/androidsense.apk" class="hidden">
     <div class="content">
         <div class="row">
             <div class="col-lg-5 col-md-6 col-centered">
@@ -237,17 +236,9 @@
                     </div>
                 </div>
                 <form id="downloadForm" method="GET"
-                      action="{{@app.context}}/api/devices/sketch/download">
-                    <div class="control-group">
-                        <div class="controls">
-                            <input type="hidden" class="deviceType" name="deviceType"
-                                   value="android_sense"/>
-                            <input type="hidden" class="sketchType" name="sketchType"
-                                   value="android_sense"/>
-                        </div>
-                    </div>
+                      action="{{hostName}}{{@unit.publicUri}}/asset/androidsense.apk">
                     <div class="buttons" style="padding-bottom: 0px">
-                        <a class="btn btn-operations" onclick="downloadAgent()">Download Now</a>
+                        <input class="btn btn-operations" type="submit" value="Download Now">
                     </div>
                 </form>
             </div>

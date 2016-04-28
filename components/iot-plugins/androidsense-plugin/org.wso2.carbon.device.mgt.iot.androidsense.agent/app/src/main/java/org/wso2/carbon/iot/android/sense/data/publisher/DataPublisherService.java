@@ -143,7 +143,7 @@ public class DataPublisherService extends Service {
                     }
                     SenseDataHolder.resetWordDataHolder();
                     //publish the data
-                    if (events.size() > 0) {
+                    if (events.size() > 0 && LocalRegistry.isEnrolled(context)) {
                         String user = LocalRegistry.getUsername(context);
                         String deviceId = LocalRegistry.getDeviceId(context);
                         JSONArray jsonArray = new JSONArray();

@@ -35,6 +35,7 @@ public class LocalRegistry {
     private static final String ACCESS_TOKEN_KEY = "accessTokenKey";
     private static final String REFRESH_TOKEN_KEY = "refreshTokenKey";
     private static final String MQTT_PORT_KEY = "mqttPort";
+    private static final String IS_ENROLLED_KEY = "enrolled";
     private static boolean exists = false;
     private static String username;
     private static String deviceId;
@@ -43,6 +44,7 @@ public class LocalRegistry {
     private static String accessToken;
     private static String refreshToken;
     private static int mqttPort;
+    private static boolean enrolled;
 
     public static boolean isExist(Context context) {
         if (!exists) {
@@ -207,6 +209,22 @@ public class LocalRegistry {
             LocalRegistry.mqttPort = sharedpreferences.getInt(MQTT_PORT_KEY, SenseConstants.MQTT_BROKER_PORT);
         }
         return LocalRegistry.mqttPort;
+    }
+
+    public static void setEnrolled(Context context, boolean enrolled) {
+        SharedPreferences sharedpreferences = context.getSharedPreferences(SENSE_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean(IS_ENROLLED_KEY, enrolled);
+        editor.commit();
+        LocalRegistry.enrolled = enrolled;
+    }
+
+    public static boolean isEnrolled(Context context) {
+        if (!LocalRegistry.enrolled) {
+            SharedPreferences sharedpreferences = context.getSharedPreferences(SENSE_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            return LocalRegistry.enrolled = sharedpreferences.getBoolean(IS_ENROLLED_KEY, false);
+        }
+        return LocalRegistry.enrolled;
     }
 
     public static String getServerHost(Context context) {

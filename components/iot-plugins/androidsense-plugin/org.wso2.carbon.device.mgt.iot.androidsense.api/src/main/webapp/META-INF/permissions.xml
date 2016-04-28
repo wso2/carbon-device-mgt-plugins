@@ -65,7 +65,7 @@
     </Permission>
     <Permission>
         <name>Add device</name>
-        <path>/login</path>
+        <path>/device-mgt/user</path>
         <url>/enrollment/devices/*</url>
         <method>POST</method>
         <scope>android_sense_user</scope>
@@ -75,13 +75,6 @@
         <path>/device-mgt/android_sense/user</path>
         <url>/enrollment/devices/*</url>
         <method>DELETE</method>
-        <scope>android_sense_user</scope>
-    </Permission>
-    <Permission>
-        <name>Download device</name>
-        <path>/device-mgt/android_sense/user</path>
-        <url>/enrollment/devices/download</url>
-        <method>GET</method>
         <scope>android_sense_user</scope>
     </Permission>
     <Permission>

@@ -26,21 +26,23 @@ import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.DeviceData;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport.VirtualFireAlarmXMPPConnector;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.SecurityManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.scep.ContentType;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.scep.SCEPOperation;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport.VirtualFireAlarmMQTTConnector;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport.VirtualFireAlarmXMPPConnector;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.SecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.VirtualFireAlarmServiceUtils;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.scep.ContentType;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.scep.SCEPOperation;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,13 +62,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * This class consists the functions/APIs specific to the "actions" of the VirtualFirealarm device-type. These APIs
- * include the ones that are used by the [Device] to contact the server (i.e: Enrollment & Publishing Data) and the
- * ones used by the [Server/Owner] to contact the [Device] (i.e: sending control signals). This class also initializes
- * the transport 'Connectors' [XMPP & MQTT] specific to the VirtualFirealarm device-type in order to communicate with
- * such devices and to receive messages form it.
- */
 @SuppressWarnings("Non-Annoted WebService")
 public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmControllerService {
 
@@ -75,7 +70,7 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
     private static final String MQTT_PROTOCOL = "MQTT";
     private static Log log = LogFactory.getLog(VirtualFireAlarmControllerServiceImpl.class);
     // consists of utility methods related to encrypting and decrypting messages
-    private SecurityManager securityManager;
+    private org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.SecurityManager securityManager;
     // connects to the given MQTT broker and handles MQTT communication
     private VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector;
     // connects to the given XMPP server and handles XMPP communication
@@ -117,6 +112,10 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                       protocolString);
         }
         try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
+                                                                                                     VirtualFireAlarmConstants.DEVICE_TYPE))) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
             switch (protocolString) {
                 case HTTP_PROTOCOL:
                     String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
@@ -138,6 +137,9 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
         } catch (DeviceManagementException | TransportHandlerException e) {
             log.error("Failed to send switch-bulb request to device [" + deviceId + "] via " + protocolString);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -147,7 +149,6 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
     public Response pushTemperatureData(final DeviceData dataMsg) {
         String deviceId = dataMsg.deviceId;
         String deviceIp = dataMsg.reply;
-        float temperature = dataMsg.value;
         String registeredIp = deviceToIpMap.get(deviceId);
         if (registeredIp == null) {
             log.warn("Unregistered IP: Temperature Data Received from an un-registered IP " +
@@ -158,118 +159,37 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                      " is already registered under some other IP. Re-registration required");
             return Response.status(Response.Status.CONFLICT).build();
         }
-        if (!VirtualFireAlarmServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
+        try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
+                VirtualFireAlarmConstants.DEVICE_TYPE))) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
+            if (!VirtualFireAlarmServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+            }
+            return Response.ok().build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return Response.ok().build();
     }
 
-    @GET
-    @Path("device/scep")
-    public Response scepRequest(@QueryParam("operation") String operation, @QueryParam("message") String message) {
-        if (log.isDebugEnabled()) {
-            log.debug("Invoking SCEP operation " + operation);
-        }
-        if (SCEPOperation.GET_CA_CERT.getValue().equals(operation)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Invoking GetCACert");
-            }
-            try {
-                CertificateManagementService certificateManagementService =
-                        VirtualFireAlarmServiceUtils.getCertificateManagementService();
-                SCEPResponse scepResponse = certificateManagementService.getCACertSCEP();
-                Response.ResponseBuilder responseBuilder;
-                switch (scepResponse.getResultCriteria()) {
-                    case CA_CERT_FAILED:
-                        log.error("CA cert failed");
-                        responseBuilder = Response.serverError();
-                        break;
-                    case CA_CERT_RECEIVED:
-                        if (log.isDebugEnabled()) {
-                            log.debug("CA certificate received in GetCACert");
-                        }
-                        responseBuilder = Response.ok(scepResponse.getEncodedResponse(),
-                                                      ContentType.X_X509_CA_CERT);
-                        break;
-                    case CA_RA_CERT_RECEIVED:
-                        if (log.isDebugEnabled()) {
-                            log.debug("CA and RA certificates received in GetCACert");
-                        }
-                        responseBuilder = Response.ok(scepResponse.getEncodedResponse(),
-                                                      ContentType.X_X509_CA_RA_CERT);
-                        break;
-                    default:
-                        log.error("Invalid SCEP request");
-                        responseBuilder = Response.serverError();
-                        break;
-                }
-
-                return responseBuilder.build();
-            } catch (VirtualFireAlarmException e) {
-                log.error("Error occurred while enrolling the VirtualFireAlarm device", e);
-            } catch (KeystoreException e) {
-                log.error("Keystore error occurred while enrolling the VirtualFireAlarm device", e);
-            }
-
-        } else if (SCEPOperation.GET_CA_CAPS.getValue().equals(operation)) {
-
-            if (log.isDebugEnabled()) {
-                log.debug("Invoking GetCACaps");
-            }
-            try {
-                CertificateManagementService certificateManagementService = VirtualFireAlarmServiceUtils.
-                        getCertificateManagementService();
-                byte caCaps[] = certificateManagementService.getCACapsSCEP();
-
-                return Response.ok(caCaps, MediaType.TEXT_PLAIN).build();
-
-            } catch (VirtualFireAlarmException e) {
-                log.error("Error occurred while enrolling the device", e);
-            }
-        } else {
-            log.error("Invalid SCEP operation " + operation);
-        }
-        return Response.serverError().build();
-    }
-
-    @POST
-    @Path("device/scep")
-    public Response scepRequestPost(@QueryParam("operation") String operation, InputStream inputStream) {
-        if (log.isDebugEnabled()) {
-            log.debug("Invoking SCEP operation " + operation);
-        }
-        if (SCEPOperation.PKI_OPERATION.getValue().equals(operation)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Invoking PKIOperation");
-            }
-            try {
-                CertificateManagementService certificateManagementService = VirtualFireAlarmServiceUtils.
-                        getCertificateManagementService();
-                byte pkiMessage[] = certificateManagementService.getPKIMessageSCEP(inputStream);
-                return Response.ok(pkiMessage, ContentType.X_PKI_MESSAGE).build();
-            } catch (VirtualFireAlarmException e) {
-                log.error("Error occurred while enrolling the device", e);
-            } catch (KeystoreException e) {
-                log.error("Keystore error occurred while enrolling the device", e);
-            }
-        }
-        return Response.serverError().build();
-    }
-
-    @Path("device/stats/{deviceId}/sensors/{sensorName}")
+    @Path("device/stats/{deviceId}")
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    public Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId,
-                                             @PathParam("sensorName") String sensor,
-                                             @QueryParam("username") String user, @QueryParam("from") long from,
+    public Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
                                              @QueryParam("to") long to) {
             String fromDate = String.valueOf(from);
             String toDate = String.valueOf(to);
-            String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
+            String query = "deviceId:" + deviceId + " AND deviceType:" +
                            VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
-            String sensorTableName = getSensorEventTableName(sensor);
+            String sensorTableName = VirtualFireAlarmConstants.TEMPERATURE_EVENT_TABLE;
             try {
+                if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
+                        VirtualFireAlarmConstants.DEVICE_TYPE))) {
+                    return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+                }
                 if (sensorTableName != null) {
                     List<SortByField> sortByFields = new ArrayList<>();
                     SortByField sortByField = new SortByField("time", SORT.ASC, false);
@@ -281,6 +201,9 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                 String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
                 log.error(errorMsg);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
+            } catch (DeviceAccessAuthorizationException e) {
+                log.error(e.getErrorMessage(), e);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
@@ -407,23 +330,5 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
         };
         Thread connectorThread = new Thread(connector);
         connectorThread.start();
-    }
-
-    /**
-     * get the event table from the sensor name.
-     */
-    private String getSensorEventTableName(String sensorName) {
-        String sensorEventTableName;
-        switch (sensorName) {
-            case VirtualFireAlarmConstants.SENSOR_TEMP:
-                sensorEventTableName = VirtualFireAlarmConstants.TEMPERATURE_EVENT_TABLE;
-                break;
-            case VirtualFireAlarmConstants.SENSOR_HUMIDITY:
-                sensorEventTableName = VirtualFireAlarmConstants.HUMIDITY_EVENT_TABLE;
-                break;
-            default:
-                sensorEventTableName = null;
-        }
-        return sensorEventTableName;
     }
 }
