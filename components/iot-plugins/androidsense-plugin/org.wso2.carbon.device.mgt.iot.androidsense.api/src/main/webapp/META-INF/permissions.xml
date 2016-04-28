@@ -44,8 +44,8 @@
 	</Permission>
 	<Permission>
 		<name>delete words</name>
-		<path>/device-mgt/android_sense/user</path>
-		<url>/device/*/words</url>
+        <path>/device-mgt/android_sense/user</path>
+        <url>/device/*/words</url>
 		<method>DELETE</method>
 		<scope>android_sense_user</scope>
 	</Permission>

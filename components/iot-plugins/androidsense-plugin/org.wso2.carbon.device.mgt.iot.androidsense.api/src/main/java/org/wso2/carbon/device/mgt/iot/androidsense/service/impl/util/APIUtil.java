@@ -48,6 +48,11 @@ public class APIUtil {
 		return username;
 	}
 
+	public static String getAuthenticatedUserTenantDomain() {
+		PrivilegedCarbonContext threadLocalCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+		return threadLocalCarbonContext.getTenantDomain();
+	}
+
 	public static DeviceManagementProviderService getDeviceManagementService() {
 		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
 		DeviceManagementProviderService deviceManagementProviderService =

@@ -15,19 +15,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+package org.wso2.carbon.iot.android.sense.util.dto;
 
-package org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util;
+/**
+ * This holds the required configuration for agent to connect to the server.
+ */
+public class AndroidConfiguration {
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+    public String tenantDomain;
+    public String mqttEndpoint;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+    public String getTenantDomain() {
+        return tenantDomain;
+    }
 
-@XmlRootElement
+    public void setTenantDomain(String tenantDomain) {
+        this.tenantDomain = tenantDomain;
+    }
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class DeviceData {
-    @XmlElement(required = true) public String owner;
-    @XmlElement(required = true) public String deviceId;
-    @XmlElement public SensorData[] values;
+    public String getMqttEndpoint() {
+        return mqttEndpoint;
+    }
+
+    public void setMqttEndpoint(String mqttEndpoint) {
+        this.mqttEndpoint = mqttEndpoint;
+    }
 }

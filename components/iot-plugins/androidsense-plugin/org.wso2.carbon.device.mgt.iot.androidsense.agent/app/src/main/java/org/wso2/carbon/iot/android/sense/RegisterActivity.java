@@ -52,7 +52,6 @@ public class RegisterActivity extends Activity {
     private EditText mUsernameView;
     private EditText mPasswordView;
     private EditText mHostView;
-    private EditText mMqttPortView;
     private View mProgressView;
     private View mLoginFormView;
     private Handler mUiHandler = new Handler();
@@ -71,7 +70,6 @@ public class RegisterActivity extends Activity {
         mUsernameView = (EditText) findViewById(R.id.username);
         mPasswordView = (EditText) findViewById(R.id.password);
         mHostView = (EditText) findViewById(R.id.hostname);
-        mMqttPortView = (EditText) findViewById(R.id.mqttPort);
         AvailableSensorsInDevice availableSensorsInDevice = new AvailableSensorsInDevice(getApplicationContext());
         availableSensorsInDevice.setContent();
 
@@ -99,7 +97,6 @@ public class RegisterActivity extends Activity {
         final String username = mUsernameView.getText().toString();
         final String password = mPasswordView.getText().toString();
         final String hostname = mHostView.getText().toString();
-        String mqttPort = mMqttPortView.getText().toString();
         boolean cancel = false;
         View focusView = null;
 
@@ -124,7 +121,6 @@ public class RegisterActivity extends Activity {
         if (cancel) {
             focusView.requestFocus();
         } else {
-            final int mqttPortNo= Integer.parseInt(mqttPort);
             Thread myThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -143,7 +139,6 @@ public class RegisterActivity extends Activity {
                         LocalRegistry.setEnrolled(getApplicationContext(), true);
                         LocalRegistry.addUsername(getApplicationContext(), username);
                         LocalRegistry.addDeviceId(getApplicationContext(), deviceId);
-                        LocalRegistry.addMqttPort(getApplicationContext(), mqttPortNo);
                         MQTTTransportHandler mqttTransportHandler = AndroidSenseMQTTHandler.getInstance(getApplicationContext());
                         if (!mqttTransportHandler.isConnected()) {
                             mqttTransportHandler.connect();

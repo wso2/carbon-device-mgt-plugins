@@ -27,6 +27,11 @@ import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
+import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.AndroidConfiguration;
+import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.Constants;
+import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
+import org.wso2.carbon.device.mgt.iot.exception.IoTException;
+import org.wso2.carbon.device.mgt.iot.util.IoTUtil;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -53,7 +58,15 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
         try {
             if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
-                return Response.status(Response.Status.CONFLICT.getStatusCode()).build();
+                AndroidConfiguration androidConfiguration = new AndroidConfiguration();
+                androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
+                String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
+                if (mqttEndpoint.contains(Constants.LOCALHOST)) {
+                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, IoTUtil.getHostName());
+                }
+                androidConfiguration.setMqttEndpoint(mqttEndpoint);
+                return Response.status(Response.Status.ACCEPTED.getStatusCode()).entity(androidConfiguration.toString())
+                        .build();
             }
             Device device = new Device();
             device.setDeviceIdentifier(deviceId);
@@ -69,12 +82,22 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
             boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
             if (added) {
                 APIUtil.registerApiAccessRoles(APIUtil.getAuthenticatedUser());
-                return Response.ok(true).build();
+                AndroidConfiguration androidConfiguration = new AndroidConfiguration();
+                androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
+                String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
+                if (mqttEndpoint.contains(Constants.LOCALHOST)) {
+                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, IoTUtil.getHostName());
+                }
+                androidConfiguration.setMqttEndpoint(mqttEndpoint);
+                return Response.ok(androidConfiguration.toString()).build();
             } else {
                 return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).entity(false).build();
             }
         } catch (DeviceManagementException e) {
             log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(false).build();
+        } catch (IoTException e) {
+            log.error(e.getMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(false).build();
         }
     }
@@ -146,7 +169,7 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
-            Device device =  APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
+            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
             return Response.ok().entity(device).build();
         } catch (DeviceManagementException e) {
             log.error(e.getErrorMessage(), e);

@@ -38,7 +38,7 @@ function drawLineGraph(data) {
 		$("#chart").html("<br/>No data available...");
 		return;
 	}
-
+    $("#chart").empty();
     var graphConfig = {
         element: document.getElementById("chart"),
         width: graphWidth,

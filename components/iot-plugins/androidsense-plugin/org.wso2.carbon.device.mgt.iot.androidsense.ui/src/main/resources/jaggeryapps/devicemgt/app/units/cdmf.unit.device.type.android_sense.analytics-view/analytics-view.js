@@ -26,7 +26,7 @@ function onRequest(context) {
         if (device && device.status != "error") {
             return {
                 "device": device,
-                "backendApiUri": devicemgtProps["httpsURL"] + "/virtual_firealarm/stats/" + deviceId + "sensors/"
+                "backendApiUrl": devicemgtProps["httpsURL"] + "/android_sense/stats/" + deviceId + "/sensors/"
             };
         } else {
             response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");

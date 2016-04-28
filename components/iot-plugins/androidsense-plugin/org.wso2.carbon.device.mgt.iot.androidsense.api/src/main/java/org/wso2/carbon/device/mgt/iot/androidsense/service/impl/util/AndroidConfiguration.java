@@ -18,44 +18,36 @@
 
 package org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.json.simple.JSONObject;
+import org.wso2.carbon.apimgt.application.extension.constants.ApiApplicationConstants;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement
 /**
- * This stores sensor event data for android sense.
+ * This holds the required configuration for agent to connect to the server.
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class SensorData {
+public class AndroidConfiguration {
+	public String tenantDomain;
+	public String mqttEndpoint;
 
-	@XmlElement public Long time;
-	@XmlElement public String key;
-	@XmlElement public String value;
-
-	public String getValue() {
-		return value;
+	public String getTenantDomain() {
+		return tenantDomain;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void setTenantDomain(String tenantDomain) {
+		this.tenantDomain = tenantDomain;
 	}
 
-	public String getKey() {
-		return key;
+	public String getMqttEndpoint() {
+		return mqttEndpoint;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void setMqttEndpoint(String mqttEndpoint) {
+		this.mqttEndpoint = mqttEndpoint;
 	}
 
-	public Long getTime() {
-		return time;
+	public String toString() {
+		JSONObject obj = new JSONObject();
+		obj.put("tenantDomain", tenantDomain);
+		obj.put("mqttEndpoint", mqttEndpoint);
+		return obj.toString();
 	}
-
-	public void setTime(Long time) {
-		this.time = time;
-	}
-
 }

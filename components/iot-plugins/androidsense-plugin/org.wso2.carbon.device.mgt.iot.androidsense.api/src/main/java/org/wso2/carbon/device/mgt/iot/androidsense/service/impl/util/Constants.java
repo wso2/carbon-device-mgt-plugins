@@ -29,4 +29,5 @@ public class Constants {
 	public static final String DEFAULT_ROLE_NAME = "android_sense_user";
 	public static final Permission DEFAULT_PERMISSION[] = new Permission[]{new Permission(Constants.DEFAULT_PERMISSION_RESOURCE,
 		"ui.execute")};
+	public static final String LOCALHOST = "localhost";
 }

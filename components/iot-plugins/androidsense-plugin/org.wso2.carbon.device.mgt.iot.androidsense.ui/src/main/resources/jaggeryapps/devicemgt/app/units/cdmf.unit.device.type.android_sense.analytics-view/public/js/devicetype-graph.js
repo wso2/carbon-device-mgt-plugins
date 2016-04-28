@@ -30,8 +30,8 @@ function drawGraph(from, to) {
     retrieveDataAndDrawMultiLineGraph("gravity", from, to);
 }
 
-function retrieveDataAndDrawLineGraph(sensorType, from, to, column) {
-    var backendApiUrl = $("#div-chart").data("backend-api-url") + sensorType + "?from=" + from + "&to=" + to;
+function retrieveDataAndDrawLineGraph(sensorType, from, to) {
+    var backendApiUrl = $("#device-chart").data("backend-api-url") + sensorType + "?from=" + from + "&to=" + to;
     var successCallback = function (data) {
         if (data) {
             drawLineGraph(JSON.parse(data), sensorType);
@@ -43,7 +43,7 @@ function retrieveDataAndDrawLineGraph(sensorType, from, to, column) {
 }
 
 function retrieveDataAndDrawMultiLineGraph(sensorType, from, to) {
-    var backendApiUrl = $("#div-chart").data("backend-api-url") + sensorType + "?from=" + from + "&to=" + to;
+    var backendApiUrl = $("#device-chart").data("backend-api-url") + sensorType + "?from=" + from + "&to=" + to;
     var successCallback = function (data) {
         if (data) {
             drawMultiLineGraph(JSON.parse(data), sensorType);
@@ -55,12 +55,13 @@ function retrieveDataAndDrawMultiLineGraph(sensorType, from, to) {
 }
 
 function drawLineGraph(data, type) {
-	var chartWrapperElmId = "#div-chart";
+	var chartWrapperElmId = "#device-chart";
 	var graphWidth = $(chartWrapperElmId).width() - 50;
 	if (data.length == 0 || data.length == undefined) {
-		$("#chart" + type).html("<br/>No data available...");
+		$("#chart-" + type).html("<br/>No data available...");
 		return;
 	}
+    $("#chart-" + type).empty();
 
     var graphConfig = {
         element: document.getElementById("chart-" + type),
@@ -108,16 +109,11 @@ function drawLineGraph(data, type) {
             {
                 'color': palette.color(),
                 'data': chartData,
-                'name': $("#details").data("devicename"),
+                'name': type,
                 'scale': d3.scale.linear().domain([Math.min(min, min_val), Math.max(max, max_val)])
                         .nice()
             }
     );
-
-    if (graphConfig['series'].length == 0) {
-        $(chartWrapperElmId).html("No data available...");
-        return;
-    }
 
     var graph = new Rickshaw.Graph(graphConfig);
 
@@ -179,12 +175,13 @@ function drawLineGraph(data, type) {
 
 
 function drawMultiLineGraph(data, type) {
-    var chartWrapperElmId = "#div-chart";
+    var chartWrapperElmId = "#device-chart";
     var graphWidth = $(chartWrapperElmId).width() - 50;
     if (data.length == 0 || data.length == undefined) {
         $("#chart-" + type).html("<br/>No data available...");
         return;
     }
+    $("#chart-" + type).empty();
 
     var graphConfig = {
         element: document.getElementById("chart-" + type),
@@ -256,37 +253,26 @@ function drawMultiLineGraph(data, type) {
                 y: parseInt(data[i].values.z)
             });
     }
-    if (range_max < max_val) {
-        range_max = max_val;
-    }
-    if (range_min > min_val) {
-        range_min = min_val;
-    }
     graphConfig['series'].push(
         {
             'color': palette.color(),
             'data': chartDataX,
-            'name': $("#details").data("devicename"),
+            'name': "x",
             'scale': d3.scale.linear().domain([Math.min(min, min_valX), Math.max(max, max_valX)]).nice()
         },
         {
             'color': palette.color(),
             'data': chartDataY,
-            'name': $("#details").data("devicename"),
+            'name': "y",
             'scale': d3.scale.linear().domain([Math.min(min, min_valY), Math.max(max, max_valY)]).nice()
         },
         {
             'color': palette.color(),
             'data': chartDataZ,
-            'name': $("#details").data("devicename"),
+            'name': "z",
             'scale': d3.scale.linear().domain([Math.min(min, min_valZ), Math.max(max, max_valZ)]).nice()
         }
     );
-
-    if (graphConfig['series'].length == 0) {
-        $(chartWrapperElmId).html("No data available...");
-        return;
-    }
 
     var graph = new Rickshaw.Graph(graphConfig);
 
@@ -298,25 +284,21 @@ function drawMultiLineGraph(data, type) {
 
     xAxis.render();
 
-    var yAxis = new Rickshaw.Graph.Axis.Y.Scaled({
+    var yAxis = new Rickshaw.Graph.Axis.Y({
         graph: graph,
-        orientation: 'left',
-        element: document.getElementById("y_axis-type"),
-        width: 40,
-        height: 410,
-        'scale': d3.scale.linear().domain([Math.min(min, range_min), Math.max(max, range_max)]).nice()
+        element: document.getElementById("y_axis-" + type)
     });
 
     yAxis.render();
 
     var slider = new Rickshaw.Graph.RangeSlider.Preview({
         graph: graph,
-        element: document.getElementById("slider-type")
+        element: document.getElementById("slider-" + type)
     });
 
     var legend = new Rickshaw.Graph.Legend({
         graph: graph,
-        element: document.getElementById('legend-type')
+        element: document.getElementById('legend-' + type)
     });
 
     var hoverDetail = new Rickshaw.Graph.HoverDetail({

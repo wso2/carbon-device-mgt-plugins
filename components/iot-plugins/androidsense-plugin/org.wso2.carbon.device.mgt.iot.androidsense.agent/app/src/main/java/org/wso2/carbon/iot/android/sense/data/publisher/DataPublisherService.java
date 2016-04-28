@@ -50,6 +50,7 @@ public class DataPublisherService extends Service {
     private static String VALUE_TAG = "value";
     public static Context context;
 
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -125,7 +126,7 @@ public class DataPublisherService extends Service {
                     }
                     SenseDataHolder.resetLocationDataHolder();
 
-                    //retreive words
+                    //retrieve words
                     ProcessWords.cleanAndPushToWordMap();
                     List<WordData> wordDatMap = SenseDataHolder.getWordDataHolder();
                     for (WordData wordData : wordDatMap) {
@@ -161,7 +162,9 @@ public class DataPublisherService extends Service {
                         if (!mqttTransportHandler.isConnected()) {
                             mqttTransportHandler.connect();
                         }
-                        mqttTransportHandler.publishDeviceData(user, deviceId, jsonArray.toString());
+                        String topic = "wso2/" + LocalRegistry.getTenantDomain(context) + "/" + SenseConstants
+                                .DEVICE_TYPE + "/" + deviceId + "/data";
+                        mqttTransportHandler.publishDeviceData(user, deviceId, jsonArray.toString(), topic);
                     }
                 } catch (JSONException e) {
                     Log.e(TAG, "Json Data Parsing Exception", e);
