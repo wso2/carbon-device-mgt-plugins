@@ -76,12 +76,9 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     @Override
     @Path("device/{deviceId}/bulb")
     @POST
-    public Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
-                               @FormParam("state") String state) {
-
+    public Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state) {
         LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
         String operation = "BULB:" + state.toUpperCase();
-        log.info(operation);
         if (deviceControlList == null) {
             deviceControlList = new LinkedList<>();
             deviceControlList.add(operation);
@@ -99,7 +96,6 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     public Response pushData(DeviceData dataMsg) {
         String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
         String deviceId = dataMsg.deviceId;
-        float pinData = dataMsg.value;
         if (!ArduinoServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
             log.warn("An error occured whilst trying to publish pin data of Arduino with ID [" +
                      deviceId + "] of owner [" + owner + "]");
@@ -111,7 +107,7 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     @Override
     @Path("device/{deviceId}/controls")
     @GET
-    public Response readControls(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol) {
+    public Response readControls(@PathParam("deviceId") String deviceId) {
         String result;
         LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
         String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
@@ -142,10 +138,9 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     @Path("device/temperature")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response pushTemperatureData(final DeviceData dataMsg, @Context HttpServletRequest request) {
+    public Response pushTemperatureData(final DeviceData dataMsg) {
         String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
         String deviceId = dataMsg.deviceId;
-        float temperature = dataMsg.value;
         if (!ArduinoServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
             log.warn("An error occured whilst trying to publish temperature data of Arduino with ID [" + deviceId +
                      "] of owner [" + owner + "]");

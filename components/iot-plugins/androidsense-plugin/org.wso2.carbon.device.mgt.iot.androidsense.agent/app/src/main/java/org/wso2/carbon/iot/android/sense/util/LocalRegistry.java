@@ -251,7 +251,7 @@ public class LocalRegistry {
             SharedPreferences sharedpreferences = context.getSharedPreferences(SENSE_SHARED_PREFERENCES, Context.MODE_PRIVATE);
             LocalRegistry.tenantDomain = sharedpreferences.getString(TENANT_DOMAIN_KEY, "");
         }
-        return LocalRegistry.mqttEndpoint;
+        return LocalRegistry.tenantDomain;
     }
 
     public static String getServerHost(Context context) {

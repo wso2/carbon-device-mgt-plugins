@@ -167,29 +167,6 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
         }
     }
 
-    @Override
-    @Path("devices/generate_link")
-    @GET
-    public Response generateSketchLink(@QueryParam("deviceName") String deviceName) {
-        try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName);
-            Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
-            return rb.build();
-        } catch (IllegalArgumentException ex) {
-            return Response.status(400).entity(ex.getMessage()).build();//bad request
-        } catch (DeviceManagementException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (JWTClientException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (APIManagerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (UserStoreException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        }
-    }
-
     private ZipArchive createDownloadFile(String owner, String deviceName)
             throws DeviceManagementException, JWTClientException, DeviceControllerException, APIManagerException,
                    UserStoreException {

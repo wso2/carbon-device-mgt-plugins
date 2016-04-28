@@ -159,7 +159,7 @@ public class AndroidSenseMQTTHandler extends MQTTTransportHandler {
      */
     @Override
     public void publishDeviceData(String... publishData) throws TransportHandlerException {
-        if (publishData.length != 3) {
+        if (publishData.length != 4) {
             String errorMsg = "Incorrect number of arguments received to SEND-MQTT Message. " +
                     "Need to be [owner, deviceId, content]";
             Log.e(TAG, errorMsg);

@@ -47,8 +47,7 @@ public interface ArduinoControllerService {
     @Path("device/{deviceId}/bulb")
     @POST
     @Feature(code = "bulb", name = "Control Bulb", type = "operation", description = "Control Bulb on Arduino Uno")
-    Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
-                        @FormParam("state") String state);
+    Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
     @Path("device/sensor")
     @POST
@@ -57,12 +56,12 @@ public interface ArduinoControllerService {
 
     @Path("device/{deviceId}/controls")
     @GET
-    Response readControls(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol);
+    Response readControls(@PathParam("deviceId") String deviceId);
 
     @Path("device/temperature")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    Response pushTemperatureData(final DeviceData dataMsg, @Context HttpServletRequest request);
+    Response pushTemperatureData(final DeviceData dataMsg);
 
     /**
      * Retreive Sensor data for the device type
