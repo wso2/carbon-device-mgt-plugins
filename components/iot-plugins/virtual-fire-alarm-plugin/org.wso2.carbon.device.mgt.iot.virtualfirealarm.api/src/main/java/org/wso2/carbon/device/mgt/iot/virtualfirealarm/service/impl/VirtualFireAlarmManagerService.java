@@ -33,7 +33,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("enrollment")
-@API(name = "virtual_firealarm_mgt", version = "1.0.0", context = "/virtual_firealarm_mgt", tags = "virtual_firealarm")
+@API(name = "virtual_firealarm_mgt", version = "1.0.0", context = "/virtual_firealarm_mgt", tags = {"virtual_firealarm"})
 public interface VirtualFireAlarmManagerService {
 
     @Path("/devices/{device_id}")
