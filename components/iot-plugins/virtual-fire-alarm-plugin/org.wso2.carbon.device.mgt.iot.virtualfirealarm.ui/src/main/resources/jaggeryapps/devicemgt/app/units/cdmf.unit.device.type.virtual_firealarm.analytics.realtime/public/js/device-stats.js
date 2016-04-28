@@ -17,59 +17,65 @@
  */
 
 var ws;
+var graph;
+var chartData = [];
+var palette = new Rickshaw.Color.Palette({scheme: "classic9"});
+
 $(window).load(function () {
+    var tNow = new Date().getTime() / 1000;
+    for (var i = 0; i < 30; i++) {
+        chartData.push({
+                           x: tNow - (30 - i) * 15,
+                           y: parseFloat(0)
+                       });
+    }
+
+    graph = new Rickshaw.Graph({
+        element: document.getElementById("chart"),
+        width: $("#div-chart").width() - 50,
+        height: 300,
+        renderer: "line",
+        padding: {top: 0.2, left: 0.0, right: 0.0, bottom: 0.2},
+        xScale: d3.time.scale(),
+        series: [{
+            'color': palette.color(),
+            'data': chartData,
+            'name': "Temperature"
+        }]
+    });
+
+    graph.render();
+
+    var xAxis = new Rickshaw.Graph.Axis.Time({
+        graph: graph
+    });
+
+    xAxis.render();
+
+    new Rickshaw.Graph.Axis.Y({
+        graph: graph,
+        orientation: 'left',
+        height: 300,
+        tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+        element: document.getElementById('y_axis')
+    });
+
+    new Rickshaw.Graph.HoverDetail({
+        graph: graph,
+        formatter: function (series, x, y) {
+            var date = '<span class="date">' + moment(x * 1000).format('Do MMM YYYY h:mm:ss a') + '</span>';
+            var swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
+            return swatch + series.name + ": " + parseInt(y) + '<br>' + date;
+        }
+    });
+
     var websocketUrl = $("#div-chart").data("websocketurl");
     connect(websocketUrl)
 });
 
-$(window).unload(function() {
+$(window).unload(function () {
     disconnect();
 });
-
-
-// set up our data series with 150 random data points
-
-var graph = new Rickshaw.Graph({
-    element: document.getElementById("chart"),
-    width: $("#chartWrapper").width() - 50,
-    height: 300,
-    renderer: "line",
-    padding: {top: 0.2, left: 0.0, right: 0.0, bottom: 0.2},
-    min :0,
-    max : 80,
-    series: new Rickshaw.Series.FixedDuration([{
-        name: 'one', color: 'steelblue'
-    }], undefined, {
-        timeInterval: 1000,
-        maxDataPoints: 10,
-        timeBase: new Date().getTime() / 1000
-    })
-});
-
-
-
-graph.render();
-
-new Rickshaw.Graph.Axis.Y({
-    graph: graph,
-    orientation: 'left',
-    height: 300,
-    tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-    element: document.getElementById('y_axis')
-});
-
-new Rickshaw.Graph.Legend({
-    graph: graph,
-    element: document.getElementById('legend')
-});
-
-new Rickshaw.Graph.HoverDetail({
-    graph: graph,
-    xFormatter: function(x) { return x + "seconds" },
-    yFormatter: function(y) { return Math.floor(y) + " C" }
-});
-
-
 
 //websocket connection
 function connect(target) {
@@ -82,13 +88,13 @@ function connect(target) {
     }
     if (ws) {
         ws.onmessage = function (event) {
-            console.log('Received: ' + event.data);
             var dataPoint = JSON.parse(event.data);
-            var data = {
-                one: parseFloat(dataPoint[5])
-            };
-            graph.series.addData(data);
-            graph.render();
+            chartData.push({
+                               x: parseInt(dataPoint[4]) / 1000,
+                               y: parseFloat(dataPoint[5])
+                           });
+            chartData.shift();
+            graph.update();
         };
     }
 }

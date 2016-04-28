@@ -23,7 +23,7 @@ function onRequest(context) {
     var constants = require("/app/modules/constants.js");
     var websocketEndpoint = devicemgtProps["httpsURL"].replace("https", "wss");
     var tokenPair = session.get(constants.ACCESS_TOKEN_PAIR_IDENTIFIER);
-    var token = ""
+    var token = "";
     if (tokenPair) {
         token =  tokenPair.accessToken;
     }
