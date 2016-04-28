@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.dataservice.commons.SORT;
 import org.wso2.carbon.analytics.dataservice.commons.SortByField;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
@@ -78,6 +79,7 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
     // holds a mapping of the IP addresses to Device-IDs for HTTP communication
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
 
+    @Permission(scope = "virtual_firealarm_user", permissions = {"device-mgt/virtual_firealarm/user"})
     @POST
     @Path("device/register/{deviceId}/{ip}/{port}")
     public Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
