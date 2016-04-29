@@ -30,56 +30,56 @@
 	<!-- Device related APIs -->
 	<Permission>
 		<name>Set words</name>
-		<path>/device-mgt/android_sense/user</path>
+		<path>/device-mgt/user/operations</path>
 		<url>/device/*/words</url>
 		<method>POST</method>
 		<scope>android_sense_user</scope>
 	</Permission>
 	<Permission>
 		<name>set word threshold information</name>
-		<path>/device-mgt/android_sense/user</path>
+		<path>/device-mgt/user/operations</path>
 		<url>/device/*/words/threshold</url>
 		<method>POST</method>
 		<scope>android_sense_user</scope>
 	</Permission>
 	<Permission>
 		<name>delete words</name>
-		<path>/device-mgt/android_sense/user</path>
-		<url>/device/*/words</url>
+        <path>/device-mgt/user/operations</path>
+        <url>/device/*/words</url>
 		<method>DELETE</method>
 		<scope>android_sense_user</scope>
 	</Permission>
 	<Permission>
 		<name>get device stats</name>
-		<path>/device-mgt/android_sense/user</path>
+		<path>/device-mgt/user/stats</path>
 		<url>/stats/*/sensors/*</url>
 		<method>GET</method>
 		<scope>android_sense_device</scope>
 	</Permission>
     <Permission>
         <name>Get device</name>
-        <path>/device-mgt/android_sense/user</path>
+        <path>/device-mgt/user/devices/list</path>
         <url>/enrollment/devices/*</url>
         <method>GET</method>
         <scope>android_sense_user</scope>
     </Permission>
     <Permission>
         <name>Add device</name>
-        <path>/device-mgt/user</path>
+        <path>/device-mgt/user/devices</path>
         <url>/enrollment/devices/*</url>
         <method>POST</method>
         <scope>android_sense_user</scope>
     </Permission>
     <Permission>
         <name>Remove device</name>
-        <path>/device-mgt/android_sense/user</path>
+        <path>/device-mgt/user/devices/remove</path>
         <url>/enrollment/devices/*</url>
         <method>DELETE</method>
         <scope>android_sense_user</scope>
     </Permission>
     <Permission>
         <name>Update device</name>
-        <path>/device-mgt/android_sense/user</path>
+        <path>/device-mgt/user/devices/update</path>
         <url>/enrollment/devices/*</url>
         <method>PUT</method>
         <scope>android_sense_user</scope>

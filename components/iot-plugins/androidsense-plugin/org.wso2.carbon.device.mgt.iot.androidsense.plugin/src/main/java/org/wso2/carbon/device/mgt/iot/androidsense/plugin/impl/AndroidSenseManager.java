@@ -30,7 +30,7 @@ import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.exception.AndroidSenseDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.feature.AndroidSenseFeatureManager;
-import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.dao.AndroidSenseDAO;
+import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.dao.AndroidSenseDAOUtil;
 import java.util.List;
 
 
@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class AndroidSenseManager implements DeviceManager {
 
-    private static final AndroidSenseDAO androidSenseDAO = new AndroidSenseDAO();
+    private static final AndroidSenseDAOUtil androidSenseDAO = new AndroidSenseDAOUtil();
     private static final Log log = LogFactory.getLog(AndroidSenseManager.class);
     private FeatureManager androidSenseFeatureManager = new AndroidSenseFeatureManager();
 
@@ -68,12 +68,12 @@ public class AndroidSenseManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new Android device : " + device.getDeviceIdentifier());
             }
-            AndroidSenseDAO.beginTransaction();
+            AndroidSenseDAOUtil.beginTransaction();
             status = androidSenseDAO.getDeviceDAO().addDevice(device);
-            AndroidSenseDAO.commitTransaction();
+            AndroidSenseDAOUtil.commitTransaction();
         } catch (AndroidSenseDeviceMgtPluginException e) {
             try {
-                AndroidSenseDAO.rollbackTransaction();
+                AndroidSenseDAOUtil.rollbackTransaction();
             } catch (AndroidSenseDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
@@ -92,12 +92,12 @@ public class AndroidSenseManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Modifying the Android device enrollment data");
             }
-            AndroidSenseDAO.beginTransaction();
+            AndroidSenseDAOUtil.beginTransaction();
             status = androidSenseDAO.getDeviceDAO().updateDevice(device);
-            AndroidSenseDAO.commitTransaction();
+            AndroidSenseDAOUtil.commitTransaction();
         } catch (AndroidSenseDeviceMgtPluginException e) {
             try {
-                AndroidSenseDAO.rollbackTransaction();
+                AndroidSenseDAOUtil.rollbackTransaction();
             } catch (AndroidSenseDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
@@ -117,12 +117,12 @@ public class AndroidSenseManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Dis-enrolling Android device : " + deviceId);
             }
-            AndroidSenseDAO.beginTransaction();
+            AndroidSenseDAOUtil.beginTransaction();
             status = androidSenseDAO.getDeviceDAO().deleteDevice(deviceId.getId());
-            AndroidSenseDAO.commitTransaction();
+            AndroidSenseDAOUtil.commitTransaction();
         } catch (AndroidSenseDeviceMgtPluginException e) {
             try {
-                AndroidSenseDAO.rollbackTransaction();
+                AndroidSenseDAOUtil.rollbackTransaction();
             } catch (AndroidSenseDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device dis enrol transaction :" + deviceId.toString();
                 log.warn(msg, iotDAOEx);
@@ -219,12 +219,12 @@ public class AndroidSenseManager implements DeviceManager {
                 log.debug(
                         "updating the details of Android device : " + deviceIdentifier);
             }
-            AndroidSenseDAO.beginTransaction();
+            AndroidSenseDAOUtil.beginTransaction();
             status = androidSenseDAO.getDeviceDAO().updateDevice(device);
-            AndroidSenseDAO.commitTransaction();
+            AndroidSenseDAOUtil.commitTransaction();
         } catch (AndroidSenseDeviceMgtPluginException e) {
             try {
-                AndroidSenseDAO.rollbackTransaction();
+                AndroidSenseDAOUtil.rollbackTransaction();
             } catch (AndroidSenseDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device info transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);

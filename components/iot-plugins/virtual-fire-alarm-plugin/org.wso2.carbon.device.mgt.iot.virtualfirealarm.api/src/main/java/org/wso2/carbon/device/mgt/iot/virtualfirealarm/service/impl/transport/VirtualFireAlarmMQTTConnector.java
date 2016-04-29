@@ -69,7 +69,7 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 	private static Log log = LogFactory.getLog(VirtualFireAlarmMQTTConnector.class);
 	// subscription topic: <SERVER_NAME>/+/virtual_firealarm/+/publisher
 	// wildcard (+) is in place for device_owner & device_id
-	private static String subscribeTopic = "wso2/" + VirtualFireAlarmConstants.DEVICE_TYPE + "/+/publisher";
+	private static String subscribeTopic = "wso2/+/"+ VirtualFireAlarmConstants.DEVICE_TYPE + "/+/publisher";
 	private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 	private static final String KEY_TYPE = "PRODUCTION";
 	private static final String EMPTY_STRING = "";
@@ -155,14 +155,14 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 			// <Topic> = [ServerName/Owner/DeviceType/DeviceId/"publisher"]
 			String topic = messageParams[0];
 			String[] topicParams = topic.split("/");
-			String deviceId = topicParams[2];
+			String tenantDomain = topicParams[1];
+			String deviceId = topicParams[3];
 			if (log.isDebugEnabled()) {
 				log.debug("Received MQTT message for: [DEVICE.ID-" + deviceId + "]");
 			}
 			JSONObject jsonPayload = new JSONObject(mqttMessage.toString());
 			String actualMessage;
 			try {
-				String tenantDomain = (String) jsonPayload.get(JSON_TENANT_KEY);
 				PrivilegedCarbonContext.startTenantFlow();
 				PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
 				DeviceManagementProviderService deviceManagementProviderService =
@@ -240,7 +240,8 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 		String state = publishData[2];
 
 		MqttMessage pushMessage = new MqttMessage();
-		String publishTopic = "wso2/" + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
+		String publishTopic = "wso2/" + APIUtil.getTenantDomainOftheUser() + "/"
+				+ VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
 
 		try {
 			PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();

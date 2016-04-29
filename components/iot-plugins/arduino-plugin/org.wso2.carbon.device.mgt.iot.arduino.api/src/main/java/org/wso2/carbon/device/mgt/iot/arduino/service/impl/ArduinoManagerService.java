@@ -34,7 +34,6 @@ import javax.ws.rs.core.Response;
 
 @Path("enrollment")
 @API(name = "arduino_mgt", version = "1.0.0", context = "/arduino_mgt", tags = {"arduino"})
-@DeviceType(value = "arduino")
 public interface ArduinoManagerService {
 
     @Path("devices/{device_id}")
@@ -61,9 +60,4 @@ public interface ArduinoManagerService {
     @GET
     @Produces("application/octet-stream")
     Response downloadSketch(@QueryParam("deviceName") String customDeviceName);
-
-    @Path("devices/generate_link")
-    @GET
-    Response generateSketchLink(@QueryParam("deviceName") String deviceName);
-
 }

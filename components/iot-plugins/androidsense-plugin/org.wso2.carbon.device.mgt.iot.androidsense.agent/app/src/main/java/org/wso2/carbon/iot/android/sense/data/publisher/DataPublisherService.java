@@ -50,6 +50,7 @@ public class DataPublisherService extends Service {
     private static String VALUE_TAG = "value";
     public static Context context;
 
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -70,34 +71,39 @@ public class DataPublisherService extends Service {
                     for (SensorData sensorData : sensorDataMap) {
                         Event event = new Event();
                         event.setTimestamp(sensorData.getTimestamp());
-
                         switch (sensorData.getSensorType()) {
                             case Sensor.TYPE_ACCELEROMETER:
                                 event.setAccelerometer(sensorData.getSensorValues());
+                                events.add(event);
                                 break;
                             case Sensor.TYPE_MAGNETIC_FIELD:
                                 event.setMagnetic(sensorData.getSensorValues());
+                                events.add(event);
                                 break;
                             case Sensor.TYPE_GYROSCOPE:
                                 event.setGyroscope(sensorData.getSensorValues());
+                                events.add(event);
                                 break;
                             case Sensor.TYPE_LIGHT:
                                 event.setLight(sensorData.getSensorValues()[0]);
                                 break;
                             case Sensor.TYPE_PRESSURE:
                                 event.setPressure(sensorData.getSensorValues()[0]);
+                                events.add(event);
                                 break;
                             case Sensor.TYPE_PROXIMITY:
                                 event.setProximity(sensorData.getSensorValues()[0]);
+                                events.add(event);
                                 break;
                             case Sensor.TYPE_GRAVITY:
                                 event.setGravity(sensorData.getSensorValues());
+                                events.add(event);
                                 break;
-                            case Sensor.TYPE_ROTATION_VECTOR:
-                                event.setGravity(sensorData.getSensorValues());
+                            case Sensor.TYPE_GAME_ROTATION_VECTOR:
+                                event.setRotation(sensorData.getSensorValues());
+                                events.add(event);
                                 break;
                         }
-                        events.add(event);
                     }
                     SenseDataHolder.resetSensorDataHolder();
 
@@ -120,7 +126,7 @@ public class DataPublisherService extends Service {
                     }
                     SenseDataHolder.resetLocationDataHolder();
 
-                    //retreive words
+                    //retrieve words
                     ProcessWords.cleanAndPushToWordMap();
                     List<WordData> wordDatMap = SenseDataHolder.getWordDataHolder();
                     for (WordData wordData : wordDatMap) {
@@ -156,7 +162,9 @@ public class DataPublisherService extends Service {
                         if (!mqttTransportHandler.isConnected()) {
                             mqttTransportHandler.connect();
                         }
-                        mqttTransportHandler.publishDeviceData(user, deviceId, jsonArray.toString());
+                        String topic = "wso2/" + LocalRegistry.getTenantDomain(context) + "/" + SenseConstants
+                                .DEVICE_TYPE + "/" + deviceId + "/data";
+                        mqttTransportHandler.publishDeviceData(user, deviceId, jsonArray.toString(), topic);
                     }
                 } catch (JSONException e) {
                     Log.e(TAG, "Json Data Parsing Exception", e);

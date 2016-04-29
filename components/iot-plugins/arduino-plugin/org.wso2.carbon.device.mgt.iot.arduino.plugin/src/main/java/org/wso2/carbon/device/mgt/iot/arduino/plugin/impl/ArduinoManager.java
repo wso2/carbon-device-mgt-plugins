@@ -31,7 +31,7 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.exception.ArduinoDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.dao.ArduinoDAO;
+import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.dao.ArduinoDAOUtil;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.feature.ArduinoFeatureManager;
 import java.util.List;
 
@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class ArduinoManager implements DeviceManager {
 
-    private static final ArduinoDAO arduinoDAO = new ArduinoDAO();
+    private static final ArduinoDAOUtil arduinoDAO = new ArduinoDAOUtil();
     private static final Log log = LogFactory.getLog(ArduinoManager.class);
     private ArduinoFeatureManager arduinoFeatureManager = new ArduinoFeatureManager();
 
@@ -70,12 +70,12 @@ public class ArduinoManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new Arduino device : " + device.getDeviceIdentifier());
             }
-            ArduinoDAO.beginTransaction();
+            ArduinoDAOUtil.beginTransaction();
             status = arduinoDAO.getDeviceDAO().addDevice(device);
-            ArduinoDAO.commitTransaction();
+            ArduinoDAOUtil.commitTransaction();
         } catch (ArduinoDeviceMgtPluginException e) {
             try {
-                ArduinoDAO.rollbackTransaction();
+                ArduinoDAOUtil.rollbackTransaction();
             } catch (ArduinoDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
@@ -94,12 +94,12 @@ public class ArduinoManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Modifying the Arduino device enrollment data");
             }
-            ArduinoDAO.beginTransaction();
+            ArduinoDAOUtil.beginTransaction();
             status = arduinoDAO.getDeviceDAO().updateDevice(device);
-            ArduinoDAO.commitTransaction();
+            ArduinoDAOUtil.commitTransaction();
         } catch (ArduinoDeviceMgtPluginException e) {
             try {
-                ArduinoDAO.rollbackTransaction();
+                ArduinoDAOUtil.rollbackTransaction();
             } catch (ArduinoDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
@@ -119,12 +119,12 @@ public class ArduinoManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Dis-enrolling Arduino device : " + deviceId);
             }
-            ArduinoDAO.beginTransaction();
+            ArduinoDAOUtil.beginTransaction();
             status = arduinoDAO.getDeviceDAO().deleteDevice(deviceId.getId());
-            ArduinoDAO.commitTransaction();
+            ArduinoDAOUtil.commitTransaction();
         } catch (ArduinoDeviceMgtPluginException e) {
             try {
-                ArduinoDAO.rollbackTransaction();
+                ArduinoDAOUtil.rollbackTransaction();
             } catch (ArduinoDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device dis enrol transaction :" + deviceId.toString();
                 log.warn(msg, iotDAOEx);
@@ -222,12 +222,12 @@ public class ArduinoManager implements DeviceManager {
                 log.debug(
                         "updating the details of Arduino device : " + deviceIdentifier);
             }
-            ArduinoDAO.beginTransaction();
+            ArduinoDAOUtil.beginTransaction();
             status = arduinoDAO.getDeviceDAO().updateDevice(device);
-            ArduinoDAO.commitTransaction();
+            ArduinoDAOUtil.commitTransaction();
         } catch (ArduinoDeviceMgtPluginException e) {
             try {
-                ArduinoDAO.rollbackTransaction();
+                ArduinoDAOUtil.rollbackTransaction();
             } catch (ArduinoDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device info transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);

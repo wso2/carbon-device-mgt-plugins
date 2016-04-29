@@ -47,7 +47,7 @@ public class AndroidSenseConstants {
     public static final String SENSOR_ROTATION = "rotation";
     public static final String SENSOR_WORDCOUNT = "wordcounter";
     //MQTT Subscribe topic
-    public static final String MQTT_SUBSCRIBE_WORDS_TOPIC = "wso2/android_sense/+/data";
+    public static final String MQTT_SUBSCRIBE_WORDS_TOPIC = "wso2/+/android_sense/+/data";
     public static final String DATA_SOURCE_NAME = "jdbc/AndroidSenseDM_DB";
     public final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
 }

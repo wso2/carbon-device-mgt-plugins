@@ -27,7 +27,7 @@ CREATE TEMPORARY TABLE WordcountSummaryData USING CarbonAnalytics OPTIONS (table
     primaryKeys "deviceType, deviceId, sessionId, owner");
 
                            
-insert overwrite table WordcountSummaryData select sessionId, word, count(*) as occurence, meta_deviceType as deviceType,
+insert into table WordcountSummaryData select sessionId, word, count(*) as occurence, meta_deviceType as deviceType,
     meta_deviceId as deviceId, meta_owner as owner from WordCountData group by sessionId, word, meta_deviceType, meta_deviceId, meta_owner;
 </Script>
     <CronExpression>0 * * * * ?</CronExpression>

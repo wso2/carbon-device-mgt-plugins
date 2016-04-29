@@ -131,7 +131,8 @@ public class AndroidSenseMQTTConnector extends MQTTTransportHandler {
         String operation = publishData[1];
         String resource = publishData[2];
         MqttMessage pushMessage = new MqttMessage();
-        String publishTopic = "wso2/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command";
+        String publishTopic = "wso2/" + APIUtil.getAuthenticatedUserTenantDomain()
+                + "/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command";
         if (operation.equals("add")) {
             publishTopic = publishTopic + "/words";
         } else if (operation.equals("remove")) {

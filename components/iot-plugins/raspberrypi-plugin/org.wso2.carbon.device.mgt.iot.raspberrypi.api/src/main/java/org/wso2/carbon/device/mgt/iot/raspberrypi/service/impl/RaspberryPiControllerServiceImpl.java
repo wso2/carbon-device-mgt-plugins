@@ -23,30 +23,25 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.dataservice.commons.SORT;
 import org.wso2.carbon.analytics.dataservice.commons.SortByField;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
-import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.DeviceData;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.transport.RaspberryPiMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.APIUtil;
-import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.RaspberrypiServiceUtils;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
+import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -56,88 +51,48 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
     private RaspberryPiMQTTConnector raspberryPiMQTTConnector;
 
-    @Path("device/register/{deviceId}/{ip}/{port}")
-    @POST
-    public Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
-                                     @PathParam("port") String devicePort, @Context HttpServletRequest request) {
-        String result;
-        if (log.isDebugEnabled()) {
-            log.debug("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId);
-        }
-        String deviceHttpEndpoint = deviceIP + ":" + devicePort;
-        deviceToIpMap.put(deviceId, deviceHttpEndpoint);
-        result = "Device-IP Registered";
-        if (log.isDebugEnabled()) {
-            log.debug(result);
-        }
-        return Response.ok().entity(result).build();
-    }
-
     @Path("device/{deviceId}/bulb")
     @POST
-    public Response switchBulb(@PathParam("deviceId") String deviceId, @FormParam("state") String state) {
-        String switchToState = state.toUpperCase();
-        if (!switchToState.equals(RaspberrypiConstants.STATE_ON) && !switchToState.equals(
-                RaspberrypiConstants.STATE_OFF)) {
-            log.error("The requested state change shoud be either - 'ON' or 'OFF'");
-            return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
-        }
-        String callUrlPattern = RaspberrypiConstants.BULB_CONTEXT + switchToState;
+    public Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state) {
         try {
-            String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
-            if (deviceHTTPEndpoint == null) {
-                return Response.status(Response.Status.PRECONDITION_FAILED.getStatusCode()).build();
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
+                RaspberrypiConstants.DEVICE_TYPE))) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
-            RaspberrypiServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint, callUrlPattern, true);
-        } catch (DeviceManagementException e) {
-            log.error("Failed to send switch-bulb request to device [" + deviceId + "] via ");
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+            String switchToState = state.toUpperCase();
+            if (!switchToState.equals(RaspberrypiConstants.STATE_ON) && !switchToState.equals(
+                    RaspberrypiConstants.STATE_OFF)) {
+                log.error("The requested state change shoud be either - 'ON' or 'OFF'");
+                return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
+            }
+            String mqttResource = RaspberrypiConstants.BULB_CONTEXT.replace("/", "");
+            raspberryPiMQTTConnector.publishDeviceData(deviceId, mqttResource, switchToState);
+            return Response.ok().build();
+        } catch (TransportHandlerException e) {
+            log.error("Failed to send switch-bulb request to device [" + deviceId + "]");
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-        return Response.ok().build();
     }
 
-    @Path("device/push_temperature")
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response pushTemperatureData(final DeviceData dataMsg, @Context HttpServletRequest request) {
-        String owner = dataMsg.owner;
-        String deviceId = dataMsg.deviceId;
-        String deviceIp = dataMsg.reply;
-        float temperature = dataMsg.value;
-        String registeredIp = deviceToIpMap.get(deviceId);
-        if (registeredIp == null) {
-            log.warn("Unregistered IP: Temperature Data Received from an un-registered IP " + deviceIp +
-                     " for device ID - " + deviceId);
-            return Response.status(Response.Status.PRECONDITION_FAILED.getStatusCode()).build();
-        } else if (!registeredIp.equals(deviceIp)) {
-            log.warn("Conflicting IP: Received IP is " + deviceIp + ". Device with ID " + deviceId +
-                     " is already registered under some other IP. Re-registration required");
-            return Response.status(Response.Status.CONFLICT.getStatusCode()).build();
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("Received Pin Data Value: " + temperature + " degrees C");
-        }
-        if (!RaspberrypiServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
-            log.warn("An error occured whilst trying to publish temperature data of raspberrypi with ID [" +
-                     deviceId + "] of owner [" + owner + "]");
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-        return Response.ok().build();
-    }
-
-    @Path("device/stats/{deviceId}/sensors/temperature")
+    @Path("device/stats/{deviceId}")
     @GET
     @Consumes("application/json")
     @Produces("application/json")
     public Response getRaspberryPiTemperatureStats(@PathParam("deviceId") String deviceId,
-                                                   @QueryParam("username") String user,
                                                    @QueryParam("from") long from, @QueryParam("to") long to) {
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
-        String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
-                       RaspberrypiConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+        String query = "deviceId:" + deviceId + " AND deviceType:" +
+                RaspberrypiConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = RaspberrypiConstants.TEMPERATURE_EVENT_TABLE;
         try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
+                    RaspberrypiConstants.DEVICE_TYPE))) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
             List<SortByField> sortByFields = new ArrayList<>();
             SortByField sortByField = new SortByField("time", SORT.ASC, false);
             sortByFields.add(sortByField);
@@ -147,6 +102,9 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
             String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
             log.error(errorMsg);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 

@@ -32,77 +32,49 @@
 	<Permission>
 		<name>Get device</name>
 		<path>/device-mgt/user/devices/list</path>
-		<url>/devices/*</url>
+		<url>/enrollment/devices/*</url>
 		<method>GET</method>
 		<scope>raspberrypi_user</scope>
 	</Permission>
 	<Permission>
 		<name>Remove device</name>
 		<path>/device-mgt/user/devices/remove</path>
-		<url>/devices/*</url>
+		<url>/enrollment/devices/*</url>
 		<method>DELETE</method>
 		<scope>raspberrypi_user</scope>
 	</Permission>
 	<Permission>
 		<name>Download device</name>
-		<path>/device-mgt/user/devices/add</path>
-		<url>/devices/*/download</url>
+		<path>/device-mgt/user/devices</path>
+		<url>/enrollment/devices/download</url>
 		<method>GET</method>
 		<scope>raspberrypi_user</scope>
 	</Permission>
 	<Permission>
 		<name>Update device</name>
 		<path>/device-mgt/user/devices/update</path>
-		<url>/devices/*</url>
+		<url>/enrollment/devices/*</url>
 		<method>POST</method>
 		<scope>raspberrypi_user</scope>
 	</Permission>
     <Permission>
         <name>Get Devices</name>
-        <path>/device-mgt/user/devices</path>
-        <url>/devices</url>
+        <path>/device-mgt/user/devices/list</path>
+        <url>/enrollment/devices</url>
         <method>GET</method>
         <scope>raspberrypi_user</scope>
-    </Permission>
-    <Permission>
-        <name>Generate Link</name>
-        <path>/device-mgt/user/devices/generate_link</path>
-        <url>/devices/*/generate_link</url>
-        <method>GET</method>
-        <scope>raspberrypi_user</scope>
-    </Permission>
-    <Permission>
-        <name>Register Device</name>
-        <path>/device-mgt/user/device/register</path>
-        <url>/device/register/*/*/*</url>
-        <method>POST</method>
-        <scope>raspberrypi_device</scope>
     </Permission>
     <Permission>
         <name>Control Bulb</name>
-        <path>/device-mgt/user/device/bulb</path>
+        <path>/device-mgt/user/operations</path>
         <url>/device/*/bulb</url>
         <method>POST</method>
         <scope>raspberrypi_user</scope>
     </Permission>
     <Permission>
-        <name>Read Temperature</name>
-        <path>/device-mgt/user/device/readtemperature</path>
-        <url>/device/*/readtemperature</url>
-        <method>GET</method>
-        <scope>raspberrypi_user</scope>
-    </Permission>
-    <Permission>
-        <name>Push Temperature</name>
-        <path>/device-mgt/user/device/push_temperature</path>
-        <url>/device/push_temperature</url>
-        <method>POST</method>
-        <scope>raspberrypi_device</scope>
-    </Permission>
-    <Permission>
         <name>Get Temperature Data</name>
-        <path>/device-mgt/user/device/sensors/temperature</path>
-        <url>/device/stats/*/sensors/temperature</url>
+        <path>/device-mgt/user/stats</path>
+        <url>/device/stats/*</url>
         <method>GET</method>
         <scope>raspberrypi_user</scope>
     </Permission>

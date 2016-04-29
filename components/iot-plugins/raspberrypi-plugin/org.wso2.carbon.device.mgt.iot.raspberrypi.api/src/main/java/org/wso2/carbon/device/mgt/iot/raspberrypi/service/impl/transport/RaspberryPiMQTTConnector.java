@@ -26,13 +26,8 @@ import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService
 import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
 import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.common.Device;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.APIUtil;
-import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.RaspberrypiServiceUtils;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.transport.mqtt.MQTTTransportHandler;
@@ -40,9 +35,8 @@ import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.user.api.UserStoreException;
-import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
-import java.util.Calendar;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
@@ -82,7 +76,6 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
                         String accessToken = accessTokenInfo.getAccessToken();
                         setUsernameAndPassword(accessToken, EMPTY_STRING);
                         connectToQueue();
-                        subscribeToQueue();
 					} catch (TransportHandlerException e) {
 						log.error("Connection/Subscription to MQTT Broker at: " + mqttBrokerEndPoint + " failed", e);
 						try {
@@ -112,55 +105,6 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
 
     @Override
     public void processIncomingMessage(MqttMessage message, String... messageParams) throws TransportHandlerException {
-        if(messageParams.length != 0) {
-            // owner and the deviceId are extracted from the MQTT topic to which the message was received.
-            // <Topic> = [ServerName/Owner/DeviceType/DeviceId/"publisher"]
-            String topic = messageParams[0];
-            String[] topicParams = topic.split("/");
-            String deviceId = topicParams[2];
-            String receivedMessage = message.toString();
-
-            if (log.isDebugEnabled()) {
-                log.debug("Received MQTT message for: [DEVICE.ID-" + deviceId + "]");
-                log.debug("Message [" + receivedMessage + "] topic: [" + topic + "]");
-            }
-
-            if (receivedMessage.contains("PUBLISHER")) {
-                float temperature = Float.parseFloat(receivedMessage.split(":")[2]);
-
-                try {
-                    PrivilegedCarbonContext.startTenantFlow();
-                    PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-                    DeviceManagementProviderService deviceManagementProviderService =
-                            (DeviceManagementProviderService) ctx.getOSGiService(DeviceManagementProviderService.class, null);
-                    if (deviceManagementProviderService != null) {
-                        DeviceIdentifier identifier = new DeviceIdentifier(deviceId, RaspberrypiConstants.DEVICE_TYPE);
-                        Device device = deviceManagementProviderService.getDevice(identifier);
-                        if (device != null) {
-                            String owner = device.getEnrolmentInfo().getOwner();
-                            ctx.setTenantDomain(MultitenantUtils.getTenantDomain(owner), true);
-                            ctx.setUsername(owner);
-                            if (!RaspberrypiServiceUtils.publishToDAS(deviceId, temperature)) {
-                                log.error("MQTT Subscriber: Publishing data to DAS failed.");
-                            }
-                        }
-                    }
-                } catch (DeviceManagementException e) {
-                    log.error("Failed to retreive the device managment service for device type " +
-                                      RaspberrypiConstants.DEVICE_TYPE, e);
-                } finally {
-                    PrivilegedCarbonContext.endTenantFlow();
-                }
-
-                if (log.isDebugEnabled()) {
-                    log.debug("MQTT Subscriber: Published data to DAS successfully.");
-                }
-
-            } else if (receivedMessage.contains("TEMPERATURE")) {
-                String temperatureValue = receivedMessage.split(":")[1];
-
-            }
-        }
     }
 
     @Override
@@ -188,7 +132,6 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
         };
 
         Thread terminatorThread = new Thread(stopConnection);
-        terminatorThread.setDaemon(true);
         terminatorThread.start();
     }
 
@@ -214,7 +157,25 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
 
     @Override
     public void publishDeviceData(String... publishData) throws TransportHandlerException {
+        if (publishData.length != 3) {
+            String errorMsg = "Incorrect number of arguments received to SEND-MQTT Message. " +
+                    "Need to be [owner, deviceId, resource{BULB/TEMP}, state{ON/OFF or null}]";
+            log.error(errorMsg);
+            throw new TransportHandlerException(errorMsg);
+        }
 
+        String deviceId = publishData[0];
+        String resource = publishData[1];
+        String state = publishData[2];
+
+        MqttMessage pushMessage = new MqttMessage();
+        String publishTopic = "wso2/" + APIUtil.getTenantDomainOftheUser() + "/"
+                + RaspberrypiConstants.DEVICE_TYPE + "/" + deviceId;
+        String actualMessage = resource + ":" + state;
+        pushMessage.setPayload(actualMessage.getBytes(StandardCharsets.UTF_8));
+        pushMessage.setQos(DEFAULT_MQTT_QUALITY_OF_SERVICE);
+        pushMessage.setRetained(false);
+        publishToQueue(publishTopic, pushMessage);
     }
 }
 

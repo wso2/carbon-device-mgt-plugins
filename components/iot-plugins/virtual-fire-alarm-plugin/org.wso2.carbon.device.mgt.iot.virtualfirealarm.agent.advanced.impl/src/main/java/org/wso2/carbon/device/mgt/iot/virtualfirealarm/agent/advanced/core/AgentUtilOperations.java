@@ -47,7 +47,6 @@ public class AgentUtilOperations {
     private static final String JSON_MESSAGE_KEY = "Msg";
     private static final String JSON_SIGNATURE_KEY = "Sig";
     private static final String JSON_SERIAL_KEY = "SerialNumber";
-    private static final String JSON_TENANT_KEY = "Tenant";
 
     /**
      * This method reads the agent specific configurations for the device from the
@@ -81,8 +80,8 @@ public class AgentUtilOperations {
             //load a properties file from class path, inside static method
             properties.load(propertiesInputStream);
 
-            iotServerConfigs.setServerName(properties.getProperty(
-                    AgentConstants.SERVER_NAME_PROPERTY));
+            iotServerConfigs.setTenantDomain(properties.getProperty(
+                    AgentConstants.TENANT_DOMAIN));
             iotServerConfigs.setDeviceOwner(properties.getProperty(
                     AgentConstants.DEVICE_OWNER_PROPERTY));
             iotServerConfigs.setDeviceId(properties.getProperty(
@@ -112,8 +111,8 @@ public class AgentUtilOperations {
             iotServerConfigs.setDataPushInterval(Integer.parseInt(properties.getProperty(
                     AgentConstants.PUSH_INTERVAL_PROPERTY)));
 
-            log.info(AgentConstants.LOG_APPENDER + "Server name: " +
-                             iotServerConfigs.getServerName());
+            log.info(AgentConstants.LOG_APPENDER + "Tenant Domain: " +
+                             iotServerConfigs.getTenantDomain());
             log.info(AgentConstants.LOG_APPENDER + "Device Owner: " +
                              iotServerConfigs.getDeviceOwner());
             log.info(AgentConstants.LOG_APPENDER + "Device ID: " + iotServerConfigs.getDeviceId());
@@ -251,7 +250,6 @@ public class AgentUtilOperations {
         jsonPayload.put(JSON_SIGNATURE_KEY, signedPayload);
         //below statements are temporary fix.
         jsonPayload.put(JSON_SERIAL_KEY, EnrollmentManager.getInstance().getSCEPCertificate().getSerialNumber());
-        jsonPayload.put(JSON_TENANT_KEY, "carbon.super");
 
         return jsonPayload.toString();
     }

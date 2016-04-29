@@ -82,7 +82,7 @@ function submitForm(formId) {
     } else if (httpMethod == "PUT") {
         invokerUtil.put(uri, payload, successCallBack, errorCallBack, contentType);
     } else if (httpMethod == "DELETE") {
-        invokerUtil.get(uri, successCallBack, errorCallBack, contentType);
+        invokerUtil.delete(uri, successCallBack, errorCallBack, contentType);
     } else {
         title.html("An Error Occurred!");
         statusIcon.attr("class", defaultStatusClasses + " fw-error");

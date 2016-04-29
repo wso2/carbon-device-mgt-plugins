@@ -21,6 +21,7 @@ import android.util.Log;
 
 import org.wso2.carbon.iot.android.sense.constants.SenseConstants;
 import org.wso2.carbon.iot.android.sense.util.dto.AccessTokenInfo;
+import org.wso2.carbon.iot.android.sense.util.dto.AndroidConfiguration;
 import org.wso2.carbon.iot.android.sense.util.dto.AndroidSenseManagerService;
 import org.wso2.carbon.iot.android.sense.util.dto.ApiApplicationRegistrationService;
 import org.wso2.carbon.iot.android.sense.util.dto.ApiRegistrationProfile;
@@ -138,18 +139,16 @@ public class SenseClientAsyncExecutor extends AsyncTask<String, Void, Map<String
                     .requestInterceptor(new OAuthRequestInterceptor(accessTokenInfo.getAccess_token()))
                     .contract(new JAXRSContract()).encoder(new JacksonEncoder()).decoder(new JacksonDecoder())
                     .target(AndroidSenseManagerService.class, endpoint + SenseConstants.REGISTER_CONTEXT);
-            boolean registered = androidSenseManagerService.register(deviceId, DEVICE_NAME);
-            if (registered) {
+            AndroidConfiguration androidConfiguration = androidSenseManagerService.register(deviceId, DEVICE_NAME);
+            if (androidConfiguration != null) {
                 LocalRegistry.addAccessToken(context, accessTokenInfo.getAccess_token());
                 LocalRegistry.addRefreshToken(context, accessTokenInfo.getRefresh_token());
+                LocalRegistry.addMqttEndpoint(context, androidConfiguration.getMqttEndpoint());
+                LocalRegistry.addTenantDomain(context, androidConfiguration.getTenantDomain());
             }
             return responseMap;
         } catch (FeignException e) {
             responseMap.put(STATUS, "" + e.status());
-            if (e.status() == 409) {
-                LocalRegistry.addAccessToken(context, accessTokenInfo.getAccess_token());
-                LocalRegistry.addRefreshToken(context, accessTokenInfo.getRefresh_token());
-            }
             return responseMap;
         }
     }
