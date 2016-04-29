@@ -35,8 +35,8 @@ import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.APIUtil;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.ZipUtil;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
-import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
@@ -67,6 +67,7 @@ public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService 
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
 
+    @Override
     @Path("devices/{device_id}")
     @DELETE
     public Response removeDevice(@PathParam("device_id") String deviceId) {
@@ -86,6 +87,7 @@ public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService 
         }
     }
 
+    @Override
     @Path("devices/{device_id}")
     @PUT
     public Response updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name) {
@@ -110,6 +112,7 @@ public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService 
         }
     }
 
+    @Override
     @Path("devices/{device_id}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -127,6 +130,7 @@ public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService 
         }
     }
 
+    @Override
     @Path("devices")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -149,54 +153,39 @@ public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService 
         }
     }
 
-
-    @Path("devices/{sketch_type}/download")
+    @Override
+    @Path("devices/download")
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response downloadSketch(@QueryParam("deviceName") String deviceName,
-                                   @PathParam("sketch_type") String sketchType) {
+    @Produces("application/zip")
+    public Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketch_type") String sketchType) {
         try {
             ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
             Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
+            response.status(Response.Status.OK);
             response.type("application/zip");
             response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
-            return response.build();
+            Response resp = response.build();
+            zipFile.getZipFile().delete();
+            return resp;
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
         } catch (DeviceManagementException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (JWTClientException ex) {
+            log.error(ex.getMessage(), ex);
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (APIManagerException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (DeviceControllerException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (IOException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (APIManagerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (UserStoreException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        }
-    }
-
-    @Path("devices/{sketch_type}/generate_link")
-    @GET
-    public Response generateSketchLink(@QueryParam("deviceName") String deviceName,
-                                @PathParam("sketch_type") String sketchType) {
-        try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
-            Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
-            return rb.build();
-        } catch (IllegalArgumentException ex) {
-            return Response.status(400).entity(ex.getMessage()).build();//bad request
-        } catch (DeviceManagementException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (JWTClientException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (APIManagerException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (UserStoreException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         }
     }
@@ -215,12 +204,12 @@ public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService 
             enrolmentInfo.setDateOfEnrolment(new Date().getTime());
             enrolmentInfo.setDateOfLastUpdate(new Date().getTime());
             enrolmentInfo.setStatus(EnrolmentInfo.Status.ACTIVE);
+            enrolmentInfo.setOwnership(EnrolmentInfo.OwnerShip.BYOD);
             device.setName(name);
             device.setType(RaspberrypiConstants.DEVICE_TYPE);
             enrolmentInfo.setOwner(APIUtil.getAuthenticatedUser());
             device.setEnrolmentInfo(enrolmentInfo);
-            boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
-            return added;
+            return APIUtil.getDeviceManagementService().enrollDevice(device);
         } catch (DeviceManagementException e) {
             return false;
         }

@@ -2,7 +2,7 @@
   "deviceType": {
     "label": "Arduino",
     "category": "iot",
-    "downloadAgentUri": "manager/device/arduino/download",
+    "downloadAgentUri": "arduino/enrollment/devices/download"
   },
   "analyticStreams": [
     {

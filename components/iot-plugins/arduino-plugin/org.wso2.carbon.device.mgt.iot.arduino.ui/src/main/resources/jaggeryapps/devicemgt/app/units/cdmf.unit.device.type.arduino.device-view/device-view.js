@@ -20,24 +20,17 @@ function onRequest(context) {
     var log = new Log("device-view.js");
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("id");
+    var autoCompleteParams = [
+        {"name" : "deviceId", "value" : deviceId}
+    ];
 
     if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
         var deviceModule = require("/app/modules/device.js").deviceModule;
         var device = deviceModule.viewDevice(deviceType, deviceId);
-
         if (device && device.status != "error") {
-            var viewModel = {};
-            var deviceInfo = device.properties.DEVICE_INFO;
-            if (deviceInfo != undefined && String(deviceInfo.toString()).length > 0) {
-                deviceInfo = parse(stringify(deviceInfo));
-                viewModel.system = device.properties.IMEI;
-                viewModel.machine = "Arduino";
-                viewModel.vendor = device.properties.VENDOR;
-            }
-            device.viewModel = viewModel;
-            return {"device": device};
+            return {"device": device, "backendApiUri" : devicemgtProps["httpsURL"] + "/arduino/", "autoCompleteParams" : autoCompleteParams};
         } else {
-            response.sendError(404, "Device Id " + deviceId + "of type " + deviceType + " cannot be found!");
+            response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
             exit();
         }
     }

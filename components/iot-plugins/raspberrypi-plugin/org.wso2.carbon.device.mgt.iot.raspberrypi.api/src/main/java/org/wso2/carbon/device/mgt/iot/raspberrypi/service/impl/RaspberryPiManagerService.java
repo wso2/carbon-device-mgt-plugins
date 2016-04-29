@@ -58,15 +58,9 @@ public interface RaspberryPiManagerService {
     @Produces(MediaType.APPLICATION_JSON)
     Response getRaspberrypiDevices();
 
-    @Path("devices/{sketch_type}/download")
+    @Path("devicesg/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    Response downloadSketch(@QueryParam("deviceName") String deviceName,
-                            @PathParam("sketch_type") String sketchType);
-
-    @Path("devices/{sketch_type}/generate_link")
-    @GET
-    Response generateSketchLink(@QueryParam("deviceName") String deviceName,
-                                @PathParam("sketch_type") String sketchType);
+    Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketch_type") String sketchType);
 
 }

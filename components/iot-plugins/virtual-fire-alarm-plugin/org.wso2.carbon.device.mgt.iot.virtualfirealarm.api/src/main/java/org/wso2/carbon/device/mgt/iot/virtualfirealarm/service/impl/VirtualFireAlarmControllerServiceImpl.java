@@ -24,9 +24,6 @@ import org.wso2.carbon.analytics.dataservice.commons.SORT;
 import org.wso2.carbon.analytics.dataservice.commons.SortByField;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.annotations.api.Permission;
-import org.wso2.carbon.certificate.mgt.core.dto.SCEPResponse;
-import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
-import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
@@ -37,10 +34,7 @@ import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.DeviceData;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport.VirtualFireAlarmXMPPConnector;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.SecurityManager;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.scep.ContentType;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.scep.SCEPOperation;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.SensorRecord;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport.VirtualFireAlarmMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.VirtualFireAlarmServiceUtils;
@@ -58,7 +52,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -84,13 +77,13 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
     @Path("device/register/{deviceId}/{ip}/{port}")
     public Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
                                      @PathParam("port") String devicePort, @Context HttpServletRequest request) {
-        String result;
+
         if (log.isDebugEnabled()) {
             log.debug("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId);
         }
         String deviceHttpEndpoint = deviceIP + ":" + devicePort;
         deviceToIpMap.put(deviceId, deviceHttpEndpoint);
-        result = "Device-IP Registered";
+        String result = "Device-IP Registered";
         if (log.isDebugEnabled()) {
             log.debug(result);
         }
@@ -115,7 +108,7 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
         }
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                                                                                                     VirtualFireAlarmConstants.DEVICE_TYPE))) {
+                                                                VirtualFireAlarmConstants.DEVICE_TYPE))) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             switch (protocolString) {
