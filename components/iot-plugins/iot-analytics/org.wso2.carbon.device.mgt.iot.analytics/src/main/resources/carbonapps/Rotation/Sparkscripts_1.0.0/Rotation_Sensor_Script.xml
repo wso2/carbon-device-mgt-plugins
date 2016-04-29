@@ -18,13 +18,13 @@
   -->
 
 <Analytics>
-    <Name>IoTServer_Sensor_Script</Name>
-<Script>
-CREATE TEMPORARY TABLE DeviceROTATIONData USING CarbonAnalytics OPTIONS(tableName "ORG_WSO2_IOT_DEVICES_ROTATION"); 	
+  <Name>IoTServer_Sensor_Script</Name>
+  <Script>
+    CREATE TEMPORARY TABLE DeviceROTATIONData USING CarbonAnalytics OPTIONS(tableName "ORG_WSO2_IOT_DEVICES_ROTATION");
 
-CREATE TEMPORARY TABLE DeviceROTATIONSummaryData USING CarbonAnalytics OPTIONS (tableName "DEVICE_ROTATION_SUMMARY", schema "x FLOAT, y FLOAT, z FLOAT, deviceType STRING -i, deviceId STRING -i, owner STRING -i, time LONG -i",primaryKeys "deviceType, deviceId, owner, time");
+    CREATE TEMPORARY TABLE DeviceROTATIONSummaryData USING CarbonAnalytics OPTIONS (tableName "DEVICE_ROTATION_SUMMARY", schema "x FLOAT, y FLOAT, z FLOAT, deviceType STRING -i, deviceId STRING -i, owner STRING -i, time LONG -i",primaryKeys "deviceType, deviceId, owner, time");
 
-insert overwrite table DeviceROTATIONSummaryData select x, y, z, meta_deviceType as deviceType, meta_deviceId as deviceId, meta_owner as owner, cast(meta_time/1000 as BIGINT)as time from DeviceROTATIONData group by x, y, z, meta_deviceType, meta_deviceId, meta_owner, cast(meta_time/1000 as BIGINT);
-</Script>
-    <CronExpression>0 * * * * ?</CronExpression>
+    insert into table DeviceROTATIONSummaryData select x, y, z, meta_deviceType as deviceType, meta_deviceId as deviceId, meta_owner as owner, cast(meta_time/1000 as BIGINT)as time from DeviceROTATIONData group by x, y, z, meta_deviceType, meta_deviceId, meta_owner, cast(meta_time/1000 as BIGINT);
+  </Script>
+  <CronExpression>0 * * * * ?</CronExpression>
 </Analytics>

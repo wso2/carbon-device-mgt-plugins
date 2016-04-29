@@ -133,7 +133,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             List<SensorRecord> sensorDatas;
-            if (sensor.equals(AndroidSenseConstants.SENSOR_WORDCOUNT)) {
+            if (!sensor.equals(AndroidSenseConstants.SENSOR_WORDCOUNT)) {
                 List<SortByField> sortByFields = new ArrayList<>();
                 SortByField sortByField = new SortByField("time", SORT.ASC, false);
                 sortByFields.add(sortByField);
@@ -183,7 +183,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
                 sensorEventTableName = "DEVICE_PRESSURE_SUMMARY";
                 break;
             case AndroidSenseConstants.SENSOR_PROXIMITY:
-                sensorEventTableName = "DevicePROXIMITYSummaryData";
+                sensorEventTableName = "DEVICE_PROXIMITY_SUMMARY";
                 break;
             case AndroidSenseConstants.SENSOR_ROTATION:
                 sensorEventTableName = "DEVICE_ROTATION_SUMMARY";

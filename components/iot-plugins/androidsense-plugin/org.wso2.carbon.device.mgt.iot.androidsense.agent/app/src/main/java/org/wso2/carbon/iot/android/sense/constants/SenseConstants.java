@@ -23,14 +23,12 @@ public class SenseConstants {
     public final static String TOKEN_ISSUER_CONTEXT = "/oauth2";
     public final static String API_APPLICATION_REGISTRATION_CONTEXT = "/api-application-registration";
 
-    public static final int MQTT_BROKER_PORT = 1883;
     public static final String EVENT_LISTENER_STARTED = "xxStartedxx";
     public static final String EVENT_LISTENER_FINISHED = "xxFinishedxx";
     public static final String EVENT_LISTENER_ONGOING = "xxOngoingxx";
 
     public final class Request {
         public final static String REQUEST_SUCCESSFUL = "200";
-        public final static String REQUEST_CONFLICT = "409";
         public final static int MAX_ATTEMPTS = 2;
     }
 }

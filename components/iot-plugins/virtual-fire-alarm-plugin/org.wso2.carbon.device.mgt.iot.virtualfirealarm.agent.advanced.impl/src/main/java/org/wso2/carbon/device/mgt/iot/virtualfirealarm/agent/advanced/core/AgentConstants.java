@@ -57,8 +57,8 @@ public class AgentConstants {
  		---------------------------------------------------------------------------------------	*/
 	public static final int DEFAULT_MQTT_RECONNECTION_INTERVAL = 2;        // time in seconds
 	public static final int DEFAULT_MQTT_QUALITY_OF_SERVICE = 0;
-	public static final String MQTT_SUBSCRIBE_TOPIC = "wso2/" + DEVICE_TYPE + "/%s";
-	public static final String MQTT_PUBLISH_TOPIC = "wso2/" + DEVICE_TYPE + "/%s/publisher";
+	public static final String MQTT_SUBSCRIBE_TOPIC = "wso2/%s/" + DEVICE_TYPE + "/%s";
+	public static final String MQTT_PUBLISH_TOPIC = "wso2/%s/" + DEVICE_TYPE + "/%s/publisher";
 	/*	---------------------------------------------------------------------------------------
 								XMPP Connection specific information
  		---------------------------------------------------------------------------------------	*/
@@ -67,7 +67,7 @@ public class AgentConstants {
 		  Device/Agent specific properties to be read from the 'deviceConfig.properties' file
  		---------------------------------------------------------------------------------------	*/
 	public static final String AGENT_PROPERTIES_FILE_NAME = "deviceConfig.properties";
-	public static final String SERVER_NAME_PROPERTY = "server-name";
+	public static final String TENANT_DOMAIN = "tenantDomain";
 	public static final String DEVICE_OWNER_PROPERTY = "owner";
 	public static final String DEVICE_ID_PROPERTY = "deviceId";
 	public static final String DEVICE_NAME_PROPERTY = "device-name";

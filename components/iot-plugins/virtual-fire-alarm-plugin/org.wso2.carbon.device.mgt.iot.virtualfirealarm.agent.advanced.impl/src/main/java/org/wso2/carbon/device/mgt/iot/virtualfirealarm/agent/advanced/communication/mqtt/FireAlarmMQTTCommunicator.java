@@ -106,7 +106,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
     @Override
     public void processIncomingMessage(MqttMessage message, String... messageParams) {
         final AgentManager agentManager = AgentManager.getInstance();
-        String serverName = agentManager.getAgentConfigs().getServerName();
+        String tenantDomain = agentManager.getAgentConfigs().getTenantDomain();
         String deviceOwner = agentManager.getAgentConfigs().getDeviceOwner();
         String deviceID = agentManager.getAgentConfigs().getDeviceId();
         String receivedMessage;
@@ -143,7 +143,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                         String replyTemperature = "Current temperature was read as: '" + currentTemperature + "C'";
                         log.info(AgentConstants.LOG_APPENDER + replyTemperature);
 
-                        String tempPublishTopic = String.format(AgentConstants.MQTT_PUBLISH_TOPIC, deviceID);
+                        String tempPublishTopic = String.format(AgentConstants.MQTT_PUBLISH_TOPIC, tenantDomain, deviceID);
 
                         replyMessage = AgentConstants.TEMPERATURE_CONTROL + ":" + currentTemperature;
                         securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
@@ -157,7 +157,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                         log.info(AgentConstants.LOG_APPENDER + replyHumidity);
 
                         String humidPublishTopic = String.format(
-                                AgentConstants.MQTT_PUBLISH_TOPIC, deviceID);
+                                AgentConstants.MQTT_PUBLISH_TOPIC,tenantDomain, deviceID);
 
                         replyMessage = AgentConstants.HUMIDITY_CONTROL + ":" + currentHumidity;
                         securePayLoad = AgentUtilOperations.prepareSecurePayLoad(replyMessage);
@@ -202,6 +202,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                     pushMessage.setRetained(false);
 
                     String topic = String.format(AgentConstants.MQTT_PUBLISH_TOPIC,
+                                                 agentManager.getAgentConfigs().getTenantDomain(),
                                                  agentManager.getAgentConfigs().getDeviceId());
 
                     publishToQueue(topic, pushMessage);

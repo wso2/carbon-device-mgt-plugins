@@ -24,9 +24,5 @@ import org.wso2.carbon.user.core.Permission;
  * This hold the constants related to the device type.
  */
 public class Constants {
-
-	public static final String DEFAULT_PERMISSION_RESOURCE = "/permission/admin/device-mgt/android_sense/user";
-	public static final String DEFAULT_ROLE_NAME = "android_sense_user";
-	public static final Permission DEFAULT_PERMISSION[] = new Permission[]{new Permission(Constants.DEFAULT_PERMISSION_RESOURCE,
-		"ui.execute")};
+	public static final String LOCALHOST = "localhost";
 }

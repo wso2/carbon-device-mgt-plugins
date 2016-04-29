@@ -14,9 +14,9 @@
         android:layout_marginBottom="8dp" android:visibility="gone" />
 
     <ScrollView android:id="@+id/login_form" android:layout_width="match_parent"
-        android:layout_height="211dp"
+        android:layout_height="153dp"
         android:fillViewport="false"
-                android:layout_weight="0.07">
+        >
 
         <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:orientation="vertical">
@@ -43,32 +43,14 @@
                 android:inputType="text"
                 android:maxLines="1" android:singleLine="true"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="MQTT Port"
-                android:id="@+id/textView4"
-                />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/hostname"
-                android:id="@+id/mqttPort"
-                android:text="1883"
-                android:inputType="text"
-                android:maxLines="1"
-                android:singleLine="true"
-                />
-
         </LinearLayout>
     </ScrollView>
 
     <Button android:id="@+id/device_register_button" style="?android:textAppearanceSmall"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_marginTop="16dp" android:text="@string/action_sign_in"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+            android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
 

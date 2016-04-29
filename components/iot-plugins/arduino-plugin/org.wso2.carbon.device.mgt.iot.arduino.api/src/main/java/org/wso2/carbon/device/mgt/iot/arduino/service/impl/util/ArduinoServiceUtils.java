@@ -187,23 +187,4 @@ public class ArduinoServiceUtils {
 
         return completeResponse.toString();
     }
-
-    public static boolean publishToDAS(String deviceId, float temperature) {
-        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        String owner = ctx.getUsername();
-        Object metdaData[] = {owner, ArduinoConstants.DEVICE_TYPE, deviceId, System.currentTimeMillis()};
-        Object payloadData[] = {temperature};
-        EventsPublisherService deviceAnalyticsService = (EventsPublisherService) ctx
-                .getOSGiService(EventsPublisherService.class, null);
-        if (deviceAnalyticsService != null) {
-            try {
-                deviceAnalyticsService.publishEvent(TEMPERATURE_STREAM_DEFINITION, "1.0.0", metdaData,
-                                                    new Object[0], payloadData);
-            } catch (DataPublisherConfigurationException e) {
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
 }

@@ -26,5 +26,5 @@ public interface AndroidSenseManagerService {
 
     @Path("/enrollment/devices/{device_id}")
     @POST
-    boolean register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName);
+    AndroidConfiguration register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName);
 }

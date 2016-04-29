@@ -14,7 +14,7 @@
         Operations
     </div>
     <div class="add-margin-top-4x">
-        {{unit "iot.unit.device.operation-bar" device=device backendApiUri=backendApiUri}}
+        {{unit "iot.unit.device.operation-bar" device=device backendApiUri=backendApiUri autoCompleteParams=autoCompleteParams}}
     </div>
 {{/zone}}
 
@@ -38,7 +38,7 @@
                 <div class="panel panel-default tab-pane active"
                      id="device_statistics" role="tabpanel" aria-labelledby="device_statistics">
                     <div class="panel-heading">Device Statistics</div>
-                    {{unit "iot.unit.device.stats" device=device}}
+                    {{unit "cdmf.unit.device.type.android_sense.realtime.analytics-view" device=device}}
                 </div>
                 <div class="panel panel-default tab-pane" id="device_location" role="tabpanel"
                      aria-labelledby="device_location">

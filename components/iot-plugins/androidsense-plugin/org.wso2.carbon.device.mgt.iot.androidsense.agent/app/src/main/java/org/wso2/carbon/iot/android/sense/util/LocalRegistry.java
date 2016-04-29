@@ -34,8 +34,9 @@ public class LocalRegistry {
     private static final String SERVER_HOST_KEY = "serverHostKey";
     private static final String ACCESS_TOKEN_KEY = "accessTokenKey";
     private static final String REFRESH_TOKEN_KEY = "refreshTokenKey";
-    private static final String MQTT_PORT_KEY = "mqttPort";
-    private static final String IS_ENROLLED_KEY = "enrolled";
+    private static final String MQTT_ENDPOINT_KEY = "mqttEndpointKey";
+    private static final String IS_ENROLLED_KEY = "enrolledKey";
+    private static final String TENANT_DOMAIN_KEY = "tenantDomainKey";
     private static boolean exists = false;
     private static String username;
     private static String deviceId;
@@ -43,8 +44,9 @@ public class LocalRegistry {
     private static MQTTTransportHandler mqttTransportHandler;
     private static String accessToken;
     private static String refreshToken;
-    private static int mqttPort;
+    private static String mqttEndpoint;
     private static boolean enrolled;
+    private static String tenantDomain;
 
     public static boolean isExist(Context context) {
         if (!exists) {
@@ -186,29 +188,29 @@ public class LocalRegistry {
         return LocalRegistry.refreshToken;
     }
 
-    public static void addMqttPort(Context context, int port) {
+    public static void addMqttEndpoint(Context context, String endpoint) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(SENSE_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putInt(MQTT_PORT_KEY, port);
+        editor.putString(MQTT_ENDPOINT_KEY, endpoint);
         editor.commit();
-        LocalRegistry.mqttPort = port;
+        LocalRegistry.mqttEndpoint = endpoint;
     }
 
-    public static void removeMqttPort(Context context) {
+    public static void removeMqttEndpoint(Context context) {
         SharedPreferences sharedpreferences = context.getSharedPreferences(SENSE_SHARED_PREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.remove(MQTT_PORT_KEY);
+        editor.remove(MQTT_ENDPOINT_KEY);
         editor.clear();
         editor.commit();
-        LocalRegistry.mqttPort = 0;
+        LocalRegistry.mqttEndpoint = null;
     }
 
-    public static int getMqttPort(Context context) {
-        if (LocalRegistry.mqttPort == 0) {
+    public static String getMqttEndpoint(Context context) {
+        if (LocalRegistry.mqttEndpoint == null) {
             SharedPreferences sharedpreferences = context.getSharedPreferences(SENSE_SHARED_PREFERENCES, Context.MODE_PRIVATE);
-            LocalRegistry.mqttPort = sharedpreferences.getInt(MQTT_PORT_KEY, SenseConstants.MQTT_BROKER_PORT);
+            LocalRegistry.mqttEndpoint = sharedpreferences.getString(MQTT_ENDPOINT_KEY, "");
         }
-        return LocalRegistry.mqttPort;
+        return LocalRegistry.mqttEndpoint;
     }
 
     public static void setEnrolled(Context context, boolean enrolled) {
@@ -225,6 +227,31 @@ public class LocalRegistry {
             return LocalRegistry.enrolled = sharedpreferences.getBoolean(IS_ENROLLED_KEY, false);
         }
         return LocalRegistry.enrolled;
+    }
+
+    public static void addTenantDomain(Context context, String tenantDomain) {
+        SharedPreferences sharedpreferences = context.getSharedPreferences(SENSE_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString(TENANT_DOMAIN_KEY, tenantDomain);
+        editor.commit();
+        LocalRegistry.tenantDomain = tenantDomain;
+    }
+
+    public static void removeTenantDomain(Context context) {
+        SharedPreferences sharedpreferences = context.getSharedPreferences(SENSE_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.remove(TENANT_DOMAIN_KEY);
+        editor.clear();
+        editor.commit();
+        LocalRegistry.tenantDomain = null;
+    }
+
+    public static String getTenantDomain(Context context) {
+        if (LocalRegistry.tenantDomain == null) {
+            SharedPreferences sharedpreferences = context.getSharedPreferences(SENSE_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+            LocalRegistry.tenantDomain = sharedpreferences.getString(TENANT_DOMAIN_KEY, "");
+        }
+        return LocalRegistry.tenantDomain;
     }
 
     public static String getServerHost(Context context) {

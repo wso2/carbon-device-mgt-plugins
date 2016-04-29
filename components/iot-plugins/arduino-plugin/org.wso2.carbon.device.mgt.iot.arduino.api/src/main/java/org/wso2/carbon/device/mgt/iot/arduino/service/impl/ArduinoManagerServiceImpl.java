@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.device.mgt.iot.arduino.service.impl;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
 import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
@@ -28,9 +31,9 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
+import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.ZipUtil;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
-import org.wso2.carbon.device.mgt.iot.util.ZipUtil;
 import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
@@ -46,6 +49,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -58,6 +62,7 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
 
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
+    private static Log log = LogFactory.getLog(ArduinoManagerServiceImpl.class);
 
     @Override
     @Path("devices/{device_id}")
@@ -143,49 +148,38 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
     }
 
     @Override
-    @Path("devices/download")
+    @Path("/devices/download")
     @GET
-    @Produces("application/octet-stream")
-    public Response downloadSketch(@QueryParam("deviceName") String customDeviceName) {
-        try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), customDeviceName);
-            Response.ResponseBuilder rb = Response.ok(zipFile.getZipFile());
-            rb.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
-            return rb.build();
-        } catch (IllegalArgumentException ex) {
-            return Response.status(400).entity(ex.getMessage()).build();//bad request
-        } catch (DeviceManagementException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (JWTClientException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (APIManagerException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (UserStoreException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        }
-    }
-
-    @Override
-    @Path("devices/generate_link")
-    @GET
-    public Response generateSketchLink(@QueryParam("deviceName") String deviceName) {
+    @Produces("application/zip")
+    public Response downloadSketch(@QueryParam("deviceName") String deviceName) {
         try {
             ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName);
-            Response.ResponseBuilder rb = Response.ok(zipFile.getDeviceId());
-            return rb.build();
+            Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
+            response.status(Response.Status.OK);
+            response.type("application/zip");
+            response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
+            Response resp = response.build();
+            zipFile.getZipFile().delete();
+            return resp;
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
         } catch (DeviceManagementException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (JWTClientException ex) {
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (APIManagerException ex) {
+            log.error(ex.getMessage(), ex);
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (DeviceControllerException ex) {
+            log.error(ex.getMessage(), ex);
+            return Response.status(500).entity(ex.getMessage()).build();
+        } catch (IOException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (UserStoreException ex) {
+            log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         }
     }
@@ -210,8 +204,7 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = "device_type_" + ArduinoConstants.DEVICE_TYPE + " device_" + deviceId;
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
-                                                                   apiApplicationKey.getConsumerSecret(), owner,
-                                                                   scopes);
+                                                                   apiApplicationKey.getConsumerSecret(), owner, scopes);
         //create token
         String accessToken = accessTokenInfo.getAccessToken();
         String refreshToken = accessTokenInfo.getRefreshToken();
@@ -223,8 +216,7 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
         }
         ZipUtil ziputil = new ZipUtil();
         ZipArchive zipFile = ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(),
-                                                   ArduinoConstants.DEVICE_TYPE, deviceId,
-                                                   deviceName, accessToken, refreshToken);
+                            ArduinoConstants.DEVICE_TYPE, deviceId, deviceName, accessToken, refreshToken);
         zipFile.setDeviceId(deviceId);
         return zipFile;
     }

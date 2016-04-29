@@ -30,7 +30,7 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.exception.RaspberrypiDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao.RaspberrypiDAO;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao.RaspberrypiDAOUtil;
 import java.util.List;
 
 /**
@@ -38,7 +38,7 @@ import java.util.List;
  */
 public class RaspberrypiManager implements DeviceManager {
 
-    private static final RaspberrypiDAO raspberrypiDAO = new RaspberrypiDAO();
+    private static final RaspberrypiDAOUtil raspberrypiDAO = new RaspberrypiDAOUtil();
     private static final Log log = LogFactory.getLog(RaspberrypiManager.class);
 
     @Override
@@ -64,12 +64,12 @@ public class RaspberrypiManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new Raspberrypi device : " + device.getDeviceIdentifier());
             }
-            RaspberrypiDAO.beginTransaction();
+            RaspberrypiDAOUtil.beginTransaction();
             status = raspberrypiDAO.getDeviceDAO().addDevice(device);
-            RaspberrypiDAO.commitTransaction();
+            RaspberrypiDAOUtil.commitTransaction();
         } catch (RaspberrypiDeviceMgtPluginException e) {
             try {
-                RaspberrypiDAO.rollbackTransaction();
+                RaspberrypiDAOUtil.rollbackTransaction();
             } catch (RaspberrypiDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
@@ -88,12 +88,12 @@ public class RaspberrypiManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Modifying the Raspberrypi device enrollment data");
             }
-            RaspberrypiDAO.beginTransaction();
+            RaspberrypiDAOUtil.beginTransaction();
             status = raspberrypiDAO.getDeviceDAO().updateDevice(device);
-            RaspberrypiDAO.commitTransaction();
+            RaspberrypiDAOUtil.commitTransaction();
         } catch (RaspberrypiDeviceMgtPluginException e) {
             try {
-                RaspberrypiDAO.rollbackTransaction();
+                RaspberrypiDAOUtil.rollbackTransaction();
             } catch (RaspberrypiDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
@@ -113,12 +113,12 @@ public class RaspberrypiManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Dis-enrolling Raspberrypi device : " + deviceId);
             }
-            RaspberrypiDAO.beginTransaction();
+            RaspberrypiDAOUtil.beginTransaction();
             status = raspberrypiDAO.getDeviceDAO().deleteDevice(deviceId.getId());
-            RaspberrypiDAO.commitTransaction();
+            RaspberrypiDAOUtil.commitTransaction();
         } catch (RaspberrypiDeviceMgtPluginException e) {
             try {
-                RaspberrypiDAO.rollbackTransaction();
+                RaspberrypiDAOUtil.rollbackTransaction();
             } catch (RaspberrypiDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device dis enrol transaction :" + deviceId.toString();
                 log.warn(msg, iotDAOEx);
@@ -216,12 +216,12 @@ public class RaspberrypiManager implements DeviceManager {
                 log.debug(
                         "updating the details of Raspberrypi device : " + deviceIdentifier);
             }
-            RaspberrypiDAO.beginTransaction();
+            RaspberrypiDAOUtil.beginTransaction();
             status = raspberrypiDAO.getDeviceDAO().updateDevice(device);
-            RaspberrypiDAO.commitTransaction();
+            RaspberrypiDAOUtil.commitTransaction();
         } catch (RaspberrypiDeviceMgtPluginException e) {
             try {
-                RaspberrypiDAO.rollbackTransaction();
+                RaspberrypiDAOUtil.rollbackTransaction();
             } catch (RaspberrypiDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device info transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);

@@ -182,7 +182,8 @@ public class ActivitySelectSensor extends AppCompatActivity
             LocalRegistry.removeServerURL(getApplicationContext());
             LocalRegistry.removeAccessToken(getApplicationContext());
             LocalRegistry.removeRefreshToken(getApplicationContext());
-            LocalRegistry.removeMqttPort(getApplicationContext());
+            LocalRegistry.removeMqttEndpoint(getApplicationContext());
+            LocalRegistry.removeTenantDomain(getApplicationContext());
             LocalRegistry.setExist(false);
             //Stop the current running background services.
             stopService(new Intent(this, SenseService.class)); //Stop sensor reading service

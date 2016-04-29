@@ -138,9 +138,13 @@ function downloadAgent() {
     var deviceNameFormat = /^[^~?!#$:;%^*`+={}\[\]\\()|<>,'"]{1,30}$/;
     if (deviceName && deviceNameFormat.test(deviceName)) {
         $('#downloadForm').submit();
-        hideAgentDownloadPopup();
+        hidePopup();
         $(modalPopupContent).html($('#device-agent-downloading-content').html());
-    } else {
+        showPopup();
+        setTimeout(function () {
+            hidePopup();
+        }, 1000);
+    }else {
         $("#invalid-username-error-msg span").text("Invalid device name");
         $("#invalid-username-error-msg").removeClass("hidden");
     }

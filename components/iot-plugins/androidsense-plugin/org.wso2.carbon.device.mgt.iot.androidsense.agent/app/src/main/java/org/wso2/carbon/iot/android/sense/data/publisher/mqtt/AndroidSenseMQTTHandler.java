@@ -26,6 +26,7 @@ import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.transport.MQTTTrans
 import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.transport.TransportHandlerException;
 import org.wso2.carbon.iot.android.sense.constants.SenseConstants;
 import org.wso2.carbon.iot.android.sense.speech.detector.util.ProcessWords;
+import org.wso2.carbon.iot.android.sense.util.LocalRegistry;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -46,7 +47,7 @@ import java.util.Arrays;
 public class AndroidSenseMQTTHandler extends MQTTTransportHandler {
     private static final String TAG = "AndroidSenseMQTTHandler";
     private static volatile AndroidSenseMQTTHandler mInstance;
-
+    private Context context;
 
     /**
      * return a sigleton Instance
@@ -54,6 +55,7 @@ public class AndroidSenseMQTTHandler extends MQTTTransportHandler {
      * @return AndroidSenseMQTTHandler.
      */
     public static AndroidSenseMQTTHandler getInstance(Context context) {
+        context = context;
         if (mInstance == null) {
             Class clazz = AndroidSenseMQTTHandler.class;
             synchronized (clazz) {
@@ -157,7 +159,7 @@ public class AndroidSenseMQTTHandler extends MQTTTransportHandler {
      */
     @Override
     public void publishDeviceData(String... publishData) throws TransportHandlerException {
-        if (publishData.length != 3) {
+        if (publishData.length != 4) {
             String errorMsg = "Incorrect number of arguments received to SEND-MQTT Message. " +
                     "Need to be [owner, deviceId, content]";
             Log.e(TAG, errorMsg);
@@ -169,7 +171,7 @@ public class AndroidSenseMQTTHandler extends MQTTTransportHandler {
         String resource = publishData[2];
 
         MqttMessage pushMessage = new MqttMessage();
-        String publishTopic = "wso2/" + SenseConstants.DEVICE_TYPE + "/" + deviceId + "/data";
+        String publishTopic = publishData[3];
         String actualMessage = resource;
         pushMessage.setPayload(actualMessage.getBytes(StandardCharsets.UTF_8));
         pushMessage.setQos(DEFAULT_MQTT_QUALITY_OF_SERVICE);

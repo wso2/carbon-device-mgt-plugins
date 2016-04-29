@@ -227,7 +227,7 @@ public class EnrollmentManager {
     private PKCS10CertificationRequest generateCertSignRequest() throws AgentCoreOperationException {
         // Build the CN for the cert that's being requested.
         X500NameBuilder nameBld = new X500NameBuilder(BCStyle.INSTANCE);
-        nameBld.addRDN(BCStyle.CN, AgentManager.getInstance().getAgentConfigs().getServerName());
+        nameBld.addRDN(BCStyle.CN, AgentManager.getInstance().getAgentConfigs().getTenantDomain());
         nameBld.addRDN(BCStyle.O, AgentManager.getInstance().getAgentConfigs().getDeviceOwner());
         nameBld.addRDN(BCStyle.OU, AgentManager.getInstance().getAgentConfigs().getDeviceOwner());
         nameBld.addRDN(BCStyle.UNIQUE_IDENTIFIER, AgentManager.getInstance().getAgentConfigs().getDeviceId());
