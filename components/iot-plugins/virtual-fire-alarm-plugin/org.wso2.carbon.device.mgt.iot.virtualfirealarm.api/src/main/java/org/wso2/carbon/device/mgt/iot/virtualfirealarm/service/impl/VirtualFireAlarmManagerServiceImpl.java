@@ -226,11 +226,7 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
             device.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
             enrolmentInfo.setOwner(APIUtil.getAuthenticatedUser());
             device.setEnrolmentInfo(enrolmentInfo);
-            boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
-            if (added) {
-                APIUtil.registerApiAccessRoles(APIUtil.getAuthenticatedUser());
-            }
-            return added;
+            return APIUtil.getDeviceManagementService().enrollDevice(device);
         } catch (DeviceManagementException e) {
             log.error(e.getMessage(), e);
             return false;
