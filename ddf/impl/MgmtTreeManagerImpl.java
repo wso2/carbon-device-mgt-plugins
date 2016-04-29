@@ -44,6 +44,7 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
 
     @Override
     public boolean addNode(Node node, String path) {
+        // Note that the path here is the path of the parent node
         URIParser.validateUri(path);
         String absolutePath = path + NODE_URI_DELIMETER + node.getNodeName();
         if (isExistingNode(absolutePath)) {
@@ -53,43 +54,99 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
             throw new DMException("Node cannot be null.");
         } else {
             node.setPath(path);
-            this.tree.getNodes().add(node);
+            getParentNode(node).getNodes().add(node);
             return true;
         }
     }
 
     @Override
     public boolean removeNode(String path) {
+        Node node = getNode(path);
 
-    }
-
-    @Override
-    public Node getNode(String path) {
-
-    }
-
-    @Override
-    public boolean replaceNodeValue(String path, String value) {
-        return false;
-    }
-
-    @Override
-    public int nodeCount() {
-        return DMRoot.getNodeMap().size();
-    }
-
-    @Override
-    public boolean isExistingNode(String path) {
-        if (DMRoot.getNodeMap().containsKey(path)) {
+        if (node.getDfProperties().getAccessType().getDelete() != null) {
+            getNode(URIParser.getParentPath(path)).getNodes().remove(node);
             return true;
         }
         return false;
     }
 
+    @Override
+    public Node getNode(String path) {
+        Node node;
+        //Validate the URI
+        URIParser.validateUri(path);
+
+        if (path == null) {
+            throw new DMNodeException("Invalid path.");
+        }
+
+        String[] pathArr = URIParser.nodeNames(path);
+        node = searchNode(pathArr, tree.getNodes(), 0);
+
+        if (node == null) {
+            throw new DMNodeException("Node does not exist in the given path.");
+        } else if (node.getDfProperties().getAccessType().getGet() == null) {
+            throw new DMNodeException("This operation is not allowed on the node.");
+        } else {
+            return node;
+        }
+    }
+
+    @Override
+    public boolean replaceNodeValue(String path, String value) {
+        Node node = getNode(path);
+        if (node.getDfProperties().getAccessType().getReplace() != null) {
+            node.setValue(value);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int nodeCount() {
+        return this.tree.getNodes().size();
+    }
+
+    @Override
+    public boolean isExistingNode(String path) {
+        if (getNode(path) != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public Node getParentNode(Node node) {
+        return getNode(node.getPath());
+    }
+
+    /**
+     * This is a recursive method which traverses through a nested node structure
+     *
+     * @param pathArr The path segments to the node as an array of node names
+     * @param nodes   The node list to be traversed
+     * @param index   Current search position of the node list
+     * @return Requested node if found or else null
+     */
+    private Node searchNode(String[] pathArr, List<Node> nodes, int index) {
+        int N = index;
+        Node targetNode = null;
+        for (Node node : nodes) {
+            if (node.getNodeName().equalsIgnoreCase(pathArr[N + 1])) {
+                if (N + 2 == pathArr.length) {
+                    targetNode = node;
+                } else {
+                    targetNode = searchNode(pathArr, node.getNodes(), ++N);
+                }
+            }
+        }
+        return targetNode;
+    }
+
     /**
      * This recursive method generates absolute paths of each node in a given Node list
      *
-     * @param treeNodes     node list
+     * @param treeNodes     Node list
      * @param currParentURI URI of the parent node
      */
     public void updatePaths(List<Node> treeNodes, String currParentURI) {

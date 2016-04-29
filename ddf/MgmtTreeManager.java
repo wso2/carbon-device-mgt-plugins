@@ -46,7 +46,8 @@ public interface MgmtTreeManager {
     boolean removeNode(String path);
 
     /**
-     * Gets a node in a given path
+     * Gets a node in a given path by traversing through each
+     * and every node of the given tree
      *
      * @param path The absolute path of the node to be retrieved
      * @return The requested node

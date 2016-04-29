@@ -18,8 +18,12 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.dm.processors;
 
+import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.StatusTag;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLBody;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLDocument;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class handles the processing of SyncML messages and DM Tree manipulation
@@ -31,6 +35,7 @@ public class SyncMLMessageProcessor {
 
     public SyncMLMessageProcessor(SyncMLDocument document) {
         this.sourceDocument = document;
+        this.responseDocument = new SyncMLDocument();
     }
 
     public void processHeader() {
@@ -38,9 +43,21 @@ public class SyncMLMessageProcessor {
     }
 
     public void processBody() {
-        SyncMLBody sourceBody = this.sourceDocument.getBody();
-    }
-     public void processStatus
 
+        SyncMLBody sourceBody = this.sourceDocument.getBody();
+
+        // Process status blocks
+        if (sourceBody.getStatus() != null) {
+            processStatuses();
+        }
+    }
+
+    /**
+     * This method processes the status blocks of the message while updating the DM Tree
+     */
+    public void processStatuses() {
+        List<StatusTag> sourceStatuses = sourceDocument.getBody().getStatus();
+        List<StatusTag> targetStatuses = new ArrayList<>();
+    }
 
 }

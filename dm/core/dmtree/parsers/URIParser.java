@@ -72,7 +72,7 @@ public class URIParser {
     }
 
     public static String getParentPath(String uri) {
-        String parentPath = uri.substring(0, (uri.lastIndexOf(NODE_URI_DELIMETER) - 1));
+        String parentPath = uri.substring(0, (uri.lastIndexOf(NODE_URI_DELIMETER)));
         return parentPath;
     }
 
