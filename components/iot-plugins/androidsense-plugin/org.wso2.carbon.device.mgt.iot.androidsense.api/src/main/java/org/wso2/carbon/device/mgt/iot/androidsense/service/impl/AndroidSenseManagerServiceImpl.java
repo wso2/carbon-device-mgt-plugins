@@ -81,7 +81,6 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
             device.setEnrolmentInfo(enrolmentInfo);
             boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
             if (added) {
-                APIUtil.registerApiAccessRoles(APIUtil.getAuthenticatedUser());
                 AndroidConfiguration androidConfiguration = new AndroidConfiguration();
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
                 String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();

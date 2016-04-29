@@ -16,14 +16,13 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao.impl;
+package org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.exception.RaspberrypiDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.util.RaspberrypiUtils;
-import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao.RaspberrypiDAO;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,9 +34,9 @@ import java.util.List;
 /**
  * Implements CRUD for Raspberrypi Devices.
  */
-public class RaspberrypiDeviceDAOImpl {
+public class RaspberrypiDeviceDAO {
 
-	private static final Log log = LogFactory.getLog(RaspberrypiDeviceDAOImpl.class);
+	private static final Log log = LogFactory.getLog(RaspberrypiDeviceDAO.class);
 
 	public Device getDevice(String iotDeviceId) throws RaspberrypiDeviceMgtPluginException {
 		Connection conn;
@@ -45,7 +44,7 @@ public class RaspberrypiDeviceDAOImpl {
 		Device device = null;
 		ResultSet resultSet = null;
 		try {
-			conn = RaspberrypiDAO.getConnection();
+			conn = RaspberrypiDAOUtil.getConnection();
 			String selectDBQuery =
 					"SELECT RASPBERRYPI_DEVICE_ID, DEVICE_NAME FROM RASPBERRYPI_DEVICE WHERE RASPBERRYPI_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
@@ -66,7 +65,7 @@ public class RaspberrypiDeviceDAOImpl {
 			throw new RaspberrypiDeviceMgtPluginException(msg, e);
 		} finally {
 			RaspberrypiUtils.cleanupResources(stmt, resultSet);
-			RaspberrypiDAO.closeConnection();
+			RaspberrypiDAOUtil.closeConnection();
 		}
 		return device;
 	}
@@ -76,7 +75,7 @@ public class RaspberrypiDeviceDAOImpl {
 		Connection conn;
 		PreparedStatement stmt = null;
 		try {
-			conn = RaspberrypiDAO.getConnection();
+			conn = RaspberrypiDAOUtil.getConnection();
 			String createDBQuery =
 					"INSERT INTO RASPBERRYPI_DEVICE(RASPBERRYPI_DEVICE_ID, DEVICE_NAME) VALUES (?, ?)";
 
@@ -107,7 +106,7 @@ public class RaspberrypiDeviceDAOImpl {
 		Connection conn;
 		PreparedStatement stmt = null;
 		try {
-			conn = RaspberrypiDAO.getConnection();
+			conn = RaspberrypiDAOUtil.getConnection();
 			String updateDBQuery = "UPDATE RASPBERRYPI_DEVICE SET  DEVICE_NAME = ? WHERE RASPBERRYPI_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 			stmt.setString(1, device.getName());
@@ -136,7 +135,7 @@ public class RaspberrypiDeviceDAOImpl {
 		Connection conn;
 		PreparedStatement stmt = null;
 		try {
-			conn = RaspberrypiDAO.getConnection();
+			conn = RaspberrypiDAOUtil.getConnection();
 			String deleteDBQuery = "DELETE FROM RASPBERRYPI_DEVICE WHERE RASPBERRYPI_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
 			stmt.setString(1, iotDeviceId);
@@ -165,7 +164,7 @@ public class RaspberrypiDeviceDAOImpl {
 		Device device;
 		List<Device> devices = new ArrayList<>();
 		try {
-			conn = RaspberrypiDAO.getConnection();
+			conn = RaspberrypiDAOUtil.getConnection();
 			String selectDBQuery = "SELECT RASPBERRYPI_DEVICE_ID, DEVICE_NAME FROM RASPBERRYPI_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			resultSet = stmt.executeQuery();
@@ -185,7 +184,7 @@ public class RaspberrypiDeviceDAOImpl {
 			throw new RaspberrypiDeviceMgtPluginException(msg, e);
 		} finally {
 			RaspberrypiUtils.cleanupResources(stmt, resultSet);
-			RaspberrypiDAO.closeConnection();
+			RaspberrypiDAOUtil.closeConnection();
 		}
 	}
 }

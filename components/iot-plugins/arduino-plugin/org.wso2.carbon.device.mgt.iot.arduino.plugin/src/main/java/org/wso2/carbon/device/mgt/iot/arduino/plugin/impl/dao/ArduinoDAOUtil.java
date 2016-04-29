@@ -16,13 +16,13 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao;
+package org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao.impl.VirtualFireAlarmDeviceDAOImpl;
+import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
+import org.wso2.carbon.device.mgt.iot.arduino.plugin.exception.ArduinoDeviceMgtPluginException;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -30,51 +30,51 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class VirtualFireAlarmDAO {
+public class ArduinoDAOUtil {
 
-    private static final Log log = LogFactory.getLog(VirtualFireAlarmDAO.class);
+    private static final Log log = LogFactory.getLog(ArduinoDAOUtil.class);
     static DataSource dataSource;
     private static ThreadLocal<Connection> currentConnection = new ThreadLocal<Connection>();
 
-    public VirtualFireAlarmDAO() {
-        initFireAlarmDAO();
+    public ArduinoDAOUtil() {
+        initArduinoDAO();
     }
 
-    public static void initFireAlarmDAO() {
+    public static void initArduinoDAO() {
         try {
             Context ctx = new InitialContext();
-            dataSource = (DataSource) ctx.lookup(VirtualFireAlarmConstants.DATA_SOURCE_NAME);
+            dataSource = (DataSource) ctx.lookup(ArduinoConstants.DATA_SOURCE_NAME);
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + VirtualFireAlarmConstants.DATA_SOURCE_NAME);
+            log.error("Error while looking up the data source: " + ArduinoConstants.DATA_SOURCE_NAME);
         }
     }
 
-    public VirtualFireAlarmDeviceDAOImpl getDeviceDAO() {
-        return new VirtualFireAlarmDeviceDAOImpl();
+    public ArduinoDeviceDAO getDeviceDAO() {
+        return new ArduinoDeviceDAO();
     }
 
-    public static void beginTransaction() throws VirtualFirealarmDeviceMgtPluginException {
+    public static void beginTransaction() throws ArduinoDeviceMgtPluginException {
         try {
             Connection conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             currentConnection.set(conn);
         } catch (SQLException e) {
-            throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while retrieving datasource connection", e);
+            throw new ArduinoDeviceMgtPluginException("Error occurred while retrieving datasource connection", e);
         }
     }
 
-    public static Connection getConnection() throws VirtualFirealarmDeviceMgtPluginException {
+    public static Connection getConnection() throws ArduinoDeviceMgtPluginException {
         if (currentConnection.get() == null) {
             try {
                 currentConnection.set(dataSource.getConnection());
             } catch (SQLException e) {
-                throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while retrieving data source connection", e);
+                throw new ArduinoDeviceMgtPluginException("Error occurred while retrieving data source connection", e);
             }
         }
         return currentConnection.get();
     }
 
-    public static void commitTransaction() throws VirtualFirealarmDeviceMgtPluginException {
+    public static void commitTransaction() throws ArduinoDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -86,13 +86,13 @@ public class VirtualFireAlarmDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while committing the transaction", e);
+            throw new ArduinoDeviceMgtPluginException("Error occurred while committing the transaction", e);
         } finally {
             closeConnection();
         }
     }
 
-    public static void closeConnection() throws VirtualFirealarmDeviceMgtPluginException {
+    public static void closeConnection() throws ArduinoDeviceMgtPluginException {
 
         Connection con = currentConnection.get();
         if (con != null) {
@@ -105,7 +105,7 @@ public class VirtualFireAlarmDAO {
         currentConnection.remove();
     }
 
-    public static void rollbackTransaction() throws VirtualFirealarmDeviceMgtPluginException {
+    public static void rollbackTransaction() throws ArduinoDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -117,7 +117,7 @@ public class VirtualFireAlarmDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while rollback the transaction", e);
+            throw new ArduinoDeviceMgtPluginException("Error occurred while rollback the transaction", e);
         } finally {
             closeConnection();
         }

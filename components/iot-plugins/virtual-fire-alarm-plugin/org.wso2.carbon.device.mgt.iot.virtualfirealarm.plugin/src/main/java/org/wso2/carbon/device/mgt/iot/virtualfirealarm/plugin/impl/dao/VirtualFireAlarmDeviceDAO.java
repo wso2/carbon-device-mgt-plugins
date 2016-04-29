@@ -16,14 +16,13 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao.impl;
+package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao.VirtualFireAlarmDAO;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFireAlarmUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,9 +34,9 @@ import java.util.List;
 /**
  * Implements CRUD for virtual firealarm Devices.
  */
-public class VirtualFireAlarmDeviceDAOImpl {
+public class VirtualFireAlarmDeviceDAO {
 
-	private static final Log log = LogFactory.getLog(VirtualFireAlarmDeviceDAOImpl.class);
+	private static final Log log = LogFactory.getLog(VirtualFireAlarmDeviceDAO.class);
 
 	public Device getDevice(String deviceId) throws VirtualFirealarmDeviceMgtPluginException {
 		Connection conn = null;
@@ -45,7 +44,7 @@ public class VirtualFireAlarmDeviceDAOImpl {
 		Device device = null;
 		ResultSet resultSet = null;
 		try {
-			conn = VirtualFireAlarmDAO.getConnection();
+			conn = VirtualFireAlarmDAOUtil.getConnection();
 			String selectDBQuery =
 					"SELECT VIRTUAL_FIREALARM_DEVICE_ID, DEVICE_NAME" +
 					" FROM VIRTUAL_FIREALARM_DEVICE WHERE VIRTUAL_FIREALARM_DEVICE_ID = ?";
@@ -67,7 +66,7 @@ public class VirtualFireAlarmDeviceDAOImpl {
 			throw new VirtualFirealarmDeviceMgtPluginException(msg, e);
 		} finally {
 			VirtualFireAlarmUtils.cleanupResources(stmt, resultSet);
-			VirtualFireAlarmDAO.closeConnection();
+			VirtualFireAlarmDAOUtil.closeConnection();
 		}
 
 		return device;
@@ -78,7 +77,7 @@ public class VirtualFireAlarmDeviceDAOImpl {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = VirtualFireAlarmDAO.getConnection();
+			conn = VirtualFireAlarmDAOUtil.getConnection();
 			String createDBQuery =
 					"INSERT INTO VIRTUAL_FIREALARM_DEVICE(VIRTUAL_FIREALARM_DEVICE_ID, DEVICE_NAME) VALUES (?, ?)";
 
@@ -109,7 +108,7 @@ public class VirtualFireAlarmDeviceDAOImpl {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = VirtualFireAlarmDAO.getConnection();
+			conn = VirtualFireAlarmDAOUtil.getConnection();
 			String updateDBQuery =
 					"UPDATE VIRTUAL_FIREALARM_DEVICE SET  DEVICE_NAME = ? WHERE VIRTUAL_FIREALARM_DEVICE_ID = ?";
 
@@ -140,7 +139,7 @@ public class VirtualFireAlarmDeviceDAOImpl {
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		try {
-			conn = VirtualFireAlarmDAO.getConnection();
+			conn = VirtualFireAlarmDAOUtil.getConnection();
 			String deleteDBQuery = "DELETE FROM VIRTUAL_FIREALARM_DEVICE WHERE VIRTUAL_FIREALARM_DEVICE_ID = ?";
 			stmt = conn.prepareStatement(deleteDBQuery);
 			stmt.setString(1, iotDeviceId);
@@ -169,7 +168,7 @@ public class VirtualFireAlarmDeviceDAOImpl {
 		Device device;
 		List<Device> devices = new ArrayList<>();
 		try {
-			conn = VirtualFireAlarmDAO.getConnection();
+			conn = VirtualFireAlarmDAOUtil.getConnection();
 			String selectDBQuery =
 					"SELECT VIRTUAL_FIREALARM_DEVICE_ID, DEVICE_NAME FROM VIRTUAL_FIREALARM_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
@@ -190,7 +189,7 @@ public class VirtualFireAlarmDeviceDAOImpl {
 			throw new VirtualFirealarmDeviceMgtPluginException(msg, e);
 		} finally {
 			VirtualFireAlarmUtils.cleanupResources(stmt, resultSet);
-			VirtualFireAlarmDAO.closeConnection();
+			VirtualFireAlarmDAOUtil.closeConnection();
 		}
 	}
 }

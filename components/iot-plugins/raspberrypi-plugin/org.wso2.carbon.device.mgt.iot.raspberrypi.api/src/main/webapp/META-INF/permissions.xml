@@ -59,7 +59,7 @@
 	</Permission>
     <Permission>
         <name>Get Devices</name>
-        <path>/device-mgt/user/devices/devices</path>
+        <path>/device-mgt/user/devices/list</path>
         <url>/enrollment/devices</url>
         <method>GET</method>
         <scope>raspberrypi_user</scope>
@@ -73,7 +73,7 @@
     </Permission>
     <Permission>
         <name>Get Temperature Data</name>
-        <path>/device-mgt/user/operations</path>
+        <path>/device-mgt/user/stats</path>
         <url>/device/stats/*</url>
         <method>GET</method>
         <scope>raspberrypi_user</scope>

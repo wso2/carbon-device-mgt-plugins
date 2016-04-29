@@ -246,12 +246,7 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
             device.setType(ArduinoConstants.DEVICE_TYPE);
             enrolmentInfo.setOwner(APIUtil.getAuthenticatedUser());
             device.setEnrolmentInfo(enrolmentInfo);
-            boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
-            if (added) {
-                APIUtil.registerApiAccessRoles(APIUtil.getAuthenticatedUser());
-                return true;
-            }
-            return false;
+            return APIUtil.getDeviceManagementService().enrollDevice(device);
         } catch (DeviceManagementException e) {
             return false;
         }

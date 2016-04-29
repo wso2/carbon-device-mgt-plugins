@@ -31,49 +31,49 @@
 
 	<Permission>
 		<name>control bulb</name>
-		<path>/device-mgt/arduino/user</path>
+		<path>device-mgt/user/operations</path>
 		<url>/device/*/bulb</url>
 		<method>POST</method>
 		<scope>arduino_user</scope>
 	</Permission>
     <Permission>
         <name>get controls</name>
-        <path>/device-mgt/arduino/user</path>
+        <path>device-mgt/user/operations</path>
         <url>/device/*/controls</url>
         <method>POST</method>
         <scope>arduino_device</scope>
     </Permission>
     <Permission>
         <name>get temperature stats</name>
-        <path>/device-mgt/arduino/user</path>
+        <path>device-mgt/user/stats</path>
         <url>/device/stats/*</url>
         <method>GET</method>
         <scope>arduino_device</scope>
     </Permission>
     <Permission>
         <name>Get device</name>
-        <path>/device-mgt/arduino/user</path>
+        <path>/device-mgt/user/devices/list</path>
         <url>/enrollment/devices/*</url>
         <method>GET</method>
         <scope>arduino_user</scope>
     </Permission>
     <Permission>
         <name>Remove device</name>
-        <path>/device-mgt/arduino/user</path>
+        <path>/device-mgt/user/devices/remove</path>
         <url>/enrollment/devices/*</url>
         <method>DELETE</method>
         <scope>arduino_user</scope>
     </Permission>
     <Permission>
         <name>Download device</name>
-        <path>/device-mgt/user</path>
+        <path>/device-mgt/user/devices</path>
         <url>/enrollment/devices/download</url>
         <method>GET</method>
         <scope>arduino_user</scope>
     </Permission>
     <Permission>
         <name>Update device</name>
-        <path>/device-mgt/arduino/user</path>
+        <path>/device-mgt/user/devices/update</path>
         <url>/enrollment/devices/*</url>
         <method>PUT</method>
         <scope>arduino_user</scope>

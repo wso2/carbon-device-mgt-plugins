@@ -30,7 +30,7 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao.VirtualFireAlarmDAO;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao.VirtualFireAlarmDAOUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.feature.VirtualFirealarmFeatureManager;
 import java.util.List;
 
@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class VirtualFireAlarmManager implements DeviceManager {
 
-    private static final VirtualFireAlarmDAO virtualFireAlarmDAO = new VirtualFireAlarmDAO();
+    private static final VirtualFireAlarmDAOUtil virtualFireAlarmDAO = new VirtualFireAlarmDAOUtil();
     private static final Log log = LogFactory.getLog(VirtualFireAlarmManager.class);
     private FeatureManager virtualFirealarmFeatureManager = new VirtualFirealarmFeatureManager();
 
@@ -67,12 +67,12 @@ public class VirtualFireAlarmManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Enrolling a new Virtual Firealarm device : " + device.getDeviceIdentifier());
             }
-            VirtualFireAlarmDAO.beginTransaction();
+            VirtualFireAlarmDAOUtil.beginTransaction();
             status = virtualFireAlarmDAO.getDeviceDAO().addDevice(device);
-            VirtualFireAlarmDAO.commitTransaction();
+            VirtualFireAlarmDAOUtil.commitTransaction();
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
             try {
-                VirtualFireAlarmDAO.rollbackTransaction();
+                VirtualFireAlarmDAOUtil.rollbackTransaction();
             } catch (VirtualFirealarmDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
@@ -91,12 +91,12 @@ public class VirtualFireAlarmManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Modifying the Virtual Firealarm device enrollment data");
             }
-            VirtualFireAlarmDAO.beginTransaction();
+            VirtualFireAlarmDAOUtil.beginTransaction();
             status = virtualFireAlarmDAO.getDeviceDAO().updateDevice(device);
-            VirtualFireAlarmDAO.commitTransaction();
+            VirtualFireAlarmDAOUtil.commitTransaction();
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
             try {
-                VirtualFireAlarmDAO.rollbackTransaction();
+                VirtualFireAlarmDAOUtil.rollbackTransaction();
             } catch (VirtualFirealarmDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);
@@ -116,12 +116,12 @@ public class VirtualFireAlarmManager implements DeviceManager {
             if (log.isDebugEnabled()) {
                 log.debug("Dis-enrolling Virtual Firealarm device : " + deviceId);
             }
-            VirtualFireAlarmDAO.beginTransaction();
+            VirtualFireAlarmDAOUtil.beginTransaction();
             status = virtualFireAlarmDAO.getDeviceDAO().deleteDevice(deviceId.getId());
-            VirtualFireAlarmDAO.commitTransaction();
+            VirtualFireAlarmDAOUtil.commitTransaction();
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
             try {
-                VirtualFireAlarmDAO.rollbackTransaction();
+                VirtualFireAlarmDAOUtil.rollbackTransaction();
             } catch (VirtualFirealarmDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the device dis enrol transaction :" + deviceId.toString();
                 log.warn(msg, iotDAOEx);
@@ -219,12 +219,12 @@ public class VirtualFireAlarmManager implements DeviceManager {
                 log.debug(
                         "updating the details of Virtual Firealarm device : " + deviceIdentifier);
             }
-            VirtualFireAlarmDAO.beginTransaction();
+            VirtualFireAlarmDAOUtil.beginTransaction();
             status = virtualFireAlarmDAO.getDeviceDAO().updateDevice(device);
-            VirtualFireAlarmDAO.commitTransaction();
+            VirtualFireAlarmDAOUtil.commitTransaction();
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
             try {
-                VirtualFireAlarmDAO.rollbackTransaction();
+                VirtualFireAlarmDAOUtil.rollbackTransaction();
             } catch (VirtualFirealarmDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred while roll back the update device info transaction :" + device.toString();
                 log.warn(msg, iotDAOEx);

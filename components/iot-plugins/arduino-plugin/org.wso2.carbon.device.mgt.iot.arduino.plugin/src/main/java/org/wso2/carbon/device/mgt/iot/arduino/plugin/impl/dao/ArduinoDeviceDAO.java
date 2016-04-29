@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.dao.impl;
+package org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,7 +24,7 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.exception.ArduinoDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.util.ArduinoUtils;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
-import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.dao.ArduinoDAO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,10 +35,10 @@ import java.util.List;
 /**
  * Implements CRUD for arduino Devices.
  */
-public class ArduinoDeviceDAOImpl {
+public class ArduinoDeviceDAO {
 	
 
-	    private static final Log log = LogFactory.getLog(ArduinoDeviceDAOImpl.class);
+	    private static final Log log = LogFactory.getLog(ArduinoDeviceDAO.class);
 
 	    public Device getDevice(String deviceId) throws ArduinoDeviceMgtPluginException {
 	        Connection conn = null;
@@ -46,7 +46,7 @@ public class ArduinoDeviceDAOImpl {
 	        Device device = null;
 	        ResultSet resultSet = null;
 	        try {
-	            conn = ArduinoDAO.getConnection();
+	            conn = ArduinoDAOUtil.getConnection();
 	            String selectDBQuery =
 						"SELECT ARDUINO_DEVICE_ID, DEVICE_NAME FROM ARDUINO_DEVICE WHERE ARDUINO_DEVICE_ID = ?";
 	            stmt = conn.prepareStatement(selectDBQuery);
@@ -67,7 +67,7 @@ public class ArduinoDeviceDAOImpl {
 	            throw new ArduinoDeviceMgtPluginException(msg, e);
 	        } finally {
 	            ArduinoUtils.cleanupResources(stmt, resultSet);
-	            ArduinoDAO.closeConnection();
+	            ArduinoDAOUtil.closeConnection();
 	        }
 	        return device;
 	    }
@@ -77,7 +77,7 @@ public class ArduinoDeviceDAOImpl {
 	        Connection conn = null;
 	        PreparedStatement stmt = null;
 	        try {
-	            conn = ArduinoDAO.getConnection();
+	            conn = ArduinoDAOUtil.getConnection();
 	            String createDBQuery =
 						"INSERT INTO ARDUINO_DEVICE(ARDUINO_DEVICE_ID, DEVICE_NAME) VALUES (?, ?)";
 
@@ -108,7 +108,7 @@ public class ArduinoDeviceDAOImpl {
 	        Connection conn = null;
 	        PreparedStatement stmt = null;
 	        try {
-	            conn = ArduinoDAO.getConnection();
+	            conn = ArduinoDAOUtil.getConnection();
 	            String updateDBQuery =
 						"UPDATE ARDUINO_DEVICE SET  DEVICE_NAME = ? WHERE ARDUINO_DEVICE_ID = ?";
 
@@ -139,7 +139,7 @@ public class ArduinoDeviceDAOImpl {
 	        Connection conn = null;
 	        PreparedStatement stmt = null;
 	        try {
-	            conn = ArduinoDAO.getConnection();
+	            conn = ArduinoDAOUtil.getConnection();
 	            String deleteDBQuery =
 						"DELETE FROM ARDUINO_DEVICE WHERE ARDUINO_DEVICE_ID = ?";
 				stmt = conn.prepareStatement(deleteDBQuery);
@@ -170,7 +170,7 @@ public class ArduinoDeviceDAOImpl {
 	        Device device;
 	        List<Device> devices = new ArrayList<Device>();
 	        try {
-	            conn = ArduinoDAO.getConnection();
+	            conn = ArduinoDAOUtil.getConnection();
 	            String selectDBQuery =
 						"SELECT ARDUINO_DEVICE_ID, DEVICE_NAME FROM ARDUINO_DEVICE";
 				stmt = conn.prepareStatement(selectDBQuery);
@@ -190,7 +190,7 @@ public class ArduinoDeviceDAOImpl {
 	            throw new ArduinoDeviceMgtPluginException(msg, e);
 	        } finally {
 	            ArduinoUtils.cleanupResources(stmt, resultSet);
-	            ArduinoDAO.closeConnection();
+	            ArduinoDAOUtil.closeConnection();
 	        }
 	    }
 	}

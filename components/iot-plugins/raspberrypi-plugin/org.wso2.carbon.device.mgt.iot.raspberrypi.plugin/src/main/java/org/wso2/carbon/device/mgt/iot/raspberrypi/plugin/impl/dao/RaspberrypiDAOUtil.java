@@ -16,13 +16,13 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.dao;
+package org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
-import org.wso2.carbon.device.mgt.iot.arduino.plugin.exception.ArduinoDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.dao.impl.ArduinoDeviceDAOImpl;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.exception.RaspberrypiDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -30,51 +30,51 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class ArduinoDAO {
+public class RaspberrypiDAOUtil {
 
-    private static final Log log = LogFactory.getLog(ArduinoDAO.class);
+    private static final Log log = LogFactory.getLog(RaspberrypiDAOUtil.class);
     static DataSource dataSource;
     private static ThreadLocal<Connection> currentConnection = new ThreadLocal<Connection>();
 
-    public ArduinoDAO() {
-        initArduinoDAO();
+    public RaspberrypiDAOUtil() {
+        initRaspberrypiDAO();
     }
 
-    public static void initArduinoDAO() {
+    public RaspberrypiDeviceDAO getDeviceDAO() {
+        return new RaspberrypiDeviceDAO();
+    }
+
+    public static void initRaspberrypiDAO() {
         try {
             Context ctx = new InitialContext();
-            dataSource = (DataSource) ctx.lookup(ArduinoConstants.DATA_SOURCE_NAME);
+            dataSource = (DataSource) ctx.lookup(RaspberrypiConstants.DATA_SOURCE_NAME);
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + ArduinoConstants.DATA_SOURCE_NAME);
+            log.error("Error while looking up the data source: " + RaspberrypiConstants.DATA_SOURCE_NAME);
         }
     }
 
-    public ArduinoDeviceDAOImpl getDeviceDAO() {
-        return new ArduinoDeviceDAOImpl();
-    }
-
-    public static void beginTransaction() throws ArduinoDeviceMgtPluginException {
+    public static void beginTransaction() throws RaspberrypiDeviceMgtPluginException {
         try {
             Connection conn = dataSource.getConnection();
             conn.setAutoCommit(false);
             currentConnection.set(conn);
         } catch (SQLException e) {
-            throw new ArduinoDeviceMgtPluginException("Error occurred while retrieving datasource connection", e);
+            throw new RaspberrypiDeviceMgtPluginException("Error occurred while retrieving datasource connection", e);
         }
     }
 
-    public static Connection getConnection() throws ArduinoDeviceMgtPluginException {
+    public static Connection getConnection() throws RaspberrypiDeviceMgtPluginException {
         if (currentConnection.get() == null) {
             try {
                 currentConnection.set(dataSource.getConnection());
             } catch (SQLException e) {
-                throw new ArduinoDeviceMgtPluginException("Error occurred while retrieving data source connection", e);
+                throw new RaspberrypiDeviceMgtPluginException("Error occurred while retrieving data source connection", e);
             }
         }
         return currentConnection.get();
     }
 
-    public static void commitTransaction() throws ArduinoDeviceMgtPluginException {
+    public static void commitTransaction() throws RaspberrypiDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -86,14 +86,13 @@ public class ArduinoDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new ArduinoDeviceMgtPluginException("Error occurred while committing the transaction", e);
+            throw new RaspberrypiDeviceMgtPluginException("Error occurred while committing the transaction", e);
         } finally {
             closeConnection();
         }
     }
 
-    public static void closeConnection() throws ArduinoDeviceMgtPluginException {
-
+    public static void closeConnection() throws RaspberrypiDeviceMgtPluginException {
         Connection con = currentConnection.get();
         if (con != null) {
             try {
@@ -105,7 +104,7 @@ public class ArduinoDAO {
         currentConnection.remove();
     }
 
-    public static void rollbackTransaction() throws ArduinoDeviceMgtPluginException {
+    public static void rollbackTransaction() throws RaspberrypiDeviceMgtPluginException {
         try {
             Connection conn = currentConnection.get();
             if (conn != null) {
@@ -117,7 +116,7 @@ public class ArduinoDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new ArduinoDeviceMgtPluginException("Error occurred while rollback the transaction", e);
+            throw new RaspberrypiDeviceMgtPluginException("Error occurred while rollback the transaction", e);
         } finally {
             closeConnection();
         }
