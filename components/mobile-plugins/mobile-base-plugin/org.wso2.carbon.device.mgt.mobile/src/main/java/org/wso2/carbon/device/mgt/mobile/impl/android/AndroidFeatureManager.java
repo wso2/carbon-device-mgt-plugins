@@ -231,6 +231,12 @@ public class AndroidFeatureManager implements FeatureManager {
         supportedFeatures.add(feature);
 
         feature = new Feature();
+        feature.setCode("UPDATE_APPLICATION");
+        feature.setName("Update App");
+        feature.setDescription("Update Enterprise or Market application");
+        supportedFeatures.add(feature);
+
+        feature = new Feature();
         feature.setCode("UNINSTALL_APPLICATION");
         feature.setName("Uninstall App");
         feature.setDescription("Uninstall application");
@@ -272,7 +278,7 @@ public class AndroidFeatureManager implements FeatureManager {
         feature.setDescription("Reboot the device");
         supportedFeatures.add(feature);
         
-	    feature = new Feature();
+	feature = new Feature();
         feature.setCode("UPGRADE_FIRMWARE");
         feature.setName("Upgrade Firmware");
         feature.setDescription("Upgrade Firmware");
