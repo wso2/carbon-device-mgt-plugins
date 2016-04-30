@@ -19,7 +19,6 @@
 package org.wso2.carbon.mdm.services.android.omadm.ddf.impl;
 
 import org.wso2.carbon.mdm.services.android.omadm.ddf.MgmtTreeManager;
-import org.wso2.carbon.mdm.services.android.omadm.ddf.standardmos.DMRoot;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.Node;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMException;

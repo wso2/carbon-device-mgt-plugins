@@ -53,4 +53,7 @@ public class DevInfo implements Serializable {
         }
     }
 
+    public MgmtTree getMgmtTree() {
+        return mgmtTree;
+    }
 }

@@ -19,14 +19,11 @@
 package org.wso2.carbon.mdm.services.android.omadm.ddf.constants;
 
 /**
- * Contains constants related to the 'DevInfo' Management Object
+ * Contains constants related to standard Management Objects
  */
-public class DevInfoMOConstants {
+public class StandardMOConstants {
 
-    public final class DevId {
-        public static final String NODE_NAME = "DevId";
-        public static final String ACCESS_TYPE = "DevDetail";
-        public static final String ACC_INFO_MO_NAME = "DMAcc";
-    }
+    public static final String DEV_INFO = "DevInfo";
+    public static final String DEV_DETAIL = "DevDetail";
 
 }

@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.constants;
+package org.wso2.carbon.mdm.services.android.omadm.syncml.util;
 
 /**
  * Contains all the SyncML status codes

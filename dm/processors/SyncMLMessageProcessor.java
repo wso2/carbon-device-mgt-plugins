@@ -21,6 +21,8 @@ package org.wso2.carbon.mdm.services.android.omadm.dm.processors;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.StatusTag;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLBody;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLDocument;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLStatusCodes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +35,15 @@ public class SyncMLMessageProcessor {
     private SyncMLDocument sourceDocument;
     private SyncMLDocument responseDocument;
 
+    private static final int HEADER_STATUS_COMMAND_ID = 1;
+    private static final int HEADER_COMMAND_REF_ID = 0;
+
     public SyncMLMessageProcessor(SyncMLDocument document) {
         this.sourceDocument = document;
         this.responseDocument = new SyncMLDocument();
     }
 
     public void processHeader() {
-
     }
 
     public void processBody() {
@@ -58,6 +62,17 @@ public class SyncMLMessageProcessor {
     public void processStatuses() {
         List<StatusTag> sourceStatuses = sourceDocument.getBody().getStatus();
         List<StatusTag> targetStatuses = new ArrayList<>();
+
+        // Generate header status
+        StatusTag headerStatus = new StatusTag(HEADER_STATUS_COMMAND_ID, sourceDocument.getHeader().getMsgID(),
+                HEADER_COMMAND_REF_ID, Constants.SyncMLTags.SYNC_HDR,
+                sourceDocument.getHeader().getSource().getLocURI(),
+                SyncMLStatusCodes.AUTHENTICATION_ACCEPTED.getCode());
+        targetStatuses.add(headerStatus);
+    }
+
+    public void processReplaceCommands() {
+
     }
 
 }

@@ -59,4 +59,8 @@ public class DevDetail {
         }
     }
 
+    public MgmtTree getMgmtTree() {
+        return mgmtTree;
+    }
+
 }
