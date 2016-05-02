@@ -19,6 +19,7 @@
 package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.rtproperties.rtformat;
 
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.format.*;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.format.Float;
 
 import javax.xml.bind.annotation.*;
 

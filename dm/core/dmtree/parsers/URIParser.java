@@ -54,7 +54,7 @@ public class URIParser {
 
     private static String NODE_URI_DELIMETER = "/";
 
-    public static void validateUri(String uri) {
+    public static void validateUri(String uri) throws DMNodeException {
         if (uri == null || uri.isEmpty()) {
             throw new DMNodeException("URI cannot be null or empty");
         }
@@ -79,5 +79,9 @@ public class URIParser {
     public static String getNodeName(String uri) {
         String[] nodeNames = uri.split(NODE_URI_DELIMETER);
         return nodeNames[(nodeNames.length - 1)];
+    }
+
+    public static String getDMTreeName(String path) {
+        return path.split(NODE_URI_DELIMETER)[1];
     }
 }

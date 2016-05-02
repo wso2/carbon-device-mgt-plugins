@@ -20,6 +20,8 @@ package org.wso2.carbon.mdm.services.android.omadm.ddf;
 
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.Node;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMTreeOperationException;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.ItemTag;
 
 import java.util.ArrayList;
 
@@ -34,16 +36,18 @@ public interface MgmtTreeManager {
      * @param node The Node to be added
      * @param path The absolute path of the parent node
      * @return The status of the adding operation
+     * @throws DMTreeOperationException
      */
-    boolean addNode(Node node, String path);
+    String addNode(Node node, String path) throws DMTreeOperationException;
 
     /**
      * Removes a node in a given path
      *
      * @param path The absolute path of the node to be removed
      * @return Status of the remove operation
+     * @throws DMTreeOperationException
      */
-    boolean removeNode(String path);
+    String removeNode(String path) throws DMTreeOperationException;
 
     /**
      * Gets a node in a given path by traversing through each
@@ -51,17 +55,19 @@ public interface MgmtTreeManager {
      *
      * @param path The absolute path of the node to be retrieved
      * @return The requested node
+     * @throws DMTreeOperationException
      */
-    Node getNode(String path);
+    Node getNode(String path) throws DMTreeOperationException;
 
     /**
-     * Replaces data of a given node
+     * Replaces node details
      *
-     * @param path  The absolute path of the node
-     * @param value New data
-     * @return The status of the replace operation
+     * @param path Full path to the node
+     * @param item Item block
+     * @return Operation status
+     * @throws DMTreeOperationException
      */
-    boolean replaceNodeValue(String path, String value);
+    String replaceNodeDetails(String path, ItemTag item) throws DMTreeOperationException;
 
     /**
      * Counts the number of attached nodes in the tree

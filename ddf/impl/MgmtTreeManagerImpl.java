@@ -21,9 +21,11 @@ package org.wso2.carbon.mdm.services.android.omadm.ddf.impl;
 import org.wso2.carbon.mdm.services.android.omadm.ddf.MgmtTreeManager;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.Node;
-import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMException;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMNodeException;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMTreeOperationException;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.parsers.URIParser;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.ItemTag;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLStatusCodes;
 
 import java.util.List;
 
@@ -42,64 +44,70 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
     }
 
     @Override
-    public boolean addNode(Node node, String path) {
+    public String addNode(Node node, String path) throws DMTreeOperationException {
         // Note that the path here is the path of the parent node
         URIParser.validateUri(path);
         String absolutePath = path + NODE_URI_DELIMETER + node.getNodeName();
         if (isExistingNode(absolutePath)) {
-            throw new DMNodeException("A node already exists in the given path.");
+            return SyncMLStatusCodes.NOT_MODIFIED.getCode();
         }
-        if (node == null) {
-            throw new DMException("Node cannot be null.");
-        } else {
-            node.setPath(path);
-            getParentNode(node).getNodes().add(node);
-            return true;
-        }
+        node.setPath(path);
+        getParentNode(node).getNodes().add(node);
+        return SyncMLStatusCodes.SUCCESS.getCode();
     }
 
     @Override
-    public boolean removeNode(String path) {
+    public String removeNode(String path) throws DMTreeOperationException {
         Node node = getNode(path);
 
         if (node.getDfProperties().getAccessType().getDelete() != null) {
             getNode(URIParser.getParentPath(path)).getNodes().remove(node);
-            return true;
+            return SyncMLStatusCodes.SUCCESS.getCode();
+        } else {
+            return SyncMLStatusCodes.NOT_MODIFIED.getCode();
         }
-        return false;
     }
 
     @Override
-    public Node getNode(String path) {
+    public Node getNode(String path) throws DMNodeException {
         Node node;
         //Validate the URI
         URIParser.validateUri(path);
-
-        if (path == null) {
-            throw new DMNodeException("Invalid path.");
-        }
 
         String[] pathArr = URIParser.nodeNames(path);
         node = searchNode(pathArr, tree.getNodes(), 0);
 
         if (node == null) {
-            throw new DMNodeException("Node does not exist in the given path.");
+            throw new DMTreeOperationException("Node does not exist in the given path.");
         } else if (node.getDfProperties().getAccessType().getGet() == null) {
-            throw new DMNodeException("This operation is not allowed on the node.");
+            throw new DMTreeOperationException("This operation type is not allowed on the node.");
         } else {
             return node;
         }
     }
 
     @Override
-    public boolean replaceNodeValue(String path, String value) {
+    public String replaceNodeDetails(String path, ItemTag item) {
         Node node = getNode(path);
-        if (node.getDfProperties().getAccessType().getReplace() != null) {
-            node.setValue(value);
-            return true;
-        } else {
-            return false;
+        if (node == null) {
+            return SyncMLStatusCodes.NOT_FOUND.getCode();
         }
+        if (node.getDfProperties().getAccessType().getReplace() == null) {
+            return SyncMLStatusCodes.NOT_ALLOWED.getCode();
+        } else {
+            if (item.getMeta().getFormat() != null) {
+                node.setFormat(item.getMeta().getFormat());
+            }
+
+            if (item.getMeta().getType() != null) {
+                node.setType(item.getMeta().getType());
+            }
+
+            if (item.getData() != null) {
+                node.setValue(item.getData());
+            }
+        }
+        return SyncMLStatusCodes.SUCCESS.getCode();
     }
 
     @Override

@@ -41,6 +41,8 @@ import java.util.List;
 public class Node {
 
     private static String NODE_URI_DELIMETER = "/";
+    public static final String TYPE_DEFAULT_VALUE = "text/plain";
+    public static final String FORMAT_DEFAULT_VALUE = "chr";
 
     @XmlElement(name = "NodeName", required = true)
     private String nodeName;
@@ -54,6 +56,10 @@ public class Node {
     private List<Node> nodes = new ArrayList<>();
     @XmlElement(name = "Value")
     private String value;
+    @XmlTransient
+    private String type = TYPE_DEFAULT_VALUE;
+    @XmlTransient
+    private String format = FORMAT_DEFAULT_VALUE;
 
     public Node() {
     }
@@ -163,4 +169,21 @@ public class Node {
     public void setValue(String value) {
         this.value = value;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
 }

@@ -21,13 +21,23 @@ package org.wso2.carbon.mdm.services.android.omadm.dm.dao;
 import org.wso2.carbon.mdm.services.android.omadm.ddf.constants.StandardMOConstants;
 import org.wso2.carbon.mdm.services.android.omadm.ddf.standardmos.StandardMOFactory;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.exceptions.DMTreeDAOException;
 
 /**
- * This is a mock DAO class written to mimic an RDBMS
+ * This is a mock DAO class written to mimic a RDBMS
  */
 public class DeviceMODao {
 
-    public MgmtTree getMO(String name, String deviceId) {
+    private static DeviceMODao deviceMODao = new DeviceMODao();
+
+    private DeviceMODao() {
+    }
+
+    public static DeviceMODao getInstance() {
+        return deviceMODao;
+    }
+
+    public MgmtTree getMO(String name, String deviceId) throws DMTreeDAOException {
 
         MgmtTree tree = null;
         switch (name) {
@@ -40,4 +50,5 @@ public class DeviceMODao {
         }
         return tree;
     }
+
 }

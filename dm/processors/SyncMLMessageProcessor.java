@@ -18,9 +18,14 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.dm.processors;
 
-import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.StatusTag;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLBody;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLDocument;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.mdm.services.android.omadm.ddf.MgmtTreeManager;
+import org.wso2.carbon.mdm.services.android.omadm.ddf.impl.MgmtTreeManagerImpl;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.parsers.URIParser;
+import org.wso2.carbon.mdm.services.android.omadm.dm.dao.DeviceMODao;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLStatusCodes;
 
@@ -34,9 +39,14 @@ public class SyncMLMessageProcessor {
 
     private SyncMLDocument sourceDocument;
     private SyncMLDocument responseDocument;
+    private DeviceMODao moDao = DeviceMODao.getInstance();
 
     private static final int HEADER_STATUS_COMMAND_ID = 1;
     private static final int HEADER_COMMAND_REF_ID = 0;
+
+    private int headerCommandId = HEADER_STATUS_COMMAND_ID;
+
+    private static Log log = LogFactory.getLog(SyncMLMessageProcessor.class);
 
     public SyncMLMessageProcessor(SyncMLDocument document) {
         this.sourceDocument = document;
@@ -72,7 +82,26 @@ public class SyncMLMessageProcessor {
     }
 
     public void processReplaceCommands() {
+        ReplaceTag replaceTag = sourceDocument.getBody().getReplace();
+        int replaceCmdId = replaceTag.getCommandId();
+        List<ItemTag> items = replaceTag.getItems();
+        List<StatusTag> statuses = new ArrayList<>();
 
+        for (ItemTag item : items) {
+            String locURI = item.getSource().getLocURI();
+            StatusTag status = new StatusTag();
+
+            MgmtTree tree = moDao.getMO(URIParser.getDMTreeName(locURI),
+                    sourceDocument.getHeader().getSource().getLocURI());
+
+            MgmtTreeManager treeManager = new MgmtTreeManagerImpl(tree);
+            String statusCode = treeManager.replaceNodeDetails(locURI, item);
+            status.setData(statusCode);
+            status.setMessageReference(sourceDocument.getHeader().getMsgID());
+            status.setCommandReference(replaceCmdId);
+            status.setCommandId(++headerCommandId);
+            statuses.add(status);
+        }
     }
 
 }
