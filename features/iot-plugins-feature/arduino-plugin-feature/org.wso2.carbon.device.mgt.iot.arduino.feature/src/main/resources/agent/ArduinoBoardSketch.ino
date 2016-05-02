@@ -37,6 +37,7 @@ void setup()
     pinMode(13, OUTPUT);
     connectHttp();
     setupResource();
+    setupEndpoint();
     wdt_enable(WDTO_8S);
    
 }

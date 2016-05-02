@@ -25,17 +25,12 @@
  ***********************************************************************************************/
 
 void pushData(){
-    String payLoad = "Temp";
-    payLoad = payLoad +  "\",\"value\":\"";
-    
-    
+    String payLoad = "\"temperature\":";  
     payLoad+=cpuTemperature;
-    
-    
-    payLoad += "\"}";
+    payLoad += "}}}";
     
     client.fastrprint(F("POST "));
-    client.fastrprint(SERVICE_EPOINT); client.fastrprint(F("pushdata"));
+    client.fastrprint(endPoint); client.fastrprint(F("pushdata"));
     client.fastrprint(F(" HTTP/1.1")); client.fastrprint(F("\n"));
     client.fastrprint(host.c_str()); client.fastrprint(F("\n"));
     client.fastrprint(F("Content-Type: application/json")); client.fastrprint(F("\n"));
@@ -102,8 +97,6 @@ void pushData(){
     
     payLoad = "";
 }
-
-
 
 
 double getBoardTemp(void)

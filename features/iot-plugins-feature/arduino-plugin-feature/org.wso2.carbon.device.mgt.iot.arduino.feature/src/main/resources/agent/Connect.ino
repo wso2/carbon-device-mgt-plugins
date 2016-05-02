@@ -97,11 +97,16 @@ void setupResource(){
     host = "Host: " + hostIP + ":" + port;
     if(DEBUG) Serial.println(host);
     
-    jsonPayLoad = "{\"owner\":\"";
+    jsonPayLoad = "{\"event\":"
+    jsonPayLoad += "{\"owner\":\"";
     jsonPayLoad += String(DEVICE_OWNER);
+    jsonPayLoad += "\",\"deviceType\":\"";
+    jsonPayLoad += String(DEVICE_TYPE);
     jsonPayLoad += "\",\"deviceId\":\"";
     jsonPayLoad += String(DEVICE_ID);
-    jsonPayLoad += "\",\"reply\":\"";
+    jsonPayLoad += "\",\"time\":";
+    jsonPayLoad += String(TIME);
+    jsonPayLoad += "}, \"payloadData\":{";
     
     if(DEBUG) {
         Serial.print("JSON Payload: ");
@@ -155,4 +160,21 @@ void setupClient(){
     }
         if(CON_DEBUG) Serial.println(F("client Connection failed"));
     }
+}
+
+
+void setupEndpoint() {
+  endPoint = SERVICE_EPOINT;
+  
+  // check tenant domain
+  if (TENANT_DOMAIN.equals(SUPER_TENANT)) {
+    endPoint += EVENT_STREAM;  
+  
+  } else {
+    endPoint += "/t/" + TENANT_DOMAIN;
+    endPoint += EVENT_STREAM;
+  }
+  endPoint += "?deviceId=";
+  endPoint += DEVICE_ID;
+
 }

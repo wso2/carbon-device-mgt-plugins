@@ -39,8 +39,12 @@
 #define DEVICE_ID "${DEVICE_ID}"
 #define DEVICE_TOKEN "${DEVICE_TOKEN}"
 #define REFRESH_DEVICE_TOKEN "${DEVICE_REFRESH_TOKEN}"
+#define DEVICE_TYPE  "arduino"
+#define TIME  0
+#define SUPER_TENANT "carbon.super"
 
-#define SERVICE_EPOINT "/arduino/controller/"
+#define SERVICE_EPOINT "/endpoints"
+#define EVENT_STREAM "/temperature-http"
 
 #define POLL_INTERVAL 1000
 #define PUSH_INTERVAL 10000
@@ -57,7 +61,7 @@ byte subnet[] = { 255, 255, 255, 0 };     //Ststic subnet of arduino
 byte gateway[] = { 192, 168, 43, 1 };     //Ststic gateway of arduino
 
 
-String host, jsonPayLoad, replyMsg;
+String host, jsonPayLoad, replyMsg, endPoint;
 String responseMsg, subStrn;
 double cpuTemperature =0;
 static unsigned long pushTimestamp = 0;
