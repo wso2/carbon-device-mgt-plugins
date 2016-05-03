@@ -81,7 +81,8 @@ if args.interval:
 if args.mode:
     running_mode.RUNNING_MODE = args.mode
     iotUtils = __import__('iotUtils')
-    httpServer = __import__('httpServer') # python script used to start a http-server to listen for operations
+    mqttSubscriber = __import__('mqttConnector')
+    # httpServer = __import__('httpServer') # python script used to start a http-server to listen for operations
     # (includes the TEMPERATURE global variable)
 
     if running_mode.RUNNING_MODE == 'N':
@@ -92,16 +93,16 @@ if args.mode:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       Endpoint specific settings to which the data is pushed
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-DC_ENDPOINT = iotUtils.HTTPS_EP.split(":")
-DC_IP = DC_ENDPOINT[1].replace('//', '')
-DC_PORT = int(DC_ENDPOINT[2])
-DC_ENDPOINT_CONTEXT = iotUtils.CONTROLLER_CONTEXT
-PUSH_ENDPOINT = str(DC_ENDPOINT_CONTEXT) + '/push_temperature/'
-REGISTER_ENDPOINT = str(DC_ENDPOINT_CONTEXT) + '/register'
+# DC_ENDPOINT = iotUtils.HTTPS_EP.split(":")
+# DC_IP = DC_ENDPOINT[1].replace('//', '')
+# DC_PORT = int(DC_ENDPOINT[2])
+# DC_ENDPOINT_CONTEXT = iotUtils.CONTROLLER_CONTEXT
+# PUSH_ENDPOINT = str(DC_ENDPOINT_CONTEXT) + '/push_temperature/'
+# REGISTER_ENDPOINT = str(DC_ENDPOINT_CONTEXT) + '/register'
 
-HOST = iotUtils.getDeviceIP()
-HOST_HTTP_SERVER_PORT = iotUtils.getHTTPServerPort()
-HOST_AND_PORT = str(HOST)+ ":" + str(HOST_HTTP_SERVER_PORT)
+# HOST = iotUtils.getDeviceIP()
+# HOST_HTTP_SERVER_PORT = iotUtils.getHTTPServerPort()
+# HOST_AND_PORT = str(HOST)+ ":" + str(HOST_HTTP_SERVER_PORT)
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -142,32 +143,32 @@ def configureLogger(loggerName):
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       This method registers the DevieIP in the Device-Cloud
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def registerDeviceIP():
-    ssl.wrap_socket = sslwrap(ssl.wrap_socket) # using the overridden sslwrap that uses TLSv1
-    if sys.version_info<(2,7,9):
-        dcConncection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
-    else:
-        dcConncection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT, context=ssl._create_unverified_context())
-    #TODO need to get server certificate when initializing https connection
-    dcConncection.set_debuglevel(1)
-    dcConncection.connect()
-
-    registerURL = str(REGISTER_ENDPOINT) + '/' + str(iotUtils.DEVICE_OWNER) + '/' + str(iotUtils.DEVICE_ID) + '/' + \
-                  str(HOST) + '/' + str(HOST_HTTP_SERVER_PORT) + '/'
-    dcConncection.putrequest('POST', registerURL)
-    dcConncection.putheader('Authorization', 'Bearer ' + iotUtils.AUTH_TOKEN)
-    dcConncection.endheaders()
-    dcResponse = dcConncection.getresponse()
-
-    print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-    print ('RASPBERRY_STATS: ' + str(registerURL))
-    print ('RASPBERRY_STATS: ' + str(dcResponse.status))
-    print ('RASPBERRY_STATS: ' + str(dcResponse.reason))
-    print ('RASPBERRY_STATS: Response Message')
-    print str(dcResponse.msg)
-
-    dcConncection.close()
-    print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+# def registerDeviceIP():
+#     ssl.wrap_socket = sslwrap(ssl.wrap_socket) # using the overridden sslwrap that uses TLSv1
+#     if sys.version_info<(2,7,9):
+#         dcConncection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
+#     else:
+#         dcConncection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT, context=ssl._create_unverified_context())
+#     #TODO need to get server certificate when initializing https connection
+#     dcConncection.set_debuglevel(1)
+#     dcConncection.connect()
+#
+#     registerURL = str(REGISTER_ENDPOINT) + '/' + str(iotUtils.DEVICE_OWNER) + '/' + str(iotUtils.DEVICE_ID) + '/' + \
+#                   str(HOST) + '/' + str(HOST_HTTP_SERVER_PORT) + '/'
+#     dcConncection.putrequest('POST', registerURL)
+#     dcConncection.putheader('Authorization', 'Bearer ' + iotUtils.AUTH_TOKEN)
+#     dcConncection.endheaders()
+#     dcResponse = dcConncection.getresponse()
+#
+#     print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+#     print ('RASPBERRY_STATS: ' + str(registerURL))
+#     print ('RASPBERRY_STATS: ' + str(dcResponse.status))
+#     print ('RASPBERRY_STATS: ' + str(dcResponse.reason))
+#     print ('RASPBERRY_STATS: Response Message')
+#     print str(dcResponse.msg)
+#
+#     dcConncection.close()
+#     print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -175,6 +176,11 @@ def registerDeviceIP():
 #       This method connects to the Device-Cloud and pushes data
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def connectAndPushData():
+
+
+
+
+
     if sys.version_info<(2,7,9):
         dcConnection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
     else:
@@ -282,6 +288,19 @@ class ListenHTTPServerThread(object):
         httpServer.main()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#       This is a Thread object for connecting and subscribing to an MQTT Queue
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class SubscribeToMQTTQueue(object):
+    def __init__(self):
+        thread = threading.Thread(target=self.run, args=())
+        thread.daemon = True  # Daemonize thread
+        thread.start()  # Start the execution
+
+    def run(self):
+        mqttSubscriber.main()
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       When sysvinit sends the TERM signal, cleanup before exiting
@@ -303,9 +322,10 @@ def main():
     if running_mode.RUNNING_MODE == 'N':
         iotUtils.setUpGPIOPins()
     UtilsThread()
-    registerDeviceIP()  # Call the register endpoint and register Device IP
+    # registerDeviceIP()  # Call the register endpoint and register Device IP
     TemperatureReaderThread()  # initiates and runs the thread to continuously read temperature from DHT Sensor
-    ListenHTTPServerThread()  # starts an HTTP Server that listens for operational commands to switch ON/OFF Led
+    # ListenHTTPServerThread()  # starts an HTTP Server that listens for operational commands to switch ON/OFF Led
+    SubscribeToMQTTQueue()  # connects and subscribes to an MQTT Queue that receives MQTT commands from the server
     while True:
         try:
             if iotUtils.LAST_TEMP > 0:  # Push data only if there had been a successful temperature read
