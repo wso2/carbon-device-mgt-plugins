@@ -23,37 +23,33 @@ void readControls() {
     Serial.println("Started..");
     
     client.fastrprint(F("GET "));
-    client.fastrprint(SERVICE_EPOINT);
-    client.fastrprint(F("readcontrols"));
+    client.fastrprint(IOT_SERVICE_EPOINT);
     client.fastrprint(F(" HTTP/1.1"));
     client.fastrprint(F("\n"));
     client.fastrprint(host.c_str()); 
+    client.fastrprint(F("Authorization: Bearer ")); client.fastrprint(F(DEVICE_TOKEN)); client.fastrprint(F("\n"));
+    client.fastrprint(F("Content-Type: application/json")); client.fastrprint(F("\n"));
+    client.fastrprint(F("Accept: application/json")); client.fastrprint(F("\n"));
     client.fastrprint(F("\n"));
-    client.fastrprint(DEVICE_ID);
-    client.fastrprint(F("owner: "));
-    client.fastrprint(DEVICE_OWNER);
-    client.fastrprint(F("\n"));
-    client.fastrprint(F("deviceId: "));
-    client.fastrprint(F(DEVICE_ID));
-    client.fastrprint(F("\n"));
-    client.fastrprint(F("deviceId: "));
-    client.fastrprint(F("protocol: HTTP\n"));
+
     client.println();
     
     
     delay(1000);
-    Serial.println("Ended..");
+    
     while (client.available()) {
         char response = client.read();
         responseMsg += response;
         
     }
+    Serial.println("Ended..");
     int index = responseMsg.lastIndexOf(":");
     int newLine = responseMsg.lastIndexOf("\n");
     subStrn = responseMsg.substring(index + 1);
     responseMsg = responseMsg.substring(newLine + 1, index);
     
     if(DEBUG) {
+        Serial.print("Polling Response: ");
         Serial.print(responseMsg);
         Serial.println();
         Serial.println("-------------------------------");
