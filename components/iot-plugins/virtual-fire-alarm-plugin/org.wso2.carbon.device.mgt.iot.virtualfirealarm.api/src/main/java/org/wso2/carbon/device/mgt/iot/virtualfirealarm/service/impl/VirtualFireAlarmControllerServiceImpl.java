@@ -46,6 +46,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -133,6 +134,44 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
             return Response.ok().build();
         } catch (DeviceManagementException | TransportHandlerException e) {
             log.error("Failed to send switch-bulb request to device [" + deviceId + "] via " + protocolString);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PUT
+    @Path("device/update-policy")
+    public Response updatePolicy(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
+                                 @FormParam("policy") String policy) {
+        String protocolString = protocol.toUpperCase();
+        if (log.isDebugEnabled()) {
+            log.debug("Sending request to update-policy of device [" + deviceId + "] via " +
+                              protocolString);
+        }
+        try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(
+                    new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE),
+                    DeviceGroupConstants.Permissions.DEFAULT_MANAGE_POLICIES_PERMISSIONS)) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
+            switch (protocolString) {
+            case HTTP_PROTOCOL:
+                throw new UnsupportedOperationException(
+                        "Sending request to update-policy via HTTP protocol not supported.");
+            case XMPP_PROTOCOL:
+                String xmppResource = VirtualFireAlarmConstants.POLICY_CONTEXT.replace("/", "");
+                virtualFireAlarmXMPPConnector.publishDeviceData(deviceId, xmppResource, policy);
+                break;
+            default:
+                String mqttResource = VirtualFireAlarmConstants.POLICY_CONTEXT.replace("/", "");
+                virtualFireAlarmMQTTConnector.publishDeviceData(deviceId, mqttResource, policy);
+                break;
+            }
+            return Response.ok().build();
+        } catch (TransportHandlerException e) {
+            log.error("Failed to send update-policy request to device [" + deviceId + "] via " + protocolString);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
