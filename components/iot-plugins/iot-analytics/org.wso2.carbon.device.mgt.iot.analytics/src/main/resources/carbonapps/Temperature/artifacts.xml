@@ -22,6 +22,8 @@
 		<dependency artifact="Eventstream_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
 		<dependency artifact="Eventstore_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
 		<dependency artifact="Eventreceiver_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="Eventreceiver_http_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="Eventreceiver_mqtt_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="Eventpublisher_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
 		<dependency artifact="Sparkscripts" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
     </artifact>

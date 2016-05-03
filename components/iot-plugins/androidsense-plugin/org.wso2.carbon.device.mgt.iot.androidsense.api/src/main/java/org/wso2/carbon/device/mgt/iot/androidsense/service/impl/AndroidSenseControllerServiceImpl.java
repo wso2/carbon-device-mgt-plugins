@@ -36,7 +36,6 @@ import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -119,11 +118,10 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
                                         @QueryParam("from") long from, @QueryParam("to") long to) {
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
-        String user = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
-        String query = "owner:" + user + " AND deviceId:" + deviceId + " AND deviceType:" +
+        String query = "deviceId:" + deviceId + " AND deviceType:" +
                 AndroidSenseConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
         if (sensor.equals(AndroidSenseConstants.SENSOR_WORDCOUNT)) {
-            query = "owner:" + user + " AND deviceId:" + deviceId;
+            query = "deviceId:" + deviceId;
         }
         String sensorTableName = getSensorEventTableName(sensor);
 
