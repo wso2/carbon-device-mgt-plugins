@@ -41,7 +41,7 @@ import java.util.UUID;
 
 public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
     private static Log log = LogFactory.getLog(RaspberryPiMQTTConnector.class);
-    private static final String subscribeTopic = "wso2/" + RaspberrypiConstants.DEVICE_TYPE + "/+/publisher";
+    private static final String subscribeTopic = "wso2/+/"+ RaspberrypiConstants.DEVICE_TYPE + "/+/publisher";
     private static final String KEY_TYPE = "PRODUCTION";
     private static final String EMPTY_STRING = "";
 

@@ -1,2 +1,3 @@
 
 global RUNNING_MODE
+RUNNING_MODE = 'N'

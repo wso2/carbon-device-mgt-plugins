@@ -24,20 +24,20 @@ import sys, os, signal, argparse
 import running_mode
 import time, threading, datetime
 
-import httplib, ssl
-from functools import wraps
+# import httplib, ssl
+# from functools import wraps
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #      Overriding the default SSL version used in some of the Python (2.7.x) versions
 #           This is a known issue in earlier Python releases
 #               But was fixed in later versions. Ex-2.7.11
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-def sslwrap(func):
-    @wraps(func)
-    def bar(*args, **kw):
-        kw['ssl_version'] = ssl.PROTOCOL_TLSv1
-        return func(*args, **kw)
-    return bar
+# def sslwrap(func):
+#     @wraps(func)
+#     def bar(*args, **kw):
+#         kw['ssl_version'] = ssl.PROTOCOL_TLSv1
+#         return func(*args, **kw)
+#     return bar
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 PUSH_INTERVAL = 5000  # time interval between successive data pushes in seconds
@@ -81,7 +81,7 @@ if args.interval:
 if args.mode:
     running_mode.RUNNING_MODE = args.mode
     iotUtils = __import__('iotUtils')
-    mqttSubscriber = __import__('mqttConnector')
+    mqttConnector = __import__('mqttConnector')
     # httpServer = __import__('httpServer') # python script used to start a http-server to listen for operations
     # (includes the TEMPERATURE global variable)
 
@@ -176,49 +176,54 @@ def configureLogger(loggerName):
 #       This method connects to the Device-Cloud and pushes data
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def connectAndPushData():
-
-
-
-
-
-    if sys.version_info<(2,7,9):
-        dcConnection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
-    else:
-        dcConnection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT, context=ssl._create_unverified_context())
-
-    dcConnection.set_debuglevel(1)
-    dcConnection.connect()
-    request = dcConnection.putrequest('POST', PUSH_ENDPOINT)
-    dcConnection.putheader('Authorization', 'Bearer ' + iotUtils.AUTH_TOKEN)
-    dcConnection.putheader('Content-Type', 'application/json')
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ###       Read the Temperature and Load info of RPi and construct payload
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     rPiTemperature = iotUtils.LAST_TEMP  # Push the last read temperature value
-    PUSH_DATA = iotUtils.DEVICE_INFO + iotUtils.DEVICE_IP.format(ip=HOST_AND_PORT) + iotUtils.DEVICE_DATA.format(
-        temperature=rPiTemperature)
+    PUSH_DATA = iotUtils.DEVICE_INFO + iotUtils.DEVICE_DATA.format(temperature=rPiTemperature)
     PUSH_DATA += '}'
-    dcConnection.putheader('Content-Length', len(PUSH_DATA))
-    dcConnection.endheaders()
+    
+    print '~~~~~~~~~~~~~~~~~~~~~~~~ Publishing Device-Data ~~~~~~~~~~~~~~~~~~~~~~~~~'
+    print ('PUBLISHED DATA: ' + PUSH_DATA)
+    print ('PUBLISHED TOPIC: ' + mqttConnector.TOPIC_TO_PUBLISH)
+    mqttConnector.publish(PUSH_DATA)
+#    print '~~~~~~~~~~~~~~~~~~~~~~~~ End Of Publishing ~~~~~~~~~~~~~~~~~~~~~~~~~'
 
-    print PUSH_DATA
-    print '~~~~~~~~~~~~~~~~~~~~~~~~ Pushing Device-Data ~~~~~~~~~~~~~~~~~~~~~~~~~'
+    # if sys.version_info<(2,7,9):
+    #     dcConnection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT)
+    # else:
+    #     dcConnection = httplib.HTTPSConnection(host=DC_IP, port=DC_PORT, context=ssl._create_unverified_context())
 
-    dcConnection.send(PUSH_DATA)  # Push the data
-    dcResponse = dcConnection.getresponse()
+    # dcConnection.set_debuglevel(1)
+    # dcConnection.connect()
+    # request = dcConnection.putrequest('POST', PUSH_ENDPOINT)
+    # dcConnection.putheader('Authorization', 'Bearer ' + iotUtils.AUTH_TOKEN)
+    # dcConnection.putheader('Content-Type', 'application/json')
+    # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # ###       Read the Temperature and Load info of RPi and construct payload
+    # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-    print ('RASPBERRY_STATS: ' + str(dcResponse.status))
-    print ('RASPBERRY_STATS: ' + str(dcResponse.reason))
-    print ('RASPBERRY_STATS: Response Message')
-    print str(dcResponse.msg)
-    print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-    dcConnection.close()
+    # rPiTemperature = iotUtils.LAST_TEMP  # Push the last read temperature value
+    # PUSH_DATA = iotUtils.DEVICE_INFO + iotUtils.DEVICE_IP.format(ip=HOST_AND_PORT) + iotUtils.DEVICE_DATA.format(
+    #     temperature=rPiTemperature)
+    # PUSH_DATA += '}'
+    # dcConnection.putheader('Content-Length', len(PUSH_DATA))
+    # dcConnection.endheaders()
 
-    if (dcResponse.status == 409 or dcResponse.status == 412):
-        print 'RASPBERRY_STATS: Re-registering Device IP'
-        registerDeviceIP()
+    # print PUSH_DATA
+    # print '~~~~~~~~~~~~~~~~~~~~~~~~ Pushing Device-Data ~~~~~~~~~~~~~~~~~~~~~~~~~'
+
+    # dcConnection.send(PUSH_DATA)  # Push the data
+    # dcResponse = dcConnection.getresponse()
+
+    # print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    # print ('RASPBERRY_STATS: ' + str(dcResponse.status))
+    # print ('RASPBERRY_STATS: ' + str(dcResponse.reason))
+    # print ('RASPBERRY_STATS: Response Message')
+    # print str(dcResponse.msg)
+    # print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    # dcConnection.close()
+
+    # if (dcResponse.status == 409 or dcResponse.status == 412):
+    #     print 'RASPBERRY_STATS: Re-registering Device IP'
+    #     registerDeviceIP()
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -255,9 +260,9 @@ class TemperatureReaderThread(object):
                 print 'RASPBERRY_STATS: Temp={0:0.1f}*C  Humidity={1:0.1f}%'.format(temperature, humidity)
 
             except Exception, e:
-                print "RASPBERRY_STATS: Exception in TempReaderThread: Could not successfully read Temperature"
-                print ("RASPBERRY_STATS: " + str(e))
                 print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+                print "RASPBERRY_STATS: Exception in TempReaderThread: Could not successfully read Temperature"
+                print ("RASPBERRY_STATS: " + str(e))                
                 pass
                 time.sleep(self.interval)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -298,7 +303,7 @@ class SubscribeToMQTTQueue(object):
         thread.start()  # Start the execution
 
     def run(self):
-        mqttSubscriber.main()
+        mqttConnector.main()
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -319,13 +324,11 @@ signal.signal(signal.SIGTERM, sigterm_handler)
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def main():
     configureLogger("WSO2IOT_RPiStats")
-    if running_mode.RUNNING_MODE == 'N':
-        iotUtils.setUpGPIOPins()
     UtilsThread()
     # registerDeviceIP()  # Call the register endpoint and register Device IP
-    TemperatureReaderThread()  # initiates and runs the thread to continuously read temperature from DHT Sensor
     # ListenHTTPServerThread()  # starts an HTTP Server that listens for operational commands to switch ON/OFF Led
     SubscribeToMQTTQueue()  # connects and subscribes to an MQTT Queue that receives MQTT commands from the server
+    TemperatureReaderThread()  # initiates and runs the thread to continuously read temperature from DHT Sensor
     while True:
         try:
             if iotUtils.LAST_TEMP > 0:  # Push data only if there had been a successful temperature read

@@ -60,7 +60,7 @@ AUTH_TOKEN = configParser.get('Device-Configurations', 'auth-token')
 CONTROLLER_CONTEXT = configParser.get('Device-Configurations', 'controller-context')
 MQTT_SUB_TOPIC = configParser.get('Device-Configurations', 'mqtt-sub-topic').format(owner = DEVICE_OWNER, deviceId = DEVICE_ID)
 MQTT_PUB_TOPIC = configParser.get('Device-Configurations', 'mqtt-pub-topic').format(owner = DEVICE_OWNER, deviceId = DEVICE_ID)
-DEVICE_INFO = '{"owner":"' + DEVICE_OWNER + '","deviceId":"' + DEVICE_ID + '","reply":'
+DEVICE_INFO = '{"owner":"' + DEVICE_OWNER + '","deviceId":"' + DEVICE_ID + '","temperature":'
 HTTPS_EP = configParser.get('Device-Configurations', 'https-ep')
 HTTP_EP = configParser.get('Device-Configurations', 'http-ep')
 APIM_EP = configParser.get('Device-Configurations', 'apim-ep')
@@ -75,6 +75,7 @@ DEVICE_DATA = '"{temperature}"'  # '"{temperature}:{load}:OFF"'
 #       Method used to switch ON/OFF the LED attached to RPi
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def switchBulb(state):
+    print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
     print "Requested Switch State: " + state
 
     if running_mode.RUNNING_MODE == "N":
@@ -90,7 +91,6 @@ def switchBulb(state):
             print "BULB Switched ON"
         elif state == "OFF":
             print "BULB Switched OFF"
-    print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -176,7 +176,7 @@ def setUpGPIOPins():
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def main():
     global HOST_NAME
-    HOST_NAME = getDeviceIP()
+    # HOST_NAME = getDeviceIP()
     if running_mode.RUNNING_MODE == 'N':
         setUpGPIOPins()
 
