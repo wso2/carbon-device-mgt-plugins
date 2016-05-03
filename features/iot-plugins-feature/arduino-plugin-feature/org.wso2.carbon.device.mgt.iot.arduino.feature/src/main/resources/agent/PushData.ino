@@ -25,20 +25,22 @@
  ***********************************************************************************************/
 
 void pushData(){
-    String payLoad = "Temp";
-    payLoad = payLoad +  "\",\"value\":\"";
-    
-    
-    payLoad+=cpuTemperature;
-    
-    
-    payLoad += "\"}";
+  
+    payLoad = "\"temperature\":";
+    payLoad += dtostrf(cpuTemperature, 3, 2, charBuf);
+    payLoad += "}}}";
     
     client.fastrprint(F("POST "));
-    client.fastrprint(SERVICE_EPOINT); client.fastrprint(F("pushdata"));
+    if (strcmp(TENANT_DOMAIN, SUPER_TENANT) == 0) {
+      client.fastrprint(DAS_SERVICE_EPOINT);
+    } else {
+      client.fastrprint(DAS_SERVICE_TEPOINT); 
+    }
     client.fastrprint(F(" HTTP/1.1")); client.fastrprint(F("\n"));
     client.fastrprint(host.c_str()); client.fastrprint(F("\n"));
+    client.fastrprint(F("Authorization: Bearer ")); client.fastrprint(F(DEVICE_TOKEN)); client.fastrprint(F("\n"));
     client.fastrprint(F("Content-Type: application/json")); client.fastrprint(F("\n"));
+    client.fastrprint(F("Accept: application/json")); client.fastrprint(F("\n"));
     client.fastrprint(F("Content-Length: "));
     
     int payLength = jsonPayLoad.length() + payLoad.length();
@@ -48,8 +50,11 @@ void pushData(){
     
     if(DEBUG) {
         Serial.print("POST ");
-        Serial.print(SERVICE_EPOINT);
-        Serial.print("pushdata");
+        if (strcmp(TENANT_DOMAIN, SUPER_TENANT) == 0) {
+          Serial.print(DAS_SERVICE_EPOINT);
+        } else {
+          Serial.print(DAS_SERVICE_TEPOINT);
+        }
         Serial.print(" HTTP/1.1"); Serial.println();
         Serial.print(host); Serial.println();
         Serial.print("Content-Type: application/json"); Serial.println();
@@ -102,8 +107,6 @@ void pushData(){
     
     payLoad = "";
 }
-
-
 
 
 double getBoardTemp(void)
