@@ -90,7 +90,7 @@ function connect(target) {
         ws.onmessage = function (event) {
             var dataPoint = JSON.parse(event.data);
             chartData.push({
-                               x: parseInt(dataPoint[4]) / 1000,
+                               x: parseInt(dataPoint[0]) / 1000,
                                y: parseFloat(dataPoint[5])
                            });
             chartData.shift();

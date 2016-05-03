@@ -31,6 +31,8 @@ import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.exception.RaspberrypiDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao.RaspberrypiDAOUtil;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.feature.RaspberrypiFeatureManager;
+
 import java.util.List;
 
 /**
@@ -40,10 +42,10 @@ public class RaspberrypiManager implements DeviceManager {
 
     private static final RaspberrypiDAOUtil raspberrypiDAO = new RaspberrypiDAOUtil();
     private static final Log log = LogFactory.getLog(RaspberrypiManager.class);
-
+    private RaspberrypiFeatureManager raspberrypiFeatureManager = new RaspberrypiFeatureManager();
     @Override
     public FeatureManager getFeatureManager() {
-        return null;
+        return raspberrypiFeatureManager;
     }
 
     @Override
