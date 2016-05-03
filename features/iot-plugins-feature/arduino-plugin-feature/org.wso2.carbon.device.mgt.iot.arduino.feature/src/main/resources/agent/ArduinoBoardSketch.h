@@ -39,8 +39,14 @@
 #define DEVICE_ID "${DEVICE_ID}"
 #define DEVICE_TOKEN "${DEVICE_TOKEN}"
 #define REFRESH_DEVICE_TOKEN "${DEVICE_REFRESH_TOKEN}"
+#define DEVICE_TYPE  "arduino"
+#define TIME  0
+#define SUPER_TENANT "carbon.super"
 
-#define SERVICE_EPOINT "/arduino/controller/"
+#define DAS_SERVICE_EPOINT "/endpoints/temperature-http?deviceId=${DEVICE_ID}"
+#define DAS_SERVICE_TEPOINT "/endpoints/t/${TENANT_DOMAIN}/temperature-http?deviceId=${DEVICE_ID}"
+
+#define IOT_SERVICE_EPOINT "/arduino/device/${DEVICE_ID}/controls"
 
 #define POLL_INTERVAL 1000
 #define PUSH_INTERVAL 10000
@@ -49,19 +55,21 @@
 
 #define SERVICE_PORT 9763                 //http port of iot server
 
-byte server[4] = {192,168,43,168};        //Ip address of iot server
-byte deviceIP[4] = { 192, 168, 43,11 };   //Ststic ip address of arduino
+byte server[4] = {192,168,1,10};        //Ip address of iot server
+byte deviceIP[4] = { 192, 168, 1,110 };   //Ststic ip address of arduino
 
 byte dns2[] = { 8, 8, 8, 8 };             //Ststic dns of arduino
 byte subnet[] = { 255, 255, 255, 0 };     //Ststic subnet of arduino
-byte gateway[] = { 192, 168, 43, 1 };     //Ststic gateway of arduino
+byte gateway[] = { 192, 168, 1, 1 };      //Ststic gateway of arduino
 
 
 String host, jsonPayLoad, replyMsg;
 String responseMsg, subStrn;
-double cpuTemperature =0;
+double cpuTemperature = 0;
 static unsigned long pushTimestamp = 0;
 static unsigned long pollTimestamp = 0;
+char charBuf[10];
+String payLoad;
 
 
 #endif
