@@ -39,7 +39,7 @@ public interface RaspberryPiControllerService {
     @POST
     @Feature(code = "bulb", name = "Bulb On / Off", type = "operation",
             description = "Switch on/off Raspberry Pi agent's bulb. (On / Off)")
-    Response switchBulb(@PathParam("deviceId") String deviceId, @FormParam("state") String state);
+    Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
     /**
      * Retreive Sensor data for the device type
