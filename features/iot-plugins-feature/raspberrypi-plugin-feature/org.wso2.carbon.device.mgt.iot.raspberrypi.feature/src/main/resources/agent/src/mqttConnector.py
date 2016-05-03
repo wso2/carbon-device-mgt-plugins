@@ -78,20 +78,22 @@ def publish(msg):
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       The Main method of the server script
-#			This method is invoked from RaspberryStats.py on a new thread
+#           This method is invoked from RaspberryStats.py on a new thread
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def main():
     MQTT_ENDPOINT = iotUtils.MQTT_EP.split(":")
     MQTT_IP = MQTT_ENDPOINT[1].replace('//','')
     MQTT_PORT = int(MQTT_ENDPOINT[2])
 
-    DEV_OWNER = iotUtils.DEVICE_OWNER
+    SERVER_NAME = iotUtils.SERVER_NAME
     DEV_ID = iotUtils.DEVICE_ID
 
     global TOPIC_TO_SUBSCRIBE
-    TOPIC_TO_SUBSCRIBE = "wso2/" + DEV_OWNER + "/raspberrypi/" + DEV_ID
+    # TOPIC_TO_SUBSCRIBE = SERVER_NAME + "/raspberrypi/" + DEV_ID
+    TOPIC_TO_SUBSCRIBE = SERVER_NAME + "/raspberrypi/" + DEV_ID
     global TOPIC_TO_PUBLISH
-    TOPIC_TO_PUBLISH = "wso2/" + DEV_OWNER + "/raspberrypi/" + DEV_ID + "/publisher"
+    # TOPIC_TO_PUBLISH = SERVER_NAME + "/raspberrypi/" + DEV_ID + "/publisher"
+    TOPIC_TO_PUBLISH = SERVER_NAME + "/raspberrypi/" + DEV_ID + "/temperature"
 
     print ("MQTT_LISTENER: MQTT_ENDPOINT is " + str(MQTT_ENDPOINT))
     print ("MQTT_LISTENER: MQTT_TOPIC is " + TOPIC_TO_SUBSCRIBE)

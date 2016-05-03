@@ -22,7 +22,7 @@
 import logging, logging.handlers
 import sys, os, signal, argparse
 import running_mode
-import time, threading, datetime
+import time, threading, datetime, calendar
 
 # import httplib, ssl
 # from functools import wraps
@@ -176,9 +176,9 @@ def configureLogger(loggerName):
 #       This method connects to the Device-Cloud and pushes data
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def connectAndPushData():
+    currentTime = calendar.timegm(time.gmtime())
     rPiTemperature = iotUtils.LAST_TEMP  # Push the last read temperature value
-    PUSH_DATA = iotUtils.DEVICE_INFO + iotUtils.DEVICE_DATA.format(temperature=rPiTemperature)
-    PUSH_DATA += '}'
+    PUSH_DATA = iotUtils.DEVICE_INFO.format(currentTime, rPiTemperature)
     
     print '~~~~~~~~~~~~~~~~~~~~~~~~ Publishing Device-Data ~~~~~~~~~~~~~~~~~~~~~~~~~'
     print ('PUBLISHED DATA: ' + PUSH_DATA)

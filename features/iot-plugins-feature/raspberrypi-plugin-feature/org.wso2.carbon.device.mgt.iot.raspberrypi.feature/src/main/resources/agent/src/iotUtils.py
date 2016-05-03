@@ -26,7 +26,7 @@ import random
 import running_mode
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#			HOST_NAME(IP) of the Device
+#           HOST_NAME(IP) of the Device
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 global HOST_NAME
 HOST_NAME = "0.0.0.0"
@@ -52,6 +52,7 @@ configParser = ConfigParser.RawConfigParser()
 configFilePath = os.path.join(os.path.dirname(__file__), './deviceConfig.properties')
 configParser.read(configFilePath)
 
+SERVER_NAME = configParser.get('Device-Configurations', 'server-name')
 DEVICE_OWNER = configParser.get('Device-Configurations', 'owner')
 DEVICE_ID = configParser.get('Device-Configurations', 'deviceId')
 MQTT_EP = configParser.get('Device-Configurations', 'mqtt-ep')
@@ -60,12 +61,18 @@ AUTH_TOKEN = configParser.get('Device-Configurations', 'auth-token')
 CONTROLLER_CONTEXT = configParser.get('Device-Configurations', 'controller-context')
 MQTT_SUB_TOPIC = configParser.get('Device-Configurations', 'mqtt-sub-topic').format(owner = DEVICE_OWNER, deviceId = DEVICE_ID)
 MQTT_PUB_TOPIC = configParser.get('Device-Configurations', 'mqtt-pub-topic').format(owner = DEVICE_OWNER, deviceId = DEVICE_ID)
-DEVICE_INFO = '{"owner":"' + DEVICE_OWNER + '","deviceId":"' + DEVICE_ID + '","temperature":'
+DEVICE_INFO = '{{"event":{{"metaData":{{"owner":"' + DEVICE_OWNER + '","type":"raspberrypi","deviceId":"' + DEVICE_ID + '","time":{:.2f}}},"payloadData":{{"temperature":{:.2f}}}}}}}'
+
+# '{"owner":"' + DEVICE_OWNER + '","deviceId":"' + DEVICE_ID + '","temperature":'
 HTTPS_EP = configParser.get('Device-Configurations', 'https-ep')
 HTTP_EP = configParser.get('Device-Configurations', 'http-ep')
 APIM_EP = configParser.get('Device-Configurations', 'apim-ep')
-DEVICE_IP = '"{ip}","value":'
-DEVICE_DATA = '"{temperature}"'  # '"{temperature}:{load}:OFF"'
+# DEVICE_IP = '"{ip}","value":'
+# DEVICE_DATA = '"{temperature}"'  # '"{temperature}:{load}:OFF"'
+
+
+# {"event": {"metaData": {"owner": "admin", "type": "arduino","deviceId": "s15kdwf34vue","time": 0},"payloadData": { "temperature": 22} }}
+
 
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
