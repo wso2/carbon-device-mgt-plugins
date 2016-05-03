@@ -142,7 +142,7 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
     }
 
     @PUT
-    @Path("device/update-policy")
+    @Path("device/{deviceId}/policy")
     public Response updatePolicy(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
                                  @FormParam("policy") String policy) {
         String protocolString = protocol.toUpperCase();
