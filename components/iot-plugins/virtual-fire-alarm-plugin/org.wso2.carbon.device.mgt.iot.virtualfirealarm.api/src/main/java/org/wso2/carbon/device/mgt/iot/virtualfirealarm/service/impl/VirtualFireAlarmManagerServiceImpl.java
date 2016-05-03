@@ -30,13 +30,14 @@ import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
+import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.ZipUtil;
 import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
@@ -75,7 +76,8 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
             DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
             deviceIdentifier.setId(deviceId);
             deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
-            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier)) {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier, DeviceGroupConstants.
+                    Permissions.DEFAULT_ADMIN_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(
@@ -101,7 +103,8 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
             DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
             deviceIdentifier.setId(deviceId);
             deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
-            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier)) {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier, DeviceGroupConstants.
+                    Permissions.DEFAULT_ADMIN_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
@@ -158,7 +161,7 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
             ArrayList<Device> userDevicesforFirealarm = new ArrayList<>();
             for (Device device : userDevices) {
                 if (device.getType().equals(VirtualFireAlarmConstants.DEVICE_TYPE) &&
-                    device.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.ACTIVE)) {
+                        device.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.ACTIVE)) {
                     userDevicesforFirealarm.add(device);
                 }
             }
@@ -239,8 +242,9 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
         //create new device id
         String deviceId = shortUUID();
         if (apiApplicationKey == null) {
-            String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
-                    .getAdminUserName();
+            String applicationUsername =
+                    PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
+                            .getAdminUserName();
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {VirtualFireAlarmConstants.DEVICE_TYPE};
             apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
@@ -249,7 +253,8 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = "device_type_" + VirtualFireAlarmConstants.DEVICE_TYPE + " device_" + deviceId;
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
-                                                                   apiApplicationKey.getConsumerSecret(), owner, scopes);
+                                                                   apiApplicationKey.getConsumerSecret(), owner,
+                                                                   scopes);
         String accessToken = accessTokenInfo.getAccessToken();
         String refreshToken = accessTokenInfo.getRefreshToken();
         //adding registering data
@@ -266,8 +271,8 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
             if (!status) {
                 String msg =
                         "XMPP Account was not created for device - " + deviceId + " of owner - " + owner +
-                        ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot" +
-                        ".common.config.server.configs";
+                                ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot" +
+                                ".common.config.server.configs";
                 throw new DeviceManagementException(msg);
             }
         }

@@ -25,6 +25,7 @@ import org.wso2.carbon.analytics.dataservice.commons.SortByField;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
+import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.transport.RaspberryPiMQTTConnector;
@@ -56,7 +57,7 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
     public Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state) {
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                RaspberrypiConstants.DEVICE_TYPE))) {
+                RaspberrypiConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             String switchToState = state.toUpperCase();
@@ -90,7 +91,7 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
         String sensorTableName = RaspberrypiConstants.TEMPERATURE_EVENT_TABLE;
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                    RaspberrypiConstants.DEVICE_TYPE))) {
+                    RaspberrypiConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_STATS_MONITOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             List<SortByField> sortByFields = new ArrayList<>();

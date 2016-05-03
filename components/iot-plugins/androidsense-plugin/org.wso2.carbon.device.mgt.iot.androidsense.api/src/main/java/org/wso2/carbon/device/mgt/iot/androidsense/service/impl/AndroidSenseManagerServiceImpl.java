@@ -25,6 +25,7 @@ import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
+import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.AndroidConfiguration;
@@ -108,7 +109,8 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
         try {
-            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier)) {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier, DeviceGroupConstants.
+                    Permissions.DEFAULT_ADMIN_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(deviceIdentifier);
@@ -133,7 +135,8 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
         try {
-            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier)) {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(deviceIdentifier, DeviceGroupConstants.
+                    Permissions.DEFAULT_ADMIN_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);

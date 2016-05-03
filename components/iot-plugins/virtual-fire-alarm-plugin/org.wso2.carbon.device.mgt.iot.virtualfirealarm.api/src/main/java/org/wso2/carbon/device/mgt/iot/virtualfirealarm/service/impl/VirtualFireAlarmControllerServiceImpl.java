@@ -27,24 +27,26 @@ import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
+import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.DeviceData;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport.VirtualFireAlarmXMPPConnector;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.SecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport.VirtualFireAlarmMQTTConnector;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport.VirtualFireAlarmXMPPConnector;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.SecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.VirtualFireAlarmServiceUtils;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -72,7 +74,7 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
     // holds a mapping of the IP addresses to Device-IDs for HTTP communication
     private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
 
-    @Permission(scope = "virtual_firealarm_user", permissions = {"device-mgt/virtual_firealarm/user"})
+    @Permission(scope = "virtual_firealarm_user", permissions = { "device-mgt/virtual_firealarm/user" })
     @POST
     @Path("device/register/{deviceId}/{ip}/{port}")
     public Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
@@ -107,8 +109,9 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                       protocolString);
         }
         try {
-            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                                                                VirtualFireAlarmConstants.DEVICE_TYPE))) {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(
+                    new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE),
+                    DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             switch (protocolString) {
@@ -138,6 +141,44 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
         }
     }
 
+    @PUT
+    @Path("device/{deviceId}/policy")
+    public Response updatePolicy(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
+                                 @FormParam("policy") String policy) {
+        String protocolString = protocol.toUpperCase();
+        if (log.isDebugEnabled()) {
+            log.debug("Sending request to update-policy of device [" + deviceId + "] via " +
+                              protocolString);
+        }
+        try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(
+                    new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE),
+                    DeviceGroupConstants.Permissions.DEFAULT_MANAGE_POLICIES_PERMISSIONS)) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
+            switch (protocolString) {
+            case HTTP_PROTOCOL:
+                throw new UnsupportedOperationException(
+                        "Sending request to update-policy via HTTP protocol not supported.");
+            case XMPP_PROTOCOL:
+                String xmppResource = VirtualFireAlarmConstants.POLICY_CONTEXT.replace("/", "");
+                virtualFireAlarmXMPPConnector.publishDeviceData(deviceId, xmppResource, policy);
+                break;
+            default:
+                String mqttResource = VirtualFireAlarmConstants.POLICY_CONTEXT.replace("/", "");
+                virtualFireAlarmMQTTConnector.publishDeviceData(deviceId, mqttResource, policy);
+                break;
+            }
+            return Response.ok().build();
+        } catch (TransportHandlerException e) {
+            log.error("Failed to send update-policy request to device [" + deviceId + "] via " + protocolString);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @POST
     @Path("device/temperature")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -155,8 +196,8 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
             return Response.status(Response.Status.CONFLICT).build();
         }
         try {
-            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                VirtualFireAlarmConstants.DEVICE_TYPE))) {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(
+                    new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE))) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             if (!VirtualFireAlarmServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
@@ -175,33 +216,34 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
     @Produces("application/json")
     public Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
                                              @QueryParam("to") long to) {
-            String fromDate = String.valueOf(from);
-            String toDate = String.valueOf(to);
-            String query = "deviceId:" + deviceId + " AND deviceType:" +
-                           VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
-            String sensorTableName = VirtualFireAlarmConstants.TEMPERATURE_EVENT_TABLE;
-            try {
-                if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                        VirtualFireAlarmConstants.DEVICE_TYPE))) {
-                    return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
-                }
-                if (sensorTableName != null) {
-                    List<SortByField> sortByFields = new ArrayList<>();
-                    SortByField sortByField = new SortByField("time", SORT.ASC, false);
-                    sortByFields.add(sortByField);
-                    List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
-                    return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
-                }
-            } catch (AnalyticsException e) {
-                String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
-                log.error(errorMsg);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
-            } catch (DeviceAccessAuthorizationException e) {
-                log.error(e.getErrorMessage(), e);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        String fromDate = String.valueOf(from);
+        String toDate = String.valueOf(to);
+        String query = "deviceId:" + deviceId + " AND deviceType:" +
+                VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+        String sensorTableName = VirtualFireAlarmConstants.TEMPERATURE_EVENT_TABLE;
+        try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(
+                    new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE),
+                    DeviceGroupConstants.Permissions.DEFAULT_STATS_MONITOR_PERMISSIONS)) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            if (sensorTableName != null) {
+                List<SortByField> sortByFields = new ArrayList<>();
+                SortByField sortByField = new SortByField("time", SORT.ASC, false);
+                sortByFields.add(sortByField);
+                List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
+                return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
+            }
+        } catch (AnalyticsException e) {
+            String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
+            log.error(errorMsg);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+        return Response.status(Response.Status.BAD_REQUEST).build();
+    }
 
     private boolean waitForServerStartup() {
         while (!IoTServerStartupListener.isServerReady()) {
