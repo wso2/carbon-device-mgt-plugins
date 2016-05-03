@@ -22,11 +22,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONObject;
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
 import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.exception.RaspberrypiException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
@@ -37,11 +43,13 @@ import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientExceptio
 import org.wso2.carbon.user.api.UserStoreException;
 
 import java.nio.charset.StandardCharsets;
+import java.security.PublicKey;
 import java.util.UUID;
 
 public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
     private static Log log = LogFactory.getLog(RaspberryPiMQTTConnector.class);
-    private static final String subscribeTopic = "wso2/" + RaspberrypiConstants.DEVICE_TYPE + "/+/publisher";
+//  subscribeTopic is not used for the RaspberryPi sample since the DAS device directly publishes to DAS MQTT receiver
+    private static final String subscribeTopic = "wso2/+/"+ RaspberrypiConstants.DEVICE_TYPE + "/+/publisher";
     private static final String KEY_TYPE = "PRODUCTION";
     private static final String EMPTY_STRING = "";
 
@@ -104,7 +112,26 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
     }
 
     @Override
-    public void processIncomingMessage(MqttMessage message, String... messageParams) throws TransportHandlerException {
+    public void publishDeviceData(String... publishData) throws TransportHandlerException {
+        if (publishData.length != 3) {
+            String errorMsg = "Incorrect number of arguments received to SEND-MQTT Message. " +
+                    "Need to be [owner, deviceId, resource{BULB/TEMP}, state{ON/OFF or null}]";
+            log.error(errorMsg);
+            throw new TransportHandlerException(errorMsg);
+        }
+
+        String deviceId = publishData[0];
+        String resource = publishData[1];
+        String state = publishData[2];
+
+        MqttMessage pushMessage = new MqttMessage();
+        String publishTopic = "wso2/" + APIUtil.getTenantDomainOftheUser() + "/"
+                + RaspberrypiConstants.DEVICE_TYPE + "/" + deviceId;
+        String actualMessage = resource + ":" + state;
+        pushMessage.setPayload(actualMessage.getBytes(StandardCharsets.UTF_8));
+        pushMessage.setQos(DEFAULT_MQTT_QUALITY_OF_SERVICE);
+        pushMessage.setRetained(false);
+        publishToQueue(publishTopic, pushMessage);
     }
 
     @Override
@@ -136,6 +163,10 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
     }
 
     @Override
+    public void processIncomingMessage(MqttMessage mqttMessage, String... messageParams) throws TransportHandlerException {
+    }
+
+    @Override
     public void processIncomingMessage() throws TransportHandlerException {
 
     }
@@ -153,29 +184,6 @@ public class RaspberryPiMQTTConnector extends MQTTTransportHandler {
     @Override
     public void publishDeviceData(MqttMessage publishData) throws TransportHandlerException {
 
-    }
-
-    @Override
-    public void publishDeviceData(String... publishData) throws TransportHandlerException {
-        if (publishData.length != 3) {
-            String errorMsg = "Incorrect number of arguments received to SEND-MQTT Message. " +
-                    "Need to be [owner, deviceId, resource{BULB/TEMP}, state{ON/OFF or null}]";
-            log.error(errorMsg);
-            throw new TransportHandlerException(errorMsg);
-        }
-
-        String deviceId = publishData[0];
-        String resource = publishData[1];
-        String state = publishData[2];
-
-        MqttMessage pushMessage = new MqttMessage();
-        String publishTopic = "wso2/" + APIUtil.getTenantDomainOftheUser() + "/"
-                + RaspberrypiConstants.DEVICE_TYPE + "/" + deviceId;
-        String actualMessage = resource + ":" + state;
-        pushMessage.setPayload(actualMessage.getBytes(StandardCharsets.UTF_8));
-        pushMessage.setQos(DEFAULT_MQTT_QUALITY_OF_SERVICE);
-        pushMessage.setRetained(false);
-        publishToQueue(publishTopic, pushMessage);
     }
 }
 
