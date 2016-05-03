@@ -26,22 +26,33 @@ void readControls() {
     client.fastrprint(IOT_SERVICE_EPOINT);
     client.fastrprint(F(" HTTP/1.1"));
     client.fastrprint(F("\n"));
-    client.fastrprint(host.c_str()); 
+    client.fastrprint(host.c_str());client.fastrprint(F("\n")); 
     client.fastrprint(F("Authorization: Bearer ")); client.fastrprint(F(DEVICE_TOKEN)); client.fastrprint(F("\n"));
     client.fastrprint(F("Content-Type: application/json")); client.fastrprint(F("\n"));
     client.fastrprint(F("Accept: application/json")); client.fastrprint(F("\n"));
     client.fastrprint(F("\n"));
+    client.fastrprint(F("protocol: HTTP\n"));
 
     client.println();
     
+    if(DEBUG) {
+        Serial.print("GET ");
+        Serial.print(IOT_SERVICE_EPOINT);
+        Serial.print(" HTTP/1.1"); Serial.println();
+        Serial.print(host); Serial.println();
+        Serial.print("Content-Type: application/json"); Serial.println();
+        Serial.println();
+    }
     
     delay(1000);
     
     while (client.available()) {
         char response = client.read();
+        if(DEBUG) Serial.print(response);
         responseMsg += response;
         
     }
+    Serial.println();
     Serial.println("Ended..");
     int index = responseMsg.lastIndexOf(":");
     int newLine = responseMsg.lastIndexOf("\n");
