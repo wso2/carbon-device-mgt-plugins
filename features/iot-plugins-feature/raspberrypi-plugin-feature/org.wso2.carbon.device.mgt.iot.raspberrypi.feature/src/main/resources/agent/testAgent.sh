@@ -97,14 +97,26 @@ done
 cp deviceConfig.properties ./src
 
 if [ "$mode" = "N" ]; then
+    # Install RPi.GPIO Library for Accessing RPi GPIO Pins
      sudo apt-get install rpi.gpio
+    # -----------------------------------------------------
+    # Install Adafruit_Python_DHT Library for reading DHT Sensor
      git clone https://github.com/adafruit/Adafruit_Python_DHT.git
      sudo apt-get install build-essential python-dev python-openssl
-     sudo python ./Adafruit_Python_DHT/setup.py install
+     cd ./Adafruit_Python_DHT
+     sudo python setup.py install
+     cd ..
+     # -----------------------------------------------------
+     # Install Paho-MQTT-Library for MQTT Communication
+     git clone https://github.com/eclipse/paho.mqtt.python.git
+     cd ./paho.mqtt.python
+     sudo python setup.py install
+     cd ..
+     # -----------------------------------------------------
 fi
 
 chmod +x ./src/RaspberryAgent.py
-./src/RaspberryAgent.py -i $input -m $mode
+sudo python ./src/RaspberryAgent.py -i $input -m $mode
 
 if [ $? -ne 0 ]; then
 	echo "Could not start the service..."
