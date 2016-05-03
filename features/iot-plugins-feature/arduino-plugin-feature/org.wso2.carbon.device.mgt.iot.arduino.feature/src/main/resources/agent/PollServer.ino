@@ -28,8 +28,6 @@ void readControls() {
     client.fastrprint(F("\n"));
     client.fastrprint(host.c_str());client.fastrprint(F("\n")); 
     client.fastrprint(F("Authorization: Bearer ")); client.fastrprint(F(DEVICE_TOKEN)); client.fastrprint(F("\n"));
-    client.fastrprint(F("Content-Type: application/json")); client.fastrprint(F("\n"));
-    client.fastrprint(F("Accept: application/json")); client.fastrprint(F("\n"));
     client.fastrprint(F("\n"));
     client.fastrprint(F("protocol: HTTP\n"));
 
@@ -77,6 +75,7 @@ void readControls() {
         digitalWrite(6, LOW);
         
     }
+    responseMsg = "";
     
 }
 
