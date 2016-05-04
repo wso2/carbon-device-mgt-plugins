@@ -18,8 +18,11 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.format;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 /**
  * The parent class of the 'DFFormat' property type
  */
+@XmlTransient
 public abstract class AbstractFormatProperty {
 }

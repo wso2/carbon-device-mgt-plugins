@@ -35,7 +35,8 @@ import java.util.List;
         "path",
         "rtProperties",
         "dfProperties",
-        "nodes"
+        "nodes",
+        "value"
 })
 @XmlRootElement(name = "Node")
 public class Node {

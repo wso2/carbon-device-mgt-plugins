@@ -47,8 +47,7 @@ public class DevDetail {
     // Indicates whether the device supports the OMA DM Large Object Handling specification
     public static final String LRG_OBJ = "/LrgObj";
     // Path to the DevDetail DDF file
-    public static final String DEV_DETAIL_DDF_PATH = "org/wso2/carbon/mdm/services/android/omadm/ddf/" +
-            "resources/OMA-SUP-MO_DM_DevDetail-V1_2-20070209-A.xml";
+    public static final String DEV_DETAIL_DDF_PATH = "OMA-SUP-MO_DM_DevDetail-V1_2-20070209-A.xml";
 
     private MgmtTree mgmtTree = null;
 

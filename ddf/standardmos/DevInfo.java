@@ -41,8 +41,7 @@ public class DevInfo implements Serializable {
     // Device language
     public static final String LANG = "/Lang";
     // Path to the DevInfo DDF file
-    public static final String DEV_INFO_DDF_PATH = "org/wso2/carbon/mdm/services/android/omadm/ddf/" +
-            "resources/OMA-SUP-MO_DM_DevInfo-V1_2-20070209-A.xml";
+    public static final String DEV_INFO_DDF_PATH = "OMA-SUP-MO_DM_DevInfo-V1_2-20070209-A.xml";
 
     private MgmtTree mgmtTree = null;
 

@@ -24,20 +24,6 @@ import javax.xml.bind.annotation.*;
  * The 'MIME' property of the 'DFType' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = {
-        "value"
-})
 @XmlRootElement(name = "MIME")
 public class MIME extends AbstractTypeProperty {
-
-    @XmlValue
-    protected String value;
-
-    public String getvalue() {
-        return value;
-    }
-
-    public void setvalue(String value) {
-        this.value = value;
-    }
 }

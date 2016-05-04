@@ -18,8 +18,22 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.type;
 
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlValue;
+
 /**
  * The parent class of the 'DFType' property type
  */
+@XmlTransient
 public class AbstractTypeProperty {
+    @XmlValue
+    protected String value;
+
+    public String getvalue() {
+        return value;
+    }
+
+    public void setvalue(String value) {
+        this.value = value;
+    }
 }

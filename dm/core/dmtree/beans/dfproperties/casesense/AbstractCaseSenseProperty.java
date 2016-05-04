@@ -18,8 +18,11 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.dfproperties.casesense;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 /**
  * The parent class of the 'CaseSense' property type
  */
+@XmlTransient
 public class AbstractCaseSenseProperty {
 }

@@ -24,20 +24,6 @@ import javax.xml.bind.annotation.*;
  * The 'DDFName' property of the 'DFType' property
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = {
-        "value"
-})
 @XmlRootElement(name = "DDFName")
 public class DDFName extends AbstractTypeProperty {
-
-    @XmlValue
-    protected String value;
-
-    public String getvalue() {
-        return value;
-    }
-
-    public void setvalue(String value) {
-        this.value = value;
-    }
 }

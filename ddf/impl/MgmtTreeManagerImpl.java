@@ -92,21 +92,26 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
         if (node == null) {
             return SyncMLStatusCodes.NOT_FOUND.getCode();
         }
-        if (node.getDfProperties().getAccessType().getReplace() == null) {
-            return SyncMLStatusCodes.NOT_ALLOWED.getCode();
-        } else {
+        // TODO: Need to check for ACL permissions
+
+        if (item.getMeta() != null) {
             if (item.getMeta().getFormat() != null) {
                 node.setFormat(item.getMeta().getFormat());
             }
+        }
 
+        if (item.getMeta() != null) {
             if (item.getMeta().getType() != null) {
                 node.setType(item.getMeta().getType());
             }
+        }
 
+        if (item.getMeta() != null) {
             if (item.getData() != null) {
                 node.setValue(item.getData());
             }
         }
+
         return SyncMLStatusCodes.SUCCESS.getCode();
     }
 

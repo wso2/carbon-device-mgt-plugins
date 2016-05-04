@@ -44,6 +44,7 @@ public class SyncMLMessageProcessor {
     private static final int HEADER_STATUS_COMMAND_ID = 1;
     private static final int HEADER_COMMAND_REF_ID = 0;
 
+    // Kept as a counter to generate command IDs
     private int headerCommandId = HEADER_STATUS_COMMAND_ID;
 
     private static Log log = LogFactory.getLog(SyncMLMessageProcessor.class);
@@ -53,39 +54,74 @@ public class SyncMLMessageProcessor {
         this.responseDocument = new SyncMLDocument();
     }
 
-    public void processHeader() {
+    public SyncMLDocument processMessage() {
+        processHeader();
+        processBody();
+        return this.responseDocument;
     }
 
-    public void processBody() {
+    private void processHeader() {
+        SyncMLHeader sourceHeader = sourceDocument.getHeader();
+        SyncMLHeader targetHeader = new SyncMLHeader();
+        targetHeader.setMsgID(sourceHeader.getMsgID());
+        targetHeader.setHexadecimalSessionId(Integer.toHexString(sourceHeader.getSessionId()));
+
+        TargetTag target = new TargetTag();
+        target.setLocURI(sourceHeader.getSource().getLocURI());
+        targetHeader.setTarget(target);
+
+        SourceTag source = new SourceTag();
+        source.setLocURI(sourceHeader.getTarget().getLocURI());
+        targetHeader.setSource(source);
+
+        responseDocument.setHeader(targetHeader);
+    }
+
+    private void processBody() {
 
         SyncMLBody sourceBody = this.sourceDocument.getBody();
+        this.responseDocument.setBody(new SyncMLBody());
 
         // Process status blocks
         if (sourceBody.getStatus() != null) {
             processStatuses();
+        }
+
+        // Generate alert status
+        processAlert();
+
+        // Process replace blocks
+        if (sourceBody.getReplace() != null) {
+            processReplaceCommand();
         }
     }
 
     /**
      * This method processes the status blocks of the message while updating the DM Tree
      */
-    public void processStatuses() {
+    private void processStatuses() {
         List<StatusTag> sourceStatuses = sourceDocument.getBody().getStatus();
-        List<StatusTag> targetStatuses = new ArrayList<>();
 
         // Generate header status
         StatusTag headerStatus = new StatusTag(HEADER_STATUS_COMMAND_ID, sourceDocument.getHeader().getMsgID(),
                 HEADER_COMMAND_REF_ID, Constants.SyncMLTags.SYNC_HDR,
                 sourceDocument.getHeader().getSource().getLocURI(),
                 SyncMLStatusCodes.AUTHENTICATION_ACCEPTED.getCode());
-        targetStatuses.add(headerStatus);
+
+        if (responseDocument.getBody().getStatus() == null) {
+            responseDocument.getBody().setStatus(new ArrayList<StatusTag>());
+            responseDocument.getBody().getStatus().add(headerStatus);
+        } else {
+            responseDocument.getBody().getStatus().add(headerStatus);
+        }
     }
 
-    public void processReplaceCommands() {
+    private void processReplaceCommand() {
         ReplaceTag replaceTag = sourceDocument.getBody().getReplace();
         int replaceCmdId = replaceTag.getCommandId();
         List<ItemTag> items = replaceTag.getItems();
         List<StatusTag> statuses = new ArrayList<>();
+        boolean wholeBlockFlag = false;
 
         for (ItemTag item : items) {
             String locURI = item.getSource().getLocURI();
@@ -94,14 +130,54 @@ public class SyncMLMessageProcessor {
             MgmtTree tree = moDao.getMO(URIParser.getDMTreeName(locURI),
                     sourceDocument.getHeader().getSource().getLocURI());
 
+            // If the tree does not exist
+            if (tree == null) {
+                status.setData(SyncMLStatusCodes.NOT_FOUND.getCode());
+                status.setMessageReference(sourceDocument.getHeader().getMsgID());
+                status.setCommandReference(replaceCmdId);
+                status.setCommandId(++headerCommandId);
+                status.setCommand(Constants.REPLACE);
+                statuses.add(status);
+                wholeBlockFlag = true;
+                break;
+            }
+
             MgmtTreeManager treeManager = new MgmtTreeManagerImpl(tree);
+
             String statusCode = treeManager.replaceNodeDetails(locURI, item);
-            status.setData(statusCode);
+            if (!statusCode.equals(SyncMLStatusCodes.SUCCESS.getCode())) {
+                wholeBlockFlag = true;
+            }
+        }
+
+        if (!wholeBlockFlag) {
+            StatusTag status = new StatusTag();
+            status.setData(SyncMLStatusCodes.SUCCESS.getCode());
             status.setMessageReference(sourceDocument.getHeader().getMsgID());
             status.setCommandReference(replaceCmdId);
             status.setCommandId(++headerCommandId);
-            statuses.add(status);
+            status.setCommand(Constants.REPLACE);
+            responseDocument.getBody().getStatus().add(status);
+        } else {
+            StatusTag status = new StatusTag();
+            status.setData(SyncMLStatusCodes.UNSUPPORTED_MEDIA_TYPE.getCode());
+            status.setMessageReference(sourceDocument.getHeader().getMsgID());
+            status.setCommandReference(replaceCmdId);
+            status.setCommandId(++headerCommandId);
+            status.setCommand(Constants.REPLACE);
+            responseDocument.getBody().getStatus().add(status);
         }
+    }
+
+    private void processAlert() {
+        StatusTag status = new StatusTag();
+        AlertTag alert = sourceDocument.getBody().getAlert();
+        status.setCommand(Constants.ALERT);
+        status.setCommandId(++headerCommandId);
+        status.setCommandReference(alert.getCommandId());
+        status.setMessageReference(sourceDocument.getHeader().getMsgID());
+        status.setData(SyncMLStatusCodes.SUCCESS.getCode());
+        responseDocument.getBody().getStatus().add(status);
     }
 
 }

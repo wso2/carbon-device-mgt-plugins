@@ -18,7 +18,10 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.dfproperties.scope;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 /**
  * The parent class of the 'Scope' property type
  */
+@XmlTransient
 public class AbstractScopeProperty {}
