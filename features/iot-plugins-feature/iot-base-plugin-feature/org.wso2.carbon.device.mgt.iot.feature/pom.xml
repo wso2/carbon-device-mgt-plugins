@@ -156,7 +156,7 @@
 							<importFeatures>
 								<importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}
 								</importFeatureDef>
-								<importFeatureDef>org.wso2.carbon.device.mgt.server:${carbon.device.mgt.version}
+								<importFeatureDef>org.wso2.carbon.device.mgt.server:${carbon.devicemgt.version}
 								</importFeatureDef>
 							</importFeatures>
 						</configuration>
