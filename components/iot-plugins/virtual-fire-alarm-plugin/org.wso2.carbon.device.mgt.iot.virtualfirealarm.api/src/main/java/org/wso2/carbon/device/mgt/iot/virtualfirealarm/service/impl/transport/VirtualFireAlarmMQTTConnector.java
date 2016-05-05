@@ -69,7 +69,7 @@ public class VirtualFireAlarmMQTTConnector extends MQTTTransportHandler {
 	private static Log log = LogFactory.getLog(VirtualFireAlarmMQTTConnector.class);
 	// subscription topic: <SERVER_NAME>/+/virtual_firealarm/+/publisher
 	// wildcard (+) is in place for device_owner & device_id
-	private static String subscribeTopic = "wso2/+/"+ VirtualFireAlarmConstants.DEVICE_TYPE + "/+/publisher";
+	private static final String subscribeTopic = "wso2/+/"+ VirtualFireAlarmConstants.DEVICE_TYPE + "/+/publisher";
 	private static String iotServerSubscriber = UUID.randomUUID().toString().substring(0, 5);
 	private static final String KEY_TYPE = "PRODUCTION";
 	private static final String EMPTY_STRING = "";

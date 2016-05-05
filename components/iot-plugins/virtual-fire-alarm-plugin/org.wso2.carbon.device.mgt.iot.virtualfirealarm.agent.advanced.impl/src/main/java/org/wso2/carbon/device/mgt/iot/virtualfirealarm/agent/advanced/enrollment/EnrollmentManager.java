@@ -44,6 +44,7 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core.Agent
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.exception.AgentCoreOperationException;
 import sun.security.x509.X509CertImpl;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -82,6 +83,7 @@ public class EnrollmentManager {
     private static final String KEY_PAIR_ALGORITHM = "RSA";
     private static final String PROVIDER = "BC";
     private static final String SIGNATURE_ALG = "SHA1withRSA";
+    private static final String CERT_IS_CA_EXTENSION = "is_ca";
     private static final int KEY_SIZE = 2048;
 
     // Seed to our PRNG. Make sure this is initialised randomly, NOT LIKE THIS
@@ -376,9 +378,9 @@ public class EnrollmentManager {
                         log.debug(((X509Certificate) cert).getIssuerDN().getName());
                     }
 
-                    //TODO: Need to identify the correct certificate.
-                    // I have chosen the CA cert based on its BasicConstraint criticality being set to "true"
-                    if (((X509CertImpl) cert).getBasicConstraintsExtension().isCritical()) {
+                    // I have chosen the CA cert based on its BasicConstraintExtension "is_ca" being set to "true"
+                    // This is because the returned keystore may contain many certificates including RAs.
+                    if (((Boolean) ((X509CertImpl) cert).getBasicConstraintsExtension().get(CERT_IS_CA_EXTENSION))) {
                         serverCertPublicKey = cert.getPublicKey();
                     }
                 }
@@ -394,6 +396,10 @@ public class EnrollmentManager {
             throw new AgentCoreOperationException(errorMsg, e);
         } catch (CertStoreException e) {
             String errorMsg = "Could not retrieve [Server-Certificates] from the response message from SCEP-Server.";
+            log.error(errorMsg);
+            throw new AgentCoreOperationException(errorMsg, e);
+        } catch (IOException e) {
+            String errorMsg = "Error occurred whilst trying to get property ['is_ca'] from the retreived Certificates";
             log.error(errorMsg);
             throw new AgentCoreOperationException(errorMsg, e);
         }

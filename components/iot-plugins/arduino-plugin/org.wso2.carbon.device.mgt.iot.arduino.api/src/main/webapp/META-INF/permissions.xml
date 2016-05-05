@@ -31,16 +31,16 @@
 
 	<Permission>
 		<name>control bulb</name>
-		<path>device-mgt/user/operations</path>
+		<path>/device-mgt/user/operations</path>
 		<url>/device/*/bulb</url>
 		<method>POST</method>
 		<scope>arduino_user</scope>
 	</Permission>
     <Permission>
         <name>get controls</name>
-        <path>device-mgt/user/operations</path>
+        <path>/device-mgt/user/operations</path>
         <url>/device/*/controls</url>
-        <method>POST</method>
+        <method>GET</method>
         <scope>arduino_device</scope>
     </Permission>
     <Permission>

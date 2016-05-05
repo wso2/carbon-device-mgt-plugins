@@ -26,6 +26,7 @@ import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
+import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.transport.AndroidSenseMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.SensorRecord;
@@ -78,7 +79,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
     public Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold) {
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                    AndroidSenseConstants.DEVICE_TYPE))) {
+                    AndroidSenseConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             androidSenseMQTTConnector.publishDeviceData(deviceId, "threshold", threshold);
@@ -96,7 +97,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
     public Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words) {
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                AndroidSenseConstants.DEVICE_TYPE))) {
+                AndroidSenseConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             androidSenseMQTTConnector.publishDeviceData(deviceId, "remove", words);
@@ -127,7 +128,7 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
 
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                    AndroidSenseConstants.DEVICE_TYPE))) {
+                    AndroidSenseConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_STATS_MONITOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             List<SensorRecord> sensorDatas;

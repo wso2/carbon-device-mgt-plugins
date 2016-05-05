@@ -157,7 +157,7 @@ public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService 
     @Path("devices/download")
     @GET
     @Produces("application/zip")
-    public Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketch_type") String sketchType) {
+    public Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketchType") String sketchType) {
         try {
             ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
             Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
