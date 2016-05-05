@@ -17,13 +17,14 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
     <artifactId>carbon-device-mgt-plugins-parent</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.0</version>
+    <version>2.1.0-SNAPSHOT</version>
     <name>WSO2 Carbon - Device Management Plugins Parent</name>
     <url>http://wso2.org</url>
     <description>WSO2 Carbon - Device Management Plugins Parent</description>
@@ -1029,7 +1030,7 @@
         <carbon.devicemgt.version>1.1.0</carbon.devicemgt.version>
 
         <!-- Carbon Device Management Plugins -->
-        <carbon.devicemgt.plugins.version>2.1.0</carbon.devicemgt.plugins.version>
+        <carbon.devicemgt.plugins.version>2.1.0-SNAPSHOT</carbon.devicemgt.plugins.version>
 
         <!-- Carbon Commons -->
         <carbon.commons.version>4.4.8</carbon.commons.version>
@@ -1058,7 +1059,7 @@
         <carbon.api.mgt.version>5.0.3</carbon.api.mgt.version>
 
         <!-- Mobile Device Management -->
-        <carbon.mobile.device.mgt.version>2.1.0</carbon.mobile.device.mgt.version>
+        <carbon.mobile.device.mgt.version>2.1.0-SNAPSHOT</carbon.mobile.device.mgt.version>
 
         <!-- XMPP/MQTT Version -->
         <smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>
@@ -1115,7 +1116,7 @@
         <developerConnection>scm:git:https://github.com/wso2/carbon-device-mgt-plugins.git
         </developerConnection>
         <connection>scm:git:https://github.com/wso2/carbon-device-mgt-plugins.git</connection>
-        <tag>v2.1.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
 
