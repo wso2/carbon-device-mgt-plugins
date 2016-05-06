@@ -23,11 +23,13 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.mdm.services.android.omadm.ddf.MgmtTreeManager;
 import org.wso2.carbon.mdm.services.android.omadm.ddf.impl.MgmtTreeManagerImpl;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.Node;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.parsers.URIParser;
 import org.wso2.carbon.mdm.services.android.omadm.dm.dao.DeviceMODao;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLStatusCodes;
+import org.wso2.carbon.mdm.services.android.omadm.util.AlertCodeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,6 +180,47 @@ public class SyncMLMessageProcessor {
         status.setMessageReference(sourceDocument.getHeader().getMsgID());
         status.setData(SyncMLStatusCodes.SUCCESS.getCode());
         responseDocument.getBody().getStatus().add(status);
+    }
+
+    private void processGetCommands() {
+        GetTag getCommands = sourceDocument.getBody().getGet();
+        List<ItemTag> items = getCommands.getItems();
+        List<ItemTag> targetTtems = new ArrayList<>();
+        ResultsTag results = new ResultsTag();
+
+        for (ItemTag item : items) {
+            ItemTag targetItem = new ItemTag();
+            String locURI = item.getTarget().getLocURI();
+
+            MgmtTree tree = moDao.getMO(URIParser.getDMTreeName(locURI),
+                    sourceDocument.getHeader().getSource().getLocURI());
+
+            if (tree == null) {
+                SourceTag source = new SourceTag();
+                source.setLocURI(locURI);
+                targetItem.setSource(source);
+                targetItem.setData(SyncMLStatusCodes.NOT_FOUND.getCode());
+            } else {
+                MgmtTreeManager treeManager = new MgmtTreeManagerImpl(tree);
+                Node node = treeManager.getNode(locURI);
+                SourceTag source = new SourceTag();
+                source.setLocURI(locURI);
+                targetItem.setSource(source);
+
+                if (node == null) {
+                    targetItem.setData(SyncMLStatusCodes.NOT_FOUND.getCode());
+                } else {
+                    targetItem.setData(node.getValue());
+                }
+            }
+            targetTtems.add(targetItem);
+        }
+        results.setItems(targetTtems);
+        results.setCommandId(++headerCommandId);
+        results.setMessageReference(sourceDocument.getHeader().getMsgID());
+        results.setCommandReference(sourceDocument.getBody().getGet().getCommandId());
+
+        responseDocument.getBody().setResults(results);
     }
 
 }

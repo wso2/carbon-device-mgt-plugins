@@ -32,7 +32,7 @@ public class ResultsTag {
     int commandId = -1;
     int messageReference = -1;
     int commandReference = -1;
-    List<ItemTag> item;
+    List<ItemTag> items;
 
     public int getCommandId() {
         return commandId;
@@ -59,11 +59,11 @@ public class ResultsTag {
     }
 
     public List<ItemTag> getItem() {
-        return item;
+        return items;
     }
 
-    public void setItem(List<ItemTag> item) {
-        this.item = item;
+    public void setItems(List<ItemTag> item) {
+        this.items = item;
     }
 
     public void buildResultElement(Document doc, Element rootElement) {

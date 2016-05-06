@@ -60,4 +60,5 @@ public class OMADMService {
         String responseStr = syncGenerator.generatePayload(responseObj);
         return Response.status(Response.Status.OK).entity(responseStr).build();
     }
+
 }
