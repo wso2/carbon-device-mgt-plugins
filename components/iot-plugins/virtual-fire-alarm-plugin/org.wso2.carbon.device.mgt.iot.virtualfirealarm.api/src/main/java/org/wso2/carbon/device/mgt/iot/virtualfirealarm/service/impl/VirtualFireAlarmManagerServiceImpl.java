@@ -269,8 +269,7 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
         if (XmppConfig.getInstance().isEnabled()) {
             status = xmppServerClient.createXMPPAccount(newXmppAccount);
             if (!status) {
-                String msg =
-                        "XMPP Account was not created for device - " + deviceId + " of owner - " + owner +
+                String msg = "XMPP Account was not created for device - " + deviceId + " of owner - " + owner +
                                 ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot" +
                                 ".common.config.server.configs";
                 throw new DeviceManagementException(msg);

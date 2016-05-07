@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- * WSO2 Inc. licenses this file to you under the Apache License,
- * Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+* Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*
+* WSO2 Inc. licenses this file to you under the Apache License,
+* Version 2.0 (the "License"); you may not use this file except
+* in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an
+* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+* KIND, either express or implied. See the License for the
+* specific language governing permissions and limitations
+* under the License.
+*/
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl;
 
@@ -35,6 +35,7 @@ import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.DeviceData;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.SensorRecord;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport.VirtualFireAlarmMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.transport.VirtualFireAlarmXMPPConnector;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
@@ -54,8 +55,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.nio.charset.StandardCharsets;
+import java.security.PrivateKey;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("Non-Annoted WebService")
@@ -71,26 +76,7 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
     private VirtualFireAlarmMQTTConnector virtualFireAlarmMQTTConnector;
     // connects to the given XMPP server and handles XMPP communication
     private VirtualFireAlarmXMPPConnector virtualFireAlarmXMPPConnector;
-    // holds a mapping of the IP addresses to Device-IDs for HTTP communication
-    private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
 
-    @Permission(scope = "virtual_firealarm_user", permissions = { "device-mgt/virtual_firealarm/user" })
-    @POST
-    @Path("device/register/{deviceId}/{ip}/{port}")
-    public Response registerDeviceIP(@PathParam("deviceId") String deviceId, @PathParam("ip") String deviceIP,
-                                     @PathParam("port") String devicePort, @Context HttpServletRequest request) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("Got register call from IP: " + deviceIP + " for Device ID: " + deviceId);
-        }
-        String deviceHttpEndpoint = deviceIP + ":" + devicePort;
-        deviceToIpMap.put(deviceId, deviceHttpEndpoint);
-        String result = "Device-IP Registered";
-        if (log.isDebugEnabled()) {
-            log.debug(result);
-        }
-        return Response.ok().entity(result).build();
-    }
 
     @POST
     @Path("device/{deviceId}/buzz")
@@ -106,7 +92,7 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
         String callUrlPattern = VirtualFireAlarmConstants.BULB_CONTEXT + switchToState;
         if (log.isDebugEnabled()) {
             log.debug("Sending request to switch-bulb of device [" + deviceId + "] via " +
-                      protocolString);
+                              protocolString);
         }
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(
@@ -115,28 +101,34 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             switch (protocolString) {
-                case HTTP_PROTOCOL:
-                    String deviceHTTPEndpoint = deviceToIpMap.get(deviceId);
-                    if (deviceHTTPEndpoint == null) {
-                        return Response.status(Response.Status.PRECONDITION_FAILED).build();
-                    }
-                    VirtualFireAlarmServiceUtils.sendCommandViaHTTP(deviceHTTPEndpoint, callUrlPattern, true);
-                    break;
                 case XMPP_PROTOCOL:
                     String xmppResource = VirtualFireAlarmConstants.BULB_CONTEXT.replace("/", "");
                     virtualFireAlarmXMPPConnector.publishDeviceData(deviceId, xmppResource, switchToState);
                     break;
                 default:
                     String mqttResource = VirtualFireAlarmConstants.BULB_CONTEXT.replace("/", "");
-                    virtualFireAlarmMQTTConnector.publishDeviceData(deviceId, mqttResource, switchToState);
+                    String publishTopic = "wso2/" + APIUtil.getTenantDomainOftheUser() + "/"
+                            + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
+                    PrivateKey serverPrivateKey = SecurityManager.getServerPrivateKey();
+                    String actualMessage = mqttResource + ":" + state.toUpperCase();
+                    String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage,
+                                                                                            serverPrivateKey);
+                    Map<String, String> dynamicProperties = new HashMap<>();
+                    dynamicProperties.put(VirtualFireAlarmConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
+                    APIUtil.getOutputEventAdapterService().publish(VirtualFireAlarmConstants.ADAPTER_NAME,
+                                                                   dynamicProperties, encryptedMsg);
                     break;
             }
             return Response.ok().build();
-        } catch (DeviceManagementException | TransportHandlerException e) {
+        } catch (TransportHandlerException e) {
             log.error("Failed to send switch-bulb request to device [" + deviceId + "] via " + protocolString);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (VirtualFireAlarmException e) {
+            String errorMsg = "Preparing Secure payload failed for device - [" + deviceId + "]";
+            log.error(errorMsg);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -157,17 +149,14 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             switch (protocolString) {
-            case HTTP_PROTOCOL:
-                throw new UnsupportedOperationException(
-                        "Sending request to update-policy via HTTP protocol not supported.");
-            case XMPP_PROTOCOL:
-                String xmppResource = VirtualFireAlarmConstants.POLICY_CONTEXT.replace("/", "");
-                virtualFireAlarmXMPPConnector.publishDeviceData(deviceId, xmppResource, policy);
-                break;
-            default:
-                String mqttResource = VirtualFireAlarmConstants.POLICY_CONTEXT.replace("/", "");
-                virtualFireAlarmMQTTConnector.publishDeviceData(deviceId, mqttResource, policy);
-                break;
+                case XMPP_PROTOCOL:
+                    String xmppResource = VirtualFireAlarmConstants.POLICY_CONTEXT.replace("/", "");
+                    virtualFireAlarmXMPPConnector.publishDeviceData(deviceId, xmppResource, policy);
+                    break;
+                default:
+                    String mqttResource = VirtualFireAlarmConstants.POLICY_CONTEXT.replace("/", "");
+                    virtualFireAlarmMQTTConnector.publishDeviceData(deviceId, mqttResource, policy);
+                    break;
             }
             return Response.ok().build();
         } catch (TransportHandlerException e) {
@@ -179,36 +168,6 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
         }
     }
 
-    @POST
-    @Path("device/temperature")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response pushTemperatureData(final DeviceData dataMsg) {
-        String deviceId = dataMsg.deviceId;
-        String deviceIp = dataMsg.reply;
-        String registeredIp = deviceToIpMap.get(deviceId);
-        if (registeredIp == null) {
-            log.warn("Unregistered IP: Temperature Data Received from an un-registered IP " +
-                     deviceIp + " for device ID - " + deviceId);
-            return Response.status(Response.Status.PRECONDITION_FAILED).build();
-        } else if (!registeredIp.equals(deviceIp)) {
-            log.warn("Conflicting IP: Received IP is " + deviceIp + ". Device with ID " + deviceId +
-                     " is already registered under some other IP. Re-registration required");
-            return Response.status(Response.Status.CONFLICT).build();
-        }
-        try {
-            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(
-                    new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE))) {
-                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
-            }
-            if (!VirtualFireAlarmServiceUtils.publishToDAS(dataMsg.deviceId, dataMsg.value)) {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-            }
-            return Response.ok().build();
-        } catch (DeviceAccessAuthorizationException e) {
-            log.error(e.getErrorMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
     @Path("device/stats/{deviceId}")
     @GET
@@ -303,7 +262,8 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                 if (waitForServerStartup()) {
                     return;
                 }
-                VirtualFireAlarmControllerServiceImpl.this.virtualFireAlarmXMPPConnector = virtualFireAlarmXMPPConnector;
+                VirtualFireAlarmControllerServiceImpl.this.virtualFireAlarmXMPPConnector =
+                        virtualFireAlarmXMPPConnector;
 
                 if (XmppConfig.getInstance().isEnabled()) {
                     Runnable xmppStarter = new Runnable() {
@@ -318,7 +278,9 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                     xmppStarterThread.setDaemon(true);
                     xmppStarterThread.start();
                 } else {
-                    log.warn("XMPP disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmXMPPConnector not started.");
+                    log.warn(
+                            "XMPP disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmXMPPConnector not " +
+                                    "started.");
                 }
             }
         };
@@ -357,11 +319,13 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
-                VirtualFireAlarmControllerServiceImpl.this.virtualFireAlarmMQTTConnector = virtualFireAlarmMQTTConnector;
+                VirtualFireAlarmControllerServiceImpl.this.virtualFireAlarmMQTTConnector =
+                        virtualFireAlarmMQTTConnector;
                 if (MqttConfig.getInstance().isEnabled()) {
                     virtualFireAlarmMQTTConnector.connect();
                 } else {
-                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
+                    log.warn(
+                            "MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
                 }
             }
         };

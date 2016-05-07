@@ -16,6 +16,7 @@ import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationService;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.SensorRecord;
+import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
 
 import java.util.ArrayList;
@@ -167,5 +168,17 @@ public class APIUtil {
 			throw new IllegalStateException(msg);
 		}
 		return deviceAccessAuthorizationService;
+	}
+
+	public static OutputEventAdapterService getOutputEventAdapterService() {
+		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+		OutputEventAdapterService outputEventAdapterService =
+				(OutputEventAdapterService) ctx.getOSGiService(OutputEventAdapterService.class, null);
+		if (outputEventAdapterService == null) {
+			String msg = "Device Authorization service has not initialized.";
+			log.error(msg);
+			throw new IllegalStateException(msg);
+		}
+		return outputEventAdapterService;
 	}
 }

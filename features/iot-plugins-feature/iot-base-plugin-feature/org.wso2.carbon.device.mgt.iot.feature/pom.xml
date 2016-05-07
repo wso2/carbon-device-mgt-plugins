@@ -42,6 +42,10 @@
 			<artifactId>org.wso2.carbon.device.mgt.iot</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.output.adapter.mqtt</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.json.wso2</groupId>
 			<artifactId>json</artifactId>
 		</dependency>
@@ -141,6 +145,9 @@
 									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot:${carbon.devicemgt.plugins.version}
 								</bundleDef>
 								<bundleDef>
+									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.output.adapter.mqtt:${carbon.devicemgt.plugins.version}
+								</bundleDef>
+								<bundleDef>
 									org.json.wso2:json:${commons-json.version}
 								</bundleDef>
 								<bundleDef>
@@ -157,6 +164,9 @@
 								<importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}
 								</importFeatureDef>
 								<importFeatureDef>org.wso2.carbon.device.mgt.server:${carbon.devicemgt.version}
+								</importFeatureDef>
+								<importFeatureDef>
+									org.wso2.carbon.event.output.adapter.server:${carbon.analytics.common.version}
 								</importFeatureDef>
 							</importFeatures>
 						</configuration>

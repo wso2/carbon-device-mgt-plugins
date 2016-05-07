@@ -20,20 +20,31 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.core.util.Utils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.VirtualFirealarmManagementDataHolder;
+import org.wso2.carbon.event.output.adapter.core.MessageType;
+import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterConfiguration;
+import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Contains utility methods used by FireAlarm plugin.
@@ -41,26 +52,9 @@ import java.util.Map;
 public class VirtualFireAlarmUtils {
 
     private static Log log = LogFactory.getLog(VirtualFireAlarmUtils.class);
-
-    public static String getDeviceProperty(List<Device.Property> deviceProperties, String propertyKey) {
-        String deviceProperty = "";
-        for(Device.Property property :deviceProperties){
-            if(propertyKey.equals(property.getName())){
-                deviceProperty = property.getValue();
-            }
-        }
-        return deviceProperty;
-    }
-
-    public static Device.Property getProperty(String property, String value) {
-        if (property != null) {
-            Device.Property prop = new Device.Property();
-            prop.setName(property);
-            prop.setValue(value);
-            return prop;
-        }
-        return null;
-    }
+    private static final String VIRTUAL_FIREALARM_CONFIG_LOCATION =
+            CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "resources" +
+                    File.separator + "device-types" + File.separator + "virtual-firealarm.properties";
 
     public static void cleanupResources(Connection conn, PreparedStatement stmt, ResultSet rs) {
         if (rs != null) {
@@ -105,7 +99,89 @@ public class VirtualFireAlarmUtils {
             log.error("Error while looking up the data source: " + VirtualFireAlarmConstants.DATA_SOURCE_NAME);
         } catch (Exception e) {
             throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while initializing Iot Device " +
-                                                                  "Management database schema", e);
+                                                                       "Management database schema", e);
         }
     }
+
+    public static void setupOutputAdapter() throws IOException {
+        OutputEventAdapterConfiguration outputEventAdapterConfiguration =
+                createOutputEventAdapterConfiguration(VirtualFireAlarmConstants.ADAPTER_NAME,
+                                                      VirtualFireAlarmConstants.ADAPTER_TYPE, MessageType.TEXT);
+        try {
+            PrivilegedCarbonContext.startTenantFlow();
+            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
+                    VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN, true);
+            VirtualFirealarmManagementDataHolder.getInstance().getOutputEventAdapterService()
+                    .create(outputEventAdapterConfiguration);
+        } catch (OutputEventAdapterException e) {
+            log.error("Unable to create Output Event Adapter : " + VirtualFireAlarmConstants.ADAPTER_NAME, e);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+        }
+    }
+
+    /**
+     * Create Output Event Adapter Configuration for given configuration.
+     *
+     * @param name      Output Event Adapter name
+     * @param type      Output Event Adapter type
+     * @param msgFormat Output Event Adapter message format
+     * @return OutputEventAdapterConfiguration instance for given configuration
+     */
+    private static OutputEventAdapterConfiguration createOutputEventAdapterConfiguration(String name, String type,
+                                                                                         String msgFormat)
+            throws IOException {
+        OutputEventAdapterConfiguration outputEventAdapterConfiguration = new OutputEventAdapterConfiguration();
+        outputEventAdapterConfiguration.setName(name);
+        outputEventAdapterConfiguration.setType(type);
+        outputEventAdapterConfiguration.setMessageFormat(msgFormat);
+        File configFile = new File(VIRTUAL_FIREALARM_CONFIG_LOCATION);
+        if (configFile.exists()) {
+            Map<String, String> mqttAdapterProperties = new HashMap<>();
+            InputStream propertyStream = configFile.toURI().toURL().openStream();
+            Properties properties = new Properties();
+            properties.load(propertyStream);
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.USERNAME_PROPERTY_KEY, properties.getProperty(
+                    VirtualFireAlarmConstants.USERNAME_PROPERTY_KEY));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.DCR_PROPERTY_KEY, Utils.replaceSystemProperty(
+                    properties.getProperty(VirtualFireAlarmConstants.DCR_PROPERTY_KEY)));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.BROKER_URL_PROPERTY_KEY, replaceMqttProperty(
+                    properties.getProperty(VirtualFireAlarmConstants.BROKER_URL_PROPERTY_KEY)));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.SCOPES_PROPERTY_KEY, properties.getProperty(
+                    VirtualFireAlarmConstants.SCOPES_PROPERTY_KEY));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.CLEAR_SESSION_PROPERTY_KEY, properties.getProperty(
+                    VirtualFireAlarmConstants.CLEAR_SESSION_PROPERTY_KEY));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.QOS_PROPERTY_KEY, properties.getProperty(
+                    VirtualFireAlarmConstants.QOS_PROPERTY_KEY));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.CLIENT_ID_PROPERTY_KEY, properties.getProperty(
+                    VirtualFireAlarmConstants.CLIENT_ID_PROPERTY_KEY));
+            outputEventAdapterConfiguration.setStaticProperties(mqttAdapterProperties);
+        }
+        return outputEventAdapterConfiguration;
+    }
+
+    public static String replaceMqttProperty(String urlWithPlaceholders) {
+        urlWithPlaceholders = Utils.replaceSystemProperty(urlWithPlaceholders);
+        urlWithPlaceholders = urlWithPlaceholders.replaceAll(VirtualFireAlarmConstants.MQTT_PORT, "" +
+                (VirtualFireAlarmConstants.DEFAULT_MQTT_PORT + getPortOffset()));
+        urlWithPlaceholders = urlWithPlaceholders.replaceAll(VirtualFireAlarmConstants.MQTT_BROKER_HOST,
+                        System.getProperty(VirtualFireAlarmConstants.DEFAULT_CARBON_SERVER_HOST_PROPERTY, "localhost"));
+        return urlWithPlaceholders;
+    }
+
+    private static int getPortOffset() {
+        ServerConfiguration carbonConfig = ServerConfiguration.getInstance();
+        String portOffset = System.getProperty("portOffset", carbonConfig.getFirstProperty(
+                VirtualFireAlarmConstants.CARBON_CONFIG_PORT_OFFSET));
+        try {
+            if ((portOffset != null)) {
+                return Integer.parseInt(portOffset.trim());
+            } else {
+                return VirtualFireAlarmConstants.CARBON_DEFAULT_PORT_OFFSET;
+            }
+        } catch (NumberFormatException e) {
+            return VirtualFireAlarmConstants.CARBON_DEFAULT_PORT_OFFSET;
+        }
+    }
+
 }
