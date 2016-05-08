@@ -26,14 +26,15 @@ import org.wso2.carbon.device.mgt.iot.input.adapter.ContentTransformer;
 import org.wso2.carbon.device.mgt.iot.input.adapter.DefaultContentTransformer;
 import org.wso2.carbon.device.mgt.iot.input.adapter.DefaultContentValidator;
 import org.wso2.carbon.device.mgt.iot.input.adapter.http.exception.HTTPContentInitializationException;
+import org.wso2.carbon.device.mgt.iot.input.adapter.http.jwt.JWTAuthenticator;
+import org.wso2.carbon.device.mgt.iot.input.adapter.http.oauth.OAuthAuthenticator;
 import org.wso2.carbon.device.mgt.iot.input.adapter.http.oauth.OAuthTokenValidaterStubFactory;
 import org.wso2.carbon.device.mgt.iot.input.adapter.http.util.AuthenticationInfo;
 import org.wso2.carbon.device.mgt.iot.input.adapter.http.util.HTTPEventAdapterConstants;
-import org.wso2.carbon.device.mgt.iot.input.adapter.internal.EventAdapterServiceDataHolder;
+import org.wso2.carbon.device.mgt.iot.input.adapter.internal.InputAdapterServiceDataHolder;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterListener;
 import org.wso2.carbon.device.mgt.iot.input.adapter.ContentValidator;
-import org.wso2.carbon.device.mgt.iot.input.adapter.mqtt.exception.MQTTContentInitializationException;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
@@ -60,20 +61,21 @@ import java.util.regex.Pattern;
  */
 public class HTTPMessageServlet extends HttpServlet {
 
-	private static final String AUTHORIZATION_HEADER = "Authorization";
 	private static final String AUTH_MESSAGE_STORE_AUTHENTICATION_INFO = "AUTH_MESSAGE_STORE_AUTHENTICATION_INFO";
 	private static final String AUTH_FAILURE_RESPONSE = "_AUTH_FAILURE_";
-	private static final Pattern PATTERN = Pattern.compile("[B|b]earer\\s");
-	private static final String TOKEN_TYPE = "bearer";
-	private static String cookie;
+
+
+
 	private static Log log = LogFactory.getLog(HTTPMessageServlet.class);
-	private GenericObjectPool stubs;
+
 	private static Map<String, String> contentValidationProperties;
 	private static ContentValidator contentValidator;
 	private static ContentTransformer contentTransformer;
 	private InputEventAdapterListener eventAdaptorListener;
 	private int tenantId;
 	private String exposedTransports;
+	private static JWTAuthenticator jwtAuthenticator;
+	private static OAuthAuthenticator oAuthAuthenticator;
 
 	public HTTPMessageServlet(InputEventAdapterListener eventAdaptorListener, int tenantId,
 							  InputEventAdapterConfiguration eventAdapterConfiguration) {
@@ -81,7 +83,6 @@ public class HTTPMessageServlet extends HttpServlet {
 		this.tenantId = tenantId;
 		this.exposedTransports = eventAdapterConfiguration.getProperties().get(
 				HTTPEventAdapterConstants.EXPOSED_TRANSPORTS);
-		this.stubs = new GenericObjectPool(new OAuthTokenValidaterStubFactory(eventAdapterConfiguration));
 		HTTPMessageServlet.contentValidationProperties = new HashMap<>();
 		String contentValidationParams = eventAdapterConfiguration.getProperties().get(
 				HTTPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS);
@@ -134,143 +135,9 @@ public class HTTPMessageServlet extends HttpServlet {
 				throw new HTTPContentInitializationException("Access of the instance in not allowed.", e);
 			}
 		}
-	}
 
-	private String getBearerToken(HttpServletRequest request) {
-		String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
-		if (authorizationHeader != null) {
-			Matcher matcher = PATTERN.matcher(authorizationHeader);
-			if (matcher.find()) {
-				authorizationHeader = authorizationHeader.substring(matcher.end());
-			}
-		}
-		return authorizationHeader;
-	}
-
-	private AuthenticationInfo checkAuthentication(HttpServletRequest req) {
-		AuthenticationInfo authenticationInfo = (AuthenticationInfo) req.getSession().getAttribute(
-				AUTH_MESSAGE_STORE_AUTHENTICATION_INFO);
-		if (authenticationInfo != null) {
-			return authenticationInfo;
-		}
-		String bearerToken = getBearerToken(req);
-		if (bearerToken == null) {
-			return authenticationInfo;
-		}
-		try {
-			authenticationInfo = validateToken(bearerToken);
-			boolean success = authenticationInfo.isAuthenticated();
-			if (success) {
-				req.getSession().setAttribute(AUTH_MESSAGE_STORE_AUTHENTICATION_INFO, authenticationInfo);
-			}
-		} catch (Exception e) {
-			if (log.isDebugEnabled()) {
-				log.debug("checkAuthentication() fail: " + e.getMessage(), e);
-			}
-		}
-		return authenticationInfo;
-	}
-
-	/**
-	 * This method gets a string accessToken and validates it
-	 *
-	 * @param token which need to be validated.
-	 * @return AuthenticationInfo with the validated results.
-	 */
-	private AuthenticationInfo validateToken(String token) {
-		OAuth2TokenValidationServiceStub tokenValidationServiceStub = null;
-		try {
-			Object stub = this.stubs.borrowObject();
-			if (stub != null) {
-				tokenValidationServiceStub = (OAuth2TokenValidationServiceStub) stub;
-				if (cookie != null) {
-					tokenValidationServiceStub._getServiceClient().getOptions().setProperty(
-							HTTPConstants.COOKIE_STRING, cookie);
-				}
-				return getAuthenticationInfo(token, tokenValidationServiceStub);
-			} else {
-				log.warn("Stub initialization failed.");
-			}
-		} catch (RemoteException e) {
-			log.error("Error on connecting with the validation endpoint.", e);
-		} catch (Exception e) {
-			log.error("Error occurred in borrowing an validation stub from the pool.", e);
-
-		} finally {
-			try {
-				if (tokenValidationServiceStub != null) {
-					this.stubs.returnObject(tokenValidationServiceStub);
-				}
-			} catch (Exception e) {
-				log.warn("Error occurred while returning the object back to the oauth token validation service " +
-								 "stub pool.", e);
-			}
-		}
-		AuthenticationInfo authenticationInfo = new AuthenticationInfo();
-		authenticationInfo.setAuthenticated(false);
-		authenticationInfo.setTenantId(-1);
-		return authenticationInfo;
-	}
-
-	/**
-	 * This creates an AuthenticationInfo object that is used for authorization. This method will validate the token
-	 * and
-	 * sets the required parameters to the object.
-	 *
-	 * @param token                      that needs to be validated.
-	 * @param tokenValidationServiceStub stub that is used to call the external service.
-	 * @return AuthenticationInfo This contains the information related to authenticated client.
-	 * @throws RemoteException that triggers when failing to call the external service..
-	 */
-	private AuthenticationInfo getAuthenticationInfo(String token,
-													 OAuth2TokenValidationServiceStub tokenValidationServiceStub)
-			throws RemoteException, UserStoreException {
-		AuthenticationInfo authenticationInfo = new AuthenticationInfo();
-		OAuth2TokenValidationRequestDTO validationRequest = new OAuth2TokenValidationRequestDTO();
-		OAuth2TokenValidationRequestDTO_OAuth2AccessToken accessToken =
-				new OAuth2TokenValidationRequestDTO_OAuth2AccessToken();
-		accessToken.setTokenType(TOKEN_TYPE);
-		accessToken.setIdentifier(token);
-		validationRequest.setAccessToken(accessToken);
-		boolean authenticated;
-		OAuth2TokenValidationResponseDTO tokenValidationResponse;
-		tokenValidationResponse = tokenValidationServiceStub.validate(validationRequest);
-		if (tokenValidationResponse == null) {
-			authenticationInfo.setAuthenticated(false);
-			return authenticationInfo;
-		}
-		authenticated = tokenValidationResponse.getValid();
-		if (authenticated) {
-			String authorizedUser = tokenValidationResponse.getAuthorizedUser();
-			String username = MultitenantUtils.getTenantAwareUsername(authorizedUser);
-			String tenantDomain = MultitenantUtils.getTenantDomain(authorizedUser);
-			authenticationInfo.setUsername(username);
-			authenticationInfo.setTenantDomain(tenantDomain);
-			RealmService realmService = EventAdapterServiceDataHolder.getRealmService();
-			int tenantId = realmService.getTenantManager().getTenantId(authenticationInfo.getTenantDomain());
-			authenticationInfo.setTenantId(tenantId);
-		} else {
-			if (log.isDebugEnabled()) {
-				log.debug("Token validation failed for token: " + token);
-			}
-		}
-		ServiceContext serviceContext = tokenValidationServiceStub._getServiceClient()
-				.getLastOperationContext().getServiceContext();
-		cookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
-		authenticationInfo.setAuthenticated(authenticated);
-		return authenticationInfo;
-	}
-
-
-	private String inputStreamToString(InputStream in) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		byte[] buff = new byte[1024];
-		int i;
-		while ((i = in.read(buff)) > 0) {
-			out.write(buff, 0, i);
-		}
-		out.close();
-		return out.toString();
+		jwtAuthenticator = new JWTAuthenticator();
+		oAuthAuthenticator = new OAuthAuthenticator(eventAdapterConfiguration);
 	}
 
 	@Override
@@ -361,8 +228,7 @@ public class HTTPMessageServlet extends HttpServlet {
 		private String payload;
 		private int tenantId;
 
-		public HTTPRequestProcessor(InputEventAdapterListener inputEventAdapterListener,
-									String payload, int tenantId) {
+		public HTTPRequestProcessor(InputEventAdapterListener inputEventAdapterListener, String payload, int tenantId) {
 			this.inputEventAdapterListener = inputEventAdapterListener;
 			this.payload = payload;
 			this.tenantId = tenantId;
@@ -372,11 +238,9 @@ public class HTTPMessageServlet extends HttpServlet {
 			try {
 				PrivilegedCarbonContext.startTenantFlow();
 				PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(tenantId);
-
 				if (log.isDebugEnabled()) {
 					log.debug("Event received in HTTP Event Adapter - " + payload);
 				}
-
 				if (payload.trim() != null) {
 					inputEventAdapterListener.onEvent(payload);
 				} else {
@@ -388,7 +252,37 @@ public class HTTPMessageServlet extends HttpServlet {
 				PrivilegedCarbonContext.endTenantFlow();
 			}
 		}
+	}
 
+	private AuthenticationInfo checkAuthentication(HttpServletRequest req) {
+		AuthenticationInfo authenticationInfo = (AuthenticationInfo) req.getSession().getAttribute(
+				AUTH_MESSAGE_STORE_AUTHENTICATION_INFO);
+		if (authenticationInfo != null) {
+			return authenticationInfo;
+		}
+		if (jwtAuthenticator.isJWTHeaderExist(req)) {
+			authenticationInfo = jwtAuthenticator.authenticate(req);
+		} else {
+			authenticationInfo = oAuthAuthenticator.authenticate(req);
+		}
+		if (authenticationInfo != null) {
+			boolean success = authenticationInfo.isAuthenticated();
+			if (success) {
+				req.getSession().setAttribute(AUTH_MESSAGE_STORE_AUTHENTICATION_INFO, authenticationInfo);
+			}
+		}
+		return authenticationInfo;
+	}
+
+	private String inputStreamToString(InputStream in) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		byte[] buff = new byte[1024];
+		int i;
+		while ((i = in.read(buff)) > 0) {
+			out.write(buff, 0, i);
+		}
+		out.close();
+		return out.toString();
 	}
 
 }

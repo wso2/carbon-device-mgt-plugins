@@ -15,19 +15,19 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.device.mgt.iot.output.adapter.xmpp;
+package org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.i18n;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.util.MQTTAdapterPublisher;
-import org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.util.MQTTBrokerConnectionConfiguration;
+import org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.i18n.util.MQTTEventAdapterConstants;
+import org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.i18n.util.MQTTAdapterPublisher;
+import org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.i18n.util.MQTTBrokerConnectionConfiguration;
 import org.wso2.carbon.event.output.adapter.core.EventAdapterUtil;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapter;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterConfiguration;
 import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
 import org.wso2.carbon.event.output.adapter.core.exception.TestConnectionNotSupportedException;
-import org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.util.MQTTEventAdapterConstants;
 
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;

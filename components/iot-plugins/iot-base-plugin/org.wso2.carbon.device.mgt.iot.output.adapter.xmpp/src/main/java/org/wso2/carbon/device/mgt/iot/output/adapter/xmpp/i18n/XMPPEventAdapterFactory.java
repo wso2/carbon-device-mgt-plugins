@@ -15,10 +15,10 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.device.mgt.iot.output.adapter.xmpp;
+package org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.i18n;
 
+import org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.i18n.util.XMPPEventAdapterConstants;
 import org.wso2.carbon.event.output.adapter.core.*;
-import org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.util.XMPPEventAdapterConstants;
 
 import java.util.*;
 

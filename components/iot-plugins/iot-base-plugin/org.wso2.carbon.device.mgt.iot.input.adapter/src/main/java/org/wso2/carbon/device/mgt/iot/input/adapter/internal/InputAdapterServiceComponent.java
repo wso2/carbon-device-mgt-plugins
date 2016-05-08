@@ -32,16 +32,16 @@ import org.wso2.carbon.user.core.service.RealmService;
  */
 
 /**
- * @scr.component name="org.wso2.carbon.event.input.adapter.extension.EventAdapterServiceComponent" immediate="true"
+ * @scr.component name="org.wso2.carbon.event.input.adapter.extension.InputAdapterServiceComponent" immediate="true"
  * @scr.reference name="user.realmservice.default"
  * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
  * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
  * @scr.reference name="http.service" interface="org.osgi.service.http.HttpService"
  * cardinality="1..1" policy="dynamic" bind="setHttpService" unbind="unsetHttpService"
  */
-public class EventAdapterServiceComponent {
+public class InputAdapterServiceComponent {
 
-	private static final Log log = LogFactory.getLog(EventAdapterServiceComponent.class);
+	private static final Log log = LogFactory.getLog(InputAdapterServiceComponent.class);
 
 	protected void activate(ComponentContext context) {
 		try {
@@ -63,19 +63,19 @@ public class EventAdapterServiceComponent {
 	}
 
 	protected void setRealmService(RealmService realmService) {
-		EventAdapterServiceDataHolder.registerRealmService(realmService);
+		InputAdapterServiceDataHolder.registerRealmService(realmService);
 	}
 
 	protected void unsetRealmService(RealmService realmService) {
-		EventAdapterServiceDataHolder.registerRealmService(null);
+		InputAdapterServiceDataHolder.registerRealmService(null);
 	}
 
 	protected void setHttpService(HttpService httpService) {
-		EventAdapterServiceDataHolder.registerHTTPService(httpService);
+		InputAdapterServiceDataHolder.registerHTTPService(httpService);
 	}
 
 	protected void unsetHttpService(HttpService httpService) {
-		EventAdapterServiceDataHolder.registerHTTPService(null);
+		InputAdapterServiceDataHolder.registerHTTPService(null);
 	}
 
 }

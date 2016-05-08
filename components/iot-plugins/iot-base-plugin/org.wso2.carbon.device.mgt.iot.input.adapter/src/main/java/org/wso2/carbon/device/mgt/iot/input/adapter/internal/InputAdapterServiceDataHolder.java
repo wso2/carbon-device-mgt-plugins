@@ -20,17 +20,17 @@ import org.wso2.carbon.user.core.service.RealmService;
 /**
  * common place to hold some OSGI service references.
  */
-public final class EventAdapterServiceDataHolder {
+public final class InputAdapterServiceDataHolder {
 
 	private static RealmService realmService;
 	private static HttpService httpService;
 
-	private EventAdapterServiceDataHolder() {
+	private InputAdapterServiceDataHolder() {
 	}
 
 	public static void registerRealmService(
 			RealmService realmService) {
-		EventAdapterServiceDataHolder.realmService = realmService;
+		InputAdapterServiceDataHolder.realmService = realmService;
 	}
 
 	public static RealmService getRealmService() {
@@ -39,7 +39,7 @@ public final class EventAdapterServiceDataHolder {
 
 	public static void registerHTTPService(
 			HttpService httpService) {
-		EventAdapterServiceDataHolder.httpService = httpService;
+		InputAdapterServiceDataHolder.httpService = httpService;
 	}
 
 	public static HttpService getHTTPService() {

@@ -17,7 +17,6 @@
 */
 package org.wso2.carbon.device.mgt.iot.input.adapter.xmpp;
 
-import org.wso2.carbon.device.mgt.iot.input.adapter.mqtt.util.MQTTEventAdapterConstants;
 import org.wso2.carbon.device.mgt.iot.input.adapter.xmpp.util.XMPPEventAdapterConstants;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapter;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;

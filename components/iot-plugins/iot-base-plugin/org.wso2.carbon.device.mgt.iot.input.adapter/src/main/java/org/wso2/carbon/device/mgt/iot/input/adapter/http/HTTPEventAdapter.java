@@ -20,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.iot.input.adapter.internal.EventAdapterServiceDataHolder;
+import org.wso2.carbon.device.mgt.iot.input.adapter.internal.InputAdapterServiceDataHolder;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapter;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterListener;
@@ -180,7 +180,7 @@ public final class HTTPEventAdapter implements InputEventAdapter {
         }
 
         try {
-            HttpService httpService = EventAdapterServiceDataHolder.getHTTPService();
+            HttpService httpService = InputAdapterServiceDataHolder.getHTTPService();
             if (httpService == null) {
                 throw new InputEventAdapterRuntimeException(
                         "HttpService not available, Error in registering endpoint " + endpoint);
@@ -195,7 +195,7 @@ public final class HTTPEventAdapter implements InputEventAdapter {
     }
 
     private void unregisterDynamicEndpoint(String adapterName) {
-        HttpService httpService = EventAdapterServiceDataHolder.getHTTPService();
+        HttpService httpService = InputAdapterServiceDataHolder.getHTTPService();
         String tenantDomain = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
         String endpoint;
         if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) {

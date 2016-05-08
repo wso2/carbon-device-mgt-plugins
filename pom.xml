@@ -338,6 +338,16 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.output.adapter.xmpp</artifactId>
+                <version>${carbon.devicemgt.plugins.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.input.adapter</artifactId>
+                <version>${carbon.devicemgt.plugins.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.iot.api</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
                 <type>war</type>

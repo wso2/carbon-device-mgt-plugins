@@ -1,4 +1,4 @@
-package org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.util;
+package org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.i18n.util;
 
 /**
  * This class represents the data that are required to register
