@@ -66,6 +66,7 @@ public class Constants {
     public static final String SEQUENCE = "Sequence";
     public static final String META_FORMAT_INT = "int";
     public static final String META_FORMAT_CHARACTER = "chr";
+    public static final String META_SIZE = "Size";
 
     /**
      * SynclML response codes

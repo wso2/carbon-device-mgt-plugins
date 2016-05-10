@@ -60,6 +60,7 @@ public class SyncMLParser {
         ALERT("Alert"),
         REPLACE("Replace"),
         STATUS("Status"),
+        ADD("Add"),
         RESULTS("Results");
         private final String commandName;
 
@@ -175,6 +176,7 @@ public class SyncMLParser {
         ReplaceTag replace = null;
         ResultsTag results = null;
         List<StatusTag> status = new ArrayList<>();
+        AddTag add = null;
         NodeList bodyElements = syncBody.getChildNodes();
 
         for (int i = 0; i < bodyElements.getLength(); i++) {
@@ -191,6 +193,8 @@ public class SyncMLParser {
                     status.add(generateStatus(node));
                 } else if (SycMLCommandType.RESULTS.getValue().equals(nodeName)) {
                     results = generateResults(node);
+                } else if (SycMLCommandType.ADD.getValue().equals(nodeName)) {
+                    add = generateAdd(node);
                 }
             }
         }
@@ -200,6 +204,62 @@ public class SyncMLParser {
         body.setStatus(status);
         body.setResults(results);
         return body;
+    }
+
+    private static AddTag generateAdd(Node node) {
+        AddTag add = new AddTag();
+        Node targetURIItem = node.getChildNodes().item(0);
+        int itemIndex = 0;
+
+        if (node.getNodeName().equalsIgnoreCase("Meta")) {
+            itemIndex = 1;
+            MetaTag meta = new MetaTag();
+            NodeList metaChildren = node.getChildNodes();
+            for (int i = 0; i < metaChildren.getLength(); i++) {
+                String nodeName = metaChildren.item(i).getNodeName();
+                switch (nodeName) {
+                    case "Format": meta.setFormat(metaChildren.item(i).getNodeValue());
+                        break;
+                    case "Type": meta.setType(metaChildren.item(i).getNodeValue());
+                        break;
+                    case "Size": meta.setSize(metaChildren.item(i).getNodeValue());
+                        break;
+                }
+            }
+            add.setMeta(meta);
+        }
+
+        if (node.getNodeName().equalsIgnoreCase("Item")) {
+            NodeList itemList = node.getChildNodes();
+            for (int i = itemIndex; i < itemList.getLength(); i++) {
+                ItemTag item = new ItemTag();
+                if (itemList.item(0).getNodeName().equalsIgnoreCase("Meta")) {
+                    MetaTag meta = new MetaTag();
+                    switch (itemList.item(0).getNodeName()) {
+                        case "Format": meta.setFormat(itemList.item(i).getNodeValue());
+                            break;
+                        case "Type": meta.setType(itemList.item(i).getNodeValue());
+                            break;
+                        case "Size": meta.setSize(itemList.item(i).getNodeValue());
+                            break;
+                    }
+                }
+            }
+        }
+
+        Node targetNameItem = node.getChildNodes().item(1);
+        String targetURI = null;
+        String targetName = null;
+
+        if (targetURIItem != null) {
+            targetURI = targetURIItem.getTextContent().trim();
+        }
+        if (targetNameItem != null) {
+            targetName = targetNameItem.getTextContent().trim();
+        }
+        target.setLocURI(targetURI);
+        target.setLocName(targetName);
+        return target;
     }
 
     /**
@@ -288,7 +348,7 @@ public class SyncMLParser {
             results.setCommandId(Integer.valueOf(commandId));
             results.setMessageReference(Integer.valueOf(messageReference));
             results.setCommandReference(Integer.valueOf(commandReference));
-            results.setItem(item);
+            results.setItems(item);
         }
         return results;
     }

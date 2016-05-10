@@ -96,6 +96,16 @@ public class SyncMLMessageProcessor {
         if (sourceBody.getReplace() != null) {
             processReplaceCommand();
         }
+
+        // Process get commands
+        if (sourceBody.getGet() != null) {
+            processGetCommands();
+        }
+
+        //Process add commands
+        if (sourceBody.getAdd() != null) {
+            processAddCommands();
+        }
     }
 
     /**
@@ -185,7 +195,7 @@ public class SyncMLMessageProcessor {
     private void processGetCommands() {
         GetTag getCommands = sourceDocument.getBody().getGet();
         List<ItemTag> items = getCommands.getItems();
-        List<ItemTag> targetTtems = new ArrayList<>();
+        List<ItemTag> targetItems = new ArrayList<>();
         ResultsTag results = new ResultsTag();
 
         for (ItemTag item : items) {
@@ -213,14 +223,101 @@ public class SyncMLMessageProcessor {
                     targetItem.setData(node.getValue());
                 }
             }
-            targetTtems.add(targetItem);
+            targetItems.add(targetItem);
         }
-        results.setItems(targetTtems);
+        results.setItems(targetItems);
         results.setCommandId(++headerCommandId);
         results.setMessageReference(sourceDocument.getHeader().getMsgID());
         results.setCommandReference(sourceDocument.getBody().getGet().getCommandId());
 
         responseDocument.getBody().setResults(results);
+    }
+
+    private void processAddCommands() {
+        AddTag addCommand = sourceDocument.getBody().getAdd();
+        List<ItemTag> items = addCommand.getItems();
+        StatusTag status = new StatusTag();
+        status.setCommand(Constants.ADD);
+        status.setCommandReference(addCommand.getCommandId());
+        boolean wholeBlock = true;
+        MetaTag commonMeta = null;
+
+        if (addCommand.getMeta() != null) {
+            commonMeta = addCommand.getMeta();
+        }
+
+        for (ItemTag item : items) {
+            MetaTag meta;
+            if (item.getMeta() != null) {
+                meta = item.getMeta();
+            }
+            String locURI = item.getTarget().getLocURI();
+            MgmtTree tree = moDao.getMO(URIParser.getDMTreeName(locURI),
+                    sourceDocument.getHeader().getSource().getLocURI());
+
+            if (tree == null) {
+                wholeBlock = false;
+                ItemTag errorItem = new ItemTag();
+                TargetTag errorTarget = new TargetTag();
+                errorTarget.setLocURI(item.getTarget().getLocURI());
+                errorItem.setTarget(errorTarget);
+                status.getItems().add(errorItem);
+                status.setData(SyncMLStatusCodes.COMMAND_FAILED.getCode());
+            } else {
+                Node node = new Node();
+                if (commonMeta != null) {
+                    if (commonMeta.getFormat() != null) {
+                        node.setFormat(commonMeta.getFormat());
+                    }
+                    if (commonMeta.getSize() != null) {
+                        node.setSize(commonMeta.getSize());
+                    }
+                    if (commonMeta.getType() != null) {
+                        node.setType(commonMeta.getType());
+                    }
+                } else {
+                    if (item.getMeta() != null) {
+                        if (item.getMeta().getFormat() != null) {
+                            node.setFormat(item.getMeta().getFormat());
+                        }
+                        if (item.getMeta().getSize() != null) {
+                            node.setSize(item.getMeta().getFormat());
+                        }
+                        if (item.getMeta().getType() != null) {
+                            node.setType(item.getMeta().getType());
+                        }
+                    }
+                }
+                node.setValue(item.getData());
+                node.setNodeName(URIParser.getNodeName(locURI));
+                MgmtTreeManager treeManager = new MgmtTreeManagerImpl(tree);
+
+                if (treeManager.getNode(locURI) != null) {
+                    wholeBlock = false;
+                    ItemTag errorItem = new ItemTag();
+                    TargetTag errorTarget = new TargetTag();
+                    errorTarget.setLocURI(item.getTarget().getLocURI());
+                    errorItem.setTarget(errorTarget);
+                    status.getItems().add(errorItem);
+                    status.setData(SyncMLStatusCodes.ALREADY_EXISTS.getCode());
+                } else {
+                    String statusCode = treeManager.addNode(node, locURI);
+                    if (!statusCode.equals(SyncMLStatusCodes.SUCCESS.getCode())) {
+                        ItemTag errorItem = new ItemTag();
+                        TargetTag errorTarget = new TargetTag();
+                        errorTarget.setLocURI(item.getTarget().getLocURI());
+                        errorItem.setTarget(errorTarget);
+                        status.getItems().add(errorItem);
+                        status.setData(SyncMLStatusCodes.COMMAND_FAILED.getCode());
+                    }
+                }
+            }
+        }
+        if (wholeBlock) {
+            status.setData(SyncMLStatusCodes.SUCCESS.getCode());
+        }
+        status.setCommandId(++headerCommandId);
+        sourceDocument.getBody().getStatus().add(status);
     }
 
 }

@@ -61,6 +61,8 @@ public class Node {
     private String type = TYPE_DEFAULT_VALUE;
     @XmlTransient
     private String format = FORMAT_DEFAULT_VALUE;
+    @XmlTransient
+    private String size;
 
     public Node() {
     }
@@ -187,4 +189,11 @@ public class Node {
         this.format = format;
     }
 
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
 }

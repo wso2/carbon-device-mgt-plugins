@@ -32,6 +32,7 @@ public class SyncMLBody {
     GetTag getCommands;
     List<ExecuteTag> exec;
     List<StatusTag> status;
+    AddTag add;
     AlertTag alert;
     ReplaceTag replace;
     ResultsTag results;
@@ -102,6 +103,14 @@ public class SyncMLBody {
         this.getCommands = get;
     }
 
+    public AddTag getAdd() {
+        return add;
+    }
+
+    public void setAdd(AddTag add) {
+        this.add = add;
+    }
+
     public void buildBodyElement(Document doc, Element rootElement) {
 
         Element syncBody = doc.createElement(Constants.SYNC_BODY);
@@ -121,6 +130,9 @@ public class SyncMLBody {
         }
         if (getGet() != null) {
             getGet().buildGetElement(doc, syncBody);
+        }
+        if (getAdd() != null) {
+            getAdd().buildAddElement(doc, syncBody);
         }
         if (getReplace() != null) {
             getReplace().buildReplaceElement(doc, syncBody);

@@ -22,6 +22,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
 
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Status of a previously sent message to device;
  */
@@ -32,6 +35,7 @@ public class StatusTag {
     String command;
     String targetReference;
     String data;
+    List<ItemTag> items;
     ChallengeTag challenge;
 
     public StatusTag(int commandId, int messageReference, int commandReference, String command,
@@ -103,6 +107,14 @@ public class StatusTag {
         this.data = data;
     }
 
+    public List<ItemTag> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ItemTag> items) {
+        this.items = items;
+    }
+
     public void buildStatusElement(Document doc, Element rootElement) {
         Element status = doc.createElement(Constants.STATUS);
         rootElement.appendChild(status);
@@ -138,6 +150,14 @@ public class StatusTag {
             Element data = doc.createElement(Constants.DATA);
             data.appendChild(doc.createTextNode(getData()));
             status.appendChild(data);
+        }
+        if (getItems() != null) {
+            for (Iterator<ItemTag> itemIterator = getItems().iterator(); itemIterator.hasNext(); ) {
+                ItemTag item = itemIterator.next();
+                if (item != null) {
+                    item.buildItemElement(doc, status);
+                }
+            }
         }
     }
 

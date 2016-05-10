@@ -31,6 +31,7 @@ import java.util.List;
 public class AddTag {
     int commandId = -1;
     List<ItemTag> items;
+    MetaTag meta;
 
     public int getCommandId() {
         return commandId;
@@ -48,9 +49,17 @@ public class AddTag {
         this.items = items;
     }
 
+    public MetaTag getMeta() {
+        return meta;
+    }
+
+    public void setMeta(MetaTag meta) {
+        this.meta = meta;
+    }
+
     public void buildAddElement(Document doc, Element rootElement) {
+        Element add = doc.createElement(Constants.ADD);
         if (getItems() != null) {
-            Element add = doc.createElement(Constants.ADD);
             rootElement.appendChild(add);
             if (getCommandId() != -1) {
                 Element commandId = doc.createElement(Constants.COMMAND_ID);
@@ -63,6 +72,9 @@ public class AddTag {
                     item.buildItemElement(doc, add);
                 }
             }
+        }
+        if (getMeta() != null) {
+            getMeta().buildMetaElement(doc, add);
         }
     }
 }

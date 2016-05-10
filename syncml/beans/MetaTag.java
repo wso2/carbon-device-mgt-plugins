@@ -30,6 +30,7 @@ public class MetaTag {
 
     String format;
     String type;
+    String size;
     String nextNonce;
 
     public String getNextNonce() {
@@ -54,6 +55,14 @@ public class MetaTag {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public void buildMetaElement(Document doc, Element rootElement) {
@@ -82,6 +91,14 @@ public class MetaTag {
             attr.setValue(Constants.META_NAMESPACE);
             nextNonce.setAttributeNode(attr);
             meta.appendChild(nextNonce);
+        }
+        if (getSize() != null) {
+            Element size = doc.createElement(Constants.META_SIZE);
+            size.appendChild(doc.createTextNode(getSize()));
+            Attr attr = doc.createAttribute(Constants.XMLNS);
+            attr.setValue(Constants.META_NAMESPACE);
+            size.setAttributeNode(attr);
+            meta.appendChild(size);
         }
 
     }
