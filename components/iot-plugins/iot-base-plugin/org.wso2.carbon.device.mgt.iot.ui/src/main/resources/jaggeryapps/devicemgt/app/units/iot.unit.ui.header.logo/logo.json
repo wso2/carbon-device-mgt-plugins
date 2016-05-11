@@ -1,5 +1,5 @@
 {
     "version": "1.0.0",
     "index": 29,
-    "extends": "mdm.unit.ui.header.logo"
+    "extends": "uuf.unit.header.logo"
 }

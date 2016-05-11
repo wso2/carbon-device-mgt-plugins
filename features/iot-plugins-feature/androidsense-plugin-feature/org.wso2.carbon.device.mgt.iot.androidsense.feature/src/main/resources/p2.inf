@@ -1,6 +1,4 @@
 instructions.configure = \
-org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../conf/device-types/);\
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.androidsense_${feature.version}/configs/,target:${installFolder}/../../conf/device-types/,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/webapps/);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.androidsense_${feature.version}/webapps/,target:${installFolder}/../../deployment/server/webapps/,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/carbonapps/);\
@@ -13,7 +11,6 @@ org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../data
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.androidsense_${feature.version}/database/,target:${installFolder}/../../database/,overwrite:true);\
 
 instructions.unconfigure = \
-org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../conf/device-types/android_sense.json);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/android_sense.war);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/android_sense);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../dbscripts/cdm/plugins/android_sense);\
