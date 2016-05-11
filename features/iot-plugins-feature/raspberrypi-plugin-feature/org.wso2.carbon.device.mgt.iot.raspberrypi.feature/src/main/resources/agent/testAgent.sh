@@ -107,13 +107,14 @@ if [ "$mode" = "N" ]; then
      sudo python setup.py install
      cd ..
      # -----------------------------------------------------
-     # Install Paho-MQTT-Library for MQTT Communication
-     git clone https://github.com/eclipse/paho.mqtt.python.git
-     cd ./paho.mqtt.python
-     sudo python setup.py install
-     cd ..
-     # -----------------------------------------------------
 fi
+
+# Install Paho-MQTT-Library for MQTT Communication
+git clone https://github.com/eclipse/paho.mqtt.python.git
+cd ./paho.mqtt.python
+sudo python setup.py install
+cd ..
+# -----------------------------------------------------
 
 chmod +x ./src/RaspberryAgent.py
 sudo python ./src/RaspberryAgent.py -i $input -m $mode
