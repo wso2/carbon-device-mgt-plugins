@@ -26,6 +26,7 @@ import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
+import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
@@ -54,7 +55,8 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     public Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state) {
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                                                                            ArduinoConstants.DEVICE_TYPE))) {
+                                                                            ArduinoConstants.DEVICE_TYPE),
+                                                                                DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
@@ -79,7 +81,7 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     public Response readControls(@PathParam("deviceId") String deviceId) {
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                    ArduinoConstants.DEVICE_TYPE))) {
+                    ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             String result;
@@ -121,7 +123,7 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
                                                @QueryParam("to") long to) {
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                   ArduinoConstants.DEVICE_TYPE))) {
+                   ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_STATS_MONITOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             String fromDate = String.valueOf(from);

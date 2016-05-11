@@ -35,6 +35,7 @@ $(window).load(function () {
         width: $("#div-chart").width() - 50,
         height: 300,
         renderer: "line",
+        interpolation: "linear",
         padding: {top: 0.2, left: 0.0, right: 0.0, bottom: 0.2},
         xScale: d3.time.scale(),
         series: [{
