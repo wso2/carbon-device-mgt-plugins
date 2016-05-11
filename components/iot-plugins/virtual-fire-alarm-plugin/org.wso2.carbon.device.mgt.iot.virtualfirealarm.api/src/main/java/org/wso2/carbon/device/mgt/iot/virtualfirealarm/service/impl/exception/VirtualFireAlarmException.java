@@ -28,4 +28,8 @@ public class VirtualFireAlarmException extends Exception {
     public VirtualFireAlarmException(String errorMessage, Throwable throwable) {
         super(errorMessage, throwable);
     }
+
+    public VirtualFireAlarmException(Throwable cause) {
+        super(cause);
+    }
 }

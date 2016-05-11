@@ -37,7 +37,10 @@
         <module>org.wso2.carbon.device.mgt.iot.ui</module>
         <module>org.wso2.carbon.device.mgt.iot.output.adapter.mqtt</module>
         <module>org.wso2.carbon.device.mgt.iot.output.adapter.xmpp</module>
-        <module>org.wso2.carbon.device.mgt.iot.input.adapter</module>
+        <module>org.wso2.carbon.device.mgt.iot.input.adapter.extension</module>
+        <module>org.wso2.carbon.device.mgt.iot.input.adapter.http</module>
+        <module>org.wso2.carbon.device.mgt.iot.input.adapter.mqtt</module>
+        <module>org.wso2.carbon.device.mgt.iot.input.adapter.xmpp</module>
     </modules>
 
     <build>

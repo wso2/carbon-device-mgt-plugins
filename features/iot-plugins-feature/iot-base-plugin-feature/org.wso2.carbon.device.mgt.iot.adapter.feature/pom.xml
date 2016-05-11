@@ -47,7 +47,19 @@
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.input.adapter</artifactId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.input.adapter.extension</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.input.adapter.http</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.input.adapter.mqtt</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.input.adapter.xmpp</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -105,7 +117,16 @@
 									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.output.adapter.xmpp:${carbon.devicemgt.plugins.version}
 								</bundleDef>
 								<bundleDef>
-									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.input.adapter:${carbon.devicemgt.plugins.version}
+									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.input.adapter.extension:${carbon.devicemgt.plugins.version}
+								</bundleDef>
+								<bundleDef>
+									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.input.adapter.http:${carbon.devicemgt.plugins.version}
+								</bundleDef>
+								<bundleDef>
+									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.input.adapter.mqtt:${carbon.devicemgt.plugins.version}
+								</bundleDef>
+								<bundleDef>
+									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.input.adapter.xmpp:${carbon.devicemgt.plugins.version}
 								</bundleDef>
 							</bundles>
 							<importFeatures>

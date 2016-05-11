@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal;
 
+import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
+import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.VirtualFireAlarmManagerService;
+import org.wso2.carbon.event.input.adapter.core.InputEventAdapterService;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 
 /**
@@ -26,6 +30,9 @@ import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 public class VirtualFirealarmManagementDataHolder {
 
     private OutputEventAdapterService outputEventAdapterService;
+    private InputEventAdapterService inputEventAdapterService;
+    private EventsPublisherService eventsPublisherService;
+    private CertificateManagementService certificateManagementService;
 
 	private static VirtualFirealarmManagementDataHolder thisInstance = new VirtualFirealarmManagementDataHolder();
 
@@ -43,5 +50,30 @@ public class VirtualFirealarmManagementDataHolder {
     public void setOutputEventAdapterService(
             OutputEventAdapterService outputEventAdapterService) {
         this.outputEventAdapterService = outputEventAdapterService;
+    }
+
+    public InputEventAdapterService getInputEventAdapterService() {
+        return inputEventAdapterService;
+    }
+
+    public void setInputEventAdapterService(InputEventAdapterService inputEventAdapterService) {
+        this.inputEventAdapterService = inputEventAdapterService;
+    }
+
+    public EventsPublisherService getEventsPublisherService() {
+        return eventsPublisherService;
+    }
+
+    public void setEventsPublisherService(
+            EventsPublisherService eventsPublisherService) {
+        this.eventsPublisherService = eventsPublisherService;
+    }
+
+    public CertificateManagementService getCertificateManagementService() {
+        return certificateManagementService;
+    }
+
+    public void setCertificateManagementService(CertificateManagementService certificateManagementService) {
+        this.certificateManagementService = certificateManagementService;
     }
 }

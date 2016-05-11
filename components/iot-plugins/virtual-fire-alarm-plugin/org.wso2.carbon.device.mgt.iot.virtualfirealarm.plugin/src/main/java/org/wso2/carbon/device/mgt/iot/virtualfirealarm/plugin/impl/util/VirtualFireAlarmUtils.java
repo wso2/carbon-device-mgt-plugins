@@ -18,19 +18,27 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
+import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.util.Utils;
+import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
+import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.VirtualFirealarmManagementDataHolder;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppConfig;
+import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;
+import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterException;
 import org.wso2.carbon.event.output.adapter.core.MessageType;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterConfiguration;
 import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
 import org.wso2.carbon.utils.CarbonUtils;
-
+import org.json.JSONObject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -38,6 +46,8 @@ import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.PublicKey;
+import java.security.cert.X509Certificate;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -53,8 +63,8 @@ public class VirtualFireAlarmUtils {
 
     private static Log log = LogFactory.getLog(VirtualFireAlarmUtils.class);
     private static final String VIRTUAL_FIREALARM_CONFIG_LOCATION =
-            CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "resources" +
-                    File.separator + "device-types" + File.separator + "virtual-firealarm.properties";
+            CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "conf" +
+                    File.separator + "iot" + File.separator + "mqtt.properties";
 
     public static void cleanupResources(Connection conn, PreparedStatement stmt, ResultSet rs) {
         if (rs != null) {
@@ -103,10 +113,10 @@ public class VirtualFireAlarmUtils {
         }
     }
 
-    public static void setupOutputAdapter() throws IOException {
+    public static void setupMqttOutputAdapter() throws IOException {
         OutputEventAdapterConfiguration outputEventAdapterConfiguration =
-                createOutputEventAdapterConfiguration(VirtualFireAlarmConstants.ADAPTER_NAME,
-                                                      VirtualFireAlarmConstants.ADAPTER_TYPE, MessageType.TEXT);
+                createMqttOutputEventAdapterConfiguration(VirtualFireAlarmConstants.MQTT_ADAPTER_NAME,
+                                                          VirtualFireAlarmConstants.MQTT_ADAPTER_TYPE, MessageType.TEXT);
         try {
             PrivilegedCarbonContext.startTenantFlow();
             PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
@@ -114,7 +124,24 @@ public class VirtualFireAlarmUtils {
             VirtualFirealarmManagementDataHolder.getInstance().getOutputEventAdapterService()
                     .create(outputEventAdapterConfiguration);
         } catch (OutputEventAdapterException e) {
-            log.error("Unable to create Output Event Adapter : " + VirtualFireAlarmConstants.ADAPTER_NAME, e);
+            log.error("Unable to create Output Event Adapter : " + VirtualFireAlarmConstants.MQTT_ADAPTER_NAME, e);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+        }
+    }
+
+    public static void setupMqttInputAdapter() throws IOException {
+        InputEventAdapterConfiguration inputEventAdapterConfiguration =
+                createMqttInputEventAdapterConfiguration(VirtualFireAlarmConstants.MQTT_ADAPTER_NAME,
+                                                         VirtualFireAlarmConstants.MQTT_ADAPTER_TYPE, MessageType.TEXT);
+        try {
+            PrivilegedCarbonContext.startTenantFlow();
+            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
+                    VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN, true);
+            VirtualFirealarmManagementDataHolder.getInstance().getInputEventAdapterService()
+                    .create(inputEventAdapterConfiguration, new VirtualFirealarmEventAdapterSubscription());
+        } catch (InputEventAdapterException e) {
+            log.error("Unable to create Input Event Adapter : " + VirtualFireAlarmConstants.MQTT_ADAPTER_NAME, e);
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
         }
@@ -128,9 +155,8 @@ public class VirtualFireAlarmUtils {
      * @param msgFormat Output Event Adapter message format
      * @return OutputEventAdapterConfiguration instance for given configuration
      */
-    private static OutputEventAdapterConfiguration createOutputEventAdapterConfiguration(String name, String type,
-                                                                                         String msgFormat)
-            throws IOException {
+    private static OutputEventAdapterConfiguration createMqttOutputEventAdapterConfiguration(String name, String type,
+                                                    String msgFormat) throws IOException {
         OutputEventAdapterConfiguration outputEventAdapterConfiguration = new OutputEventAdapterConfiguration();
         outputEventAdapterConfiguration.setName(name);
         outputEventAdapterConfiguration.setType(type);
@@ -153,14 +179,55 @@ public class VirtualFireAlarmUtils {
                     VirtualFireAlarmConstants.CLEAR_SESSION_PROPERTY_KEY));
             mqttAdapterProperties.put(VirtualFireAlarmConstants.QOS_PROPERTY_KEY, properties.getProperty(
                     VirtualFireAlarmConstants.QOS_PROPERTY_KEY));
-            mqttAdapterProperties.put(VirtualFireAlarmConstants.CLIENT_ID_PROPERTY_KEY, properties.getProperty(
-                    VirtualFireAlarmConstants.CLIENT_ID_PROPERTY_KEY));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.CLIENT_ID_PROPERTY_KEY, "");
             outputEventAdapterConfiguration.setStaticProperties(mqttAdapterProperties);
         }
         return outputEventAdapterConfiguration;
     }
 
-    public static String replaceMqttProperty(String urlWithPlaceholders) {
+    /**
+     * Create Output Event Adapter Configuration for given configuration.
+     *
+     * @param name      Input Event Adapter name
+     * @param type      Input Event Adapter type
+     * @param msgFormat Input Event Adapter message format
+     * @return InputEventAdapterConfiguration instance for given configuration
+     */
+    private static InputEventAdapterConfiguration createMqttInputEventAdapterConfiguration(String name, String type,
+                                                    String msgFormat) throws IOException {
+        InputEventAdapterConfiguration inputEventAdapterConfiguration = new InputEventAdapterConfiguration();
+        inputEventAdapterConfiguration.setName(name);
+        inputEventAdapterConfiguration.setType(type);
+        inputEventAdapterConfiguration.setMessageFormat(msgFormat);
+        File configFile = new File(VIRTUAL_FIREALARM_CONFIG_LOCATION);
+        if (configFile.exists()) {
+            Map<String, String> mqttAdapterProperties = new HashMap<>();
+            InputStream propertyStream = configFile.toURI().toURL().openStream();
+            Properties properties = new Properties();
+            properties.load(propertyStream);
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.USERNAME_PROPERTY_KEY, properties.getProperty(
+                    VirtualFireAlarmConstants.USERNAME_PROPERTY_KEY));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.DCR_PROPERTY_KEY, Utils.replaceSystemProperty(
+                    properties.getProperty(VirtualFireAlarmConstants.DCR_PROPERTY_KEY)));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.BROKER_URL_PROPERTY_KEY, replaceMqttProperty(
+                    properties.getProperty(VirtualFireAlarmConstants.BROKER_URL_PROPERTY_KEY)));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.SCOPES_PROPERTY_KEY, properties.getProperty(
+                    VirtualFireAlarmConstants.SCOPES_PROPERTY_KEY));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.CLEAR_SESSION_PROPERTY_KEY, properties.getProperty(
+                    VirtualFireAlarmConstants.CLEAR_SESSION_PROPERTY_KEY));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.QOS_PROPERTY_KEY, properties.getProperty(
+                    VirtualFireAlarmConstants.QOS_PROPERTY_KEY));
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.CLIENT_ID_PROPERTY_KEY, "");
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.TOPIC, VirtualFireAlarmConstants.SUBSCRIBED_TOPIC);
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.CONTENT_TRANSFORMATION,
+                                      VirtualFirealarmMqttContentTransformer.class.getName());
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.CONTENT_VALIDATION, "default");
+            inputEventAdapterConfiguration.setProperties(mqttAdapterProperties);
+        }
+        return inputEventAdapterConfiguration;
+    }
+
+    private static String replaceMqttProperty(String urlWithPlaceholders) {
         urlWithPlaceholders = Utils.replaceSystemProperty(urlWithPlaceholders);
         urlWithPlaceholders = urlWithPlaceholders.replaceAll(VirtualFireAlarmConstants.MQTT_PORT, "" +
                 (VirtualFireAlarmConstants.DEFAULT_MQTT_PORT + getPortOffset()));
@@ -184,4 +251,156 @@ public class VirtualFireAlarmUtils {
         }
     }
 
+    public static String extractMessageFromPayload(String message, PublicKey verifySignatureKey)
+            throws VirtualFirealarmDeviceMgtPluginException {
+        String actualMessage;
+
+        JSONObject jsonPayload = new JSONObject(message);
+        Object encodedMessage = jsonPayload.get(VirtualFireAlarmConstants.JSON_MESSAGE_KEY);
+        Object signedPayload = jsonPayload.get(VirtualFireAlarmConstants.JSON_SIGNATURE_KEY);
+
+        if (encodedMessage != null && signedPayload != null) {
+            if (VirtualFirealarmSecurityManager.verifySignature(
+                    encodedMessage.toString(), signedPayload.toString(), verifySignatureKey)) {
+                actualMessage = new String(Base64.decodeBase64(encodedMessage.toString()));
+                //VirtualFirealarmSecurityManager.decryptMessage(encryptedMessage.toString(), decryptionKey);
+            } else {
+                String errorMsg = "The message was not signed by a valid client. Could not verify signature on payload";
+                throw new VirtualFirealarmDeviceMgtPluginException(errorMsg);
+            }
+        } else {
+            String errorMsg = "The received message is in an INVALID format. " +
+                    "Need to be JSON - {\"Msg\":\"<ENCRYPTED_MSG>\", \"Sig\":\"<SIGNED_MSG>\"}.";
+            throw new VirtualFirealarmDeviceMgtPluginException(errorMsg);
+        }
+
+        return actualMessage;
+    }
+
+    public static PublicKey getDevicePublicKey(String alias) throws VirtualFirealarmDeviceMgtPluginException {
+        PublicKey clientPublicKey;
+        try {
+            CertificateManagementService certificateManagementService =
+                    VirtualFirealarmManagementDataHolder.getInstance().getCertificateManagementService();
+            X509Certificate clientCertificate = (X509Certificate) certificateManagementService.getCertificateByAlias(
+                    alias);
+            clientPublicKey = clientCertificate.getPublicKey();
+        } catch (KeystoreException e) {
+            String errorMsg;
+            if (e.getMessage().contains("NULL_CERT")) {
+                errorMsg = "The Device-View page might have been accessed prior to the device being started.";
+                if(log.isDebugEnabled()){
+                    log.debug(errorMsg);
+                }
+                throw new VirtualFirealarmDeviceMgtPluginException(errorMsg, e);
+            } else {
+                errorMsg = "An error occurred whilst trying to retrieve certificate for alias [" + alias +
+                        "] with alias: [" + alias + "]";
+                if(log.isDebugEnabled()){
+                    log.debug(errorMsg);
+                }
+                throw new VirtualFirealarmDeviceMgtPluginException(errorMsg, e);
+            }
+        }
+        return clientPublicKey;
+    }
+
+    public static boolean publishToDAS(String deviceId, float temperature) {
+        EventsPublisherService deviceAnalyticsService =
+                VirtualFirealarmManagementDataHolder.getInstance().getEventsPublisherService();
+        if (deviceAnalyticsService != null) {
+            String owner = "";
+            Object metdaData[] = {owner, VirtualFireAlarmConstants.DEVICE_TYPE, deviceId, System.currentTimeMillis()};
+            Object payloadData[] = {temperature};
+            try {
+                deviceAnalyticsService.publishEvent(VirtualFireAlarmConstants.TEMPERATURE_STREAM_DEFINITION,
+                                                    "1.0.0", metdaData, new Object[0], payloadData);
+            } catch (DataPublisherConfigurationException e) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public static void setupXmppInputAdapter() throws IOException {
+        if (!XmppConfig.getInstance().isEnabled()) return;
+        InputEventAdapterConfiguration inputEventAdapterConfiguration =
+                createXmppInputEventAdapterConfiguration(VirtualFireAlarmConstants.XMPP_ADAPTER_NAME,
+                                                         VirtualFireAlarmConstants.XMPP_ADAPTER_TYPE, MessageType.TEXT);
+        try {
+            PrivilegedCarbonContext.startTenantFlow();
+            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
+                    VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN, true);
+            VirtualFirealarmManagementDataHolder.getInstance().getInputEventAdapterService()
+                    .create(inputEventAdapterConfiguration, new VirtualFirealarmEventAdapterSubscription());
+        } catch (InputEventAdapterException e) {
+            log.error("Unable to create Input Event Adapter : " + VirtualFireAlarmConstants.MQTT_ADAPTER_NAME, e);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+        }
+    }
+
+    /**
+     * Create Input Event Adapter Configuration for given configuration.
+     *
+     * @param name      Input Event Adapter name
+     * @param type      Input Event Adapter type
+     * @param msgFormat Input Event Adapter message format
+     * @return InputEventAdapterConfiguration instance for given configuration
+     */
+    private static InputEventAdapterConfiguration createXmppInputEventAdapterConfiguration(String name, String type,
+                                                                                           String msgFormat) throws IOException {
+        InputEventAdapterConfiguration inputEventAdapterConfiguration = new InputEventAdapterConfiguration();
+        inputEventAdapterConfiguration.setName(name);
+        inputEventAdapterConfiguration.setType(type);
+        inputEventAdapterConfiguration.setMessageFormat(msgFormat);
+        Map<String, String> xmppAdapterProperties = new HashMap<>();
+        XmppConfig xmppConfig = XmppConfig.getInstance();
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.HOST_KEY, xmppConfig.getXmppServerIP());
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.PORT_KEY, String.valueOf(xmppConfig.getXmppServerPort()));
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.USERNAME_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminUsername());
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.PASSWORD_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminPassword());
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminJID());
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.CONTENT_TRANSFORMATION,
+                                  VirtualFirealarmXmppContentTransformer.class.getName());
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.CONTENT_VALIDATION, "default");
+        inputEventAdapterConfiguration.setProperties(xmppAdapterProperties);
+        return inputEventAdapterConfiguration;
+    }
+
+    public static void setupXmppOutputAdapter() throws IOException {
+        if(!XmppConfig.getInstance().isEnabled()) return;
+        OutputEventAdapterConfiguration outputEventAdapterConfiguration =
+                createXmppOutputEventAdapterConfiguration(VirtualFireAlarmConstants.XMPP_ADAPTER_NAME,
+                                                          VirtualFireAlarmConstants.XMPP_ADAPTER_TYPE, MessageType.TEXT);
+        try {
+            PrivilegedCarbonContext.startTenantFlow();
+            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
+                    VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN, true);
+            VirtualFirealarmManagementDataHolder.getInstance().getOutputEventAdapterService()
+                    .create(outputEventAdapterConfiguration);
+        } catch (OutputEventAdapterException e) {
+            log.error("Unable to create Output Event Adapter : " + VirtualFireAlarmConstants.MQTT_ADAPTER_NAME, e);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+        }
+    }
+
+    private static OutputEventAdapterConfiguration createXmppOutputEventAdapterConfiguration(String name, String type,
+                                                                                           String msgFormat) throws IOException {
+        OutputEventAdapterConfiguration outputEventAdapterConfiguration = new OutputEventAdapterConfiguration();
+        outputEventAdapterConfiguration.setName(name);
+        outputEventAdapterConfiguration.setType(type);
+        outputEventAdapterConfiguration.setMessageFormat(msgFormat);
+        Map<String, String> xmppAdapterProperties = new HashMap<>();
+        XmppConfig xmppConfig = XmppConfig.getInstance();
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.HOST_KEY, xmppConfig.getXmppServerIP());
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.PORT_KEY, String.valueOf(xmppConfig.getXmppServerPort()));
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.USERNAME_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminUsername());
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.PASSWORD_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminPassword());
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminJID());
+        outputEventAdapterConfiguration.setStaticProperties(xmppAdapterProperties);
+        return outputEventAdapterConfiguration;
+    }
 }

@@ -28,7 +28,7 @@
 
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - Device Mgt Output MQTT Adaptor Module</name>
-    <description>org.wso2.carbon.device.mgt.iot.output.adapter.xmpp provides the back-end functionality of mqtt adaptor
+    <description>org.wso2.carbon.device.mgt.iot.output.adapter.mqtt provides the back-end functionality of mqtt adaptor
     </description>
     <url>http://wso2.org</url>
 
@@ -94,13 +94,13 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>
-                            org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.internal,
-                            org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.internal.*
+                            org.wso2.carbon.device.mgt.iot.output.adapter.mqtt.internal,
+                            org.wso2.carbon.device.mgt.iot.output.adapter.mqtt.internal.*
                         </Private-Package>
                         <Export-Package>
-                            !org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.internal,
-                            !org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.internal.*,
-                            org.wso2.carbon.device.mgt.iot.output.adapter.xmpp.*,
+                            !org.wso2.carbon.device.mgt.iot.output.adapter.mqtt.internal,
+                            !org.wso2.carbon.device.mgt.iot.output.adapter.mqtt.internal.*,
+                            org.wso2.carbon.device.mgt.iot.output.adapter.mqtt.*,
                         </Export-Package>
                         <Import-Package>
                             org.wso2.carbon.event.output.adapter.core,

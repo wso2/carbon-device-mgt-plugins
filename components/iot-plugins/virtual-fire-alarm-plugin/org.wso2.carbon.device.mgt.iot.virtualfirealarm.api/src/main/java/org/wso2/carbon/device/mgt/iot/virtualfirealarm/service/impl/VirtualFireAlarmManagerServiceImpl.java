@@ -31,12 +31,13 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
 import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppAccount;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppConfig;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppServerClient;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.ZipUtil;
 import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
@@ -207,6 +208,9 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
         } catch (UserStoreException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
+        } catch (VirtualFirealarmDeviceMgtPluginException ex) {
+            log.error(ex.getMessage(), ex);
+            return Response.status(500).entity(ex.getMessage()).build();
         }
     }
 
@@ -238,7 +242,7 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
 
     private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
             throws DeviceManagementException, APIManagerException, JWTClientException, DeviceControllerException,
-                   UserStoreException {
+                   UserStoreException, VirtualFirealarmDeviceMgtPluginException {
         //create new device id
         String deviceId = shortUUID();
         if (apiApplicationKey == null) {
@@ -259,15 +263,14 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
         String refreshToken = accessTokenInfo.getRefreshToken();
         //adding registering data
         XmppAccount newXmppAccount = new XmppAccount();
-        newXmppAccount.setAccountName(owner + "_" + deviceId);
+        newXmppAccount.setAccountName(deviceId);
         newXmppAccount.setUsername(deviceId);
         newXmppAccount.setPassword(accessToken);
         newXmppAccount.setEmail(deviceId + "@" + APIUtil.getTenantDomainOftheUser());
         XmppServerClient xmppServerClient = new XmppServerClient();
-        xmppServerClient.initControlQueue();
         boolean status;
         if (XmppConfig.getInstance().isEnabled()) {
-            status = xmppServerClient.createXMPPAccount(newXmppAccount);
+            status = xmppServerClient.createAccount(newXmppAccount);
             if (!status) {
                 String msg = "XMPP Account was not created for device - " + deviceId + " of owner - " + owner +
                                 ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot" +

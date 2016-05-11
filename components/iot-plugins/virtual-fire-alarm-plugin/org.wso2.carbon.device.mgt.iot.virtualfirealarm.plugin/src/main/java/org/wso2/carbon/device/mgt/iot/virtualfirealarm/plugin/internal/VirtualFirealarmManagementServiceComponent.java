@@ -23,12 +23,16 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
 import org.wso2.carbon.core.ServerStartupObserver;
+import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.VirtualFireAlarmManagerService;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFireAlarmUtils;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFirealarmSecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFirealarmStartupListener;
+import org.wso2.carbon.event.input.adapter.core.InputEventAdapterService;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 
 /**
@@ -41,6 +45,24 @@ import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
  * policy="dynamic"
  * bind="setOutputEventAdapterService"
  * unbind="unsetOutputEventAdapterService"
+ * @scr.reference name="event.input.adapter.service"
+ * interface="org.wso2.carbon.event.input.adapter.core.InputEventAdapterService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setInputEventAdapterService"
+ * unbind="unsetInputEventAdapterService"
+ * @scr.reference name="certificate.management.service"
+ * interface="org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setCertificateManagementService"
+ * unbind="unsetCertificateManagementService"
+ * @scr.reference name="event.publisher.service"
+ * interface="org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setEventsPublisherService"
+ * unbind="unsetEventsPublisherService"
  */
 public class VirtualFirealarmManagementServiceComponent {
 
@@ -52,9 +74,10 @@ public class VirtualFirealarmManagementServiceComponent {
             log.debug("Activating Virtual Firealarm Device Management Service Component");
         }
         try {
+            VirtualFireAlarmManagerService virtualFireAlarmManagerService = new VirtualFireAlarmManagerService();
             BundleContext bundleContext = ctx.getBundleContext();
-            firealarmServiceRegRef = bundleContext.registerService(DeviceManagementService.class.getName(),
-                                                                   new VirtualFireAlarmManagerService(), null);
+            firealarmServiceRegRef = bundleContext.registerService(DeviceManagementService.class.getName()
+                                                                   ,virtualFireAlarmManagerService, null);
             bundleContext.registerService(ServerStartupObserver.class.getName(), new VirtualFirealarmStartupListener(),
                                           null);
             String setupOption = System.getProperty("setup");
@@ -72,6 +95,7 @@ public class VirtualFirealarmManagementServiceComponent {
             if (log.isDebugEnabled()) {
                 log.debug("Virtual Firealarm Device Management Service Component has been successfully activated");
             }
+            VirtualFirealarmSecurityManager.initVerificationManager();
         } catch (Throwable e) {
             log.error("Error occurred while activating Virtual Firealarm Device Management Service Component", e);
         }
@@ -104,10 +128,40 @@ public class VirtualFirealarmManagementServiceComponent {
 
     /**
      * De-reference the Output EventAdapter Service dependency.
-     *
-     * @param outputEventAdapterService
      */
     protected void unsetOutputEventAdapterService(OutputEventAdapterService outputEventAdapterService) {
         VirtualFirealarmManagementDataHolder.getInstance().setOutputEventAdapterService(null);
+    }
+
+    /**
+     * Initialize the Input EventAdapter Service dependency
+     *
+     * @param inputEventAdapterService Input EventAdapter Service reference
+     */
+    protected void setInputEventAdapterService(InputEventAdapterService inputEventAdapterService) {
+        VirtualFirealarmManagementDataHolder.getInstance().setInputEventAdapterService(inputEventAdapterService);
+    }
+
+    /**
+     * De-reference the Input EventAdapter Service dependency.
+     */
+    protected void unsetInputEventAdapterService(InputEventAdapterService inputEventAdapterService) {
+        VirtualFirealarmManagementDataHolder.getInstance().setInputEventAdapterService(null);
+    }
+
+    protected void setCertificateManagementService(CertificateManagementService certificateManagementService) {
+        VirtualFirealarmManagementDataHolder.getInstance().setCertificateManagementService(certificateManagementService);
+    }
+
+    protected void unsetCertificateManagementService(CertificateManagementService certificateManagementService) {
+        VirtualFirealarmManagementDataHolder.getInstance().setCertificateManagementService(null);
+    }
+
+    protected void setEventsPublisherService(EventsPublisherService eventsPublisherService) {
+        VirtualFirealarmManagementDataHolder.getInstance().setEventsPublisherService(eventsPublisherService);
+    }
+
+    protected void unsetEventsPublisherService(EventsPublisherService eventsPublisherService) {
+        VirtualFirealarmManagementDataHolder.getInstance().setEventsPublisherService(null);
     }
 }

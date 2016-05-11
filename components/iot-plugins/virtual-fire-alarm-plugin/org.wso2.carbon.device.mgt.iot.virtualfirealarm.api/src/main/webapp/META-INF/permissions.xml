@@ -44,7 +44,7 @@
 	</Permission>
 	<Permission>
 		<name>Download device</name>
-		<path>/device-mgt/user</path>
+		<path>/device-mgt/virtual_firealarm/user</path>
         <url>/enrollment/devices/download</url>
 		<method>GET</method>
 		<scope>virtual_firealarm_user</scope>
