@@ -109,4 +109,5 @@ public class RaspberrypiManagementServiceComponent {
 	protected void unsetOutputEventAdapterService(OutputEventAdapterService outputEventAdapterService) {
 		RaspberrypiManagementDataHolder.getInstance().setOutputEventAdapterService(null);
 	}
+
 }

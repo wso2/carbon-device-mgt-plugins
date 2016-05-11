@@ -50,4 +50,24 @@ public class AndroidSenseConstants {
     public static final String MQTT_SUBSCRIBE_WORDS_TOPIC = "wso2/+/android_sense/+/data";
     public static final String DATA_SOURCE_NAME = "jdbc/AndroidSenseDM_DB";
     public final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
+
+    //mqtt tranport related constants
+    public static final String MQTT_ADAPTER_NAME = "android_sense_mqtt";
+    public static final String MQTT_ADAPTER_TYPE = "oauth-mqtt";
+    public static final String ADAPTER_TOPIC_PROPERTY = "topic";
+    public static final String MQTT_PORT = "\\$\\{mqtt.broker.port\\}";
+    public static final String MQTT_BROKER_HOST = "\\$\\{mqtt.broker.host\\}";
+    public static final String CARBON_CONFIG_PORT_OFFSET = "Ports.Offset";
+    public static final String DEFAULT_CARBON_SERVER_HOST_PROPERTY = "server.host";
+    public static final int CARBON_DEFAULT_PORT_OFFSET = 0;
+    public static final int DEFAULT_MQTT_PORT = 1883;
+
+    public static final String USERNAME_PROPERTY_KEY = "username";
+    public static final String DCR_PROPERTY_KEY = "dcrUrl";
+    public static final String BROKER_URL_PROPERTY_KEY = "url";
+    public static final String SCOPES_PROPERTY_KEY = "scopes";
+    public static final String QOS_PROPERTY_KEY = "qos";
+    public static final String CLIENT_ID_PROPERTY_KEY = "qos";
+    public static final String CLEAR_SESSION_PROPERTY_KEY = "clearSession";
+    public static final String TOPIC = "topic";
 }

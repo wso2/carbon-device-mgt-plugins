@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.dao.util;
+package org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

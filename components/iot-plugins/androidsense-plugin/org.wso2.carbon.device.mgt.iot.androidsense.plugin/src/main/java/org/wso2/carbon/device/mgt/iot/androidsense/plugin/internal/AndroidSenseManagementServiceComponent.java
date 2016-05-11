@@ -24,11 +24,18 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.exception.AndroidSenseDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.AndroidSenseManagerService;
-import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.dao.util.AndroidSenseUtils;
+import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.util.AndroidSenseUtils;
+import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.android.internal.AndroidSenseManagementServiceComponent"
  * immediate="true"
+ * @scr.reference name="event.output.adapter.service"
+ * interface="org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setOutputEventAdapterService"
+ * unbind="unsetOutputEventAdapterService"
  */
 public class AndroidSenseManagementServiceComponent {
 	
@@ -80,5 +87,21 @@ public class AndroidSenseManagementServiceComponent {
         } catch (Throwable e) {
             log.error("Error occurred while de-activating Android Device Management bundle", e);
         }
+    }
+
+    /**
+     * Initialize the Output EventAdapter Service dependency
+     *
+     * @param outputEventAdapterService Output EventAdapter Service reference
+     */
+    protected void setOutputEventAdapterService(OutputEventAdapterService outputEventAdapterService) {
+        AndroidSenseManagementDataHolder.getInstance().setOutputEventAdapterService(outputEventAdapterService);
+    }
+
+    /**
+     * De-reference the Output EventAdapter Service dependency.
+     */
+    protected void unsetOutputEventAdapterService(OutputEventAdapterService outputEventAdapterService) {
+        AndroidSenseManagementDataHolder.getInstance().setOutputEventAdapterService(null);
     }
 }

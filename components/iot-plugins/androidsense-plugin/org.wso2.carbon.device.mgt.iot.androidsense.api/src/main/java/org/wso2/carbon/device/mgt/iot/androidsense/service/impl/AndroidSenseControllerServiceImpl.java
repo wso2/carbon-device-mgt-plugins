@@ -45,7 +45,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The api for
@@ -53,21 +55,22 @@ import java.util.List;
 public class AndroidSenseControllerServiceImpl implements AndroidSenseControllerService {
 
     private static Log log = LogFactory.getLog(AndroidSenseControllerServiceImpl.class);
-    private static AndroidSenseMQTTConnector androidSenseMQTTConnector;
 
     @Path("device/{deviceId}/words")
     @POST
     public Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords) {
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                AndroidSenseConstants.DEVICE_TYPE))) {
+                      AndroidSenseConstants.DEVICE_TYPE))) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
-            androidSenseMQTTConnector.publishDeviceData(deviceId, "add", keywords);
+            Map<String, String> dynamicProperties = new HashMap<>();
+            String publishTopic = APIUtil.getAuthenticatedUserTenantDomain()
+                    + "/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command/words";
+            dynamicProperties.put(AndroidSenseConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
+            APIUtil.getOutputEventAdapterService().publish(AndroidSenseConstants.MQTT_ADAPTER_NAME,
+                                                           dynamicProperties, keywords);
             return Response.ok().build();
-        } catch (TransportHandlerException e) {
-            log.error(e.getErrorMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
@@ -82,11 +85,13 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
                     AndroidSenseConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
-            androidSenseMQTTConnector.publishDeviceData(deviceId, "threshold", threshold);
+            Map<String, String> dynamicProperties = new HashMap<>();
+            String publishTopic = APIUtil.getAuthenticatedUserTenantDomain()
+                    + "/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command/threshold";
+            dynamicProperties.put(AndroidSenseConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
+            APIUtil.getOutputEventAdapterService().publish(AndroidSenseConstants.MQTT_ADAPTER_NAME,
+                                                           dynamicProperties, threshold);
             return Response.ok().build();
-        } catch (TransportHandlerException e) {
-            log.error(e.getErrorMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         } catch (DeviceAccessAuthorizationException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
@@ -100,11 +105,13 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
                 AndroidSenseConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
-            androidSenseMQTTConnector.publishDeviceData(deviceId, "remove", words);
+            Map<String, String> dynamicProperties = new HashMap<>();
+            String publishTopic = APIUtil.getAuthenticatedUserTenantDomain()
+                    + "/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command/remove";
+            dynamicProperties.put(AndroidSenseConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
+            APIUtil.getOutputEventAdapterService().publish(AndroidSenseConstants.MQTT_ADAPTER_NAME,
+                                                           dynamicProperties, words);
             return Response.ok().build();
-        } catch (TransportHandlerException e) {
-            log.error(e.getErrorMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
@@ -196,58 +203,4 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
         return sensorEventTableName;
     }
 
-    /**
-     * Fetches the `AndroidSenseMQTTConnector` specific to this Android Sense controller service.
-     *
-     * @return the 'AndroidSenseMQTTConnector' instance bound to the 'AndroidSenseMQTTConnector' variable of
-     * this service.
-     */
-    @SuppressWarnings("Unused")
-    public AndroidSenseMQTTConnector getAndroidSenseMQTTConnector() {
-        return androidSenseMQTTConnector;
-    }
-
-    /**
-     * Sets the `AndroidSenseMQTTConnector` variable of this Android Sense controller service.
-     *
-     * @param androidSenseMQTTConnector a 'AndroidSenseMQTTConnector' object that handles all MQTT related
-     *                                  communications of any connected Android Sense device-type
-     */
-    @SuppressWarnings("Unused")
-    public void setAndroidSenseMQTTConnector(final AndroidSenseMQTTConnector androidSenseMQTTConnector) {
-        Runnable connector = new Runnable() {
-            public void run() {
-                if (waitForServerStartup()) {
-                    return;
-                }
-                //The delay is added for the server to starts up.
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-                AndroidSenseControllerServiceImpl.androidSenseMQTTConnector = androidSenseMQTTConnector;
-                if (MqttConfig.getInstance().isEnabled()) {
-                    synchronized (androidSenseMQTTConnector) {
-                        androidSenseMQTTConnector.connect();
-                    }
-                } else {
-                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, VirtualFireAlarmMQTTConnector not started.");
-                }
-            }
-        };
-        Thread connectorThread = new Thread(connector);
-        connectorThread.start();
-    }
-
-    private boolean waitForServerStartup() {
-        while (!IoTServerStartupListener.isServerReady()) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
