@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.mdm.services.android.bean.wrapper;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.mdm.services.android.bean.Wifi;
 
 import java.util.List;
@@ -24,9 +26,13 @@ import java.util.List;
 /**
  * This class is used to wrap the Wifi bean with devices.
  */
+@ApiModel(value = "WifiBeanWrapper",
+          description = "Mapping between wifi operation and device list to be applied.")
 public class WifiBeanWrapper {
 
+    @ApiModelProperty(name = "operation", value = "Information of configuring wifi operation", required = true)
 	private Wifi operation;
+    @ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
 	private List<String> deviceIDs;
 
 	public Wifi getOperation() {

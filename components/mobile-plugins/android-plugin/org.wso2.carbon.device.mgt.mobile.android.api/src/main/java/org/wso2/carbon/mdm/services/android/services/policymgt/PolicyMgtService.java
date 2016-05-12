@@ -28,7 +28,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Api("PolicyMgtService")
+@Api(value = "PolicyMgtService", description = "Policy management related REST-API implementation.")
 @WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})

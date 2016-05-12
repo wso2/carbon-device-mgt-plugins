@@ -34,7 +34,7 @@ import java.util.List;
  * All end points supports JSON, XMl with content negotiation.
  */
 
-@Api(value = "DeviceManagementService")
+@Api(value = "DeviceManagementService", description = "Android Device Management REST-API implementation.")
 @WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})

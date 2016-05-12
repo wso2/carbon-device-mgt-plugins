@@ -18,11 +18,16 @@
 
 package org.wso2.carbon.mdm.services.android.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import java.io.Serializable;
 
+@ApiModel(value = "Disenrollment",
+          description = "Details related to disenrolling a device.")
 public class Disenrollment extends AndroidOperation implements Serializable {
 
+    @ApiModelProperty(name = "enabled", value = "Whether  to enable disenrollment or not.", required = true)
 	private boolean enabled;
 
 	public boolean isEnabled() {

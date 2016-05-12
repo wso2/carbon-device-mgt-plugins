@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.mdm.services.android.bean.wrapper;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.mdm.services.android.bean.WebClip;
 
 import java.util.List;
@@ -24,9 +26,14 @@ import java.util.List;
 /**
  * This class is used to wrap the WebClip bean with devices.
  */
+
+@ApiModel(value = "WebClipBeanWrapper",
+          description = "Mapping between web clip operation and device list to be applied.")
 public class WebClipBeanWrapper {
 
+    @ApiModelProperty(name = "operation", value = "the information of setting up webclip", required = true)
 	private WebClip operation;
+    @ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
 	private List<String> deviceIDs;
 
 	public WebClip getOperation() {

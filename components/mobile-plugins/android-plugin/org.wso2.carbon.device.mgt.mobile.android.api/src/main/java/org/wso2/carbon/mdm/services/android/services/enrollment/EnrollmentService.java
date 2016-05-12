@@ -30,7 +30,8 @@ import javax.ws.rs.core.MediaType;
  * Android Device Enrollment REST-API implementation.
  * All end points supports JSON, XMl with content negotiation.
  */
-@Api(value = "EnrollmentService")
+
+@Api(value = "EnrollmentService", description = "Android Device Enrollment REST-API implementation.")
 @WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})

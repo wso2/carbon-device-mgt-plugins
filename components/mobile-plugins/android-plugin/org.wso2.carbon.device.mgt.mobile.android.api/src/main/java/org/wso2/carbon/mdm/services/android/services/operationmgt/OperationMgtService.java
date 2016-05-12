@@ -31,7 +31,7 @@ import java.util.List;
  * Android Device Operation REST-API implementation.
  */
 
-@Api("OperationMgtService")
+@Api(value = "OperationMgtService", description = "Android Device Operation REST-API implementation.")
 public interface OperationMgtService {
     String ACCEPT = "Accept";
 
