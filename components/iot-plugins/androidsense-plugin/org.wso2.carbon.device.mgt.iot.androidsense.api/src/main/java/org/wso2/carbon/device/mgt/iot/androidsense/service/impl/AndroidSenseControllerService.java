@@ -43,7 +43,7 @@ public interface AndroidSenseControllerService {
      */
     @Path("device/{deviceId}/words")
     @POST
-    @Feature(code = "keywords", name = "Add Keywords", description = "Send keywords to the device", type = "operation")
+    @Feature(code = "keywords", name = "Add Keywords", description = "Send keywords to the device")
     Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords);
 
     /**
@@ -54,14 +54,12 @@ public interface AndroidSenseControllerService {
      */
     @Path("device/{deviceId}/words/threshold")
     @POST
-    @Feature(code = "threshold", name = "Add a Threshold", description = "Set a threshold for word in the device",
-            type = "operation")
+    @Feature(code = "threshold", name = "Add a Threshold", description = "Set a threshold for word in the device")
     Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold);
 
     @Path("device/{deviceId}/words")
     @DELETE
-    @Feature(code = "remove", name = "Remove Keywords", description = "Remove the keywords",
-            type = "operation")
+    @Feature(code = "remove", name = "Remove Keywords", description = "Remove the keywords")
     Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words);
 
     /**

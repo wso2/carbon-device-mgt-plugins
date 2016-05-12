@@ -37,8 +37,7 @@ public interface RaspberryPiControllerService {
 
     @Path("device/{deviceId}/bulb")
     @POST
-    @Feature(code = "bulb", name = "Bulb On / Off", type = "operation",
-            description = "Switch on/off Raspberry Pi agent's bulb. (On / Off)")
+    @Feature(code = "bulb", name = "Bulb On / Off", description = "Switch on/off Raspberry Pi agent's bulb. (On / Off)")
     Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
     /**

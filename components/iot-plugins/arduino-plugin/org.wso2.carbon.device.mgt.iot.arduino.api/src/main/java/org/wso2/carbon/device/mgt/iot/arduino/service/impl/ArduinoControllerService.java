@@ -36,7 +36,7 @@ public interface ArduinoControllerService {
 
     @Path("device/{deviceId}/bulb")
     @POST
-    @Feature(code = "bulb", name = "Control Bulb", type = "operation", description = "Control Bulb on Arduino Uno")
+    @Feature(code = "bulb", name = "Control Bulb", description = "Control Bulb on Arduino Uno")
     Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
     @Path("device/{deviceId}/controls")
