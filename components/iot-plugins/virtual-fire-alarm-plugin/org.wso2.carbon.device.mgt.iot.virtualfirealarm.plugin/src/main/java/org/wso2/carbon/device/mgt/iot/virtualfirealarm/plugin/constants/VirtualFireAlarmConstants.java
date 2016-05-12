@@ -45,7 +45,7 @@ public class VirtualFireAlarmConstants {
     public static final String MQTT_PORT = "\\$\\{mqtt.broker.port\\}";
     public static final String MQTT_BROKER_HOST = "\\$\\{mqtt.broker.host\\}";
     public static final String CARBON_CONFIG_PORT_OFFSET = "Ports.Offset";
-    public static final String DEFAULT_CARBON_SERVER_HOST_PROPERTY = "server.host";
+    public static final String DEFAULT_CARBON_LOCAL_IP_PROPERTY = "carbon.local.ip";
     public static final int CARBON_DEFAULT_PORT_OFFSET = 0;
     public static final int DEFAULT_MQTT_PORT = 1883;
 

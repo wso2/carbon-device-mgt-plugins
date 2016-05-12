@@ -38,11 +38,12 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * This is the utility class that is used for MQTT input adapater.
+ * This is the utility class that is used for MQTT input adapter.
  */
 public class MQTTUtil {
 	private static final String HTTPS_PROTOCOL = "https";
 	private static final Log log = LogFactory.getLog(MQTTUtil.class);
+
 	/**
 	 * Return a http client instance
 	 * @param protocol- service endpoint protocol http/https

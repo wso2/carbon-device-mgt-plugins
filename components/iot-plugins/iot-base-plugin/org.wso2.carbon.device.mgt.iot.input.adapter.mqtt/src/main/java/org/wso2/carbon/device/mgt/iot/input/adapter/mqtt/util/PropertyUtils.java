@@ -25,7 +25,7 @@ public class PropertyUtils {
     private static final String MQTT_PORT = "\\$\\{mqtt.broker.port\\}";
     private static final String MQTT_BROKER_HOST = "\\$\\{mqtt.broker.host\\}";
     private static final String CARBON_CONFIG_PORT_OFFSET = "Ports.Offset";
-    private static final String DEFAULT_CARBON_SERVER_HOST_PROPERTY = "server.host";
+    private static final String DEFAULT_CARBON_LOCAL_IP_PROPERTY = "carbon.local.ip";
     private static final int CARBON_DEFAULT_PORT_OFFSET = 0;
     private static final int DEFAULT_MQTT_PORT = 1883;
 
@@ -33,8 +33,8 @@ public class PropertyUtils {
     public static String replaceMqttProperty (String urlWithPlaceholders) {
         urlWithPlaceholders = Utils.replaceSystemProperty(urlWithPlaceholders);
         urlWithPlaceholders = urlWithPlaceholders.replaceAll(MQTT_PORT, "" + (DEFAULT_MQTT_PORT + getPortOffset()));
-        urlWithPlaceholders = urlWithPlaceholders.replaceAll(MQTT_BROKER_HOST, System.getProperty(DEFAULT_CARBON_SERVER_HOST_PROPERTY,
-                                                                                                "localhost"));
+        urlWithPlaceholders = urlWithPlaceholders.replaceAll(MQTT_BROKER_HOST, System.getProperty(
+                DEFAULT_CARBON_LOCAL_IP_PROPERTY, "localhost"));
         return urlWithPlaceholders;
     }
 

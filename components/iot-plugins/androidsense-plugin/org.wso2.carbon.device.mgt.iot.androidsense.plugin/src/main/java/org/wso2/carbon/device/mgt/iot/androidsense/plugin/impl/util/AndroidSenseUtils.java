@@ -158,7 +158,7 @@ public class AndroidSenseUtils {
 		urlWithPlaceholders = urlWithPlaceholders.replaceAll(AndroidSenseConstants.MQTT_PORT, "" +
 				(AndroidSenseConstants.DEFAULT_MQTT_PORT + getPortOffset()));
 		urlWithPlaceholders = urlWithPlaceholders.replaceAll(AndroidSenseConstants.MQTT_BROKER_HOST,
-				System.getProperty(AndroidSenseConstants.DEFAULT_CARBON_SERVER_HOST_PROPERTY, "localhost"));
+				System.getProperty(AndroidSenseConstants.DEFAULT_CARBON_LOCAL_IP_PROPERTY, "localhost"));
 		return urlWithPlaceholders;
 	}
 

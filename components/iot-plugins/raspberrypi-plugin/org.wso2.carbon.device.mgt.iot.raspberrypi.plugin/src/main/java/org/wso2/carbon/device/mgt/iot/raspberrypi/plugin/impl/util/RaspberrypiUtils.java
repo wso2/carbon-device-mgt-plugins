@@ -23,14 +23,12 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.util.Utils;
-import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.exception.RaspberrypiDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.internal.RaspberrypiManagementDataHolder;
 import org.wso2.carbon.event.output.adapter.core.MessageType;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterConfiguration;
 import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
-import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -44,7 +42,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -162,7 +159,7 @@ public class RaspberrypiUtils {
         urlWithPlaceholders = urlWithPlaceholders.replaceAll(RaspberrypiConstants.MQTT_PORT, "" +
                 (RaspberrypiConstants.DEFAULT_MQTT_PORT + getPortOffset()));
         urlWithPlaceholders = urlWithPlaceholders.replaceAll(RaspberrypiConstants.MQTT_BROKER_HOST,
-                       System.getProperty(RaspberrypiConstants.DEFAULT_CARBON_SERVER_HOST_PROPERTY, "localhost"));
+                       System.getProperty(RaspberrypiConstants.DEFAULT_CARBON_LOCAL_IP_PROPERTY, "localhost"));
         return urlWithPlaceholders;
     }
 

@@ -230,7 +230,7 @@ public class VirtualFireAlarmUtils {
         urlWithPlaceholders = urlWithPlaceholders.replaceAll(VirtualFireAlarmConstants.MQTT_PORT, "" +
                 (VirtualFireAlarmConstants.DEFAULT_MQTT_PORT + getPortOffset()));
         urlWithPlaceholders = urlWithPlaceholders.replaceAll(VirtualFireAlarmConstants.MQTT_BROKER_HOST,
-                        System.getProperty(VirtualFireAlarmConstants.DEFAULT_CARBON_SERVER_HOST_PROPERTY, "localhost"));
+                        System.getProperty(VirtualFireAlarmConstants.DEFAULT_CARBON_LOCAL_IP_PROPERTY, "localhost"));
         return urlWithPlaceholders;
     }
 
