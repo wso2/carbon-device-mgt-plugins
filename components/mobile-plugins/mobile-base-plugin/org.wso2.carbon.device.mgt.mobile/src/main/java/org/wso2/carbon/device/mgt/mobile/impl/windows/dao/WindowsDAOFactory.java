@@ -39,7 +39,8 @@ public class WindowsDAOFactory extends AbstractMobileDeviceManagementDAOFactory 
     private static ThreadLocal<Connection> currentConnection = new ThreadLocal<>();
 
     public WindowsDAOFactory() {
-        this.dataSource = getDataSourceMap().get(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+        this.dataSource = getDataSourceMap().get(
+                DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
     }
 
     @Override

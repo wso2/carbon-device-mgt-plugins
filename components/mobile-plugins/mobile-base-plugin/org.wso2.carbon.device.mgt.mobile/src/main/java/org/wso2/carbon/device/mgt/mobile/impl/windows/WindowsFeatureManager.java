@@ -26,6 +26,7 @@ import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileFeature;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.WindowsDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.util.WindowsUtils;
 import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
 
 import java.util.ArrayList;
@@ -116,13 +117,13 @@ public class WindowsFeatureManager implements FeatureManager {
             featureDAO.deleteFeatureByCode(code);
             WindowsDAOFactory.commitTransaction();
             status = true;
+            return status;
         } catch (MobileDeviceManagementDAOException e) {
             WindowsDAOFactory.rollbackTransaction();
             throw new DeviceManagementException("Error occurred while removing the feature", e);
         } finally {
             WindowsDAOFactory.closeConnection();
         }
-        return status;
     }
 
     @Override
@@ -145,48 +146,49 @@ public class WindowsFeatureManager implements FeatureManager {
      * @return Supported features.
      */
     public static List<Feature> getSupportedFeatures() {
-        List<Feature> supportedFeatures = new ArrayList<Feature>();
-        Feature feature = new Feature();
+        List<Feature> supportedFeatures = new ArrayList<>();
+        Feature feature;
+        feature = WindowsUtils.getMobileFeature();
         feature.setCode("DEVICE_LOCK");
         feature.setName("Device Lock");
         feature.setDescription("Lock the device");
         supportedFeatures.add(feature);
-        feature = new Feature();
+        feature = WindowsUtils.getMobileFeature();
         feature.setCode("CAMERA");
         feature.setName("camera");
         feature.setDescription("Enable or disable camera");
         supportedFeatures.add(feature);
-        feature = new Feature();
+        feature = WindowsUtils.getMobileFeature();
         feature.setCode("DEVICE_INFO");
         feature.setName("Device info");
         feature.setDescription("Request device information");
         supportedFeatures.add(feature);
-        feature = new Feature();
+        feature = WindowsUtils.getMobileFeature();
         feature.setCode("WIPE_DATA");
         feature.setName("Wipe Data");
         feature.setDescription("Factory reset the device");
         supportedFeatures.add(feature);
-        feature = new Feature();
+        feature = WindowsUtils.getMobileFeature();
         feature.setCode("ENCRYPT_STORAGE");
         feature.setName("Encrypt storage");
         feature.setDescription("Encrypt storage");
         supportedFeatures.add(feature);
-        feature = new Feature();
+        feature = WindowsUtils.getMobileFeature();
         feature.setCode("DEVICE_RING");
         feature.setName("Ring");
         feature.setDescription("Ring the device");
         supportedFeatures.add(feature);
-        feature = new Feature();
+        feature = WindowsUtils.getMobileFeature();
         feature.setCode("PASSCODE_POLICY");
         feature.setName("Password Policy");
         feature.setDescription("Set passcode policy");
         supportedFeatures.add(feature);
-        feature = new Feature();
+        feature = WindowsUtils.getMobileFeature();
         feature.setCode("DISENROLL");
         feature.setName("DisEnroll");
         feature.setDescription("DisEnroll the device");
         supportedFeatures.add(feature);
-        feature = new Feature();
+        feature = WindowsUtils.getMobileFeature();
         feature.setCode("LOCK_RESET");
         feature.setName("LockReset");
         feature.setDescription("Lock Reset device");

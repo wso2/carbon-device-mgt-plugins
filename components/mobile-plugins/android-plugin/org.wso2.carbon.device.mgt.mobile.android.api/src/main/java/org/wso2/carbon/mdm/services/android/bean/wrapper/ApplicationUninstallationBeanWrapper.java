@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.mdm.services.android.bean.wrapper;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.mdm.services.android.bean.ApplicationUninstallation;
 
 import java.util.List;
@@ -24,9 +26,14 @@ import java.util.List;
 /**
  * This class is used to wrap the UninstallApplication bean with devices.
  */
+@ApiModel(value = "ApplicationUninstallationBeanWrapper",
+		description = "This class carries all information related to Uninstall Application")
 public class ApplicationUninstallationBeanWrapper {
 
+	@ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
 	private List<String> deviceIDs;
+
+	@ApiModelProperty(name = "operation", value = "Name of the device", required = true)
 	private ApplicationUninstallation operation;
 
 	public List<String> getDeviceIDs() {

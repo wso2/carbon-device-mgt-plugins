@@ -69,7 +69,7 @@ public class AndroidDeviceManager implements DeviceManager {
         } catch (LicenseManagementException e) {
             log.error("Error occurred while adding default license for Android devices", e);
         } catch (DeviceManagementException e) {
-            log.error("Error occurred while adding supported device features for Android platform", e);
+            throw new IllegalStateException("Error occurred while adding Android features to the DB.");
         }
     }
 
@@ -101,13 +101,13 @@ public class AndroidDeviceManager implements DeviceManager {
             status = true;
         } catch (MobileDeviceMgtPluginException e) {
             throw new DeviceManagementException(
-                    "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
+                    "Error occurred while retrieving the Registry instance", e);
         } catch (RegistryException e) {
             throw new DeviceManagementException(
-                    "Error occurred while persisting the Registry resource of Android Configuration : " + e.getMessage(), e);
+                    "Error occurred while persisting the Registry resource of Android Configuration", e);
         } catch (JAXBException e) {
             throw new DeviceManagementException(
-                    "Error occurred while parsing the Android configuration : " + e.getMessage(), e);
+                    "Error occurred while parsing the Android configuration", e);
         }
         return status;
     }
@@ -130,13 +130,13 @@ public class AndroidDeviceManager implements DeviceManager {
             return null;
         } catch (MobileDeviceMgtPluginException e) {
             throw new DeviceManagementException(
-                    "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
+                    "Error occurred while retrieving the Registry instance", e);
         } catch (JAXBException e) {
             throw new DeviceManagementException(
-                    "Error occurred while parsing the Android configuration : " + e.getMessage(), e);
+                    "Error occurred while parsing the Android configuration", e);
         } catch (RegistryException e) {
             throw new DeviceManagementException(
-                    "Error occurred while retrieving the Registry resource of Android Configuration : " + e.getMessage(), e);
+                    "Error occurred while retrieving the Registry resource of Android Configuration", e);
         }
     }
 
@@ -163,12 +163,10 @@ public class AndroidDeviceManager implements DeviceManager {
             try {
                 AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException mobileDAOEx) {
-                String msg = "Error occurred while roll back the device enrol transaction :" +
-                        device.toString();
+                String msg = "Error occurred while roll back the device enrol transaction :" + device.toString();
                 log.warn(msg, mobileDAOEx);
             }
-            String msg =
-                    "Error while enrolling the Android device : " + device.getDeviceIdentifier();
+            String msg = "Error occurred while enrolling the Android device : " + device.getDeviceIdentifier();
             throw new DeviceManagementException(msg, e);
         }
         return status;
@@ -189,11 +187,10 @@ public class AndroidDeviceManager implements DeviceManager {
             try {
                 AndroidDAOFactory.rollbackTransaction();
             } catch (MobileDeviceManagementDAOException mobileDAOEx) {
-                String msg = "Error occurred while roll back the update device transaction :" +
-                        device.toString();
+                String msg = "Error occurred while roll back the update device transaction :" + device.toString();
                 log.warn(msg, mobileDAOEx);
             }
-            String msg = "Error while updating the enrollment of the Android device : " +
+            String msg = "Error occurred while updating the enrollment of the Android device : " +
                     device.getDeviceIdentifier();
             throw new DeviceManagementException(msg, e);
         }
@@ -219,8 +216,7 @@ public class AndroidDeviceManager implements DeviceManager {
                 isEnrolled = true;
             }
         } catch (MobileDeviceManagementDAOException e) {
-            String msg = "Error while checking the enrollment status of Android device : " +
-                    deviceId.getId();
+            String msg = "Error occurred while checking the enrollment status of Android device : " + deviceId.getId();
             throw new DeviceManagementException(msg, e);
         }
         return isEnrolled;
@@ -249,8 +245,7 @@ public class AndroidDeviceManager implements DeviceManager {
             device = MobileDeviceManagementUtil.convertToDevice(mobileDevice);
         } catch (MobileDeviceManagementDAOException e) {
             throw new DeviceManagementException(
-                    "Error occurred while fetching the Android device: '" +
-                            deviceId.getId() + "'", e);
+                    "Error occurred while fetching the Android device: '" + deviceId.getId() + "'", e);
         }
         return device;
     }
@@ -294,12 +289,9 @@ public class AndroidDeviceManager implements DeviceManager {
         boolean status;
         Device existingDevice = this.getDevice(deviceIdentifier);
         // This object holds the current persisted device object
-        MobileDevice existingMobileDevice =
-                MobileDeviceManagementUtil.convertToMobileDevice(existingDevice);
-
+        MobileDevice existingMobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(existingDevice);
         // This object holds the newly received device object from response
         MobileDevice mobileDevice = MobileDeviceManagementUtil.convertToMobileDevice(device);
-
         // Updating current object features using newer ones
         existingMobileDevice.setLatitude(mobileDevice.getLatitude());
         existingMobileDevice.setLongitude(mobileDevice.getLongitude());
@@ -321,8 +313,7 @@ public class AndroidDeviceManager implements DeviceManager {
                         device.toString() + "'", e1);
             }
             throw new DeviceManagementException(
-                    "Error occurred while updating the Android device: '" +
-                            device.getDeviceIdentifier() + "'", e);
+                    "Error occurred while updating the Android device: '" + device.getDeviceIdentifier() + "'", e);
         }
         return status;
     }
@@ -343,8 +334,7 @@ public class AndroidDeviceManager implements DeviceManager {
                 }
             }
         } catch (MobileDeviceManagementDAOException e) {
-            throw new DeviceManagementException("Error occurred while fetching all Android devices",
-                    e);
+            throw new DeviceManagementException("Error occurred while fetching all Android devices", e);
         }
         return devices;
     }

@@ -44,6 +44,12 @@
 
     <dependencyManagement>
         <dependencies>
+            <!--Swagger Dependency-->
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
 
             <!--Carbon Kernel Dependencies-->
             <dependency>
@@ -1086,6 +1092,9 @@
 
         <!-- Jetty -->
         <jetty.version>8.1.3.v20120416</jetty.version>
+
+        <!-- Swagger -->
+        <swagger.version>1.5.8</swagger.version>
 
         <!-- Carbon Analytics -->
         <carbon.analytics.common.version>5.0.11</carbon.analytics.common.version>

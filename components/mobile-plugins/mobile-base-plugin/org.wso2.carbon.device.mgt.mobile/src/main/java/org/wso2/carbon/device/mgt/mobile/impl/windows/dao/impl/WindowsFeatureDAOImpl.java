@@ -43,10 +43,6 @@ public class WindowsFeatureDAOImpl implements MobileFeatureDAO {
 
     private static final Log log = LogFactory.getLog(WindowsFeatureDAOImpl.class);
 
-    public WindowsFeatureDAOImpl() {
-
-    }
-
     @Override
     public boolean addFeature(MobileFeature mobileFeature) throws MobileDeviceManagementDAOException {
         PreparedStatement stmt = null;

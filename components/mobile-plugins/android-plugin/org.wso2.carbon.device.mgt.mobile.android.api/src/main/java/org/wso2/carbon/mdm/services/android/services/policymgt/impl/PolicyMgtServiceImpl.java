@@ -16,14 +16,13 @@
  * under the License.
  */
 
-
-package org.wso2.carbon.mdm.services.android;
-
+package org.wso2.carbon.mdm.services.android.services.policymgt.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
+import org.wso2.carbon.mdm.services.android.services.policymgt.PolicyMgtService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.Message;
 import org.wso2.carbon.policy.mgt.common.FeatureManagementException;
@@ -32,16 +31,14 @@ import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
 import org.wso2.carbon.policy.mgt.common.ProfileFeature;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
-import javax.jws.WebService;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@WebService
-@Produces({"application/json", "application/xml"})
-@Consumes({"application/json", "application/xml"})
-public class PolicyMgtService {
-
+public class PolicyMgtServiceImpl {
     private static Log log = LogFactory.getLog(PolicyMgtService.class);
 
     @GET
