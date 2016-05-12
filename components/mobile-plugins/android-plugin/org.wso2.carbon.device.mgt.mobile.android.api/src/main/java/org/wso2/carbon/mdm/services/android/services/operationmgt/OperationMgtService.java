@@ -86,7 +86,7 @@ public interface OperationMgtService {
             notes = "Request location coordinates of Android devices",
             response = String.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Requested Device Coordinates"),
+            @ApiResponse(code = 200, message = "Requested Device Coordinates"),
             @ApiResponse(code = 500, message = "Issue in retrieving device management service instance")})
     Response getDeviceLocation(@ApiParam(name = "acceptHeader", value = "Accept Header")
                                @HeaderParam(ACCEPT) String acceptHeader, @ApiParam(name = "deviceIDs",
