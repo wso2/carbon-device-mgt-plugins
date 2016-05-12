@@ -21,7 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.exception.AndroidSenseDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.dao.util.AndroidSenseUtils;
+import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.util.AndroidSenseUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

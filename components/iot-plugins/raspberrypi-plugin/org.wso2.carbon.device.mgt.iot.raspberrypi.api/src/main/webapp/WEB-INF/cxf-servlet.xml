@@ -29,7 +29,6 @@
         <jaxrs:serviceBeans>
             <bean id="RaspberryPiControllerService"
                   class="org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.RaspberryPiControllerServiceImpl">
-                <property name="raspberryPiMQTTConnector" ref="raspberryPiMQTTConnector"/>
             </bean>
             <bean id="RaspberryPiManagerService"
                   class="org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.RaspberryPiManagerServiceImpl">
@@ -39,9 +38,4 @@
             <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
         </jaxrs:providers>
     </jaxrs:server>
-
-    <bean id="raspberryPiMQTTConnector"
-          class="org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.transport.RaspberryPiMQTTConnector">
-    </bean>
-
 </beans>

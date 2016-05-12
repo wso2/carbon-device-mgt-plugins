@@ -29,10 +29,6 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppAccount;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
-import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.ZipUtil;
@@ -178,9 +174,6 @@ public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService 
         } catch (APIManagerException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
-            log.error(ex.getMessage(), ex);
-            return Response.status(500).entity(ex.getMessage()).build();
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
@@ -216,13 +209,13 @@ public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService 
     }
 
     private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
-            throws DeviceManagementException, JWTClientException, APIManagerException, DeviceControllerException,
+            throws DeviceManagementException, JWTClientException, APIManagerException,
                    UserStoreException {
         //create new device id
         String deviceId = shortUUID();
         if (apiApplicationKey == null) {
-            String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
-                    .getAdminUserName();
+            String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
+                    .getRealmConfiguration().getAdminUserName();
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {RaspberrypiConstants.DEVICE_TYPE};
             apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
@@ -235,27 +228,7 @@ public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService 
         //create token
         String accessToken = accessTokenInfo.getAccessToken();
         String refreshToken = accessTokenInfo.getRefreshToken();
-        //adding registering data
-        XmppAccount newXmppAccount = new XmppAccount();
-        newXmppAccount.setAccountName(owner + "_" + deviceId);
-        newXmppAccount.setUsername(deviceId);
-        newXmppAccount.setPassword(accessToken);
-        newXmppAccount.setEmail(deviceId + "@wso2.com");
-        XmppServerClient xmppServerClient = new XmppServerClient();
-        xmppServerClient.initControlQueue();
-        boolean status;
-        if (XmppConfig.getInstance().isEnabled()) {
-            status = xmppServerClient.createXMPPAccount(newXmppAccount);
-            if (!status) {
-                String msg = "XMPP Account was not created for device - " + deviceId + " of owner - " + owner +
-                             ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot.common.config" +
-                             ".server.configs";
-                log.warn(msg);
-                throw new DeviceManagementException(msg);
-            }
-        }
-        //Register the device with CDMF
-        status = register(deviceId, deviceName);
+        boolean status = register(deviceId, deviceName);
         if (!status) {
             String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;
             throw new DeviceManagementException(msg);

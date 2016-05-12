@@ -17,6 +17,6 @@
   ~ under the License.
   -->
 
-<artifact name="EventReceiver_AndroidSense" version="1.0.0" type="event/receiver" serverRole="DataAnalyticsServer">
+<artifact name="android_sense_mqtt" version="1.0.0" type="event/receiver" serverRole="DataAnalyticsServer">
     <file>EventReceiver_AndroidSense.xml</file>
 </artifact>
