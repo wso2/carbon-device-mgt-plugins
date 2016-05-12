@@ -17,16 +17,17 @@
   ~ under the License.
   -->
 <eventReceiver name="temperature-http" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
-<from eventAdapterType="oauth-http">
-    <property name="maximumHttpConnectionPerHost">2</property>
-    <property name="username">admin</property>
-    <property name="contentValidationParams">device_id_json_path:event.metaData.deviceId</property>
-    <property name="contentValidation">default</property>
-    <property name="transports">all</property>
-    <property name="maximumTotalHttpConnection">100</property>
-    <property name="tokenValidationEndpointUrl">https://localhost:${carbon.https.port}/services/OAuth2TokenValidationService</property>
-    <property name="password">admin</property>
-</from>
-<mapping customMapping="disable" type="json"/>
-<to streamName="org.wso2.iot.devices.temperature" version="1.0.0"/>
+    <from eventAdapterType="oauth-http">
+        <property name="maximumHttpConnectionPerHost">2</property>
+        <property name="username">admin</property>
+        <property name="contentValidationParams">device_id_json_path:event.metaData.deviceId</property>
+        <property name="contentValidation">org.wso2.carbon.device.mgt.iot.input.adapter.http.util.HTTPContentValidator</property>
+        <property name="contentTransformer">default</property>
+        <property name="transports">all</property>
+        <property name="maximumTotalHttpConnection">100</property>
+        <property name="tokenValidationEndpointUrl">https://localhost:${carbon.https.port}/services/OAuth2TokenValidationService</property>
+        <property name="password">admin</property>
+    </from>
+    <mapping customMapping="disable" type="json"/>
+    <to streamName="org.wso2.iot.devices.temperature" version="1.0.0"/>
 </eventReceiver>

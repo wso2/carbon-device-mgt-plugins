@@ -22,7 +22,8 @@
     <property name="topic">carbon.super/+/+/temperature</property>
     <property name="username">admin</property>
     <property name="contentValidationParams">device_id_json_path:event.metaData.deviceId,device_id_topic_hierarchy_index:2</property>
-    <property name="contentValidation">default</property>
+    <property name="contentValidation">org.wso2.carbon.device.mgt.iot.input.adapter.mqtt.util.MQTTContentValidator</property>
+    <property name="contentTransformer">default</property>
     <property name="dcrUrl">https://localhost:${carbon.https.port}/dynamic-client-web/register</property>
     <property name="clientId">temperatureMqttClient</property>
     <property name="url">tcp://${mqtt.broker.host}:${mqtt.broker.port}</property>
