@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants;
 
+import org.wso2.carbon.utils.CarbonUtils;
+
+import java.io.File;
+
 public class VirtualFireAlarmConstants {
     public final static String DEVICE_TYPE = "virtual_firealarm";
     public final static String DEVICE_PLUGIN_DEVICE_NAME = "DEVICE_NAME";
@@ -66,6 +70,7 @@ public class VirtualFireAlarmConstants {
 
     public static final String CONTENT_VALIDATION = "contentValidation";
     public static final String CONTENT_TRANSFORMATION = "contentTransformer";
+    public static final String RESOURCE = "resource";
 
     public static final String JSON_SERIAL_KEY = "SerialNumber";
     public static final String TEMPERATURE_STREAM_DEFINITION = "org.wso2.iot.devices.temperature";
@@ -79,4 +84,9 @@ public class VirtualFireAlarmConstants {
     public static final String ADMIN_USERNAME = "admin.username";
     public static final String ADMIN_PASSWORD = "admin.password";
     public static final String XMPP_SERVER_PASSWORD = "admin@123456789";
+
+    public static final String MQTT_CONFIG_LOCATION = CarbonUtils.getEtcCarbonConfigDirPath() + File.separator
+            + "mqtt.properties";
+    public static final String XMPP_CONFIG_LOCATION = CarbonUtils.getEtcCarbonConfigDirPath() + File.separator
+            + "xmpp.properties";
 }

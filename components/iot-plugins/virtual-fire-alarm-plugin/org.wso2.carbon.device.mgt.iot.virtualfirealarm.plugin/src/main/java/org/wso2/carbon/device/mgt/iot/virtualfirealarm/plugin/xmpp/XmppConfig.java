@@ -21,8 +21,6 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
-import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,16 +37,11 @@ public class XmppConfig {
     private String virtualFirealarmAdminUsername;
     private String virtualFirealarmAdminPassword;
     private String virtualFirealarmAdminJID;
-
-    private static final String VIRTUAL_FIREALARM_CONFIG_LOCATION =
-            CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "conf" +
-                    File.separator + "iot" + File.separator + "xmpp.properties";
-
     private static XmppConfig xmppConfig = new XmppConfig();
     private static final Log log = LogFactory.getLog(XmppConfig.class);
 
     private XmppConfig() {
-        File configFile = new File(VIRTUAL_FIREALARM_CONFIG_LOCATION);
+        File configFile = new File(VirtualFireAlarmConstants.XMPP_CONFIG_LOCATION);
         if (configFile.exists()) {
             try {
                 InputStream propertyStream = configFile.toURI().toURL().openStream();
@@ -103,7 +96,5 @@ public class XmppConfig {
     public String getVirtualFirealarmAdminJID() {
         return virtualFirealarmAdminJID;
     }
-
-
 
 }

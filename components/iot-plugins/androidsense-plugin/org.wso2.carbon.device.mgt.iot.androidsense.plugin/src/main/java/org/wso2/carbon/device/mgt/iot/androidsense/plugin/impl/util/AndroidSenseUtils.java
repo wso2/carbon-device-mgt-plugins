@@ -21,14 +21,12 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.util.Utils;
-import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.exception.AndroidSenseDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.internal.AndroidSenseManagementDataHolder;
 import org.wso2.carbon.event.output.adapter.core.MessageType;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterConfiguration;
 import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
-import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -42,7 +40,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -52,10 +49,6 @@ import java.util.Properties;
 public class AndroidSenseUtils {
 
 	private static Log log = LogFactory.getLog(AndroidSenseUtils.class);
-
-	private static final String VIRTUAL_FIREALARM_CONFIG_LOCATION =
-			CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "conf" +
-					File.separator + "iot" + File.separator + "mqtt.properties";
 
 	public static void cleanupResources(Connection conn, PreparedStatement stmt, ResultSet rs) {
 		if (rs != null) {
@@ -131,12 +124,12 @@ public class AndroidSenseUtils {
 	 * @return OutputEventAdapterConfiguration instance for given configuration
 	 */
 	private static OutputEventAdapterConfiguration createMqttOutputEventAdapterConfiguration(String name, String type,
-																							 String msgFormat) throws IOException {
+					String msgFormat) throws IOException {
 		OutputEventAdapterConfiguration outputEventAdapterConfiguration = new OutputEventAdapterConfiguration();
 		outputEventAdapterConfiguration.setName(name);
 		outputEventAdapterConfiguration.setType(type);
 		outputEventAdapterConfiguration.setMessageFormat(msgFormat);
-		File configFile = new File(VIRTUAL_FIREALARM_CONFIG_LOCATION);
+		File configFile = new File(AndroidSenseConstants.MQTT_CONFIG_LOCATION);
 		if (configFile.exists()) {
 			Map<String, String> mqttAdapterProperties = new HashMap<>();
 			InputStream propertyStream = configFile.toURI().toURL().openStream();
@@ -160,7 +153,7 @@ public class AndroidSenseUtils {
 		return outputEventAdapterConfiguration;
 	}
 
-	private static String replaceMqttProperty(String urlWithPlaceholders) {
+	public static String replaceMqttProperty(String urlWithPlaceholders) {
 		urlWithPlaceholders = Utils.replaceSystemProperty(urlWithPlaceholders);
 		urlWithPlaceholders = urlWithPlaceholders.replaceAll(AndroidSenseConstants.MQTT_PORT, "" +
 				(AndroidSenseConstants.DEFAULT_MQTT_PORT + getPortOffset()));

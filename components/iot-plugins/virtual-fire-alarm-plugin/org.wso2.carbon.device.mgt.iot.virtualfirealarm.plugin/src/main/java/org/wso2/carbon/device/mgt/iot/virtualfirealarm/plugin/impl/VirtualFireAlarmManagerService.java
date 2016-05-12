@@ -52,7 +52,7 @@ public class VirtualFireAlarmManagerService implements DeviceManagementService {
 
     @Override
     public ProvisioningConfig getProvisioningConfig() {
-        return new ProvisioningConfig(VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN, true);
+        return new ProvisioningConfig(VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN, false);
     }
 
     @Override

@@ -20,7 +20,7 @@
 <artifacts>
     <artifact name="AndroidSense_CAPP" version="1.0.0" type="carbon/application">
 		<dependency artifact="EventStream_AndroidSense" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-		<dependency artifact="EventReceiver_AndroidSense" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+		<dependency artifact="android_sense_mqtt" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="EventPublisher_AndroidSense" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="EventExecution_AndroidSense" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
     </artifact>

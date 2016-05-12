@@ -50,7 +50,7 @@ public class AndroidSenseManagerService implements DeviceManagementService {
 
     @Override
     public ProvisioningConfig getProvisioningConfig() {
-        return new ProvisioningConfig(AndroidSenseConstants.DEVICE_TYPE_PROVIDER_DOMAIN, true);
+        return new ProvisioningConfig(AndroidSenseConstants.DEVICE_TYPE_PROVIDER_DOMAIN, false);
     }
 
     @Override

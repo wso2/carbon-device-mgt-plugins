@@ -47,6 +47,7 @@ public class XmppServerClient {
                 attributes.put("email", xmppAccount.getEmail());
                 attributes.put("name", xmppAccount.getAccountName());
                 accountManager.createAccount(xmppAccount.getUsername(), xmppAccount.getPassword(), attributes);
+                xmppConnection.disconnect();
                 return true;
             } catch (XMPPException e) {
                 if (e.getXMPPError().getCode() == 409) {

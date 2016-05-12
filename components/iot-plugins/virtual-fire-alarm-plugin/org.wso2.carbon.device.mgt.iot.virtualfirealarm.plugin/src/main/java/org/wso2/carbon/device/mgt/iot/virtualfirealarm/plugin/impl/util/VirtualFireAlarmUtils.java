@@ -37,7 +37,6 @@ import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterExcep
 import org.wso2.carbon.event.output.adapter.core.MessageType;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterConfiguration;
 import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.json.JSONObject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -62,9 +61,6 @@ import java.util.Properties;
 public class VirtualFireAlarmUtils {
 
     private static Log log = LogFactory.getLog(VirtualFireAlarmUtils.class);
-    private static final String VIRTUAL_FIREALARM_CONFIG_LOCATION =
-            CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "conf" +
-                    File.separator + "iot" + File.separator + "mqtt.properties";
 
     public static void cleanupResources(Connection conn, PreparedStatement stmt, ResultSet rs) {
         if (rs != null) {
@@ -161,7 +157,7 @@ public class VirtualFireAlarmUtils {
         outputEventAdapterConfiguration.setName(name);
         outputEventAdapterConfiguration.setType(type);
         outputEventAdapterConfiguration.setMessageFormat(msgFormat);
-        File configFile = new File(VIRTUAL_FIREALARM_CONFIG_LOCATION);
+        File configFile = new File(VirtualFireAlarmConstants.MQTT_CONFIG_LOCATION);
         if (configFile.exists()) {
             Map<String, String> mqttAdapterProperties = new HashMap<>();
             InputStream propertyStream = configFile.toURI().toURL().openStream();
@@ -180,6 +176,7 @@ public class VirtualFireAlarmUtils {
             mqttAdapterProperties.put(VirtualFireAlarmConstants.QOS_PROPERTY_KEY, properties.getProperty(
                     VirtualFireAlarmConstants.QOS_PROPERTY_KEY));
             mqttAdapterProperties.put(VirtualFireAlarmConstants.CLIENT_ID_PROPERTY_KEY, "");
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.RESOURCE, "output-event");
             outputEventAdapterConfiguration.setStaticProperties(mqttAdapterProperties);
         }
         return outputEventAdapterConfiguration;
@@ -199,7 +196,7 @@ public class VirtualFireAlarmUtils {
         inputEventAdapterConfiguration.setName(name);
         inputEventAdapterConfiguration.setType(type);
         inputEventAdapterConfiguration.setMessageFormat(msgFormat);
-        File configFile = new File(VIRTUAL_FIREALARM_CONFIG_LOCATION);
+        File configFile = new File(VirtualFireAlarmConstants.MQTT_CONFIG_LOCATION);
         if (configFile.exists()) {
             Map<String, String> mqttAdapterProperties = new HashMap<>();
             InputStream propertyStream = configFile.toURI().toURL().openStream();
@@ -222,12 +219,13 @@ public class VirtualFireAlarmUtils {
             mqttAdapterProperties.put(VirtualFireAlarmConstants.CONTENT_TRANSFORMATION,
                                       VirtualFirealarmMqttContentTransformer.class.getName());
             mqttAdapterProperties.put(VirtualFireAlarmConstants.CONTENT_VALIDATION, "default");
+            mqttAdapterProperties.put(VirtualFireAlarmConstants.RESOURCE, "input-event");
             inputEventAdapterConfiguration.setProperties(mqttAdapterProperties);
         }
         return inputEventAdapterConfiguration;
     }
 
-    private static String replaceMqttProperty(String urlWithPlaceholders) {
+    public static String replaceMqttProperty(String urlWithPlaceholders) {
         urlWithPlaceholders = Utils.replaceSystemProperty(urlWithPlaceholders);
         urlWithPlaceholders = urlWithPlaceholders.replaceAll(VirtualFireAlarmConstants.MQTT_PORT, "" +
                 (VirtualFireAlarmConstants.DEFAULT_MQTT_PORT + getPortOffset()));

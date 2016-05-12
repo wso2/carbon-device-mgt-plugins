@@ -54,7 +54,7 @@ public class ArduinoManagerService implements DeviceManagementService {
 
     @Override
     public ProvisioningConfig getProvisioningConfig() {
-        return new ProvisioningConfig(DEVICE_TYPE_PROVIDER_DOMAIN, true);
+        return new ProvisioningConfig(DEVICE_TYPE_PROVIDER_DOMAIN, false);
     }
 
     @Override

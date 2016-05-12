@@ -26,11 +26,11 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
+import org.wso2.carbon.device.mgt.iot.androidsense.plugin.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.AndroidConfiguration;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.Constants;
-import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.exception.IoTException;
 import org.wso2.carbon.device.mgt.iot.util.IoTUtil;
 
@@ -61,7 +61,7 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
             if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
                 AndroidConfiguration androidConfiguration = new AndroidConfiguration();
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
-                String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
+                String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
                 if (mqttEndpoint.contains(Constants.LOCALHOST)) {
                     mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, IoTUtil.getHostName());
                 }
@@ -84,7 +84,7 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
             if (added) {
                 AndroidConfiguration androidConfiguration = new AndroidConfiguration();
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
-                String mqttEndpoint = MqttConfig.getInstance().getMqttQueueEndpoint();
+                String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
                 if (mqttEndpoint.contains(Constants.LOCALHOST)) {
                     mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, IoTUtil.getHostName());
                 }

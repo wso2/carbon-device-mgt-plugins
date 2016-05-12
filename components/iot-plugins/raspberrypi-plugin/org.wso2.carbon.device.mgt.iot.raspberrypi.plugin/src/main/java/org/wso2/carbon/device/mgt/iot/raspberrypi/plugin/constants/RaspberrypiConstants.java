@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants;
 
+import org.wso2.carbon.utils.CarbonUtils;
+
+import java.io.File;
+
 public class RaspberrypiConstants {
 
     public final static String DEVICE_TYPE = "raspberrypi";
@@ -56,5 +60,8 @@ public class RaspberrypiConstants {
     public static final String CLIENT_ID_PROPERTY_KEY = "qos";
     public static final String CLEAR_SESSION_PROPERTY_KEY = "clearSession";
     public static final String TOPIC = "topic";
+
+    public static final String MQTT_CONFIG_LOCATION = CarbonUtils.getEtcCarbonConfigDirPath() + File.separator
+            + "mqtt.properties";
 
 }

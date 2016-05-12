@@ -16,6 +16,10 @@
 
 package org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants;
 
+import org.wso2.carbon.utils.CarbonUtils;
+
+import java.io.File;
+
 public class AndroidSenseConstants {
 
     public final static String DEVICE_TYPE = "android_sense";
@@ -70,4 +74,7 @@ public class AndroidSenseConstants {
     public static final String CLIENT_ID_PROPERTY_KEY = "qos";
     public static final String CLEAR_SESSION_PROPERTY_KEY = "clearSession";
     public static final String TOPIC = "topic";
+
+    public static final String MQTT_CONFIG_LOCATION = CarbonUtils.getEtcCarbonConfigDirPath() + File.separator
+            + "mqtt.properties";
 }

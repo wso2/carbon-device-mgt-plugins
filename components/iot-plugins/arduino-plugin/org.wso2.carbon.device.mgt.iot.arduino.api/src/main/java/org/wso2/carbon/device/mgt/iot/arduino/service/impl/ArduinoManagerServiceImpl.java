@@ -32,7 +32,6 @@ import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.ZipUtil;
-import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
@@ -172,9 +171,6 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
         } catch (APIManagerException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
-            log.error(ex.getMessage(), ex);
-            return Response.status(500).entity(ex.getMessage()).build();
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
@@ -185,7 +181,7 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
     }
 
     private ZipArchive createDownloadFile(String owner, String deviceName)
-            throws DeviceManagementException, JWTClientException, DeviceControllerException, APIManagerException,
+            throws DeviceManagementException, JWTClientException, APIManagerException,
                    UserStoreException {
         if (owner == null) {
             throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");

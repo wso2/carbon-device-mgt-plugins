@@ -31,7 +31,6 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
-import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
@@ -199,9 +198,6 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
         } catch (APIManagerException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
-        } catch (DeviceControllerException ex) {
-            log.error(ex.getMessage(), ex);
-            return Response.status(500).entity(ex.getMessage()).build();
         } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
@@ -241,7 +237,7 @@ public class VirtualFireAlarmManagerServiceImpl implements VirtualFireAlarmManag
     }
 
     private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
-            throws DeviceManagementException, APIManagerException, JWTClientException, DeviceControllerException,
+            throws DeviceManagementException, APIManagerException, JWTClientException,
                    UserStoreException, VirtualFirealarmDeviceMgtPluginException {
         //create new device id
         String deviceId = shortUUID();

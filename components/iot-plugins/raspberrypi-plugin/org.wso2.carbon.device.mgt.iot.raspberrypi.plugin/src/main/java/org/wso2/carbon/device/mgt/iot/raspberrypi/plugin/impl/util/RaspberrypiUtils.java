@@ -55,10 +55,6 @@ public class RaspberrypiUtils {
 
     private static Log log = LogFactory.getLog(RaspberrypiUtils.class);
 
-    private static final String VIRTUAL_FIREALARM_CONFIG_LOCATION =
-            CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "conf" +
-                    File.separator + "iot" + File.separator + "mqtt.properties";
-
     public static void cleanupResources(Connection conn, PreparedStatement stmt, ResultSet rs) {
         if (rs != null) {
             try {
@@ -132,12 +128,12 @@ public class RaspberrypiUtils {
      * @return OutputEventAdapterConfiguration instance for given configuration
      */
     private static OutputEventAdapterConfiguration createMqttOutputEventAdapterConfiguration(String name, String type,
-                                                                                             String msgFormat) throws IOException {
+                                                   String msgFormat) throws IOException {
         OutputEventAdapterConfiguration outputEventAdapterConfiguration = new OutputEventAdapterConfiguration();
         outputEventAdapterConfiguration.setName(name);
         outputEventAdapterConfiguration.setType(type);
         outputEventAdapterConfiguration.setMessageFormat(msgFormat);
-        File configFile = new File(VIRTUAL_FIREALARM_CONFIG_LOCATION);
+        File configFile = new File(RaspberrypiConstants.MQTT_CONFIG_LOCATION);
         if (configFile.exists()) {
             Map<String, String> mqttAdapterProperties = new HashMap<>();
             InputStream propertyStream = configFile.toURI().toURL().openStream();
@@ -161,7 +157,7 @@ public class RaspberrypiUtils {
         return outputEventAdapterConfiguration;
     }
 
-    private static String replaceMqttProperty(String urlWithPlaceholders) {
+    public static String replaceMqttProperty(String urlWithPlaceholders) {
         urlWithPlaceholders = Utils.replaceSystemProperty(urlWithPlaceholders);
         urlWithPlaceholders = urlWithPlaceholders.replaceAll(RaspberrypiConstants.MQTT_PORT, "" +
                 (RaspberrypiConstants.DEFAULT_MQTT_PORT + getPortOffset()));
