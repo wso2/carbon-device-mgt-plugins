@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.mdm.services.android.bean.wrapper;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.mdm.services.android.bean.PasscodePolicy;
 
 import java.util.List;
@@ -24,9 +26,14 @@ import java.util.List;
 /**
  * This class is used to wrap the PasswordPolicy bean with devices.
  */
+
+@ApiModel(value = "PasswordPolicyBeanWrapper",
+          description = "Mapping between passcode policy and device list to be applied.")
 public class PasswordPolicyBeanWrapper {
 
+    @ApiModelProperty(name = "operation", value = "The information of setting up password policy", required = true)
 	private PasscodePolicy operation;
+    @ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
 	private List<String> deviceIDs;
 
 	public PasscodePolicy getOperation() {

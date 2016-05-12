@@ -18,14 +18,21 @@
 
 package org.wso2.carbon.mdm.services.android.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * This class represents the blacklist applications information.
  */
+@ApiModel(value = "BlacklistApplications",
+        description = "This class represents the blacklist applications information.")
 public class BlacklistApplications extends AndroidOperation implements Serializable {
 
+    @ApiModelProperty(name = "appIdentifiers", value = "A list of application package names to be blacklisted.",
+            required = true)
 	private List<String> appIdentifiers;
 
 	public List<String> getAppIdentifier() {

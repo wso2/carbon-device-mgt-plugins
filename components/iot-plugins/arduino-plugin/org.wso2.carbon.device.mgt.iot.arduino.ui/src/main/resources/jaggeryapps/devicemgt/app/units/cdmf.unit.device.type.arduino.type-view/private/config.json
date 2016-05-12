@@ -1,0 +1,7 @@
+{
+  "deviceType": {
+    "label": "Arduino",
+    "category": "iot",
+    "downloadAgentUri": "arduino/enrollment/devices/download"
+  }
+}

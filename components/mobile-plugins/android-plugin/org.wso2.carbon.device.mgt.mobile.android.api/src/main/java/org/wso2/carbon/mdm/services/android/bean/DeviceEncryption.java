@@ -18,13 +18,20 @@
 
 package org.wso2.carbon.mdm.services.android.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * This class represents the information of encrypt operation.
  */
+
+@ApiModel(value = "DeviceEncryption",
+          description = "Details related device encryption.")
 public class DeviceEncryption extends AndroidOperation implements Serializable {
 
+    @ApiModelProperty(name = "encrypted", value = "Whether  to enable encryption or not.", required = true)
 	private boolean encrypted;
 
 	public boolean isEncrypted() {

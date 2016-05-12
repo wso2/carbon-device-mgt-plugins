@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.mdm.services.android.bean.wrapper;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.mdm.services.android.bean.ApplicationInstallation;
 
 import java.util.List;
@@ -24,9 +26,15 @@ import java.util.List;
 /**
  * This class is used to wrap the InstallApplication bean with devices.
  */
+
+@ApiModel(value = "ApplicationInstallationBeanWrapper",
+		description = "This class carries all information related to a InstallApplication")
 public class ApplicationInstallationBeanWrapper {
 
+	@ApiModelProperty(name = "deviceIDs", value = "List of Devices", required = true)
 	private List<String> deviceIDs;
+
+	@ApiModelProperty(name = "operation", value = "App Installation property", required = true)
 	private ApplicationInstallation operation;
 
 	public List<String> getDeviceIDs() {

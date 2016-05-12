@@ -25,6 +25,7 @@ import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
 import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.dao.WindowsDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.impl.windows.util.WindowsPluginConstants;
+import org.wso2.carbon.device.mgt.mobile.impl.windows.util.WindowsUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -60,17 +61,7 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
             rs = stmt.executeQuery();
 
             while (rs.next()) {
-                mobileDevice = new MobileDevice();
-                mobileDevice.setMobileDeviceId(rs.getString(WindowsPluginConstants.DEVICE_ID));
-                mobileDevice.setImei(rs.getString(WindowsPluginConstants.IMEI));
-                mobileDevice.setImsi(rs.getString(WindowsPluginConstants.IMSI));
-                mobileDevice.setModel(rs.getString(WindowsPluginConstants.DEVICE_MODEL));
-                mobileDevice.setVendor(rs.getString(WindowsPluginConstants.VENDOR));
-                mobileDevice.setLatitude(rs.getString(WindowsPluginConstants.LATITUDE));
-                mobileDevice.setLongitude(rs.getString(WindowsPluginConstants.LONGITUDE));
-                mobileDevice.setSerial(rs.getString(WindowsPluginConstants.SERIAL));
-                mobileDevice.setOsVersion(rs.getString(WindowsPluginConstants.LATITUDE));
-
+                mobileDevice = WindowsUtils.loadMobileDevices(rs);
                 Map<String, String> propertyMap = new HashMap<>();
                 propertyMap.put(WindowsPluginConstants.CHANNEL_URI, rs.getString(WindowsPluginConstants.CHANNEL_URI));
                 propertyMap.put(WindowsPluginConstants.DEVICE_INFO, rs.getString(WindowsPluginConstants.DEVICE_INFO));
@@ -225,15 +216,7 @@ public class WindowsDeviceDAOImpl implements MobileDeviceDAO {
             rs = stmt.executeQuery();
 
             while (rs.next()) {
-                mobileDevice = new MobileDevice();
-                mobileDevice.setMobileDeviceId(rs.getString(WindowsPluginConstants.DEVICE_ID));
-                mobileDevice.setVendor(rs.getString(WindowsPluginConstants.IMEI));
-                mobileDevice.setLatitude(rs.getString(WindowsPluginConstants.IMSI));
-                mobileDevice.setLongitude(rs.getString(WindowsPluginConstants.OS_VERSION));
-                mobileDevice.setImei(rs.getString(WindowsPluginConstants.DEVICE_MODEL));
-                mobileDevice.setImsi(rs.getString(WindowsPluginConstants.VENDOR));
-                mobileDevice.setOsVersion(rs.getString(WindowsPluginConstants.LATITUDE));
-
+                mobileDevice = WindowsUtils.loadMobileDevices(rs);
                 Map<String, String> propertyMap = new HashMap<>();
                 propertyMap.put(WindowsPluginConstants.CHANNEL_URI, rs.getString(WindowsPluginConstants.CHANNEL_URI));
                 propertyMap.put(WindowsPluginConstants.DEVICE_INFO, rs.getString(WindowsPluginConstants.DEVICE_INFO));

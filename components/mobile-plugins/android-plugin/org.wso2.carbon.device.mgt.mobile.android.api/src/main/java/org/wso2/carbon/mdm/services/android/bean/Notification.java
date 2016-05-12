@@ -18,13 +18,19 @@
 
 package org.wso2.carbon.mdm.services.android.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * This class represents the information of sending notification operation.
  */
+@ApiModel(value = "Notification",
+          description = "Details related to notifications passed to device.")
 public class Notification extends AndroidOperation implements Serializable {
 
+    @ApiModelProperty(name = "message", value = "The message to be sent to the device.", required = true)
 	private String message;
 
 	public String getMessage() {

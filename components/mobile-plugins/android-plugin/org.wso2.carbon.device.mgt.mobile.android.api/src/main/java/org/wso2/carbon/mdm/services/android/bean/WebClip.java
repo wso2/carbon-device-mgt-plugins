@@ -18,15 +18,24 @@
 
 package org.wso2.carbon.mdm.services.android.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * This class represents the information of setting up webclip.
  */
+@ApiModel(value = "WebClip", description = "This class represents the information of setting up webclip")
 public class WebClip extends AndroidOperation implements Serializable {
 
+	@ApiModelProperty(name = "identity", value = "The URL of the application", required = true)
 	private String identity;
+	@ApiModelProperty(name = "title", value = "The name of the web application", required = true)
 	private String title;
+	@ApiModelProperty(name = "type", value = "The type of the operation. Following are the possible operation"
+			+ " types: install and uninstall. If the operation type is install, the web clip is added, and "
+			+ "if the operation type is uninstall, the existing web clip is removed", required = true)
 	private String type;
 
 	public String getIdentity() {

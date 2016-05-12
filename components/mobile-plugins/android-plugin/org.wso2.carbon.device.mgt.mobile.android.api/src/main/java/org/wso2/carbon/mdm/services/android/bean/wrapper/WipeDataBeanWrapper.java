@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.mdm.services.android.bean.wrapper;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.mdm.services.android.bean.WipeData;
 
 import java.util.List;
@@ -24,9 +26,13 @@ import java.util.List;
 /**
  * This class is used to wrap the WipeData bean with devices.
  */
+@ApiModel(value = "WipeDataBeanWrapper",
+          description = "Mapping between wipe operation and device list to be applied.")
 public class WipeDataBeanWrapper {
 
+    @ApiModelProperty(name = "operation", value = "The information of wipedata operation", required = true)
 	private WipeData operation;
+    @ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
 	private List<String> deviceIDs;
 
 	public WipeData getOperation() {

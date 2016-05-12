@@ -18,18 +18,33 @@
 
 package org.wso2.carbon.device.mgt.mobile.impl.windows.util;
 
-import java.util.Map;
+import org.wso2.carbon.device.mgt.common.Feature;
+import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
- * Contains utility methods used by Windows plugin.
+ * Contains utility methods which are used by Windows plugin.
  */
 public class WindowsUtils {
-    public static String getDeviceProperty(Map<String, String> deviceProperties, String property) {
 
-        String deviceProperty = deviceProperties.get(property);
-        if (deviceProperty == null) {
-            return null;
-        }
-        return deviceProperty;
+    public static MobileDevice loadMobileDevices(ResultSet rs) throws SQLException {
+        MobileDevice mobileDevice = new MobileDevice();
+        mobileDevice.setMobileDeviceId(rs.getString(WindowsPluginConstants.DEVICE_ID));
+        mobileDevice.setImei(rs.getString(WindowsPluginConstants.IMEI));
+        mobileDevice.setImsi(rs.getString(WindowsPluginConstants.IMSI));
+        mobileDevice.setModel(rs.getString(WindowsPluginConstants.DEVICE_MODEL));
+        mobileDevice.setVendor(rs.getString(WindowsPluginConstants.VENDOR));
+        mobileDevice.setLatitude(rs.getString(WindowsPluginConstants.LATITUDE));
+        mobileDevice.setLongitude(rs.getString(WindowsPluginConstants.LONGITUDE));
+        mobileDevice.setSerial(rs.getString(WindowsPluginConstants.SERIAL));
+        mobileDevice.setOsVersion(rs.getString(WindowsPluginConstants.LATITUDE));
+        return mobileDevice;
+    }
+    
+    public static Feature getMobileFeature() {
+        Feature feature = new Feature();
+        return feature;
     }
 }
