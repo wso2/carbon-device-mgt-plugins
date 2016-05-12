@@ -18,13 +18,18 @@
 
 package org.wso2.carbon.mdm.services.android.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * This class represents the information of wipedata operation.
  */
+@ApiModel(value = "WipeData", description = "This class represents the information of wipedata operation")
 public class WipeData extends AndroidOperation implements Serializable {
 
+	@ApiModelProperty(name = "pin", value = "PIN number to proceed with the data wipe", required = true)
 	private String pin;
 
 	public String getPin() {

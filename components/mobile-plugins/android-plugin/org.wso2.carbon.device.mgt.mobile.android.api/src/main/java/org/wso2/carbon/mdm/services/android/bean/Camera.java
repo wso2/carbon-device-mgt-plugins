@@ -18,13 +18,20 @@
 
 package org.wso2.carbon.mdm.services.android.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * This class represents the information of camera operation.
  */
+@ApiModel(value = "Camera",
+        description = "This class represents the information of camera operation.")
 public class Camera extends AndroidOperation implements Serializable {
 
+    @ApiModelProperty(name = "enabled", value = "Disable the camera on the device by assigning false as the value or " +
+        "enable the camera on the device to function by defining true as the value.", required = true)
 	private boolean enabled;
 
 	public boolean isEnabled() {
