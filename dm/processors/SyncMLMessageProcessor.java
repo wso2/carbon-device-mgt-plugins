@@ -26,10 +26,10 @@ import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.Node;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.parsers.URIParser;
 import org.wso2.carbon.mdm.services.android.omadm.dm.dao.DeviceMODao;
+import org.wso2.carbon.mdm.services.android.omadm.operations.OperationHandler;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLStatusCodes;
-import org.wso2.carbon.mdm.services.android.omadm.util.AlertCodeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,8 +112,6 @@ public class SyncMLMessageProcessor {
      * This method processes the status blocks of the message while updating the DM Tree
      */
     private void processStatuses() {
-        List<StatusTag> sourceStatuses = sourceDocument.getBody().getStatus();
-
         // Generate header status
         StatusTag headerStatus = new StatusTag(HEADER_STATUS_COMMAND_ID, sourceDocument.getHeader().getMsgID(),
                 HEADER_COMMAND_REF_ID, Constants.SyncMLTags.SYNC_HDR,
@@ -126,13 +124,17 @@ public class SyncMLMessageProcessor {
         } else {
             responseDocument.getBody().getStatus().add(headerStatus);
         }
+
+        // Update operations
+        OperationHandler operationHandler = new OperationHandler(sourceDocument, headerCommandId);
+        operationHandler.updateOperations();
+
     }
 
     private void processReplaceCommand() {
         ReplaceTag replaceTag = sourceDocument.getBody().getReplace();
         int replaceCmdId = replaceTag.getCommandId();
         List<ItemTag> items = replaceTag.getItems();
-        List<StatusTag> statuses = new ArrayList<>();
         boolean wholeBlockFlag = false;
 
         for (ItemTag item : items) {
@@ -149,7 +151,7 @@ public class SyncMLMessageProcessor {
                 status.setCommandReference(replaceCmdId);
                 status.setCommandId(++headerCommandId);
                 status.setCommand(Constants.REPLACE);
-                statuses.add(status);
+                responseDocument.getBody().getStatus().add(status);
                 wholeBlockFlag = true;
                 break;
             }
@@ -247,10 +249,6 @@ public class SyncMLMessageProcessor {
         }
 
         for (ItemTag item : items) {
-            MetaTag meta;
-            if (item.getMeta() != null) {
-                meta = item.getMeta();
-            }
             String locURI = item.getTarget().getLocURI();
             MgmtTree tree = moDao.getMO(URIParser.getDMTreeName(locURI),
                     sourceDocument.getHeader().getSource().getLocURI());

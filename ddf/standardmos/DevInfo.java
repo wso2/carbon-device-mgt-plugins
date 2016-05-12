@@ -28,18 +28,6 @@ import java.io.Serializable;
  */
 public class DevInfo implements Serializable {
 
-    // Name of the Management Object
-    public static final String DEVINFO = "DevInfo";
-    // Device Identifier
-    public static final String DEV_ID = "/DevId";
-    // Manufacturer
-    public static final String MAN = "/Man";
-    // Device model
-    public static final String MOD = "/Mod";
-    // Device model version
-    public static final String DMV = "/DmV";
-    // Device language
-    public static final String LANG = "/Lang";
     // Path to the DevInfo DDF file
     public static final String DEV_INFO_DDF_PATH = "OMA-SUP-MO_DM_DevInfo-V1_2-20070209-A.xml";
 

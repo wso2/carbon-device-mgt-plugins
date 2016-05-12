@@ -5,9 +5,9 @@ Copyright Open Mobile Alliance Ltd., 2005-2007. All rights reserved
 This DDF contains a description of the DM information management object (DevInfo), according to the OMA DM Description Framework.
 -->
 
-<!DOCTYPE MgmtTree PUBLIC "-//OMA//DTD-DM-DDF 1.2//EN"
+<!-- <!DOCTYPE MgmtTree PUBLIC "-//OMA//DTD-DM-DDF 1.2//EN"
              "http://www.openmobilealliance.org/tech/DTD/DM_DDF-V1_2.dtd"
-             [<?oma-dm-ddf-ver supported-versions="1.2"?>]>
+             [<?oma-dm-ddf-ver supported-versions="1.2"?>]> -->
 
 <!-- 
 FILE INFORMATION
@@ -82,12 +82,13 @@ terms set forth above.
 <MgmtTree>
 	<VerDTD>1.2</VerDTD>
 	<Node>
-		<NodeName>DevInfo</NodeName>
+		<NodeName>DevConfig</NodeName>
 		<!--The '.' shows that this node is located immediately under the root.-->
 		<Path>.</Path>
 		<DFProperties>
 			<AccessType>
 				<Get/>
+				<Exec/>
 			</AccessType>
 			<DFFormat>
 				<node/>
@@ -118,63 +119,6 @@ terms set forth above.
 					<DDFName></DDFName>
 				</DFType>
 			</DFProperties>
-			<Node>
-				<NodeName>Identity</NodeName>
-				<!--There are no further items here at the moment.-->
-				<DFProperties>
-					<AccessType>
-						<Get/>
-					</AccessType>
-					<DFFormat>
-						<node/>
-					</DFFormat>
-					<Scope>
-						<Permanent/>
-					</Scope>
-					<DFTitle>Identity related information</DFTitle>
-					<DFType>
-						<DDFName></DDFName>
-					</DFType>
-				</DFProperties>
-				<Node>
-					<NodeName>IMSI</NodeName>
-					<!--There are no further items here at the moment.-->
-					<DFProperties>
-						<AccessType>
-							<Get/>
-						</AccessType>
-						<DFFormat>
-							<node/>
-						</DFFormat>
-						<Scope>
-							<Permanent/>
-						</Scope>
-						<DFTitle>IMSI number</DFTitle>
-						<DFType>
-							<DDFName></DDFName>
-						</DFType>
-					</DFProperties>
-				</Node>
-				<Node>
-					<NodeName>IMEI</NodeName>
-					<!--There are no further items here at the moment.-->
-					<DFProperties>
-						<AccessType>
-							<Get/>
-						</AccessType>
-						<DFFormat>
-							<node/>
-						</DFFormat>
-						<Scope>
-							<Permanent/>
-						</Scope>
-						<DFTitle>IMEI number</DFTitle>
-						<DFType>
-							<DDFName></DDFName>
-						</DFType>
-					</DFProperties>
-				</Node>
-			</Node>
 		</Node>
 		<Node>
 			<NodeName>Bearer</NodeName>

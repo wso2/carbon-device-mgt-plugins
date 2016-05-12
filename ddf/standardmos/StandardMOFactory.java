@@ -32,4 +32,12 @@ public class StandardMOFactory {
         return DevDetail.getInstance();
     }
 
+    public static DevConfig getDevConfigTree() {
+        return DevConfig.getInstance();
+    }
+
+    public static DevCommand getDevCommandTree() {
+        return DevCommand.getInstance();
+    }
+
 }

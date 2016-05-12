@@ -34,9 +34,6 @@ import java.util.List;
  */
 public class MgmtTreeManagerImpl implements MgmtTreeManager {
 
-    private static String NODE_URI_DELIMETER = "/";
-    private static String ROOT_NODE_PATH_DELIMETER = ".";
-
     private MgmtTree tree;
 
     public MgmtTreeManagerImpl(MgmtTree tree) {
@@ -50,6 +47,7 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
         String absolutePath = URIParser.getPath(path);
         node.setPath(absolutePath);
         getParentNode(node).getNodes().add(node);
+
         return SyncMLStatusCodes.SUCCESS.getCode();
     }
 
@@ -70,9 +68,9 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
         Node node;
         //Validate the URI
         URIParser.validateUri(path);
-
         String[] pathArr = URIParser.nodeNames(path);
         node = searchNode(pathArr, tree.getNodes(), 0);
+
         return node;
     }
 
@@ -89,19 +87,16 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
                 node.setFormat(item.getMeta().getFormat());
             }
         }
-
         if (item.getMeta() != null) {
             if (item.getMeta().getType() != null) {
                 node.setType(item.getMeta().getType());
             }
         }
-
         if (item.getMeta() != null) {
             if (item.getData() != null) {
                 node.setValue(item.getData());
             }
         }
-
         return SyncMLStatusCodes.SUCCESS.getCode();
     }
 
@@ -112,10 +107,7 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
 
     @Override
     public boolean isExistingNode(String path) {
-        if (getNode(path) != null) {
-            return true;
-        }
-        return false;
+        return getNode(path) != null;
     }
 
     public Node getParentNode(Node node) {
@@ -145,21 +137,4 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
         return targetNode;
     }
 
-    /**
-     * This recursive method generates absolute paths of each node in a given Node list
-     *
-     * @param treeNodes     Node list
-     * @param currParentURI URI of the parent node
-     */
-    public void updatePaths(List<Node> treeNodes, String currParentURI) {
-        String tempStr;
-        for (Node node : treeNodes) {
-            tempStr = currParentURI + NODE_URI_DELIMETER + node.getNodeName();
-            node.setPath(currParentURI);
-            if (node.getNodes() != null) {
-                System.out.println(node.getNodeName() + " : " + node.getPath());
-                updatePaths(node.getNodes(), tempStr);
-            }
-        }
-    }
 }

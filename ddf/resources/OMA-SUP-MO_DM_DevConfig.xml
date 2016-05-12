@@ -5,9 +5,9 @@ Copyright Open Mobile Alliance Ltd., 2005-2007. All rights reserved
 This DDF contains a description of the DM information management object (DevInfo), according to the OMA DM Description Framework.
 -->
 
-<!DOCTYPE MgmtTree PUBLIC "-//OMA//DTD-DM-DDF 1.2//EN"
+<!-- <!DOCTYPE MgmtTree PUBLIC "-//OMA//DTD-DM-DDF 1.2//EN"
              "http://www.openmobilealliance.org/tech/DTD/DM_DDF-V1_2.dtd"
-             [<?oma-dm-ddf-ver supported-versions="1.2"?>]>
+             [<?oma-dm-ddf-ver supported-versions="1.2"?>]> -->
 
 <!-- 
 FILE INFORMATION
@@ -82,7 +82,7 @@ terms set forth above.
 <MgmtTree>
 	<VerDTD>1.2</VerDTD>
 	<Node>
-		<NodeName>DevInfo</NodeName>
+		<NodeName>DevConfig</NodeName>
 		<!--The '.' shows that this node is located immediately under the root.-->
 		<Path>.</Path>
 		<DFProperties>
@@ -95,13 +95,13 @@ terms set forth above.
 			<Scope>
 				<Permanent/>
 			</Scope>
-			<DFTitle>The interior node holding all devinfo objects</DFTitle>
+			<DFTitle>The interior node holding all devconfig objects</DFTitle>
 			<DFType>
 				<DDFName></DDFName>
 			</DFType>
 		</DFProperties>
 		<Node>
-			<NodeName>Ext</NodeName>
+			<NodeName>Camera</NodeName>
 			<!--There are no further items here at the moment.-->
 			<DFProperties>
 				<AccessType>
@@ -113,72 +113,14 @@ terms set forth above.
 				<Scope>
 					<Permanent/>
 				</Scope>
-				<DFTitle>The extendable DevInfo branch.</DFTitle>
+				<DFTitle>Represents the camera</DFTitle>
 				<DFType>
 					<DDFName></DDFName>
 				</DFType>
 			</DFProperties>
-			<Node>
-				<NodeName>Identity</NodeName>
-				<!--There are no further items here at the moment.-->
-				<DFProperties>
-					<AccessType>
-						<Get/>
-					</AccessType>
-					<DFFormat>
-						<node/>
-					</DFFormat>
-					<Scope>
-						<Permanent/>
-					</Scope>
-					<DFTitle>Identity related information</DFTitle>
-					<DFType>
-						<DDFName></DDFName>
-					</DFType>
-				</DFProperties>
-				<Node>
-					<NodeName>IMSI</NodeName>
-					<!--There are no further items here at the moment.-->
-					<DFProperties>
-						<AccessType>
-							<Get/>
-						</AccessType>
-						<DFFormat>
-							<node/>
-						</DFFormat>
-						<Scope>
-							<Permanent/>
-						</Scope>
-						<DFTitle>IMSI number</DFTitle>
-						<DFType>
-							<DDFName></DDFName>
-						</DFType>
-					</DFProperties>
-				</Node>
-				<Node>
-					<NodeName>IMEI</NodeName>
-					<!--There are no further items here at the moment.-->
-					<DFProperties>
-						<AccessType>
-							<Get/>
-						</AccessType>
-						<DFFormat>
-							<node/>
-						</DFFormat>
-						<Scope>
-							<Permanent/>
-						</Scope>
-						<DFTitle>IMEI number</DFTitle>
-						<DFType>
-							<DDFName></DDFName>
-						</DFType>
-					</DFProperties>
-				</Node>
-			</Node>
 		</Node>
 		<Node>
-			<NodeName>Bearer</NodeName>
-			<!--There are no further items here at the moment.-->
+			<NodeName>Passcode</NodeName>
 			<DFProperties>
 				<AccessType>
 					<Get/>
@@ -194,9 +136,63 @@ terms set forth above.
 					<DDFName></DDFName>
 				</DFType>
 			</DFProperties>
+			<Node>
+				<NodeName>PasscodeValue</NodeName>
+				<DFProperties>
+					<AccessType>
+						<Get/>
+					</AccessType>
+					<DFFormat>
+						<node/>
+					</DFFormat>
+					<Scope>
+						<Permanent/>
+					</Scope>
+					<DFTitle>The bearer specific DevInfo branch.</DFTitle>
+					<DFType>
+						<DDFName></DDFName>
+					</DFType>
+				</DFProperties>
+			</Node>
+			<Node>
+				<NodeName>MaxLength</NodeName>
+				<DFProperties>
+					<AccessType>
+						<Get/>
+					</AccessType>
+					<DFFormat>
+						<node/>
+					</DFFormat>
+					<Scope>
+						<Permanent/>
+					</Scope>
+					<DFTitle>The bearer specific DevInfo branch.</DFTitle>
+					<DFType>
+						<DDFName></DDFName>
+					</DFType>
+				</DFProperties>
+			</Node>
+			<Node>
+				<NodeName>MinLength</NodeName>
+				<DFProperties>
+					<AccessType>
+						<Get/>
+					</AccessType>
+					<DFFormat>
+						<node/>
+					</DFFormat>
+					<Scope>
+						<Permanent/>
+					</Scope>
+					<DFTitle>The bearer specific DevInfo branch.</DFTitle>
+					<DFType>
+						<DDFName></DDFName>
+					</DFType>
+				</DFProperties>
+			</Node>
 		</Node>
 		<Node>
-			<NodeName>DevId</NodeName>
+			<NodeName>WiFi</NodeName>
 			<DFProperties>
 				<AccessType>
 					<Get/>
@@ -211,89 +207,6 @@ terms set forth above.
 					<Permanent/>
 				</Scope>
 				<DFTitle>The unique device identifier.</DFTitle>
-				<DFType>
-					<MIME>text/plain</MIME>
-				</DFType>
-			</DFProperties>
-		</Node>
-		<Node>
-			<NodeName>Man</NodeName>
-			<DFProperties>
-				<AccessType>
-					<Get/>
-				</AccessType>
-				<!--Here the manufacturer must fill in their name. -->
-				<DefaultValue/>
-				<Description>The name of the device manufacturer </Description>
-				<DFFormat>
-					<chr/>
-				</DFFormat>
-				<Scope>
-					<Permanent/>
-				</Scope>
-				<DFTitle>The name of the device manufacturer.</DFTitle>
-				<DFType>
-					<MIME>text/plain</MIME>
-				</DFType>
-			</DFProperties>
-		</Node>
-		<Node>
-			<NodeName>Mod</NodeName>
-			<DFProperties>
-				<AccessType>
-					<Get/>
-				</AccessType>
-				<!--Here the manufacturer must fill in the model name of the device.-->
-				<DefaultValue/>
-				<Description>The name of the device model</Description>
-				<DFFormat>
-					<chr/>
-				</DFFormat>
-				<Scope>
-					<Permanent/>
-				</Scope>
-				<DFTitle>Model name</DFTitle>
-				<DFType>
-					<MIME>text/plain</MIME>
-				</DFType>
-			</DFProperties>
-		</Node>
-		<Node>
-			<NodeName>DmV</NodeName>
-			<DFProperties>
-				<AccessType>
-					<Get/>
-				</AccessType>
-				<!--Here the manufacturer must fill in the management client revision of the device.-->
-				<DefaultValue/>
-				<Description>The management client revision of the device.</Description>
-				<DFFormat>
-					<chr/>
-				</DFFormat>
-				<Scope>
-					<Permanent/>
-				</Scope>
-				<DFTitle>The current management client revision of the device.</DFTitle>
-				<DFType>
-					<MIME>text/plain</MIME>
-				</DFType>
-			</DFProperties>
-		</Node>
-		<Node>
-			<NodeName>Lang</NodeName>
-			<DFProperties>
-				<AccessType>
-					<Get/>
-				</AccessType>
-				<DefaultValue/>
-				<Description>The current language setting of the device.</Description>
-				<DFFormat>
-					<chr/>
-				</DFFormat>
-				<Scope>
-					<Permanent/>
-				</Scope>
-				<DFTitle>Current language.</DFTitle>
 				<DFType>
 					<MIME>text/plain</MIME>
 				</DFType>

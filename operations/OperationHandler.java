@@ -21,7 +21,7 @@ package org.wso2.carbon.mdm.services.android.omadm.operations;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
@@ -43,11 +43,13 @@ public class OperationHandler {
 
     private SyncMLDocument sourceDocument;
     DeviceIdentifier deviceIdentifier;
+    int commandId = 0;
 
-    public OperationHandler(SyncMLDocument sourceDocument) {
+    public OperationHandler(SyncMLDocument sourceDocument, int startingCmdId) {
         this.sourceDocument = sourceDocument;
         this.deviceIdentifier = OperationUtils.convertToDeviceIdentifier(sourceDocument.
                 getHeader().getSource().getLocURI());
+        this.commandId = startingCmdId;
     }
 
     public List<? extends Operation> getPendingOperations() throws OperationManagementException {
@@ -56,13 +58,23 @@ public class OperationHandler {
         return pendingOperations;
     }
 
-    public static void updateOperations(String deviceId, List<? extends Operation> operations)
+    public static void updateOperationStatuses(String deviceId, List<? extends Operation> operations)
             throws PolicyComplianceException, ApplicationManagementException, OperationManagementException {
         for (Operation operation : operations) {
             AndroidAPIUtils.updateOperation(deviceId, operation);
             if (log.isDebugEnabled()) {
                 log.debug("Updating operation '" + operation.toString() + "'");
             }
+        }
+    }
+
+    public void updateOperations() throws OperationManagementException {
+        List<? extends Operation> pendingOperations;
+        List<StatusTag> statuses = sourceDocument.getBody().getStatus();
+        try {
+            pendingOperations = getPendingOperations();
+        } catch (OperationManagementException e) {
+            throw new OperationManagementException("Error occurred while retrieving pending operations.");
         }
     }
 

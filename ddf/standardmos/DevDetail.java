@@ -26,26 +26,6 @@ import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
  */
 public class DevDetail {
 
-    // Name of the Management Object
-    public static final String DEVDETAIL = "DevDetail";
-    // Maximum depth of the management tree supported by the device
-    public static final String URI_MAX_DEPTH = "/URI/MaxDepth";
-    // Maximum total length of any URI used to address a node or node property
-    public static final String URI_MAX_TOT_LEN = "/URI/MaxToLen";
-    // Maximum total length of any URI segment in a URI used to address a node or node property
-    public static final String URI_MAX_SEG_LEN = "/URI/MaxSegLen";
-    // Device type
-    public static final String DEV_TYP = "/DevTyp";
-    // Original Equipment Manufacturer of the device
-    public static final String OEM = "/OEM";
-    // Firmware version of the device
-    public static final String FWV = "/FwV";
-    // Software version of the device
-    public static final String SWV = "/SwV";
-    // Hardware version of the device
-    public static final String HWV = "/HwV";
-    // Indicates whether the device supports the OMA DM Large Object Handling specification
-    public static final String LRG_OBJ = "/LrgObj";
     // Path to the DevDetail DDF file
     public static final String DEV_DETAIL_DDF_PATH = "OMA-SUP-MO_DM_DevDetail-V1_2-20070209-A.xml";
 
@@ -69,4 +49,5 @@ public class DevDetail {
     private static void setMgmtTree(MgmtTree mgmtTree) {
         DevDetail.mgmtTree = mgmtTree;
     }
+
 }
