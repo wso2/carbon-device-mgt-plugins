@@ -23,11 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.core.ServerStartupObserver;
-import org.wso2.carbon.device.mgt.iot.config.server.DeviceManagementConfigurationManager;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppServerClient;
-import org.wso2.carbon.device.mgt.iot.exception.DeviceControllerException;
-import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
+import org.wso2.carbon.device.mgt.iot.url.printer.URLPrinterStartupHandler;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
@@ -43,7 +39,6 @@ import org.wso2.carbon.utils.ConfigurationContextService;
 public class IotDeviceManagementServiceComponent {
 
     private static final Log log = LogFactory.getLog(IotDeviceManagementServiceComponent.class);
-    public static ConfigurationContextService configurationContextService;
 
     protected void activate(ComponentContext ctx) {
         if (log.isDebugEnabled()) {
@@ -51,9 +46,7 @@ public class IotDeviceManagementServiceComponent {
         }
         try {
             BundleContext bundleContext = ctx.getBundleContext();
-            /* Initialize the data source configuration */
-            DeviceManagementConfigurationManager.getInstance().initConfig();
-            bundleContext.registerService(ServerStartupObserver.class.getName(), new IoTServerStartupListener(), null);
+            bundleContext.registerService(ServerStartupObserver.class.getName(), new URLPrinterStartupHandler(), null);
             if (log.isDebugEnabled()) {
                 log.debug("Iot Device Management Service Component has been successfully activated");
             }
@@ -63,19 +56,6 @@ public class IotDeviceManagementServiceComponent {
     }
 
     protected void deactivate(ComponentContext ctx) {
-        XmppConfig xmppConfig = XmppConfig.getInstance();
-        try {
-            if (xmppConfig.isEnabled()) {
-                XmppServerClient xmppServerClient = new XmppServerClient();
-                xmppServerClient.initControlQueue();
-                xmppServerClient.deleteCurrentXmppSessions();
-            }
-        } catch (DeviceControllerException e) {
-            String errorMsg = "An error occurred whilst trying to delete all existing XMPP login sessions at " +
-                              "[" + xmppConfig.getXmppEndpoint() + "].";
-            log.error(errorMsg, e);
-        }
-
         if (log.isDebugEnabled()) {
             log.debug("De-activating Iot Device Management Service Component");
         }
@@ -86,7 +66,7 @@ public class IotDeviceManagementServiceComponent {
             log.debug("Setting ConfigurationContextService");
         }
 
-        IotDeviceManagementServiceComponent.configurationContextService = configurationContextService;
+        IoTDeviceManagementDataHolder.getInstance().setConfigurationContextService(configurationContextService);
 
     }
 
@@ -94,6 +74,6 @@ public class IotDeviceManagementServiceComponent {
         if (log.isDebugEnabled()) {
             log.debug("Un-setting ConfigurationContextService");
         }
-        IotDeviceManagementServiceComponent.configurationContextService = null;
+        IoTDeviceManagementDataHolder.getInstance().setConfigurationContextService(null);
     }
 }

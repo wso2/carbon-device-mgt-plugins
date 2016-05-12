@@ -63,28 +63,15 @@
                         <Bundle-Description>IoT Server Impl Bundle</Bundle-Description>
                         <Private-Package>org.wso2.carbon.device.mgt.iot.internal</Private-Package>
                         <Import-Package>
-                            org.jivesoftware.smack.*,
-                            javax.xml.namespace;resolution:=optional,
-                            javax.xml.validation;resolution:=optional,
-                            org.apache.commons.codec.binary,
-                            org.apache.http.*,
-                            org.apache.commons.io.*,
-                            org.apache.commons.logging.*,
-                            org.json;version="${commons-json.version}",
                             org.wso2.carbon.base.*,
                             org.osgi.framework,
                             org.osgi.service.component,
-                            javax.xml.bind.*;resolution:=optional,
-                            javax.xml.parsers.*;resolution:=optional,
-                            javax.crypto,
-                            org.apache.tomcat.util.codec.binary,
-                            org.w3c.dom;resolution:=optional,
-                            org.wso2.carbon.core;version="${carbon.kernel.version.range}",
-                            org.wso2.carbon.utils.*;version="${carbon.kernel.version.range}",
-                            org.wso2.carbon.device.mgt.common.*,
-                            org.eclipse.paho.client.mqttv3.*;version="${eclipse.paho.version}",
-                            javax.xml;resolution:=optional,
-                            javax.net.ssl;resolution:=optional
+                            org.apache.axis2.context,
+                            org.apache.commons.io,
+                            org.apache.commons.logging,
+                            org.wso2.carbon.core,
+                            org.wso2.carbon.device.mgt.common,
+                            org.wso2.carbon.utils
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.device.mgt.iot.internal,

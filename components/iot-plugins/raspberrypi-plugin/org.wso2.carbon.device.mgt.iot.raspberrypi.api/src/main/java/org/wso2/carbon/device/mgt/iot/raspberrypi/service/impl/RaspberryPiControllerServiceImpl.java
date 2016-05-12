@@ -26,13 +26,9 @@ import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
-import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.SensorRecord;
-import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.transport.RaspberryPiMQTTConnector;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
-import org.wso2.carbon.device.mgt.iot.service.IoTServerStartupListener;
-import org.wso2.carbon.device.mgt.iot.transport.TransportHandlerException;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -43,14 +39,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Map;
 
 public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerService {
 
     private static Log log = LogFactory.getLog(RaspberryPiControllerServiceImpl.class);
-    private ConcurrentHashMap<String, String> deviceToIpMap = new ConcurrentHashMap<>();
-    private RaspberryPiMQTTConnector raspberryPiMQTTConnector;
 
     @Path("device/{deviceId}/bulb")
     @POST
@@ -66,12 +61,14 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
                 log.error("The requested state change shoud be either - 'ON' or 'OFF'");
                 return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
             }
-            String mqttResource = RaspberrypiConstants.BULB_CONTEXT.replace("/", "");
-            raspberryPiMQTTConnector.publishDeviceData(deviceId, mqttResource, switchToState);
+            String actualMessage = RaspberrypiConstants.BULB_CONTEXT + ":" + state;
+            Map<String, String> dynamicProperties = new HashMap<>();
+            String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
+                    + RaspberrypiConstants.DEVICE_TYPE + "/" + deviceId;
+            dynamicProperties.put(RaspberrypiConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
+            APIUtil.getOutputEventAdapterService().publish(RaspberrypiConstants.MQTT_ADAPTER_NAME,
+                                                           dynamicProperties, actualMessage);
             return Response.ok().build();
-        } catch (TransportHandlerException e) {
-            log.error("Failed to send switch-bulb request to device [" + deviceId + "]");
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -107,46 +104,6 @@ public class RaspberryPiControllerServiceImpl implements RaspberryPiControllerSe
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
-    }
-
-    private boolean waitForServerStartup() {
-        while (!IoTServerStartupListener.isServerReady()) {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public RaspberryPiMQTTConnector getRaspberryPiMQTTConnector() {
-        return raspberryPiMQTTConnector;
-    }
-
-    public void setRaspberryPiMQTTConnector(
-            final RaspberryPiMQTTConnector raspberryPiMQTTConnector) {
-        Runnable connector = new Runnable() {
-            public void run() {
-                if (waitForServerStartup()) {
-                    return;
-                }
-                //The delay is added for the server to starts up.
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-                RaspberryPiControllerServiceImpl.this.raspberryPiMQTTConnector = raspberryPiMQTTConnector;
-                if (MqttConfig.getInstance().isEnabled()) {
-                    raspberryPiMQTTConnector.connect();
-                } else {
-                    log.warn("MQTT disabled in 'devicemgt-config.xml'. Hence, RaspberryPiMQTTConnector not started.");
-                }
-            }
-        };
-        Thread connectorThread = new Thread(connector);
-        connectorThread.start();
     }
 
 }

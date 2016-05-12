@@ -22,13 +22,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Document;
-import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.utils.CarbonUtils;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -41,28 +36,6 @@ import java.util.zip.ZipOutputStream;
 public class IotDeviceManagementUtil {
 
 	private static final Log log = LogFactory.getLog(IotDeviceManagementUtil.class.getName());
-
-	public static Document convertToDocument(File file) throws DeviceManagementException {
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setNamespaceAware(true);
-		try {
-			DocumentBuilder docBuilder = factory.newDocumentBuilder();
-			return docBuilder.parse(file);
-		} catch (Exception e) {
-			throw new DeviceManagementException("Error occurred while parsing file, while converting " +
-														"to a org.w3c.dom.Document : " + e.getMessage(), e);
-		}
-	}
-
-	private static Device.Property getProperty(String property, String value) {
-		if (property != null) {
-			Device.Property prop = new Device.Property();
-			prop.setName(property);
-			prop.setValue(value);
-			return prop;
-		}
-		return null;
-	}
 
 	public static ZipArchive getSketchArchive(String archivesPath, String templateSketchPath, Map contextParams)
 			throws DeviceManagementException, IOException {

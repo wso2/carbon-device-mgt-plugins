@@ -68,7 +68,7 @@ public class TransportUtils {
 		}
 
 		ipPortMap.put("Protocol", ipPortArray[0]);
-		ipPortMap.put("Host", ipPortArray[1].replace(File.separator, ""));
+		ipPortMap.put("Host", ipPortArray[1].replace("/", ""));
 		ipPortMap.put("Port", ipPortArray[2]);
 		return ipPortMap;
 	}

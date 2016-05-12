@@ -19,8 +19,6 @@
 package org.wso2.carbon.device.mgt.iot.arduino.service.impl.util;
 
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.iot.controlqueue.mqtt.MqttConfig;
-import org.wso2.carbon.device.mgt.iot.controlqueue.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.exception.IoTException;
 import org.wso2.carbon.device.mgt.iot.util.IoTUtil;
 import org.wso2.carbon.device.mgt.iot.util.IotDeviceManagementUtil;

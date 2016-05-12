@@ -71,7 +71,13 @@
 							org.wso2.carbon.device.mgt.common,
 							org.wso2.carbon.device.mgt.iot.*,
 							org.wso2.carbon.device.mgt.extensions.feature.mgt.*,
-							org.wso2.carbon.utils.*
+							org.wso2.carbon.utils.*,
+							org.wso2.carbon.base,
+							org.wso2.carbon.context,
+							org.wso2.carbon.core,
+							org.wso2.carbon.core.util,
+							org.wso2.carbon.event.output.adapter.core,
+							org.wso2.carbon.event.output.adapter.core.exception
 						</Import-Package>
 						<Export-Package>
 							!org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.internal,
@@ -111,6 +117,10 @@
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.utils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.analytics-common</groupId>
+			<artifactId>org.wso2.carbon.event.output.adapter.core</artifactId>
 		</dependency>
 	</dependencies>
 </project>

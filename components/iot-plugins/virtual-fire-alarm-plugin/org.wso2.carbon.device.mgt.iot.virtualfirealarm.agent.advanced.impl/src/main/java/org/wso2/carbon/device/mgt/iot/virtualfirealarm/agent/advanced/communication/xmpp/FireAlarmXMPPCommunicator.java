@@ -196,7 +196,7 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
                     String payLoad = AgentUtilOperations.prepareSecurePayLoad(message);
 
                     xmppMessage.setTo(xmppAdminJID);
-                    xmppMessage.setSubject("PUBLISHER");
+                    xmppMessage.setSubject(agentManager.getAgentConfigs().getTenantDomain());
                     xmppMessage.setBody(payLoad);
                     xmppMessage.setType(Message.Type.chat);
 

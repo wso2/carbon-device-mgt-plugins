@@ -52,7 +52,7 @@ public class RaspberrypiManagerService implements DeviceManagementService {
 
     @Override
     public ProvisioningConfig getProvisioningConfig() {
-        return new ProvisioningConfig(RaspberrypiConstants.DEVICE_TYPE_PROVIDER_DOMAIN, true);
+        return new ProvisioningConfig(RaspberrypiConstants.DEVICE_TYPE_PROVIDER_DOMAIN, false);
     }
 
     @Override

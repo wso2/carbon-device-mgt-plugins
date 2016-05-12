@@ -55,8 +55,7 @@ public class ArduinoControllerServiceImpl implements ArduinoControllerService {
     public Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state) {
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                                                                            ArduinoConstants.DEVICE_TYPE),
-                                                                                DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
+                        ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
