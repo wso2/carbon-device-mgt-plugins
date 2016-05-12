@@ -292,7 +292,7 @@ public class SyncMLMessageProcessor {
                 node.setNodeName(URIParser.getNodeName(locURI));
                 MgmtTreeManager treeManager = new MgmtTreeManagerImpl(tree);
 
-                if (treeManager.getNode(locURI) != null) {
+                if (treeManager.isExistingNode(locURI)) {
                     wholeBlock = false;
                     ItemTag errorItem = new ItemTag();
                     TargetTag errorTarget = new TargetTag();
@@ -317,7 +317,7 @@ public class SyncMLMessageProcessor {
             status.setData(SyncMLStatusCodes.SUCCESS.getCode());
         }
         status.setCommandId(++headerCommandId);
-        sourceDocument.getBody().getStatus().add(status);
+        responseDocument.getBody().getStatus().add(status);
     }
 
 }

@@ -66,7 +66,7 @@ public class Constants {
     public static final String SEQUENCE = "Sequence";
     public static final String META_FORMAT_INT = "int";
     public static final String META_FORMAT_CHARACTER = "chr";
-    public static final String META_SIZE = "Size";
+    public static final String SIZE = "Size";
 
     /**
      * SynclML response codes
@@ -91,6 +91,7 @@ public class Constants {
         }
 
         public static final String SYNCML_SOURCE = "Source";
+        public static final String SYNCML_TARGET = "Target";
         public static final String SYNCML_DATA = "Data";
         public static final String SYNCML_CMD = "Cmd";
         public static final String SYNCML_CHAL = "ChallengeTag";
@@ -99,6 +100,7 @@ public class Constants {
         public static final String SYNCML_MESSAGE_REF = "MsgRef";
         public static final String SYNCML_LOCATION_URI = "LocURI";
         public static final String SYNCML_TARGET_REF = "TargetRef";
+        public static final String SYNCML_META = "Meta";
     }
 
     /**

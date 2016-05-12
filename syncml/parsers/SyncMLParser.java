@@ -203,63 +203,39 @@ public class SyncMLParser {
         body.setReplace(replace);
         body.setStatus(status);
         body.setResults(results);
+        body.setAdd(add);
         return body;
     }
 
     private static AddTag generateAdd(Node node) {
         AddTag add = new AddTag();
-        Node targetURIItem = node.getChildNodes().item(0);
-        int itemIndex = 0;
+        int commandId = 0;
 
-        if (node.getNodeName().equalsIgnoreCase("Meta")) {
-            itemIndex = 1;
-            MetaTag meta = new MetaTag();
-            NodeList metaChildren = node.getChildNodes();
-            for (int i = 0; i < metaChildren.getLength(); i++) {
-                String nodeName = metaChildren.item(i).getNodeName();
-                switch (nodeName) {
-                    case "Format": meta.setFormat(metaChildren.item(i).getNodeValue());
-                        break;
-                    case "Type": meta.setType(metaChildren.item(i).getNodeValue());
-                        break;
-                    case "Size": meta.setSize(metaChildren.item(i).getNodeValue());
-                        break;
-                }
-            }
-            add.setMeta(meta);
-        }
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            NodeList nodes = node.getChildNodes();
 
-        if (node.getNodeName().equalsIgnoreCase("Item")) {
-            NodeList itemList = node.getChildNodes();
-            for (int i = itemIndex; i < itemList.getLength(); i++) {
-                ItemTag item = new ItemTag();
-                if (itemList.item(0).getNodeName().equalsIgnoreCase("Meta")) {
-                    MetaTag meta = new MetaTag();
-                    switch (itemList.item(0).getNodeName()) {
-                        case "Format": meta.setFormat(itemList.item(i).getNodeValue());
-                            break;
-                        case "Type": meta.setType(itemList.item(i).getNodeValue());
-                            break;
-                        case "Size": meta.setSize(itemList.item(i).getNodeValue());
-                            break;
+            for (int i = 0; i < nodes.getLength(); i++) {
+                String nodeName = nodes.item(i).getNodeName();
+                switch(nodeName) {
+                    case Constants.COMMAND_ID: {
+                        commandId = Integer.parseInt(nodes.item(i).getTextContent().trim());
+                        break;
+                    }
+                    case Constants.META: {
+                        MetaTag meta = generateMeta(nodes.item(i));
+                        add.setMeta(meta);
+                        break;
+                    }
+                    case Constants.ITEM: {
+                        ItemTag item = generateItem(nodes.item(i));
+                        add.getItems().add(item);
+                        break;
                     }
                 }
             }
         }
-
-        Node targetNameItem = node.getChildNodes().item(1);
-        String targetURI = null;
-        String targetName = null;
-
-        if (targetURIItem != null) {
-            targetURI = targetURIItem.getTextContent().trim();
-        }
-        if (targetNameItem != null) {
-            targetName = targetNameItem.getTextContent().trim();
-        }
-        target.setLocURI(targetURI);
-        target.setLocName(targetName);
-        return target;
+        add.setCommandId(commandId);
+        return add;
     }
 
     /**
@@ -450,6 +426,7 @@ public class SyncMLParser {
     private static ItemTag generateItem(Node node) {
         ItemTag item = new ItemTag();
         SourceTag source = new SourceTag();
+        TargetTag target = new TargetTag();
         String data;
         String nodeName;
         String childNodeName;
@@ -477,7 +454,28 @@ public class SyncMLParser {
                     source.setLocURI(locUri);
                     item.setSource(source);
                 }
-            } else if (Constants.SyncML.SYNCML_DATA.equals(nodeName)) {
+            }
+            if (Constants.SyncML.SYNCML_TARGET.equals(nodeName)) {
+                if (itemNode.getChildNodes().item(0).getNodeName() != null) {
+                    childNodeName = itemNode.getChildNodes().item(0).getNodeName();
+                } else {
+                    throw new IllegalStateException();
+                }
+                if ((Constants.SyncML.SYNCML_LOCATION_URI.equals(childNodeName))) {
+                    if (itemNode.getChildNodes().item(0).getTextContent().trim() != null) {
+                        locUri = itemNode.getChildNodes().item(0).getTextContent().trim();
+                    } else {
+                        throw new IllegalStateException();
+                    }
+                    target.setLocURI(locUri);
+                    item.setTarget(target);
+                }
+            }
+            if (Constants.SyncML.SYNCML_META.equals(nodeName)) {
+                MetaTag meta = generateMeta(itemNode);
+                item.setMeta(meta);
+            }
+            if (Constants.SyncML.SYNCML_DATA.equals(nodeName)) {
                 if (itemNode.getTextContent().trim() != null) {
                     data = itemNode.getTextContent().trim();
                 } else {
@@ -512,10 +510,19 @@ public class SyncMLParser {
      */
     private static MetaTag generateMeta(Node node) {
         MetaTag meta = new MetaTag();
-        String format = node.getChildNodes().item(0).getTextContent().trim();
-        String type = node.getChildNodes().item(1).getTextContent().trim();
-        meta.setFormat(format);
-        meta.setType(type);
+        NodeList metaChildren = node.getChildNodes();
+
+        for (int i = 0; i < metaChildren.getLength(); i++) {
+            String childName = metaChildren.item(i).getNodeName();
+            switch (childName) {
+                case Constants.FORMAT: meta.setFormat(metaChildren.item(i).getTextContent().trim());
+                    break;
+                case Constants.TYPE: meta.setType(metaChildren.item(i).getTextContent().trim());
+                    break;
+                case Constants.SIZE: meta.setSize(metaChildren.item(i).getTextContent().trim());
+                    break;
+            }
+        }
         return meta;
     }
 }

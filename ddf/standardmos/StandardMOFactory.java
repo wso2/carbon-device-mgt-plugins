@@ -25,11 +25,11 @@ package org.wso2.carbon.mdm.services.android.omadm.ddf.standardmos;
 public class StandardMOFactory {
 
     public static DevInfo getDevInfoTree() {
-        return new DevInfo();
+        return DevInfo.getInstance();
     }
 
     public static DevDetail getDevDetailTree() {
-        return new DevDetail();
+        return DevDetail.getInstance();
     }
 
 }

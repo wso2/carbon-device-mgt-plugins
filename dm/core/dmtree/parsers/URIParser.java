@@ -84,4 +84,17 @@ public class URIParser {
     public static String getDMTreeName(String path) {
         return path.split(NODE_URI_DELIMETER)[1];
     }
+
+    public static String getPath(String path) {
+        String strArr[] = path.split(NODE_URI_DELIMETER);
+        String outStr = "";
+        for (int i = 0; i < strArr.length - 1; i++) {
+            if (i == strArr.length - 2) {
+                outStr += strArr[i];
+            } else {
+                outStr += strArr[i] + NODE_URI_DELIMETER;
+            }
+        }
+        return outStr;
+    }
 }

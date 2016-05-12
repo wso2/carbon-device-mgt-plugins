@@ -22,6 +22,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -108,6 +109,9 @@ public class StatusTag {
     }
 
     public List<ItemTag> getItems() {
+        if (items == null) {
+            items = new ArrayList<>();
+        }
         return items;
     }
 

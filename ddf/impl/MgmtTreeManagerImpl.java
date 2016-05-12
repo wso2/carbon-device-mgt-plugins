@@ -47,11 +47,8 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
     public String addNode(Node node, String path) throws DMTreeOperationException {
         // Note that the path here is the path of the parent node
         URIParser.validateUri(path);
-        String absolutePath = path + NODE_URI_DELIMETER + node.getNodeName();
-        if (isExistingNode(absolutePath)) {
-            return SyncMLStatusCodes.NOT_MODIFIED.getCode();
-        }
-        node.setPath(path);
+        String absolutePath = URIParser.getPath(path);
+        node.setPath(absolutePath);
         getParentNode(node).getNodes().add(node);
         return SyncMLStatusCodes.SUCCESS.getCode();
     }
@@ -76,14 +73,7 @@ public class MgmtTreeManagerImpl implements MgmtTreeManager {
 
         String[] pathArr = URIParser.nodeNames(path);
         node = searchNode(pathArr, tree.getNodes(), 0);
-
-        if (node == null) {
-            throw new DMTreeOperationException("Node does not exist in the given path.");
-        } else if (node.getDfProperties().getAccessType().getGet() == null) {
-            throw new DMTreeOperationException("This operation type is not allowed on the node.");
-        } else {
-            return node;
-        }
+        return node;
     }
 
     @Override

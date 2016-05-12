@@ -43,16 +43,24 @@ public class DevInfo implements Serializable {
     // Path to the DevInfo DDF file
     public static final String DEV_INFO_DDF_PATH = "OMA-SUP-MO_DM_DevInfo-V1_2-20070209-A.xml";
 
-    private MgmtTree mgmtTree = null;
+    private static MgmtTree mgmtTree = DDFCommonUtils.generateTree(DEV_INFO_DDF_PATH);
+    private static DevInfo devInfo = new DevInfo();
 
-    public DevInfo() {
-        this.mgmtTree = DDFCommonUtils.generateTree(DEV_INFO_DDF_PATH);
+    private DevInfo() {
+    }
+
+    public static DevInfo getInstance() {
         if (mgmtTree != null) {
-            this.mgmtTree.setName(DEVINFO);
+            devInfo.setMgmtTree(mgmtTree);
         }
+        return devInfo;
     }
 
     public MgmtTree getMgmtTree() {
         return mgmtTree;
+    }
+
+    public static void setMgmtTree(MgmtTree mgmtTree) {
+        DevInfo.mgmtTree = mgmtTree;
     }
 }

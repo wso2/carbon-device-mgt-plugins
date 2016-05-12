@@ -49,17 +49,24 @@ public class DevDetail {
     // Path to the DevDetail DDF file
     public static final String DEV_DETAIL_DDF_PATH = "OMA-SUP-MO_DM_DevDetail-V1_2-20070209-A.xml";
 
-    private MgmtTree mgmtTree = null;
+    private static MgmtTree mgmtTree = DDFCommonUtils.generateTree(DEV_DETAIL_DDF_PATH);
+    private static DevDetail devDetail = new DevDetail();
 
     public DevDetail() {
-        this.mgmtTree = DDFCommonUtils.generateTree(DEV_DETAIL_DDF_PATH);
+    }
+
+    public static DevDetail getInstance() {
         if (mgmtTree != null) {
-            this.mgmtTree.setName(DEVDETAIL);
+            devDetail.setMgmtTree(mgmtTree);
         }
+        return devDetail;
     }
 
     public MgmtTree getMgmtTree() {
         return mgmtTree;
     }
 
+    private static void setMgmtTree(MgmtTree mgmtTree) {
+        DevDetail.mgmtTree = mgmtTree;
+    }
 }

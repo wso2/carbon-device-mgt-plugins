@@ -93,7 +93,7 @@ public class MetaTag {
             meta.appendChild(nextNonce);
         }
         if (getSize() != null) {
-            Element size = doc.createElement(Constants.META_SIZE);
+            Element size = doc.createElement(Constants.SIZE);
             size.appendChild(doc.createTextNode(getSize()));
             Attr attr = doc.createAttribute(Constants.XMLNS);
             attr.setValue(Constants.META_NAMESPACE);
