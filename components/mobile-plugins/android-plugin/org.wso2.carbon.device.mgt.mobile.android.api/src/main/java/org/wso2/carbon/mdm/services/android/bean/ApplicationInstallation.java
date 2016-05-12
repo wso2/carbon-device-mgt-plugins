@@ -30,7 +30,7 @@ import java.io.Serializable;
 		description = "This class carries all information related to install application")
 public class ApplicationInstallation extends AndroidOperation implements Serializable {
 
-	@ApiModelProperty(name = "appIdentifier", value = "DeviceIdentifier", required = true)
+	@ApiModelProperty(name = "appIdentifier", value = "Application Identifier", required = true)
 	private String appIdentifier;
 
 	@ApiModelProperty(name = "type", value = "Application type(Enterprise/Web/public)", required = true)
