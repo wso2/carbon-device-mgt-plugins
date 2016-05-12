@@ -162,7 +162,7 @@ public class DataPublisherService extends Service {
                         if (!mqttTransportHandler.isConnected()) {
                             mqttTransportHandler.connect();
                         }
-                        String topic = "wso2/" + LocalRegistry.getTenantDomain(context) + "/" + SenseConstants
+                        String topic = LocalRegistry.getTenantDomain(context) + "/" + SenseConstants
                                 .DEVICE_TYPE + "/" + deviceId + "/data";
                         mqttTransportHandler.publishDeviceData(user, deviceId, jsonArray.toString(), topic);
                     }

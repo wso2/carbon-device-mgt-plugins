@@ -73,7 +73,7 @@ public class ZipUtil {
             xmppEndpoint = xmppEndpoint + ":" + XmppConfig.getInstance().getSERVER_CONNECTION_PORT();
 
             Map<String, String> contextParams = new HashMap<>();
-            contextParams.put("SERVER_NAME", "wso2/" + APIUtil.getTenantDomainOftheUser());
+            contextParams.put("SERVER_NAME", APIUtil.getTenantDomainOftheUser());
             contextParams.put("DEVICE_OWNER", owner);
             contextParams.put("DEVICE_ID", deviceId);
             contextParams.put("DEVICE_NAME", deviceName);
