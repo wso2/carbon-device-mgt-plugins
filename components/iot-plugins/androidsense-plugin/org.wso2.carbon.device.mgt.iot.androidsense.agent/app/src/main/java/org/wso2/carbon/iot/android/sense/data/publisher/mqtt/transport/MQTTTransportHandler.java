@@ -77,7 +77,7 @@ public abstract class MQTTTransportHandler implements MqttCallback, TransportHan
         String username = LocalRegistry.getUsername(context);
         String deviceId = LocalRegistry.getDeviceId(context);
         this.clientId = deviceId + ":" + SenseConstants.DEVICE_TYPE;
-        this.subscribeTopic = LocalRegistry.getTenantDomain(context)+ "/" + SenseConstants.DEVICE_TYPE + "/" +
+        this.subscribeTopic = "wso2/" + LocalRegistry.getTenantDomain(context)+ "/" + SenseConstants.DEVICE_TYPE + "/" +
                 deviceId + "/command/#";
         this.clientWillTopic = DISCONNECTION_WILL_TOPIC_PREFIX + SenseConstants.DEVICE_TYPE;
         this.mqttBrokerEndPoint = LocalRegistry.getMqttEndpoint(context);

@@ -2,6 +2,9 @@ package org.wso2.carbon.iot.android.sense.data.publisher;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationData;
+import android.util.Log;
+
 
 /**
  * This hold the definition of the stream that android sense is publishing to.
@@ -26,8 +29,11 @@ public class Event {
     private String wordStatus;
     private long timestamp;
 
+    private static final String TAG = Event.class.getName();
+    LocationData  gpsLoc;
+
     private int getBattery() {
-        return battery;
+        return this.battery;
     }
 
     public void setBattery(int battery) {
@@ -36,7 +42,8 @@ public class Event {
     }
 
     private double[] getGps() {
-        return gps != null ? gps : new double[]{0, 0};
+
+        return gps != null ? this.gps : new double[]{gps[0],gps[1]};
     }
 
     public void setGps(double[] gps) {
@@ -45,7 +52,7 @@ public class Event {
     }
 
     private float[] getAccelerometer() {
-        return accelerometer != null ? accelerometer : new float[]{0, 0, 0};
+        return this.accelerometer != null ? this.accelerometer : new float[]{0, 0, 0};
     }
 
     public void setAccelerometer(float[] accelerometer) {
@@ -54,7 +61,7 @@ public class Event {
     }
 
     private float[] getMagnetic() {
-        return magnetic != null ? magnetic : new float[]{0, 0, 0};
+        return this.magnetic != null ? this.magnetic : new float[]{0, 0, 0};
     }
 
     public void setMagnetic(float[] magnetic) {
@@ -63,7 +70,7 @@ public class Event {
     }
 
     private float[] getGyroscope() {
-        return gyroscope != null ? gyroscope : new float[]{0, 0, 0};
+        return this.gyroscope != null ? this.gyroscope : new float[]{0, 0, 0};
     }
 
     public void setGyroscope(float[] gyroscope) {
@@ -72,7 +79,7 @@ public class Event {
     }
 
     public float getLight() {
-        return light;
+        return this.light;
     }
 
     public void setLight(float light) {
@@ -81,7 +88,7 @@ public class Event {
     }
 
     public float getPressure() {
-        return pressure;
+        return this.pressure;
     }
 
     public void setPressure(float pressure) {
@@ -90,7 +97,7 @@ public class Event {
     }
 
     public float getProximity() {
-        return proximity;
+        return this.proximity;
     }
 
     public void setProximity(float proximity) {
@@ -99,7 +106,7 @@ public class Event {
     }
 
     private float[] getGravity() {
-        return gravity != null ? gravity : new float[]{0, 0, 0};
+        return this.gravity != null ? this.gravity : new float[]{0, 0, 0};
     }
 
     public void setGravity(float gravity[]) {
@@ -108,7 +115,7 @@ public class Event {
     }
 
     private float[] getRotation() {
-        return rotation != null ? rotation : new float[]{0, 0, 0};
+        return this.rotation != null ? this.rotation : new float[]{0, 0, 0};
     }
 
     public void setRotation(float rotation[]) {
@@ -125,7 +132,7 @@ public class Event {
     }
 
     private String getWord() {
-        return word != null ? word : "";
+        return this.word != null ? this.word : "";
     }
 
     public void setWord(String word) {
@@ -176,43 +183,59 @@ public class Event {
 
         JSONObject jsonPayloadData = new JSONObject();
         jsonPayloadData.put("battery", getBattery());
-        //gps
-        double gpsEvents[] = getGps();
-        jsonPayloadData.put("gps_lat", gpsEvents[0]);
-        jsonPayloadData.put("gps_long", gpsEvents[1]);
-        //acceleromter
-        float events[] = getAccelerometer();
-        jsonPayloadData.put("accelerometer_x", events[0]);
-        jsonPayloadData.put("accelerometer_y", events[1]);
-        jsonPayloadData.put("accelerometer_z", events[2]);
+        //gps & accelerometer
+
+        if (gps !=null && accelerometer !=null) {
+            jsonPayloadData.put("gps_lat", gps[0]);
+            jsonPayloadData.put("gps_long", gps[1]);
+
+            jsonPayloadData.put("accelerometer_x", accelerometer[0]);
+            jsonPayloadData.put("accelerometer_y", accelerometer[1]);
+            jsonPayloadData.put("accelerometer_z", accelerometer[2]);
+        }
+
+
         //magnetic
-        events = getMagnetic();
-        jsonPayloadData.put("magnetic_x", events[0]);
-        jsonPayloadData.put("magnetic_y", events[1]);
-        jsonPayloadData.put("magnetic_z", events[2]);
+        //events = getMagnetic();
+        if (magnetic !=null) {
+            jsonPayloadData.put("magnetic_x", magnetic[0]);
+            jsonPayloadData.put("magnetic_y", magnetic[1]);
+            jsonPayloadData.put("magnetic_z", magnetic[2]);
+        }
         //gyroscope
-        events = getGyroscope();
-        jsonPayloadData.put("gyroscope_x", events[0]);
-        jsonPayloadData.put("gyroscope_y", events[1]);
-        jsonPayloadData.put("gyroscope_z", events[2]);
+        //events = getGyroscope();
+
+        if (gyroscope != null) {
+            jsonPayloadData.put("gyroscope_x", gyroscope[0]);
+            jsonPayloadData.put("gyroscope_y", gyroscope[1]);
+            jsonPayloadData.put("gyroscope_z", gyroscope[2]);
+        }
+
 
         jsonPayloadData.put("light", getLight());
+
         jsonPayloadData.put("pressure", getPressure());
         jsonPayloadData.put("proximity", getProximity());
         //gravity
-        events = getGravity();
-        jsonPayloadData.put("gravity_x", events[0]);
-        jsonPayloadData.put("gravity_y", events[1]);
-        jsonPayloadData.put("gravity_z", events[2]);
+        //events = getGravity();
+        if (gravity!=null) {
+            jsonPayloadData.put("gravity_x", gravity[0]);
+            jsonPayloadData.put("gravity_y", gravity[1]);
+            jsonPayloadData.put("gravity_z", gravity[2]);
+        }
         //rotation
-        events = getRotation();
-        jsonPayloadData.put("rotation_x", events[0]);
-        jsonPayloadData.put("rotation_y", events[1]);
-        jsonPayloadData.put("rotation_z", events[2]);
+        //events = getRotation();
+        if (rotation!=null) {
+            jsonPayloadData.put("rotation_x", rotation[0]);
+            jsonPayloadData.put("rotation_y", rotation[1]);
+            jsonPayloadData.put("rotation_z", rotation[2]);
+        }
         //word
         jsonPayloadData.put("word", getWord());
         jsonPayloadData.put("word_sessionId", getWordSessionId());
         jsonPayloadData.put("word_status", getWordStatus());
+
+
 
         jsonEvent.put("payloadData", jsonPayloadData);
 
