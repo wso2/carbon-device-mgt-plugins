@@ -1,0 +1,17 @@
+/* Enter a unique ExecutionPlan */
+@Plan:name('arduino_execution')
+
+/* Enter a unique description for ExecutionPlan */
+-- @Plan:description('arduino_execution')
+
+/* define streams/tables and write queries here ... */
+
+@Import('org.wso2.iot.arduino:1.0.0')
+define stream arduino (meta_owner string, meta_deviceId string, temperature float);
+
+@Export('org.wso2.iot.devices.temperature:1.0.0')
+define stream temperature (meta_owner string, meta_deviceType string, meta_deviceId string, meta_time long, temperature float);
+
+from arduino
+select meta_owner, 'arduino' as meta_deviceType, meta_deviceId, time:timestampInMilliseconds() as meta_time, temperature
+insert into temperature;
