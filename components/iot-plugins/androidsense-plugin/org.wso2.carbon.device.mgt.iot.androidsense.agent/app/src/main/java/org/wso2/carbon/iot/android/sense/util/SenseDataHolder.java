@@ -17,9 +17,10 @@ import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationData;
 import org.wso2.carbon.iot.android.sense.event.streams.Sensor.SensorData;
 import org.wso2.carbon.iot.android.sense.event.streams.battery.BatteryData;
 import org.wso2.carbon.iot.android.sense.speech.detector.util.WordData;
-
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import android.util.Log;
+
 
 /**
  * This holds the sensor,battery and location data inmemory.
@@ -30,6 +31,12 @@ public class SenseDataHolder {
     private static List<BatteryData> batteryDataHolder;
     private static List<LocationData> locationDataHolder;
     private static List<WordData> wordDataHolder;
+
+    //LocationData gps;
+
+
+    private static final String TAG = SenseDataHolder.class.getName();
+
 
     public static List<SensorData> getSensorDataHolder(){
         if(sensorDataHolder == null){
@@ -46,10 +53,14 @@ public class SenseDataHolder {
     }
 
     public static List<LocationData> getLocationDataHolder(){
+
+
         if(locationDataHolder == null){
+
             locationDataHolder = new CopyOnWriteArrayList<>();
         }
-        return locationDataHolder;
+            return locationDataHolder;
+
     }
 
     public static List<WordData> getWordDataHolder(){
