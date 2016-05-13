@@ -18,9 +18,9 @@
   -->
 
 <artifacts>
-    <artifact name="arduino" version="1.0.0" type="carbon/application">
-        <dependency artifact="arduino_stream" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="arduino_execution" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="arduino_receiver" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+    <artifact name="raspberrypi" version="1.0.0" type="carbon/application">
+        <dependency artifact="raspberrypi_stream" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="raspberrypi_receiver" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="raspberrypi_execution" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
     </artifact>
 </artifacts>

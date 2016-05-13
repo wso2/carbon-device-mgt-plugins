@@ -17,17 +17,16 @@
   ~ under the License.
   -->
 <eventReceiver name="raspberrypi_receiver" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
-    <from eventAdapterType="oauth-http">
-        <property name="maximumHttpConnectionPerHost">2</property>
+    <from eventAdapterType="oauth-mqtt">
+        <property name="topic">carbon.super/raspberrypi/+/temperature</property>
         <property name="username">admin</property>
-        <property name="contentValidatorParams">device_id_json_path:event.metaData.deviceId</property>
-        <property name="contentValidator">org.wso2.carbon.device.mgt.iot.input.adapter.http.util.HTTPContentValidator</property>
+        <property name="contentValidatorParams">device_id_json_path:event.metaData.deviceId,device_id_topic_hierarchy_index:2</property>
+        <property name="contentValidator">org.wso2.carbon.device.mgt.iot.input.adapter.mqtt.util.MQTTContentValidator</property>
         <property name="contentTransformer">default</property>
-        <property name="transports">all</property>
-        <property name="maximumTotalHttpConnection">100</property>
-        <property name="tokenValidationEndpointUrl">https://localhost:${carbon.https.port}/services/OAuth2TokenValidationService</property>
-        <property name="password">admin</property>
+        <property name="dcrUrl">https://localhost:${carbon.https.port}/dynamic-client-web/register</property>
+        <property name="url">tcp://${mqtt.broker.host}:${mqtt.broker.port}</property>
+        <property name="cleanSession">true</property>
     </from>
     <mapping customMapping="disable" type="json"/>
-    <to streamName="org.wso2.iot.arduino" version="1.0.0"/>
+    <to streamName="org.wso2.iot.raspberrypi" version="1.0.0"/>
 </eventReceiver>

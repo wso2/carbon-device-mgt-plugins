@@ -18,12 +18,11 @@
   -->
 
 <artifacts>
-    <artifact name="Temperature_CAPP" version="1.0.0" type="carbon/application">
-		<dependency artifact="Eventstream_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-		<dependency artifact="Eventstore_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-		<dependency artifact="Eventreceiver_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="Eventreceiver_mqtt_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="Eventpublisher_temperature" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-		<dependency artifact="Sparkscripts" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+    <artifact name="temperature" version="1.0.0" type="carbon/application">
+		<dependency artifact="temperature_stream" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+		<dependency artifact="temperature_store" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+		<dependency artifact="temperature_receiver" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="temperature_publisher" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+		<dependency artifact="temperature_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
     </artifact>
 </artifacts>

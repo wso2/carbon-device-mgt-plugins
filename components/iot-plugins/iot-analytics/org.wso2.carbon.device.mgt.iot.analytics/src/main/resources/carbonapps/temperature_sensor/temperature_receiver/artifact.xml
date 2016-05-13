@@ -17,6 +17,6 @@
   ~ under the License.
   -->
 
-<artifact name="Eventreceiver_temperature" version="1.0.0" type="event/receiver" serverRole="DataAnalyticsServer">
-    <file>EventReceiver_temperature.xml</file>
+<artifact name="temperature_receiver" version="1.0.0" type="event/receiver" serverRole="DataAnalyticsServer">
+    <file>temperature_receiver.xml</file>
 </artifact>

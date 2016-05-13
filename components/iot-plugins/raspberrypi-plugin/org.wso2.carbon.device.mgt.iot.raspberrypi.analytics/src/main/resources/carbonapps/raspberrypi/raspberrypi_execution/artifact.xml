@@ -17,7 +17,7 @@
   ~ under the License.
   -->
 
-<artifact name="arduino_execution" version="1.0.0" type="event/execution-plan" serverRole="DataAnalyticsServer">
-	<file>arduino_execution.siddhiql</file>
+<artifact name="raspberrypi_execution" version="1.0.0" type="event/execution-plan" serverRole="DataAnalyticsServer">
+	<file>raspberrypi_execution.siddhiql</file>
 </artifact>
 

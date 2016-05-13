@@ -23,7 +23,7 @@
     <property name="target-dir" value="target/carbonapps"/>
     <property name="src-dir" value="src/main/resources/carbonapps"/>
 
-    <property name="Arduino_dir" value="arduino"/>
+    <property name="Raspberrypi_dir" value="raspberrypi"/>
 
     <target name="clean">
         <delete dir="${target-dir}" />
@@ -31,8 +31,8 @@
 
     <target name="zip" depends="clean">
         <mkdir dir="${target-dir}"/>
-        <zip destfile="${target-dir}/${Arduino_dir}.car">
-            <zipfileset dir="${src-dir}/${Arduino_dir}"/>
+        <zip destfile="${target-dir}/${Raspberrypi_dir}.car">
+            <zipfileset dir="${src-dir}/${Raspberrypi_dir}"/>
         </zip>
     </target>
 </project>

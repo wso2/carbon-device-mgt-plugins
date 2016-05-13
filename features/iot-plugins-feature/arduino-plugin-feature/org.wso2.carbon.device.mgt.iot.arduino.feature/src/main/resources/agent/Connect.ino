@@ -100,12 +100,8 @@ void setupResource(){
     jsonPayLoad = "{\"event\":{\"metaData\":";
     jsonPayLoad += "{\"owner\":\"";
     jsonPayLoad += String(DEVICE_OWNER);
-    jsonPayLoad += "\",\"deviceType\":\"";
-    jsonPayLoad += String(DEVICE_TYPE);
     jsonPayLoad += "\",\"deviceId\":\"";
     jsonPayLoad += String(DEVICE_ID);
-    jsonPayLoad += "\",\"time\":";
-    jsonPayLoad += String(TIME);
     jsonPayLoad += "}, \"payloadData\":{";
     
     if(DEBUG) {

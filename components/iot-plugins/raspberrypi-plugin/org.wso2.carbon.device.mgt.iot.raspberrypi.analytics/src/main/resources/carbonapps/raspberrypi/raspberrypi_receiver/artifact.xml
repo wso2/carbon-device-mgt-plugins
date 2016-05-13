@@ -17,6 +17,6 @@
   ~ under the License.
   -->
 
-<artifact name="arduino_receiver" version="1.0.0" type="event/receiver" serverRole="DataAnalyticsServer">
-    <file>arduino_receiver.xml</file>
+<artifact name="raspberrypi_receiver" version="1.0.0" type="event/receiver" serverRole="DataAnalyticsServer">
+    <file>raspberrypi_receiver.xml</file>
 </artifact>

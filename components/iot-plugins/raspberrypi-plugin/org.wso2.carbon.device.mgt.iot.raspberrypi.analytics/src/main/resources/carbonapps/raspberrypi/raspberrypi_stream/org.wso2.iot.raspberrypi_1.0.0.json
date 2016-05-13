@@ -1,11 +1,12 @@
 {
-  "name": "org.wso2.iot.arduino",
+  "name": "org.wso2.iot.raspberrypi",
   "version": "1.0.0",
-  "nickName": "Arduino",
-  "description": "Temperature data received from the Arduino",
+  "nickName": "raspberrypi",
+  "description": "Temperature data received from the raspberrypi",
   "metaData": [
     {"name":"owner","type":"STRING"},
-    {"name":"deviceId","type":"STRING"}
+    {"name":"deviceId","type":"STRING"},
+    {"name":"time","type":"LONG"}
   ],
   "payloadData": [
     {
