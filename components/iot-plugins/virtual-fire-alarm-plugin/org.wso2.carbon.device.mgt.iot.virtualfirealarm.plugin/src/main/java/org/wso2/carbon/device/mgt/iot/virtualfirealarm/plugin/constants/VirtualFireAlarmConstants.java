@@ -68,7 +68,7 @@ public class VirtualFireAlarmConstants {
     public static final String TOPIC = "topic";
     public static final String SUBSCRIBED_TOPIC = "carbon.super/virtual_firealarm/+/publisher";
 
-    public static final String CONTENT_VALIDATION = "contentValidation";
+    public static final String CONTENT_VALIDATION = "contentValidator";
     public static final String CONTENT_TRANSFORMATION = "contentTransformer";
     public static final String RESOURCE = "resource";
 

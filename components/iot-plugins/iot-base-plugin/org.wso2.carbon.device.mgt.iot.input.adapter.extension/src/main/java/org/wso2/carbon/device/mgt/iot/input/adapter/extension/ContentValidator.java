@@ -25,9 +25,9 @@ import java.util.Map;
  */
 public interface ContentValidator {
 	/**
-	 * @param contentValidationParams that related to input adapter.
+	 * @param contentValidatorParams that related to input adapter.
 	 * @param dynamicParameter that message.
 	 * @return ContentInfo.
 	 */
-	ContentInfo validate(Object message, Map<String, String> contentValidationParams, Map<String, String> dynamicParameter);
+	ContentInfo validate(Object message, Map<String, String> contentValidatorParams, Map<String, String> dynamicParameter);
 }

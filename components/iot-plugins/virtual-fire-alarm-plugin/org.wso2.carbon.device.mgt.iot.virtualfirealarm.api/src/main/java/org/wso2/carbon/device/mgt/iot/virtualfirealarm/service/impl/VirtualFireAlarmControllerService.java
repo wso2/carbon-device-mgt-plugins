@@ -50,8 +50,7 @@ public interface VirtualFireAlarmControllerService {
     @POST
     @Path("device/{deviceId}/buzz")
     @Permission(scope = "virtual_firealarm_user", permissions = {"device-mgt/virtual_firealarm/user"})
-    @Feature(code = "buzz", name = "Buzzer On / Off", type = "operation",
-            description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
+    @Feature(code = "buzz", name = "Buzzer On / Off", description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
     Response switchBuzzer(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
                              @FormParam("state") String state);
     
