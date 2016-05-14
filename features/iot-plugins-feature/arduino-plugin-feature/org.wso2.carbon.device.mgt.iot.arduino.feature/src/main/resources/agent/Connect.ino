@@ -102,7 +102,7 @@ void setupResource(){
     jsonPayLoad += String(DEVICE_OWNER);
     jsonPayLoad += "\",\"deviceId\":\"";
     jsonPayLoad += String(DEVICE_ID);
-    jsonPayLoad += "}, \"payloadData\":{";
+    jsonPayLoad += "\"}, \"payloadData\":{";
     
     if(DEBUG) {
         Serial.print("JSON Payload: ");
