@@ -18,7 +18,7 @@
 
 var palette = new Rickshaw.Color.Palette({scheme: "classic9"});
 
-function drawGraph(from, to) {
+function drawGraph_raspberrypi(from, to) {
 	var backendApiUrl = $("#chart").data("backend-api-url") + "?from=" + from + "&to=" + to;
 
 	var successCallback = function (data) {

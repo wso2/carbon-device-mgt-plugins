@@ -18,10 +18,9 @@
 
 package org.wso2.carbon.device.mgt.iot.arduino.service.impl.util;
 
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.iot.exception.IoTException;
-import org.wso2.carbon.device.mgt.iot.util.IoTUtil;
-import org.wso2.carbon.device.mgt.iot.util.IotDeviceManagementUtil;
+import org.wso2.carbon.device.mgt.iot.util.Utils;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -35,12 +34,7 @@ import java.util.Map;
  */
 public class ZipUtil {
 
-    private static final String HTTPS_PORT_PROPERTY = "httpsPort";
     private static final String HTTP_PORT_PROPERTY = "httpPort";
-
-    private static final String LOCALHOST = "localhost";
-    private static final String HTTPS_PROTOCOL_APPENDER = "https://";
-    private static final String HTTP_PROTOCOL_APPENDER = "http://";
 
     public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
                                     String deviceId, String deviceName, String token,
@@ -53,29 +47,27 @@ public class ZipUtil {
         String iotServerIP;
 
         try {
-            iotServerIP = IoTUtil.getHostName();
-            String httpsServerPort = System.getProperty(HTTPS_PORT_PROPERTY);
+            iotServerIP = Utils.getHostName();
             String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
-            String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
-            String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
-            String apimEndpoint = httpsServerEP;
 
             Map<String, String> contextParams = new HashMap<>();
-            contextParams.put("TENANT_DOMAIN", APIUtil.getTenantDomainOftheUser());
+
+            if (APIUtil.getTenantDomainOftheUser().equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+                contextParams.put("TENANT_DOMAIN", "");
+            } else {
+                contextParams.put("TENANT_DOMAIN", "/t/" + tenantDomain);
+            }
             contextParams.put("DEVICE_OWNER", owner);
             contextParams.put("DEVICE_ID", deviceId);
             contextParams.put("DEVICE_NAME", deviceName);
-            contextParams.put("HTTPS_EP", httpsServerEP);
-            contextParams.put("HTTP_EP", httpServerEP);
-            contextParams.put("APIM_EP", apimEndpoint);
+            contextParams.put("SERVER_EP_IP", iotServerIP.replace('.', ','));
+            contextParams.put("SERVER_EP_PORT", httpServerPort);
             contextParams.put("DEVICE_TOKEN", token);
             contextParams.put("DEVICE_REFRESH_TOKEN", refreshToken);
 
             ZipArchive zipFile;
-            zipFile = IotDeviceManagementUtil.getSketchArchive(archivesPath, templateSketchPath, contextParams);
+            zipFile = Utils.getSketchArchive(archivesPath, templateSketchPath, contextParams, deviceName);
             return zipFile;
-        } catch (IoTException e) {
-            throw new DeviceManagementException(e.getMessage());
         } catch (IOException e) {
             throw new DeviceManagementException("Zip File Creation Failed", e);
         }

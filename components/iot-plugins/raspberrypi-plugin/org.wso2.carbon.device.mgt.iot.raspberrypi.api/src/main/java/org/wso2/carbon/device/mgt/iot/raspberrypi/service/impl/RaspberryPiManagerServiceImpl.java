@@ -236,7 +236,6 @@ public class RaspberryPiManagerServiceImpl implements RaspberryPiManagerService 
         ZipUtil ziputil = new ZipUtil();
         ZipArchive zipFile = ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(), sketchType,
                                                    deviceId, deviceName, accessToken, refreshToken);
-        zipFile.setDeviceId(deviceId);
         return zipFile;
     }
 
