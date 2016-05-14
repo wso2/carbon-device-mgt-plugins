@@ -188,9 +188,8 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
         }
         //create new device id
         String deviceId = shortUUID();
-        String applicationUsername =
-                PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
-                        .getAdminUserName();
+        String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
+                .getRealmConfiguration().getAdminUserName();
         if (apiApplicationKey == null) {
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {ArduinoConstants.DEVICE_TYPE};
@@ -213,7 +212,6 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
         ZipUtil ziputil = new ZipUtil();
         ZipArchive zipFile = ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(),
                             ArduinoConstants.DEVICE_TYPE, deviceId, deviceName, accessToken, refreshToken);
-        zipFile.setDeviceId(deviceId);
         return zipFile;
     }
 

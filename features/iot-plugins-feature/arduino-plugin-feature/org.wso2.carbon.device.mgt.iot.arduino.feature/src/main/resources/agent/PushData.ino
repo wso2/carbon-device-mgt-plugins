@@ -31,11 +31,7 @@ void pushData(){
     payLoad += "}}}";
     
     client.fastrprint(F("POST "));
-    if (strcmp(TENANT_DOMAIN, SUPER_TENANT) == 0) {
-      client.fastrprint(DAS_SERVICE_EPOINT);
-    } else {
-      client.fastrprint(DAS_SERVICE_TEPOINT); 
-    }
+    client.fastrprint(DAS_SERVICE_EPOINT);
     client.fastrprint(F(" HTTP/1.1")); client.fastrprint(F("\n"));
     client.fastrprint(host.c_str()); client.fastrprint(F("\n"));
     client.fastrprint(F("Authorization: Bearer ")); client.fastrprint(F(DEVICE_TOKEN)); client.fastrprint(F("\n"));
@@ -50,11 +46,7 @@ void pushData(){
     
     if(DEBUG) {
         Serial.print("POST ");
-        if (strcmp(TENANT_DOMAIN, SUPER_TENANT) == 0) {
-          Serial.print(DAS_SERVICE_EPOINT);
-        } else {
-          Serial.print(DAS_SERVICE_TEPOINT);
-        }
+        Serial.print(DAS_SERVICE_EPOINT);
         Serial.print(" HTTP/1.1"); Serial.println();
         Serial.print(host); Serial.println();
         Serial.print("Content-Type: application/json"); Serial.println();

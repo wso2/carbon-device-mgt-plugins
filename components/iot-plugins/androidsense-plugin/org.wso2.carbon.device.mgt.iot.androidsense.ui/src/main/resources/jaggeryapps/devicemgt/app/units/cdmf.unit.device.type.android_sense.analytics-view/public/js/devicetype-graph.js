@@ -18,7 +18,7 @@
 
 var palette = new Rickshaw.Color.Palette({scheme: "classic9"});
 
-function drawGraph(from, to) {
+function drawGraph_android_sense(from, to) {
     retrieveDataAndDrawLineGraph("battery", from, to);
     retrieveDataAndDrawLineGraph("light", from, to);
     retrieveDataAndDrawLineGraph("pressure", from, to);

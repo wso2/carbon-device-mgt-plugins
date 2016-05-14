@@ -23,9 +23,6 @@ import org.wso2.carbon.iot.android.sense.event.streams.DataReader;
 import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
 import java.util.concurrent.TimeUnit;
 
-
-
-
 /**
  * This is used to retrieve the location data using GPS and used Network connection to increase the accuracy.
  */
@@ -115,7 +112,7 @@ public class LocationDataReader extends DataReader implements LocationListener {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG, "Failed to capture location data.");
         }
 
         return location;
@@ -182,14 +179,9 @@ public class LocationDataReader extends DataReader implements LocationListener {
             TimeUnit.MILLISECONDS.sleep(10000);
             double lat = getLatitude();
             double longit = getLongitude();
-
-
-
             if (lat != 0 && longit != 0) {
                 Log.d(TAG, "YYY " + getLatitude() + ", XXX " +  getLongitude());
-
                 gps = new LocationData(getLatitude(), getLongitude());
-
                 SenseDataHolder.getLocationDataHolder().add(gps);
 
             }

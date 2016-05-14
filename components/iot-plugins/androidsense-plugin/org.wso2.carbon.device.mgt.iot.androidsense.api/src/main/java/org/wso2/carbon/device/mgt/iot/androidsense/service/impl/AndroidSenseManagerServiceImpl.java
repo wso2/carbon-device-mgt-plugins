@@ -31,8 +31,7 @@ import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.AndroidConfiguration;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.Constants;
-import org.wso2.carbon.device.mgt.iot.exception.IoTException;
-import org.wso2.carbon.device.mgt.iot.util.IoTUtil;
+import org.wso2.carbon.device.mgt.iot.util.Utils;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -63,7 +62,7 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
                 String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
                 if (mqttEndpoint.contains(Constants.LOCALHOST)) {
-                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, IoTUtil.getHostName());
+                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, Utils.getHostName());
                 }
                 androidConfiguration.setMqttEndpoint(mqttEndpoint);
                 return Response.status(Response.Status.ACCEPTED.getStatusCode()).entity(androidConfiguration.toString())
@@ -86,7 +85,7 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
                 String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
                 if (mqttEndpoint.contains(Constants.LOCALHOST)) {
-                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, IoTUtil.getHostName());
+                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, Utils.getHostName());
                 }
                 androidConfiguration.setMqttEndpoint(mqttEndpoint);
                 return Response.ok(androidConfiguration.toString()).build();
@@ -95,9 +94,6 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
             }
         } catch (DeviceManagementException e) {
             log.error(e.getErrorMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(false).build();
-        } catch (IoTException e) {
-            log.error(e.getMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(false).build();
         }
     }

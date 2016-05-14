@@ -52,8 +52,6 @@ public class DataPublisherService extends Service {
     private static String VALUE_TAG = "value";
     public static Context context;
 
-    LocationData gps;
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -114,16 +112,13 @@ public class DataPublisherService extends Service {
 
                     //retrieve batter data.
                     List<BatteryData> batteryDataMap = SenseDataHolder.getBatteryDataHolder();
-
                     if (!batteryDataMap.isEmpty()) {
-
                         for (BatteryData batteryData : batteryDataMap) {
                             Event event = new Event();
                             event.setTimestamp(batteryData.getTimestamp());
                             event.setBattery(batteryData.getLevel());
                             events.add(event);
                         }
-
                     }
                     SenseDataHolder.resetBatteryDataHolder();
                     //retrieve location data.

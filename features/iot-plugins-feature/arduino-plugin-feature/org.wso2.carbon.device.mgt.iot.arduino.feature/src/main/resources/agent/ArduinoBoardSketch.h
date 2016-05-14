@@ -34,7 +34,6 @@
 // Security can be WLAN_SEC_UNSEC, WLAN_SEC_WEP, WLAN_SEC_WPA or WLAN_SEC_WPA2
 #define IDLE_TIMEOUT_MS  3000
 
-#define TENANT_DOMAIN "${TENANT_DOMAIN}"
 #define DEVICE_OWNER "${DEVICE_OWNER}"
 #define DEVICE_ID "${DEVICE_ID}"
 #define DEVICE_TOKEN "${DEVICE_TOKEN}"
@@ -43,8 +42,7 @@
 #define TIME  0
 #define SUPER_TENANT "carbon.super"
 
-#define DAS_SERVICE_EPOINT "/endpoints/temperature-http?deviceId=${DEVICE_ID}"
-#define DAS_SERVICE_TEPOINT "/endpoints/t/${TENANT_DOMAIN}/temperature-http?deviceId=${DEVICE_ID}"
+#define DAS_SERVICE_EPOINT "/endpoints${TENANT_DOMAIN}/arduino_receiver?deviceId=${DEVICE_ID}"
 
 #define IOT_SERVICE_EPOINT "/arduino/device/${DEVICE_ID}/controls"
 
@@ -53,15 +51,17 @@
 #define DEBUG true
 #define CON_DEBUG true
 
-#define SERVICE_PORT 9763                 //http port of iot server
+#define SERVICE_PORT ${SERVER_EP_PORT}                 //http port of iot server
 
-byte server[4] = {192,168,1,10};        //Ip address of iot server
+byte server[4] = {${SERVER_EP_IP}};        //Ip address of iot server
+
+//set static Ip
+/**
 byte deviceIP[4] = { 192, 168, 1,110 };   //Ststic ip address of arduino
-
 byte dns2[] = { 8, 8, 8, 8 };             //Ststic dns of arduino
 byte subnet[] = { 255, 255, 255, 0 };     //Ststic subnet of arduino
 byte gateway[] = { 192, 168, 1, 1 };      //Ststic gateway of arduino
-
+*/
 
 String host, jsonPayLoad, replyMsg;
 String responseMsg, subStrn;
