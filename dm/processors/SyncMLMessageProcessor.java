@@ -26,7 +26,7 @@ import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.Node;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.parsers.URIParser;
 import org.wso2.carbon.mdm.services.android.omadm.dm.dao.DeviceMODao;
-import org.wso2.carbon.mdm.services.android.omadm.operations.OperationHandler;
+import org.wso2.carbon.mdm.services.android.omadm.operations.OMADMOperationHandler;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLStatusCodes;
@@ -126,8 +126,8 @@ public class SyncMLMessageProcessor {
         }
 
         // Update operations
-        OperationHandler operationHandler = new OperationHandler(sourceDocument, headerCommandId);
-        operationHandler.updateOperations();
+        OMADMOperationHandler OMADMOperationHandler = new OMADMOperationHandler(sourceDocument, headerCommandId);
+        OMADMOperationHandler.updateOperations();
 
     }
 

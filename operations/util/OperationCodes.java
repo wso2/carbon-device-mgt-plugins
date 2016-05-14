@@ -23,6 +23,8 @@ public class OperationCodes {
         CAMERA("./DevInfo/Ext/Config/AllowCamera"),
         CAMERA_STATUS("./DevInfo/Ext/Config/AllowCamera"),
         LONGITUDE("./DevInfo/Ext/Location/Longitude"),
+        ENCRYPT_STORAGE_STATUS("./Vendor/MSFT/PolicyManager/Device/Security/RequireDeviceEncryption"),
+        DEVICE_PASSCODE_STATUS("./Vendor/MSFT/PolicyManager/My/DeviceLock/DevicePasswordEnabled"),
         LATITUDE("./DevInfo/Ext/Location/Latitude");
 
         private final String code;
@@ -40,7 +42,7 @@ public class OperationCodes {
     public static enum Command {
         DEVICE_RING("./Vendor/MSFT/RemoteRing/Ring"),
         DEVICE_LOCK("./Vendor/MSFT/RemoteLock/Lock"),
-        WIPE_DATA("./Vendor/MSFT/RemoteWipe/doWipe"),
+        DEVICE_WIPE("./Vendor/MSFT/RemoteWipe/doWipe"),
         DISENROLL("./Vendor/MSFT/DMClient/Unenroll"),
         LOCK_RESET("./Vendor/MSFT/RemoteLock/LockAndResetPIN"),
         CAMERA("./Vendor/MSFT/PolicyManager/My/Camera/AllowCamera"),

@@ -58,7 +58,7 @@ public class ResultsTag {
         this.commandReference = commandReference;
     }
 
-    public List<ItemTag> getItem() {
+    public List<ItemTag> getItems() {
         return items;
     }
 
@@ -84,8 +84,8 @@ public class ResultsTag {
             messageReference.appendChild(doc.createTextNode(String.valueOf(getCommandReference())));
             results.appendChild(messageReference);
         }
-        if (getItem() != null) {
-            for (Iterator<ItemTag> itemIterator = getItem().iterator(); itemIterator.hasNext(); ) {
+        if (getItems() != null) {
+            for (Iterator<ItemTag> itemIterator = getItems().iterator(); itemIterator.hasNext(); ) {
                 ItemTag item = itemIterator.next();
                 if (item != null) {
                     item.buildItemElement(doc, results);
