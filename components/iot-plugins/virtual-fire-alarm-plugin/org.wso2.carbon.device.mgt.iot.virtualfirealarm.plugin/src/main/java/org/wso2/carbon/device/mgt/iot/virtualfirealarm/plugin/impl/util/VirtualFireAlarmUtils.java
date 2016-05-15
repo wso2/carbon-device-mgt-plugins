@@ -362,7 +362,8 @@ public class VirtualFireAlarmUtils {
         xmppAdapterProperties.put(VirtualFireAlarmConstants.PORT_KEY, String.valueOf(xmppConfig.getXmppServerPort()));
         xmppAdapterProperties.put(VirtualFireAlarmConstants.USERNAME_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminUsername());
         xmppAdapterProperties.put(VirtualFireAlarmConstants.PASSWORD_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminPassword());
-        xmppAdapterProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminJID());
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminJID()
+                + "/input-adapter");
         xmppAdapterProperties.put(VirtualFireAlarmConstants.CONTENT_TRANSFORMATION,
                                   VirtualFirealarmXmppContentTransformer.class.getName());
         xmppAdapterProperties.put(VirtualFireAlarmConstants.CONTENT_VALIDATION, "default");
@@ -400,7 +401,8 @@ public class VirtualFireAlarmUtils {
         xmppAdapterProperties.put(VirtualFireAlarmConstants.PORT_KEY, String.valueOf(xmppConfig.getXmppServerPort()));
         xmppAdapterProperties.put(VirtualFireAlarmConstants.USERNAME_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminUsername());
         xmppAdapterProperties.put(VirtualFireAlarmConstants.PASSWORD_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminPassword());
-        xmppAdapterProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminJID());
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminJID()
+                + "/output-adapter");
         outputEventAdapterConfiguration.setStaticProperties(xmppAdapterProperties);
         return outputEventAdapterConfiguration;
     }
