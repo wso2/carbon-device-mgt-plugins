@@ -28,6 +28,7 @@ import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorization
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFirealarmSecurityManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppConfig;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
@@ -83,7 +84,8 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
             Map<String, String> dynamicProperties = new HashMap<>();
             switch (protocolString) {
                 case XMPP_PROTOCOL:
-                    dynamicProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY, deviceId);
+                    dynamicProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY,
+                                          deviceId + "@" + XmppConfig.getInstance().getXmppServerName());
                     dynamicProperties.put(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "CONTROL-REQUEST");
                     dynamicProperties.put(VirtualFireAlarmConstants.MESSAGE_TYPE_PROPERTY_KEY,
                                           VirtualFireAlarmConstants.CHAT_PROPERTY_KEY);
@@ -91,7 +93,6 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
                                                                    dynamicProperties, encryptedMsg);
                     break;
                 default:
-
                     String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
                             + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
                     dynamicProperties.put(VirtualFireAlarmConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
@@ -131,7 +132,8 @@ public class VirtualFireAlarmControllerServiceImpl implements VirtualFireAlarmCo
             Map<String, String> dynamicProperties = new HashMap<>();
             switch (protocolString) {
                 case XMPP_PROTOCOL:
-                    dynamicProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY, deviceId);
+                    dynamicProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY,
+                                          deviceId + "@" + XmppConfig.getInstance().getXmppServerName());
                     dynamicProperties.put(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "POLICTY-REQUEST");
                     dynamicProperties.put(VirtualFireAlarmConstants.MESSAGE_TYPE_PROPERTY_KEY,
                                           VirtualFireAlarmConstants.CHAT_PROPERTY_KEY);

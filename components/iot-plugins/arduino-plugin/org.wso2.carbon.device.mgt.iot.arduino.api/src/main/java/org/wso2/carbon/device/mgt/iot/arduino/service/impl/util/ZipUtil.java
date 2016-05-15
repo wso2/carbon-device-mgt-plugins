@@ -47,7 +47,7 @@ public class ZipUtil {
         String iotServerIP;
 
         try {
-            iotServerIP = Utils.getHostName();
+            iotServerIP = Utils.getServerUrl();
             String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
 
             Map<String, String> contextParams = new HashMap<>();

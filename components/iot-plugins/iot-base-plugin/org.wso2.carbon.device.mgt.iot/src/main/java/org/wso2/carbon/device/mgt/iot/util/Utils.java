@@ -55,7 +55,7 @@ public class Utils {
     public static final String HOST_NAME = "HostName";
     private static final Log log = LogFactory.getLog(Utils.class);
 
-    public static String getHostName() {
+    public static String getServerUrl() {
         String hostName = ServerConfiguration.getInstance().getFirstProperty(HOST_NAME);
         try {
             if (hostName == null) {

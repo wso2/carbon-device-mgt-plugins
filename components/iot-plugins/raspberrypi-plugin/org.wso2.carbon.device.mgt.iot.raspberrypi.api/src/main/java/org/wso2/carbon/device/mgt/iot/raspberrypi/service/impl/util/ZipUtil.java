@@ -52,7 +52,7 @@ public class ZipUtil {
         String iotServerIP;
 
         try {
-            iotServerIP = Utils.getHostName();
+            iotServerIP = Utils.getServerUrl();
             String httpsServerPort = System.getProperty(HTTPS_PORT_PROPERTY);
             String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
             String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;

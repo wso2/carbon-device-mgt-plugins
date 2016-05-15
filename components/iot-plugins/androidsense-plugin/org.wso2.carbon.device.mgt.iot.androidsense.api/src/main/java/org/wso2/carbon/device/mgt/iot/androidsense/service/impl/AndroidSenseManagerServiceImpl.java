@@ -62,7 +62,7 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
                 String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
                 if (mqttEndpoint.contains(Constants.LOCALHOST)) {
-                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, Utils.getHostName());
+                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, Utils.getServerUrl());
                 }
                 androidConfiguration.setMqttEndpoint(mqttEndpoint);
                 return Response.status(Response.Status.ACCEPTED.getStatusCode()).entity(androidConfiguration.toString())
@@ -85,7 +85,7 @@ public class AndroidSenseManagerServiceImpl implements AndroidSenseManagerServic
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
                 String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
                 if (mqttEndpoint.contains(Constants.LOCALHOST)) {
-                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, Utils.getHostName());
+                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, Utils.getServerUrl());
                 }
                 androidConfiguration.setMqttEndpoint(mqttEndpoint);
                 return Response.ok(androidConfiguration.toString()).build();

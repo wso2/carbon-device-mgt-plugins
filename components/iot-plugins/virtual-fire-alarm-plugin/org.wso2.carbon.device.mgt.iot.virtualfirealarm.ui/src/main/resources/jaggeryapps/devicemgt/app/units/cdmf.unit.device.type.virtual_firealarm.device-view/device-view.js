@@ -21,8 +21,7 @@ function onRequest(context) {
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("id");
     var autoCompleteParams = [
-        {"name" : "deviceId", "value" : deviceId},
-        {"name" : "protocol", "value" : "MQTT"}
+        {"name" : "deviceId", "value" : deviceId}
     ];
 
     if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {

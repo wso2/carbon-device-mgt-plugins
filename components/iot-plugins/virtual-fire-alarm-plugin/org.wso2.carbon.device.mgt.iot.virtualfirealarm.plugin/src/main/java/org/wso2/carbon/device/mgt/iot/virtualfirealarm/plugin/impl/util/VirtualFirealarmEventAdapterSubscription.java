@@ -14,6 +14,9 @@ public class VirtualFirealarmEventAdapterSubscription implements InputEventAdapt
             if (actualMessage.contains("PUBLISHER")) {
                 float temperature = Float.parseFloat(actualMessage.split(":")[2]);
                 VirtualFireAlarmUtils.publishToDAS(deviceId, temperature);
+            } else {
+                float temperature = Float.parseFloat(actualMessage.split(":")[1]);
+                VirtualFireAlarmUtils.publishToDAS(deviceId, temperature);
             }
         }
     }
