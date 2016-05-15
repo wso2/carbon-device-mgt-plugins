@@ -1,25 +1,20 @@
-{{#zone "topCss"}}
-    {{css "css/graph.css"}}
-{{/zone}}
-<span id="details" data-devicename="{{device.name}}" data-deviceid="{{device.deviceIdentifier}}"
+<span id="raspberrypi-details" data-devices="{{devices}}" data-devicename="{{device.name}}"
+      data-deviceid="{{device.deviceIdentifier}}"
       data-appcontext="{{@app.context}}"></span>
-<div id="div-chart">
+<div id="raspberrypi-div-chart" data-backend-api-url= {{backendApiUri}}>
     <div class="chartWrapper" id="chartWrapper">
-        <span id="span-title">Temperature</span>
-        <div id="y_axis" class="custom_y_axis"></div>
+        <h3 id="span-title">Temperature</h3>
+        <div id="y_axis-temperature" class="custom_y_axis"></div>
         <div class="legend_container">
-            <div id="smoother" title="Smoothing"></div>
-            <div id="legend"></div>
+            <div id="smoother-temperature" title="Smoothing"></div>
+            <div id="legend-temperature"></div>
         </div>
-        <div id="chart" class="custom_rickshaw_graph" data-backend-api-url = {{backendApiUri}}></div>
-        <div id="x_axis" class="custom_x_axis"></div>
-        <div id="slider" class="custom_slider"></div>
+        <div id="chart-temperature" class="custom_rickshaw_graph"></div>
+        <div id="x_axis-temperature" class="custom_x_axis"></div>
+        <div id="slider-temperature" class="custom_slider"></div>
     </div>
 </div>
 
 {{#zone "bottomJs"}}
-    {{js "js/d3.min.js"}}
-    {{js "js/rickshaw.min.js"}}
-    {{js "js/moment.min.js"}}
-    {{js "js/devicetype-graph.js"}}
+    {{js "js/raspberrypi.js"}}
 {{/zone}}

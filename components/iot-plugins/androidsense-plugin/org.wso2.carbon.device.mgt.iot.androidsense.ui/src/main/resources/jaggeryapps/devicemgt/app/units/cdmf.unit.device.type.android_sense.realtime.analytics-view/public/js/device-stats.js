@@ -304,3 +304,7 @@ function disconnect() {
 		ws = null;
 	}
 }
+
+function initMap() {
+
+}

@@ -18,22 +18,21 @@
 
 var palette = new Rickshaw.Color.Palette({scheme: "classic9"});
 
-function drawGraph_virtual_firealarm(from, to) {
-    $("#y_axis").html("");
-    $("#smoother").html("");
-    $("#legend").html("");
-    $("#chart").html("");
-    $("#x_axis").html("");
-    $("#slider").html("");
+function drawGraph_raspberrypi(from, to) {
+    $("#y_axis-temperature").html("");
+    $("#smoother-temperature").html("");
+    $("#legend-temperature").html("");
+    $("#chart-temperature").html("");
+    $("#x_axis-temperature").html("");
+    $("#slider-temperature").html("");
 
-    var devices = $("#details").data("devices");
-
+    var devices = $("#raspberrypi-details").data("devices");
     var tzOffset = new Date().getTimezoneOffset() * 60;
 
-    var chartWrapperElmId = "#div-chart";
+    var chartWrapperElmId = "#raspberrypi-div-chart";
     var graphWidth = $(chartWrapperElmId).width() - 50;
     var graphConfig = {
-        element: document.getElementById("chart"),
+        element: document.getElementById("chart-temperature"),
         width: graphWidth,
         height: 400,
         strokeWidth: 2,
@@ -66,10 +65,10 @@ function drawGraph_virtual_firealarm(from, to) {
                         x: parseInt(new Date().getTime() / 1000),
                         y: 0
                     }],
-                    'name': $("#details").data("devicename")
+                    'name': $("#raspberrypi-details").data("devicename")
                 });
     }
-    
+
     var graph = new Rickshaw.Graph(graphConfig);
 
     graph.render();
@@ -83,7 +82,7 @@ function drawGraph_virtual_firealarm(from, to) {
     var yAxis = new Rickshaw.Graph.Axis.Y({
         graph: graph,
         orientation: 'left',
-        element: document.getElementById("y_axis"),
+        element: document.getElementById("y_axis-temperature"),
         width: 40,
         height: 410
     });
@@ -92,12 +91,12 @@ function drawGraph_virtual_firealarm(from, to) {
 
     var slider = new Rickshaw.Graph.RangeSlider.Preview({
         graph: graph,
-        element: document.getElementById("slider")
+        element: document.getElementById("slider-temperature")
     });
 
     var legend = new Rickshaw.Graph.Legend({
         graph: graph,
-        element: document.getElementById('legend')
+        element: document.getElementById('legend-temperature')
     });
 
     var hoverDetail = new Rickshaw.Graph.HoverDetail({
@@ -131,7 +130,7 @@ function drawGraph_virtual_firealarm(from, to) {
     if (devices) {
         getData();
     } else {
-        var backendApiUrl = $("#chart").data("backend-api-url") + "?from=" + from + "&to=" + to;
+        var backendApiUrl = $("#raspberrypi-div-chart").data("backend-api-url") + "?from=" + from + "&to=" + to;
         var successCallback = function (data) {
             if (data) {
                 drawLineGraph(JSON.parse(data));
@@ -146,7 +145,7 @@ function drawGraph_virtual_firealarm(from, to) {
         if (deviceIndex >= devices.length) {
             return;
         }
-        var backendApiUrl = $("#chart").data("backend-api-url") + devices[deviceIndex].deviceIdentifier 
+        var backendApiUrl = $("#raspberrypi-div-chart").data("backend-api-url") + devices[deviceIndex].deviceIdentifier
                             + "?from=" + from + "&to=" + to;
         var successCallback = function (data) {
             if (data) {

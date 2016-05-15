@@ -19,21 +19,20 @@
 var palette = new Rickshaw.Color.Palette({scheme: "classic9"});
 
 function drawGraph_arduino(from, to) {
-    $("#y_axis").html("");
-    $("#smoother").html("");
-    $("#legend").html("");
-    $("#chart").html("");
-    $("#x_axis").html("");
-    $("#slider").html("");
+    $("#y_axis-temperature").html("");
+    $("#smoother-temperature").html("");
+    $("#legend-temperature").html("");
+    $("#chart-temperature").html("");
+    $("#x_axis-temperature").html("");
+    $("#slider-temperature").html("");
 
-    var devices = $("#details").data("devices");
-
+    var devices = $("#arduino-details").data("devices");
     var tzOffset = new Date().getTimezoneOffset() * 60;
 
-    var chartWrapperElmId = "#div-chart";
+    var chartWrapperElmId = "#arduino-div-chart";
     var graphWidth = $(chartWrapperElmId).width() - 50;
     var graphConfig = {
-        element: document.getElementById("chart"),
+        element: document.getElementById("chart-temperature"),
         width: graphWidth,
         height: 400,
         strokeWidth: 2,
@@ -49,25 +48,25 @@ function drawGraph_arduino(from, to) {
     if (devices) {
         for (var i = 0; i < devices.length; i++) {
             graphConfig['series'].push(
+                    {
+                        'color': palette.color(),
+                        'data': [{
+                            x: parseInt(new Date().getTime() / 1000),
+                            y: 0
+                        }],
+                        'name': devices[i].name
+                    });
+        }
+    } else {
+        graphConfig['series'].push(
                 {
                     'color': palette.color(),
                     'data': [{
                         x: parseInt(new Date().getTime() / 1000),
                         y: 0
                     }],
-                    'name': devices[i].name
+                    'name': $("#arduino-details").data("devicename")
                 });
-        }
-    } else {
-        graphConfig['series'].push(
-            {
-                'color': palette.color(),
-                'data': [{
-                    x: parseInt(new Date().getTime() / 1000),
-                    y: 0
-                }],
-                'name': $("#details").data("devicename")
-            });
     }
 
     var graph = new Rickshaw.Graph(graphConfig);
@@ -83,7 +82,7 @@ function drawGraph_arduino(from, to) {
     var yAxis = new Rickshaw.Graph.Axis.Y({
         graph: graph,
         orientation: 'left',
-        element: document.getElementById("y_axis"),
+        element: document.getElementById("y_axis-temperature"),
         width: 40,
         height: 410
     });
@@ -92,21 +91,21 @@ function drawGraph_arduino(from, to) {
 
     var slider = new Rickshaw.Graph.RangeSlider.Preview({
         graph: graph,
-        element: document.getElementById("slider")
+        element: document.getElementById("slider-temperature")
     });
 
     var legend = new Rickshaw.Graph.Legend({
         graph: graph,
-        element: document.getElementById('legend')
+        element: document.getElementById('legend-temperature')
     });
 
     var hoverDetail = new Rickshaw.Graph.HoverDetail({
         graph: graph,
         formatter: function (series, x, y) {
             var date = '<span class="date">' +
-                moment((x + tzOffset) * 1000).format('Do MMM YYYY h:mm:ss a') + '</span>';
+                       moment((x + tzOffset) * 1000).format('Do MMM YYYY h:mm:ss a') + '</span>';
             var swatch = '<span class="detail_swatch" style="background-color: ' +
-                series.color + '"></span>';
+                         series.color + '"></span>';
             return swatch + series.name + ": " + parseInt(y) + '<br>' + date;
         }
     });
@@ -131,7 +130,7 @@ function drawGraph_arduino(from, to) {
     if (devices) {
         getData();
     } else {
-        var backendApiUrl = $("#chart").data("backend-api-url") + "?from=" + from + "&to=" + to;
+        var backendApiUrl = $("#arduino-div-chart").data("backend-api-url") + "?from=" + from + "&to=" + to;
         var successCallback = function (data) {
             if (data) {
                 drawLineGraph(JSON.parse(data));
@@ -146,8 +145,8 @@ function drawGraph_arduino(from, to) {
         if (deviceIndex >= devices.length) {
             return;
         }
-        var backendApiUrl = $("#chart").data("backend-api-url") + devices[deviceIndex].deviceIdentifier
-            + "?from=" + from + "&to=" + to;
+        var backendApiUrl = $("#arduino-div-chart").data("backend-api-url") + devices[deviceIndex].deviceIdentifier
+                            + "?from=" + from + "&to=" + to;
         var successCallback = function (data) {
             if (data) {
                 drawLineGraph(JSON.parse(data));
@@ -170,10 +169,10 @@ function drawGraph_arduino(from, to) {
         var chartData = [];
         for (var i = 0; i < data.length; i++) {
             chartData.push(
-                {
-                    x: parseInt(data[i].values.time) - tzOffset,
-                    y: parseInt(data[i].values.temperature)
-                }
+                    {
+                        x: parseInt(data[i].values.time) - tzOffset,
+                        y: parseInt(data[i].values.temperature)
+                    }
             );
         }
 
