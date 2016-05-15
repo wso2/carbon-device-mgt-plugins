@@ -19,6 +19,7 @@
 package org.wso2.carbon.device.mgt.iot.androidsense.service.impl;
 
 import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 import javax.ws.rs.Consumes;
@@ -33,7 +34,7 @@ import javax.ws.rs.core.Response;
 
 @DeviceType(value = "android_sense")
 @API(name = "android_sense", version = "1.0.0", context = "/android_sense", tags = {"android_sense"})
-public interface AndroidSenseControllerService {
+public interface AndroidSenseService {
 
     /**
      * End point to send the key words to the device
@@ -44,6 +45,7 @@ public interface AndroidSenseControllerService {
     @Path("device/{deviceId}/words")
     @POST
     @Feature(code = "keywords", name = "Add Keywords", description = "Send keywords to the device")
+    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/operations"})
     Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords);
 
     /**
@@ -55,11 +57,13 @@ public interface AndroidSenseControllerService {
     @Path("device/{deviceId}/words/threshold")
     @POST
     @Feature(code = "threshold", name = "Add a Threshold", description = "Set a threshold for word in the device")
+    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/operations"})
     Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold);
 
     @Path("device/{deviceId}/words")
     @DELETE
     @Feature(code = "remove", name = "Remove Keywords", description = "Remove the keywords")
+    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/operations"})
     Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words);
 
     /**
@@ -68,9 +72,18 @@ public interface AndroidSenseControllerService {
     @Path("stats/{deviceId}/sensors/{sensorName}")
     @GET
     @Consumes("application/json")
+    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/stats"})
     @Produces("application/json")
     Response getAndroidSenseDeviceStats(@PathParam("deviceId") String deviceId, @PathParam("sensorName") String sensor,
                                         @QueryParam("from") long from, @QueryParam("to") long to);
+
+    /**
+     * Enroll devices.
+     */
+    @Path("device/{device_id}/register")
+    @POST
+    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/devices"})
+    Response register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName);
 
 }
 

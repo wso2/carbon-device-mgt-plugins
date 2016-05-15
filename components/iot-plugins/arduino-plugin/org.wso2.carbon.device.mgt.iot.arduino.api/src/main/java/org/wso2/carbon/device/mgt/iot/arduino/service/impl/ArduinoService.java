@@ -16,13 +16,13 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl;
+package org.wso2.carbon.device.mgt.iot.arduino.service.impl;
 
 import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -31,14 +31,20 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
-@API(name = "raspberrypi", version = "1.0.0", context = "/raspberrypi", tags = {"raspberrypi"})
-@DeviceType(value = "raspberrypi")
-public interface RaspberryPiControllerService {
+@API(name = "arduino", version = "1.0.0", context = "/arduino", tags = {"arduino"})
+@DeviceType(value = "arduino")
+public interface ArduinoService {
 
     @Path("device/{deviceId}/bulb")
     @POST
-    @Feature(code = "bulb", name = "Bulb On / Off", description = "Switch on/off Raspberry Pi agent's bulb. (On / Off)")
+    @Feature(code = "bulb", name = "Control Bulb", description = "Control Bulb on Arduino Uno")
+    @Permission(scope = "arduino_user", permissions = {"/permission/admin/device-mgt/user/operations"})
     Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
+
+    @Path("device/{deviceId}/controls")
+    @GET
+    @Permission(scope = "arduino_device", permissions = {"/permission/admin/device-mgt/user/operations"})
+    Response readControls(@PathParam("deviceId") String deviceId);
 
     /**
      * Retreive Sensor data for the device type
@@ -47,7 +53,17 @@ public interface RaspberryPiControllerService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    Response getRaspberryPiTemperatureStats(@PathParam("deviceId") String deviceId,
-                                        @QueryParam("from") long from, @QueryParam("to") long to);
+    @Permission(scope = "arduino_user", permissions = {"/permission/admin/device-mgt/user/stats"})
+    Response getArduinoTemperatureStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
+                                               @QueryParam("to") long to);
+
+    /**
+     * download device agent
+     */
+    @Path("device/download")
+    @GET
+    @Produces("application/octet-stream")
+    @Permission(scope = "arduino_user", permissions = {"/permission/admin/device-mgt/user/devices"})
+    Response downloadSketch(@QueryParam("deviceName") String customDeviceName);
 
 }

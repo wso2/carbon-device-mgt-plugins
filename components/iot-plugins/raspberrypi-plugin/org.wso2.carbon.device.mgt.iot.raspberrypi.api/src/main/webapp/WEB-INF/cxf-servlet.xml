@@ -27,11 +27,8 @@
 
     <jaxrs:server id="RaspberryPi" address="/">
         <jaxrs:serviceBeans>
-            <bean id="RaspberryPiControllerService"
-                  class="org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.RaspberryPiControllerServiceImpl">
-            </bean>
-            <bean id="RaspberryPiManagerService"
-                  class="org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.RaspberryPiManagerServiceImpl">
+            <bean id="RaspberryPiService"
+                  class="org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.RaspberryPiServiceImpl">
             </bean>
         </jaxrs:serviceBeans>
         <jaxrs:providers>

@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response;
  */
 @API(name = "virtual_firealarm", version = "1.0.0", context = "/virtual_firealarm", tags = {"virtual_firealarm"})
 @DeviceType(value = "virtual_firealarm")
-public interface VirtualFireAlarmControllerService {
+public interface VirtualFireAlarmService {
 
     /**
      * This is an API called/used from within the Server(Front-End) or by a device Owner. It sends a control command to
@@ -49,7 +49,7 @@ public interface VirtualFireAlarmControllerService {
      */
     @POST
     @Path("device/{deviceId}/buzz")
-    @Permission(scope = "virtual_firealarm_user", permissions = {"device-mgt/virtual_firealarm/user"})
+    @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user/operations"})
     @Feature(code = "buzz", name = "Buzzer On / Off", description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
     Response switchBuzzer(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
                              @FormParam("state") String state);
@@ -60,10 +60,16 @@ public interface VirtualFireAlarmControllerService {
      */
     @Path("device/stats/{deviceId}")
     @GET
-    @Permission(scope = "virtual_firealarm_user", permissions = {"device-mgt/virtual_firealarm/user"})
+    @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user/stats"})
     @Consumes("application/json")
     @Produces("application/json")
     Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
                                                  @QueryParam("to") long to);
+
+    @Path("device/download")
+    @GET
+    @Produces("application/zip")
+    @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user/devices"})
+    Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketchType") String sketchType);
 
 }
