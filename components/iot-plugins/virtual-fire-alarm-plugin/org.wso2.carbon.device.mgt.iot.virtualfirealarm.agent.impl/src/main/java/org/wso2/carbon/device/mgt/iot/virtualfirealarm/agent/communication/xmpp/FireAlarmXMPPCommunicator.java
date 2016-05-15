@@ -21,6 +21,7 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.xmpp
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.packet.Message;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentConfiguration;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentUtilOperations;
@@ -68,11 +69,8 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
         final AgentManager agentManager = AgentManager.getInstance();
         username = agentManager.getAgentConfigs().getDeviceId();
         password = agentManager.getAgentConfigs().getAuthToken();
-        resource = agentManager.getAgentConfigs().getDeviceOwner();
-
-        xmppDeviceJID = username + "@" + server;
-        xmppAdminJID =  "wso2_" + AgentConstants.DEVICE_TYPE + "@" + server;
-
+        xmppDeviceJID = username + "@" + agentManager.getAgentConfigs().getXmppServerName();
+        xmppAdminJID =  "wso2admin_" + AgentConstants.DEVICE_TYPE + "@" + agentManager.getAgentConfigs().getXmppServerName();
 
         Runnable connect = new Runnable() {
             public void run() {

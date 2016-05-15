@@ -80,10 +80,11 @@ public class VirtualFireAlarmConstants {
     public static final String IS_ENABLED_KEY = "enabled";
     public static final String HOST_KEY = "host";
     public static final String PORT_KEY = "port";
-    public static final String CONNECTION_PORT = "connection.port";
     public static final String ADMIN_USERNAME = "admin.username";
     public static final String ADMIN_PASSWORD = "admin.password";
     public static final String XMPP_SERVER_PASSWORD = "admin@123456789";
+
+    public static final String SERVER_NAME = "serverName";
 
     public static final String MQTT_CONFIG_LOCATION = CarbonUtils.getEtcCarbonConfigDirPath() + File.separator
             + "mqtt.properties";

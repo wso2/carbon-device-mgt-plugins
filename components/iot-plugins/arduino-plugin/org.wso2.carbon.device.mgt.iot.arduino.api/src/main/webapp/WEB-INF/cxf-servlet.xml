@@ -25,11 +25,8 @@
 
     <jaxrs:server id="Arduino" address="/">
         <jaxrs:serviceBeans>
-            <bean id="ArduinoManagerService"
-                  class="org.wso2.carbon.device.mgt.iot.arduino.service.impl.ArduinoManagerServiceImpl">
-            </bean>
-            <bean id="ArduinoControllerService"
-                  class="org.wso2.carbon.device.mgt.iot.arduino.service.impl.ArduinoControllerServiceImpl">
+            <bean id="ArduinoService"
+                  class="org.wso2.carbon.device.mgt.iot.arduino.service.impl.ArduinoServiceImpl">
             </bean>
         </jaxrs:serviceBeans>
         <jaxrs:providers>

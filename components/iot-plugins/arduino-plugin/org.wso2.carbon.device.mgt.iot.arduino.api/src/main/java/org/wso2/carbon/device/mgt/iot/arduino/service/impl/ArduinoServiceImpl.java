@@ -21,6 +21,9 @@ package org.wso2.carbon.device.mgt.iot.arduino.service.impl;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.analytics.dataservice.commons.SORT;
+import org.wso2.carbon.analytics.dataservice.commons.SortByField;
+import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
 import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
@@ -29,6 +32,9 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
+import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
+import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
+import org.wso2.carbon.device.mgt.iot.arduino.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.ZipUtil;
@@ -39,115 +45,132 @@ import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientExceptio
 import org.wso2.carbon.user.api.UserStoreException;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
-@Path("enrollment")
-public class ArduinoManagerServiceImpl implements ArduinoManagerService {
+public class ArduinoServiceImpl implements ArduinoService {
 
+    private static Log log = LogFactory.getLog(ArduinoServiceImpl.class);
+    private static Map<String, LinkedList<String>> internalControlsQueue = new HashMap<>();
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
-    private static Log log = LogFactory.getLog(ArduinoManagerServiceImpl.class);
 
     @Override
-    @Path("devices/{device_id}")
-    @DELETE
-    public Response removeDevice(@PathParam("device_id") String deviceId) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(ArduinoConstants.DEVICE_TYPE);
+    @Path("device/{deviceId}/bulb")
+    @POST
+    public Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state) {
         try {
-            boolean removed = APIUtil.getDeviceManagementService().disenrollDevice(deviceIdentifier);
-            if (removed) {
-                return Response.status(Response.Status.OK.getStatusCode()).entity(true).build();
-            } else {
-                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
+                        ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
-        } catch (DeviceManagementException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-    }
-
-    @Override
-    @Path("devices/{device_id}")
-    @PUT
-    public Response updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(ArduinoConstants.DEVICE_TYPE);
-        try {
-            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
-            device.setDeviceIdentifier(deviceId);
-            device.getEnrolmentInfo().setDateOfLastUpdate(new Date().getTime());
-            device.setName(name);
-            device.setType(ArduinoConstants.DEVICE_TYPE);
-            boolean updated = APIUtil.getDeviceManagementService().modifyEnrollment(device);
-            if (updated) {
-                return Response.status(Response.Status.OK.getStatusCode()).entity(true).build();
+            LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
+            String operation = "BULB:" + state.toUpperCase();
+            if (deviceControlList == null) {
+                deviceControlList = new LinkedList<>();
+                deviceControlList.add(operation);
+                internalControlsQueue.put(deviceId, deviceControlList);
             } else {
-                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).build();
+                deviceControlList.add(operation);
             }
-        } catch (DeviceManagementException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+            return Response.status(Response.Status.OK.getStatusCode()).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @Override
-    @Path("devices/{device_id}")
+    @Path("device/{deviceId}/controls")
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getDevice(@PathParam("device_id") String deviceId) {
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(ArduinoConstants.DEVICE_TYPE);
+    public Response readControls(@PathParam("deviceId") String deviceId) {
         try {
-            Device device = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
-            return Response.status(Response.Status.OK.getStatusCode()).entity(device).build();
-        } catch (DeviceManagementException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-    }
-
-    @Override
-    @Path("devices")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getArduinoDevices() {
-        try {
-            List<Device> userDevices = APIUtil.getDeviceManagementService().getDevicesOfUser(
-                    APIUtil.getAuthenticatedUser());
-            ArrayList<Device> userDevicesforArduino = new ArrayList<>();
-            for (Device device : userDevices) {
-                if (device.getType().equals(ArduinoConstants.DEVICE_TYPE) &&
-                    device.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.ACTIVE)) {
-                    userDevicesforArduino.add(device);
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
+                    ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
+            String result;
+            LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
+            String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
+            if (deviceControlList == null) {
+                result = "No controls have been set for device " + deviceId + " of owner " + owner;
+                if (log.isDebugEnabled()) {
+                    log.debug(result);
+                }
+                return Response.status(Response.Status.CONFLICT.getStatusCode()).entity(result).build();
+            } else {
+                try {
+                    result = deviceControlList.remove();
+                    if (log.isDebugEnabled()) {
+                        log.debug(result);
+                    }
+                    return Response.status(Response.Status.ACCEPTED.getStatusCode()).entity(result).build();
+                } catch (NoSuchElementException ex) {
+                    result = "There are no more controls for device " + deviceId + " of owner " + owner;
+                    if (log.isDebugEnabled()) {
+                        log.debug(result);
+                    }
+                    return Response.status(Response.Status.NO_CONTENT.getStatusCode()).entity(result).build();
                 }
             }
-            Device[] devices = userDevicesforArduino.toArray(new Device[]{});
-            return Response.status(Response.Status.OK.getStatusCode()).entity(devices).build();
-        } catch (DeviceManagementException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(true).build();
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @Override
-    @Path("/devices/download")
+    @Path("device/stats/{deviceId}")
+    @GET
+    @Consumes("application/json")
+    @Produces("application/json")
+    public Response getArduinoTemperatureStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
+                                               @QueryParam("to") long to) {
+        try {
+            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
+                   ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_STATS_MONITOR_PERMISSIONS)) {
+                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+            }
+            String fromDate = String.valueOf(from);
+            String toDate = String.valueOf(to);
+            String query = "deviceId:" + deviceId + " AND deviceType:" +
+                    ArduinoConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+            String sensorTableName = ArduinoConstants.TEMPERATURE_EVENT_TABLE;
+            try {
+                List<SortByField> sortByFields = new ArrayList<>();
+                SortByField sortByField = new SortByField("time", SORT.ASC, false);
+                sortByFields.add(sortByField);
+                List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
+                return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
+            } catch (AnalyticsException e) {
+                String errorMsg = "Error on retrieving stats on table " + sensorTableName + " with query " + query;
+                log.error(errorMsg);
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(errorMsg).build();
+            }
+        } catch (DeviceAccessAuthorizationException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @Override
+    @Path("/device/download")
     @GET
     @Produces("application/zip")
     public Response downloadSketch(@QueryParam("deviceName") String deviceName) {
@@ -197,7 +220,7 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
                     ArduinoConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
-        String scopes = "device_type_" + ArduinoConstants.DEVICE_TYPE + " device_" + deviceId;
+        String scopes = "arduino_device device_type_" + ArduinoConstants.DEVICE_TYPE + " device_" + deviceId;
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
                                                                    apiApplicationKey.getConsumerSecret(), owner, scopes);
         //create token
@@ -210,9 +233,8 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
             throw new DeviceManagementException(msg);
         }
         ZipUtil ziputil = new ZipUtil();
-        ZipArchive zipFile = ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(),
-                            ArduinoConstants.DEVICE_TYPE, deviceId, deviceName, accessToken, refreshToken);
-        return zipFile;
+        return ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(),
+                                                   ArduinoConstants.DEVICE_TYPE, deviceId, deviceName, accessToken, refreshToken);
     }
 
     private static String shortUUID() {
@@ -245,5 +267,4 @@ public class ArduinoManagerServiceImpl implements ArduinoManagerService {
             return false;
         }
     }
-
 }

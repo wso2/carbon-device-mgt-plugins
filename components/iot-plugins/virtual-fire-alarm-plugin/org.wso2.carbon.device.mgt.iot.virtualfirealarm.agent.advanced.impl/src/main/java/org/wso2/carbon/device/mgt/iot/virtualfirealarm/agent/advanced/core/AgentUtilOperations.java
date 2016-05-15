@@ -102,6 +102,8 @@ public class AgentUtilOperations {
                     AgentConstants.MQTT_BROKER_EP_PROPERTY));
             iotServerConfigs.setXmppServerEndpoint(properties.getProperty(
                     AgentConstants.XMPP_SERVER_EP_PROPERTY));
+            iotServerConfigs.setXmppServerName(properties.getProperty(
+                    AgentConstants.XMPP_SERVER_NAME_PROPERTY));
             iotServerConfigs.setAuthMethod(properties.getProperty(
                     AgentConstants.AUTH_METHOD_PROPERTY));
             iotServerConfigs.setAuthToken(properties.getProperty(
@@ -138,6 +140,8 @@ public class AgentUtilOperations {
                              iotServerConfigs.getRefreshToken());
             log.info(AgentConstants.LOG_APPENDER + "Data Push Interval: " +
                              iotServerConfigs.getDataPushInterval());
+            log.info(AgentConstants.LOG_APPENDER + "XMPP Server Name: " +
+                             iotServerConfigs.getXmppServerName());
 
         } catch (FileNotFoundException ex) {
             log.error(AgentConstants.LOG_APPENDER + "Unable to find " + propertiesFileName +

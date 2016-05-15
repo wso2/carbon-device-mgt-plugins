@@ -53,7 +53,7 @@ public class ZipUtil {
         String iotServerIP;
 
         try {
-            iotServerIP = Utils.getHostName();
+            iotServerIP = Utils.getServerUrl();
             String httpsServerPort = System.getProperty(HTTPS_PORT_PROPERTY);
             String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
             String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
@@ -80,7 +80,7 @@ public class ZipUtil {
             contextParams.put("XMPP_EP", "XMPP:" + xmppEndpoint);
             contextParams.put("DEVICE_TOKEN", token);
             contextParams.put("DEVICE_REFRESH_TOKEN", refreshToken);
-
+            contextParams.put("SERVER_NAME", XmppConfig.getInstance().getXmppServerName());
             ZipArchive zipFile;
             zipFile = Utils.getSketchArchive(archivesPath, templateSketchPath, contextParams, deviceName);
             return zipFile;

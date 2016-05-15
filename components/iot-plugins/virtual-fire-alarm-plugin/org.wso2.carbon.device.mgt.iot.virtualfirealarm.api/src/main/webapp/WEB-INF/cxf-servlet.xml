@@ -25,11 +25,8 @@
 
     <jaxrs:server id="VirtualFireAlarm" address="/">
         <jaxrs:serviceBeans>
-            <bean id="VirtualFireAlarmControllerService"
-                  class="org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.VirtualFireAlarmControllerServiceImpl">
-            </bean>
-            <bean id="VirtualFireAlarmManagerService"
-                  class="org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.VirtualFireAlarmManagerServiceImpl">
+            <bean id="VirtualFireAlarmService"
+                  class="org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.VirtualFireAlarmServiceImpl">
             </bean>
         </jaxrs:serviceBeans>
         <jaxrs:providers>

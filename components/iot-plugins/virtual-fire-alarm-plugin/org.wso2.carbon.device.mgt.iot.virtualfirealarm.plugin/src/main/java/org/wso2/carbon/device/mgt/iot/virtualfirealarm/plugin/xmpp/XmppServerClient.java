@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
@@ -36,7 +34,8 @@ public class XmppServerClient {
         if (xmppAccount != null) {
             try {
                 ConnectionConfiguration config = new ConnectionConfiguration(XmppConfig.getInstance().getXmppServerIP(),
-                                                                             XmppConfig.getInstance().getXmppServerPort());
+                                                                             XmppConfig.getInstance().getXmppServerPort(),
+                                                                             "Accounts");
                 XMPPConnection xmppConnection = new XMPPConnection(config);
                 xmppConnection.connect();
                 xmppConnection.login(XmppConfig.getInstance().getXmppUsername(), XmppConfig.getInstance().getXmppPassword());

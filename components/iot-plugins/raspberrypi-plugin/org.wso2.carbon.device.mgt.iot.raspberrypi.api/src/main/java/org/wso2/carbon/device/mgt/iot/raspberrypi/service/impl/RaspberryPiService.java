@@ -19,12 +19,12 @@
 package org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl;
 
 import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
-
+import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -32,35 +32,34 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("enrollment")
-@API(name = "raspberrypi_mgt", version = "1.0.0", context = "/raspberrypi_mgt", tags = {"raspberrypi"})
+@API(name = "raspberrypi", version = "1.0.0", context = "/raspberrypi", tags = {"raspberrypi"})
 @DeviceType(value = "raspberrypi")
-public interface RaspberryPiManagerService {
+public interface RaspberryPiService {
 
-    @Path("devices/{device_id}")
-    @DELETE
-    Response removeDevice(@PathParam("device_id") String deviceId);
+    @Path("device/{deviceId}/bulb")
+    @POST
+    @Feature(code = "bulb", name = "Bulb On / Off", description = "Switch on/off Raspberry Pi agent's bulb. (On / Off)")
+    @Permission(scope = "raspberrypi_user", permissions = {"/permission/admin/device-mgt/user/operations"})
+    Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
-    @Path("devices/{device_id}")
-    @PUT
-    Response updateDevice(@PathParam("device_id") String deviceId,
-                          @QueryParam("name") String name);
-
-    @Path("devices/{device_id}")
+    /**
+     * Retreive Sensor data for the device type
+     */
+    @Path("device/stats/{deviceId}")
     @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response getDevice(@PathParam("device_id") String deviceId);
+    @Consumes("application/json")
+    @Produces("application/json")
+    @Permission(scope = "raspberrypi_user", permissions = {"/permission/admin/device-mgt/user/stats"})
+    Response getRaspberryPiTemperatureStats(@PathParam("deviceId") String deviceId,
+                                        @QueryParam("from") long from, @QueryParam("to") long to);
 
-    @Path("devices")
-    @GET
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    Response getRaspberrypiDevices();
-
-    @Path("devicesg/download")
+    /**
+     * download the agent.
+     */
+    @Path("device/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Permission(scope = "raspberrypi_user", permissions = {"/permission/admin/device-mgt/user/devices"})
     Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketch_type") String sketchType);
 
 }

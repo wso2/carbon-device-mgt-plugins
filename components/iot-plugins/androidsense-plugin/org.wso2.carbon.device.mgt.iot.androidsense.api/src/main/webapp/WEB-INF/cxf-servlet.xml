@@ -24,11 +24,9 @@
 
     <jaxrs:server id="AndroidSense" address="/">
         <jaxrs:serviceBeans>
-            <bean id="AndroidSenseControllerService"
-                  class="org.wso2.carbon.device.mgt.iot.androidsense.service.impl.AndroidSenseControllerServiceImpl">
+            <bean id="AndroidSenseService"
+                  class="org.wso2.carbon.device.mgt.iot.androidsense.service.impl.AndroidSenseServiceImpl">
             </bean>
-            <bean id="AndroidSenseManagerService"
-                  class="org.wso2.carbon.device.mgt.iot.androidsense.service.impl.AndroidSenseManagerServiceImpl"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />

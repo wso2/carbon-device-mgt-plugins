@@ -32,10 +32,10 @@ public class XmppUtil {
         XmppServerClient xmppServerClient = new XmppServerClient();
         try {
             XmppAccount xmppAccount = new XmppAccount();
-            xmppAccount.setAccountName(XmppConfig.getInstance().getVirtualFirealarmAdminJID());
+            xmppAccount.setAccountName(XmppConfig.getInstance().getVirtualFirealarmAdminUsername());
             xmppAccount.setUsername(XmppConfig.getInstance().getVirtualFirealarmAdminUsername());
             xmppAccount.setPassword(XmppConfig.getInstance().getVirtualFirealarmAdminPassword());
-            xmppAccount.setEmail("");
+            xmppAccount.setEmail(XmppConfig.getInstance().getVirtualFirealarmAdminJID());
             xmppServerClient.createAccount(xmppAccount);
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
             String errorMsg = "An error was encountered whilst trying to create Server XMPP account for device-type - "

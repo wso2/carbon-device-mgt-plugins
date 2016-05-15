@@ -68,11 +68,8 @@ public class FireAlarmXMPPCommunicator extends XMPPTransportHandler {
         final AgentManager agentManager = AgentManager.getInstance();
         username = agentManager.getAgentConfigs().getDeviceId();
         password = agentManager.getAgentConfigs().getAuthToken();
-        resource = agentManager.getAgentConfigs().getDeviceOwner();
-
-        xmppDeviceJID = username + "@" + server;
-        xmppAdminJID = "wso2_" + AgentConstants.DEVICE_TYPE + "@" + server;
-
+        xmppDeviceJID = username + "@" + agentManager.getAgentConfigs().getXmppServerName();
+        xmppAdminJID =  "wso2admin_" + AgentConstants.DEVICE_TYPE + "@" + agentManager.getAgentConfigs().getXmppServerName();
 
         Runnable connect = new Runnable() {
             public void run() {

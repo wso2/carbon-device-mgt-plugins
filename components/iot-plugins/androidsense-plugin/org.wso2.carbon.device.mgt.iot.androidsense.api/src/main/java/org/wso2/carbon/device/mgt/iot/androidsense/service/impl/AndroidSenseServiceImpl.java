@@ -23,12 +23,19 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.dataservice.commons.SORT;
 import org.wso2.carbon.analytics.dataservice.commons.SortByField;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
+import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
+import org.wso2.carbon.device.mgt.iot.androidsense.plugin.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
+import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.AndroidConfiguration;
+import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.Constants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
+import org.wso2.carbon.device.mgt.iot.util.Utils;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -40,6 +47,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,9 +55,9 @@ import java.util.Map;
 /**
  * The api for
  */
-public class AndroidSenseControllerServiceImpl implements AndroidSenseControllerService {
+public class AndroidSenseServiceImpl implements AndroidSenseService {
 
-    private static Log log = LogFactory.getLog(AndroidSenseControllerServiceImpl.class);
+    private static Log log = LogFactory.getLog(AndroidSenseServiceImpl.class);
 
     @Path("device/{deviceId}/words")
     @POST
@@ -196,6 +204,54 @@ public class AndroidSenseControllerServiceImpl implements AndroidSenseController
                 sensorEventTableName = "";
         }
         return sensorEventTableName;
+    }
+
+    @Path("device/{device_id}/register")
+    @POST
+    public Response register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName) {
+        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+        deviceIdentifier.setId(deviceId);
+        deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
+        try {
+            if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
+                AndroidConfiguration androidConfiguration = new AndroidConfiguration();
+                androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
+                String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
+                if (mqttEndpoint.contains(Constants.LOCALHOST)) {
+                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, Utils.getServerUrl());
+                }
+                androidConfiguration.setMqttEndpoint(mqttEndpoint);
+                return Response.status(Response.Status.ACCEPTED.getStatusCode()).entity(androidConfiguration.toString())
+                        .build();
+            }
+            Device device = new Device();
+            device.setDeviceIdentifier(deviceId);
+            EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
+            enrolmentInfo.setDateOfEnrolment(new Date().getTime());
+            enrolmentInfo.setDateOfLastUpdate(new Date().getTime());
+            enrolmentInfo.setStatus(EnrolmentInfo.Status.ACTIVE);
+            device.setName(deviceName);
+            device.setType(AndroidSenseConstants.DEVICE_TYPE);
+            enrolmentInfo.setOwner(APIUtil.getAuthenticatedUser());
+            enrolmentInfo.setOwnership(EnrolmentInfo.OwnerShip.BYOD);
+            device.setEnrolmentInfo(enrolmentInfo);
+            boolean added = APIUtil.getDeviceManagementService().enrollDevice(device);
+            if (added) {
+                AndroidConfiguration androidConfiguration = new AndroidConfiguration();
+                androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
+                String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
+                if (mqttEndpoint.contains(Constants.LOCALHOST)) {
+                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, Utils.getServerUrl());
+                }
+                androidConfiguration.setMqttEndpoint(mqttEndpoint);
+                return Response.ok(androidConfiguration.toString()).build();
+            } else {
+                return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).entity(false).build();
+            }
+        } catch (DeviceManagementException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(false).build();
+        }
     }
 
 }
