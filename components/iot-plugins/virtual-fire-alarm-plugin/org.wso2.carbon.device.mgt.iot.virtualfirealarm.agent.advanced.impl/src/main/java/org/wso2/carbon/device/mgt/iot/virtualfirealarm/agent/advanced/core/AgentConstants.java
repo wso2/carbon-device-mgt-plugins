@@ -134,4 +134,6 @@ public class AgentConstants {
 											"select deviceID, temp\n" +
 											"insert into bulbOffStream;";
 
+
+	public static final String XMPP_SERVER_NAME_PROPERTY = "xmpp-server-name";
 }

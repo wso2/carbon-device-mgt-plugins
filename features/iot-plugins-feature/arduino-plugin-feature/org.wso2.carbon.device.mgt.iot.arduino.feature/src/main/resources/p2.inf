@@ -10,6 +10,8 @@ org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../featur
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.arduino_${feature.version}/datasources/,target:${installFolder}/../../conf/datasources/,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../database/);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.arduino_${feature.version}/database/,target:${installFolder}/../../database/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/carbonapps/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.arduino_${feature.version}/carbonapps/,target:${installFolder}/../../deployment/server/carbonapps/,overwrite:true);\
 
 instructions.unconfigure = \
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/arduino.war);\
@@ -20,3 +22,4 @@ org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../con
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../database/ArduinoDM_DB.h2.db);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.arduino.device-view);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.arduino.type-view);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/carbonapps/arduino.car);\

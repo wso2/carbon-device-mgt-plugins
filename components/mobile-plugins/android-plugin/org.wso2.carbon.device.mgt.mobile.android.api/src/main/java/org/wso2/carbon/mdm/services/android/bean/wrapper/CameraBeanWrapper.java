@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.mdm.services.android.bean.wrapper;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.mdm.services.android.bean.Camera;
 
 import java.util.List;
@@ -24,9 +26,14 @@ import java.util.List;
 /**
  * This class is used to wrap the Camera bean with devices.
  */
+
+@ApiModel(value = "CameraBeanWrapper",
+          description = "Mapping between camera operation and device list to be applied.")
 public class CameraBeanWrapper {
 
+    @ApiModelProperty(name = "operation", value = "Information of camera operation", required = true)
 	private Camera operation;
+    @ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
 	private List<String> deviceIDs;
 
 	public Camera getOperation() {

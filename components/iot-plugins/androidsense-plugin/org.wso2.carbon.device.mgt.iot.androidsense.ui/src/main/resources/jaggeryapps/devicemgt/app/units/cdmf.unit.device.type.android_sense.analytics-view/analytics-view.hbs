@@ -1,9 +1,7 @@
-{{#zone "topCss"}}
-    {{css "css/graph.css"}}
-{{/zone}}
-<span id="details" data-devicename="{{device.name}}" data-deviceid="{{device.deviceIdentifier}}"
+<span id="android_sense-details" data-devices="{{devices}}" data-devicename="{{device.name}}"
+      data-deviceid="{{device.deviceIdentifier}}"
       data-appcontext="{{@app.context}}"></span>
-<div id="device-chart" data-backend-api-url = {{backendApiUrl}}>
+<div id="android_sense-div-chart" data-backend-api-url= {{backendApiUrl}}>
     <div class="chartWrapper" id="chartWrapper-battery">
         <span id="span-title">Battery</span>
         <div id="y_axis-battery" class="custom_y_axis"></div>
@@ -115,8 +113,5 @@
 </div>
 
 {{#zone "bottomJs"}}
-    {{js "js/d3.min.js"}}
-    {{js "js/rickshaw.min.js"}}
-    {{js "js/moment.min.js"}}
-    {{js "js/devicetype-graph.js"}}
+    {{js "js/android_sense.js"}}
 {{/zone}}

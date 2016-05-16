@@ -18,19 +18,42 @@
 
 package org.wso2.carbon.mdm.services.android.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * This class represents the information of setting up password policy.
  */
+@ApiModel(value = "PasscodePolicy", description = "This class represents the information of setting up "
+		+ "password policy")
 public class PasscodePolicy extends AndroidOperation implements Serializable {
 
+	@ApiModelProperty(name = "maxFailedAttempts", value = "The maximum number of times the end-user can enter"
+			+ " his/her device passcode incorrectly. EMM will take different courses of action based on the"
+			+ " OS when  the failed attempts exceed the maximum failed attempts.  Android devices will be "
+			+ "automatically reset to the original factory settings", required = true)
 	private int maxFailedAttempts;
+	@ApiModelProperty(name = "minLength", value = "The minimum number of alphanumerical values that the "
+			+ "end-user can enter as his/her passcode", required = true)
 	private int minLength;
+	@ApiModelProperty(name = "pinHistory", value = "The end-user will not be allowed to reuse a passcode that"
+			+ " he/she previously entered until he/she exceeds the set pin history length", required = true)
 	private int pinHistory;
+	@ApiModelProperty(name = "minComplexChars", value = "The minimum number of special characters that the "
+			+ "end-user will have to enter in his/her passcode", required = true)
 	private int minComplexChars;
+	@ApiModelProperty(name = "maxPINAgeInDays", value = "The number of days after which the device owner has"
+			+ " to change his/her passcode", required = true)
 	private int maxPINAgeInDays;
+	@ApiModelProperty(name = "requireAlphanumeric", value = "Whether or not it is mandatory for the end-user"
+			+ " to have a mix of digits and characters in his/her passcode", required = true)
 	private boolean requireAlphanumeric;
+	@ApiModelProperty(name = "allowSimple", value = "If this field is set to 'true', the device owner will be"
+			+ " able to have a simple passcode and the following criteria in the passcode policy will not be"
+			+ " applicable:\n"
+			+ "Minimum length\n" + "Minimum complex characters", required = true)
 	private boolean allowSimple;
 
 	public int getMaxFailedAttempts() {

@@ -38,11 +38,14 @@ void connectHttp() {
      Only required if using static IP for the WifiSheild
      ***********************************************************************************************/
     
+      /**
       ip = cc3000.IP2U32(deviceIP[0], deviceIP[1], deviceIP[2], deviceIP[3]);
       ddns = cc3000.IP2U32(dns2[0], dns2[1], dns2[2], dns2[3]);
       ssubnet = cc3000.IP2U32(subnet[0], subnet[1], subnet[2], subnet[3]);
       ggateway = cc3000.IP2U32(gateway[0], gateway[1], gateway[2], gateway[3]);
-      cc3000.setStaticIPAddress(ip, ssubnet, ggateway, ddns);            // required for setting static IP
+      cc3000.setStaticIPAddress(ip, ssubnet, ggateway, ddns);
+       */
+       // required for setting static IP
     
     /***********************************************************************************************/
 
@@ -100,13 +103,9 @@ void setupResource(){
     jsonPayLoad = "{\"event\":{\"metaData\":";
     jsonPayLoad += "{\"owner\":\"";
     jsonPayLoad += String(DEVICE_OWNER);
-    jsonPayLoad += "\",\"deviceType\":\"";
-    jsonPayLoad += String(DEVICE_TYPE);
     jsonPayLoad += "\",\"deviceId\":\"";
     jsonPayLoad += String(DEVICE_ID);
-    jsonPayLoad += "\",\"time\":";
-    jsonPayLoad += String(TIME);
-    jsonPayLoad += "}, \"payloadData\":{";
+    jsonPayLoad += "\"}, \"payloadData\":{";
     
     if(DEBUG) {
         Serial.print("JSON Payload: ");

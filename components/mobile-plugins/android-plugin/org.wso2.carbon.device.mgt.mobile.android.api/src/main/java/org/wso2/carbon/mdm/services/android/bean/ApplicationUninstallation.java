@@ -18,16 +18,29 @@
 
 package org.wso2.carbon.mdm.services.android.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * This class represents the information of uninstall application operation.
  */
+@ApiModel(value = "ApplicationUninstallation",
+        description = "This class carries all information related to application uninstallation.")
 public class ApplicationUninstallation extends AndroidOperation implements Serializable {
 
+    @ApiModelProperty(name = "appIdentifier", value = "The package name of the application to be uninstalled.", required = true)
 	private String appIdentifier;
+
+    @ApiModelProperty(name = "type", value = "The type of the application. The following types of applications " +
+        "are supported: enterprise, public and webapp.", required = true)
 	private String type;
+
+    @ApiModelProperty(name = "url", value = "The URL of the application.", required = true)
 	private String url;
+
+    @ApiModelProperty(name = "name", value = "The name of the application.", required = true)
 	private String name;
 
 	public String getAppIdentifier() {

@@ -17,14 +17,25 @@
  */
 
 function onRequest(context) {
+    var devicemgtProps = require('/app/conf/devicemgt-props.js').config();
+    
+    var devices = context.unit.params.devices;
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("deviceId");
 
-    if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
+    if (devices) {
+        return {
+            "devices": stringify(devices),
+            "backendApiUri": devicemgtProps["httpsURL"] + "/arduino/device/stats/"
+        };
+    } else if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
         var deviceModule = require("/app/modules/device.js").deviceModule;
         var device = deviceModule.viewDevice(deviceType, deviceId);
         if (device && device.status != "error") {
-            return {"device": device, "backendApiUri" : devicemgtProps["httpsURL"] + "/arduino/device/stats/" + deviceId};
+            return {
+                "device": device,
+                "backendApiUri": devicemgtProps["httpsURL"] + "/arduino/device/stats/" + deviceId
+            };
         } else {
             response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
             exit();

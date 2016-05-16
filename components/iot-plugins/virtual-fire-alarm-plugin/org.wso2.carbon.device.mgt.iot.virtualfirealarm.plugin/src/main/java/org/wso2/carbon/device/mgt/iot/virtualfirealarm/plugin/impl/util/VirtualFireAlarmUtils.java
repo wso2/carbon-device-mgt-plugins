@@ -38,6 +38,8 @@ import org.wso2.carbon.event.output.adapter.core.MessageType;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterConfiguration;
 import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
 import org.json.JSONObject;
+import org.wso2.carbon.utils.NetworkUtils;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -45,6 +47,7 @@ import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.sql.Connection;
@@ -359,7 +362,8 @@ public class VirtualFireAlarmUtils {
         xmppAdapterProperties.put(VirtualFireAlarmConstants.PORT_KEY, String.valueOf(xmppConfig.getXmppServerPort()));
         xmppAdapterProperties.put(VirtualFireAlarmConstants.USERNAME_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminUsername());
         xmppAdapterProperties.put(VirtualFireAlarmConstants.PASSWORD_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminPassword());
-        xmppAdapterProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminJID());
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminJID()
+                + "/input-adapter");
         xmppAdapterProperties.put(VirtualFireAlarmConstants.CONTENT_TRANSFORMATION,
                                   VirtualFirealarmXmppContentTransformer.class.getName());
         xmppAdapterProperties.put(VirtualFireAlarmConstants.CONTENT_VALIDATION, "default");
@@ -397,7 +401,8 @@ public class VirtualFireAlarmUtils {
         xmppAdapterProperties.put(VirtualFireAlarmConstants.PORT_KEY, String.valueOf(xmppConfig.getXmppServerPort()));
         xmppAdapterProperties.put(VirtualFireAlarmConstants.USERNAME_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminUsername());
         xmppAdapterProperties.put(VirtualFireAlarmConstants.PASSWORD_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminPassword());
-        xmppAdapterProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminJID());
+        xmppAdapterProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY, xmppConfig.getVirtualFirealarmAdminJID()
+                + "/output-adapter");
         outputEventAdapterConfiguration.setStaticProperties(xmppAdapterProperties);
         return outputEventAdapterConfiguration;
     }

@@ -49,8 +49,6 @@ public class HTTPMessageServlet extends HttpServlet {
 	private static final String AUTH_MESSAGE_STORE_AUTHENTICATION_INFO = "AUTH_MESSAGE_STORE_AUTHENTICATION_INFO";
 	private static final String AUTH_FAILURE_RESPONSE = "_AUTH_FAILURE_";
 
-
-
 	private static Log log = LogFactory.getLog(HTTPMessageServlet.class);
 
 	private static Map<String, String> contentValidationProperties;

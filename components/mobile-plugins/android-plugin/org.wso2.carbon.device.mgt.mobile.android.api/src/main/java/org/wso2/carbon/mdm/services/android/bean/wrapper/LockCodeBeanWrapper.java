@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.mdm.services.android.bean.wrapper;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.mdm.services.android.bean.LockCode;
 
 import java.util.List;
@@ -24,9 +26,14 @@ import java.util.List;
 /**
  * This class is used to wrap the LockCode bean with devices.
  */
+
+@ApiModel(value = "LockCodeBeanWrapper",
+          description = "Mapping between lock operation and device list to be applied.")
 public class LockCodeBeanWrapper {
 
+    @ApiModelProperty(name = "operation", value = "The information of device lock operation", required = true)
 	private LockCode operation;
+    @ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
 	private List<String> deviceIDs;
 
 	public LockCode getOperation() {

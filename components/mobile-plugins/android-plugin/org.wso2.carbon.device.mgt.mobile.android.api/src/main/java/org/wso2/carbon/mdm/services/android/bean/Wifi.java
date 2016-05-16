@@ -18,14 +18,22 @@
 
 package org.wso2.carbon.mdm.services.android.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * This class represents the information of configuring wifi operation.
  */
+@ApiModel(value = "Wifi", description = "This class represents the information of configuring wifi operation")
 public class Wifi extends AndroidOperation implements Serializable {
 
+	@ApiModelProperty(name = "ssid", value = "The name of the Wifi network that you wish to configure",
+			required = true)
 	private String ssid;
+	@ApiModelProperty(name = "password", value = "The password to connect to the specified Wifi network",
+			required = true)
 	private String password;
 
 	public String getSsid() {

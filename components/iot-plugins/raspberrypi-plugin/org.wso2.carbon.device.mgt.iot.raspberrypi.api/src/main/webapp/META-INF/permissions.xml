@@ -37,33 +37,12 @@
 		<scope>raspberrypi_user</scope>
 	</Permission>
 	<Permission>
-		<name>Remove device</name>
-		<path>/device-mgt/user/devices/remove</path>
-		<url>/enrollment/devices/*</url>
-		<method>DELETE</method>
-		<scope>raspberrypi_user</scope>
-	</Permission>
-	<Permission>
 		<name>Download device</name>
 		<path>/device-mgt/user/devices</path>
-		<url>/enrollment/devices/download</url>
+		<url>/device/download</url>
 		<method>GET</method>
 		<scope>raspberrypi_user</scope>
 	</Permission>
-	<Permission>
-		<name>Update device</name>
-		<path>/device-mgt/user/devices/update</path>
-		<url>/enrollment/devices/*</url>
-		<method>POST</method>
-		<scope>raspberrypi_user</scope>
-	</Permission>
-    <Permission>
-        <name>Get Devices</name>
-        <path>/device-mgt/user/devices/list</path>
-        <url>/enrollment/devices</url>
-        <method>GET</method>
-        <scope>raspberrypi_user</scope>
-    </Permission>
     <Permission>
         <name>Control Bulb</name>
         <path>/device-mgt/user/operations</path>

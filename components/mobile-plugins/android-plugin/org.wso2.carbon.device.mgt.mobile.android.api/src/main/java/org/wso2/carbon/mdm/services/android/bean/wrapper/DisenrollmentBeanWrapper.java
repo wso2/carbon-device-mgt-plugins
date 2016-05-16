@@ -17,13 +17,18 @@
  */
 package org.wso2.carbon.mdm.services.android.bean.wrapper;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.mdm.services.android.bean.Disenrollment;
 
 import java.util.List;
 
+@ApiModel(value = "DisenrollmentBeanWrapper", description = "Disenrollment details are mapped to devices list.")
 public class DisenrollmentBeanWrapper {
 
+    @ApiModelProperty(name = "operation", value = "Disenrollment operation.", required = true)
 	private Disenrollment operation;
+    @ApiModelProperty(name = "deviceIDs", value = "Device id list of the operation to be executed.", required = true)
 	private List<String> deviceIDs;
 
 	public Disenrollment getOperation() {

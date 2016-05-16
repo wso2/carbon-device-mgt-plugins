@@ -20,23 +20,17 @@ package org.wso2.carbon.device.mgt.iot.util;
 
 import java.io.File;
 
+/**
+ * This is an utility class to hold zip files.
+ */
 public class ZipArchive {
 
     private File zipFile = null;
     private String fileName = null;
-    private String deviceId = null;
 
     public ZipArchive(String fileName, File zipFile) {
         this.fileName = fileName;
         this.zipFile = zipFile;
-    }
-
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
     }
 
     public File getZipFile() {

@@ -38,10 +38,10 @@ public class XMPPEventAdapterConstants {
     public static final String ADAPTER_CONF_RESOURCE_HINT = "resource.hint";
     public static final String ADAPTER_CONF_TIMEOUT_INTERVAL = "timeoutInterval";
     public static final String ADAPTER_CONF_TIMEOUT_INTERVAL_HINT = "timeoutInterval.hint";
-    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME = "contentValidation";
-    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME_HINT = "contentValidation.hint";
-    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS = "contentValidationParams";
-    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS_HINT = "contentValidationParams.hint";
+    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME = "contentValidator";
+    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME_HINT = "contentValidator.hint";
+    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS = "contentValidatorParams";
+    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS_HINT = "contentValidatorParams.hint";
     public static final String ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME = "contentTransformer";
     public static final String ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME_HINT = "contentTransformer.hint";
     public static final String ADAPTER_CONF_RECIEVER_JID = "jid";

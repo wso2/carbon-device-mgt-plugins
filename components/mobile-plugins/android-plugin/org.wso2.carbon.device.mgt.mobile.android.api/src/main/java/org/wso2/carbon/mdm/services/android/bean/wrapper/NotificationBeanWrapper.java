@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.mdm.services.android.bean.wrapper;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.mdm.services.android.bean.Notification;
 
 import java.util.List;
@@ -24,9 +26,14 @@ import java.util.List;
 /**
  * This class is used to wrap the Notification bean with devices.
  */
+
+@ApiModel(value = "NotificationBeanWrapper",
+          description = "Mapping between notification operation and device list to be applied.")
 public class NotificationBeanWrapper {
 
+    @ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
 	private List<String> deviceIDs;
+    @ApiModelProperty(name = "operation", value = "The information of notification operation", required = true)
 	private Notification operation;
 
 	public List<String> getDeviceIDs() {

@@ -21,6 +21,7 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFireAlarmUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +38,7 @@ public class XmppConfig {
     private String virtualFirealarmAdminUsername;
     private String virtualFirealarmAdminPassword;
     private String virtualFirealarmAdminJID;
+    private String xmppServerName;
     private static XmppConfig xmppConfig = new XmppConfig();
     private static final Log log = LogFactory.getLog(XmppConfig.class);
 
@@ -48,12 +50,13 @@ public class XmppConfig {
                 Properties properties = new Properties();
                 properties.load(propertyStream);
                 xmppServerIP = properties.getProperty(VirtualFireAlarmConstants.HOST_KEY);
+                xmppServerName = properties.getProperty(VirtualFireAlarmConstants.SERVER_NAME);
                 xmppServerPort = Integer.parseInt(properties.getProperty(VirtualFireAlarmConstants.PORT_KEY));
                 isEnabled = Boolean.parseBoolean(properties.getProperty(VirtualFireAlarmConstants.IS_ENABLED_KEY));
                 xmppUsername = properties.getProperty(VirtualFireAlarmConstants.ADMIN_USERNAME);
                 xmppPassword = properties.getProperty(VirtualFireAlarmConstants.ADMIN_PASSWORD);
                 virtualFirealarmAdminUsername = "wso2admin_" + VirtualFireAlarmConstants.DEVICE_TYPE;
-                virtualFirealarmAdminJID = virtualFirealarmAdminUsername + "@" + xmppServerIP;
+                virtualFirealarmAdminJID = virtualFirealarmAdminUsername + "@" + xmppServerName;
                 virtualFirealarmAdminPassword = VirtualFireAlarmConstants.XMPP_SERVER_PASSWORD;
             } catch (IOException e) {
                 log.error(e);
@@ -97,4 +100,7 @@ public class XmppConfig {
         return virtualFirealarmAdminJID;
     }
 
+    public String getXmppServerName() {
+        return xmppServerName;
+    }
 }

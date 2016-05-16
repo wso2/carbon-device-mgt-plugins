@@ -18,13 +18,19 @@
 
 package org.wso2.carbon.mdm.services.android.bean;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 /**
  * This class represents the information of changing lock code operation.
  */
+@ApiModel(value = "LockCode",
+          description = "Details related to lock code sent on device.")
 public class LockCode extends AndroidOperation implements Serializable {
 
+    @ApiModelProperty(name = "lockCode", value = "The lock code to be sent to the device.", required = true)
 	private String lockCode;
 
 	public String getLockCode() {

@@ -19,9 +19,7 @@
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util;
 
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.iot.exception.IoTException;
-import org.wso2.carbon.device.mgt.iot.util.IoTUtil;
-import org.wso2.carbon.device.mgt.iot.util.IotDeviceManagementUtil;
+import org.wso2.carbon.device.mgt.iot.util.Utils;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppConfig;
@@ -55,7 +53,7 @@ public class ZipUtil {
         String iotServerIP;
 
         try {
-            iotServerIP = IoTUtil.getHostName();
+            iotServerIP = Utils.getServerUrl();
             String httpsServerPort = System.getProperty(HTTPS_PORT_PROPERTY);
             String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
             String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
@@ -82,12 +80,10 @@ public class ZipUtil {
             contextParams.put("XMPP_EP", "XMPP:" + xmppEndpoint);
             contextParams.put("DEVICE_TOKEN", token);
             contextParams.put("DEVICE_REFRESH_TOKEN", refreshToken);
-
+            contextParams.put("SERVER_NAME", XmppConfig.getInstance().getXmppServerName());
             ZipArchive zipFile;
-            zipFile = IotDeviceManagementUtil.getSketchArchive(archivesPath, templateSketchPath, contextParams);
+            zipFile = Utils.getSketchArchive(archivesPath, templateSketchPath, contextParams, deviceName);
             return zipFile;
-        } catch (IoTException e) {
-            throw new DeviceManagementException(e.getMessage());
         } catch (IOException e) {
             throw new DeviceManagementException("Zip File Creation Failed", e);
         }

@@ -39,6 +39,7 @@ public class AgentConfiguration {
 	private String authToken;
 	private String refreshToken;
 	private int dataPushInterval;
+	private String xmppServerName;
 
 	public String getTenantDomain() {
 		return tenantDomain;
@@ -158,6 +159,14 @@ public class AgentConfiguration {
 
 	public void setScepContext(String scepContext) {
 		this.scepContext = scepContext;
+	}
+
+	public String getXmppServerName() {
+		return xmppServerName;
+	}
+
+	public void setXmppServerName(String xmppServerName) {
+		this.xmppServerName = xmppServerName;
 	}
 }
 

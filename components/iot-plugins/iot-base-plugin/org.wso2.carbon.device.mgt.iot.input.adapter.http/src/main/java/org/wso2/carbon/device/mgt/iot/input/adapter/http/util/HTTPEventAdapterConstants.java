@@ -64,10 +64,10 @@ public final class HTTPEventAdapterConstants {
     public static final String USERNAME_TAG = "username";
     public static final String PAYLOAD_TAG = "payload";
     public static final String DEVICE_ID_JSON_PATH = "device_id_json_path";
-    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME = "contentValidation";
-    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME_HINT = "contentValidation.hint";
-    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS = "contentValidationParams";
-    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS_HINT = "contentValidationParams.hint";
+    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME = "contentValidator";
+    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME_HINT = "contentValidator.hint";
+    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS = "contentValidatorParams";
+    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS_HINT = "contentValidatorParams.hint";
     public static final String DEFAULT = "default";
     public static final String HTTP_CONTENT_VALIDATION_DEFAULT_PARAMETERS = "";
     public static final String ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME = "contentTransformer";

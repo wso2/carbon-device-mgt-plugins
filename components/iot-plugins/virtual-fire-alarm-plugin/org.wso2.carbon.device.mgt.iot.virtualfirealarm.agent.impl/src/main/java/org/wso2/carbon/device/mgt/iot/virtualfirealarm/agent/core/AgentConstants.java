@@ -77,6 +77,7 @@ public class AgentConstants {
 	public static final String APIM_GATEWAY_EP_PROPERTY = "apim-ep";
 	public static final String MQTT_BROKER_EP_PROPERTY = "mqtt-ep";
 	public static final String XMPP_SERVER_EP_PROPERTY = "xmpp-ep";
+	public static final String XMPP_SERVER_NAME_PROPERTY = "xmpp-server-name";
 	public static final String AUTH_METHOD_PROPERTY = "auth-method";
 	public static final String AUTH_TOKEN_PROPERTY = "auth-token";
 	public static final String REFRESH_TOKEN_PROPERTY = "refresh-token";

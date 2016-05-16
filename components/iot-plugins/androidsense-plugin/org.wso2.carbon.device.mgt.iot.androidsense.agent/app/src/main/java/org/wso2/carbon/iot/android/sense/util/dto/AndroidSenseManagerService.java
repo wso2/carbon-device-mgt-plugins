@@ -24,7 +24,7 @@ import javax.ws.rs.QueryParam;
  */
 public interface AndroidSenseManagerService {
 
-    @Path("/enrollment/devices/{device_id}")
+    @Path("/device/{device_id}/register")
     @POST
     AndroidConfiguration register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName);
 }

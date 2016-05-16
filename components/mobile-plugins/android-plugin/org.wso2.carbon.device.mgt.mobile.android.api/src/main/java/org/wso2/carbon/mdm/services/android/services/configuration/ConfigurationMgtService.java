@@ -77,5 +77,6 @@ public interface ConfigurationMgtService {
             @ApiResponse(code = 500, message = "Error occurred while modifying configuration settings of " +
                     "Android platform")
     })
-    Message updateConfiguration(TenantConfiguration configuration) throws AndroidAgentException;
+    Message updateConfiguration(@ApiParam(name = "configuration", value = "AndroidPlatformConfiguration")
+                                TenantConfiguration configuration) throws AndroidAgentException;
 }
