@@ -19,6 +19,7 @@
 package org.wso2.carbon.device.mgt.iot.androidsense.service.impl;
 
 import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 import javax.ws.rs.Consumes;
@@ -44,6 +45,7 @@ public interface AndroidSenseControllerService {
     @Path("device/{deviceId}/words")
     @POST
     @Feature(code = "keywords", name = "Add Keywords", description = "Send keywords to the device", type = "operation")
+    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/operations"})
     Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords);
 
     /**
@@ -56,12 +58,14 @@ public interface AndroidSenseControllerService {
     @POST
     @Feature(code = "threshold", name = "Add a Threshold", description = "Set a threshold for word in the device",
             type = "operation")
+    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/operations"})
     Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold);
 
     @Path("device/{deviceId}/words")
     @DELETE
     @Feature(code = "remove", name = "Remove Keywords", description = "Remove the keywords",
             type = "operation")
+    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/operations"})
     Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words);
 
     /**
@@ -71,6 +75,7 @@ public interface AndroidSenseControllerService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
+    @Permission(scope = "android_sense_device", permissions = {"/permission/admin/device-mgt/user/stats"})
     Response getAndroidSenseDeviceStats(@PathParam("deviceId") String deviceId, @PathParam("sensorName") String sensor,
                                         @QueryParam("from") long from, @QueryParam("to") long to);
 

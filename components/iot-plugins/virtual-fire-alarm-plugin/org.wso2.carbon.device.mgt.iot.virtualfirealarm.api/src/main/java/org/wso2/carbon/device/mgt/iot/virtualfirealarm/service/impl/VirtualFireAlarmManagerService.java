@@ -19,6 +19,7 @@
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl;
 
 import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 
 import javax.ws.rs.Consumes;
@@ -38,28 +39,33 @@ public interface VirtualFireAlarmManagerService {
 
     @Path("/devices/{device_id}")
     @DELETE
+    @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user/devices/remove"})
     Response removeDevice(@PathParam("device_id") String deviceId);
 
 
     @Path("/devices/{device_id}")
     @PUT
+    @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user/devices/update"})
     Response updateDevice(@PathParam("device_id") String deviceId, @QueryParam("name") String name);
 
     @Path("/devices/{device_id}")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user/devices/list"})
     Response getDevice(@PathParam("device_id") String deviceId);
 
     @Path("/devices")
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @Permission(scope = "virtual_firealarm_user", permissions = {"/device-mgt/user/devices/list"})
     Response getFirealarmDevices();
 
     @Path("/devices/download")
     @GET
     @Produces("application/zip")
+    @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user"})
     Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketchType") String sketchType);
 
 }

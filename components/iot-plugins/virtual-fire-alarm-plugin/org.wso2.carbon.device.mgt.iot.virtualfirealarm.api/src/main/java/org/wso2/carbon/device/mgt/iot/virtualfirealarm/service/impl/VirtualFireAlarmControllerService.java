@@ -49,7 +49,7 @@ public interface VirtualFireAlarmControllerService {
      */
     @POST
     @Path("device/{deviceId}/buzz")
-    @Permission(scope = "virtual_firealarm_user", permissions = {"device-mgt/virtual_firealarm/user"})
+    @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user/operation"})
     @Feature(code = "buzz", name = "Buzzer On / Off", type = "operation",
             description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
     Response switchBuzzer(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
@@ -61,7 +61,7 @@ public interface VirtualFireAlarmControllerService {
      */
     @Path("device/stats/{deviceId}")
     @GET
-    @Permission(scope = "virtual_firealarm_user", permissions = {"device-mgt/virtual_firealarm/user"})
+    @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user/stats"})
     @Consumes("application/json")
     @Produces("application/json")
     Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,

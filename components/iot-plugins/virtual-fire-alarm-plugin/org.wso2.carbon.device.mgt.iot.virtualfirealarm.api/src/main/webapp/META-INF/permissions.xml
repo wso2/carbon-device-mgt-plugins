@@ -44,7 +44,7 @@
 	</Permission>
 	<Permission>
 		<name>Download device</name>
-		<path>/device-mgt/virtual_firealarm/user</path>
+		<path>/device-mgt/user</path>
         <url>/enrollment/devices/download</url>
 		<method>GET</method>
 		<scope>virtual_firealarm_user</scope>
@@ -64,31 +64,17 @@
         <scope>virtual_firealarm_user</scope>
     </Permission>
     <Permission>
-        <name>Register Device</name>
-        <path>/device-mgt/user/operations</path>
-        <url>/device/register/*/*/*</url>
-        <method>POST</method>
-        <scope>virtual_firealarm_device</scope>
-    </Permission>
-    <Permission>
         <name>Control Buzz</name>
-        <path>/device-mgt/user/operations</path>
+        <path>/device-mgt/user/operation</path>
         <url>/device/*/buzz</url>
         <method>POST</method>
         <scope>virtual_firealarm_user</scope>
-    </Permission>
-    <Permission>
-        <name>Push Temperature</name>
-        <path>/device-mgt/user/stats</path>
-        <url>/device/temperature</url>
-        <method>POST</method>
-        <scope>virtual_firealarm_device</scope>
     </Permission>
     <Permission>
         <name>Get Stats</name>
         <path>/device-mgt/user/stats</path>
         <url>/device/stats/*</url>
         <method>GET</method>
-        <scope>virtual_firealarm_device</scope>
+        <scope>virtual_firealarm_user</scope>
     </Permission>
 </PermissionConfiguration>
