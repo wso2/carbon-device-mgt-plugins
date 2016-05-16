@@ -59,7 +59,6 @@ public class OMADMOperationHandler {
     int commandId = 0;
 
     private static final String FEATURE_ENABLED = "1";
-    private static final String FEATURE_DISABLED = "0";
 
     public OMADMOperationHandler(SyncMLDocument sourceDocument, int startingCmdId) {
         this.sourceDocument = sourceDocument;
@@ -158,6 +157,7 @@ public class OMADMOperationHandler {
                 }
             }
         }
+        checkComplianceFeatureStatuses();
     }
 
     /**
@@ -342,9 +342,65 @@ public class OMADMOperationHandler {
                     } catch (JSONException e) {
                         log.error("Issue in parsing JSON.", e);
                     }
+
+                    for (ProfileOperation profileOperation : profileOperations) {
+                        if (profileOperation.getFeatureCode().equals(activeFeature.getFeatureCode()) &&
+                                profileOperation.getFeatureCode().equals(Constants.OperationCodes.CAMERA)) {
+                            if (profileOperation.isEnabled()) {
+                                profileOperation.setIsCompliant(true);
+                            } else {
+                                profileOperation.setIsCompliant(false);
+                            }
+                            ComplianceFeature complianceFeature = generateComplianceFeature(activeFeature,
+                                    profileOperation);
+                            complianceFeatures.add(complianceFeature);
+                        }
+                        if (profileOperation.getFeatureCode().equals(activeFeature.getFeatureCode()) &&
+                                profileOperation.getFeatureCode().equals(Constants.OperationCodes.ENCRYPT_STORAGE)) {
+                            if (profileOperation.isEnabled()) {
+                                profileOperation.setIsCompliant(true);
+                            } else {
+                                profileOperation.setIsCompliant(false);
+                            }
+                            ComplianceFeature complianceFeature = generateComplianceFeature(activeFeature,
+                                    profileOperation);
+                            complianceFeatures.add(complianceFeature);
+                        }
+                        if (profileOperation.getFeatureCode().equals(activeFeature.getFeatureCode()) &&
+                                profileOperation.getFeatureCode().equals(Constants.OperationCodes.PASSCODE_POLICY)) {
+                            if (profileOperation.isEnabled()) {
+                                profileOperation.setIsCompliant(true);
+                            } else {
+                                profileOperation.setIsCompliant(false);
+                            }
+                            ComplianceFeature complianceFeature = generateComplianceFeature(activeFeature,
+                                    profileOperation);
+                            complianceFeatures.add(complianceFeature);
+                        }
+                        try {
+                            AndroidAPIUtils.getPolicyManagerService().checkPolicyCompliance(deviceIdentifier, complianceFeatures);
+                        } catch (PolicyComplianceException e) {
+                            log.error("Issue in checking policy compliance.", e);
+                        }
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * Generates a ComplianceFeature object from a Profile Feature and a Profile Operation
+     *
+     * @param profileFeature - Profile Feature
+     * @param profileOperation - Profile Operation
+     * @return - Generated Compliance Feature
+     */
+    private ComplianceFeature generateComplianceFeature(ProfileFeature profileFeature, ProfileOperation profileOperation) {
+        ComplianceFeature complianceFeature = new ComplianceFeature();
+        complianceFeature.setFeature(profileFeature);
+        complianceFeature.setFeatureCode(profileFeature.getFeatureCode());
+        complianceFeature.setCompliance(profileOperation.isCompliant());
+        return complianceFeature;
     }
 
     /**
