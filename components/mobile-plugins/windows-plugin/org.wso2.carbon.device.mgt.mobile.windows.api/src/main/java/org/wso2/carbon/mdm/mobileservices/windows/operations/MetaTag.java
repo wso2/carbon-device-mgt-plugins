@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -26,10 +28,13 @@ import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
 /**
  * MetaTag data related to credentials.
  */
+@ApiModel(value = "MetaTag", description = "This class carries all information related to MetaTag")
 public class MetaTag {
-
+    @ApiModelProperty(name = "format", value = "MetaTag format.)", required = true)
     String format;
+    @ApiModelProperty(name = "type", value = "MetaTag type)", required = true)
     String type;
+    @ApiModelProperty(name = "nextNonce", value = "Syncml Nextnonce)", required = true)
     String nextNonce;
 
     public String getNextNonce() {

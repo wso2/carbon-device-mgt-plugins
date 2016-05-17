@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.authbst.beans;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -26,18 +29,28 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * This bean class is for credentials coming from wab page at federated authentication step.
  */
+@ApiModel(value = "Credentials", description = "This class carries all information related to Credentials.")
 @XmlRootElement(name = "credentials")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Credentials {
 
+    @ApiModelProperty(name = "username", value = "User name", required = true)
     @XmlElement(required = true, name = "username")
     private String username;
+
+    @ApiModelProperty(name = "email", value = "Email Address of the user.", required = true)
     @XmlElement(required = true, name = "email")
     private String email;
+
+    @ApiModelProperty(name = "password", value = "password of the user.", required = true)
     @XmlElement(required = true, name = "password")
     private String password;
+
+    @ApiModelProperty(name = "ownership", value = "ownership of the user.(BYOD/COPE).", required = true)
     @XmlElement(required = true, name = "ownership")
     private String ownership;
+
+    @ApiModelProperty(name = "usertoken", value = "User Token.", required = true)
     @XmlElement(required = true, name = "token")
     private String usertoken;
 

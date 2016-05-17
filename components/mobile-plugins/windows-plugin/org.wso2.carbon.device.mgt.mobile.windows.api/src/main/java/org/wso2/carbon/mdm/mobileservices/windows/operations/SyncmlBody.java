@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -28,14 +30,23 @@ import java.util.List;
 /**
  * Represents the body details of a syncml.
  */
+@ApiModel(value = "SyncmlBody", description = "This class carries all information related to SyncmlBody.")
 public class SyncmlBody {
+    @ApiModelProperty(name = "getCommands", value = "Get value of the syncmlBody.", required = true)
     Get getCommands;
+    @ApiModelProperty(name = "exec", value = "List of executeTags in syncmlBody.", required = true)
     List<ExecuteTag> exec;
+    @ApiModelProperty(name = "status", value = "List of statusTags in syncmlBody.", required = true)
     List<Status> status;
+    @ApiModelProperty(name = "alert", value = "Alert tag in syncmlBody.", required = true)
     Alert alert;
+    @ApiModelProperty(name = "replace", value = "replace tag in syncmlBody.", required = true)
     Replace replace;
+    @ApiModelProperty(name = "results", value = "Results tag in syncmlBody.", required = true)
     Results results;
+    @ApiModelProperty(name = "sequence", value = "Sequence tag in syncmlBody.", required = true)
     SequenceTag sequence;
+    @ApiModelProperty(name = "atomicTag", value = "Atomic tag in syncmlBody.", required = true)
     AtomicTag atomicTag;
 
     public AtomicTag getAtomicTag() {

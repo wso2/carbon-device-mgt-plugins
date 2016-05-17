@@ -18,19 +18,33 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.syncml.beans;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Bean for WIFI configurations.
  */
+@ApiModel(value = "Wifi",
+        description = "This class carries all information related to Wifi policy.")
 public class Wifi extends BasicOperation {
 
+    @ApiModelProperty(name = "networkName", value = "Name of the Wifi Network.", required = true)
     private String networkName;
+    @ApiModelProperty(name = "ssid", value = "SSID.", required = true)
     private String ssid;
+    @ApiModelProperty(name = "connectionType", value = "Type of the connection.", required = true)
     private String connectionType;
+    @ApiModelProperty(name = "connectionMode", value = "Connection mode.", required = true)
     private String connectionMode;
+    @ApiModelProperty(name = "authentication", value = "Authentication type.", required = true)
     private String authentication;
+    @ApiModelProperty(name = "encryption", value = "Encryption type.", required = true)
     private String encryption;
+    @ApiModelProperty(name = "keyType", value = "Key type.", required = true)
     private String keyType;
+    @ApiModelProperty(name = "protection", value = "Protection.", required = true)
     private String protection;
+    @ApiModelProperty(name = "keyMaterial", value = "Key Material.", required = true)
     private String keyMaterial;
 
     public String getNetworkName() {

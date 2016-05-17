@@ -18,12 +18,21 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.common.beans;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Class for java CacheEntry
  */
+@ApiModel(value = "CacheEntry",
+        description = "This class carries all information related to token cache")
 public class CacheEntry {
+
+    @ApiModelProperty(name = "deviceID", value = "Windows deviceIdentifier", required = true)
     private String deviceID;
+    @ApiModelProperty(name = "username", value = "Enrolled User", required = true)
     private String username;
+    @ApiModelProperty(name = "ownership", value = "Enrollment ownership(BYOD/COPE)", required = true)
     private String ownership;
 
     public String getOwnership() {

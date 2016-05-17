@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -25,8 +27,12 @@ import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
 /**
  * Credentials passed between the device and the server for security purposes.
  */
+@ApiModel(value = "Credential",
+        description = "This class carries all information related to syncml credentials")
 public class Credential {
+    @ApiModelProperty(name = "meta", value = "Syncml credential's MetaTag reference.)", required = true)
     MetaTag meta;
+    @ApiModelProperty(name = "data", value = "Data of the Credential Tag.)", required = true)
     String data;
 
     public MetaTag getMeta() {
