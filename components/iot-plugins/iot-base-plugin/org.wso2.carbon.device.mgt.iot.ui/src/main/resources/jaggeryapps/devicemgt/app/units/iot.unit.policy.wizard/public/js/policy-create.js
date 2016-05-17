@@ -73,7 +73,6 @@ validateStep["policy-profile"] = function () {
 };
 
 stepForwardFrom["policy-profile"] = function () {
-    policy["profile"] = operationModule.generateProfile(policy["platform"], configuredOperations);
     // updating next-page wizard title with selected platform
     $("#policy-criteria-page-wizard-title").text("ADD " + deviceTypeLabel + " POLICY");
 };
@@ -105,6 +104,8 @@ stepForwardFrom["policy-criteria"] = function () {
                     policy["selectedUsers"] = $("#users-input").val();
                 } else if ($(this).attr("id") == "user-roles-radio-btn") {
                     policy["selectedUserRoles"] = $("#user-roles-input").val();
+                } else if ($(this).attr("id") == "groups-radio-btn") {
+                    policy["selectedUserGroups"] = $("#groups-input").val();
                 }
             }
         }
@@ -247,12 +248,15 @@ var savePolicy = function (policy, state) {
     invokerUtil.post(
             serviceURL,
             payload,
-            function () {
-                $(".add-policy").addClass("hidden");
-                $(".policy-naming").addClass("hidden");
-                $(".policy-message").removeClass("hidden");
-                if (state == "publish") {
-                    publishToDevice();
+            function (response) {
+                response = JSON.parse(response);
+                if (response["statusCode"] == 201) {
+                    $(".add-policy").addClass("hidden");
+                    $(".policy-naming").addClass("hidden");
+                    $(".policy-message").removeClass("hidden");
+                    if (state == "publish") {
+                        publishToDevice();
+                    }
                 }
             },
             function (err) {
@@ -351,6 +355,31 @@ function formatRepoSelection(user) {
     return user.username || user.text;
 }
 
+function formatGroupRepo(group) {
+    if (group.loading) {
+        return group.text
+    }
+    if (!group.name) {
+        return;
+    }
+    var markup = '<div class="clearfix">' +
+                 '<div clas="col-sm-8">' +
+                 '<div class="clearfix">' +
+                 '<div class="col-sm-3">' + group.name + '</div>';
+    if (group.name) {
+        markup += '<div class="col-sm-3"><i class="fa fa-code-fork"></i> ' + group.name + '</div>';
+    }
+    if (group.owner) {
+        markup += '<div class="col-sm-2"><i class="fa fa-star"></i> ' + group.owner + '</div></div>';
+    }
+    markup += '</div></div>';
+    return markup;
+}
+
+function formatGroupRepoSelection(group) {
+    return group.name || group.text;
+}
+
 // End of functions related to grid-input-view
 
 
@@ -372,46 +401,85 @@ $(document).ready(function () {
     });
 
     $("#users-input").select2({
-        multiple: true,
-        tags: true,
-        ajax: {
-            url: window.location.origin + "/devicemgt/api/invoker/execute/",
-            method: "POST",
-            dataType: 'json',
-            delay: 250,
-            id: function (user) {
-                return user.username;
-            },
-            data: function (params) {
-                var postData = {};
-                postData.actionMethod = "GET";
-                postData.actionUrl = "/devicemgt_admin/users";
-                postData.actionPayload = JSON.stringify({
-                    q: params.term, // search term
-                    page: params.page
-                });
+                                  multiple: true,
+                                  tags: true,
+                                  ajax: {
+                                      url: window.location.origin + "/devicemgt/api/invoker/execute/",
+                                      method: "POST",
+                                      dataType: 'json',
+                                      delay: 250,
+                                      id: function (user) {
+                                          return user.username;
+                                      },
+                                      data: function (params) {
+                                          var postData = {};
+                                          postData.actionMethod = "GET";
+                                          postData.actionUrl = "/devicemgt_admin/users";
+                                          postData.actionPayload = JSON.stringify({
+                                                                                      q: params.term, // search term
+                                                                                      page: params.page
+                                                                                  });
 
-                return JSON.stringify(postData);
-            },
-            processResults: function (data, page) {
-                var newData = [];
-                $.each(data.responseContent, function (index, value) {
-                    value.id = value.username;
-                    newData.push(value);
-                });
-                return {
-                    results: newData
-                };
-            },
-            cache: true
-        },
-        escapeMarkup: function (markup) {
-            return markup;
-        }, // let our custom formatter work
-        minimumInputLength: 1,
-        templateResult: formatRepo, // omitted for brevity, see the source of this page
-        templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
-    });
+                                          return JSON.stringify(postData);
+                                      },
+                                      processResults: function (data, page) {
+                                          var newData = [];
+                                          $.each(data.responseContent, function (index, value) {
+                                              value.id = value.username;
+                                              newData.push(value);
+                                          });
+                                          return {
+                                              results: newData
+                                          };
+                                      },
+                                      cache: true
+                                  },
+                                  escapeMarkup: function (markup) {
+                                      return markup;
+                                  }, // let our custom formatter work
+                                  minimumInputLength: 1,
+                                  templateResult: formatRepo, // omitted for brevity, see the source of this page
+                                  templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+                              });
+
+    $("#groups-input").select2({
+                                  multiple: true,
+                                  tags: true,
+                                  ajax: {
+                                      url: window.location.origin + "/devicemgt/api/invoker/execute/",
+                                      method: "POST",
+                                      dataType: 'json',
+                                      delay: 250,
+                                      id: function (group) {
+                                          return group.name;
+                                      },
+                                      data: function (params) {
+                                          var postData = {};
+                                          postData.actionMethod = "GET";
+                                          var username = $("#platform").data("username");
+                                          postData.actionUrl = "/devicemgt_admin/groups/user/" + username +
+                                                               "/search?groupName=" + params.term;
+                                          return JSON.stringify(postData);
+                                      },
+                                      processResults: function (data, page) {
+                                          var newData = [];
+                                          $.each(data, function (index, value) {
+                                              value.id = value.name;
+                                              newData.push(value);
+                                          });
+                                          return {
+                                              results: newData
+                                          };
+                                      },
+                                      cache: true
+                                  },
+                                  escapeMarkup: function (markup) {
+                                      return markup;
+                                  }, // let our custom formatter work
+                                  minimumInputLength: 1,
+                                  templateResult: formatGroupRepo, // omitted for brevity, see the source of this page
+                                  templateSelection: formatGroupRepoSelection // omitted for brevity, see the source of this page
+                              });
 
     // Adding initial state of wizard-steps.
     $("#policy-profile-wizard-steps").html($(".wr-steps").html());
@@ -427,16 +495,24 @@ $(document).ready(function () {
     });
 
     $("#users-select-field").hide();
+    $("#groups-select-field").hide();
     $("#user-roles-select-field").show();
 
     $("input[type='radio'].select-users-radio").change(function () {
+        if ($("#user-roles-radio-btn").is(":checked")) {
+            $("#user-roles-select-field").show();
+            $("#users-select-field").hide();
+            $("#groups-select-field").hide();
+        }
         if ($("#users-radio-btn").is(":checked")) {
             $("#user-roles-select-field").hide();
             $("#users-select-field").show();
+            $("#groups-select-field").hide();
         }
-        if ($("#user-roles-radio-btn").is(":checked")) {
+        if ($("#groups-radio-btn").is(":checked")) {
+            $("#user-roles-select-field").hide();
             $("#users-select-field").hide();
-            $("#user-roles-select-field").show();
+            $("#groups-select-field").show();
         }
     });
 
@@ -657,7 +733,9 @@ $(document).ready(function () {
 
             // hiding current section of the wizard and showing next section.
             $("." + currentStep).addClass("hidden");
-            $("." + nextStep).removeClass("hidden");
+            if (nextStep !== "policy-message") {
+                $("." + nextStep).removeClass("hidden");
+            }
         }
     });
 });
