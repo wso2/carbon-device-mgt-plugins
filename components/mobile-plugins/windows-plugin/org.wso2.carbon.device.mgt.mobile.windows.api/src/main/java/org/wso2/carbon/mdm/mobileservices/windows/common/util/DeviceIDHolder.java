@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.common.util;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 
 import java.util.List;
@@ -25,9 +27,12 @@ import java.util.List;
 /**
  * Class for holding device ids.
  */
+@ApiModel(value = "DeviceIDHolder", description = "This class carries all information related to DeviceIDs")
 public class DeviceIDHolder {
 
+    @ApiModelProperty(name = "errorDeviceIdList", value = "Error occurred DeviceIds.)", required = true)
     private List<String> errorDeviceIdList;
+    @ApiModelProperty(name = "validDeviceIDList", value = "Valid DeviceIDs.)", required = true)
     private List<DeviceIdentifier> validDeviceIDList;
 
     public List<String> getErrorDeviceIdList() {

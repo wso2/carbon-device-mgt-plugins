@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.authbst;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.WindowsDeviceEnrolmentException;
 import org.wso2.carbon.mdm.mobileservices.windows.services.authbst.beans.Credentials;
 
@@ -36,5 +39,16 @@ public interface BSTProvider {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/authentication")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Getting Binary security token via the Rest API",
+            notes = "Getting binary security token to call next certificate endpoints.",
+            response = String.class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 500, message = "Internal Server error")
+    })
     Response getBST(Credentials credentials) throws WindowsDeviceEnrolmentException;
 }

@@ -18,16 +18,21 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
-import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
 
 /**
  * Source details of syncml header's.
  */
+@ApiModel(value = "Source",
+        description = "This class carries all information related to Syncml source.")
 public class Source {
-
+    @ApiModelProperty(name = "LocURI", value = "Location URI.(Source Location:Device)", required = true)
     private String LocURI;
+    @ApiModelProperty(name = "LocName", value = "Name of the location", required = true)
     private String LocName;
 
     public String getLocURI() {

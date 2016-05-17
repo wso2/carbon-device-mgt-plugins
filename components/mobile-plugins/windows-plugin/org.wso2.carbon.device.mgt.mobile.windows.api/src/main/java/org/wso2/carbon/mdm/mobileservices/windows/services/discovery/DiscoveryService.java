@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.discovery;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.wso2.carbon.mdm.mobileservices.windows.common.PluginConstants;
 import org.wso2.carbon.mdm.mobileservices.windows.services.discovery.beans.DiscoveryRequest;
 import org.wso2.carbon.mdm.mobileservices.windows.services.discovery.beans.DiscoveryResponse;
@@ -46,6 +49,17 @@ public interface DiscoveryService {
     @RequestWrapper(localName = "Discover", targetNamespace = PluginConstants.DISCOVERY_SERVICE_TARGET_NAMESPACE)
     @WebMethod(operationName = "Discover")
     @ResponseWrapper(localName = "DiscoverResponse", targetNamespace = PluginConstants.DISCOVERY_SERVICE_TARGET_NAMESPACE)
+    @ApiOperation(
+            httpMethod = "POST",
+            value = "Discover the EMM server via REST API.",
+            notes = "Request the server endpoints.",
+            response = DiscoveryResponse.class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200,
+                    message = "Windows policy, policy endpoints, enrollment endpoints and authentication endpoint."),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     void discover(
             @WebParam(name = "request", targetNamespace = PluginConstants.DISCOVERY_SERVICE_TARGET_NAMESPACE)
             DiscoveryRequest request,
@@ -57,6 +71,15 @@ public interface DiscoveryService {
     @GET
     @WebMethod
     @WebResult()
+    @ApiOperation(
+            httpMethod = "GET",
+            value = "Discover the EMM server via REST API.",
+            notes = "Check the server availability."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok."),
+            @ApiResponse(code = 500, message = "Internal server error.")
+    })
     Response discoverGet();
 
 }

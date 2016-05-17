@@ -18,13 +18,23 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.common.util;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * DTO class to hold the information of authenticated user.
  */
+@ApiModel(value = "ApplicationInstallation",
+        description = "This class carries all information related to install application")
+
 public class AuthenticationInfo {
+    @ApiModelProperty(name = "message", value = "Authentication info message.", required = true)
     private String message;
+    @ApiModelProperty(name = "username", value = "Username of the enrolled user.", required = true)
     private String username;
+    @ApiModelProperty(name = "tenantDomain", value = "Enrolled user's tenant domain.", required = true)
     private String tenantDomain;
+    @ApiModelProperty(name = "tenantId", value = "Enrolled user's tenant ID)", required = true)
     private int tenantId = -1;
 
     public String getUsername() {

@@ -142,6 +142,7 @@ public interface DeviceManagementService {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Licence agreement"),
             @ApiResponse(code = 500, message = "Error occurred while retrieving the license configured for Android " +
-                    "device enrolment")})
+                    "device enrolment")
+    })
     String getLicense() throws AndroidAgentException;
 }

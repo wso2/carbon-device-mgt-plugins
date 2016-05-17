@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -28,8 +30,12 @@ import java.util.List;
 /**
  * Commands that needs to be executed on the device.
  */
+@ApiModel(value = "ExecuteTag",
+        description = "This class carries all information related to Syncml ExecuteTag.")
 public class ExecuteTag {
+    @ApiModelProperty(name = "type", value = "CommandId of the syncml ExecuteTag.", required = true)
     int commandId = -1;
+    @ApiModelProperty(name = "type", value = "List of items of the Syncml ExecuteTag.", required = true)
     List<Item> items;
 
     public int getCommandId() {

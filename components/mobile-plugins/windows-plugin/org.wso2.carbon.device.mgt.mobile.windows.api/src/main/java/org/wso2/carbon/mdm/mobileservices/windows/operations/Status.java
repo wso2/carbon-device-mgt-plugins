@@ -18,20 +18,31 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
-import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
 
 /**
  * Status of a previously sent message to device;
  */
+@ApiModel(value = "Status",
+        description = "This class carries all information related to Syncml Device statuses.")
 public class Status {
+    @ApiModelProperty(name = "commandId", value = "CommandId of the Syncml StatusTag.", required = true)
     int commandId = -1;
+    @ApiModelProperty(name = "messageReference", value = "Message referenceId.", required = true)
     int messageReference = -1;
+    @ApiModelProperty(name = "commandReference", value = "Command referenceId.", required = true)
     int commandReference = -1;
+    @ApiModelProperty(name = "command", value = "Command String.", required = true)
     String command;
+    @ApiModelProperty(name = "targetReference", value = "Target reference of the status message.", required = true)
     String targetReference;
+    @ApiModelProperty(name = "data", value = "Status data of the message.(ex:200,404,500...)", required = true)
     String data;
+    @ApiModelProperty(name = "challenge", value = "Challenge value.", required = true)
     ChallengeTag challenge;
 
     public Status(int commandId, int messageReference, int commandReference, String command,

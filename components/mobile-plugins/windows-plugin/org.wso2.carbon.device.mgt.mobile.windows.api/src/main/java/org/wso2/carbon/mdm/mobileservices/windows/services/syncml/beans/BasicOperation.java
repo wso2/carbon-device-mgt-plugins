@@ -18,11 +18,16 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.syncml.beans;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Bean for get basic operations.
  */
+@ApiModel(value = "BasicOperation",
+        description = "This class carries all information related to Basic operation.")
 public class BasicOperation {
-
+    @ApiModelProperty(name = "name", value = "Name of the basic operation.", required = true)
     private String name;
 
     public String getName() {

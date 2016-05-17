@@ -18,14 +18,19 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
  * Represents a base format of a syncml document
  */
+@ApiModel(value = "SyncmlDocument", description = "This class carries all information related to SyncmlDocument.")
 public class SyncmlDocument {
+    @ApiModelProperty(name = "header", value = "Header of the syncmlDocument.", required = true)
     SyncmlHeader header;
+    @ApiModelProperty(name = "body", value = "Body of the SyncmlDocument.", required = true)
     SyncmlBody body;
 
     public SyncmlHeader getHeader() {
