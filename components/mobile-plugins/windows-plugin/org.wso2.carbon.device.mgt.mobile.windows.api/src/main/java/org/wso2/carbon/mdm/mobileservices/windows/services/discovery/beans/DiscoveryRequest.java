@@ -18,21 +18,32 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.discovery.beans;
 
-import javax.xml.bind.annotation.*;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DiscoveryRequest")
 @SuppressWarnings("unused")
+@ApiModel(value = "DiscoveryRequest",
+        description = "This class carries all information related to Discovery request.")
 public class DiscoveryRequest implements Serializable {
 
     @XmlElement(name = "EmailAddress", required = true)
+    @ApiModelProperty(name = "emailId", value = "Email ID.", required = true)
     private String emailId;
 
     @XmlElement(name = "RequestVersion")
+    @ApiModelProperty(name = "version", value = "Request Version.", required = true)
     private String version;
 
     @XmlElement(name = "DeviceType")
+    @ApiModelProperty(name = "deviceType", value = "Type of the Device.", required = true)
     private String deviceType;
 
     public String getEmailId() {

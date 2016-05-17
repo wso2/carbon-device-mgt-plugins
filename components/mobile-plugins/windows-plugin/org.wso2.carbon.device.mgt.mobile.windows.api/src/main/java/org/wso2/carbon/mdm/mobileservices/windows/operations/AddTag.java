@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -28,8 +30,11 @@ import java.util.List;
 /**
  * Configurations that needs to be added on the device.
  */
+@ApiModel(value = "AddTag", description = "This class carries all information related to Syncml AddTag.")
 public class AddTag {
+    @ApiModelProperty(name = "commandId", value = "CommandID of the AddTag.", required = true)
     int commandId = -1;
+    @ApiModelProperty(name = "items", value = "List of items of the AddTag.", required = true)
     List<Item> items;
 
     public int getCommandId() {

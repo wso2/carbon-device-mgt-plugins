@@ -18,19 +18,38 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.syncml.beans;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Bean for device lockOperationUpdate screen passcode policy.
  */
+@ApiModel(value = "PasscodePolicy",
+        description = "This class carries all information related to Passcode Policy.")
 public class PasscodePolicy extends BasicOperation {
 
+    @ApiModelProperty(name = "maxFailedAttempts", value = "No of Max fail attempts.", required = true)
     private int maxFailedAttempts;
+    @ApiModelProperty(name = "minLength", value = "Minimum length of the Passcode.", required = true)
     private int minLength;
+    @ApiModelProperty(name = "pinHistory",
+            value = "The number of passwords Windows 10 Mobile remembers in the password history.", required = true)
     private int pinHistory;
+    @ApiModelProperty(name = "minComplexChars",
+            value = "The number of password element types (in other words, uppercase letters, lowercase letters, " +
+                    "numbers, or punctuation) required to create strong passwords.", required = true)
     private int minComplexChars;
+    @ApiModelProperty(name = "maxPINAgeInDays",
+            value = "Number of Maximum days to expire the passcode.", required = true)
     private int maxPINAgeInDays;
+    @ApiModelProperty(name = "requireAlphanumeric",
+            value = "An integer value that specifies the complexity of the password or PIN allowed.", required = true)
     private boolean requireAlphanumeric;
+    @ApiModelProperty(name = "allowSimple", value = "Set boolean value to allow simple password.", required = true)
     private boolean allowSimple;
+    @ApiModelProperty(name = "enablePassword", value = "Set boolean value enable password.", required = true)
     private boolean enablePassword;
+    @ApiModelProperty(name = "maxInactiveTime", value = "Maximum Inactive time.", required = true)
     private int maxInactiveTime;
 
     public int getMaxInactiveTime() {

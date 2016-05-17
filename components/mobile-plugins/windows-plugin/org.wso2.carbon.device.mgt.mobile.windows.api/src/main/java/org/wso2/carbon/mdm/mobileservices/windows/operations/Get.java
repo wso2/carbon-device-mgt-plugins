@@ -18,9 +18,11 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
-import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
 
 import java.util.Iterator;
 import java.util.List;
@@ -28,8 +30,12 @@ import java.util.List;
 /**
  * Data that needs to be retrieved from the device.
  */
+@ApiModel(value = "Get",
+        description = "This class carries all information related to syncml GetTag.")
 public class Get {
+    @ApiModelProperty(name = "commandId", value = "CommandId of the syncml GetTag.", required = true)
     int commandId = -1;
+    @ApiModelProperty(name = "items", value = "List of items of the Syncml GetTag.", required = true)
     List<Item> items;
 
     public int getCommandId() {

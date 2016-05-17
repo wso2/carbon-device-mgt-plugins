@@ -18,14 +18,23 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.syncml.beans;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Class for contains device active policy.
  */
+@ApiModel(value = "Profile",
+        description = "This class carries all information related to Profile features.")
 public class Profile {
 
+    @ApiModelProperty(name = "featureCode", value = "Profile type operation feature code.", required = true)
     String featureCode;
+    @ApiModelProperty(name = "data", value = "Profile type operation data content..", required = true)
     String data;
+    @ApiModelProperty(name = "enable", value = "Status of the Profile operation.", required = true)
     boolean enable;
+    @ApiModelProperty(name = "compliance", value = "Status of the operation compliance.", required = true)
     boolean compliance;
 
     public boolean isCompliance() {

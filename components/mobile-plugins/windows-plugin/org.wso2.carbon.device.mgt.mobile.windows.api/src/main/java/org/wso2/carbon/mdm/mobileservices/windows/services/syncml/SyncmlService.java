@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.syncml;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.w3c.dom.Document;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.mdm.mobileservices.windows.common.PluginConstants;
@@ -35,6 +39,7 @@ import javax.ws.rs.core.Response;
 /**
  * Interface for Syncml message flow.
  */
+@Api(value = "SyncmlService", description = "Windows Device Management REST-API implementation.")
 @Path("/devicemanagement")
 public interface SyncmlService {
 
@@ -42,6 +47,17 @@ public interface SyncmlService {
     @POST
     @Consumes({PluginConstants.SYNCML_MEDIA_TYPE, MediaType.APPLICATION_XML})
     @Produces(PluginConstants.SYNCML_MEDIA_TYPE)
+    @ApiOperation(
+            consumes = "application/vnd.syncml.dm+xml;charset=utf-8",
+            produces = "application/vnd.syncml.dm+xml;charset=utf-8",
+            httpMethod = "POST",
+            value = "Windows Device Management service REST API",
+            notes = "Windows device management session"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully completed syncml session"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     Response getResponse(Document request) throws WindowsDeviceEnrolmentException, WindowsOperationException,
             NotificationManagementException, WindowsConfigurationException;
 

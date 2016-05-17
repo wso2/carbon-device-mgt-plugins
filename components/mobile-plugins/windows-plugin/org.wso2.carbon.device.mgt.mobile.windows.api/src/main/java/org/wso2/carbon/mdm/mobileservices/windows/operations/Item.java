@@ -18,18 +18,25 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
-import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
 
 /**
  * Represents an items that should be retrieved from the device or a command.
  */
+@ApiModel(value = "Item",
+        description = "This class carries all information related to Syncml Item.")
 public class Item {
-
+    @ApiModelProperty(name = "target", value = "Target reference value of the Syncml Message(ex:Device).", required = true)
     Target target;
+    @ApiModelProperty(name = "source", value = "Source reference of the syncml message.(Ex:EMM Server).", required = true)
     Source source;
+    @ApiModelProperty(name = "data", value = "Content of the syncml message.", required = true)
     String data;
+    @ApiModelProperty(name = "meta", value = "Meta data of the syncml messsage.", required = true)
     MetaTag meta;
 
     public MetaTag getMeta() {

@@ -30,13 +30,6 @@
     <APIVersion></APIVersion>
 	<!-- Device related APIs -->
 	<Permission>
-		<name>Get device</name>
-		<path>/device-mgt/user/devices/list</path>
-		<url>/enrollment/devices/*</url>
-		<method>GET</method>
-		<scope>raspberrypi_user</scope>
-	</Permission>
-	<Permission>
 		<name>Download device</name>
 		<path>/device-mgt/user/devices</path>
 		<url>/device/download</url>

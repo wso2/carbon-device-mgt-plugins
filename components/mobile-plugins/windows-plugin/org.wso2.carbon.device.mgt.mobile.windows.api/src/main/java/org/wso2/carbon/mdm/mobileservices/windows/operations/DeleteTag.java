@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -28,8 +30,12 @@ import java.util.List;
 /**
  * Configurations that need to be delete on Device.
  */
+@ApiModel(value = "DeleteTag",
+        description = "This class carries all information related to Syncml DeleteTag.")
 public class DeleteTag {
+    @ApiModelProperty(name = "commandId", value = "CommandId of the Syncl DeleteTag.", required = true)
     int commandId = -1;
+    @ApiModelProperty(name = "items", value = "List of items of the syncml DeleteTag. ", required = true)
     List<Item> items;
 
     public int getCommandId() {

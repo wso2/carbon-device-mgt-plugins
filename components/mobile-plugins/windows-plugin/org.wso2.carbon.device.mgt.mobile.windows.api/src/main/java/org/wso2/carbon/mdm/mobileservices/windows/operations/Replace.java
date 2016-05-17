@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -28,8 +30,12 @@ import java.util.List;
 /**
  * Commands sent from the device.
  */
+@ApiModel(value = "Replace",
+        description = "This class carries all information related to Syncml ReplaceTag.")
 public class Replace {
+    @ApiModelProperty(name = "commandId", value = "CommandId of the syncml ReplaceTag.", required = true)
     int commandId = -1;
+    @ApiModelProperty(name = "items", value = "List of items of the syncml ReplaceTag.", required = true)
     List<Item> items;
 
     public int getCommandId() {
