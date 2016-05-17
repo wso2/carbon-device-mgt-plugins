@@ -2,7 +2,7 @@
     {{css "css/codemirror.css"}}
 {{/zone}}
 <span id="platform" class="hidden" data-platform="{{type.name}}" data-platform-id="{{type.id}}"
-      data-platform-label="{{type.label}}"></span>
+      data-platform-label="{{type.label}}" data-username="{{username}}"></span>
 <div class="row">
     <div class="col-md-12">
         <div class="wr-steps hidden">
@@ -23,7 +23,7 @@
             <div class="col-md-3 col-xs-3">
                 <div class="itm-wiz" data-step="policy-criteria">
                     <div class="wiz-no">3</div>
-                    <div class="wiz-lbl hidden-xs"><span>Assign to groups</span></div>
+                    <div class="wiz-lbl hidden-xs"><span>Assign</span></div>
                 </div>
                 <br class="c-both"/>
             </div>
@@ -130,48 +130,80 @@
                 <hr>
                 <div class="row">
                     <div class="col-lg-12">
-                        <h4>Step 3: Assign to groups</h4>
+                        <h4>Step 3: Assign</h4>
                         <br>
 
                         <div>
                             <div class="wr-input-control">
-                                <label class="wr-input-control radio light">
-                                    <input id="user-roles-radio-btn" type="radio"
-                                           name="select-users-radio-btn" class="select-users-radio"
-                                           checked/>
-                                    <span class="helper">&nbsp;Set user role(s)</span>
-                                </label>
-                                <label class="wr-input-control radio light" rel="assetfilter">
-                                    <input id="users-radio-btn" type="radio"
-                                           name="select-users-radio-btn"
-                                           class="select-users-radio"/>
-                                    <span class="helper">&nbsp;Set user(s)</span>
-                                </label>
+                                {{#if permissions.LIST_ROLES}}
+                                    <label class="wr-input-control radio light">
+                                        <input id="user-roles-radio-btn" type="radio"
+                                               name="select-users-radio-btn" class="select-users-radio"
+                                               checked/>
+                                        <span class="helper">&nbsp;Set user role(s)</span>
+                                    </label>
+                                {{/if}}
+                                {{#if permissions.LIST_USERS}}
+                                    <label class="wr-input-control radio light" rel="assetfilter">
+                                        <input id="users-radio-btn" type="radio"
+                                               name="select-users-radio-btn"
+                                               class="select-users-radio"/>
+                                        <span class="helper">&nbsp;Set user(s)</span>
+                                    </label>
+                                {{/if}}
+                                <!--
+                                {{#if permissions.LIST_GROUPS}}
+                                    <label class="wr-input-control radio light" rel="assetfilter">
+                                        <input id="groups-radio-btn" type="radio"
+                                               name="select-users-radio-btn"
+                                               class="select-users-radio"/>
+                                        <span class="helper">&nbsp;Set groups(s)</span>
+                                    </label>
+                                {{/if}}
+                                -->
                             </div>
-                            <div id="user-roles-select-field" class="select-users">
-                                <div class="wr-input-control">
-                                    <div class="cus-col-50">
-                                        <select id="user-roles-input" class="form-control select2"
-                                                multiple="multiple">
-                                            <option value="ANY" selected>ANY</option>
-                                            {{#each roles}}
-                                                <option>{{this}}</option>
-                                            {{/each}}
-                                        </select>
+                            {{#if permissions.LIST_ROLES}}
+                                <div id="user-roles-select-field" class="select-users">
+                                    <div class="wr-input-control">
+                                        <div class="cus-col-50">
+                                            <select id="user-roles-input" class="form-control select2"
+                                                    multiple="multiple">
+                                                <option value="ANY" selected>ANY</option>
+                                                {{#each roles}}
+                                                    <option>{{this}}</option>
+                                                {{/each}}
+                                            </select>
+                                        </div>
+                                        <br class="c-both"/>
                                     </div>
-                                    <br class="c-both"/>
                                 </div>
-                            </div>
-                            <div id="users-select-field" class="select-users">
-                                <div class="wr-input-control">
-                                    <div class="cus-col-50">
-                                        <select id="users-input" class="form-control select2"
-                                                multiple="multiple">
-                                        </select>
+                            {{/if}}
+                            {{#if permissions.LIST_USERS}}
+                                <div id="users-select-field" class="select-users">
+                                    <div class="wr-input-control">
+                                        <div class="cus-col-50">
+                                            <select id="users-input" class="form-control select2"
+                                                    multiple="multiple">
+                                            </select>
+                                        </div>
+                                        <br class="c-both"/>
                                     </div>
-                                    <br class="c-both"/>
                                 </div>
-                            </div>
+                            {{/if}}
+                            <!--
+                            {{#if permissions.LIST_GROUPS}}
+                                <div id="groups-select-field" class="select-users">
+                                    <div class="wr-input-control">
+                                        <div class="cus-col-50">
+                                            <select id="groups-input" class="form-control select2"
+                                                    multiple="multiple">
+                                            </select>
+                                        </div>
+                                        <br class="c-both"/>
+                                    </div>
+                                </div>
+                            {{/if}}
+                            -->
                             <br>
                             <label class="wr-input-label" title="">
                                 Set an action upon non-compliance
@@ -237,7 +269,7 @@
                             <a href="javascript:void(0)" class="wr-btn wizard-stepper"
                                data-current="policy-profile" data-next="policy-criteria"
                                data-validate="true">
-                               Continue
+                                Continue
                             </a>
                         </div>
                     </div>
