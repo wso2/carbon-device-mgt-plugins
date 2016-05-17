@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 import java.util.Iterator;
 import java.util.List;
@@ -50,10 +50,10 @@ public class DeleteTag {
 
     public void buildDeleteElement(Document doc, Element rootElement) {
         if (getItems() != null) {
-            Element delete = doc.createElement(Constants.DELETE);
+            Element delete = doc.createElement(SyncMLConstants.DELETE);
             rootElement.appendChild(delete);
             if (getCommandId() != -1) {
-                Element commandId = doc.createElement(Constants.COMMAND_ID);
+                Element commandId = doc.createElement(SyncMLConstants.COMMAND_ID);
                 commandId.appendChild(doc.createTextNode(String.valueOf(getCommandId())));
                 delete.appendChild(commandId);
             }

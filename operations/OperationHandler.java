@@ -36,7 +36,7 @@ import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.ItemTag;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.ResultsTag;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.StatusTag;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLDocument;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
 import org.wso2.carbon.policy.mgt.common.ProfileFeature;
@@ -47,12 +47,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class acts as an entity which maps server
- * supported device operations to OMADM operations
+ * This class acts as an entity which converts server supported
+ * device operations into OMADM understandable operations
  */
-public class OMADMOperationHandler {
+public class OperationHandler {
 
-    private static Log log = LogFactory.getLog(OMADMOperationHandler.class);
+    private static Log log = LogFactory.getLog(OperationHandler.class);
 
     private SyncMLDocument sourceDocument;
     DeviceIdentifier deviceIdentifier;
@@ -60,7 +60,7 @@ public class OMADMOperationHandler {
 
     private static final String FEATURE_ENABLED = "1";
 
-    public OMADMOperationHandler(SyncMLDocument sourceDocument, int startingCmdId) {
+    public OperationHandler(SyncMLDocument sourceDocument, int startingCmdId) {
         this.sourceDocument = sourceDocument;
         this.deviceIdentifier = OperationUtils.convertToDeviceIdentifier(sourceDocument.
                 getHeader().getSource().getLocURI());
@@ -103,6 +103,11 @@ public class OMADMOperationHandler {
         }
     }
 
+    /**
+     * The initial method which gets called from the outside.
+     * This method invokes the relevant methods for operation
+     * updating and compliance checking.
+     */
     public void updateOperations() {
         List<? extends Operation> pendingOperations;
         List<StatusTag> statuses = sourceDocument.getBody().getStatus();
@@ -111,7 +116,7 @@ public class OMADMOperationHandler {
 
         for (StatusTag status : statuses) {
             // Process 'Exec' tags
-            if (Constants.SyncMLTags.EXECUTE.equals(status.getCommand())) {
+            if (SyncMLConstants.SyncMLTags.EXECUTE.equals(status.getCommand())) {
                 // If the whole execution operation batch is successful
                 if (status.getTargetReference() == null) {
                     updateExecutionOperationBatch(status, pendingOperations);
@@ -128,14 +133,14 @@ public class OMADMOperationHandler {
                 }
             }
             // Process 'Sequence' tags
-            if (Constants.SEQUENCE.equals(status.getCommand())) {
-                if (Constants.SyncMLResponseCodes.ACCEPTED.equals(status.getData())) {
+            if (SyncMLConstants.SyncMLTags.SEQUENCE.equals(status.getCommand())) {
+                if (SyncMLConstants.SyncMLResponseCodes.ACCEPTED.equals(status.getData())) {
                     for (Operation operation : pendingOperations) {
-                        if (Constants.OperationCodes.POLICY_BUNDLE.equals(operation.getCode()) &&
+                        if (OperationCodes.POLICY_BUNDLE.equals(operation.getCode()) &&
                                 operation.getId() == status.getCommandReference()) {
                             operation.setStatus(Operation.Status.COMPLETED);
                         }
-                        if (Constants.OperationCodes.MONITOR.equals(operation.getCode()) &&
+                        if (OperationCodes.MONITOR.equals(operation.getCode()) &&
                                 operation.getId() == status.getCommandReference()) {
                             operation.setStatus(Operation.Status.COMPLETED);
                         }
@@ -143,11 +148,11 @@ public class OMADMOperationHandler {
                     }
                 } else {
                     for (Operation operation : pendingOperations) {
-                        if (Constants.OperationCodes.POLICY_BUNDLE.equals(operation.getCode()) &&
+                        if (OperationCodes.POLICY_BUNDLE.equals(operation.getCode()) &&
                                 operation.getId() == status.getCommandReference()) {
                             operation.setStatus(Operation.Status.ERROR);
                         }
-                        if (Constants.OperationCodes.MONITOR.equals(operation.getCode()) &&
+                        if (OperationCodes.MONITOR.equals(operation.getCode()) &&
                                 operation.getId() == status.getCommandReference()) {
                             operation.setStatus(Operation.Status.ERROR);
                         }
@@ -167,7 +172,7 @@ public class OMADMOperationHandler {
      * @param operations - A list of operations
      */
     private void updateWipeOperation(StatusTag status, List<? extends Operation> operations) {
-        if (Constants.SyncMLResponseCodes.ACCEPTED.equals(status.getData())) {
+        if (SyncMLConstants.SyncMLResponseCodes.ACCEPTED.equals(status.getData())) {
             for (Operation operation : operations) {
                 if ((OperationCodes.Command.DEVICE_WIPE.getCode().equals(operation.getCode()))
                         && operation.getId() == status.getCommandReference()) {
@@ -194,7 +199,7 @@ public class OMADMOperationHandler {
      * @param operations - A list of operations
      */
     private void updateRingOperationStatus(StatusTag status, List<? extends Operation> operations) {
-        if (Constants.SyncMLResponseCodes.ACCEPTED.equals(status.getData())) {
+        if (SyncMLConstants.SyncMLResponseCodes.ACCEPTED.equals(status.getData())) {
             for (Operation operation : operations) {
                 if ((OperationCodes.Command.DEVICE_RING.getCode().equals(operation.getCode()))
                         && operation.getId() == status.getCommandReference()) {
@@ -221,7 +226,7 @@ public class OMADMOperationHandler {
      * @param operations - A list of operations
      */
     private void updateLockOperationStatus(StatusTag status, List<? extends Operation> operations) {
-        if (Constants.SyncMLResponseCodes.ACCEPTED.equals(status.getData())) {
+        if (SyncMLConstants.SyncMLResponseCodes.ACCEPTED.equals(status.getData())) {
             for (Operation operation : operations) {
                 if ((OperationCodes.Command.DEVICE_LOCK.getCode().equals(operation.getCode()))
                         && operation.getId() == status.getCommandReference()) {
@@ -248,8 +253,8 @@ public class OMADMOperationHandler {
      * @param operations - A list of operations
      */
     private void updateExecutionOperationBatch(StatusTag status, List<? extends Operation> operations) {
-        if (Constants.SyncMLResponseCodes.ACCEPTED.equals(status.getData()) ||
-                (Constants.SyncMLResponseCodes.ACCEPTED_FOR_PROCESSING.equals(status.getData()))) {
+        if (SyncMLConstants.SyncMLResponseCodes.ACCEPTED.equals(status.getData()) ||
+                (SyncMLConstants.SyncMLResponseCodes.ACCEPTED_FOR_PROCESSING.equals(status.getData()))) {
             for (Operation operation : operations) {
                 if (operation.getId() == status.getCommandReference()) {
                     operation.setStatus(Operation.Status.COMPLETED);
@@ -283,7 +288,7 @@ public class OMADMOperationHandler {
                 // Camera status
                 if (item.getSource().getLocURI().equals(OperationCodes.Info.CAMERA_STATUS.getCode())) {
                     ProfileOperation cameraProfile = new ProfileOperation();
-                    cameraProfile.setFeatureCode(Constants.OperationCodes.CAMERA);
+                    cameraProfile.setFeatureCode(OperationCodes.CAMERA);
                     cameraProfile.setData(item.getData());
                     if (FEATURE_ENABLED.equals(item.getData())) {
                         cameraProfile.setIsEnabled(true);
@@ -295,7 +300,7 @@ public class OMADMOperationHandler {
                 // Storage encryption status
                 if (item.getSource().getLocURI().equals(OperationCodes.Info.ENCRYPT_STORAGE_STATUS.getCode())) {
                     ProfileOperation encryptProfile = new ProfileOperation();
-                    encryptProfile.setFeatureCode(Constants.OperationCodes.ENCRYPT_STORAGE);
+                    encryptProfile.setFeatureCode(OperationCodes.ENCRYPT_STORAGE);
                     encryptProfile.setData(item.getData());
                     if (FEATURE_ENABLED.equals(item.getData())) {
                         encryptProfile.setIsEnabled(true);
@@ -307,7 +312,7 @@ public class OMADMOperationHandler {
                 // Passcode status
                 if (item.getSource().getLocURI().equals(OperationCodes.Info.DEVICE_PASSCODE_STATUS.getCode())) {
                     ProfileOperation passcodeProfile = new ProfileOperation();
-                    passcodeProfile.setFeatureCode(Constants.OperationCodes.PASSCODE_POLICY);
+                    passcodeProfile.setFeatureCode(OperationCodes.PASSCODE_POLICY);
                     passcodeProfile.setData(item.getData());
                     if (FEATURE_ENABLED.equals(item.getData())) {
                         passcodeProfile.setIsEnabled(true);
@@ -328,7 +333,8 @@ public class OMADMOperationHandler {
         if (profileOperations != null && profileOperations.size() > 0) {
 
             try {
-                profileFeatures = AndroidAPIUtils.getPolicyManagerService().getAppliedPolicyToDevice(deviceIdentifier).getProfile().
+                profileFeatures = AndroidAPIUtils.getPolicyManagerService().
+                        getAppliedPolicyToDevice(deviceIdentifier).getProfile().
                         getProfileFeaturesList();
             } catch (PolicyManagementException e) {
                 log.error("Issue in retrieving profile features.", e);
@@ -339,50 +345,55 @@ public class OMADMOperationHandler {
                 for (ProfileFeature activeFeature : profileFeatures) {
                     try {
                         JSONObject policyContent = new JSONObject(activeFeature.getContent().toString());
+
+                        for (ProfileOperation profileOperation : profileOperations) {
+                            if (profileOperation.getFeatureCode().equals(activeFeature.getFeatureCode()) &&
+                                    profileOperation.getFeatureCode().equals(OperationCodes.CAMERA)) {
+                                if (policyContent.getBoolean(OperationCodes.PolicyConfigProperties.
+                                        POLICY_ENABLE) == (profileOperation.isEnabled())) {
+                                    profileOperation.setIsCompliant(true);
+                                } else {
+                                    profileOperation.setIsCompliant(false);
+                                }
+                                ComplianceFeature complianceFeature = generateComplianceFeature(activeFeature,
+                                        profileOperation);
+                                complianceFeatures.add(complianceFeature);
+                            }
+                            if (profileOperation.getFeatureCode().equals(activeFeature.getFeatureCode()) &&
+                                    profileOperation.getFeatureCode().equals(
+                                            OperationCodes.ENCRYPT_STORAGE)) {
+                                if (policyContent.getBoolean(OperationCodes.PolicyConfigProperties.
+                                        ENCRYPTED_ENABLE) == (profileOperation.isEnabled())) {
+                                    profileOperation.setIsCompliant(true);
+                                } else {
+                                    profileOperation.setIsCompliant(false);
+                                }
+                                ComplianceFeature complianceFeature = generateComplianceFeature(activeFeature,
+                                        profileOperation);
+                                complianceFeatures.add(complianceFeature);
+                            }
+                            if (profileOperation.getFeatureCode().equals(activeFeature.getFeatureCode()) &&
+                                    profileOperation.getFeatureCode().equals(OperationCodes.
+                                            PASSCODE_POLICY)) {
+                                if (policyContent.getBoolean(OperationCodes.PolicyConfigProperties.
+                                        ENABLE_PASSWORD) == (profileOperation.isEnabled())) {
+                                    profileOperation.setIsCompliant(true);
+                                } else {
+                                    profileOperation.setIsCompliant(false);
+                                }
+                                ComplianceFeature complianceFeature = generateComplianceFeature(activeFeature,
+                                        profileOperation);
+                                complianceFeatures.add(complianceFeature);
+                            }
+                                AndroidAPIUtils.getPolicyManagerService().checkPolicyCompliance(deviceIdentifier,
+                                        complianceFeatures);
+                        }
                     } catch (JSONException e) {
                         log.error("Issue in parsing JSON.", e);
+                    } catch (PolicyComplianceException e) {
+                        log.error("Issue in checking policy compliance.", e);
                     }
 
-                    for (ProfileOperation profileOperation : profileOperations) {
-                        if (profileOperation.getFeatureCode().equals(activeFeature.getFeatureCode()) &&
-                                profileOperation.getFeatureCode().equals(Constants.OperationCodes.CAMERA)) {
-                            if (profileOperation.isEnabled()) {
-                                profileOperation.setIsCompliant(true);
-                            } else {
-                                profileOperation.setIsCompliant(false);
-                            }
-                            ComplianceFeature complianceFeature = generateComplianceFeature(activeFeature,
-                                    profileOperation);
-                            complianceFeatures.add(complianceFeature);
-                        }
-                        if (profileOperation.getFeatureCode().equals(activeFeature.getFeatureCode()) &&
-                                profileOperation.getFeatureCode().equals(Constants.OperationCodes.ENCRYPT_STORAGE)) {
-                            if (profileOperation.isEnabled()) {
-                                profileOperation.setIsCompliant(true);
-                            } else {
-                                profileOperation.setIsCompliant(false);
-                            }
-                            ComplianceFeature complianceFeature = generateComplianceFeature(activeFeature,
-                                    profileOperation);
-                            complianceFeatures.add(complianceFeature);
-                        }
-                        if (profileOperation.getFeatureCode().equals(activeFeature.getFeatureCode()) &&
-                                profileOperation.getFeatureCode().equals(Constants.OperationCodes.PASSCODE_POLICY)) {
-                            if (profileOperation.isEnabled()) {
-                                profileOperation.setIsCompliant(true);
-                            } else {
-                                profileOperation.setIsCompliant(false);
-                            }
-                            ComplianceFeature complianceFeature = generateComplianceFeature(activeFeature,
-                                    profileOperation);
-                            complianceFeatures.add(complianceFeature);
-                        }
-                        try {
-                            AndroidAPIUtils.getPolicyManagerService().checkPolicyCompliance(deviceIdentifier, complianceFeatures);
-                        } catch (PolicyComplianceException e) {
-                            log.error("Issue in checking policy compliance.", e);
-                        }
-                    }
                 }
             }
         }
@@ -391,11 +402,12 @@ public class OMADMOperationHandler {
     /**
      * Generates a ComplianceFeature object from a Profile Feature and a Profile Operation
      *
-     * @param profileFeature - Profile Feature
+     * @param profileFeature   - Profile Feature
      * @param profileOperation - Profile Operation
      * @return - Generated Compliance Feature
      */
-    private ComplianceFeature generateComplianceFeature(ProfileFeature profileFeature, ProfileOperation profileOperation) {
+    private ComplianceFeature generateComplianceFeature(ProfileFeature profileFeature,
+                                                        ProfileOperation profileOperation) {
         ComplianceFeature complianceFeature = new ComplianceFeature();
         complianceFeature.setFeature(profileFeature);
         complianceFeature.setFeatureCode(profileFeature.getFeatureCode());

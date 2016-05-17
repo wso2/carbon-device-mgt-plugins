@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 /**
  * Inform an event occurred from device to server.
@@ -47,15 +47,15 @@ public class AlertTag {
     }
 
     public void buildAlertElement(Document doc, Element rootElement) {
-        Element alert = doc.createElement(Constants.ALERT);
+        Element alert = doc.createElement(SyncMLConstants.ALERT);
         rootElement.appendChild(alert);
         if (getCommandId() != -1) {
-            Element commandId = doc.createElement(Constants.COMMAND_ID);
+            Element commandId = doc.createElement(SyncMLConstants.COMMAND_ID);
             commandId.appendChild(doc.createTextNode(String.valueOf(getCommandId())));
             alert.appendChild(commandId);
         }
         if (getData() != null) {
-            Element data = doc.createElement(Constants.DATA);
+            Element data = doc.createElement(SyncMLConstants.DATA);
             data.appendChild(doc.createTextNode(getData()));
             alert.appendChild(data);
         }

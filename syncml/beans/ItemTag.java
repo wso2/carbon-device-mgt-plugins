@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 /**
  * Represents an items that should be retrieved from the device or a command.
@@ -65,7 +65,7 @@ public class ItemTag {
     }
 
     public void buildItemElement(Document doc, Element rootElement) {
-        Element item = doc.createElement(Constants.ITEM);
+        Element item = doc.createElement(SyncMLConstants.ITEM);
         rootElement.appendChild(item);
 
         if (getTarget() != null || getSource() != null) {
@@ -78,7 +78,7 @@ public class ItemTag {
             }
         }
         if (getData() != null) {
-            Element data = doc.createElement(Constants.DATA);
+            Element data = doc.createElement(SyncMLConstants.DATA);
             data.appendChild(doc.createTextNode(getData()));
             item.appendChild(data);
         }

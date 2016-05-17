@@ -21,7 +21,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.util;
 /**
  * Constant values used in syncml generator.
  */
-public class Constants {
+public class SyncMLConstants {
 
     public static final String APPLICATION_SYNCML = "application/vnd.syncml.dm+xml;charset=utf-8";
     public static final String EXECUTE = "Exec";
@@ -104,37 +104,6 @@ public class Constants {
     }
 
     /**
-     * Configuration Service Provider (CSP) URIs
-     */
-    public final class ConfigurationServiceProviders {
-        private ConfigurationServiceProviders() {
-            throw new AssertionError();
-        }
-
-        public static final String DEVICE_ID = "./DevInfo/DevId";
-        public static final String MANUFACTURER = "./DevInfo/Man";
-        public static final String DEVICE_MODEL = "./DevInfo/Mod";
-        public static final String DEVICE_MODEL_VERSION = "./DevInfo/DmV";
-        public static final String LANGUAGE = "./DevInfo/Lang";
-        public static final String IMSI = "./DevInfo/Ext/Android/IMSI";
-        public static final String IMEI = "./DevInfo/Ext/Android/IMEI";
-        public static final String SOFTWARE_VERSION = "./DevDetail/SwV";
-        public static final String VENDOR = "./DevDetail/OEM";
-        public static final String MAC_ADDRESS = "./DevDetail/Ext/WLANMACAddress";
-        public static final String DEVICE_NAME = "./DevDetail/Ext/Android/DeviceName";
-        public static final String CHANNEL_URI = "./Vendor/MSFT/DMClient/Provider/MobiCDMServer/Push/ChannelURI";
-        public static final String LOCK_PIN = "./Vendor/MSFT/RemoteLock/NewPINValue";
-        public static final String LOCK_RESET = "./Vendor/MSFT/RemoteLock/LockAndResetPIN";
-        public static final String CAMERA = "./Vendor/MSFT/PolicyManager/My/Camera/AllowCamera";
-        public static final String CAMERA_STATUS = "./Vendor/MSFT/PolicyManager/Device/Camera/AllowCamera";
-        public static final String ENCRYPT_STORAGE_STATUS = "./Vendor/MSFT/PolicyManager/Device/Security/RequireDeviceEncryption";
-        public static final String DEVICE_PASSWORD_STATUS = "./Vendor/MSFT/PolicyManager/Device/DeviceLock/DevicePasswordEnabled";
-        public static final String DEVICE_PASSCODE_DELETE = "./Vendor/MSFT/PolicyManager/My/DeviceLock";
-        public static final String LONGITUDE = "./Vendor/MSFT/RemoteFind/Location/Longitude";
-        public static final String LATITUDE = "./Vendor/MSFT/RemoteFind/Location/Latitude";
-    }
-
-    /**
      * SynclML Tag related constants.
      */
     public final class SyncMLTags {
@@ -208,16 +177,6 @@ public class Constants {
     }
 
     /**
-     * SyncmML message related constants.
-     */
-    public final class SyncmlMessageCodes {
-        public static final int replaceCommandId = 300;
-        public static final int elementCommandId = 75;
-        public static final int atomicCommandId = 400;
-        public static final int addCommandId = 90;
-    }
-
-    /**
      * Device Operation codes.
      */
     public final class OperationCodes {
@@ -231,6 +190,7 @@ public class Constants {
         public static final String WIPE_DATA = "WIPE_DATA";
         public static final String ENCRYPT_STORAGE = "ENCRYPT_STORAGE";
         public static final String LOCK_RESET = "LOCK_RESET";
+        public static final String DEVICE_MUTE = "DEVICE_MUTE";
         public static final String PIN_CODE = "LOCK_PIN";
         public static final String CAMERA = "CAMERA";
         public static final String PASSCODE_POLICY = "PASSCODE_POLICY";
@@ -250,4 +210,27 @@ public class Constants {
         public static final String DEVICE_PASSWORD_STATUS = "DEVICE_PASSWORD_STATUS";
         public static final String DEVICE_PASSCODE_DELETE = "DEVICE_PASSCODE_DELETE";
     }
+
+    /**
+     * SyncML Alert codes
+     */
+    public final class SyncMLAlertCodes {
+        private SyncMLAlertCodes() {
+            throw new AssertionError();
+        }
+
+        public static final String DISPLAY = "1100";
+        public static final String CONFIRM_OR_REJECT = "1101";
+        public static final String INPUT = "1102";
+        public static final String SINGLE_CHOICE = "1103";
+        public static final String MULTIPLE_CHOICE = "1104";
+        public static final String SERVER_INITIATED_MANAGEMENT = "1200";
+        public static final String CLIENT_INITIATED_MANAGEMENT = "1201";
+        public static final String MORE_DATA = "1222";
+        public static final String SESSION_ABORT = "1223";
+        public static final String CLIENT_EVENT = "1224";
+        public static final String NO_END_OF_DATA = "1225";
+        public static final String GENERIC_ALERT = "1226";
+    }
+
 }

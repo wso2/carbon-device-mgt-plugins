@@ -24,7 +24,7 @@ import org.wso2.carbon.mdm.services.android.omadm.dm.processors.SyncMLMessagePro
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLDocument;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.exceptions.SyncMLException;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.parsers.SyncMLGenerator;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -42,7 +42,7 @@ public class OMADMService {
     private static Log log = LogFactory.getLog(OMADMService.class);
 
     @POST
-    @Consumes({Constants.APPLICATION_SYNCML, MediaType.APPLICATION_XML})
+    @Consumes({SyncMLConstants.APPLICATION_SYNCML, MediaType.APPLICATION_XML})
     @Produces(MediaType.APPLICATION_XML)
     public Response processRequest(SyncMLDocument syncMLDoc) {
 

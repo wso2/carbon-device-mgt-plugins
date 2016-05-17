@@ -136,25 +136,62 @@ terms set forth above.
 					<DDFName></DDFName>
 				</DFType>
 			</DFProperties>
-			<Node>
-				<NodeName>Wipe</NodeName>
-				<DFProperties>
-					<AccessType>
-						<Exec/>
-					</AccessType>
-					<DFFormat>
-						<node/>
-					</DFFormat>
-					<Scope>
-						<Permanent/>
-					</Scope>
-					<DFTitle>Wipe operation</DFTitle>
-					<DFType>
-						<DDFName></DDFName>
-					</DFType>
-				</DFProperties>
-			</Node>
-	</Node>
+            <Node>
+                <NodeName>Reset</NodeName>
+                <DFProperties>
+                    <AccessType>
+                        <Exec/>
+                    </AccessType>
+                    <DFFormat>
+                        <node/>
+                    </DFFormat>
+                    <Scope>
+                        <Permanent/>
+                    </Scope>
+                    <DFTitle>Reset lock operation</DFTitle>
+                    <DFType>
+                        <DDFName></DDFName>
+                    </DFType>
+                </DFProperties>
+            </Node>
+        </Node>
+        <Node>
+            <NodeName>Wipe</NodeName>
+            <DFProperties>
+                <AccessType>
+                    <Exec/>
+                </AccessType>
+                <DFFormat>
+                    <node/>
+                </DFFormat>
+                <Scope>
+                    <Permanent/>
+                </Scope>
+                <DFTitle>Wipe operation</DFTitle>
+                <DFType>
+                    <DDFName></DDFName>
+                </DFType>
+            </DFProperties>
+        </Node>
+        <Node>
+            <NodeName>Mute</NodeName>
+            <DFProperties>
+                <AccessType>
+                    <Exec/>
+                </AccessType>
+                <DFFormat>
+                    <node/>
+                </DFFormat>
+                <Scope>
+                    <Permanent/>
+                </Scope>
+                <DFTitle>Mute operation</DFTitle>
+                <DFType>
+                    <DDFName></DDFName>
+                </DFType>
+            </DFProperties>
+        </Node>
+    </Node>
 </MgmtTree>
 
 

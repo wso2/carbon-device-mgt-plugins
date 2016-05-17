@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 import java.util.Iterator;
 import java.util.List;
@@ -67,20 +67,20 @@ public class ResultsTag {
     }
 
     public void buildResultElement(Document doc, Element rootElement) {
-        Element results = doc.createElement(Constants.RESULTS);
+        Element results = doc.createElement(SyncMLConstants.RESULTS);
         rootElement.appendChild(results);
         if (getCommandId() != -1) {
-            Element commandId = doc.createElement(Constants.COMMAND_ID);
+            Element commandId = doc.createElement(SyncMLConstants.COMMAND_ID);
             commandId.appendChild(doc.createTextNode(String.valueOf(getCommandId())));
             results.appendChild(commandId);
         }
         if (getMessageReference() != -1) {
-            Element messageReference = doc.createElement(Constants.MESSAGE_REFERENCE);
+            Element messageReference = doc.createElement(SyncMLConstants.MESSAGE_REFERENCE);
             messageReference.appendChild(doc.createTextNode(String.valueOf(getMessageReference())));
             results.appendChild(messageReference);
         }
         if (getCommandReference() != -1) {
-            Element messageReference = doc.createElement(Constants.COMMAND_REFERENCE);
+            Element messageReference = doc.createElement(SyncMLConstants.COMMAND_REFERENCE);
             messageReference.appendChild(doc.createTextNode(String.valueOf(getCommandReference())));
             results.appendChild(messageReference);
         }

@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 import java.util.Iterator;
 import java.util.List;
@@ -86,10 +86,10 @@ public class SequenceTag {
     }
 
     public void buildSequenceElement(Document doc, Element rootElement) {
-        Element sequence = doc.createElement(Constants.SEQUENCE);
+        Element sequence = doc.createElement(SyncMLConstants.SEQUENCE);
         rootElement.appendChild(sequence);
         if (getCommandId() != -1) {
-            Element commandId = doc.createElement(Constants.COMMAND_ID);
+            Element commandId = doc.createElement(SyncMLConstants.COMMAND_ID);
             commandId.appendChild(doc.createTextNode(String.valueOf(getCommandId())));
             sequence.appendChild(commandId);
         }

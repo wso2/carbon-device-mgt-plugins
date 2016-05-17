@@ -21,7 +21,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 /**
  * MetaTag data related to credentials.
@@ -66,37 +66,37 @@ public class MetaTag {
     }
 
     public void buildMetaElement(Document doc, Element rootElement) {
-        Element meta = doc.createElement(Constants.META);
+        Element meta = doc.createElement(SyncMLConstants.META);
         rootElement.appendChild(meta);
         if (getFormat() != null) {
-            Element format = doc.createElement(Constants.FORMAT);
+            Element format = doc.createElement(SyncMLConstants.FORMAT);
             format.appendChild(doc.createTextNode(getFormat()));
-            Attr attr = doc.createAttribute(Constants.XMLNS);
-            attr.setValue(Constants.META_NAMESPACE);
+            Attr attr = doc.createAttribute(SyncMLConstants.XMLNS);
+            attr.setValue(SyncMLConstants.META_NAMESPACE);
             format.setAttributeNode(attr);
             meta.appendChild(format);
         }
         if (getType() != null) {
-            Element type = doc.createElement(Constants.TYPE);
+            Element type = doc.createElement(SyncMLConstants.TYPE);
             type.appendChild(doc.createTextNode(getType()));
-            Attr attr = doc.createAttribute(Constants.XMLNS);
-            attr.setValue(Constants.META_NAMESPACE);
+            Attr attr = doc.createAttribute(SyncMLConstants.XMLNS);
+            attr.setValue(SyncMLConstants.META_NAMESPACE);
             type.setAttributeNode(attr);
             meta.appendChild(type);
         }
         if (getNextNonce() != null) {
-            Element nextNonce = doc.createElement(Constants.NEXTNONCE);
+            Element nextNonce = doc.createElement(SyncMLConstants.NEXTNONCE);
             nextNonce.appendChild(doc.createTextNode(getNextNonce()));
-            Attr attr = doc.createAttribute(Constants.XMLNS);
-            attr.setValue(Constants.META_NAMESPACE);
+            Attr attr = doc.createAttribute(SyncMLConstants.XMLNS);
+            attr.setValue(SyncMLConstants.META_NAMESPACE);
             nextNonce.setAttributeNode(attr);
             meta.appendChild(nextNonce);
         }
         if (getSize() != null) {
-            Element size = doc.createElement(Constants.SIZE);
+            Element size = doc.createElement(SyncMLConstants.SIZE);
             size.appendChild(doc.createTextNode(getSize()));
-            Attr attr = doc.createAttribute(Constants.XMLNS);
-            attr.setValue(Constants.META_NAMESPACE);
+            Attr attr = doc.createAttribute(SyncMLConstants.XMLNS);
+            attr.setValue(SyncMLConstants.META_NAMESPACE);
             size.setAttributeNode(attr);
             meta.appendChild(size);
         }

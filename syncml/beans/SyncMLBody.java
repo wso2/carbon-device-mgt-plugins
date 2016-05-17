@@ -20,8 +20,9 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -56,6 +57,9 @@ public class SyncMLBody {
     }
 
     public List<ExecuteTag> getExec() {
+        if (exec == null) {
+            exec = new ArrayList<>();
+        }
         return exec;
     }
 
@@ -113,7 +117,7 @@ public class SyncMLBody {
 
     public void buildBodyElement(Document doc, Element rootElement) {
 
-        Element syncBody = doc.createElement(Constants.SYNC_BODY);
+        Element syncBody = doc.createElement(SyncMLConstants.SYNC_BODY);
         rootElement.appendChild(syncBody);
         if (getStatus() != null) {
             for (int x = 0; x < getStatus().size(); x++) {
@@ -151,6 +155,6 @@ public class SyncMLBody {
         if (getAtomicTag() != null) {
             getAtomicTag().buildAtomicElement(doc, syncBody);
         }
-        syncBody.appendChild(doc.createElement(Constants.FINAL));
+        syncBody.appendChild(doc.createElement(SyncMLConstants.FINAL));
     }
 }

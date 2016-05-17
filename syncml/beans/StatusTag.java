@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -120,30 +120,30 @@ public class StatusTag {
     }
 
     public void buildStatusElement(Document doc, Element rootElement) {
-        Element status = doc.createElement(Constants.STATUS);
+        Element status = doc.createElement(SyncMLConstants.STATUS);
         rootElement.appendChild(status);
         if (getCommandId() != -1) {
-            Element commandId = doc.createElement(Constants.COMMAND_ID);
+            Element commandId = doc.createElement(SyncMLConstants.COMMAND_ID);
             commandId.appendChild(doc.createTextNode(String.valueOf(getCommandId())));
             status.appendChild(commandId);
         }
         if (getMessageReference() != -1) {
-            Element msgReference = doc.createElement(Constants.MESSAGE_REFERENCE);
+            Element msgReference = doc.createElement(SyncMLConstants.MESSAGE_REFERENCE);
             msgReference.appendChild(doc.createTextNode(String.valueOf(getMessageReference())));
             status.appendChild(msgReference);
         }
         if (getCommandReference() != -1) {
-            Element commandReference = doc.createElement(Constants.COMMAND_REFERENCE);
+            Element commandReference = doc.createElement(SyncMLConstants.COMMAND_REFERENCE);
             commandReference.appendChild(doc.createTextNode(String.valueOf(getCommandReference())));
             status.appendChild(commandReference);
         }
         if (getCommand() != null) {
-            Element command = doc.createElement(Constants.COMMAND);
+            Element command = doc.createElement(SyncMLConstants.COMMAND);
             command.appendChild(doc.createTextNode(getCommand()));
             status.appendChild(command);
         }
         if (getTargetReference() != null) {
-            Element targetReference = doc.createElement(Constants.TARGET_REFERENCE);
+            Element targetReference = doc.createElement(SyncMLConstants.TARGET_REFERENCE);
             targetReference.appendChild(doc.createTextNode(getTargetReference()));
             status.appendChild(targetReference);
         }
@@ -151,7 +151,7 @@ public class StatusTag {
             getChallenge().buildChallengeElement(doc, status);
         }
         if (getData() != null) {
-            Element data = doc.createElement(Constants.DATA);
+            Element data = doc.createElement(SyncMLConstants.DATA);
             data.appendChild(doc.createTextNode(getData()));
             status.appendChild(data);
         }

@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 /**
  * Target details of syncml header's.
@@ -47,15 +47,15 @@ public class TargetTag {
     }
 
     public void buildTargetElement(Document doc, Element rootElement) {
-        Element target = doc.createElement(Constants.TARGET);
+        Element target = doc.createElement(SyncMLConstants.TARGET);
         rootElement.appendChild(target);
         if (getLocURI() != null) {
-            Element locURI = doc.createElement(Constants.LOC_URI);
+            Element locURI = doc.createElement(SyncMLConstants.LOC_URI);
             locURI.appendChild(doc.createTextNode(getLocURI()));
             target.appendChild(locURI);
         }
         if (getLocName() != null) {
-            Element locName = doc.createElement(Constants.LOC_NAME);
+            Element locName = doc.createElement(SyncMLConstants.LOC_NAME);
             locName.appendChild(doc.createTextNode(getLocName()));
             target.appendChild(locName);
         }

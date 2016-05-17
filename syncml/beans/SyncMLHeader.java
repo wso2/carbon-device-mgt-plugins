@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 /**
  * Represents the header details of a syncml.
@@ -82,22 +82,22 @@ public class SyncMLHeader {
     }
 
     public void buildSyncmlHeaderElement(Document doc, Element rootElement) {
-        Element syncHdr = doc.createElement(Constants.SYNC_HDR);
+        Element syncHdr = doc.createElement(SyncMLConstants.SYNC_HDR);
         rootElement.appendChild(syncHdr);
-        Element verDTD = doc.createElement(Constants.VER_DTD);
-        verDTD.appendChild(doc.createTextNode(Constants.VER_DTD_VALUE));
+        Element verDTD = doc.createElement(SyncMLConstants.VER_DTD);
+        verDTD.appendChild(doc.createTextNode(SyncMLConstants.VER_DTD_VALUE));
         syncHdr.appendChild(verDTD);
 
-        Element verProtocol = doc.createElement(Constants.VER_PROTOCOL);
-        verProtocol.appendChild(doc.createTextNode(Constants.VER_PROTOCOL_VALUE));
+        Element verProtocol = doc.createElement(SyncMLConstants.VER_PROTOCOL);
+        verProtocol.appendChild(doc.createTextNode(SyncMLConstants.VER_PROTOCOL_VALUE));
         syncHdr.appendChild(verProtocol);
         if (getHexadecimalSessionId() != null) {
-            Element sessionId = doc.createElement(Constants.SESSION_ID);
+            Element sessionId = doc.createElement(SyncMLConstants.SESSION_ID);
             sessionId.appendChild(doc.createTextNode(getHexadecimalSessionId()));
             syncHdr.appendChild(sessionId);
         }
         if (getMsgID() != -1) {
-            Element msgId = doc.createElement(Constants.MESSAGE_ID);
+            Element msgId = doc.createElement(SyncMLConstants.MESSAGE_ID);
             msgId.appendChild(doc.createTextNode(String.valueOf(getMsgID())));
             syncHdr.appendChild(msgId);
         }

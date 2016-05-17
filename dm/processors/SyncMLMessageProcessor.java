@@ -26,9 +26,10 @@ import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.Node;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.parsers.URIParser;
 import org.wso2.carbon.mdm.services.android.omadm.dm.dao.DeviceMODao;
-import org.wso2.carbon.mdm.services.android.omadm.operations.OMADMOperationHandler;
+import org.wso2.carbon.mdm.services.android.omadm.operations.OperationHandler;
+import org.wso2.carbon.mdm.services.android.omadm.operations.OperationAppender;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLStatusCodes;
 
 import java.util.ArrayList;
@@ -114,7 +115,7 @@ public class SyncMLMessageProcessor {
     private void processStatuses() {
         // Generate header status
         StatusTag headerStatus = new StatusTag(HEADER_STATUS_COMMAND_ID, sourceDocument.getHeader().getMsgID(),
-                HEADER_COMMAND_REF_ID, Constants.SyncMLTags.SYNC_HDR,
+                HEADER_COMMAND_REF_ID, SyncMLConstants.SyncMLTags.SYNC_HDR,
                 sourceDocument.getHeader().getSource().getLocURI(),
                 SyncMLStatusCodes.AUTHENTICATION_ACCEPTED.getCode());
 
@@ -126,8 +127,12 @@ public class SyncMLMessageProcessor {
         }
 
         // Update operations
-        OMADMOperationHandler OMADMOperationHandler = new OMADMOperationHandler(sourceDocument, headerCommandId);
+        OperationHandler OMADMOperationHandler = new OperationHandler(sourceDocument, headerCommandId);
         OMADMOperationHandler.updateOperations();
+
+        // Append operations
+        OperationAppender operationAppender = new OperationAppender(sourceDocument, headerCommandId);
+        operationAppender.appendOperations();
 
     }
 
@@ -150,7 +155,7 @@ public class SyncMLMessageProcessor {
                 status.setMessageReference(sourceDocument.getHeader().getMsgID());
                 status.setCommandReference(replaceCmdId);
                 status.setCommandId(++headerCommandId);
-                status.setCommand(Constants.REPLACE);
+                status.setCommand(SyncMLConstants.REPLACE);
                 responseDocument.getBody().getStatus().add(status);
                 wholeBlockFlag = true;
                 break;
@@ -170,7 +175,7 @@ public class SyncMLMessageProcessor {
             status.setMessageReference(sourceDocument.getHeader().getMsgID());
             status.setCommandReference(replaceCmdId);
             status.setCommandId(++headerCommandId);
-            status.setCommand(Constants.REPLACE);
+            status.setCommand(SyncMLConstants.REPLACE);
             responseDocument.getBody().getStatus().add(status);
         } else {
             StatusTag status = new StatusTag();
@@ -178,7 +183,7 @@ public class SyncMLMessageProcessor {
             status.setMessageReference(sourceDocument.getHeader().getMsgID());
             status.setCommandReference(replaceCmdId);
             status.setCommandId(++headerCommandId);
-            status.setCommand(Constants.REPLACE);
+            status.setCommand(SyncMLConstants.REPLACE);
             responseDocument.getBody().getStatus().add(status);
         }
     }
@@ -186,7 +191,7 @@ public class SyncMLMessageProcessor {
     private void processAlert() {
         StatusTag status = new StatusTag();
         AlertTag alert = sourceDocument.getBody().getAlert();
-        status.setCommand(Constants.ALERT);
+        status.setCommand(SyncMLConstants.ALERT);
         status.setCommandId(++headerCommandId);
         status.setCommandReference(alert.getCommandId());
         status.setMessageReference(sourceDocument.getHeader().getMsgID());
@@ -239,7 +244,7 @@ public class SyncMLMessageProcessor {
         AddTag addCommand = sourceDocument.getBody().getAdd();
         List<ItemTag> items = addCommand.getItems();
         StatusTag status = new StatusTag();
-        status.setCommand(Constants.ADD);
+        status.setCommand(SyncMLConstants.ADD);
         status.setCommandReference(addCommand.getCommandId());
         boolean wholeBlock = true;
         MetaTag commonMeta = null;

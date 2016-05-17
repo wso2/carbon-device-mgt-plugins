@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 /**
  * Credentials passed between the device and the server for security purposes.
@@ -46,13 +46,13 @@ public class CredentialTag {
     }
 
     public void buildCredentialElement(Document doc, Element rootElement) {
-        Element credentials = doc.createElement(Constants.CREDENTIAL);
+        Element credentials = doc.createElement(SyncMLConstants.CREDENTIAL);
         rootElement.appendChild(credentials);
         if (getMeta() != null) {
             getMeta().buildMetaElement(doc, credentials);
         }
         if (getData() != null) {
-            Element data = doc.createElement(Constants.DATA);
+            Element data = doc.createElement(SyncMLConstants.DATA);
             data.appendChild(doc.createTextNode(getData()));
             credentials.appendChild(data);
         }

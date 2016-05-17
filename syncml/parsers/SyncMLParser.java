@@ -22,7 +22,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -217,16 +217,16 @@ public class SyncMLParser {
             for (int i = 0; i < nodes.getLength(); i++) {
                 String nodeName = nodes.item(i).getNodeName();
                 switch(nodeName) {
-                    case Constants.COMMAND_ID: {
+                    case SyncMLConstants.COMMAND_ID: {
                         commandId = Integer.parseInt(nodes.item(i).getTextContent().trim());
                         break;
                     }
-                    case Constants.META: {
+                    case SyncMLConstants.META: {
                         MetaTag meta = generateMeta(nodes.item(i));
                         add.setMeta(meta);
                         break;
                     }
-                    case Constants.ITEM: {
+                    case SyncMLConstants.ITEM: {
                         ItemTag item = generateItem(nodes.item(i));
                         add.getItems().add(item);
                         break;
@@ -307,16 +307,16 @@ public class SyncMLParser {
                 String nodeName = nodelist.item(i).getNodeName();
 
                 switch (nodeName) {
-                    case Constants.COMMAND_ID:
+                    case SyncMLConstants.COMMAND_ID:
                         commandId = node.getChildNodes().item(i).getTextContent().trim();
                         break;
-                    case Constants.MESSAGE_REFERENCE:
+                    case SyncMLConstants.MESSAGE_REFERENCE:
                         messageReference = node.getChildNodes().item(i).getTextContent().trim();
                         break;
-                    case Constants.COMMAND_REFERENCE:
+                    case SyncMLConstants.COMMAND_REFERENCE:
                         commandReference = node.getChildNodes().item(i).getTextContent().trim();
                         break;
-                    case Constants.ITEM:
+                    case SyncMLConstants.ITEM:
                         item.add(generateItem(node.getChildNodes().item(i)));
                         break;
                 }
@@ -341,23 +341,23 @@ public class SyncMLParser {
         for (int x = 0; x < node.getChildNodes().getLength(); x++) {
             String nodeName = node.getChildNodes().item(x).getNodeName();
             switch (nodeName) {
-                case Constants.SyncML.SYNCML_CMD_ID:
+                case SyncMLConstants.SyncML.SYNCML_CMD_ID:
                     String commandId = node.getChildNodes().item(x).getTextContent().trim();
                     status.setCommandId(Integer.valueOf(commandId));
                     break;
-                case Constants.SyncML.SYNCML_MESSAGE_REF:
+                case SyncMLConstants.SyncML.SYNCML_MESSAGE_REF:
                     String messageReference = node.getChildNodes().item(x).getTextContent().trim();
                     status.setMessageReference(Integer.valueOf(messageReference));
                     break;
-                case Constants.SyncML.SYNCML_CMD_REF:
+                case SyncMLConstants.SyncML.SYNCML_CMD_REF:
                     String commandReference = node.getChildNodes().item(x).getTextContent().trim();
                     status.setCommandReference(Integer.valueOf(commandReference));
                     break;
-                case Constants.SyncML.SYNCML_CMD:
+                case SyncMLConstants.SyncML.SYNCML_CMD:
                     String command = node.getChildNodes().item(x).getTextContent().trim();
                     status.setCommand(command);
                     break;
-                case Constants.SyncML.SYNCML_CHAL:
+                case SyncMLConstants.SyncML.SYNCML_CHAL:
                     NodeList childNodes = node.getChildNodes().item(x).getChildNodes();
                     MetaTag meta = new MetaTag();
                     ChallengeTag challengeTag = new ChallengeTag();
@@ -370,11 +370,11 @@ public class SyncMLParser {
                     challengeTag.setMeta(meta);
                     status.setChallenge(challengeTag);
                     break;
-                case Constants.SyncML.SYNCML_DATA:
+                case SyncMLConstants.SyncML.SYNCML_DATA:
                     String data = node.getChildNodes().item(x).getTextContent().trim();
                     status.setData(data);
                     break;
-                case Constants.SyncML.SYNCML_TARGET_REF:
+                case SyncMLConstants.SyncML.SYNCML_TARGET_REF:
                     String targetReference = node.getChildNodes().item(x).getTextContent().trim();
                     status.setTargetReference(targetReference);
                     break;
@@ -439,13 +439,13 @@ public class SyncMLParser {
             } else {
                 throw new IllegalStateException();
             }
-            if (Constants.SyncML.SYNCML_SOURCE.equals(nodeName)) {
+            if (SyncMLConstants.SyncML.SYNCML_SOURCE.equals(nodeName)) {
                 if (itemNode.getChildNodes().item(x).getNodeName() != null) {
                     childNodeName = itemNode.getChildNodes().item(x).getNodeName();
                 } else {
                     throw new IllegalStateException();
                 }
-                if ((Constants.SyncML.SYNCML_LOCATION_URI.equals(childNodeName))) {
+                if ((SyncMLConstants.SyncML.SYNCML_LOCATION_URI.equals(childNodeName))) {
                     if (itemNode.getChildNodes().item(x).getTextContent().trim() != null) {
                         locUri = itemNode.getChildNodes().item(x).getTextContent().trim();
                     } else {
@@ -455,13 +455,13 @@ public class SyncMLParser {
                     item.setSource(source);
                 }
             }
-            if (Constants.SyncML.SYNCML_TARGET.equals(nodeName)) {
+            if (SyncMLConstants.SyncML.SYNCML_TARGET.equals(nodeName)) {
                 if (itemNode.getChildNodes().item(0).getNodeName() != null) {
                     childNodeName = itemNode.getChildNodes().item(0).getNodeName();
                 } else {
                     throw new IllegalStateException();
                 }
-                if ((Constants.SyncML.SYNCML_LOCATION_URI.equals(childNodeName))) {
+                if ((SyncMLConstants.SyncML.SYNCML_LOCATION_URI.equals(childNodeName))) {
                     if (itemNode.getChildNodes().item(0).getTextContent().trim() != null) {
                         locUri = itemNode.getChildNodes().item(0).getTextContent().trim();
                     } else {
@@ -471,11 +471,11 @@ public class SyncMLParser {
                     item.setTarget(target);
                 }
             }
-            if (Constants.SyncML.SYNCML_META.equals(nodeName)) {
+            if (SyncMLConstants.SyncML.SYNCML_META.equals(nodeName)) {
                 MetaTag meta = generateMeta(itemNode);
                 item.setMeta(meta);
             }
-            if (Constants.SyncML.SYNCML_DATA.equals(nodeName)) {
+            if (SyncMLConstants.SyncML.SYNCML_DATA.equals(nodeName)) {
                 if (itemNode.getTextContent().trim() != null) {
                     data = itemNode.getTextContent().trim();
                 } else {
@@ -515,11 +515,11 @@ public class SyncMLParser {
         for (int i = 0; i < metaChildren.getLength(); i++) {
             String childName = metaChildren.item(i).getNodeName();
             switch (childName) {
-                case Constants.FORMAT: meta.setFormat(metaChildren.item(i).getTextContent().trim());
+                case SyncMLConstants.FORMAT: meta.setFormat(metaChildren.item(i).getTextContent().trim());
                     break;
-                case Constants.TYPE: meta.setType(metaChildren.item(i).getTextContent().trim());
+                case SyncMLConstants.TYPE: meta.setType(metaChildren.item(i).getTextContent().trim());
                     break;
-                case Constants.SIZE: meta.setSize(metaChildren.item(i).getTextContent().trim());
+                case SyncMLConstants.SIZE: meta.setSize(metaChildren.item(i).getTextContent().trim());
                     break;
             }
         }

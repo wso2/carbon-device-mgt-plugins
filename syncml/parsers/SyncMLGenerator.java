@@ -24,7 +24,7 @@ import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLDocument;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLBody;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLHeader;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.exceptions.SyncMLSyntaxException;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -61,8 +61,8 @@ public class SyncMLGenerator {
     }
 
     private static Element createRootElement(Document document) {
-        Element rootElement = document.createElementNS(Constants.SyncMLGeneralInfo.XMLNS_SYNCML,
-                Constants.SyncMLGeneralInfo.SYNCML_ROOT_ELEMENT_NAME);
+        Element rootElement = document.createElementNS(SyncMLConstants.SyncMLGeneralInfo.XMLNS_SYNCML,
+                SyncMLConstants.SyncMLGeneralInfo.SYNCML_ROOT_ELEMENT_NAME);
         document.appendChild(rootElement);
         return rootElement;
     }
@@ -76,8 +76,8 @@ public class SyncMLGenerator {
         } catch (TransformerConfigurationException e) {
             throw new SyncMLSyntaxException("Error occurred while retrieving a new transformer", e);
         }
-        transformer.setOutputProperty(OutputKeys.ENCODING, Constants.SyncMLGeneralInfo.UTF_8);
-        transformer.setOutputProperty(OutputKeys.INDENT, Constants.SyncMLGeneralInfo.YES);
+        transformer.setOutputProperty(OutputKeys.ENCODING, SyncMLConstants.SyncMLGeneralInfo.UTF_8);
+        transformer.setOutputProperty(OutputKeys.INDENT, SyncMLConstants.SyncMLGeneralInfo.YES);
 
         StringWriter stringWriter = new StringWriter();
         StreamResult streamResult = new StreamResult(stringWriter);

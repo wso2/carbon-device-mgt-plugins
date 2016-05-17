@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 /**
  * Challenge data pass through the device and Device Management server for the security purpose.
@@ -37,7 +37,7 @@ public class ChallengeTag {
     }
 
     public void buildChallengeElement(Document doc, Element rootElement) {
-        Element challenge = doc.createElement(Constants.CHALLENGE);
+        Element challenge = doc.createElement(SyncMLConstants.CHALLENGE);
         rootElement.appendChild(challenge);
         if (getMeta() != null) {
             getMeta().buildMetaElement(doc, challenge);

@@ -21,7 +21,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.parsers;
 import com.google.gson.Gson;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,7 @@ public class ResponseGenerator {
             headerStatus =
                     new StatusTag(headerCommandId, sourceHeader.getMsgID(), HEADER_STATUS_ID,
                             HEADER_COMMAND_TEXT, sourceHeader.getSource().getLocURI(),
-                            String.valueOf(Constants.SyncMLResponseCodes.AUTHENTICATION_ACCEPTED));
+                            String.valueOf(SyncMLConstants.SyncMLResponseCodes.AUTHENTICATION_ACCEPTED));
             statuses.add(headerStatus);
         } else {
             for (StatusTag sourceStatus : sourceStatuses) {
@@ -69,7 +69,7 @@ public class ResponseGenerator {
                     headerStatus =
                             new StatusTag(headerCommandId, sourceHeader.getMsgID(), HEADER_STATUS_ID,
                                     HEADER_COMMAND_TEXT, sourceHeader.getSource().getLocURI(),
-                                    String.valueOf(Constants.SyncMLResponseCodes.AUTHENTICATION_ACCEPTED));
+                                    String.valueOf(SyncMLConstants.SyncMLResponseCodes.AUTHENTICATION_ACCEPTED));
                     statuses.add(headerStatus);
                 }
             }
@@ -78,7 +78,7 @@ public class ResponseGenerator {
             int ResultCommandId = ++headerCommandId;
             StatusTag resultStatus = new StatusTag(ResultCommandId, sourceHeader.getMsgID(),
                     sourceSyncMLBody.getResults().getCommandId(), RESULTS_COMMAND_TEXT, null,
-                    String.valueOf(Constants.SyncMLResponseCodes.ACCEPTED));
+                    String.valueOf(SyncMLConstants.SyncMLResponseCodes.ACCEPTED));
             statuses.add(resultStatus);
         }
         if (sourceSyncMLBody.getAlert() != null) {
@@ -87,14 +87,14 @@ public class ResponseGenerator {
                     sourceHeader.getMsgID(),
                     sourceSyncMLBody.getAlert().getCommandId(),
                     ALERT_COMMAND_TEXT, null,
-                    String.valueOf(Constants.SyncMLResponseCodes.ACCEPTED));
+                    String.valueOf(SyncMLConstants.SyncMLResponseCodes.ACCEPTED));
             statuses.add(alertStatus);
         }
         if (sourceSyncMLBody.getReplace() != null) {
             int replaceCommandId = ++headerCommandId;
             StatusTag replaceStatus = new StatusTag(replaceCommandId, sourceHeader.getMsgID(),
                     sourceSyncMLBody.getReplace().getCommandId(), REPLACE_COMMAND_TEXT, null,
-                    String.valueOf(Constants.SyncMLResponseCodes.ACCEPTED)
+                    String.valueOf(SyncMLConstants.SyncMLResponseCodes.ACCEPTED)
             );
             statuses.add(replaceStatus);
         }
@@ -104,7 +104,7 @@ public class ResponseGenerator {
                 int execCommandId = ++headerCommandId;
                 StatusTag execStatus = new StatusTag(execCommandId, sourceHeader.getMsgID(),
                         exec.getCommandId(), EXEC_COMMAND_TEXT, null, String.valueOf(
-                        Constants.SyncMLResponseCodes.ACCEPTED));
+                        SyncMLConstants.SyncMLResponseCodes.ACCEPTED));
                 statuses.add(execStatus);
             }
         }
@@ -112,7 +112,7 @@ public class ResponseGenerator {
             int getCommandId = ++headerCommandId;
             StatusTag execStatus = new StatusTag(getCommandId, sourceHeader.getMsgID(), sourceSyncMLBody
                     .getGet().getCommandId(), GET_COMMAND_TEXT, null, String.valueOf(
-                    Constants.SyncMLResponseCodes.ACCEPTED));
+                    SyncMLConstants.SyncMLResponseCodes.ACCEPTED));
             statuses.add(execStatus);
         }
         syncMLBodyReply.setStatus(statuses);

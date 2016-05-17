@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -62,11 +62,11 @@ public class AddTag {
     }
 
     public void buildAddElement(Document doc, Element rootElement) {
-        Element add = doc.createElement(Constants.ADD);
+        Element add = doc.createElement(SyncMLConstants.ADD);
         if (getItems() != null) {
             rootElement.appendChild(add);
             if (getCommandId() != -1) {
-                Element commandId = doc.createElement(Constants.COMMAND_ID);
+                Element commandId = doc.createElement(SyncMLConstants.COMMAND_ID);
                 commandId.appendChild(doc.createTextNode(String.valueOf(getCommandId())));
                 add.appendChild(commandId);
             }

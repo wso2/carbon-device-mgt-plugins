@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.omadm.syncml.beans;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.Constants;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 
 import java.util.Iterator;
 import java.util.List;
@@ -50,10 +50,10 @@ public class GetTag {
 
     public void buildGetElement(Document doc, Element rootElement) {
         if (getItems() != null) {
-            Element get = doc.createElement(Constants.GET);
+            Element get = doc.createElement(SyncMLConstants.GET);
             rootElement.appendChild(get);
             if (getCommandId() != -1) {
-                Element commandId = doc.createElement(Constants.COMMAND_ID);
+                Element commandId = doc.createElement(SyncMLConstants.COMMAND_ID);
                 commandId.appendChild(doc.createTextNode(String.valueOf(getCommandId())));
                 get.appendChild(commandId);
             }
