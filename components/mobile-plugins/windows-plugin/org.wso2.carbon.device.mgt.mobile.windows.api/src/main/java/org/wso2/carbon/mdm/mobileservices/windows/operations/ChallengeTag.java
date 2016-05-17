@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -25,7 +27,10 @@ import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
 /**
  * Challenge data pass through the device and Device Management server for the security purpose.
  */
+@ApiModel(value = "ChallengeTag",
+        description = "This class carries all information related to install application")
 public class ChallengeTag {
+    @ApiModelProperty(name = "meta", value = "Syncml MetaTag", required = true)
     MetaTag meta;
 
     public MetaTag getMeta() {

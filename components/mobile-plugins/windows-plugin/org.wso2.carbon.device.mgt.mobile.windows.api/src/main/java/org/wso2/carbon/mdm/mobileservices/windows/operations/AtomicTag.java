@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -28,9 +30,13 @@ import java.util.List;
 /**
  * Wrapper for other SyncML elements.
  */
+@ApiModel(value = "AtomicTag", description = "This class carries all information related to syncml Engine Atomic tag")
 public class AtomicTag {
+    @ApiModelProperty(name = "commandId", value = "Syncml Atomic tag CommandId", required = true)
     int commandId = -1;
+    @ApiModelProperty(name = "adds", value = "List of addtags", required = true)
     List<AddTag> adds;
+    @ApiModelProperty(name = "replaces", value = "List of replace tags", required = true)
     List<Replace> replaces;
 
     public List<Replace> getReplaces() {

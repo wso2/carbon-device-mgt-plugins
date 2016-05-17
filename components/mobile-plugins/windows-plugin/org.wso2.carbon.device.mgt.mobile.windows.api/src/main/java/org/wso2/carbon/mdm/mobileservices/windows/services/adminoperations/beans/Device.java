@@ -18,11 +18,15 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.adminoperations.beans;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Class for get device IDS.
  */
+@ApiModel(value = "Device", description = "This class carries all information related to Device.")
 public class Device {
-
+    @ApiModelProperty(name = "id", value = "DeviceIDs.", required = true)
     private String id;
 
     public String getID() {

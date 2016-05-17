@@ -18,10 +18,17 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.common.beans;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Class for challenge token
  */
+@ApiModel(value = "Token", description = "Details related device encryption.")
 public class Token {
+
+    @ApiModelProperty(name = "challengeToken",
+            value = "Enrollment Binary security token", required = true)
     private String challengeToken;
 
     public String getChallengeToken() {

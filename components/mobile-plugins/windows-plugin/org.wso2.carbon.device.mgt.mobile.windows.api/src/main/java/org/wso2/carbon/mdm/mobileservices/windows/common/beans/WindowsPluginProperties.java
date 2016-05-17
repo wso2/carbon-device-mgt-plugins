@@ -18,17 +18,28 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.common.beans;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * Bean class for storing Windows plugin properties after reading the property file.
  */
+@ApiModel(value = "WindowsPluginProperties", description = "Windows plugin related properties.")
 public class WindowsPluginProperties {
 
+    @ApiModelProperty(name = "keyStorePassword", value = "Password of the keyStore.", required = true)
     private String keyStorePassword;
+    @ApiModelProperty(name = "privateKeyPassword", value = "password of the privateKey.", required = true)
     private String privateKeyPassword;
+    @ApiModelProperty(name = "commonName", value = "Common Name of the certificate.", required = true)
     private String commonName;
+    @ApiModelProperty(name = "authPolicy", value = "Windows enrollment authentication policy(Federated/on-premise).", required = true)
     private String authPolicy;
+    @ApiModelProperty(name = "domain", value = "Domain of the given Email.", required = true)
     private String domain;
+    @ApiModelProperty(name = "notBeforeDays", value = "Number of days to before the certificate expire.", required = true)
     private int notBeforeDays;
+    @ApiModelProperty(name = "notAfterDays", value = "Number of days to after the certificate has been expired.", required = true)
     private int notAfterDays;
 
     public String getKeyStorePassword() {

@@ -18,24 +18,40 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.discovery.beans;
 
-import javax.xml.bind.annotation.*;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DiscoveryResponse")
 @SuppressWarnings("unused")
+@ApiModel(value = "DiscoveryResponse",
+        description = "This class carries all information related to DiscoverResponse.")
 public class DiscoveryResponse implements Serializable {
 
     @XmlElement(name = "AuthPolicy")
+    @ApiModelProperty(name = "authPolicy",
+            value = "Authentication policy(On-premise/Federated)", required = true)
     private String authPolicy;
 
     @XmlElement(name = "EnrollmentPolicyServiceUrl")
+    @ApiModelProperty(name = "enrollmentPolicyServiceUrl",
+            value = "Enrollment policy(XCEP) endpoint URL.", required = true)
     private String enrollmentPolicyServiceUrl;
 
     @XmlElement(name = "EnrollmentServiceUrl")
+    @ApiModelProperty(name = "enrollmentServiceUrl",
+            value = "Enrollment Service(WSTEP) endpoint URL.", required = true)
     private String enrollmentServiceUrl;
 
     @XmlElement(name = "AuthenticationServiceUrl")
+    @ApiModelProperty(name = "authenticationServiceUrl",
+            value = "SOAP request authentication service URL", required = true)
     private String authenticationServiceUrl;
 
     public void setAuthenticationServiceUrl(String authenticationServiceUrl) {

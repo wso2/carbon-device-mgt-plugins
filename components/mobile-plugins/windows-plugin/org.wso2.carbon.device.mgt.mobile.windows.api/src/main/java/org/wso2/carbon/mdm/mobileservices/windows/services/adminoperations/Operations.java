@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.adminoperations;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.WindowsDeviceEnrolmentException;
 
 import javax.ws.rs.*;
@@ -28,6 +32,8 @@ import java.util.List;
 /**
  * Interface for Admin operations persisting. This interface accepts operations added via UI.
  */
+
+@Api(value = "Operations", description = "Windows Device Management REST-API implementation.")
 @Path("/operation")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -36,22 +42,72 @@ public interface Operations {
 
     @POST
     @Path("/devicelock")
+    @ApiOperation(
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Adding a Device Lock on Windows Devices via the REST API",
+            notes = "Adding a Device lock operation to the windows device"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 500, message = "Internal Server error")
+    })
     Response lock(@HeaderParam("Accept") String headerParam, List<String> deviceids) throws WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/devicedisenroll")
+    @ApiOperation(
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Disenrolling Windows Devices via the REST API",
+            notes = "Enforcing Disenrolling operation to the windows device"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 500, message = "Internal Server error")
+    })
     Response disenroll(@HeaderParam("Accept") String headerParam, List<String> deviceids) throws WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/devicewipe")
+    @ApiOperation(
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Wiping Information off Windows Devices via the REST API",
+            notes = "Enforce wipe operation to the windows device"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 500, message = "Internal Server error")
+    })
     Response wipe(@HeaderParam("Accept") String headerParam, List<String> deviceids) throws WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/devicering")
+    @ApiOperation(
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Ringing Windows Devices via the Rest API",
+            notes = "Adding a Device ring operation to the windows device."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 500, message = "Internal Server error")
+    })
     Response ring(@HeaderParam("Accept") String headerParam, List<String> deviceids) throws WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/lockreset")
+    @ApiOperation(
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Resetting the Lock of Windows Devices via the REST API",
+            notes = "Adding a Device lock re-test operation to the windows device."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 500, message = "Internal Server error")
+    })
     Response lockReset(@HeaderParam("Accept") String acceptHeader, List<String> deviceids)
             throws WindowsDeviceEnrolmentException;
 }

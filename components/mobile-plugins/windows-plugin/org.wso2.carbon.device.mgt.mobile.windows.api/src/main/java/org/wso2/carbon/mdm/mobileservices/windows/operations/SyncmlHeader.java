@@ -18,19 +18,28 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
-import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
 
 /**
  * Represents the header details of a syncml.
  */
+@ApiModel(value = "SyncmlHeader", description = "This class carries all information related to SyncmlHeader.")
 public class SyncmlHeader {
+    @ApiModelProperty(name = "sessionId", value = "SessionId of the syncml Message.", required = true)
     private int sessionId = -1;
+    @ApiModelProperty(name = "MsgID", value = "MessageId of the syncml Session.", required = true)
     private int MsgID = -1;
+    @ApiModelProperty(name = "target", value = "Target of the syncml Message.(Ex:Device/Server.)", required = true)
     private Target target;
+    @ApiModelProperty(name = "source", value = "Source of the Syncml Message.(Ex:Server/Device.)", required = true)
     private Source source;
+    @ApiModelProperty(name = "credential", value = "Credentials of the Syncml header.", required = true)
     private Credential credential;
+    @ApiModelProperty(name = "hexadecimalSessionId", value = "HexaDecimal SessionId of the syncmlHeader.", required = true)
     private String hexadecimalSessionId;
 
     public String getHexadecimalSessionId() {

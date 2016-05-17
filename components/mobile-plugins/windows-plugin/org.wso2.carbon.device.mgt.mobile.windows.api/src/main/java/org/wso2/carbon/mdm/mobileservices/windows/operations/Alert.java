@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -25,9 +27,12 @@ import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
 /**
  * Inform an event occurred from device to server.
  */
+@ApiModel(value = "Alert",
+        description = "This class carries all information related to Syncml alert.")
 public class Alert {
-
+    @ApiModelProperty(name = "commandId", value = "CommandId of The Syncml Alert.", required = true)
     int commandId = -1;
+    @ApiModelProperty(name = "data", value = "Data of the AlertTag.", required = true)
     String data;
 
     public int getCommandId() {

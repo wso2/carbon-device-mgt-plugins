@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -28,13 +30,20 @@ import java.util.List;
 /**
  * Sequence data that use to execute tag list
  */
+@ApiModel(value = "SequenceTag",
+        description = "This class carries all information related to Syncml SequenceTag.")
 public class SequenceTag {
-
+    @ApiModelProperty(name = "commandId", value = "CommandId of the Syncml SequenceTag", required = true)
     int commandId;
+    @ApiModelProperty(name = "exec", value = "ExcecuteTag sequence of the Syncml SequenceTag", required = true)
     ExecuteTag exec;
+    @ApiModelProperty(name = "get", value = "GetTag of the syncml SequenceTag.", required = true)
     Get get;
+    @ApiModelProperty(name = "deleteTag", value = "DeleteTag of the syncml SequenceTag.", required = true)
     DeleteTag deleteTag;
+    @ApiModelProperty(name = "atomicTag", value = "AtomicTag sequence of the syncml SequenceTag.", required = true)
     AtomicTag atomicTag;
+    @ApiModelProperty(name = "replaces", value = "ReplaceTag of the syncml SequenceTag.", required = true)
     List<Replace> replaces;
 
     public DeleteTag getDeleteTag() {
