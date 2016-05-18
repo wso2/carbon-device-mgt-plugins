@@ -203,9 +203,9 @@ public class XMPPAdapterListener implements Runnable {
     @Override
     public void run() {
         while (!connectionSucceeded) {
-            int connectionDuration = XMPPEventAdapterConstants.initialReconnectDuration;
+            int connectionDuration = XMPPEventAdapterConstants.INITIAL_RECONNECTION_DURATION;
             try {
-                connectionDuration = connectionDuration * XMPPEventAdapterConstants.reconnectionProgressionFactor;
+                connectionDuration = connectionDuration * XMPPEventAdapterConstants.RECONNECTION_PROGRESS_FACTOR;
                 Thread.sleep(connectionDuration);
                 startListener();
                 connectionSucceeded = true;
