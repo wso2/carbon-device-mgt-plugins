@@ -25,7 +25,7 @@ public class OperationAppender {
 
     private static Log log = LogFactory.getLog(OperationAppender.class);
 
-    private SyncMLDocument sourceDocument;
+    private SyncMLDocument targetDocument;
     private DeviceIdentifier deviceIdentifier;
 
     private static final String OPERATION_ENABLED = "1";
@@ -33,10 +33,10 @@ public class OperationAppender {
 
     private int commandId = 0;
 
-    public OperationAppender(SyncMLDocument sourceDocument, int startingCmdId) {
-        this.sourceDocument = sourceDocument;
-        this.deviceIdentifier = OperationUtils.convertToDeviceIdentifier(sourceDocument.
-                getHeader().getSource().getLocURI());
+    public OperationAppender(SyncMLDocument targetDocument, int startingCmdId) {
+        this.targetDocument = targetDocument;
+        this.deviceIdentifier = OperationUtils.convertToDeviceIdentifier(targetDocument.
+                getHeader().getTarget().getLocURI());
         this.commandId = startingCmdId;
     }
 
@@ -91,27 +91,27 @@ public class OperationAppender {
         // Lock operation
         if (SyncMLConstants.OperationCodes.DEVICE_LOCK.equals(operation.getCode())) {
             executeBlock = generateExecuteBlock(operation);
-            sourceDocument.getBody().getExec().add(executeBlock);
+            targetDocument.getBody().getExec().add(executeBlock);
         }
         // Ring operation
         if (SyncMLConstants.OperationCodes.DEVICE_RING.equals(operation.getCode())) {
             executeBlock = generateExecuteBlock(operation);
-            sourceDocument.getBody().getExec().add(executeBlock);
+            targetDocument.getBody().getExec().add(executeBlock);
         }
         // Wipe data operation
         if (SyncMLConstants.OperationCodes.WIPE_DATA.equals(operation.getCode())) {
             executeBlock = generateExecuteBlock(operation);
-            sourceDocument.getBody().getExec().add(executeBlock);
+            targetDocument.getBody().getExec().add(executeBlock);
         }
         // Reset lock operation
         if (SyncMLConstants.OperationCodes.DEVICE_MUTE.equals(operation.getCode())) {
             executeBlock = generateExecuteBlock(operation);
-            sourceDocument.getBody().getExec().add(executeBlock);
+            targetDocument.getBody().getExec().add(executeBlock);
         }
         // Monitor operation
         if (SyncMLConstants.OperationCodes.MONITOR.equals(operation.getCode())) {
             SequenceTag monitorSequence = generateMonitorSequenceBlock(operation);
-            sourceDocument.getBody().setSequence(monitorSequence);
+            targetDocument.getBody().setSequence(monitorSequence);
         }
     }
 
@@ -142,7 +142,7 @@ public class OperationAppender {
                 sequence.setReplaces(replaceBlocks);
             }
         }
-        sourceDocument.getBody().setSequence(sequence);
+        targetDocument.getBody().setSequence(sequence);
     }
 
     private void generateInfoOperation(Operation operation) {

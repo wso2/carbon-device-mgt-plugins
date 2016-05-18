@@ -131,7 +131,7 @@ public class SyncMLMessageProcessor {
         OMADMOperationHandler.updateOperations();
 
         // Append operations
-        OperationAppender operationAppender = new OperationAppender(sourceDocument, headerCommandId);
+        OperationAppender operationAppender = new OperationAppender(responseDocument, headerCommandId);
         operationAppender.appendOperations();
 
     }
