@@ -34,6 +34,9 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
@@ -51,30 +54,18 @@ import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.user.api.UserStoreException;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
 
     private static final String XMPP_PROTOCOL = "XMPP";
+    private static final String MQTT_PROTOCOL = "MQTT";
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
     private static Log log = LogFactory.getLog(VirtualFireAlarmServiceImpl.class);
@@ -83,13 +74,24 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
     @Path("device/{deviceId}/buzz")
     public Response switchBuzzer(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
                                  @FormParam("state") String state) {
+        if (state == null || state.isEmpty()) {
+            log.error("State is not defined for the buzzer operation");
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         String switchToState = state.toUpperCase();
         if (!switchToState.equals(VirtualFireAlarmConstants.STATE_ON) && !switchToState.equals(
                 VirtualFireAlarmConstants.STATE_OFF)) {
             log.error("The requested state change shoud be either - 'ON' or 'OFF'");
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        String protocolString = protocol.toUpperCase();
+        String protocolString;
+
+        if (protocol == null || protocol.isEmpty()) {
+            protocolString = MQTT_PROTOCOL;
+        } else {
+            protocolString = protocol.toUpperCase();
+        }
+
         if (log.isDebugEnabled()) {
             log.debug("Sending request to switch-bulb of device [" + deviceId + "] via " +
                               protocolString);
@@ -122,6 +124,19 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                     dynamicProperties.put(VirtualFireAlarmConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
                     APIUtil.getOutputEventAdapterService().publish(VirtualFireAlarmConstants.MQTT_ADAPTER_NAME,
                                                                    dynamicProperties, encryptedMsg);
+                    Operation commandOp = new CommandOperation();
+                    commandOp.setCode("buzz");
+                    commandOp.setType(Operation.Type.COMMAND);
+                    commandOp.setEnabled(true);
+                    commandOp.setPayLoad(encryptedMsg);
+
+                    Properties props = new Properties();
+                    props.setProperty(VirtualFireAlarmConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
+                    commandOp.setProperties(props);
+
+                    List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+                    deviceIdentifiers.add(new DeviceIdentifier(VirtualFireAlarmConstants.DEVICE_TYPE, deviceId));
+                    APIUtil.getDeviceManagementService().addOperation(VirtualFireAlarmConstants.DEVICE_TYPE, commandOp, deviceIdentifiers);
                     break;
             }
             return Response.ok().build();
@@ -131,6 +146,10 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
         } catch (VirtualFireAlarmException e) {
             String errorMsg = "Preparing Secure payload failed for device - [" + deviceId + "]";
             log.error(errorMsg);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (OperationManagementException e) {
+            String msg = "Error occurred while executing command operation upon ringing the buzzer";
+            log.error(msg, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
