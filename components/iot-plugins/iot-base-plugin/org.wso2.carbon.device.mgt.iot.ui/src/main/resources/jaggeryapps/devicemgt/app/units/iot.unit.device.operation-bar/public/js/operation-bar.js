@@ -67,7 +67,7 @@ function submitForm(formId) {
         } catch (err) {
             //do nothing
         }
-        title.html("Response Received!");
+        title.html("Operation Triggered!");
         statusIcon.attr("class", defaultStatusClasses + " fw-check");
         description.html(res);
         $(modalPopupContent).html(content.html());
