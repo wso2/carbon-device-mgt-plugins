@@ -32,6 +32,7 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.VirtualFireAl
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFireAlarmUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFirealarmSecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFirealarmStartupListener;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config.VirtualFireAlarmConfig;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterService;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 
@@ -74,6 +75,9 @@ public class VirtualFirealarmManagementServiceComponent {
             log.debug("Activating Virtual Firealarm Device Management Service Component");
         }
         try {
+            /* Initializing Virtual Fire Alarm Configuration */
+            VirtualFireAlarmConfig.init();
+
             VirtualFireAlarmManagerService virtualFireAlarmManagerService = new VirtualFireAlarmManagerService();
             BundleContext bundleContext = ctx.getBundleContext();
             firealarmServiceRegRef = bundleContext.registerService(DeviceManagementService.class.getName()

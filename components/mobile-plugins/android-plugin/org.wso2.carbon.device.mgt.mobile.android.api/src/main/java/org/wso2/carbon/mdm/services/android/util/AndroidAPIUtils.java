@@ -24,7 +24,6 @@ import com.google.gson.JsonParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -35,7 +34,6 @@ import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.app.mgt.ApplicationManagementProviderService;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
-import org.wso2.carbon.device.mgt.mobile.android.impl.gcm.GCMService;
 import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
@@ -80,16 +78,16 @@ public class AndroidAPIUtils {
         return deviceManagementProviderService;
     }
 
-    public static GCMService getGCMService() {
-        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        GCMService gcmService = (GCMService) ctx.getOSGiService(GCMService.class, null);
-        if (gcmService == null) {
-            String msg = "GCM service has not initialized.";
-            log.error(msg);
-            throw new IllegalStateException(msg);
-        }
-        return gcmService;
-    }
+//    public static GCMService getGCMService() {
+//        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+//        GCMService gcmService = (GCMService) ctx.getOSGiService(GCMService.class, null);
+//        if (gcmService == null) {
+//            String msg = "GCM service has not initialized.";
+//            log.error(msg);
+//            throw new IllegalStateException(msg);
+//        }
+//        return gcmService;
+//    }
 
     public static MediaType getResponseMediaType(String acceptHeader) {
         MediaType responseMediaType;
@@ -108,17 +106,19 @@ public class AndroidAPIUtils {
         AndroidDeviceUtils deviceUtils = new AndroidDeviceUtils();
         DeviceIDHolder deviceIDHolder = deviceUtils.validateDeviceIdentifiers(deviceIDs,
                 message, responseMediaType);
-        int status = getDeviceManagementService().addOperation(operation, deviceIDHolder.getValidDeviceIDList());
-        if (status > 0) {
-            GCMService gcmService = getGCMService();
-            if (gcmService.isGCMEnabled()) {
-                List<Device> devices = new ArrayList<Device>();
-                for (DeviceIdentifier deviceIdentifier : deviceIDHolder.getValidDeviceIDList()) {
-                    devices.add(getDeviceManagementService().getDevice(deviceIdentifier));
-                }
-                getGCMService().sendNotification(operation.getCode(), devices);
-            }
-        }
+
+        int status =
+                getDeviceManagementService().addOperation("android", operation, deviceIDHolder.getValidDeviceIDList());
+//        if (status > 0) {
+//            GCMService gcmService = getGCMService();
+//            if (gcmService.isGCMEnabled()) {
+//                List<Device> devices = new ArrayList<Device>();
+//                for (DeviceIdentifier deviceIdentifier : deviceIDHolder.getValidDeviceIDList()) {
+//                    devices.add(getDeviceManagementService().getDevice(deviceIdentifier));
+//                }
+//                getGCMService().sendNotification(operation.getCode(), devices);
+//            }
+//        }
         if (!deviceIDHolder.getErrorDeviceIdList().isEmpty()) {
             return javax.ws.rs.core.Response.status(AndroidConstants.StatusCodes.
                     MULTI_STATUS_HTTP_CODE).type(

@@ -34,6 +34,9 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
@@ -65,12 +68,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
 
@@ -122,6 +120,19 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                     dynamicProperties.put(VirtualFireAlarmConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
                     APIUtil.getOutputEventAdapterService().publish(VirtualFireAlarmConstants.MQTT_ADAPTER_NAME,
                                                                    dynamicProperties, encryptedMsg);
+                    Operation commandOp = new CommandOperation();
+                    commandOp.setCode("buzz");
+                    commandOp.setType(Operation.Type.COMMAND);
+                    commandOp.setEnabled(true);
+                    commandOp.setPayLoad(encryptedMsg);
+
+                    Properties props = new Properties();
+                    props.setProperty(VirtualFireAlarmConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
+                    commandOp.setProperties(props);
+
+                    List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+                    deviceIdentifiers.add(new DeviceIdentifier(VirtualFireAlarmConstants.DEVICE_TYPE, deviceId));
+                    APIUtil.getDeviceManagementService().addOperation(VirtualFireAlarmConstants.DEVICE_TYPE, commandOp, deviceIdentifiers);
                     break;
             }
             return Response.ok().build();
@@ -131,6 +142,10 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
         } catch (VirtualFireAlarmException e) {
             String errorMsg = "Preparing Secure payload failed for device - [" + deviceId + "]";
             log.error(errorMsg);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (OperationManagementException e) {
+            String msg = "Error occurred while executing command operation upon ringing the buzzer";
+            log.error(msg, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
