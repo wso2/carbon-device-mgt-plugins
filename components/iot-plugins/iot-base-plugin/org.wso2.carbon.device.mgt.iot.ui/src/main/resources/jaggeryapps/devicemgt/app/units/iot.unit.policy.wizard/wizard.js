@@ -18,6 +18,7 @@
 
 function onRequest(context) {
     //var log = new Log("wizard.js");
+    var constants = require("/app/modules/constants.js");
     var DTYPE_CONF_DEVICE_TYPE_KEY = "deviceType";
     var DTYPE_CONF_DEVICE_TYPE_LABEL_KEY = "label";
 
@@ -43,5 +44,8 @@ function onRequest(context) {
             }
         }
     }
+    var user = session.get(constants.USER_SESSION_KEY);
+    wizardPage.username = user.username;
+    wizardPage.permissions = userModule.getUIPermissions();
     return wizardPage;
 }
