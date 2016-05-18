@@ -48,7 +48,7 @@ public class MQTTEventAdapterConstants {
     public static final int ADAPTER_CONF_DEFAULT_KEEP_ALIVE = 60000;
 
     public static int initialReconnectDuration = 2000;
-    public static final int reconnectionProgressionFactor = 4;
+    public static final int reconnectionProgressionFactor = 2;
 
     public static final String EMPTY_STRING = "";
     public static final String GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer refresh_token";
