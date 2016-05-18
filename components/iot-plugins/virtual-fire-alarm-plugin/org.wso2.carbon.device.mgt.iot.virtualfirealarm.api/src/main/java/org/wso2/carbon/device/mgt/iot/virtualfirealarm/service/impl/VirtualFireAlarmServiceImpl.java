@@ -62,6 +62,7 @@ import java.util.*;
 public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
 
     private static final String XMPP_PROTOCOL = "XMPP";
+    private static final String MQTT_PROTOCOL = "MQTT";
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
     private static Log log = LogFactory.getLog(VirtualFireAlarmServiceImpl.class);
@@ -70,13 +71,24 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
     @Path("device/{deviceId}/buzz")
     public Response switchBuzzer(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
                                  @FormParam("state") String state) {
+        if (state == null || state.isEmpty()) {
+            log.error("State is not defined for the buzzer operation");
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         String switchToState = state.toUpperCase();
         if (!switchToState.equals(VirtualFireAlarmConstants.STATE_ON) && !switchToState.equals(
                 VirtualFireAlarmConstants.STATE_OFF)) {
             log.error("The requested state change shoud be either - 'ON' or 'OFF'");
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        String protocolString = protocol.toUpperCase();
+        String protocolString;
+
+        if (protocol == null || protocol.isEmpty()) {
+            protocolString = MQTT_PROTOCOL;
+        } else {
+            protocolString = protocol.toUpperCase();
+        }
+
         if (log.isDebugEnabled()) {
             log.debug("Sending request to switch-bulb of device [" + deviceId + "] via " +
                               protocolString);
