@@ -49,8 +49,8 @@ public class XMPPEventAdapterConstants {
     public static final int DEFAULT_XMPP_PORT = 5222;
     public static final int DEFAULT_TIMEOUT_INTERVAL = 5000;
 
-    public static int initialReconnectDuration = 10000;
-    public static final int reconnectionProgressionFactor = 2;
+    public static int initialReconnectDuration = 2000;
+    public static final int reconnectionProgressionFactor = 4;
 
     public static final String DEFAULT = "default";
 
