@@ -61,9 +61,15 @@ function submitForm(formId) {
     var statusIcon = content.find("#status-icon");
     var description = content.find("#description");
     var successCallBack = function (response) {
+        var res = response;
+        try {
+            res = JSON.parse(response).messageFromServer;
+        } catch (err) {
+            //do nothing
+        }
         title.html("Response Received!");
-        statusIcon.attr("class", defaultStatusClasses + " fw-success");
-        description.html(response);
+        statusIcon.attr("class", defaultStatusClasses + " fw-check");
+        description.html(res);
         $(modalPopupContent).html(content.html());
     };
     var errorCallBack = function (response) {
@@ -94,9 +100,9 @@ function submitForm(formId) {
 $(document).on('submit', 'form', function (e) {
     e.preventDefault();
     var postOperationRequest = $.ajax({
-        url: $(this).attr("action") + '&' + $(this).serialize(),
-        method: "post"
-    });
+                                          url: $(this).attr("action") + '&' + $(this).serialize(),
+                                          method: "post"
+                                      });
 
     var btnSubmit = $('#btnSend', this);
     btnSubmit.addClass('hidden');
