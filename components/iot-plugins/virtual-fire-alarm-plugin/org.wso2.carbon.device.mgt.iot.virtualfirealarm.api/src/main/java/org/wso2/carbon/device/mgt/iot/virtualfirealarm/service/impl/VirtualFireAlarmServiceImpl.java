@@ -54,15 +54,7 @@ import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.user.api.UserStoreException;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -73,6 +65,7 @@ import java.util.*;
 public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
 
     private static final String XMPP_PROTOCOL = "XMPP";
+    private static final String MQTT_PROTOCOL = "MQTT";
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
     private static Log log = LogFactory.getLog(VirtualFireAlarmServiceImpl.class);
@@ -81,13 +74,24 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
     @Path("device/{deviceId}/buzz")
     public Response switchBuzzer(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
                                  @FormParam("state") String state) {
+        if (state == null || state.isEmpty()) {
+            log.error("State is not defined for the buzzer operation");
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         String switchToState = state.toUpperCase();
         if (!switchToState.equals(VirtualFireAlarmConstants.STATE_ON) && !switchToState.equals(
                 VirtualFireAlarmConstants.STATE_OFF)) {
             log.error("The requested state change shoud be either - 'ON' or 'OFF'");
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        String protocolString = protocol.toUpperCase();
+        String protocolString;
+
+        if (protocol == null || protocol.isEmpty()) {
+            protocolString = MQTT_PROTOCOL;
+        } else {
+            protocolString = protocol.toUpperCase();
+        }
+
         if (log.isDebugEnabled()) {
             log.debug("Sending request to switch-bulb of device [" + deviceId + "] via " +
                               protocolString);
