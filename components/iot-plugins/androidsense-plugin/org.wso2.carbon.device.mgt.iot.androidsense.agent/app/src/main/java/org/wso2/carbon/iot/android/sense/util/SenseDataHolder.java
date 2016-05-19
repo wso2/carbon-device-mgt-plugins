@@ -59,20 +59,20 @@ public class SenseDataHolder {
         return wordDataHolder;
     }
 
-    public static void resetSensorDataHolder(){
-        sensorDataHolder = null;
-    }
-
-    public static void resetBatteryDataHolder(){
-        batteryDataHolder = null;
-    }
-
-    public static void resetLocationDataHolder(){
-        locationDataHolder = null;
-    }
-
-    public static void resetWordDataHolder() {
-        wordDataHolder = null;
-    }
+//    public static void resetSensorDataHolder(){
+//        sensorDataHolder = null;
+//    }
+//
+//    public static void resetBatteryDataHolder(){
+//        batteryDataHolder = null;
+//    }
+//
+//    public static void resetLocationDataHolder(){
+//        locationDataHolder = null;
+//    }
+//
+//    public static void resetWordDataHolder() {
+//        wordDataHolder = null;
+//    }
 
 }

@@ -105,7 +105,7 @@ public class DataPublisherService extends Service {
                                 break;
                         }
                     }
-                    SenseDataHolder.resetSensorDataHolder();
+                    //SenseDataHolder.resetSensorDataHolder();
 
                     //retreive batter data.
                     List<BatteryData> batteryDataMap = SenseDataHolder.getBatteryDataHolder();
@@ -115,7 +115,7 @@ public class DataPublisherService extends Service {
                         event.setBattery(batteryData.getLevel());
                         events.add(event);
                     }
-                    SenseDataHolder.resetBatteryDataHolder();
+                    //SenseDataHolder.resetBatteryDataHolder();
                     //retreive location data.
                     List<LocationData> locationDataMap = SenseDataHolder.getLocationDataHolder();
                     for (LocationData locationData : locationDataMap) {
@@ -124,7 +124,7 @@ public class DataPublisherService extends Service {
                         event.setGps(new double[]{locationData.getLatitude(), locationData.getLongitude()});
                         events.add(event);
                     }
-                    SenseDataHolder.resetLocationDataHolder();
+                    //SenseDataHolder.resetLocationDataHolder();
 
                     //retrieve words
                     ProcessWords.cleanAndPushToWordMap();
@@ -147,7 +147,7 @@ public class DataPublisherService extends Service {
                             events.add(event);
                         }
                     }
-                    SenseDataHolder.resetWordDataHolder();
+                    //SenseDataHolder.resetWordDataHolder();
                     //publish the data
                     if (events.size() > 0 && LocalRegistry.isEnrolled(context)) {
                         String user = LocalRegistry.getUsername(context);
