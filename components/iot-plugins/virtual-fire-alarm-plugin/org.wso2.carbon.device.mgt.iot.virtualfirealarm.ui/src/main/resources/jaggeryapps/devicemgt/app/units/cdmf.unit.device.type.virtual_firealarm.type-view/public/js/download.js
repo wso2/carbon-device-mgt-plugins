@@ -35,21 +35,6 @@ function setPopupMaxHeight() {
 function showAgentDownloadPopup() {
     $(modalPopup).show();
     setPopupMaxHeight();
-    $('#downloadForm').validate({
-        rules: {
-            deviceName: {
-                minlength: 4,
-                required: true
-            }
-        },
-        highlight: function (element) {
-            $(element).closest('.control-group').removeClass('success').addClass('error');
-        },
-        success: function (element) {
-            $(element).closest('.control-group').removeClass('error').addClass('success');
-            $('label[for=deviceName]').remove();
-        }
-    });
     var deviceType = "";
     $('.deviceType').each(function () {
         if (this.value != "") {
@@ -88,43 +73,6 @@ function attachEvents() {
         var payload = {"sketchType": sketchType, "deviceType": deviceType};
         $(modalPopupContent).html($('#download-device-modal-content').html());
         showAgentDownloadPopup();
-        var deviceName;
-        $("a#download-device-download-link").click(function () {
-            $('.new-device-name').each(function () {
-                if (this.value != "") {
-                    deviceName = this.value;
-                }
-            });
-            $('label[for=deviceName]').remove();
-            if (deviceName && deviceName.length >= 4) {
-                payload.deviceName = deviceName;
-                invokerUtil.post(
-                    downloadDeviceAPI,
-                    payload,
-                    function (data, textStatus, jqxhr) {
-                        doAction(data);
-                    },
-                    function (data) {
-                        doAction(data);
-                    }
-                );
-            } else if (deviceName) {
-                $('.controls').append('<label for="deviceName" generated="true" class="error" ' +
-                                      'style="display: inline-block;">Please enter at least 4 ' +
-                                      'characters.</label>');
-                $('.control-group').removeClass('success').addClass('error');
-            } else {
-                $('.controls').append('<label for="deviceName" generated="true" class="error" ' +
-                                      'style="display: inline-block;">This field is required.' +
-                                      '</label>');
-                $('.control-group').removeClass('success').addClass('error');
-            }
-        });
-
-        $("a#download-device-cancel-link").click(function () {
-            hideAgentDownloadPopup();
-        });
-
     });
 }
 
@@ -136,7 +84,10 @@ function downloadAgent() {
         }
     });
     var deviceNameFormat = /^[^~?!#$:;%^*`+={}\[\]\\()|<>,'"]{1,30}$/;
-    if (deviceName && deviceNameFormat.test(deviceName)) {
+    if (deviceName && deviceName.length < 4) {
+        $("#invalid-username-error-msg span").text("Device name should be more than 3 letters!");
+        $("#invalid-username-error-msg").removeClass("hidden");
+    } else if (deviceName && deviceNameFormat.test(deviceName)) {
         $('#downloadForm').submit();
         hidePopup();
         $(modalPopupContent).html($('#device-agent-downloading-content').html());
