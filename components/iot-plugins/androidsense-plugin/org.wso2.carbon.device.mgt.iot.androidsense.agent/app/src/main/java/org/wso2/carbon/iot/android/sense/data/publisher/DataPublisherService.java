@@ -20,7 +20,6 @@ import android.hardware.Sensor;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,6 +28,7 @@ import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.transport.MQTTTrans
 import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.transport.TransportHandlerException;
 import org.wso2.carbon.iot.android.sense.constants.SenseConstants;
 import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationData;
+import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationDataReader;
 import org.wso2.carbon.iot.android.sense.event.streams.Sensor.SensorData;
 import org.wso2.carbon.iot.android.sense.event.streams.battery.BatteryData;
 import org.wso2.carbon.iot.android.sense.speech.detector.util.ProcessWords;
@@ -36,7 +36,6 @@ import org.wso2.carbon.iot.android.sense.speech.detector.util.WordData;
 import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
 import org.wso2.carbon.iot.android.sense.util.LocalRegistry;
 //import org.wso2.carbon.iot.android.sense.util.SenseClient;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +48,6 @@ public class DataPublisherService extends Service {
     private static String TIME_TAG = "time";
     private static String VALUE_TAG = "value";
     public static Context context;
-
 
     @Nullable
     @Override
@@ -66,65 +64,72 @@ public class DataPublisherService extends Service {
             public void run() {
                 try {
                     List<Event> events = new ArrayList<>();
-                    //retreive sensor data.
+                    //retrieve sensor data.
                     List<SensorData> sensorDataMap = SenseDataHolder.getSensorDataHolder();
-                    for (SensorData sensorData : sensorDataMap) {
-                        Event event = new Event();
-                        event.setTimestamp(sensorData.getTimestamp());
-                        switch (sensorData.getSensorType()) {
-                            case Sensor.TYPE_ACCELEROMETER:
-                                event.setAccelerometer(sensorData.getSensorValues());
-                                events.add(event);
-                                break;
-                            case Sensor.TYPE_MAGNETIC_FIELD:
-                                event.setMagnetic(sensorData.getSensorValues());
-                                events.add(event);
-                                break;
-                            case Sensor.TYPE_GYROSCOPE:
-                                event.setGyroscope(sensorData.getSensorValues());
-                                events.add(event);
-                                break;
-                            case Sensor.TYPE_LIGHT:
-                                event.setLight(sensorData.getSensorValues()[0]);
-                                break;
-                            case Sensor.TYPE_PRESSURE:
-                                event.setPressure(sensorData.getSensorValues()[0]);
-                                events.add(event);
-                                break;
-                            case Sensor.TYPE_PROXIMITY:
-                                event.setProximity(sensorData.getSensorValues()[0]);
-                                events.add(event);
-                                break;
-                            case Sensor.TYPE_GRAVITY:
-                                event.setGravity(sensorData.getSensorValues());
-                                events.add(event);
-                                break;
-                            case Sensor.TYPE_GAME_ROTATION_VECTOR:
-                                event.setRotation(sensorData.getSensorValues());
-                                events.add(event);
-                                break;
+                    if (!sensorDataMap.isEmpty()) {
+                        for (SensorData sensorData : sensorDataMap) {
+                            Event event = new Event();
+                            event.setTimestamp(sensorData.getTimestamp());
+                            switch (sensorData.getSensorType()) {
+                                case Sensor.TYPE_ACCELEROMETER:
+                                    event.setAccelerometer(sensorData.getSensorValues());
+                                    events.add(event);
+                                    break;
+                                case Sensor.TYPE_MAGNETIC_FIELD:
+                                    event.setMagnetic(sensorData.getSensorValues());
+                                    events.add(event);
+                                    break;
+                                case Sensor.TYPE_GYROSCOPE:
+                                    event.setGyroscope(sensorData.getSensorValues());
+                                    events.add(event);
+                                    break;
+                                case Sensor.TYPE_LIGHT:
+                                    event.setLight(sensorData.getSensorValues()[0]);
+                                    break;
+                                case Sensor.TYPE_PRESSURE:
+                                    event.setPressure(sensorData.getSensorValues()[0]);
+                                    events.add(event);
+                                    break;
+                                case Sensor.TYPE_PROXIMITY:
+                                    event.setProximity(sensorData.getSensorValues()[0]);
+                                    events.add(event);
+                                    break;
+                                case Sensor.TYPE_GRAVITY:
+                                    event.setGravity(sensorData.getSensorValues());
+                                    events.add(event);
+                                    break;
+                                case Sensor.TYPE_GAME_ROTATION_VECTOR:
+                                    event.setRotation(sensorData.getSensorValues());
+                                    events.add(event);
+                                    break;
+                            }
                         }
                     }
-                    SenseDataHolder.resetSensorDataHolder();
+                   // SenseDataHolder.resetSensorDataHolder();
 
-                    //retreive batter data.
+                    //retrieve batter data.
                     List<BatteryData> batteryDataMap = SenseDataHolder.getBatteryDataHolder();
-                    for (BatteryData batteryData : batteryDataMap) {
-                        Event event = new Event();
-                        event.setTimestamp(batteryData.getTimestamp());
-                        event.setBattery(batteryData.getLevel());
-                        events.add(event);
+                    if (!batteryDataMap.isEmpty()) {
+                        for (BatteryData batteryData : batteryDataMap) {
+                            Event event = new Event();
+                            event.setTimestamp(batteryData.getTimestamp());
+                            event.setBattery(batteryData.getLevel());
+                            events.add(event);
+                        }
                     }
-                    SenseDataHolder.resetBatteryDataHolder();
-                    //retreive location data.
+                   // SenseDataHolder.resetBatteryDataHolder();
+                    //retrieve location data.
                     List<LocationData> locationDataMap = SenseDataHolder.getLocationDataHolder();
-                    for (LocationData locationData : locationDataMap) {
-                        Event event = new Event();
-                        event.setTimestamp(locationData.getTimeStamp());
-                        event.setGps(new double[]{locationData.getLatitude(), locationData.getLongitude()});
-                        events.add(event);
-                    }
-                    SenseDataHolder.resetLocationDataHolder();
+
+                    if (!locationDataMap.isEmpty()) {
+                        for (LocationData locationData : locationDataMap) {
+                            Event event = new Event();
+                            event.setTimestamp(locationData.getTimeStamp());
+                            event.setGps(new double[]{locationData.getLatitude(), locationData.getLongitude()});
+                            events.add(event);
+                        }
+                     }
+                    //SenseDataHolder.resetLocationDataHolder();
 
                     //retrieve words
                     ProcessWords.cleanAndPushToWordMap();
@@ -147,7 +152,7 @@ public class DataPublisherService extends Service {
                             events.add(event);
                         }
                     }
-                    SenseDataHolder.resetWordDataHolder();
+                    //SenseDataHolder.resetWordDataHolder();
                     //publish the data
                     if (events.size() > 0 && LocalRegistry.isEnrolled(context)) {
                         String user = LocalRegistry.getUsername(context);
@@ -158,13 +163,15 @@ public class DataPublisherService extends Service {
                             event.setDeviceId(deviceId);
                             jsonArray.put(new JSONObject().put("event", event.getEvent()));
                         }
+
                         MQTTTransportHandler mqttTransportHandler = AndroidSenseMQTTHandler.getInstance(context);
                         if (!mqttTransportHandler.isConnected()) {
                             mqttTransportHandler.connect();
                         }
-                        String topic = LocalRegistry.getTenantDomain(context) + "/" + SenseConstants
-                                .DEVICE_TYPE + "/" + deviceId + "/data";
+                        String topic = LocalRegistry.getTenantDomain(context) + "/" + SenseConstants.DEVICE_TYPE + "/" + deviceId + "/data";
                         mqttTransportHandler.publishDeviceData(user, deviceId, jsonArray.toString(), topic);
+
+                        Log.d("YourData",jsonArray.toString());
                     }
                 } catch (JSONException e) {
                     Log.e(TAG, "Json Data Parsing Exception", e);

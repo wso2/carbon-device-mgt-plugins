@@ -8,23 +8,23 @@ import org.json.JSONObject;
  */
 public class Event {
 
-    private String owner;
-    private String deviceId;
-    private String type;
-    private int battery;
-    private double gps[]; //lat,long
-    private float accelerometer[]; //x,y,z
-    private float magnetic[]; //x,y,z
-    private float gyroscope[]; //x,y,z
-    private float light;
-    private float pressure;
-    private float proximity;
-    private float gravity[];
-    private float rotation[];
-    private String wordSessionId;
-    private String word;
-    private String wordStatus;
-    private long timestamp;
+    private static String owner;
+    private static String deviceId;
+    private static String type;
+    private static int battery;
+    private static double gps[]; //lat,long
+    private static float accelerometer[]; //x,y,z
+    private static float magnetic[]; //x,y,z
+    private static float gyroscope[]; //x,y,z
+    private static float light;
+    private static float pressure;
+    private static float proximity;
+    private static float gravity[];
+    private static float rotation[];
+    private static String wordSessionId;
+    private static String word;
+    private static String wordStatus;
+    private static long timestamp;
 
     private int getBattery() {
         return battery;
@@ -55,6 +55,7 @@ public class Event {
 
     private float[] getMagnetic() {
         return magnetic != null ? magnetic : new float[]{0, 0, 0};
+
     }
 
     public void setMagnetic(float[] magnetic) {
@@ -64,6 +65,7 @@ public class Event {
 
     private float[] getGyroscope() {
         return gyroscope != null ? gyroscope : new float[]{0, 0, 0};
+
     }
 
     public void setGyroscope(float[] gyroscope) {
@@ -100,6 +102,7 @@ public class Event {
 
     private float[] getGravity() {
         return gravity != null ? gravity : new float[]{0, 0, 0};
+
     }
 
     public void setGravity(float gravity[]) {
@@ -180,7 +183,7 @@ public class Event {
         double gpsEvents[] = getGps();
         jsonPayloadData.put("gps_lat", gpsEvents[0]);
         jsonPayloadData.put("gps_long", gpsEvents[1]);
-        //acceleromter
+        //accelerometer
         float events[] = getAccelerometer();
         jsonPayloadData.put("accelerometer_x", events[0]);
         jsonPayloadData.put("accelerometer_y", events[1]);
