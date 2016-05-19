@@ -135,7 +135,7 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                     commandOp.setProperties(props);
 
                     List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
-                    deviceIdentifiers.add(new DeviceIdentifier(VirtualFireAlarmConstants.DEVICE_TYPE, deviceId));
+                    deviceIdentifiers.add(new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE));
                     APIUtil.getDeviceManagementService().addOperation(VirtualFireAlarmConstants.DEVICE_TYPE, commandOp, deviceIdentifiers);
                     break;
             }
