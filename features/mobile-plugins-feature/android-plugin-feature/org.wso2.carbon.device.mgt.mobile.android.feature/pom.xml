@@ -17,19 +17,21 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>android-plugin-feature</artifactId>
-        <version>2.1.1-SNAPSHOT</version>
+        <version>2.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.mobile.android.feature</artifactId>
     <packaging>pom</packaging>
-    <version>2.1.1-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
     <name>WSO2 Carbon - Android Device Management Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the core bundles required for Android Device Management
@@ -139,22 +141,26 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <echo message="########### Create ANDROID Mobile plugin Management H2 Schema ###########" />
-                                <property name="db.dir" value="target/maven-shared-archive-resources/database" />
-                                <property name="userid" value="wso2carbon" />
-                                <property name="password" value="wso2carbon" />
-                                <property name="dbURL" value="jdbc:h2:file:${basedir}/${db.dir}/WSO2MobileAndroid_DB;DB_CLOSE_ON_EXIT=FALSE" />
+                                <echo message="########### Create ANDROID Mobile plugin Management H2 Schema ###########"/>
+                                <property name="db.dir"
+                                          value="target/maven-shared-archive-resources/database"/>
+                                <property name="userid" value="wso2carbon"/>
+                                <property name="password" value="wso2carbon"/>
+                                <property name="dbURL"
+                                          value="jdbc:h2:file:${basedir}/${db.dir}/WSO2MobileAndroid_DB;DB_CLOSE_ON_EXIT=FALSE"/>
 
-                                <mkdir dir="${basedir}/${db.dir}" />
+                                <mkdir dir="${basedir}/${db.dir}"/>
 
-                                <sql driver="org.h2.Driver" url="${dbURL}" userid="${userid}" password="${password}" autocommit="true" onerror="continue">
-                                    <classpath refid="maven.dependency.classpath" />
-                                    <classpath refid="maven.compile.classpath" />
-                                    <classpath refid="maven.runtime.classpath" />
+                                <sql driver="org.h2.Driver" url="${dbURL}" userid="${userid}"
+                                     password="${password}"
+                                     autocommit="true" onerror="continue">
+                                    <classpath refid="maven.dependency.classpath"/>
+                                    <classpath refid="maven.compile.classpath"/>
+                                    <classpath refid="maven.runtime.classpath"/>
 
-                                    <fileset file="${basedir}/src/main/resources/dbscripts/plugins/h2.sql" />
+                                    <fileset file="${basedir}/src/main/resources/dbscripts/plugins/h2.sql"/>
                                 </sql>
-                                <echo message="##################### END ####################" />
+                                <echo message="##################### END ####################"/>
                             </tasks>
                         </configuration>
                     </execution>
