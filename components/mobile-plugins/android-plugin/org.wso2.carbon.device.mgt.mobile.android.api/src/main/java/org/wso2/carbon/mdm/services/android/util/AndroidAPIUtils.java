@@ -29,11 +29,8 @@ import org.wso2.carbon.analytics.datasource.commons.Record;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-<<<<<<< HEAD
 import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
 import org.wso2.carbon.device.mgt.common.Device;
-=======
->>>>>>> 344232fc3287dc7566624756aa2ea17d7874dcf9
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -48,11 +45,8 @@ import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceDetailsMgtExcept
 import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManager;
 import org.wso2.carbon.device.mgt.core.search.mgt.impl.Utils;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
-<<<<<<< HEAD
 import org.wso2.carbon.device.mgt.mobile.impl.android.gcm.GCMService;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
-=======
->>>>>>> 344232fc3287dc7566624756aa2ea17d7874dcf9
 import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
@@ -99,16 +93,16 @@ public class AndroidAPIUtils {
         return deviceManagementProviderService;
     }
 
-//    public static GCMService getGCMService() {
-//        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-//        GCMService gcmService = (GCMService) ctx.getOSGiService(GCMService.class, null);
-//        if (gcmService == null) {
-//            String msg = "GCM service has not initialized.";
-//            log.error(msg);
-//            throw new IllegalStateException(msg);
-//        }
-//        return gcmService;
-//    }
+    public static GCMService getGCMService() {
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        GCMService gcmService = (GCMService) ctx.getOSGiService(GCMService.class, null);
+        if (gcmService == null) {
+            String msg = "GCM service has not initialized.";
+            log.error(msg);
+            throw new IllegalStateException(msg);
+        }
+        return gcmService;
+    }
 
     public static MediaType getResponseMediaType(String acceptHeader) {
         MediaType responseMediaType;
@@ -129,7 +123,8 @@ public class AndroidAPIUtils {
                 message, responseMediaType);
 
         List<DeviceIdentifier> validDeviceIds = deviceIDHolder.getValidDeviceIDList();
-        int status = getDeviceManagementService().addOperation(operation, validDeviceIds);
+        int status = getDeviceManagementService().addOperation(
+                DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, validDeviceIds);
         if (status > 0) {
             GCMService gcmService = getGCMService();
             if (gcmService.isGCMEnabled()) {
@@ -142,12 +137,12 @@ public class AndroidAPIUtils {
             }
         }
         if (!deviceIDHolder.getErrorDeviceIdList().isEmpty()) {
-            return Response.status(AndroidConstants.StatusCodes.
+            return javax.ws.rs.core.Response.status(AndroidConstants.StatusCodes.
                     MULTI_STATUS_HTTP_CODE).type(
                     responseMediaType).entity(deviceUtils.
                     convertErrorMapIntoErrorMessage(deviceIDHolder.getErrorDeviceIdList())).build();
         }
-        return Response.status(Response.Status.CREATED).
+        return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.CREATED).
                 type(responseMediaType).build();
     }
 
@@ -378,13 +373,13 @@ public class AndroidAPIUtils {
                 } else if (prop.getName().equalsIgnoreCase("OS_VERSION")) {
                     deviceInfo.setOsVersion(prop.getValue());
                 } else if (prop.getName().equalsIgnoreCase("IMEI")) {
-                    deviceInfo.getDeviceDetailsMap().put("IMEI",prop.getValue());
+                    deviceInfo.getDeviceDetailsMap().put("IMEI", prop.getValue());
                 } else if (prop.getName().equalsIgnoreCase("IMSI")) {
-                    deviceInfo.getDeviceDetailsMap().put("IMSI",prop.getValue());
+                    deviceInfo.getDeviceDetailsMap().put("IMSI", prop.getValue());
                 } else if (prop.getName().equalsIgnoreCase("MAC")) {
-                    deviceInfo.getDeviceDetailsMap().put("mac",prop.getValue());
-                }else if (prop.getName().equalsIgnoreCase("SERIAL")) {
-                    deviceInfo.getDeviceDetailsMap().put("serial",prop.getValue());
+                    deviceInfo.getDeviceDetailsMap().put("mac", prop.getValue());
+                } else if (prop.getName().equalsIgnoreCase("SERIAL")) {
+                    deviceInfo.getDeviceDetailsMap().put("serial", prop.getValue());
                 }
             } else {
                 if (prop.getName().equalsIgnoreCase("CPU_INFO")) {
