@@ -165,13 +165,11 @@
             <artifactId>org.wso2.carbon.device.mgt.mobile.android</artifactId>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>commons-httpclient.wso2</groupId>
             <artifactId>commons-httpclient</artifactId>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
@@ -181,6 +179,16 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.analytics.data.publisher</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.analytics</groupId>
+            <artifactId>org.wso2.carbon.analytics.api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
