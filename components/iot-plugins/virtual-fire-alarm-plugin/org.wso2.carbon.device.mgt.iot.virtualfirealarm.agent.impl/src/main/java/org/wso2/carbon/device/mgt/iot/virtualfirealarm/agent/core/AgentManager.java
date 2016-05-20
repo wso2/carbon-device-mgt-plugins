@@ -20,14 +20,14 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.http.FireAlarmHTTPCommunicator;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.mqtt.FireAlarmMQTTCommunicator;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.xmpp.FireAlarmXMPPCommunicator;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.enrollment.EnrollmentManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.exception.AgentCoreOperationException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportUtils;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.http.FireAlarmHTTPCommunicator;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.mqtt.FireAlarmMQTTCommunicator;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.xmpp.FireAlarmXMPPCommunicator;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.virtual.VirtualHardwareManager;
 
 import java.util.ArrayList;
@@ -217,10 +217,14 @@ public class AgentManager {
 
 	/*------------------------------------------------------------------------------------------*/
     /* 		            Getter and Setter Methods for the private variables                 	*/
-	/*------------------------------------------------------------------------------------------*/
+    /*------------------------------------------------------------------------------------------*/
 
     public void setRootPath(String rootPath) {
         this.rootPath = rootPath;
+    }
+
+    public String getRootPath() {
+        return rootPath;
     }
 
     public void setDeviceReady(boolean deviceReady) {
@@ -324,6 +328,7 @@ public class AgentManager {
 
     /**
      * Get temperature reading from device
+     *
      * @return Temperature
      */
     public int getTemperature() {
@@ -332,9 +337,10 @@ public class AgentManager {
 
     /**
      * Get humidity reading from device
+     *
      * @return Humidity
      */
-    public int getHumidity(){
+    public int getHumidity() {
         return VirtualHardwareManager.getInstance().getHumidity();
     }
 

@@ -26,12 +26,18 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.enrollment.Enrollme
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.exception.AgentCoreOperationException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.CommunicationUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandlerException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportUtils;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -67,18 +73,19 @@ public class AgentUtilOperations {
         Properties properties = new Properties();
         InputStream propertiesInputStream = null;
         String propertiesFileName = AgentConstants.AGENT_PROPERTIES_FILE_NAME;
+        String rootPath = "";
 
         try {
             ClassLoader loader = AgentUtilOperations.class.getClassLoader();
             URL path = loader.getResource(propertiesFileName);
             System.out.println(path);
-            String root = path.getPath().replace("wso2-firealarm-virtual-agent.jar!/deviceConfig.properties", "")
-                                        .replace("jar:", "").replace("file:", "");
+            rootPath = path.getPath().replace("wso2-firealarm-virtual-agent.jar!/deviceConfig.properties", "")
+                    .replace("jar:", "").replace("file:", "");
 
-            root = URLDecoder.decode(root, StandardCharsets.UTF_8.toString());
-            agentManager.setRootPath(root);
+            rootPath = URLDecoder.decode(rootPath, StandardCharsets.UTF_8.toString());
+            agentManager.setRootPath(rootPath);
 
-            String deviceConfigFilePath = root + AgentConstants.AGENT_PROPERTIES_FILE_NAME;
+            String deviceConfigFilePath = rootPath + AgentConstants.AGENT_PROPERTIES_FILE_NAME;
             propertiesInputStream = new FileInputStream(deviceConfigFilePath);
 
             //load a properties file from class path, inside static method
@@ -108,6 +115,8 @@ public class AgentUtilOperations {
                     AgentConstants.XMPP_SERVER_EP_PROPERTY));
             iotServerConfigs.setXmppServerName(properties.getProperty(
                     AgentConstants.XMPP_SERVER_NAME_PROPERTY));
+            iotServerConfigs.setApiApplicationKey(properties.getProperty(
+                    AgentConstants.API_APPLICATION_KEY));
             iotServerConfigs.setAuthMethod(properties.getProperty(
                     AgentConstants.AUTH_METHOD_PROPERTY));
             iotServerConfigs.setAuthToken(properties.getProperty(
@@ -138,6 +147,8 @@ public class AgentUtilOperations {
                              iotServerConfigs.getXmppServerEndpoint());
             log.info(AgentConstants.LOG_APPENDER + "Authentication Method: " +
                              iotServerConfigs.getAuthMethod());
+            log.info(AgentConstants.LOG_APPENDER + "Base64Encoded API Application Key: " +
+                             iotServerConfigs.getApiApplicationKey());
             log.info(AgentConstants.LOG_APPENDER + "Authentication Token: " +
                              iotServerConfigs.getAuthToken());
             log.info(AgentConstants.LOG_APPENDER + "Refresh Token: " +
@@ -148,13 +159,13 @@ public class AgentUtilOperations {
                              iotServerConfigs.getXmppServerName());
 
         } catch (FileNotFoundException ex) {
-            String errorMsg = "[" + propertiesFileName + "] file not found at: " + AgentConstants.PROPERTIES_FILE_PATH;
+            String errorMsg = "[" + propertiesFileName + "] file not found at: " + rootPath;
             log.error(AgentConstants.LOG_APPENDER + errorMsg);
             throw new AgentCoreOperationException(errorMsg);
 
         } catch (IOException ex) {
             String errorMsg = "Error occurred whilst trying to fetch [" + propertiesFileName + "] from: " +
-                                        AgentConstants.PROPERTIES_FILE_PATH;
+                    AgentConstants.PROPERTIES_FILE_PATH;
             log.error(AgentConstants.LOG_APPENDER + errorMsg);
             throw new AgentCoreOperationException(errorMsg);
         } finally {
@@ -174,10 +185,6 @@ public class AgentUtilOperations {
     /**
      * This method constructs the URLs for each of the API Endpoints called by the device agent
      * Ex: Register API, Push-Data API
-     *
-     * @throws AgentCoreOperationException if any error occurs at socket level whilst trying to
-     *                                     retrieve the deviceIP of the network-interface read
-     *                                     from the configs file
      */
     public static void initializeServerEndPoints() {
         AgentManager agentManager = AgentManager.getInstance();
@@ -265,6 +272,155 @@ public class AgentUtilOperations {
         return actualMessage;
     }
 
+    public static String getAuthenticationMethod() {
+        String authMethod = AgentManager.getInstance().getAgentConfigs().getAuthMethod();
+        switch (authMethod) {
+            case AgentConstants.TOKEN_AUTHENTICATION_METHOD:
+                return AgentConstants.TOKEN_AUTHENTICATION_METHOD;
+            default:
+                return "";
+        }
+    }
+
+
+    public static boolean refreshOAuthToken() throws AgentCoreOperationException {
+
+        AgentManager agentManager = AgentManager.getInstance();
+        String tokenEndpoint = agentManager.getAgentConfigs().getApimGatewayEndpoint() + "/token";
+        HttpURLConnection httpConnection = null;
+        BufferedReader connectionBuffer = null;
+        String requestPayload;
+        String dataFromBuffer;
+        StringBuilder responseMessage = new StringBuilder();
+        boolean refreshStatus = false;
+
+        try {
+            httpConnection = TransportUtils.getHttpConnection(tokenEndpoint);
+            httpConnection.setRequestMethod(AgentConstants.HTTP_POST);
+            httpConnection.setRequestProperty(AgentConstants.AUTHORIZATION_HEADER,
+                                              "Bearer " + agentManager.getAgentConfigs().getApiApplicationKey());
+            httpConnection.setRequestProperty(AgentConstants.CONTENT_TYPE_HEADER, AgentConstants.X_WWW_FORM_URLENCODED);
+            httpConnection.setDoOutput(true);
+
+            String refreshToken = agentManager.getAgentConfigs().getRefreshToken();
+            String applicationScope = "device_type_" + AgentConstants.DEVICE_TYPE +
+                    " device_" + agentManager.getAgentConfigs().getDeviceId();
+
+            requestPayload = APIManagerTokenUtils.GRANT_TYPE + "=" + APIManagerTokenUtils.REFRESH_TOKEN + "&" +
+                    APIManagerTokenUtils.REFRESH_TOKEN + "=" + refreshToken + "&" +
+                    APIManagerTokenUtils.SCOPE + "=" + applicationScope;
+
+            DataOutputStream dataOutPutWriter = new DataOutputStream(httpConnection.getOutputStream());
+            dataOutPutWriter.writeBytes(requestPayload);
+            dataOutPutWriter.flush();
+            dataOutPutWriter.close();
+
+            log.info(AgentConstants.LOG_APPENDER + "Request to refresh OAuth token was sent to [" +
+                             httpConnection.getURL() + "] with payload [" + requestPayload + "].");
+            log.info(AgentConstants.LOG_APPENDER + "Response [" + httpConnection.getResponseCode() + ":" +
+                             httpConnection.getResponseMessage() + "] was received for token refresh attempt.");
+
+            connectionBuffer = new BufferedReader(new InputStreamReader(httpConnection.getInputStream()));
+
+            while ((dataFromBuffer = connectionBuffer.readLine()) != null) {
+                responseMessage.append(dataFromBuffer);
+            }
+
+            log.info(AgentConstants.LOG_APPENDER + "Response [" + responseMessage +
+                             "] was received for the token refresh call.");
+
+            refreshStatus = updateExistingTokens(responseMessage.toString());
+
+        } catch (TransportHandlerException e) {
+            throw new AgentCoreOperationException(e);
+        } catch (ProtocolException e) {
+            String errorMsg = "Protocol specific error occurred when trying to set method to " +
+                    AgentConstants.HTTP_POST + " for endpoint at: " + tokenEndpoint;
+            log.error(AgentConstants.LOG_APPENDER + errorMsg);
+            throw new AgentCoreOperationException(errorMsg, e);
+
+        } catch (IOException e) {
+            String errorMsg = "An IO error occurred whilst trying to get the response code from: " + tokenEndpoint +
+                    " for a HTTP " + AgentConstants.HTTP_POST + " call.";
+            log.error(AgentConstants.LOG_APPENDER + errorMsg);
+            throw new AgentCoreOperationException(errorMsg, e);
+        } finally {
+            if (connectionBuffer != null) {
+                try {
+                    connectionBuffer.close();
+                } catch (IOException e) {
+                    log.error(AgentConstants.LOG_APPENDER +
+                                      "Error encounter whilst attempting to close buffer to connection at: " +
+                                      tokenEndpoint);
+                }
+            }
+
+            if (httpConnection != null) {
+                httpConnection.disconnect();
+            }
+        }
+        return refreshStatus;
+    }
+
+
+    private static boolean updateExistingTokens(String responseFromTokenEP) {
+        JSONObject jsonTokenObject = new JSONObject(responseFromTokenEP);
+        String newAccessToken = jsonTokenObject.get(APIManagerTokenUtils.ACCESS_TOKEN).toString();
+        String newRefreshToken = jsonTokenObject.get(APIManagerTokenUtils.REFRESH_TOKEN).toString();
+
+        if (newAccessToken == null || newRefreshToken == null) {
+            log.error(
+                    AgentConstants.LOG_APPENDER + "Neither Access-Token nor Refresh-Token was found in the response [" +
+                            responseFromTokenEP + "].");
+            return false;
+        }
+
+        AgentManager.getInstance().getAgentConfigs().setAuthToken(newAccessToken);
+        AgentManager.getInstance().getAgentConfigs().setRefreshToken(newRefreshToken);
+        String deviceConfigFilePath =
+                AgentManager.getInstance().getRootPath() + AgentConstants.AGENT_PROPERTIES_FILE_NAME;
+
+        Properties deviceProperties = new Properties();
+        FileOutputStream fileOutputStream = null;
+
+        try {
+            fileOutputStream = new FileOutputStream(deviceConfigFilePath);
+            deviceProperties.setProperty(AgentConstants.AUTH_TOKEN_PROPERTY, newAccessToken);
+            deviceProperties.setProperty(AgentConstants.REFRESH_TOKEN_PROPERTY, newRefreshToken);
+            deviceProperties.store(fileOutputStream, null);
+
+        } catch (FileNotFoundException ex) {
+            String errorMsg =
+                    "[" + AgentConstants.AGENT_PROPERTIES_FILE_NAME + "] file not found at: " + deviceConfigFilePath;
+            log.error(AgentConstants.LOG_APPENDER + errorMsg);
+            return false;
+
+        } catch (IOException ex) {
+            String errorMsg = "Error occurred whilst trying to write to [" + AgentConstants.AGENT_PROPERTIES_FILE_NAME +
+                    "] at: " + deviceConfigFilePath;
+            log.error(AgentConstants.LOG_APPENDER + errorMsg);
+            return false;
+        } finally {
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    log.error(AgentConstants.LOG_APPENDER +
+                                      "Error occurred whilst trying to close InputStream resource used to read the '" +
+                                      AgentConstants.AGENT_PROPERTIES_FILE_NAME + "' file");
+                }
+            }
+        }
+        return true;
+    }
+
+
+    private class APIManagerTokenUtils {
+        public static final String GRANT_TYPE = "grant_type";
+        public static final String ACCESS_TOKEN = "access_token";
+        public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String SCOPE = "scope";
+    }
 
 }
 

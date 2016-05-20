@@ -35,7 +35,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-//TODO:: Lincense heade, comments and SPECIFIC class name since its not generic
+//TODO:: Lincence header, comments and SPECIFIC class name since its not generic
 public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
 
     private static final Log log = LogFactory.getLog(FireAlarmMQTTCommunicator.class);
