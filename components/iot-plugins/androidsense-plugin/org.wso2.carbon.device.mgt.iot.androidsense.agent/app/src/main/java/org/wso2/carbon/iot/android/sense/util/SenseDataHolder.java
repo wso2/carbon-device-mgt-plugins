@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * This holds the sensor,battery and location data inmemory.
+ * This holds the sensor,battery and location data in memory.
  */
 public class SenseDataHolder {
 
@@ -59,20 +59,20 @@ public class SenseDataHolder {
         return wordDataHolder;
     }
 
-//    public static void resetSensorDataHolder(){
-//        sensorDataHolder = null;
-//    }
-//
-//    public static void resetBatteryDataHolder(){
-//        batteryDataHolder = null;
-//    }
-//
-//    public static void resetLocationDataHolder(){
-//        locationDataHolder = null;
-//    }
-//
-//    public static void resetWordDataHolder() {
-//        wordDataHolder = null;
-//    }
+    public static void resetSensorDataHolder(){
+        sensorDataHolder = null;
+    }
+
+    public static void resetBatteryDataHolder(){
+        batteryDataHolder = null;
+    }
+
+    public static void resetLocationDataHolder(){
+        locationDataHolder = null;
+    }
+
+    public static void resetWordDataHolder() {
+        wordDataHolder = null;
+    }
 
 }

@@ -66,7 +66,7 @@ public class DataPublisherService extends Service {
             public void run() {
                 try {
                     List<Event> events = new ArrayList<>();
-                    //retreive sensor data.
+                    //retrieve sensor data.
                     List<SensorData> sensorDataMap = SenseDataHolder.getSensorDataHolder();
                     for (SensorData sensorData : sensorDataMap) {
                         Event event = new Event();
@@ -105,9 +105,9 @@ public class DataPublisherService extends Service {
                                 break;
                         }
                     }
-                    //SenseDataHolder.resetSensorDataHolder();
+                    SenseDataHolder.resetSensorDataHolder();
 
-                    //retreive batter data.
+                    //retrieve batter data.
                     List<BatteryData> batteryDataMap = SenseDataHolder.getBatteryDataHolder();
                     for (BatteryData batteryData : batteryDataMap) {
                         Event event = new Event();
@@ -115,8 +115,8 @@ public class DataPublisherService extends Service {
                         event.setBattery(batteryData.getLevel());
                         events.add(event);
                     }
-                    //SenseDataHolder.resetBatteryDataHolder();
-                    //retreive location data.
+                    SenseDataHolder.resetBatteryDataHolder();
+                    //retrieve location data.
                     List<LocationData> locationDataMap = SenseDataHolder.getLocationDataHolder();
                     for (LocationData locationData : locationDataMap) {
                         Event event = new Event();
@@ -124,7 +124,7 @@ public class DataPublisherService extends Service {
                         event.setGps(new double[]{locationData.getLatitude(), locationData.getLongitude()});
                         events.add(event);
                     }
-                    //SenseDataHolder.resetLocationDataHolder();
+                    SenseDataHolder.resetLocationDataHolder();
 
                     //retrieve words
                     ProcessWords.cleanAndPushToWordMap();
@@ -147,7 +147,7 @@ public class DataPublisherService extends Service {
                             events.add(event);
                         }
                     }
-                    //SenseDataHolder.resetWordDataHolder();
+                    SenseDataHolder.resetWordDataHolder();
                     //publish the data
                     if (events.size() > 0 && LocalRegistry.isEnrolled(context)) {
                         String user = LocalRegistry.getUsername(context);
