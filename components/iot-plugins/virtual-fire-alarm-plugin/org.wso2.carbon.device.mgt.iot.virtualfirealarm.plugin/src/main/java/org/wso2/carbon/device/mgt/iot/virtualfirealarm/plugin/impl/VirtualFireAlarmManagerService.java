@@ -25,10 +25,15 @@ import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
 import org.wso2.carbon.device.mgt.common.push.notification.PushNotificationConfig;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config.VirtualFireAlarmConfig;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class VirtualFireAlarmManagerService implements DeviceManagementService {
 
     private DeviceManager deviceManager;
+    private PushNotificationConfig pushNotificationConfig;
 
     @Override
     public String getType() {
@@ -38,6 +43,18 @@ public class VirtualFireAlarmManagerService implements DeviceManagementService {
     @Override
     public void init() throws DeviceManagementException {
         this.deviceManager = new VirtualFireAlarmManager();
+        this.pushNotificationConfig = this.populatePushNotificationConfig();
+    }
+
+    private PushNotificationConfig populatePushNotificationConfig() {
+        org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config.PushNotificationConfig sourceConfig =
+                VirtualFireAlarmConfig.getInstance().getPushNotificationConfig();
+        Map<String, String> staticProps = new HashMap<>();
+        for (org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config.PushNotificationConfig.Property
+                property : sourceConfig.getProperties()) {
+            staticProps.put(property.getName(), property.getValue());
+        }
+        return new PushNotificationConfig("MQTT", staticProps);
     }
 
     @Override
@@ -57,7 +74,7 @@ public class VirtualFireAlarmManagerService implements DeviceManagementService {
 
     @Override
     public PushNotificationConfig getPushNotificationConfig() {
-        return null;
+        return pushNotificationConfig;
     }
 
 }

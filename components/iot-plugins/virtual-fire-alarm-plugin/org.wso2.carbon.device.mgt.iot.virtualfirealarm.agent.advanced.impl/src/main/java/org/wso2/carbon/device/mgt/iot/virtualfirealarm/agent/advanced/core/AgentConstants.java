@@ -39,10 +39,10 @@ public class AgentConstants {
 
 	public static final String AGENT_CONTROL_APP_EP = "/devicemgt/device/%s?id=%s";
 	public static final String DEVICE_DETAILS_PAGE_EP = "/devicemgt/device/%s?id=%s";
-	public static final String DEVICE_ANALYTICS_PAGE_URL = "/devicemgt/analytics?deviceId=%s&deviceType=%s&deviceName=%s";
+	public static final String DEVICE_ANALYTICS_PAGE_URL = "/devicemgt/device/virtual_firealarm/analytics?deviceId=%s&deviceName=%s";
 	/*	---------------------------------------------------------------------------------------
-				HTTP Connection specific information for communicating with IoT-Server
- 		---------------------------------------------------------------------------------------	*/
+                    HTTP Connection specific information for communicating with IoT-Server
+             ---------------------------------------------------------------------------------------	*/
 	public static final String HTTP_POST = "POST";
 	public static final String HTTP_GET = "GET";
 	public static final String APPLICATION_JSON_TYPE = "application/json";

@@ -53,7 +53,6 @@ public interface VirtualFireAlarmService {
     @Feature(code = "buzz", name = "Buzzer On / Off", description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
     Response switchBuzzer(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
                              @FormParam("state") String state);
-    
 
     /**
      * Retrieve Sensor data for the device type

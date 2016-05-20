@@ -1,4 +1,8 @@
 {
-    "version": "1.0.0",
-    "extends": "cdmf.unit.device.operation-mod"
+  "version": "1.0.0",
+  "pushedUris": [
+    "/policies",
+    "/policy/{+any}"
+  ],
+  "extends": "cdmf.unit.device.operation-mod"
 }

@@ -89,7 +89,6 @@ public class AgentManager {
 
         String analyticsPageContext = String.format(AgentConstants.DEVICE_ANALYTICS_PAGE_URL,
                                                     agentConfigs.getDeviceId(),
-                                                    AgentConstants.DEVICE_TYPE,
                                                     agentConfigs.getDeviceName());
 
         String controlPageContext = String.format(AgentConstants.DEVICE_DETAILS_PAGE_EP,

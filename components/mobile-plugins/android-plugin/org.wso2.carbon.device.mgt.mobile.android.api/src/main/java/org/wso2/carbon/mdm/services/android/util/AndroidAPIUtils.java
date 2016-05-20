@@ -29,8 +29,11 @@ import org.wso2.carbon.analytics.datasource.commons.Record;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+<<<<<<< HEAD
 import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
 import org.wso2.carbon.device.mgt.common.Device;
+=======
+>>>>>>> 344232fc3287dc7566624756aa2ea17d7874dcf9
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -45,8 +48,11 @@ import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceDetailsMgtExcept
 import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManager;
 import org.wso2.carbon.device.mgt.core.search.mgt.impl.Utils;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
+<<<<<<< HEAD
 import org.wso2.carbon.device.mgt.mobile.impl.android.gcm.GCMService;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
+=======
+>>>>>>> 344232fc3287dc7566624756aa2ea17d7874dcf9
 import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
@@ -93,16 +99,16 @@ public class AndroidAPIUtils {
         return deviceManagementProviderService;
     }
 
-    public static GCMService getGCMService() {
-        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        GCMService gcmService = (GCMService) ctx.getOSGiService(GCMService.class, null);
-        if (gcmService == null) {
-            String msg = "GCM service has not initialized.";
-            log.error(msg);
-            throw new IllegalStateException(msg);
-        }
-        return gcmService;
-    }
+//    public static GCMService getGCMService() {
+//        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+//        GCMService gcmService = (GCMService) ctx.getOSGiService(GCMService.class, null);
+//        if (gcmService == null) {
+//            String msg = "GCM service has not initialized.";
+//            log.error(msg);
+//            throw new IllegalStateException(msg);
+//        }
+//        return gcmService;
+//    }
 
     public static MediaType getResponseMediaType(String acceptHeader) {
         MediaType responseMediaType;

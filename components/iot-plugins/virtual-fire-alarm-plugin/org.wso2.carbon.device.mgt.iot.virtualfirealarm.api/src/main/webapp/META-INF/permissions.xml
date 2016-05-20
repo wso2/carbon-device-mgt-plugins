@@ -37,7 +37,7 @@
 	</Permission>
     <Permission>
         <name>Control Buzz</name>
-        <path>/device-mgt/user/operations</path>
+        <path>/device-mgt/user/operation</path>
         <url>/device/*/buzz</url>
         <method>POST</method>
         <scope>virtual_firealarm_user</scope>
@@ -47,6 +47,6 @@
         <path>/device-mgt/user/stats</path>
         <url>/device/stats/*</url>
         <method>GET</method>
-        <scope>virtual_firealarm_device</scope>
+        <scope>virtual_firealarm_user</scope>
     </Permission>
 </PermissionConfiguration>

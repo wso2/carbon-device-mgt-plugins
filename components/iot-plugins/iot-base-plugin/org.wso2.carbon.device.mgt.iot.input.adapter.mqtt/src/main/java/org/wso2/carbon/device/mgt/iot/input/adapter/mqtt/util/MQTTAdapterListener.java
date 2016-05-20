@@ -69,7 +69,6 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
 
     private InputEventAdapterListener eventAdapterListener = null;
 
-
     public MQTTAdapterListener(MQTTBrokerConnectionConfiguration mqttBrokerConnectionConfiguration,
                                String topic, String mqttClientId,
                                InputEventAdapterListener inputEventAdapterListener, int tenantId) {
@@ -173,22 +172,26 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                     StringEntity requestEntity = new StringEntity(jsonString, ContentType.APPLICATION_JSON);
                     postMethod.setEntity(requestEntity);
                     HttpResponse httpResponse = httpClient.execute(postMethod);
-                    String response = MQTTUtil.getResponseString(httpResponse);
-                    try {
-                        JSONParser jsonParser = new JSONParser();
-                        JSONObject jsonPayload = (JSONObject) jsonParser.parse(response);
-                        String clientId = (String) jsonPayload.get(MQTTEventAdapterConstants.CLIENT_ID);
-                        String clientSecret = (String) jsonPayload.get(MQTTEventAdapterConstants.CLIENT_SECRET);
-                        JWTClientManagerService jwtClientManagerService = MQTTUtil.getJWTClientManagerService();
-                        AccessTokenInfo accessTokenInfo = jwtClientManagerService.getJWTClient().getAccessToken(
-                                clientId, clientSecret, username, scopes);
-                        connectionOptions.setUserName(accessTokenInfo.getAccessToken());
-                    } catch (ParseException e) {
-                        String msg = "error occurred while parsing client credential payload";
-                        log.error(msg, e);
-                    } catch (JWTClientException e) {
-                        String msg = "error occurred while parsing the response from JWT Client";
-                        log.error(msg, e);
+                    if (httpResponse != null) {
+                        String response = MQTTUtil.getResponseString(httpResponse);
+                        try {
+                            if (response != null) {
+                                JSONParser jsonParser = new JSONParser();
+                                JSONObject jsonPayload = (JSONObject) jsonParser.parse(response);
+                                String clientId = (String) jsonPayload.get(MQTTEventAdapterConstants.CLIENT_ID);
+                                String clientSecret = (String) jsonPayload.get(MQTTEventAdapterConstants.CLIENT_SECRET);
+                                JWTClientManagerService jwtClientManagerService = MQTTUtil.getJWTClientManagerService();
+                                AccessTokenInfo accessTokenInfo = jwtClientManagerService.getJWTClient().getAccessToken(
+                                        clientId, clientSecret, username, scopes);
+                                connectionOptions.setUserName(accessTokenInfo.getAccessToken());
+                            }
+                        } catch (ParseException e) {
+                            String msg = "error occurred while parsing client credential payload";
+                            log.error(msg, e);
+                        } catch (JWTClientException e) {
+                            String msg = "error occurred while parsing the response from JWT Client";
+                            log.error(msg, e);
+                        }
                     }
                 } catch (MalformedURLException e) {
                     log.error("Invalid dcrUrl : " + dcrUrlString);
@@ -263,11 +266,11 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
 
     @Override
     public void run() {
+        int connectionDuration = MQTTEventAdapterConstants.INITIAL_RECONNECTION_DURATION;
         while (!connectionSucceeded) {
             try {
-                MQTTEventAdapterConstants.initialReconnectDuration = MQTTEventAdapterConstants.initialReconnectDuration
-                        * MQTTEventAdapterConstants.reconnectionProgressionFactor;
-                Thread.sleep(MQTTEventAdapterConstants.initialReconnectDuration);
+                connectionDuration = connectionDuration * MQTTEventAdapterConstants.RECONNECTION_PROGRESS_FACTOR;
+                Thread.sleep(connectionDuration);
                 startListener();
                 connectionSucceeded = true;
                 log.info("MQTT Connection successful");

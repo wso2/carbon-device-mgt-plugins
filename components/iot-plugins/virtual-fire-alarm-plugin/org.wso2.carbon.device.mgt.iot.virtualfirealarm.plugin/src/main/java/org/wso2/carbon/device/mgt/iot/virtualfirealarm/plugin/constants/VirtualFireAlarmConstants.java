@@ -90,4 +90,6 @@ public class VirtualFireAlarmConstants {
             + "mqtt.properties";
     public static final String XMPP_CONFIG_LOCATION = CarbonUtils.getEtcCarbonConfigDirPath() + File.separator
             + "xmpp.properties";
+
+    public static final String MQTT_ADAPTER_TOPIC_PROPERTY_NAME = "mqtt.adapter.topic";
 }
