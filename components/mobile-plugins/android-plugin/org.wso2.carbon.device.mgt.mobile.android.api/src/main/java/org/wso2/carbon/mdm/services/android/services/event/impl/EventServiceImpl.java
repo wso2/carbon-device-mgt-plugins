@@ -50,7 +50,8 @@ public class EventServiceImpl implements EventService {
         Message message = new Message();
         MediaType responseMediaType = AndroidAPIUtils.getResponseMediaType(acceptHeader);
 
-        Object payload[] = {eventBeanWrapper.getDeviceIdentifier(), eventBeanWrapper.getPayload(), eventBeanWrapper.getType()};
+        Object payload[] = {eventBeanWrapper.getDeviceIdentifier(), eventBeanWrapper.getPayload(),
+                eventBeanWrapper.getType()};
         try {
             if (AndroidAPIUtils.getEventPublisherService().publishEvent(
                     EVENT_STREAM_DEFINITION, "1.0.0", new Object[0], new Object[0], payload)) {
@@ -64,7 +65,7 @@ public class EventServiceImpl implements EventService {
         } catch (DataPublisherConfigurationException e) {
             String msg = "Error occurred while publishing the events from Android agent.";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).type(responseMediaType).build();
         }
     }
 
@@ -94,7 +95,7 @@ public class EventServiceImpl implements EventService {
             String msg = "Error occurred while getting published events for specific " +
                     "Device: " + deviceId + ".";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).type(responseMediaType).build();
         }
     }
 
@@ -128,7 +129,7 @@ public class EventServiceImpl implements EventService {
             String msg = "Error occurred while getting published events for specific " +
                     "Device: " + deviceId + " on given Date.";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).type(responseMediaType).build();
         }
     }
 
@@ -148,8 +149,8 @@ public class EventServiceImpl implements EventService {
         try {
             deviceStates = AndroidAPIUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
             if (deviceStates == null) {
-                message.
-                        setResponseCode("No any alerts are published on given date for given Device: " + deviceId + ".");
+                message.setResponseCode("No any alerts are published for given Device: " +
+                        "" + deviceId + " on specific date.");
                 return Response.status(Response.Status.OK).entity(message).build();
 
             } else {
@@ -157,9 +158,9 @@ public class EventServiceImpl implements EventService {
             }
         } catch (AnalyticsException e) {
             String msg = "Error occurred while getting published events for specific " +
-                    "Device: " + deviceId + "og given device Type.";
+                    "Device: " + deviceId + "and given device Type.";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).type(responseMediaType).build();
         }
 
     }
