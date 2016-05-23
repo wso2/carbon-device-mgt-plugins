@@ -29,13 +29,13 @@ import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagement
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementService;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.mdm.services.android.omadm.cachemanager.OMADMCacheManager;
+import org.wso2.carbon.mdm.services.android.omadm.cachemanager.beans.DMTreeOperationCacheEntry;
+import org.wso2.carbon.mdm.services.android.omadm.cachemanager.impl.OMADMCacheManagerImpl;
 import org.wso2.carbon.mdm.services.android.omadm.operations.beans.ProfileOperation;
 import org.wso2.carbon.mdm.services.android.omadm.operations.util.OperationCodes;
 import org.wso2.carbon.mdm.services.android.omadm.operations.util.OperationUtils;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.ItemTag;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.ResultsTag;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.StatusTag;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.SyncMLDocument;
+import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;

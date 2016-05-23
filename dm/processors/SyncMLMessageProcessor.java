@@ -20,6 +20,9 @@ package org.wso2.carbon.mdm.services.android.omadm.dm.processors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.mdm.services.android.omadm.cachemanager.OMADMCacheManager;
+import org.wso2.carbon.mdm.services.android.omadm.cachemanager.beans.DMTreeOperationCacheEntry;
+import org.wso2.carbon.mdm.services.android.omadm.cachemanager.impl.OMADMCacheManagerImpl;
 import org.wso2.carbon.mdm.services.android.omadm.ddf.MgmtTreeManager;
 import org.wso2.carbon.mdm.services.android.omadm.ddf.impl.MgmtTreeManagerImpl;
 import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
@@ -124,6 +127,17 @@ public class SyncMLMessageProcessor {
             responseDocument.getBody().getStatus().add(headerStatus);
         } else {
             responseDocument.getBody().getStatus().add(headerStatus);
+        }
+
+        // Update the management tree according to previously sent operation requests
+        OMADMCacheManager cacheManager = OMADMCacheManagerImpl.getInstance();
+        DMTreeOperationCacheEntry cacheEntry = cacheManager.getOperationEntry(sourceDocument.getHeader().
+                getSource().getLocURI());
+        if (cacheEntry.getOperationBody() != null) {
+            SyncMLBody requestSyncMLBody = cacheEntry.getOperationBody();
+            PostResponseMessageProcessor processor = new PostResponseMessageProcessor(sourceDocument,
+                    requestSyncMLBody, sourceDocument.getHeader().getSource().getLocURI());
+            processor.processMessage();
         }
 
         // Update operations

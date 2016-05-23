@@ -7,6 +7,9 @@ import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.mdm.services.android.omadm.cachemanager.OMADMCacheManager;
+import org.wso2.carbon.mdm.services.android.omadm.cachemanager.beans.DMTreeOperationCacheEntry;
+import org.wso2.carbon.mdm.services.android.omadm.cachemanager.impl.OMADMCacheManagerImpl;
 import org.wso2.carbon.mdm.services.android.omadm.operations.util.OperationCodes;
 import org.wso2.carbon.mdm.services.android.omadm.operations.util.OperationUtils;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
@@ -79,6 +82,11 @@ public class OperationAppender {
                 }
             }
         }
+
+        // Persist the SyncML body for rolling back changes and further processing of the DM Tree
+        OMADMCacheManager cacheManager = OMADMCacheManagerImpl.getInstance();
+        DMTreeOperationCacheEntry cacheEntry = new DMTreeOperationCacheEntry(targetDocument.getBody());
+        cacheManager.addOperationEntry(deviceIdentifier.getId(), cacheEntry);
     }
 
     /**

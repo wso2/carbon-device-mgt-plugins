@@ -48,7 +48,7 @@ public class DevInfo implements Serializable {
         return mgmtTree;
     }
 
-    public static void setMgmtTree(MgmtTree mgmtTree) {
+    private static void setMgmtTree(MgmtTree mgmtTree) {
         DevInfo.mgmtTree = mgmtTree;
     }
 }

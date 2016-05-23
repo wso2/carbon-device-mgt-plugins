@@ -21,7 +21,7 @@ package org.wso2.carbon.mdm.services.android.omadm.util;
 /**
  * This class contains utilities related to status codes
  */
-public class AlertCodeUtils {
+public class SyncMLAlertCodeUtils {
 
     public static final String UNKNOWN = "-1";
     public static final String TWO_WAY = "200";
@@ -50,6 +50,13 @@ public class AlertCodeUtils {
     public static final String NO_END_OF_DATA = "1225";
     public static final String GENERIC_ALERT = "1226";
 
+    // Success Codes
+    public static final int IN_PROGRESS = 101;
+    public static final int SUCCESS = 200;
+    public static final int AUTHENTICATION_ACCEPTED = 212;
+    public static final int OPERATION_CANCELED = 214;
+    public static final int NOT_EXECUTED = 215;
+
     public static boolean isInitializationCode(int code) {
         return (code == 200) || (code == 201) || (code == 202) || (code == 203) || (code == 204) || (code == 205) ||
                 (code == 206) || (code == 207) || (code == 208) || (code == 209) || (code == 210) || (code == 1200) ||
@@ -64,4 +71,9 @@ public class AlertCodeUtils {
         return (code == 1100) || (code == 1101) || (code == 1102) || (code == 1103) || (code == 1104);
     }
 
+    public static boolean isSuccessCode(String codeStr) {
+        int code = Integer.parseInt(codeStr);
+        return (code == 200) || (code == 201) || (code == 202) || (code == 203) || (code == 204) || (code == 205) ||
+                (code == 206) || (code == 207) || (code == 208) || (code == 209) || (code == 210);
+    }
 }
