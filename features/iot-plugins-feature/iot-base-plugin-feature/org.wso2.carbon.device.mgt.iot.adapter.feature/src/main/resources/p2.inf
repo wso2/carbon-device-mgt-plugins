@@ -1,1 +1,4 @@
 instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/webapps/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.adapter_${feature.version}/webapps/,target:${installFolder}/../../deployment/server/webapps/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.adapter_${feature.version}/websocket-validation.properties,target:${installFolder}/../../conf/etc/websocket-validation.properties,overwrite:true);\
