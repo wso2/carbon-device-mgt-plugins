@@ -30,8 +30,6 @@ import org.wso2.carbon.mdm.services.android.services.configuration.Configuration
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 import org.wso2.carbon.mdm.services.android.util.Message;
-
-import javax.jws.WebService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -41,14 +39,13 @@ import java.util.List;
  * Android Platform Configuration REST-API implementation.
  * All end points supports JSON, XMl with content negotiation.
  */
-@WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
 public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
     private static Log log = LogFactory.getLog(ConfigurationMgtServiceImpl.class);
 
     @POST
-    public Message configureSettings(TenantConfiguration configuration)
+    public Response configureSettings(TenantConfiguration configuration)
             throws AndroidAgentException {
 
         Message responseMsg = new Message();
@@ -82,15 +79,15 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
         } catch (DeviceManagementException e) {
             msg = "Error occurred while configuring the android platform";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return responseMsg;
+        return Response.status(Response.Status.CREATED).entity(responseMsg).build();
     }
 
     @GET
-    public TenantConfiguration getConfiguration() throws AndroidAgentException {
+    public Response getConfiguration() throws AndroidAgentException {
         String msg;
-        TenantConfiguration tenantConfiguration;
+        TenantConfiguration tenantConfiguration = null;
         List<ConfigurationEntry> configs;
         try {
             tenantConfiguration = AndroidAPIUtils.getDeviceManagementService().
@@ -99,7 +96,7 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
                 configs = tenantConfiguration.getConfiguration();
             } else {
                 tenantConfiguration = new TenantConfiguration();
-                configs = new ArrayList<ConfigurationEntry>();
+                configs = new ArrayList<>();
             }
 
             ConfigurationEntry entry = new ConfigurationEntry();
@@ -117,13 +114,13 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
         } catch (DeviceManagementException e) {
             msg = "Error occurred while retrieving the Android tenant configuration";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return tenantConfiguration;
+        return Response.status(Response.Status.OK).entity(tenantConfiguration).build();
     }
 
     @PUT
-    public Message updateConfiguration(TenantConfiguration configuration) throws AndroidAgentException {
+    public Response updateConfiguration(TenantConfiguration configuration) throws AndroidAgentException {
         String msg;
         Message responseMsg = new Message();
         ConfigurationEntry licenseEntry = null;
@@ -148,15 +145,16 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
             }
             configuration.setConfiguration(configs);
             AndroidAPIUtils.getDeviceManagementService().saveConfiguration(configuration);
+            AndroidAPIUtils.getGCMService().resetTenantConfigCache();
             Response.status(Response.Status.ACCEPTED);
             responseMsg.setResponseMessage("Android platform configuration has updated successfully.");
             responseMsg.setResponseCode(Response.Status.ACCEPTED.toString());
         } catch (DeviceManagementException e) {
             msg = "Error occurred while modifying configuration settings of Android platform";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return responseMsg;
+        return Response.status(Response.Status.CREATED).entity(responseMsg).build();
     }
 
 }

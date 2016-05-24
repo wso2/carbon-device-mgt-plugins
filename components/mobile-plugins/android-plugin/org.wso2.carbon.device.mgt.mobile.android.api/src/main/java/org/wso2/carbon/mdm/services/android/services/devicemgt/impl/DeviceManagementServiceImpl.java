@@ -28,10 +28,9 @@ import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
+import org.wso2.carbon.mdm.services.android.services.devicemgt.DeviceManagementService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.Message;
-
-import javax.jws.WebService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -40,10 +39,9 @@ import java.util.List;
  * Android Device Management REST-API implementation.
  * All end points supports JSON, XMl with content negotiation.
  */
-@WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
-public class DeviceManagementServiceImpl {
+public class DeviceManagementServiceImpl implements DeviceManagementService {
 
     private static Log log = LogFactory.getLog(DeviceManagementServiceImpl.class);
 
@@ -54,7 +52,7 @@ public class DeviceManagementServiceImpl {
      * @throws AndroidAgentException
      */
     @GET
-    public List<Device> getAllDevices()
+    public Response getAllDevices()
             throws AndroidAgentException {
         String msg;
         List<Device> devices;
@@ -66,9 +64,9 @@ public class DeviceManagementServiceImpl {
         } catch (DeviceManagementException e) {
             msg = "Error occurred while fetching the device list.";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return devices;
+        return Response.status(Response.Status.OK).entity(devices).build();
     }
 
     /**
@@ -80,7 +78,7 @@ public class DeviceManagementServiceImpl {
      */
     @GET
     @Path("{id}")
-    public Device getDevice(@PathParam("id") String id)
+    public Response getDevice(@PathParam("id") String id)
             throws AndroidAgentException {
 
         String msg;
@@ -90,14 +88,14 @@ public class DeviceManagementServiceImpl {
             DeviceIdentifier deviceIdentifier = AndroidAPIUtils.convertToDeviceIdentifierObject(id);
             device = AndroidAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
             if (device == null) {
-                Response.status(Response.Status.NOT_FOUND);
+                return Response.status(Response.Status.NOT_FOUND).build();
             }
         } catch (DeviceManagementException deviceMgtEx) {
             msg = "Error occurred while fetching the device information.";
             log.error(msg, deviceMgtEx);
-            throw new AndroidAgentException(msg, deviceMgtEx);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return device;
+        return Response.status(Response.Status.OK).entity(device).build();
     }
 
     /**
@@ -110,7 +108,7 @@ public class DeviceManagementServiceImpl {
      */
     @PUT
     @Path("{id}")
-    public Message updateDevice(@PathParam("id") String id, Device device)
+    public Response updateDevice(@PathParam("id") String id, Device device)
             throws AndroidAgentException {
         String msg;
         Message responseMessage = new Message();
@@ -124,23 +122,22 @@ public class DeviceManagementServiceImpl {
             result = AndroidAPIUtils.getDeviceManagementService()
                     .updateDeviceInfo(deviceIdentifier, device);
             if (result) {
-                Response.status(Response.Status.ACCEPTED);
                 responseMessage.setResponseMessage("Device information has modified successfully.");
+                return Response.status(Response.Status.ACCEPTED).entity(responseMessage).build();
             } else {
-                Response.status(Response.Status.NOT_MODIFIED);
                 responseMessage.setResponseMessage("Device not found for the update.");
+                return Response.status(Response.Status.NOT_MODIFIED).entity(responseMessage).build();
             }
         } catch (DeviceManagementException e) {
             msg = "Error occurred while modifying the device information.";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return responseMessage;
     }
 
     @POST
     @Path("appList/{id}")
-    public Message updateApplicationList(@PathParam("id") String id, List<Application> applications)
+    public Response updateApplicationList(@PathParam("id") String id, List<Application> applications)
             throws
             AndroidAgentException {
 
@@ -151,22 +148,20 @@ public class DeviceManagementServiceImpl {
         try {
             AndroidAPIUtils.getApplicationManagerService().
                     updateApplicationListInstalledInDevice(deviceIdentifier, applications);
-            Response.status(Response.Status.ACCEPTED);
             responseMessage.setResponseMessage("Device information has modified successfully.");
-
+            return Response.status(Response.Status.ACCEPTED).entity(responseMessage).build();
         } catch (ApplicationManagementException e) {
             String msg = "Error occurred while modifying the application list.";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return responseMessage;
     }
 
     @GET
     @Path("license")
     @Produces("text/html")
-    public String getLicense() throws AndroidAgentException {
-        License license;
+    public Response getLicense() throws AndroidAgentException {
+        License license = null;
 
         try {
             license =
@@ -176,9 +171,9 @@ public class DeviceManagementServiceImpl {
         } catch (DeviceManagementException e) {
             String msg = "Error occurred while retrieving the license configured for Android device enrolment";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return (license == null) ? null : license.getText();
+        return Response.status(Response.Status.OK).entity((license == null) ? null : license.getText()).build();
     }
 
 }
