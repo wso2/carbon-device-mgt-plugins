@@ -68,6 +68,15 @@
             <ref bean="errorHandler"/>
         </jaxrs:providers>
     </jaxrs:server>
+    <jaxrs:server id="eventService" address="/events">
+        <jaxrs:serviceBeans>
+            <ref bean="eventServiceBean"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="jsonProvider"/>
+            <ref bean="errorHandler"/>
+        </jaxrs:providers>
+    </jaxrs:server>
 
     <bean id="deviceMgtServiceBean" class="org.wso2.carbon.mdm.services.android.services.devicemgt.DeviceManagementServiceImpl"/>
     <bean id="enrollmentServiceBean" class="org.wso2.carbon.mdm.services.android.services.enrollment.EnrollmentServiceImpl"/>
