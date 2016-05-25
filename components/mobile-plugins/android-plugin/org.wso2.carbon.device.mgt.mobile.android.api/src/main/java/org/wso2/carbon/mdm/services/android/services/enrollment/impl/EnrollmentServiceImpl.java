@@ -27,8 +27,6 @@ import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
 import org.wso2.carbon.mdm.services.android.services.enrollment.EnrollmentService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.Message;
-
-import javax.jws.WebService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
@@ -36,7 +34,6 @@ import javax.ws.rs.core.Response;
  * Android Device Enrollment REST-API implementation.
  * All end points supports JSON, XMl with content negotiation.
  */
-@WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
 public class EnrollmentServiceImpl implements EnrollmentService {
@@ -44,7 +41,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     private static Log log = LogFactory.getLog(EnrollmentService.class);
 
     @POST
-    public Message enrollDevice(org.wso2.carbon.device.mgt.common.Device device)
+    public Response enrollDevice(org.wso2.carbon.device.mgt.common.Device device)
             throws AndroidAgentException {
 
         Message responseMsg = new Message();
@@ -56,23 +53,22 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             if (status) {
                 Response.status(Response.Status.CREATED);
                 responseMsg.setResponseMessage("Device enrollment succeeded.");
-                responseMsg.setResponseCode(Response.Status.CREATED.toString());
+                return Response.status(Response.Status.CREATED).entity(responseMsg).build();
             } else {
                 Response.status(Response.Status.INTERNAL_SERVER_ERROR);
                 responseMsg.setResponseMessage("Device enrollment failed.");
-                responseMsg.setResponseCode(Response.Status.INTERNAL_SERVER_ERROR.toString());
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseMsg).build();
             }
         } catch (DeviceManagementException e) {
             msg = "Error occurred while enrolling the device";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return responseMsg;
     }
 
     @GET
     @Path("{deviceId}")
-    public Message isEnrolled(@PathParam("deviceId") String id) throws AndroidAgentException {
+    public Response isEnrolled(@PathParam("deviceId") String id) throws AndroidAgentException {
         String msg;
         boolean result;
         Message responseMsg = new Message();
@@ -83,11 +79,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             if (result) {
                 responseMsg.setResponseMessage("Device has already enrolled");
                 responseMsg.setResponseCode(Response.Status.ACCEPTED.toString());
-                Response.status(Response.Status.ACCEPTED);
+                return Response.status(Response.Status.ACCEPTED).entity(responseMsg).build();
             } else {
                 responseMsg.setResponseMessage("Device not found");
                 responseMsg.setResponseCode(Response.Status.NOT_FOUND.toString());
-                Response.status(Response.Status.NOT_FOUND);
+                return Response.status(Response.Status.NOT_FOUND).entity(responseMsg).build();
             }
         } catch (DeviceManagementException e) {
             msg = "Error occurred while checking enrollment status of the device.";
@@ -95,14 +91,13 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             responseMsg.setResponseCode(Response.Status.INTERNAL_SERVER_ERROR.toString());
             Response.status(Response.Status.INTERNAL_SERVER_ERROR);
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return responseMsg;
     }
 
     @PUT
     @Path("{deviceId}")
-    public Message modifyEnrollment(@PathParam("deviceId") String id,
+    public Response modifyEnrollment(@PathParam("deviceId") String id,
                                     org.wso2.carbon.device.mgt.common.Device device)
             throws AndroidAgentException {
         String msg;
@@ -114,23 +109,22 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             if (result) {
                 responseMsg.setResponseMessage("Device enrollment has updated successfully");
                 responseMsg.setResponseCode(Response.Status.ACCEPTED.toString());
-                Response.status(Response.Status.ACCEPTED);
+                return Response.status(Response.Status.ACCEPTED).entity(responseMsg).build();
             } else {
                 responseMsg.setResponseMessage("Device not found for enrollment");
                 responseMsg.setResponseCode(Response.Status.NOT_MODIFIED.toString());
-                Response.status(Response.Status.NOT_MODIFIED);
+                return Response.status(Response.Status.NOT_MODIFIED).entity(responseMsg).build();
             }
         } catch (DeviceManagementException e) {
             msg = "Error occurred while modifying enrollment of the device";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return responseMsg;
     }
 
     @DELETE
     @Path("{deviceId}")
-    public Message disEnrollDevice(@PathParam("deviceId") String id) throws AndroidAgentException {
+    public Response disEnrollDevice(@PathParam("deviceId") String id) throws AndroidAgentException {
         Message responseMsg = new Message();
         boolean result;
         String msg;
@@ -141,18 +135,17 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             if (result) {
                 responseMsg.setResponseMessage("Device has removed successfully");
                 responseMsg.setResponseCode(Response.Status.ACCEPTED.toString());
-                Response.status(Response.Status.ACCEPTED);
+                return Response.status(Response.Status.ACCEPTED).entity(responseMsg).build();
             } else {
                 responseMsg.setResponseMessage("Device not found");
                 responseMsg.setResponseCode(Response.Status.NOT_FOUND.toString());
-                Response.status(Response.Status.NOT_FOUND);
+                return Response.status(Response.Status.NOT_FOUND).entity(responseMsg).build();
             }
         } catch (DeviceManagementException e) {
             msg = "Error occurred while dis enrolling the device";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return responseMsg;
     }
 
 }

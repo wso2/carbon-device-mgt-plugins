@@ -50,7 +50,7 @@ public interface OperationMgtService {
             @ApiResponse(code = 200, message = "List of pending operations"),
             @ApiResponse(code = 500, message = "Issue in retrieving operation management service instance")
     })
-    List<? extends Operation> getPendingOperations(
+    Response getPendingOperations(
             @ApiParam(name = "acceptHeader", value = "Accept Header") @HeaderParam(ACCEPT) String acceptHeader,
             @ApiParam(name = "id", value = "DeviceIdentifier") @PathParam("id") String id,
             @ApiParam(name = "resultOperations", value = "Device Operation Status")
@@ -62,17 +62,34 @@ public interface OperationMgtService {
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
             value = "Adding a Device Lock on Android Devices",
-            responseContainer = "List",
             notes = "Using this API you have the option of hard locking an Android device, where the Administrator " +
-                    "permanently locks the device or screen locking an Android device",
+                    "permanently locks the device or screen locking an Android device"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 500, message = "Issue in retrieving device management service instance")
+    })
+    Response configureDeviceLock(@ApiParam(name = "acceptHeader", value = "Accept Header")
+                             @HeaderParam(ACCEPT) String acceptHeader, @ApiParam(name = "cameraBeanWrapper",
+            value = "Device lock configurations with device IDs") DeviceLockBeanWrapper deviceLockBeanWrapper);
+
+    @POST
+    @Path("unlock")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Adding a Device Unlock on Android Devices",
+            responseContainer = "List",
+            notes = "Using this API you have the option of unlocking an Android device, where the Administrator " +
+                    "unlocks the device",
             response = String.class)
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "created"),
             @ApiResponse(code = 500, message = "Issue in retrieving device management service instance")
     })
-    Response configureDeviceLock(@ApiParam(name = "acceptHeader", value = "Accept Header")
+    Response configureDeviceUnlock(@ApiParam(name = "acceptHeader", value = "Accept Header")
                                  @HeaderParam(ACCEPT) String acceptHeader, @ApiParam(name = "deviceIDs", value =
-            "DeviceIds to be enable device lock operation")
+            "DeviceIds to be enable device unlock operation")
                                          List<String> deviceIDs);
 
 
@@ -220,6 +237,22 @@ public interface OperationMgtService {
             value = "Device Ids needs to be ring") List<String> deviceIDs);
 
     @POST
+    @Path("reboot-device")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Rebooting Android Devices",
+            notes = "Reboot Android devices"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 500, message = "Issue in retrieving device management service instance")
+    })
+    Response rebootDevice(@ApiParam(name = "acceptHeader", value = "Accept Header")
+                        @HeaderParam(ACCEPT) String acceptHeader, @ApiParam(name = "deviceIDs",
+            value = "Device Ids needs to be rebooted") List<String> deviceIDs);
+
+    @POST
     @ApiOperation(
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
@@ -257,6 +290,27 @@ public interface OperationMgtService {
                                         ApplicationInstallationBeanWrapper applicationInstallationBeanWrapper);
 
     @POST
+    @Path("update-application")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Updating an Application on Android Devices",
+            notes = "Update an application on an Android device. If the device you are updating the application" +
+                    " has the WSO2 system service installed, the application update will happen in silent " +
+                    "mode, else the device user's consent will be required"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 500, message = "Issue in retrieving device management service instance")
+    })
+    Response updateApplication(@ApiParam(name = "acceptHeader", value = "Accept Header")
+                                @HeaderParam(ACCEPT) String acceptHeader,
+                                @ApiParam(name = "applicationUpdateBeanWrapper",
+                                        value = "Properties of updated apps and device IDs")
+                                        ApplicationUpdateBeanWrapper applicationUpdateBeanWrapper);
+
+    @POST
     @Path("uninstall-application")
     @ApiOperation(
             consumes = MediaType.APPLICATION_JSON,
@@ -292,6 +346,44 @@ public interface OperationMgtService {
                                    @ApiParam(name = "blacklistApplicationsBeanWrapper",
                                            value = "BlacklistApplications Configuration and DeviceIds")
                                            BlacklistApplicationsBeanWrapper blacklistApplicationsBeanWrapper);
+
+    @POST
+    @Path("upgrade-firmware")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Upgrading device firmware",
+            notes = "Device firmware upgrade"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 500, message = "Issue in retrieving device management service instance")
+    })
+    Response upgradeFirmware(@ApiParam(name = "acceptHeader", value = "Accept Header")
+                                   @HeaderParam(ACCEPT) String acceptHeader,
+                                   @ApiParam(name = "upgradeFirmwareBeanWrapper",
+                                           value = "Firmware upgrade configuration and DeviceIds")
+                                           UpgradeFirmwareBeanWrapper upgradeFirmwareBeanWrapper);
+
+    @POST
+    @Path("vpn")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Configuring VPN on Android devices",
+            notes = "Configure VPN on Android devices"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Created"),
+            @ApiResponse(code = 500, message = "Issue in retrieving device management service instance")
+    })
+    Response configureVPN(@ApiParam(name = "acceptHeader", value = "Accept Header")
+                             @HeaderParam(ACCEPT) String acceptHeader,
+                             @ApiParam(name = "vpnBeanWrapper",
+                                     value = "VPN configuration and DeviceIds")
+                                     VpnBeanWrapper vpnBeanWrapper);
 
     @POST
     @Path("notification")

@@ -35,18 +35,20 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-public class PolicyMgtServiceImpl {
+public class PolicyMgtServiceImpl implements PolicyMgtService {
     private static Log log = LogFactory.getLog(PolicyMgtService.class);
 
     @GET
     @Path("{deviceId}")
-    public Message getEffectivePolicy(@HeaderParam("Accept") String acceptHeader,
+    public Response getEffectivePolicy(@HeaderParam("Accept") String acceptHeader,
                                       @PathParam("deviceId") String id) throws AndroidAgentException {
 
         DeviceIdentifier deviceIdentifier = AndroidAPIUtils.convertToDeviceIdentifierObject(id);
+        MediaType responseMediaType = AndroidAPIUtils.getResponseMediaType(acceptHeader);
         Message responseMessage = new Message();
         Policy policy;
         try {
@@ -55,35 +57,44 @@ public class PolicyMgtServiceImpl {
             if (policy == null) {
                 responseMessage = Message.responseMessage("No effective policy found").
                         responseCode(Response.Status.NO_CONTENT.toString()).build();
+                return Response.status(Response.Status.NO_CONTENT).entity(responseMessage).type(
+                        responseMediaType).build();
             } else {
                 responseMessage = Message.responseMessage("Effective policy added to operation").
                         responseCode(Response.Status.OK.toString()).build();
+                return Response.status(Response.Status.OK).entity(responseMessage).type(
+                        responseMediaType).build();
             }
         } catch (PolicyManagementException e) {
             String msg = "Error occurred while getting the policy.";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).type(
+                    responseMediaType).build();
         }
-        return responseMessage;
     }
 
     @GET
     @Path("/features/{deviceId}")
-    public List<ProfileFeature> getEffectiveFeatures(@HeaderParam("Accept") String acceptHeader,
+    public Response getEffectiveFeatures(@HeaderParam("Accept") String acceptHeader,
                                                      @PathParam("deviceId") String id) throws AndroidAgentException {
         List<ProfileFeature> profileFeatures;
         DeviceIdentifier deviceIdentifier = AndroidAPIUtils.convertToDeviceIdentifierObject(id);
+        MediaType responseMediaType = AndroidAPIUtils.getResponseMediaType(acceptHeader);
         try {
             PolicyManagerService policyManagerService = AndroidAPIUtils.getPolicyManagerService();
             profileFeatures = policyManagerService.getEffectiveFeatures(deviceIdentifier);
             if (profileFeatures == null) {
                 Response.status(Response.Status.NOT_FOUND);
+                return Response.status(Response.Status.NOT_FOUND).type(
+                        responseMediaType).build();
             }
         } catch (FeatureManagementException e) {
             String msg = "Error occurred while getting the features.";
             log.error(msg, e);
-            throw new AndroidAgentException(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).type(
+                    responseMediaType).build();
         }
-        return profileFeatures;
+        return Response.status(Response.Status.OK).entity(profileFeatures).type(
+                responseMediaType).build();
     }
 }

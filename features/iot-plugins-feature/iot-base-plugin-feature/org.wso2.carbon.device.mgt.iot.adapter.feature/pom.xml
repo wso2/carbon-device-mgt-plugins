@@ -18,20 +18,19 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<parent>
 		<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
 		<artifactId>iot-base-plugin-feature</artifactId>
-		<version>2.1.0-SNAPSHOT</version>
+		<version>2.1.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>org.wso2.carbon.device.mgt.iot.adapter.feature</artifactId>
 	<packaging>pom</packaging>
-	<version>2.1.0-SNAPSHOT</version>
+	<version>2.1.1-SNAPSHOT</version>
 	<name>WSO2 Carbon - IoT Device Management Feature</name>
 	<url>http://wso2.org</url>
 	<description>This feature contains the adapter bundles required for IoT Server</description>
@@ -44,6 +43,10 @@
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
 			<artifactId>org.wso2.carbon.device.mgt.iot.output.adapter.xmpp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.output.adapter.ui</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -65,6 +68,32 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+									<artifactId>org.wso2.carbon.device.mgt.iot.output.adapter.ui.endpoint</artifactId>
+									<version>${carbon.devicemgt.plugins.version}</version>
+									<type>war</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/maven-shared-archive-resources/webapps/</outputDirectory>
+									<destFileName>secured-outputui.war</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<executions>
@@ -127,6 +156,9 @@
 								</bundleDef>
 								<bundleDef>
 									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.input.adapter.xmpp:${carbon.devicemgt.plugins.version}
+								</bundleDef>
+								<bundleDef>
+									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.output.adapter.ui:${carbon.devicemgt.plugins.version}
 								</bundleDef>
 							</bundles>
 							<importFeatures>
