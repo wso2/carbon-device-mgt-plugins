@@ -19,6 +19,7 @@
 package org.wso2.carbon.device.mgt.mobile;
 
 import org.wso2.carbon.device.mgt.common.*;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManager;
@@ -33,9 +34,9 @@ public abstract class AbstractMobileOperationManager implements OperationManager
 	}
 
 	@Override
-	public int addOperation(Operation operation, List<DeviceIdentifier> devices) throws
-            OperationManagementException {
-		return 1;
+	public Activity addOperation(Operation operation, List<DeviceIdentifier> devices) throws
+			OperationManagementException {
+		return null;
 	}
 
 }
