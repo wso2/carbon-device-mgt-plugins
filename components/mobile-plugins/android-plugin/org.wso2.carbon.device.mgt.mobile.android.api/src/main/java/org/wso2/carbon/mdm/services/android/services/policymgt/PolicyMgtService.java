@@ -26,6 +26,7 @@ import org.wso2.carbon.policy.mgt.common.ProfileFeature;
 import javax.jws.WebService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Api(value = "PolicyMgtService", description = "Policy management related REST-API implementation.")
@@ -47,9 +48,9 @@ public interface PolicyMgtService {
             @ApiResponse(code = 200, message = "Effective policy added to operation"),
             @ApiResponse(code = 204, message = "No effective policy found")
     })
-    Message getEffectivePolicy(@ApiParam(name = "acceptHeader", value = "Accept Header") @HeaderParam("Accept")
+    Response getEffectivePolicy(@ApiParam(name = "acceptHeader", value = "Accept Header") @HeaderParam("Accept")
                                        String acceptHeader,
-                               @ApiParam(name = "deviceId", value = "DeviceIdentifier") @PathParam("deviceId")
+                                @ApiParam(name = "deviceId", value = "DeviceIdentifier") @PathParam("deviceId")
                                        String id) throws AndroidAgentException;
 
     @GET
@@ -66,7 +67,7 @@ public interface PolicyMgtService {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Error occurred while getting the features")
     })
-    List<ProfileFeature> getEffectiveFeatures(@ApiParam(name = "acceptHeader", value = "Accept Header")
+    Response getEffectiveFeatures(@ApiParam(name = "acceptHeader", value = "Accept Header")
                                               @HeaderParam("Accept") String acceptHeader,
                                               @ApiParam(name = "deviceId", value = "DeviceIdentifier")
                                               @PathParam("deviceId") String id) throws AndroidAgentException;

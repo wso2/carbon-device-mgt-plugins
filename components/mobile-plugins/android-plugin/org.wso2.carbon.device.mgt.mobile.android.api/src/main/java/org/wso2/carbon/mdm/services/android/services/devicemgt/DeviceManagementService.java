@@ -22,11 +22,9 @@ import io.swagger.annotations.*;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
-import org.wso2.carbon.mdm.services.android.util.Message;
-
-import javax.jws.WebService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
@@ -35,7 +33,6 @@ import java.util.List;
  */
 
 @Api(value = "DeviceManagementService", description = "Android Device Management REST-API implementation.")
-@WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
 public interface DeviceManagementService {
@@ -62,7 +59,7 @@ public interface DeviceManagementService {
             @ApiResponse(code = 200, message = "List of Devices"),
             @ApiResponse(code = 500, message = "Error occurred while fetching the device list")
     })
-    List<org.wso2.carbon.device.mgt.common.Device> getAllDevices() throws AndroidAgentException;
+    Response getAllDevices() throws AndroidAgentException;
 
     /**
      * Fetch Android device details of a given device Id.
@@ -86,7 +83,7 @@ public interface DeviceManagementService {
             @ApiResponse(code = 200, message = "Information of the given device"),
             @ApiResponse(code = 500, message = "Error occurred while fetching the device information")
     })
-    org.wso2.carbon.device.mgt.common.Device getDevice(@ApiParam(name = "id", value = "deviceIdentifier")
+    Response getDevice(@ApiParam(name = "id", value = "deviceIdentifier")
                                                        @PathParam("id") String id) throws AndroidAgentException;
 
     /**
@@ -110,7 +107,7 @@ public interface DeviceManagementService {
             @ApiResponse(code = 304, message = "Device not found for the update")
     })
     @Path("{id}")
-    Message updateDevice(@ApiParam(name = "id", value = "deviceIdentifier")
+    Response updateDevice(@ApiParam(name = "id", value = "deviceIdentifier")
                          @PathParam("id") String id, @ApiParam(name = "device", value = "deviceIdentifier")
                                  Device device) throws AndroidAgentException;
 
@@ -125,9 +122,9 @@ public interface DeviceManagementService {
             @ApiResponse(code = 202, message = "Device information has modified successfully"),
             @ApiResponse(code = 500, message = "Error occurred while modifying the application list")
     })
-    Message updateApplicationList(@ApiParam(name = "id", value = "deviceIdentifier") @PathParam("id") String id,
+    Response updateApplicationList(@ApiParam(name = "id", value = "deviceIdentifier") @PathParam("id") String id,
                                   @ApiParam(name = "applications", value = "updatable applications")
-                                          List<Application> applications);
+                                          List<Application> applications) throws AndroidAgentException;
 
     @GET
     @Path("license")
@@ -144,5 +141,5 @@ public interface DeviceManagementService {
             @ApiResponse(code = 500, message = "Error occurred while retrieving the license configured for Android " +
                     "device enrolment")
     })
-    String getLicense() throws AndroidAgentException;
+    Response getLicense() throws AndroidAgentException;
 }

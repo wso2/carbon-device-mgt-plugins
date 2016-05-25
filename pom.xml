@@ -329,6 +329,11 @@
                 <artifactId>org.wso2.carbon.analytics.api</artifactId>
                 <version>${carbon.analytics.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.event.stream.core</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
 
             <!--IoT Server specific dependencies-->
             <dependency>
@@ -371,6 +376,11 @@
                 <artifactId>org.wso2.carbon.device.mgt.iot.api</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
                 <type>war</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.output.adapter.ui</artifactId>
+                <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
 
             <!--Android sense DeviceType Impl, API and Agent-->
@@ -1013,6 +1023,23 @@
                 <artifactId>commons-pool</artifactId>
                 <version>${commons.pool.wso2.version}</version>
             </dependency>
+            <!--websocket dependency-->
+            <dependency>
+                <groupId>javax.websocket</groupId>
+                <artifactId>javax.websocket-api</artifactId>
+                <version>${javax.websocket.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-websocket-api</artifactId>
+                <version>${tomcat.websocket.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>${javax.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1145,6 +1172,11 @@
         <nimbus.orbit.version.range>[2.26.1, 3.0.0)</nimbus.orbit.version.range>
 
         <commons.pool.wso2.version>1.5.6.wso2v1</commons.pool.wso2.version>
+
+        <!--websocket related lib versions-->
+        <tomcat.websocket.version>7.0.54</tomcat.websocket.version>
+        <javax.websocket.version>1.0</javax.websocket.version>
+        <javax.version>2.0</javax.version>
 
         <!-- Release plugin ID for github-->
         <project.scm.id>github-scm</project.scm.id>

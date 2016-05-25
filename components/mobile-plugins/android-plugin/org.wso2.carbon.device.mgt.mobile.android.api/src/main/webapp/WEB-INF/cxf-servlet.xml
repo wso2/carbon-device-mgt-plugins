@@ -78,12 +78,12 @@
         </jaxrs:providers>
     </jaxrs:server>
 
-    <bean id="deviceMgtServiceBean" class="org.wso2.carbon.mdm.services.android.services.devicemgt.DeviceManagementServiceImpl"/>
-    <bean id="enrollmentServiceBean" class="org.wso2.carbon.mdm.services.android.services.enrollment.EnrollmentServiceImpl"/>
-    <bean id="operationServiceBean" class="org.wso2.carbon.mdm.services.android.services.operationmgt.OperationMgtServiceImpl"/>
-    <bean id="policyServiceBean" class="org.wso2.carbon.mdm.services.android.services.policymgt.PolicyMgtServiceImpl"/>
-    <bean id="configurationServiceBean" class="org.wso2.carbon.mdm.services.android.services.configuration.ConfigurationMgtServiceImpl"/>
-    <bean id="eventServiceBean" class="org.wso2.carbon.mdm.services.android.services.EventServiceImpl"/>
+    <bean id="deviceMgtServiceBean" class="org.wso2.carbon.mdm.services.android.services.devicemgt.impl.DeviceManagementServiceImpl"/>
+    <bean id="enrollmentServiceBean" class="org.wso2.carbon.mdm.services.android.services.enrollment.impl.EnrollmentServiceImpl"/>
+    <bean id="operationServiceBean" class="org.wso2.carbon.mdm.services.android.services.operationmgt.impl.OperationMgtServiceImpl"/>
+    <bean id="policyServiceBean" class="org.wso2.carbon.mdm.services.android.services.policymgt.impl.PolicyMgtServiceImpl"/>
+    <bean id="configurationServiceBean" class="org.wso2.carbon.mdm.services.android.services.configuration.impl.ConfigurationMgtServiceImpl"/>
+    <bean id="eventServiceBean" class="org.wso2.carbon.mdm.services.android.services.event.impl.EventServiceImpl"/>
     <bean id="jsonProvider" class="org.wso2.carbon.mdm.services.android.common.GsonMessageBodyHandler"/>
     <bean id="errorHandler" class="org.wso2.carbon.mdm.services.android.common.ErrorHandler"/>
 </beans>

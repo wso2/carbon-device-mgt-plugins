@@ -29,7 +29,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>iot-base-plugin</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - Arduino Plugin</name>
+    <name>WSO2 Carbon - IoT Base Plugin</name>
     <url>http://wso2.org</url>
 
     <modules>
@@ -37,6 +37,8 @@
         <module>org.wso2.carbon.device.mgt.iot.ui</module>
         <module>org.wso2.carbon.device.mgt.iot.output.adapter.mqtt</module>
         <module>org.wso2.carbon.device.mgt.iot.output.adapter.xmpp</module>
+        <module>org.wso2.carbon.device.mgt.iot.output.adapter.ui</module>
+        <module>org.wso2.carbon.device.mgt.iot.output.adapter.ui.endpoint</module>
         <module>org.wso2.carbon.device.mgt.iot.input.adapter.extension</module>
         <module>org.wso2.carbon.device.mgt.iot.input.adapter.http</module>
         <module>org.wso2.carbon.device.mgt.iot.input.adapter.mqtt</module>
