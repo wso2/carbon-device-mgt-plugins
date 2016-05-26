@@ -16,7 +16,7 @@
   under the License.
 }}
 <div class="col-lg-12  margin-top-double">
-    <h1 class="grey ">Windows Mobile</h1>
+    <h1 class="grey">Windows Mobile</h1>
     <hr>
 </div>
 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
@@ -24,28 +24,26 @@
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-    <h4 class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Windows"
-                                  target="_blank">[ here ]</a> for latest instructions and troubleshooting.</h4>
+    <h4 class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Windows" target="_blank">[ here ]</a> for
+                         latest instructions and troubleshooting.</h4>
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
 
     <h3 class="uppercase">What it Does</h3>
-    <hr>
+    <hr />
     <p class="grey margin-top">Connect and manage your Windows device with WSO2 IoT Server.</p>
     <br>
 
     <h3 class="uppercase">What You Need</h3>
     <hr>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">STEP 01</span>&nbsp;&nbsp;&nbsp;Windows
-                                                                          Mobile.
+        <li class="padding-top-double"><span class="circle">STEP 01</span>&nbsp;&nbsp;&nbsp;Windows Mobile.</li>
+        <li class="padding-top-double"><span class="circle">STEP 02</span>&nbsp;&nbsp;&nbsp;Go ahead and click [Enroll
+                                                                          Device].
         </li>
-        <li class="padding-top-double"><span class="circle">STEP 02</span>&nbsp;&nbsp;&nbsp;Go ahead
-                                                                          and click [Enroll Device].
-        </li>
-        <li class="padding-top-double"><span class="circle">STEP 03</span>&nbsp;&nbsp;&nbsp;Proceed
-                                                                          to [Prepare] section.
+        <li class="padding-top-double"><span class="circle">STEP 03</span>&nbsp;&nbsp;&nbsp;Proceed to [Prepare]
+                                                                          section.
         </li>
     </ul>
     <br>
@@ -53,7 +51,7 @@
     <a href="#" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg"></i>
         Enroll Device</a>
 
-    <br/><br/>
+    <br /><br />
 </div>
 
 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12 padding-double grey-bg">
@@ -61,11 +59,8 @@
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">01</span> Scan QR code.</li>
-        <li class="padding-top-double"><span class="circle">02</span> Follow instructions in wizard.
-        </li>
-        <li class="padding-top-double"><span class="circle">03</span> Configure your workspace
-                                                                      account
-        </li>
+        <li class="padding-top-double"><span class="circle">02</span> Follow instructions in wizard.</li>
+        <li class="padding-top-double"><span class="circle">03</span> Configure your workspace account</li>
     </ul>
     <br>
 
@@ -80,12 +75,12 @@
     </center>
 </div>
 
-<br/>
+<br />
 
 <div id="qr-code-modal"
      data-enrollment-url="{{@app.context}}/device/windows/enroll" class="hidden">
 
-<div class="content">
+    <div class="content">
         <div class="row">
             <div class="col-lg-5 col-md-6 col-centered">
                 <h3>Scan QR code to start enrollment</h3>
@@ -100,60 +95,8 @@
     </div>
 </div>
 
-{{#zone "topCss"}}
-    <style type="text/css">
-        .circle {
-            background: none repeat scroll 0 0 #191919;
-            border-radius: 50px;
-            height: 50px;
-            padding: 10px;
-            width: 50px;
-            color: #fff;
-        }
-        .padding-top-double {
-            padding-top: 20px;
-        }
-        .padding-double {
-            padding: 20px;
-        }
-        .grey {
-            color: #333;
-        }
-        hr {
-            display: block;
-            height: 1px;
-            border: 0;
-            border-top: 1px solid #7f7f7f;
-            margin: 1em 0;
-            padding: 0;
-            opacity: 0.2;
-        }
-        .light-grey {
-            color: #7c7c7c;
-        }
-        .uppercase {
-            text-transform: uppercase;
-        }
-        .grey-bg {
-            background-color: #f6f4f4;
-        }
-
-        .doc-link {
-            background: #11375B;
-            padding: 20px;
-            color: white;
-            margin-top: 0;
-        }
-
-        .doc-link a {
-            color: white;
-        }
-    </style>
-{{/zone}}
-
 {{#zone "bottomJs"}}
     <script type="text/javascript">
-
         $(".download-link").click(function () {
             toggleEnrollment();
         });
@@ -163,6 +106,9 @@
             generateQRCode(".modalpopup-content .qr-code");
             showPopup();
         }
-
     </script>
+{{/zone}}
+
+{{#zone "topCss"}}
+    {{css "css/styles.css"}}
 {{/zone}}
