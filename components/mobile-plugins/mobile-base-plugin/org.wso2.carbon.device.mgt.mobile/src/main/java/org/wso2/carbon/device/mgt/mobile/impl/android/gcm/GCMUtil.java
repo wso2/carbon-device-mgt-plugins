@@ -27,6 +27,7 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
+import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.impl.android.util.AndroidPluginConstants;
 import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
 
@@ -153,12 +154,12 @@ public class GCMUtil {
     }
 
     public static String getConfigurationProperty(String property) {
-        DeviceManagementService androidDMService = MobileDeviceManagementDataHolder.getInstance().
-                getAndroidDeviceManagementService();
+        DeviceManagementService androidDMService = new AndroidDeviceManagementService();
         try {
             //Get the TenantConfiguration from cache if not we'll get it from DM service
             TenantConfiguration tenantConfiguration = getTenantConfigurationFromCache();
             if (tenantConfiguration == null) {
+                androidDMService.init();
                 tenantConfiguration = androidDMService.getDeviceManager().getConfiguration();
                 if (tenantConfiguration != null) {
                     addTenantConfigurationToCache(tenantConfiguration);
