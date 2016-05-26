@@ -76,7 +76,8 @@
 							org.wso2.carbon.core,
 							org.wso2.carbon.core.util,
 							org.wso2.carbon.event.output.adapter.core,
-							org.wso2.carbon.event.output.adapter.core.exception
+							org.wso2.carbon.event.output.adapter.core.exception,
+							org.wso2.carbon.ndatasource.core
 						</Import-Package>
 						<Export-Package>
 							!org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.internal,

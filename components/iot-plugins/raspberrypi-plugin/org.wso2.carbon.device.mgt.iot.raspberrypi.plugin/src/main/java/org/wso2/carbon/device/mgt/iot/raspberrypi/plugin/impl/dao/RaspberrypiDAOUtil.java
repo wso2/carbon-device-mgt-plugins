@@ -49,7 +49,7 @@ public class RaspberrypiDAOUtil {
             Context ctx = new InitialContext();
             dataSource = (DataSource) ctx.lookup(RaspberrypiConstants.DATA_SOURCE_NAME);
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + RaspberrypiConstants.DATA_SOURCE_NAME);
+            log.error("Error while looking up the data source: " + RaspberrypiConstants.DATA_SOURCE_NAME, e);
         }
     }
 
