@@ -23,67 +23,40 @@
          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
          http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
-    <jaxrs:server id="operationService" address="/operation">
+    <jaxrs:server id="services" address="/">
         <jaxrs:serviceBeans>
-            <ref bean="operationServiceBean"/>
+            <ref bean="deviceManagementService"/>
+            <ref bean="deviceManagementAdminService"/>
+            <ref bean="eventReceiverService"/>
+            <ref bean="deviceTypeConfigurationService"/>
+            <ref bean="swaggerResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jsonProvider"/>
             <ref bean="errorHandler"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="deviceManagementService" address="/device">
-        <jaxrs:serviceBeans>
-            <ref bean="deviceMgtServiceBean"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="errorHandler"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="enrollmentService" address="/enrollment">
-        <jaxrs:serviceBeans>
-            <ref bean="enrollmentServiceBean"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="errorHandler"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="policyService" address="/policy">
-        <jaxrs:serviceBeans>
-            <ref bean="policyServiceBean"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="errorHandler"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="configurationService" address="/configuration">
-        <jaxrs:serviceBeans>
-            <ref bean="configurationServiceBean"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="errorHandler"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="eventService" address="/events">
-        <jaxrs:serviceBeans>
-            <ref bean="eventServiceBean"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="errorHandler"/>
+            <ref bean="swaggerWriter"/>
         </jaxrs:providers>
     </jaxrs:server>
 
-    <bean id="deviceMgtServiceBean" class="org.wso2.carbon.mdm.services.android.services.devicemgt.impl.DeviceManagementServiceImpl"/>
-    <bean id="enrollmentServiceBean" class="org.wso2.carbon.mdm.services.android.services.enrollment.impl.EnrollmentServiceImpl"/>
-    <bean id="operationServiceBean" class="org.wso2.carbon.mdm.services.android.services.operationmgt.impl.OperationMgtServiceImpl"/>
-    <bean id="policyServiceBean" class="org.wso2.carbon.mdm.services.android.services.policymgt.impl.PolicyMgtServiceImpl"/>
-    <bean id="configurationServiceBean" class="org.wso2.carbon.mdm.services.android.services.configuration.impl.ConfigurationMgtServiceImpl"/>
-    <bean id="eventServiceBean" class="org.wso2.carbon.mdm.services.android.services.event.impl.EventServiceImpl"/>
+    <bean id="swaggerWriter" class="io.swagger.jaxrs.listing.SwaggerSerializers" />
+    <bean id="swaggerResource" class="io.swagger.jaxrs.listing.ApiListingResource" />
+
+    <bean id="swaggerConfig" class="io.swagger.jaxrs.config.BeanConfig">
+        <property name="resourcePackage" value="org.wso2.carbon.mdm.services.android.services"/>
+        <property name="version" value="2.1"/>
+        <property name="host" value="localhost:9443"/>
+        <property name="basePath" value="/device-mgt/android/v2.1"/>
+        <property name="title" value="Android Device Management API Definitions"/>
+        <property name="contact" value="dev@wso2.org"/>
+        <property name="license" value="Apache 2.0"/>
+        <property name="licenseUrl" value="http://www.apache.org/licenses/LICENSE-2.0.html"/>
+        <property name="scan" value="true"/>
+    </bean>
+
+    <bean id="deviceManagementService" class="org.wso2.carbon.mdm.services.android.services.impl.DeviceManagementServiceImpl"/>
+    <bean id="deviceManagementAdminService" class="org.wso2.carbon.mdm.services.android.services.impl.DeviceManagementAdminServiceImpl"/>
+    <bean id="eventReceiverService" class="org.wso2.carbon.mdm.services.android.services.impl.EventReceiverServiceImpl"/>
+    <bean id="deviceTypeConfigurationService" class="org.wso2.carbon.mdm.services.android.services.impl.DeviceTypeConfigurationServiceImpl"/>
     <bean id="jsonProvider" class="org.wso2.carbon.mdm.services.android.common.GsonMessageBodyHandler"/>
     <bean id="errorHandler" class="org.wso2.carbon.mdm.services.android.common.ErrorHandler"/>
 </beans>

@@ -1,22 +1,22 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *   Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
- * Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License.
- * You may obtain a copy of the License at
+ *   WSO2 Inc. licenses this file to you under the Apache License,
+ *   Version 2.0 (the "License"); you may not use this file except
+ *   in compliance with the License.
+ *   You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ *   Unless required by applicable law or agreed to in writing,
+ *   software distributed under the License is distributed on an
+ *   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *   KIND, either express or implied.  See the License for the
+ *   specific language governing permissions and limitations
+ *   under the License.
+ *
  */
-
-package org.wso2.carbon.mdm.services.android.services.configuration.impl;
+package org.wso2.carbon.mdm.services.android.services.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,28 +26,27 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
-import org.wso2.carbon.mdm.services.android.services.configuration.ConfigurationMgtService;
+import org.wso2.carbon.mdm.services.android.services.DeviceTypeConfigurationService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 import org.wso2.carbon.mdm.services.android.util.Message;
+
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Android Platform Configuration REST-API implementation.
- * All end points supports JSON, XMl with content negotiation.
- */
-@Produces({"application/json", "application/xml"})
-@Consumes({"application/json", "application/xml"})
-public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
-    private static Log log = LogFactory.getLog(ConfigurationMgtServiceImpl.class);
+@Path("/configuration")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurationService {
+
+    private static final Log log = LogFactory.getLog(DeviceTypeConfigurationServiceImpl.class);
 
     @POST
-    public Response configureSettings(TenantConfiguration configuration)
-            throws AndroidAgentException {
-
+    @Override
+    public Response addConfiguration(TenantConfiguration configuration) throws AndroidAgentException {
         Message responseMsg = new Message();
         String msg;
         ConfigurationEntry licenseEntry = null;
@@ -85,6 +84,7 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
     }
 
     @GET
+    @Override
     public Response getConfiguration() throws AndroidAgentException {
         String msg;
         TenantConfiguration tenantConfiguration = null;
@@ -102,7 +102,7 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
             ConfigurationEntry entry = new ConfigurationEntry();
             License license = AndroidAPIUtils.getDeviceManagementService().getLicense(
                     DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, AndroidConstants.
-                            TenantConfigProperties.LANGUAGE_US);
+                    TenantConfigProperties.LANGUAGE_US);
 
             if (license != null && configs != null) {
                 entry.setContentType(AndroidConstants.TenantConfigProperties.CONTENT_TYPE_TEXT);
@@ -120,6 +120,7 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
     }
 
     @PUT
+    @Override
     public Response updateConfiguration(TenantConfiguration configuration) throws AndroidAgentException {
         String msg;
         Message responseMsg = new Message();
@@ -145,7 +146,7 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
             }
             configuration.setConfiguration(configs);
             AndroidAPIUtils.getDeviceManagementService().saveConfiguration(configuration);
-            AndroidAPIUtils.getGCMService().resetTenantConfigCache();
+            //AndroidAPIUtils.getGCMService().resetTenantConfigCache();
             Response.status(Response.Status.ACCEPTED);
             responseMsg.setResponseMessage("Android platform configuration has updated successfully.");
             responseMsg.setResponseCode(Response.Status.ACCEPTED.toString());

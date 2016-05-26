@@ -33,4 +33,9 @@ public class BadRequestException extends WebApplicationException {
 		super(Response.status(Response.Status.BAD_REQUEST).entity(message).
 				type(mediaType).build());
 	}
+
+    public BadRequestException(Message message) {
+        super(Response.status(Response.Status.BAD_REQUEST).entity(message).build());
+    }
+
 }

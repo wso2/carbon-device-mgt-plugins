@@ -46,7 +46,7 @@
                 <version>2.2</version>
                 <configuration>
                     <packagingExcludes>WEB-INF/lib/*cxf*.jar</packagingExcludes>
-                    <warName>${project.artifactId}</warName>
+                    <warName>api#device-mgt#android#v2.1</warName>
                 </configuration>
             </plugin>
         </plugins>
