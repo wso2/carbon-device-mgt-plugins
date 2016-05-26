@@ -43,7 +43,7 @@ public class AndroidSenseDAOUtil {
             Context ctx = new InitialContext();
             dataSource = (DataSource) ctx.lookup(AndroidSenseConstants.DATA_SOURCE_NAME);
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + AndroidSenseConstants.DATA_SOURCE_NAME);
+            log.error("Error while looking up the data source: " + AndroidSenseConstants.DATA_SOURCE_NAME, e);
         }
     }
 

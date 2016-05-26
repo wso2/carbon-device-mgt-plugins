@@ -100,12 +100,11 @@ public class VirtualFireAlarmUtils {
         try {
             Context ctx = new InitialContext();
             DataSource dataSource = (DataSource) ctx.lookup(VirtualFireAlarmConstants.DATA_SOURCE_NAME);
-            DeviceSchemaInitializer initializer =
-                    new DeviceSchemaInitializer(dataSource);
+            DeviceSchemaInitializer initializer = new DeviceSchemaInitializer(dataSource);
             log.info("Initializing device management repository database schema");
             initializer.createRegistryDatabase();
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + VirtualFireAlarmConstants.DATA_SOURCE_NAME);
+            log.error("Error while looking up the data source: " + VirtualFireAlarmConstants.DATA_SOURCE_NAME, e);
         } catch (Exception e) {
             throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while initializing Iot Device " +
                                                                        "Management database schema", e);
