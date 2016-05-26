@@ -2,6 +2,7 @@ package org.wso2.carbon.mdm.services.android.omadm.operations;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
@@ -140,7 +141,7 @@ public class OperationAppender {
             for (Operation policyOperation : policyOperations) {
                 if (OperationCodes.CAMERA.equals(policyOperation.getCode())) {
                     ReplaceTag replaceCamera = new ReplaceTag();
-                    ItemTag item = generatePolicyCommandItem(operation);
+                    ItemTag item = generatePolicyCommandItem(policyOperation);
                     replaceCamera.setCommandId(operation.getId());
                     replaceCamera.getItems().add(item);
                     replaceBlocks.add(replaceCamera);
@@ -154,7 +155,28 @@ public class OperationAppender {
     }
 
     private void generateInfoOperation(Operation operation) {
+        if (SyncMLConstants.OperationCodes.DEVICE_INFO.equals(operation.getCode())) {
+            GetTag get = new GetTag();
+            get.setCommandId(operation.getId());
+            List<ItemTag> items = new ArrayList<>();
+            JSONObject payload = null;
 
+            try {
+                payload = new JSONObject(operation.getPayLoad().toString());
+            } catch (JSONException e) {
+                log.error("Issue in parsing JSON message.", e);
+            }
+
+            for (OperationCodes.DeviceInfo info : OperationCodes.DeviceInfo.values()) {
+                ItemTag item = new ItemTag();
+                TargetTag target = new TargetTag();
+                target.setLocURI(info.getCode());
+                item.setTarget(target);
+                items.add(item);
+            }
+            get.setItems(items);
+            targetDocument.getBody().setGet(get);
+        }
     }
 
     private void generateConfigOperation(Operation operation) {

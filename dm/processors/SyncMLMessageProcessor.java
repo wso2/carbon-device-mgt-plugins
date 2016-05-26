@@ -133,7 +133,7 @@ public class SyncMLMessageProcessor {
         OMADMCacheManager cacheManager = OMADMCacheManagerImpl.getInstance();
         DMTreeOperationCacheEntry cacheEntry = cacheManager.getOperationEntry(sourceDocument.getHeader().
                 getSource().getLocURI());
-        if (cacheEntry.getOperationBody() != null) {
+        if (cacheEntry != null && cacheEntry.getOperationBody() != null) {
             SyncMLBody requestSyncMLBody = cacheEntry.getOperationBody();
             PostResponseMessageProcessor processor = new PostResponseMessageProcessor(sourceDocument,
                     requestSyncMLBody, sourceDocument.getHeader().getSource().getLocURI());

@@ -8,6 +8,7 @@ public class OperationCodes {
         public static final String DEVICE_LOCK = "DEVICE_LOCK";
         public static final String DISENROLL = "DISENROLL";
         public static final String DEVICE_RING = "DEVICE_RING";
+        public static final String DEVICE_INFO = "DEVICE_INFO";
         public static final String WIPE_DATA = "WIPE_DATA";
         public static final String ENCRYPT_STORAGE = "ENCRYPT_STORAGE";
         public static final String LOCK_RESET = "LOCK_RESET";
@@ -39,8 +40,10 @@ public class OperationCodes {
         DEVICE_MODEL("./DevInfo/Mod"),
         DM_VERSION("./DevInfo/DmV"),
         LANGUAGE("./DevInfo/Lang"),
-        IMSI("./DevInfo/Ext/Identity/IMSI"),
-        IMEI("./DevInfo/Ext/Identity/IMEI"),
+        IMSI("./DevInfo/Ext/Identity/IMSI"), //
+        IMEI("./DevInfo/Ext/Identity/IMEI"), //
+        BATTERY_LEVEL("./DevInfo/Ext/Battery"),
+        INTERNAL_MEMORY("./DevInfo/Ext/Memory/InternalMemory"),
         SOFTWARE_VERSION("./DevDetail/SwV"),
         VENDOR("./DevDetail/OEM"),
         MAC_ADDRESS("./DevDetail/Ext/WLANMACAddress"),
@@ -116,6 +119,40 @@ public class OperationCodes {
         public String getCode() {
             return this.code;
         }
+    }
+
+    public enum DeviceInfo {
+        DEV_ID("./DevInfo/DevId"),
+        MANUFACTURER("./DevInfo/Man"),
+        DEVICE_MODEL("./DevInfo/Mod"),
+        DM_VERSION("./DevInfo/DmV"),
+        LANGUAGE("./DevInfo/Lang"),
+        IMSI("./DevInfo/Ext/Identity/IMSI"), //
+        IMEI("./DevInfo/Ext/Identity/IMEI"), //
+        BATTERY_LEVEL("./DevInfo/Ext/Battery"),
+        INTERNAL_MEMORY("./DevInfo/Ext/Memory/InternalMemory"),
+        SOFTWARE_VERSION("./DevDetail/SwV"),
+        VENDOR("./DevDetail/OEM"),
+        MAC_ADDRESS("./DevDetail/Ext/WLANMACAddress"),
+        RESOLUTION("./DevDetail/Ext/Microsoft/Resolution"),
+        DEVICE_NAME("./DevDetail/Ext/Microsoft/DeviceName");
+//        LOCK_PIN("./Vendor/MSFT/RemoteLock/NewPINValue"),
+//        LOCK_RESET("./Vendor/MSFT/RemoteLock/LockAndResetPIN"),
+//        LONGITUDE("./DevInfo/Ext/Location/Longitude"),
+//        ENCRYPT_STORAGE_STATUS("./Vendor/MSFT/PolicyManager/Device/Security/RequireDeviceEncryption"),
+//        DEVICE_PASSCODE_STATUS("./Vendor/MSFT/PolicyManager/My/DeviceLock/DevicePasswordEnabled"),
+//        LATITUDE("./DevInfo/Ext/Location/Latitude");
+
+        private final String code;
+
+        DeviceInfo(String code) {
+            this.code = code;
+        }
+
+        public String getCode() {
+            return this.code;
+        }
+
     }
 
     /**

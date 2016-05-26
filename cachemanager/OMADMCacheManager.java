@@ -2,8 +2,6 @@ package org.wso2.carbon.mdm.services.android.omadm.cachemanager;
 
 import org.wso2.carbon.mdm.services.android.omadm.cachemanager.beans.DMTreeOperationCacheEntry;
 
-import javax.cache.Cache;
-
 /**
  * The interface for the OMADM Cache Manager. The OMADMCacheManager
  * handles all the cahce-related operations of an OMADM management session

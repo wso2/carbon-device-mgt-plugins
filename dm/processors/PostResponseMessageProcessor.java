@@ -8,7 +8,6 @@ import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.parsers.URIPars
 import org.wso2.carbon.mdm.services.android.omadm.dm.dao.DeviceMODao;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
-import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLStatusCodes;
 import org.wso2.carbon.mdm.services.android.omadm.util.SyncMLAlertCodeUtils;
 
 import java.util.List;

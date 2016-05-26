@@ -191,6 +191,7 @@ public class SyncMLConstants {
         public static final String ENCRYPT_STORAGE = "ENCRYPT_STORAGE";
         public static final String LOCK_RESET = "LOCK_RESET";
         public static final String DEVICE_MUTE = "DEVICE_MUTE";
+        public static final String DEVICE_INFO = "DEVICE_INFO";
         public static final String PIN_CODE = "LOCK_PIN";
         public static final String CAMERA = "CAMERA";
         public static final String PASSCODE_POLICY = "PASSCODE_POLICY";

@@ -18,26 +18,33 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.operations;
 
+import com.google.gson.Gson;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
+import org.wso2.carbon.device.mgt.common.device.details.DeviceInfo;
 import org.wso2.carbon.device.mgt.common.notification.mgt.Notification;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementService;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
-import org.wso2.carbon.mdm.services.android.omadm.cachemanager.OMADMCacheManager;
-import org.wso2.carbon.mdm.services.android.omadm.cachemanager.beans.DMTreeOperationCacheEntry;
-import org.wso2.carbon.mdm.services.android.omadm.cachemanager.impl.OMADMCacheManagerImpl;
+import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceDetailsMgtException;
+import org.wso2.carbon.mdm.services.android.omadm.ddf.MgmtTreeManager;
+import org.wso2.carbon.mdm.services.android.omadm.ddf.impl.MgmtTreeManagerImpl;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.beans.MgmtTree;
+import org.wso2.carbon.mdm.services.android.omadm.dm.core.dmtree.parsers.URIParser;
+import org.wso2.carbon.mdm.services.android.omadm.dm.dao.DeviceMODao;
 import org.wso2.carbon.mdm.services.android.omadm.operations.beans.ProfileOperation;
 import org.wso2.carbon.mdm.services.android.omadm.operations.util.OperationCodes;
 import org.wso2.carbon.mdm.services.android.omadm.operations.util.OperationUtils;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
+import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
 import org.wso2.carbon.policy.mgt.common.ProfileFeature;
 import org.wso2.carbon.policy.mgt.common.monitor.ComplianceFeature;
@@ -56,6 +63,7 @@ public class OperationHandler {
 
     private SyncMLDocument sourceDocument;
     DeviceIdentifier deviceIdentifier;
+    private DeviceMODao moDao = DeviceMODao.getInstance();
     int commandId = 0;
 
     private static final String FEATURE_ENABLED = "1";
@@ -128,7 +136,7 @@ public class OperationHandler {
                         updateRingOperationStatus(status, pendingOperations);
                     }
                     if (OperationCodes.Command.DEVICE_WIPE.getCode().equals(status.getTargetReference())) {
-                        updateWipeOperation(status, pendingOperations);
+                        updateWipeOperationStatus(status, pendingOperations);
                     }
                 }
             }
@@ -161,6 +169,10 @@ public class OperationHandler {
                     }
                 }
             }
+            // Process results blocks (Update Device Information)
+            if (sourceDocument.getBody().getResults() != null) {
+                updateDeviceInfo(pendingOperations);
+            }
         }
         checkComplianceFeatureStatuses();
     }
@@ -171,7 +183,7 @@ public class OperationHandler {
      * @param status     - A status block in a SyncML Document
      * @param operations - A list of operations
      */
-    private void updateWipeOperation(StatusTag status, List<? extends Operation> operations) {
+    private void updateWipeOperationStatus(StatusTag status, List<? extends Operation> operations) {
         if (SyncMLConstants.SyncMLResponseCodes.ACCEPTED.equals(status.getData())) {
             for (Operation operation : operations) {
                 if ((OperationCodes.Command.DEVICE_WIPE.getCode().equals(operation.getCode()))
@@ -432,6 +444,56 @@ public class OperationHandler {
             nmService.addNotification(commandFailedNotification);
         } catch (NotificationManagementException e) {
             log.error("Issue in retrieving Notification management service instance", e);
+        }
+    }
+
+    /**
+     * Updates device information according
+     */
+    private void updateDeviceInfo(List<? extends Operation> pendingOperations) {
+        ResultsTag results = sourceDocument.getBody().getResults();
+        List<ItemTag> items = results.getItems();
+        MgmtTree tree;
+
+        for (Operation operation : pendingOperations) {
+            if (OperationCodes.DEVICE_INFO.equals(operation.getCode()) &&
+                    operation.getId() == results.getCommandReference()) {
+
+                Device device = new Device();
+                device.setDeviceIdentifier(deviceIdentifier.getId());
+
+                for (ItemTag item : items) {
+                    String locURI = item.getSource().getLocURI();
+                    Device.Property property = new Device.Property();
+                    List<Device.Property> properties = new ArrayList<>();
+                    property.setName(AndroidConstants.OperationCodes.DEVICE_INFO);
+                    StringBuilder devInfoStr =  new StringBuilder();
+                    devInfoStr.append("[");
+
+                    for (OperationCodes.DeviceInfo info : OperationCodes.DeviceInfo.values()) {
+                        if (locURI.equals(info.getCode())) {
+                            if (info.name().equals(OperationCodes.DeviceInfo.BATTERY_LEVEL)) {
+                                devInfoStr.append("{\"name\":\"BATTERY_LEVEL\",\"value\":\"" + item.getData() + "\"}");
+                            } else if (info.name().equals(OperationCodes.DeviceInfo.INTERNAL_MEMORY)) {
+                                devInfoStr.append("{\"name\":\"INTERNAL_MEMORY\",\"value\":\"" + item.getData() + "\"}");
+                            }
+                        }
+                    }
+                    devInfoStr.append("]");
+                    property.setValue(devInfoStr.toString());
+                    properties.add(property);
+                    device.setProperties(properties);
+
+                    tree = moDao.getMO(URIParser.getDMTreeName(locURI),
+                            sourceDocument.getHeader().getSource().getLocURI());
+                    if (tree != null) {
+                        MgmtTreeManager treeManager = new MgmtTreeManagerImpl(tree);
+                        treeManager.replaceNodeDetails(locURI, item);
+                    }
+                }
+                operation.setOperationResponse(new Gson().toJson(device));
+            }
+
         }
     }
 

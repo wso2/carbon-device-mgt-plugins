@@ -62,6 +62,63 @@
 					<DDFName></DDFName>
 				</DFType>
 			</DFProperties>
+			<Node>
+				<NodeName>BatteryLevel</NodeName>
+				<!--There are no further items here at the moment.-->
+				<DFProperties>
+					<AccessType>
+						<Get/>
+					</AccessType>
+					<DFFormat>
+						<node/>
+					</DFFormat>
+					<Scope>
+						<Permanent/>
+					</Scope>
+					<DFTitle>The Battery Level of the Device</DFTitle>
+					<DFType>
+						<DDFName></DDFName>
+					</DFType>
+				</DFProperties>
+			</Node>
+			<Node>
+				<NodeName>Memory</NodeName>
+				<!--There are no further items here at the moment.-->
+				<DFProperties>
+					<AccessType>
+						<Get/>
+					</AccessType>
+					<DFFormat>
+						<node/>
+					</DFFormat>
+					<Scope>
+						<Permanent/>
+					</Scope>
+					<DFTitle>The memory related parameters the Device</DFTitle>
+					<DFType>
+						<DDFName></DDFName>
+					</DFType>
+				</DFProperties>
+				<Node>
+					<NodeName>InternalMemory</NodeName>
+					<!--There are no further items here at the moment.-->
+					<DFProperties>
+						<AccessType>
+							<Get/>
+						</AccessType>
+						<DFFormat>
+							<node/>
+						</DFFormat>
+						<Scope>
+							<Permanent/>
+						</Scope>
+						<DFTitle>The internal memory status of the Device</DFTitle>
+						<DFType>
+							<DDFName></DDFName>
+						</DFType>
+					</DFProperties>
+				</Node>
+			</Node>
 		</Node>
 		<Node>
 			<NodeName>Bearer</NodeName>
