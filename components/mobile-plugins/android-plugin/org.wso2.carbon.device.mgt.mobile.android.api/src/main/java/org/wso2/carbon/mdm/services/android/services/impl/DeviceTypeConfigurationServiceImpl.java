@@ -161,7 +161,7 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
 
     @GET
     @Path("license")
-    @Produces("text/html")
+    @Produces("text/plain")
     public Response getLicense() throws AndroidAgentException {
         License license = null;
 

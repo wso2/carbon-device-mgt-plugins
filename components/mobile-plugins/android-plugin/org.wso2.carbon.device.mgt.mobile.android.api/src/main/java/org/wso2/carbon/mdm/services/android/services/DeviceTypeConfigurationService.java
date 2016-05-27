@@ -78,7 +78,7 @@ public interface DeviceTypeConfigurationService {
 
     @GET
     @Path("license")
-    @Produces("text/html")
+    @Produces("text/plain")
     @ApiOperation(
             produces = MediaType.APPLICATION_JSON,
             httpMethod = "GET",
