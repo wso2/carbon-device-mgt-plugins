@@ -18,10 +18,7 @@
  */
 package org.wso2.carbon.mdm.services.android.services;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.*;
 
 import javax.ws.rs.Consumes;
@@ -33,6 +30,8 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/devices")
+
+@Api(value = "DeviceManagementAdmin", description = "Device management related admin APIs.")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface DeviceManagementAdminService {
