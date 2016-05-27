@@ -30,6 +30,7 @@ import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.RaspberrypiManager
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.util.RaspberrypiStartupListener;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.util.RaspberrypiUtils;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.raspberrypi.internal.RaspberrypiManagementServiceComponent"
@@ -40,6 +41,12 @@ import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
  * policy="dynamic"
  * bind="setOutputEventAdapterService"
  * unbind="unsetOutputEventAdapterService"
+ * @scr.reference name="org.wso2.carbon.ndatasource"
+ * interface="org.wso2.carbon.ndatasource.core.DataSourceService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setDataSourceService"
+ * unbind="unsetDataSourceService"
  */
 public class RaspberrypiManagementServiceComponent {
 
@@ -108,6 +115,18 @@ public class RaspberrypiManagementServiceComponent {
 	 */
 	protected void unsetOutputEventAdapterService(OutputEventAdapterService outputEventAdapterService) {
 		RaspberrypiManagementDataHolder.getInstance().setOutputEventAdapterService(null);
+	}
+
+	protected void setDataSourceService(DataSourceService dataSourceService) {
+        /* This is to avoid mobile device management component getting initialized before the underlying datasources
+        are registered */
+		if (log.isDebugEnabled()) {
+			log.debug("Data source service set to service component");
+		}
+	}
+
+	protected void unsetDataSourceService(DataSourceService dataSourceService) {
+		//do nothing
 	}
 
 }

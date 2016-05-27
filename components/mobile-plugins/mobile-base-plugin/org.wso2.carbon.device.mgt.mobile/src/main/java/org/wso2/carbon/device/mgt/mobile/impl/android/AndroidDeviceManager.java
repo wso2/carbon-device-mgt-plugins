@@ -21,7 +21,7 @@ package org.wso2.carbon.device.mgt.mobile.impl.android;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.*;
-import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
@@ -79,7 +79,7 @@ public class AndroidDeviceManager implements DeviceManager {
     }
 
     @Override
-    public boolean saveConfiguration(TenantConfiguration tenantConfiguration)
+    public boolean saveConfiguration(PlatformConfiguration tenantConfiguration)
             throws DeviceManagementException {
         boolean status;
         try {
@@ -90,7 +90,7 @@ public class AndroidDeviceManager implements DeviceManager {
                     DeviceManagementConstants.
                             MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
             StringWriter writer = new StringWriter();
-            JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
+            JAXBContext context = JAXBContext.newInstance(PlatformConfiguration.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.marshal(tenantConfiguration, writer);
 
@@ -113,7 +113,7 @@ public class AndroidDeviceManager implements DeviceManager {
     }
 
     @Override
-    public TenantConfiguration getConfiguration() throws DeviceManagementException {
+    public PlatformConfiguration getConfiguration() throws DeviceManagementException {
         Resource resource;
         try {
             String androidRegPath =
@@ -121,9 +121,9 @@ public class AndroidDeviceManager implements DeviceManager {
                             MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
             resource = MobileDeviceManagementUtil.getRegistryResource(androidRegPath);
             if (resource != null) {
-                JAXBContext context = JAXBContext.newInstance(TenantConfiguration.class);
+                JAXBContext context = JAXBContext.newInstance(PlatformConfiguration.class);
                 Unmarshaller unmarshaller = context.createUnmarshaller();
-                return (TenantConfiguration) unmarshaller.unmarshal(
+                return (PlatformConfiguration) unmarshaller.unmarshal(
                         new StringReader(new String((byte[]) resource.getContent(), Charset.
                                 forName(MobilePluginConstants.CHARSET_UTF8))));
             }

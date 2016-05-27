@@ -93,6 +93,17 @@ public class AndroidAPIUtils {
         return deviceManagementProviderService;
     }
 
+//    public static GCMService getGCMService() {
+//        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+//        GCMService gcmService = (GCMService) ctx.getOSGiService(GCMService.class, null);
+//        if (gcmService == null) {
+//            String msg = "GCM service has not initialized.";
+//            log.error(msg);
+//            throw new IllegalStateException(msg);
+//        }
+//        return gcmService;
+//    }
+
     public static MediaType getResponseMediaType(String acceptHeader) {
         MediaType responseMediaType;
         if (MediaType.WILDCARD.equals(acceptHeader)) {
@@ -113,6 +124,17 @@ public class AndroidAPIUtils {
         List<DeviceIdentifier> validDeviceIds = deviceIDHolder.getValidDeviceIDList();
         Activity activity = getDeviceManagementService().addOperation(
                 DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, validDeviceIds);
+//        if (activity != null) {
+//            GCMService gcmService = getGCMService();
+//            if (gcmService.isGCMEnabled()) {
+//                List<DeviceIdentifier> deviceIDList = deviceIDHolder.getValidDeviceIDList();
+//                List<Device> devices = new ArrayList<Device>(deviceIDList.size());
+//                for (DeviceIdentifier deviceIdentifier : deviceIDList) {
+//                    devices.add(getDeviceManagementService().getDevice(deviceIdentifier));
+//                }
+//                getGCMService().sendNotification(operation.getCode(), devices);
+//            }
+//        }
         if (!deviceIDHolder.getErrorDeviceIdList().isEmpty()) {
             return javax.ws.rs.core.Response.status(AndroidConstants.StatusCodes.
                     MULTI_STATUS_HTTP_CODE).entity(deviceUtils.

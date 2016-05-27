@@ -27,9 +27,17 @@ import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.exception.ArduinoDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.ArduinoManagerService;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.util.ArduinoUtils;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
+
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.arduino.internal.ArduinoManagementServiceComponent"
  * immediate="true"
+ * @scr.reference name="org.wso2.carbon.ndatasource"
+ * interface="org.wso2.carbon.ndatasource.core.DataSourceService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setDataSourceService"
+ * unbind="unsetDataSourceService"
  */
 public class ArduinoManagementServiceComponent {
 
@@ -82,5 +90,17 @@ public class ArduinoManagementServiceComponent {
         } catch (Throwable e) {
             log.error("Error occurred while de-activating Arduino Device Management bundle", e);
         }
+    }
+
+    protected void setDataSourceService(DataSourceService dataSourceService) {
+        /* This is to avoid mobile device management component getting initialized before the underlying datasources
+        are registered */
+        if (log.isDebugEnabled()) {
+            log.debug("Data source service set to service component");
+        }
+    }
+
+    protected void unsetDataSourceService(DataSourceService dataSourceService) {
+        //do nothing
     }
 }

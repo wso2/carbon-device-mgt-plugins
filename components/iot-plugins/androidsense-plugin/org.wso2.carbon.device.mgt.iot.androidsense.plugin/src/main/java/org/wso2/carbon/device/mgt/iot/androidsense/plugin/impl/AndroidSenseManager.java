@@ -25,7 +25,7 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.DeviceManager;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
-import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.exception.AndroidSenseDeviceMgtPluginException;
@@ -49,14 +49,14 @@ public class AndroidSenseManager implements DeviceManager {
     }
 
     @Override
-    public boolean saveConfiguration(TenantConfiguration tenantConfiguration)
+    public boolean saveConfiguration(PlatformConfiguration PlatformConfiguration)
             throws DeviceManagementException {
         //TODO implement this
         return false;
     }
 
     @Override
-    public TenantConfiguration getConfiguration() throws DeviceManagementException {
+    public PlatformConfiguration getConfiguration() throws DeviceManagementException {
         //TODO implement this
         return null;
     }

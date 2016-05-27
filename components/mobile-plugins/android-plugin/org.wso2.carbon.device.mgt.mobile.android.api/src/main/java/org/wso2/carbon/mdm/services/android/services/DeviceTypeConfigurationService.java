@@ -22,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
 
 import javax.ws.rs.*;
@@ -46,14 +46,13 @@ public interface DeviceTypeConfigurationService {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     Response addConfiguration(@ApiParam(name = "configuration", value = "AndroidPlatformConfiguration")
-                               TenantConfiguration configuration) throws AndroidAgentException;
-
+                               PlatformConfiguration configuration) throws AndroidAgentException;
     @GET
     @ApiOperation(
             httpMethod = "GET",
             value = "Getting Android Platform Configurations",
             notes = "Get the Android platform configuration details using this REST API",
-            response = TenantConfiguration.class
+            response = PlatformConfiguration.class
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Get Android Configurations"),
@@ -75,6 +74,6 @@ public interface DeviceTypeConfigurationService {
                     "Android platform")
     })
     Response updateConfiguration(@ApiParam(name = "configuration", value = "AndroidPlatformConfiguration")
-                                 TenantConfiguration configuration) throws AndroidAgentException;
+                                 PlatformConfiguration configuration) throws AndroidAgentException;
 
 }
