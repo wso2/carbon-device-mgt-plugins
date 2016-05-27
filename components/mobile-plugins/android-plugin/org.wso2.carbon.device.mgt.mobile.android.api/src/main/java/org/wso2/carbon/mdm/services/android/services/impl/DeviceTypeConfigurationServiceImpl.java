@@ -46,7 +46,7 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
     
     @POST
     @Override
-    public Response addConfiguration(PlatformConfiguration configuration) throws AndroidAgentException {
+    public Response addConfiguration(PlatformConfiguration configuration){
         Message responseMsg = new Message();
         String msg;
         ConfigurationEntry licenseEntry = null;

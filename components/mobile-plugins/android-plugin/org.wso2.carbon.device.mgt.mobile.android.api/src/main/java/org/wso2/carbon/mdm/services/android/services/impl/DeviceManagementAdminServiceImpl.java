@@ -54,40 +54,30 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android device lock operation");
         }
-        Message message = new Message();
-        Response response;
 
         try {
             DeviceLock lock = deviceLockBeanWrapper.getOperation();
 
             if (lock == null) {
-                String errorMessage = "Lock bean is empty";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "Lock bean is empty.";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_LOCK);
             operation.setType(Operation.Type.PROFILE);
             operation.setEnabled(true);
             operation.setPayLoad(lock.toJSON());
-            response = AndroidAPIUtils.getOperationResponse(deviceLockBeanWrapper.getDeviceIDs(), operation,
-                    message);
+            return AndroidAPIUtils.getOperationResponse(deviceLockBeanWrapper.getDeviceIDs(), operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
-        return response;
     }
 
     @POST
@@ -95,32 +85,24 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     @Override
     public Response configureDeviceUnlock(List<String> deviceIDs) {
         if (log.isDebugEnabled()) {
-            log.debug("Invoking Android device unlock operation");
+            log.debug("Invoking Android device unlock operation.");
         }
-
-        Message message = new Message();
-        Response response;
 
         try {
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_UNLOCK);
             operation.setType(Operation.Type.COMMAND);
             operation.setEnabled(true);
-            response = AndroidAPIUtils.getOperationResponse(deviceIDs, operation, message);
+            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
-        return response;
     }
 
     @POST
@@ -128,27 +110,22 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     @Override
     public Response getDeviceLocation(List<String> deviceIDs) {
         if (log.isDebugEnabled()) {
-            log.debug("Invoking Android device location operation");
+            log.debug("Invoking Android device location operation.");
         }
-        Message message = new Message();
 
         try {
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_LOCATION);
             operation.setType(Operation.Type.COMMAND);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation, message);
+            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -157,29 +134,22 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     @Override
     public Response removePassword(List<String> deviceIDs) {
         if (log.isDebugEnabled()) {
-            log.debug("Invoking Android clear password operation");
+            log.debug("Invoking Android clear password operation.");
         }
-        Message message = new Message();
 
         try {
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.CLEAR_PASSWORD);
             operation.setType(Operation.Type.COMMAND);
-
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation, message);
-
+            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
-            String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+            String errorMessage = "Issue in retrieving operation management service instance.";
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -190,66 +160,53 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android Camera operation");
         }
-        Message message = new Message();
 
         try {
             Camera camera = cameraBeanWrapper.getOperation();
-
             if (camera == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the configure camera operation is incorrect");
-                }
-                throw new OperationManagementException("Issue in creating a new camera instance");
+                String errorMessage = "The payload of the configure camera operation is incorrect.";
+                log.error(errorMessage);
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.CAMERA);
             operation.setType(Operation.Type.COMMAND);
             operation.setEnabled(camera.isEnabled());
-
-            return AndroidAPIUtils.getOperationResponse(cameraBeanWrapper.getDeviceIDs(), operation, message);
-
+            return AndroidAPIUtils.getOperationResponse(cameraBeanWrapper.getDeviceIDs(), operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
     @POST
-    @Path("/get-device-info")
+    @Path("/info")
     @Override
     public Response getDeviceInformation(List<String> deviceIDs) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking get Android device information operation");
         }
-        Message message = new Message();
 
         try {
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_INFO);
             operation.setType(Operation.Type.COMMAND);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation, message);
+            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+
+
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -261,186 +218,149 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.debug("Invoking enterprise-wipe device operation");
         }
 
-        Message message = new Message();
-
         try {
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.ENTERPRISE_WIPE);
             operation.setType(Operation.Type.COMMAND);
-
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation, message);
+            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
     @POST
-    @Path("/wipe-devices")
+    @Path("/wipe")
     @Override
     public Response wipeData(WipeDataBeanWrapper wipeDataBeanWrapper) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android wipe-data device operation");
         }
 
-        Message message = new Message();
-
         try {
             WipeData wipeData = wipeDataBeanWrapper.getOperation();
 
             if (wipeData == null) {
-                throw new OperationManagementException("WipeData bean is empty");
+                String errorMessage = "WipeData bean is empty.";
+                log.error(errorMessage);
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.WIPE_DATA);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(wipeData.toJSON());
-
-            return AndroidAPIUtils.getOperationResponse(wipeDataBeanWrapper.getDeviceIDs(), operation, message);
-
+            return AndroidAPIUtils.getOperationResponse(wipeDataBeanWrapper.getDeviceIDs(), operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
     @POST
-    @Path("/get-applications")
+    @Path("/applications")
     @Override
     public Response getApplications(List<String> deviceIDs) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android getApplicationList device operation");
         }
-        Message message = new Message();
 
         try {
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.APPLICATION_LIST);
             operation.setType(Operation.Type.COMMAND);
-
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation, message);
+            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
     @POST
-    @Path("/ring-devices")
+    @Path("/ring")
     @Override
     public Response ringDevice(List<String> deviceIDs) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android ring-device device operation");
         }
 
-        Message message = new Message();
-
         try {
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_RING);
             operation.setType(Operation.Type.COMMAND);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation, message);
+            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
     @POST
-    @Path("/reboot-devices")
+    @Path("/reboot")
     @Override
     public Response rebootDevice(List<String> deviceIDs) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android reboot-device device operation");
         }
 
-        Message message = new Message();
-
         try {
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_REBOOT);
             operation.setType(Operation.Type.COMMAND);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation, message);
+            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
     @POST
-    @Path("/mute-devices")
+    @Path("/mute")
     @Override
     public Response muteDevice(List<String> deviceIDs) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking mute device operation");
         }
 
-        Message message = new Message();
-
         try {
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_MUTE);
             operation.setType(Operation.Type.COMMAND);
             operation.setEnabled(true);
-            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation, message);
+            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -451,41 +371,30 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         if (log.isDebugEnabled()) {
             log.debug("Invoking 'InstallApplication' operation");
         }
-        Message message = new Message();
 
         try {
             ApplicationInstallation applicationInstallation = applicationInstallationBeanWrapper.getOperation();
 
             if (applicationInstallation == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the application installing operation is incorrect");
-                }
-                String errorMessage = "Issue in creating a new application installation instance";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "The payload of the application installing operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.INSTALL_APPLICATION);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(applicationInstallation.toJSON());
-
             return AndroidAPIUtils.getOperationResponse(applicationInstallationBeanWrapper.getDeviceIDs(),
-                    operation, message);
+                    operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -497,20 +406,13 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.debug("Invoking 'UpdateApplication' operation");
         }
 
-        Message message = new Message();
-
         try {
             ApplicationUpdate applicationUpdate = applicationUpdateBeanWrapper.getOperation();
 
             if (applicationUpdate == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the application update operation is incorrect");
-                }
-                String errorMessage = "Issue in creating a new application update instance";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "The payload of the application update operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             ProfileOperation operation = new ProfileOperation();
@@ -519,19 +421,15 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setPayLoad(applicationUpdate.toJSON());
 
             return AndroidAPIUtils.getOperationResponse(applicationUpdateBeanWrapper.getDeviceIDs(),
-                    operation, message);
+                    operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -543,20 +441,13 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.debug("Invoking 'UninstallApplication' operation");
         }
 
-        Message message = new Message();
-
         try {
             ApplicationUninstallation applicationUninstallation = applicationUninstallationBeanWrapper.getOperation();
 
             if (applicationUninstallation == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the application uninstalling operation is incorrect");
-                }
-                String errorMessage = "Issue in creating a new application uninstallation instance";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "The payload of the application uninstalling operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             ProfileOperation operation = new ProfileOperation();
@@ -565,19 +456,15 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setPayLoad(applicationUninstallation.toJSON());
 
             return AndroidAPIUtils.getOperationResponse(applicationUninstallationBeanWrapper.getDeviceIDs(),
-                    operation, message);
+                    operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -589,20 +476,13 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.debug("Invoking 'Blacklist-Applications' operation");
         }
 
-        Message message = new Message();
-
         try {
             BlacklistApplications blacklistApplications = blacklistApplicationsBeanWrapper.getOperation();
 
             if (blacklistApplications == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the blacklisting apps operation is incorrect");
-                }
-                String errorMessage = "Issue in creating a new blacklist applications instance";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "The payload of the blacklisting apps operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             ProfileOperation operation = new ProfileOperation();
@@ -611,20 +491,16 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setPayLoad(blacklistApplications.toJSON());
 
             return AndroidAPIUtils.getOperationResponse(blacklistApplicationsBeanWrapper.getDeviceIDs(),
-                    operation, message);
+                    operation);
 
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -635,20 +511,14 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android upgrade-firmware device operation");
         }
-        Message message = new Message();
 
         try {
             UpgradeFirmware upgradeFirmware = upgradeFirmwareBeanWrapper.getOperation();
 
             if (upgradeFirmware == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the upgrade firmware operation is incorrect");
-                }
-                String errorMessage = "Issue in creating a new upgrade firmware instance";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "The payload of the upgrade firmware operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             ProfileOperation operation = new ProfileOperation();
@@ -656,19 +526,15 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(upgradeFirmware.toJSON());
             return AndroidAPIUtils.getOperationResponse(upgradeFirmwareBeanWrapper.getDeviceIDs(),
-                    operation, message);
+                    operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -679,20 +545,14 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android VPN device operation");
         }
-        Message message = new Message();
 
         try {
             Vpn vpn = vpnBeanWrapper.getOperation();
 
             if (vpn == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the VPN operation is incorrect");
-                }
-                String errorMessage = "Issue in creating a new VPN instance";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "The payload of the VPN operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             ProfileOperation operation = new ProfileOperation();
@@ -700,19 +560,15 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(vpn.toJSON());
             return AndroidAPIUtils.getOperationResponse(vpnBeanWrapper.getDeviceIDs(),
-                    operation, message);
+                    operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -723,42 +579,31 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         if (log.isDebugEnabled()) {
             log.debug("Invoking 'notification' operation");
         }
-        Message message = new Message();
 
         try {
             Notification notification = notificationBeanWrapper.getOperation();
 
             if (notification == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the notification operation is incorrect");
-                }
-                String errorMessage = "Issue in creating a new notification instance";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "The payload of the notification operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.NOTIFICATION);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(notification.toJSON());
-
             return AndroidAPIUtils.getOperationResponse(notificationBeanWrapper.getDeviceIDs(),
-                    operation, message);
+                    operation);
 
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -769,20 +614,14 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         if (log.isDebugEnabled()) {
             log.debug("Invoking 'configure wifi' operation");
         }
-        Message message = new Message();
 
         try {
             Wifi wifi = wifiBeanWrapper.getOperation();
 
             if (wifi == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the wifi operation is incorrect");
-                }
-                String errorMessage = "Issue in creating a new Wifi instance";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "The payload of the wifi operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             ProfileOperation operation = new ProfileOperation();
@@ -791,20 +630,16 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setPayLoad(wifi.toJSON());
 
             return AndroidAPIUtils.getOperationResponse(wifiBeanWrapper.getDeviceIDs(),
-                    operation, message);
+                    operation);
 
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -815,42 +650,31 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         if (log.isDebugEnabled()) {
             log.debug("Invoking 'encrypt' operation");
         }
-        Message message = new Message();
 
         try {
             DeviceEncryption deviceEncryption = encryptionBeanWrapper.getOperation();
 
             if (deviceEncryption == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the device encryption operation is incorrect");
-                }
-                String errorMessage = "Issue in creating a new encryption instance";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "The payload of the device encryption operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.ENCRYPT_STORAGE);
             operation.setType(Operation.Type.COMMAND);
             operation.setEnabled(deviceEncryption.isEncrypted());
-
             return AndroidAPIUtils.getOperationResponse(encryptionBeanWrapper.getDeviceIDs(),
-                    operation, message);
+                    operation);
 
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -862,42 +686,30 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.debug("Invoking 'change lock code' operation");
         }
 
-        Message message = new Message();
-
         try {
             LockCode lockCode = lockCodeBeanWrapper.getOperation();
 
             if (lockCode == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the change lock code operation is incorrect");
-                }
-                String errorMessage = "Issue in retrieving a new lock-code instance";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "The payload of the change lock code operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.CHANGE_LOCK_CODE);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(lockCode.toJSON());
-
             return AndroidAPIUtils.getOperationResponse(lockCodeBeanWrapper.getDeviceIDs(),
-                    operation, message);
+                    operation);
 
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -908,20 +720,13 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         if (log.isDebugEnabled()) {
             log.debug("Invoking 'password policy' operation");
         }
-        Message message = new Message();
 
         try {
             PasscodePolicy passcodePolicy = passwordPolicyBeanWrapper.getOperation();
-
             if (passcodePolicy == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the change password policy operation is incorrect");
-                }
-                String errorMessage = "Issue in creating a new Password policy instance";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "The payload of the change password policy operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             ProfileOperation operation = new ProfileOperation();
@@ -930,20 +735,16 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setPayLoad(passcodePolicy.toJSON());
 
             return AndroidAPIUtils.getOperationResponse(passwordPolicyBeanWrapper.getDeviceIDs(),
-                    operation, message);
+                    operation);
 
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 
@@ -954,42 +755,30 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         if (log.isDebugEnabled()) {
             log.debug("Invoking 'webclip' operation");
         }
-        Message message = new Message();
 
         try {
             WebClip webClip = webClipBeanWrapper.getOperation();
 
             if (webClip == null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("The payload of the add webclip operation is incorrect");
-                }
-                String errorMessage = "Issue in creating a new web clip instance";
-                message = Message.responseMessage(errorMessage).
-                        responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
+                String errorMessage = "The payload of the add webclip operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
 
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.WEBCLIP);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(webClip.toJSON());
-
-            return AndroidAPIUtils.getOperationResponse(webClipBeanWrapper.getDeviceIDs(),
-                    operation, message);
+            return AndroidAPIUtils.getOperationResponse(webClipBeanWrapper.getDeviceIDs(), operation);
 
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         } catch (DeviceManagementException e) {
             String errorMessage = "Issue in retrieving device management service instance";
-            message = Message.responseMessage(errorMessage).
-                    responseCode(Response.Status.INTERNAL_SERVER_ERROR.toString()).build();
             log.error(errorMessage, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
         }
     }
 

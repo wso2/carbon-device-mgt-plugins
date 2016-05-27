@@ -71,7 +71,22 @@ public class EventReceiverServiceImpl implements EventReceiverService {
 
     @GET
     @Override
-    public Response retrieveAlert(@QueryParam("id") String deviceId) {
+    public Response retrieveAlerts(@QueryParam("id") String deviceId, @QueryParam ("from") long from,
+                                   @QueryParam ("to") long to, @QueryParam("type") String type) {
+
+        if(from != 0l && to != 0l && deviceId != null) {
+            return retrieveAlertFromDate(deviceId, from, to);
+        } else if (deviceId != null && type != null) {
+            return retrieveAlertByType(deviceId, type);
+        } else if (deviceId != null) {
+            return retrieveAlert(deviceId);
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Request must contain the device identifier. " +
+                    "Optionally, both from and to value should be present to get alerts between times.").build();
+        }
+    }
+
+    private Response retrieveAlert(String deviceId) {
         if (log.isDebugEnabled()) {
             log.debug("Retrieving events for given device Identifier.");
         }
@@ -82,23 +97,18 @@ public class EventReceiverServiceImpl implements EventReceiverService {
             deviceStates = AndroidAPIUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
             if (deviceStates == null) {
                 message.setResponseCode("No any alerts are published for Device: " + deviceId + ".");
-                return Response.status(Response.Status.OK).entity(message).build();
-
+                return Response.status(Response.Status.NOT_FOUND).entity(message).build();
             } else {
                 return Response.status(Response.Status.OK).entity(deviceStates).build();
             }
         } catch (AnalyticsException e) {
-            String msg = "Error occurred while getting published events for specific " +
-                    "Device: " + deviceId + ".";
+            String msg = "Error occurred while getting published events for specific device: " + deviceId + ".";
             log.error(msg, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
     }
 
-    @GET
-    @Override
-    public Response retrieveAlertFromDate(@QueryParam("id") String deviceId, @QueryParam("from") long from,
-                                          @QueryParam("to") long to) {
+    private Response retrieveAlertFromDate(String deviceId, long from, long to) {
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
         if (log.isDebugEnabled()) {
@@ -113,7 +123,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
             if (deviceStates == null) {
                 message.
                         setResponseCode("No any alerts are published on given date for given Device: " + deviceId + ".");
-                return Response.status(Response.Status.OK).entity(message).build();
+                return Response.status(Response.Status.NOT_FOUND).entity(message).build();
 
             } else {
                 return Response.status(Response.Status.OK).entity(deviceStates).build();
@@ -126,9 +136,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         }
     }
 
-    @GET
-    @Override
-    public Response retrieveAlertByType(@QueryParam("id") String deviceId, @QueryParam("type") String type) {
+    private Response retrieveAlertByType(String deviceId, String type) {
         if (log.isDebugEnabled()) {
             log.debug("Retrieving events for given device identifier and type.");
         }
@@ -140,7 +148,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
             if (deviceStates == null) {
                 message.setResponseCode("No any alerts are published for given Device: " +
                         "" + deviceId + " on specific date.");
-                return Response.status(Response.Status.OK).entity(message).build();
+                return Response.status(Response.Status.NOT_FOUND).entity(message).build();
 
             } else {
                 return Response.status(Response.Status.OK).entity(deviceStates).build();
