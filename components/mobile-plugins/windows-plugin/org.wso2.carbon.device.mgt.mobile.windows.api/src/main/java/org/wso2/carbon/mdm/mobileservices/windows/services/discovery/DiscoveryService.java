@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.discovery;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -43,6 +44,7 @@ import javax.xml.ws.soap.SOAPBinding;
 @WebService(targetNamespace = PluginConstants.DISCOVERY_SERVICE_TARGET_NAMESPACE,
         name = "IDiscoveryService")
 @BindingType(value = SOAPBinding.SOAP12HTTP_BINDING)
+@Api(value = "DiscoveryService", description = "Windows Device Management REST-API implementation.")
 public interface DiscoveryService {
 
     @POST

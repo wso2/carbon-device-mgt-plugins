@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.configurationmgtservice;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -36,6 +37,7 @@ import javax.ws.rs.core.MediaType;
 @WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
+@Api(value = "ConfigurationMgtService", description = "Windows Device Management REST-API implementation.")
 public interface ConfigurationMgtService {
 
     /**

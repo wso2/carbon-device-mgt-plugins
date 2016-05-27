@@ -42,7 +42,7 @@ public class EventServiceImpl implements EventService {
 
     @POST
     public Response publishEvents(@HeaderParam(ACCEPT) String acceptHeader,
-                                  EventBeanWrapper eventBeanWrapper) throws AndroidAgentException {
+                                  EventBeanWrapper eventBeanWrapper) {
 
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android device even logging.");
@@ -73,7 +73,7 @@ public class EventServiceImpl implements EventService {
     @Produces("application/json")
     @GET
     public Response retrieveAlert(@HeaderParam(ACCEPT) String acceptHeader,
-                                  @PathParam("deviceId") String deviceId) throws AndroidAgentException {
+                                  @PathParam("deviceId") String deviceId) {
 
         if (log.isDebugEnabled()) {
             log.debug("Retrieving events for given device Identifier.");
@@ -104,7 +104,7 @@ public class EventServiceImpl implements EventService {
     @GET
     public Response retrieveAlertFromDate(@HeaderParam(ACCEPT) String acceptHeader,
                                           @PathParam("deviceId") String deviceId, @QueryParam("from") long from,
-                                          @QueryParam("to") long to) throws AndroidAgentException {
+                                          @QueryParam("to") long to) {
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
         if (log.isDebugEnabled()) {
@@ -136,8 +136,7 @@ public class EventServiceImpl implements EventService {
     @Path("{deviceId}/type/{type}")
     @GET
     public Response retrieveAlertType(@HeaderParam(ACCEPT) String acceptHeader,
-                                      @PathParam("deviceId") String deviceId, @PathParam("type") String type)
-            throws AndroidAgentException {
+                                      @PathParam("deviceId") String deviceId, @PathParam("type") String type) {
 
         if (log.isDebugEnabled()) {
             log.debug("Retrieving events for given device identifier and type.");
@@ -149,8 +148,8 @@ public class EventServiceImpl implements EventService {
         try {
             deviceStates = AndroidAPIUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
             if (deviceStates == null) {
-                message.setResponseCode("No any alerts are published for given Device: " +
-                        "" + deviceId + " on specific date.");
+                message.setResponseCode("No any alerts are published for given Device: "
+                        + deviceId + " on specific date.");
                 return Response.status(Response.Status.OK).entity(message).build();
 
             } else {

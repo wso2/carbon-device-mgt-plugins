@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.authbst;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -33,6 +34,7 @@ import javax.ws.rs.core.Response;
 /**
  * Interface for handling authentication request comes via MDM login page.
  */
+@Api(value = "BSTProvider", description = "Windows Device Management REST-API implementation.")
 @Path("/bst")
 public interface BSTProvider {
 
