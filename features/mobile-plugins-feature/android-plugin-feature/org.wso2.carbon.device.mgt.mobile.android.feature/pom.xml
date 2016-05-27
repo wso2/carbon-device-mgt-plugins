@@ -118,7 +118,7 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/maven-shared-archive-resources/webapps/
                                     </outputDirectory>
-                                    <destFileName>mdm-android-agent.war</destFileName>
+                                    <destFileName>api#device-mgt#android#v2.1.war</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
