@@ -76,4 +76,21 @@ public interface DeviceTypeConfigurationService {
     Response updateConfiguration(@ApiParam(name = "configuration", value = "AndroidPlatformConfiguration")
                                  PlatformConfiguration configuration) throws AndroidAgentException;
 
+    @GET
+    @Path("license")
+    @Produces("text/html")
+    @ApiOperation(
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "GET",
+            value = "Getting the License Agreement for Android Device Registration",
+            notes = "Use this REST API to retrieve the license agreement that is used for the Android device " +
+                    "registration process",
+            response = String.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Licence agreement"),
+            @ApiResponse(code = 500, message = "Error occurred while retrieving the license configured for Android " +
+                    "device enrolment")
+    })
+    Response getLicense() throws AndroidAgentException;
+
 }
