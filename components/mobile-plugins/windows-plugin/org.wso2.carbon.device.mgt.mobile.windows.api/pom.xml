@@ -3,7 +3,7 @@
   ~
   ~ WSO2 Inc. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
-  ~ in compliance with the License.
+  ~ in compliance with the License.a
   ~ You may obtain a copy of the License at
   ~
   ~ http://www.apache.org/licenses/LICENSE-2.0
@@ -72,7 +72,7 @@
                                     <tasks>
                                         <copy todir="${basedir}/../../../repository/deployment/server/webapps" overwrite="true">
                                             <fileset dir="${basedir}/target">
-                                                <include name="${project.artifactId}.war" />
+                                                <include name="${project.artifactId}" />
                                             </fileset>
                                         </copy>
                                     </tasks>
@@ -129,6 +129,12 @@
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-bindings-http</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.ws.security</groupId>
@@ -263,6 +269,12 @@
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.oauth</artifactId>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>javax.cache</groupId>
@@ -306,7 +318,6 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
