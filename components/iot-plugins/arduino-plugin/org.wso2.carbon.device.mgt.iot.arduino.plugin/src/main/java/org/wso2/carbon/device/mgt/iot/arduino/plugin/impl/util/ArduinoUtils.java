@@ -97,13 +97,12 @@ public class ArduinoUtils {
         try {
             Context ctx = new InitialContext();
             DataSource dataSource = (DataSource) ctx.lookup(ArduinoConstants.DATA_SOURCE_NAME);
-            DeviceSchemaInitializer initializer =
-                    new DeviceSchemaInitializer(dataSource);
+            DeviceSchemaInitializer initializer = new DeviceSchemaInitializer(dataSource);
             log.info("Initializing device management repository database schema");
             initializer.createRegistryDatabase();
 
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + ArduinoConstants.DATA_SOURCE_NAME);
+            log.error("Error while looking up the data source: " + ArduinoConstants.DATA_SOURCE_NAME, e);
         } catch (Exception e) {
             throw new ArduinoDeviceMgtPluginException("Error occurred while initializing Iot Device " +
                                                                    "Management database schema", e);

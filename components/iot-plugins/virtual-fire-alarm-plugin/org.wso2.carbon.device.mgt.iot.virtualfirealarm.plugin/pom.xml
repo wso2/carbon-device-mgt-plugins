@@ -91,7 +91,7 @@
                             javax.xml.bind,
                             javax.xml.bind.annotation,
                             javax.xml.parsers,
-                            org.w3c.dom
+                            org.w3c.dom,
 						</Import-Package>
 						<Export-Package>
 							!org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal,
