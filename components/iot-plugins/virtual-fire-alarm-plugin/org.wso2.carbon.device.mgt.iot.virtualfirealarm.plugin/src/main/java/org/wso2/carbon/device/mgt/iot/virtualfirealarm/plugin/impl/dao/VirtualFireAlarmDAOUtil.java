@@ -45,7 +45,7 @@ public class VirtualFireAlarmDAOUtil {
             Context ctx = new InitialContext();
             dataSource = (DataSource) ctx.lookup(VirtualFireAlarmConstants.DATA_SOURCE_NAME);
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + VirtualFireAlarmConstants.DATA_SOURCE_NAME);
+            log.error("Error while looking up the data source: " + VirtualFireAlarmConstants.DATA_SOURCE_NAME, e);
         }
     }
 

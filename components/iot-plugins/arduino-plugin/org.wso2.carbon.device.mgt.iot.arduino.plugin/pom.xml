@@ -69,7 +69,8 @@
 							org.wso2.carbon.device.mgt.common,
 							org.wso2.carbon.device.mgt.iot.*,
 							org.wso2.carbon.device.mgt.extensions.feature.mgt.*,
-							org.wso2.carbon.utils.*
+							org.wso2.carbon.utils.*,
+							org.wso2.carbon.ndatasource.core
 						</Import-Package>
 
 						<Export-Package>

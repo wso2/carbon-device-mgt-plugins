@@ -20,6 +20,7 @@ package org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.dbcreator.DatabaseCreator;
 
@@ -33,7 +34,8 @@ public class DeviceSchemaInitializer extends DatabaseCreator{
 
 	private static final Log log = LogFactory.getLog(DeviceSchemaInitializer.class);
 	private static final String setupSQLScriptBaseLocation = CarbonUtils.getCarbonHome() + File.separator + "dbscripts"
-			+ File.separator + "cdm" + File.separator + "plugins" + File.separator;
+			+ File.separator + "cdm" + File.separator + "plugins" + File.separator + AndroidSenseConstants.DEVICE_TYPE
+			+ File.separator;
 
 	public DeviceSchemaInitializer(DataSource dataSource) {
 		super(dataSource);

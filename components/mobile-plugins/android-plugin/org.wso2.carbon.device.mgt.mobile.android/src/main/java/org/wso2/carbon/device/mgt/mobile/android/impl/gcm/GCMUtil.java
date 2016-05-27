@@ -27,7 +27,7 @@ import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
-import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.android.impl.util.AndroidPluginConstants;
 import org.wso2.carbon.device.mgt.mobile.android.internal.AndroidDeviceManagementDataHolder;
@@ -56,7 +56,7 @@ public class GCMUtil {
     private static final int TIME_TO_LIVE = 60;
     private static final int HTTP_STATUS_CODE_OK = 200;
 
-    private static HashMap<Integer,TenantConfiguration> tenantConfigurationCache = new HashMap<>();
+    private static HashMap<Integer, PlatformConfiguration> tenantConfigurationCache = new HashMap<>();
 
     public static GCMResult sendWakeUpCall(String message, List<Device> devices) {
         GCMResult result = new GCMResult();
@@ -163,7 +163,7 @@ public class GCMUtil {
                 getAndroidDeviceManagementService();
         try {
             //Get the TenantConfiguration from cache if not we'll get it from DM service
-            TenantConfiguration tenantConfiguration = getTenantConfigurationFromCache();
+            PlatformConfiguration tenantConfiguration = getTenantConfigurationFromCache();
             if (tenantConfiguration == null) {
                 tenantConfiguration = androidDMService.getDeviceManager().getConfiguration();
                 if (tenantConfiguration != null) {
@@ -190,11 +190,11 @@ public class GCMUtil {
         tenantConfigurationCache.remove(getTenantId());
     }
 
-    private static void addTenantConfigurationToCache(TenantConfiguration tenantConfiguration) {
+    private static void addTenantConfigurationToCache(PlatformConfiguration tenantConfiguration) {
         tenantConfigurationCache.put(getTenantId(), tenantConfiguration);
     }
 
-    private static TenantConfiguration getTenantConfigurationFromCache() {
+    private static PlatformConfiguration getTenantConfigurationFromCache() {
         return tenantConfigurationCache.get(getTenantId());
     }
 

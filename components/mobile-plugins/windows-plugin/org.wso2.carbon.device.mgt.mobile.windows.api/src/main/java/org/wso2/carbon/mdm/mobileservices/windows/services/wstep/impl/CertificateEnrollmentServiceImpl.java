@@ -32,7 +32,7 @@ import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
-import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.mdm.mobileservices.windows.common.PluginConstants;
 import org.wso2.carbon.mdm.mobileservices.windows.common.beans.CacheEntry;
 import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.CertificateGenerationException;
@@ -372,7 +372,7 @@ public class CertificateEnrollmentServiceImpl implements CertificateEnrollmentSe
      */
     private List<ConfigurationEntry> getTenantConfigurationData() throws DeviceManagementException {
         if (WindowsAPIUtils.getTenantConfiguration() != null) {
-            TenantConfiguration configuration = WindowsAPIUtils.getTenantConfiguration();
+            PlatformConfiguration configuration = WindowsAPIUtils.getTenantConfiguration();
             return configuration.getConfiguration();
         } else {
             return null;

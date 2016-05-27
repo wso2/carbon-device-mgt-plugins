@@ -23,7 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
-import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.mdm.mobileservices.windows.common.PluginConstants;
 import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.WindowsConfigurationException;
@@ -54,7 +55,7 @@ public class ConfigurationMgtServiceImpl {
      * @throws WindowsConfigurationException
      */
     @POST
-    public Message ConfigureSettings(TenantConfiguration configuration) throws WindowsConfigurationException {
+    public Message ConfigureSettings(PlatformConfiguration configuration) throws WindowsConfigurationException {
         Message responseMsg = new Message();
         ConfigurationEntry licenseEntry = null;
         String message;
@@ -106,15 +107,15 @@ public class ConfigurationMgtServiceImpl {
      * @throws WindowsConfigurationException
      */
     @GET
-    public TenantConfiguration getConfiguration() throws WindowsConfigurationException {
+    public PlatformConfiguration getConfiguration() throws WindowsConfigurationException {
         String msg;
-        TenantConfiguration tenantConfiguration = null;
+        PlatformConfiguration PlatformConfiguration = null;
         try {
             if (WindowsAPIUtils.getDeviceManagementService().
                     getConfiguration(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS) != null) {
-                tenantConfiguration = WindowsAPIUtils.getDeviceManagementService().
+                PlatformConfiguration = WindowsAPIUtils.getDeviceManagementService().
                     getConfiguration(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
-            List<ConfigurationEntry> configs = tenantConfiguration.getConfiguration();
+            List<ConfigurationEntry> configs = PlatformConfiguration.getConfiguration();
             ConfigurationEntry entry = new ConfigurationEntry();
             License license = WindowsAPIUtils.getDeviceManagementService().getLicense(
                     DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS, PluginConstants.
@@ -124,7 +125,7 @@ public class ConfigurationMgtServiceImpl {
                 entry.setName(PluginConstants.TenantConfigProperties.LICENSE_KEY);
                 entry.setValue(license.getText());
                 configs.add(entry);
-                tenantConfiguration.setConfiguration(configs);
+                PlatformConfiguration.setConfiguration(configs);
             }
             }
         } catch (DeviceManagementException e) {
@@ -132,7 +133,7 @@ public class ConfigurationMgtServiceImpl {
             log.error(msg, e);
             throw new WindowsConfigurationException(msg, e);
         }
-        return tenantConfiguration;
+        return PlatformConfiguration;
     }
 
     /**
@@ -143,7 +144,7 @@ public class ConfigurationMgtServiceImpl {
      * @throws WindowsConfigurationException
      */
     @PUT
-    public Message updateConfiguration(TenantConfiguration configuration) throws WindowsConfigurationException {
+    public Message updateConfiguration(PlatformConfiguration configuration) throws WindowsConfigurationException {
         String message;
         Message responseMsg = new Message();
         ConfigurationEntry licenseEntry = null;
