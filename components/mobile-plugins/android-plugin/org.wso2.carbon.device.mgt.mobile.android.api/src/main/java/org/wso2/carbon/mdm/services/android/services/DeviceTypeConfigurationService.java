@@ -18,10 +18,7 @@
  */
 package org.wso2.carbon.mdm.services.android.services;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
 
@@ -29,6 +26,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+@Api(value = "Android Configuration Management API", description = "This API carries all resource associated with " +
+        "manipulating the general configurations of Android platform")
 @Path("/configuration")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -69,7 +68,7 @@ public interface DeviceTypeConfigurationService {
             notes = "Update the Android platform configurations using this REST API"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Created"),
+            @ApiResponse(code = 200, message = "OK. \n Platform configuration has successfully been updated"),
             @ApiResponse(code = 500, message = "Error occurred while modifying configuration settings of " +
                     "Android platform")
     })

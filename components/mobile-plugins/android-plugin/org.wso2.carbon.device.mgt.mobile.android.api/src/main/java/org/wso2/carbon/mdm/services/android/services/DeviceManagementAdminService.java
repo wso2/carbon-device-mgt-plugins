@@ -42,7 +42,7 @@ public interface DeviceManagementAdminService {
     @ApiOperation(
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
-            value = "Adding a Device Lock on Android Devices",
+            value = "Adds a Device Lock on Android Devices",
             notes = "Using this API you have the option of hard locking an Android device, where the Administrator " +
                     "permanently locks the device or screen locking an Android device"
     )

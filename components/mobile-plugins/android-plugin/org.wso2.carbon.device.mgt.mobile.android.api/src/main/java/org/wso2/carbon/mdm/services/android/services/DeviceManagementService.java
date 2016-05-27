@@ -108,7 +108,7 @@ public interface DeviceManagementService {
                             @ResponseHeader(name = "Location", description = "URL of the device enrolled")}),
             @ApiResponse(code = 400, message = "Bad Request. \n Invalid request or validation error."),
             @ApiResponse(code = 500, message = "Internal Server Error. \n " +
-                    "Server error occurred while enrolling the device."),
+                    "Server error occurred while enrolling the device.")
     })
     Response enrollDevice(@ApiParam(name = "device", value = "Device Information to be enroll") Device device);
 
@@ -144,17 +144,25 @@ public interface DeviceManagementService {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK. \n Device enrollment has been updated successfully",
                     responseHeaders = {
-                            @ResponseHeader(name = "Location", description = "The URL of the updated device."),
+                            @ResponseHeader(name = "Content-Location", description = "The URL of the updated device."),
                             @ResponseHeader(name = "Content-Type", description = "The content type of the body"),
                             @ResponseHeader(name = "ETag", description = "Entity Tag of the response resource.\n" +
                                     "Used by caches, or in conditional requests."),
                             @ResponseHeader(name = "Last-Modified",
                                     description = "Date and time the resource has been modified the last time.\n" +
                                             "Used by caches, or in conditional requests.")}),
-            @ApiResponse(code = 204, message = "No Content. \n Enrollment of the device has not been updated"),
-            @ApiResponse(code = 400, message = "Bad Request. \n Invalid request or validation error."),
-            @ApiResponse(code = 404, message = "Not Found. \n Resource to be deleted does not exist."),
-            @ApiResponse(code = 500, message = "Internal Server Error. \n " +
+            @ApiResponse(
+                    code = 204,
+                    message = "No Content. \n Enrollment of the device has not been updated"),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 404,
+                    message = "Not Found. \n Resource to be deleted does not exist."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
                     "Server error occurred while modifying the current enrollment of the device.")
     })
     Response modifyEnrollment(@ApiParam(name = "id", value = "Device Identifier") @PathParam("id") String id,
