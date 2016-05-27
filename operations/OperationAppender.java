@@ -79,6 +79,7 @@ public class OperationAppender {
                 }
                 case COMMAND: {
                     generateCommandOperation(operation);
+                    generateInfoOperation(operation);
                     break;
                 }
             }
@@ -159,13 +160,6 @@ public class OperationAppender {
             GetTag get = new GetTag();
             get.setCommandId(operation.getId());
             List<ItemTag> items = new ArrayList<>();
-            JSONObject payload = null;
-
-            try {
-                payload = new JSONObject(operation.getPayLoad().toString());
-            } catch (JSONException e) {
-                log.error("Issue in parsing JSON message.", e);
-            }
 
             for (OperationCodes.DeviceInfo info : OperationCodes.DeviceInfo.values()) {
                 ItemTag item = new ItemTag();

@@ -473,7 +473,7 @@ public class OperationHandler {
                     for (OperationCodes.DeviceInfo info : OperationCodes.DeviceInfo.values()) {
                         if (locURI.equals(info.getCode())) {
                             if (info.name().equals(OperationCodes.DeviceInfo.BATTERY_LEVEL)) {
-                                devInfoStr.append("{\"name\":\"BATTERY_LEVEL\",\"value\":\"" + item.getData() + "\"}");
+                                devInfoStr.append("{\"name\":\"BATTERY_LEVEL\",\"value\":\"" + item.getData() + "\"},");
                             } else if (info.name().equals(OperationCodes.DeviceInfo.INTERNAL_MEMORY)) {
                                 devInfoStr.append("{\"name\":\"INTERNAL_MEMORY\",\"value\":\"" + item.getData() + "\"}");
                             }
