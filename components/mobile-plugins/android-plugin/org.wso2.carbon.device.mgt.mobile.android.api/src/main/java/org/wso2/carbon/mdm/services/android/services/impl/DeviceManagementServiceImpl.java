@@ -71,7 +71,9 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
         }
     }
 
-    @GET
+
+
+    @PUT
     @Path("/{id}/pending-operations")
     @Override
     public Response getPendingOperations(@PathParam("id") String id, List<? extends Operation> resultOperations) {

@@ -30,13 +30,7 @@
 <PermissionConfiguration>
     <APIVersion></APIVersion>
     <!-- Operations management related permissions for admin -->
-    <Permission>
-        <name>Get Pending Operation</name>
-        <path>/device-mgt/android/operations/poll</path>
-        <url>/operation/*</url>
-        <method>PUT</method>
-        <scope>emm_android_agent</scope>
-    </Permission>
+
 
     <Permission>
         <name>Lock</name>
@@ -273,7 +267,7 @@
     <Permission>
         <name>View license</name>
         <path>/device-mgt/android/license/view</path>
-        <url>/device/license</url>
+        <url>/configuration/license</url>
         <method>GET</method>
         <scope>emm_android_agent</scope>
     </Permission>
@@ -282,16 +276,48 @@
     <Permission>
         <name>Enroll device</name>
         <path>/device-mgt/android/devices/enroll</path>
-        <url>/enrollment</url>
+        <url>/devices</url>
         <method>POST</method>
         <scope>emm_android_agent</scope>
     </Permission>
 
     <Permission>
-        <name>Get Enrollment Status</name>
-        <path>/device-mgt/android/devices/enroll</path>
-        <url>/enrollment/*</url>
+        <name>Devices related Operations</name>
+        <path>/device-mgt/android/devices</path>
+        <url>/devices/*</url>
         <method>GET</method>
+        <scope>emm_android_agent</scope>
+    </Permission>
+
+    <Permission>
+        <name>Device is enrolled</name>
+        <path>/device-mgt/android/devices</path>
+        <url>/devices/*/status</url>
+        <method>GET</method>
+        <scope>emm_android_agent</scope>
+    </Permission>
+
+    <Permission>
+        <name>Devices related Operations</name>
+        <path>/device-mgt/android/devices/operations</path>
+        <url>/devices/*/pending-operations</url>
+        <method>PUT</method>
+        <scope>emm_android_agent</scope>
+    </Permission>
+
+    <Permission>
+        <name>Modify devices</name>
+        <path>/device-mgt/android/devices/operations</path>
+        <url>/devices/*</url>
+        <method>PUT</method>
+        <scope>emm_android_agent</scope>
+    </Permission>
+
+    <Permission>
+        <name>Delete devices</name>
+        <path>/device-mgt/android/devices/operations</path>
+        <url>/devices/*</url>
+        <method>DELETE</method>
         <scope>emm_android_agent</scope>
     </Permission>
 
