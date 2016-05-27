@@ -112,8 +112,8 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                                    <artifactId>org.wso2.carbon.device.mgt.mobile.android.api
-                                    </artifactId>
+                                    <artifactId>org.wso2.carbon.device.mgt.mobile.android.api</artifactId>
+                                    <version>${project.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${project.build.directory}/maven-shared-archive-resources/webapps/
