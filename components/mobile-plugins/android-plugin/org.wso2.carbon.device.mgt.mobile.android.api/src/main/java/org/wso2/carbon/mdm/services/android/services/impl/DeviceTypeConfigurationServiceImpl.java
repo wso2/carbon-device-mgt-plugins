@@ -46,7 +46,7 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
     
     @POST
     @Override
-    public Response addConfiguration(PlatformConfiguration configuration) throws AndroidAgentException {
+    public Response addConfiguration(PlatformConfiguration configuration){
         Message responseMsg = new Message();
         String msg;
         ConfigurationEntry licenseEntry = null;
@@ -156,6 +156,26 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
         return Response.status(Response.Status.CREATED).entity(responseMsg).build();
+    }
+
+
+    @GET
+    @Path("license")
+    @Produces("text/plain")
+    public Response getLicense() throws AndroidAgentException {
+        License license = null;
+
+        try {
+            license =
+                    AndroidAPIUtils.getDeviceManagementService().getLicense(
+                            DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID,
+                            DeviceManagementConstants.LanguageCodes.LANGUAGE_CODE_ENGLISH_US);
+        } catch (DeviceManagementException e) {
+            String msg = "Error occurred while retrieving the license configured for Android device enrolment";
+            log.error(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+        }
+        return Response.status(Response.Status.OK).entity((license == null) ? null : license.getText()).build();
     }
 
 }

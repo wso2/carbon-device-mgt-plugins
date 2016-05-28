@@ -33,13 +33,7 @@ public class AndroidDeviceUtils {
 
     private static final String COMMA_SEPARATION_PATTERN = ", ";
 
-    public DeviceIDHolder validateDeviceIdentifiers(List<String> deviceIDs,
-                                                    Message message) {
-
-        if (deviceIDs == null || deviceIDs.isEmpty()) {
-            message.setResponseMessage("Device identifier list is empty");
-            throw new BadRequestException(message);
-        }
+    public DeviceIDHolder validateDeviceIdentifiers(List<String> deviceIDs) {
 
         List<String> errorDeviceIdList = new ArrayList<String>();
         List<DeviceIdentifier> validDeviceIDList = new ArrayList<DeviceIdentifier>();

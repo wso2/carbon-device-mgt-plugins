@@ -47,6 +47,7 @@ import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManag
 import org.wso2.carbon.device.mgt.core.search.mgt.impl.Utils;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
+import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
 import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
@@ -114,12 +115,15 @@ public class AndroidAPIUtils {
         return responseMediaType;
     }
 
-    public static Response getOperationResponse(List<String> deviceIDs, Operation operation,
-                                                Message message)
+    public static Response getOperationResponse(List<String> deviceIDs, Operation operation)
             throws DeviceManagementException, OperationManagementException {
-
+        if (deviceIDs == null || deviceIDs.size() == 0) {
+            String errorMessage = "Device identifier list is empty";
+            log.error(errorMessage);
+            return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+        }
         AndroidDeviceUtils deviceUtils = new AndroidDeviceUtils();
-        DeviceIDHolder deviceIDHolder = deviceUtils.validateDeviceIdentifiers(deviceIDs, message);
+        DeviceIDHolder deviceIDHolder = deviceUtils.validateDeviceIdentifiers(deviceIDs);
 
         List<DeviceIdentifier> validDeviceIds = deviceIDHolder.getValidDeviceIDList();
         Activity activity = getDeviceManagementService().addOperation(

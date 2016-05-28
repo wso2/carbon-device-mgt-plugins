@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Api(value = "Android Device Management API",
+@Api(value = "Android Device Management",
         description = "This carries all the resources related to Android device management functionalities")
 @Path("/devices")
 @Produces(MediaType.APPLICATION_JSON)
@@ -38,14 +38,15 @@ public interface DeviceManagementService {
     @PUT
     @Path("/{id}/applications")
     @ApiOperation(
+            produces = MediaType.APPLICATION_JSON,
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "PUT",
-            value = "Update the application list of a device"
+            value = "Update the application list of a device",
+            tags = "Android Device Management"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK. \n " +
                     "Application list of the device has successfully been updated"),
-            @ApiResponse(code = 204, message = "No Content. \n Application list of the device has not been updated"),
             @ApiResponse(code = 500, message = "Internal Server Error. \n " +
                     "Sever error occurred while modifying the application list")
     })
@@ -57,14 +58,14 @@ public interface DeviceManagementService {
     @GET
     @Path("/{id}/pending-operations")
     @ApiOperation(
-            consumes = MediaType.APPLICATION_JSON,
             produces = MediaType.APPLICATION_JSON,
-            httpMethod = "PUT",
+            httpMethod = "GET",
             value = "Get the operation list pending for the device",
             responseContainer = "List",
             notes = "The Android agent communicates with the server to get the operations that are queued up " +
                     "at the server end for a given device using via this particular resource",
-            response = Operation.class)
+            response = Operation.class,
+            tags = "Android Device Management")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK. \n List of pending operations of the device is returned",
                     responseHeaders = {
@@ -99,7 +100,8 @@ public interface DeviceManagementService {
             notes = "When carrying out device registration via an Android device, you need to initially install" +
                     " an Android Agent on the device, before being able to register the device with WSO2 EMM. Instead," +
                     " you can use this REST API to register an Android device with WSO2 EMM, without having to install" +
-                    " an Android Agent on the respective device"
+                    " an Android Agent on the respective device",
+            tags = "Android Device Management"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created. \n Device has successfully been enrolled. Location header " +
@@ -117,7 +119,8 @@ public interface DeviceManagementService {
     @ApiOperation(
             httpMethod = "GET",
             value = "Getting the Registration Status of an Android Device",
-            notes = "Use this REST API to retrieve the registration status of an Android device"
+            notes = "Use this REST API to retrieve the registration status of an Android device",
+            tags = "Android Device Management"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Device has already enrolled",
@@ -129,6 +132,12 @@ public interface DeviceManagementService {
                                     description = "Date and time the resource has been modified the last time.\n" +
                                             "Used by caches, or in conditional requests.")}),
             @ApiResponse(code = 404, message = "Not Found. \n Requested device not found."),
+            @ApiResponse(code = 303, message = "See Other. \n " +
+                    "Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(name = "Location", description = "The Source URL of the document.")}),
+            @ApiResponse(code = 304, message = "Not Modified. \n " +
+                    "Empty body because the client already has the latest version of the requested resource."),
             @ApiResponse(code = 500, message = "Internal Server Error. \n " +
                     "Server error occurred while retrieving the enrollment status of the device."),
     })
@@ -139,7 +148,8 @@ public interface DeviceManagementService {
     @ApiOperation(
             httpMethod = "PUT",
             value = "Updating the Registration Details of an Android Device",
-            notes = "Use this REST API to update the registration details of an Android device"
+            notes = "Use this REST API to update the registration details of an Android device",
+            tags = "Android Device Management"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK. \n Device enrollment has been updated successfully",
@@ -173,7 +183,8 @@ public interface DeviceManagementService {
     @ApiOperation(
             httpMethod = "DELETE",
             value = "Un-registering an Android Device",
-            notes = "Use this REST API to un-register a specific Android device"
+            notes = "Use this REST API to un-register a specific Android device",
+            tags = "Android Device Management"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK. \n Device has successfully been dis-enrolled"),
