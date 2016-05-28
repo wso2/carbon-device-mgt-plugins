@@ -43,51 +43,13 @@ import java.util.List;
 public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurationService {
 
     private static final Log log = LogFactory.getLog(DeviceTypeConfigurationServiceImpl.class);
-    
-    @POST
-    @Override
-    public Response addConfiguration(PlatformConfiguration configuration){
-        Message responseMsg = new Message();
-        String msg;
-        ConfigurationEntry licenseEntry = null;
-        try {
-            configuration.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
-            List<ConfigurationEntry> configs = configuration.getConfiguration();
-            for (ConfigurationEntry entry : configs) {
-                if (AndroidConstants.TenantConfigProperties.LICENSE_KEY.equals(entry.getName())) {
-                    License license = new License();
-                    license.setName(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
-                    license.setLanguage(AndroidConstants.TenantConfigProperties.LANGUAGE_US);
-                    license.setVersion("1.0.0");
-                    license.setText(entry.getValue().toString());
-                    AndroidAPIUtils.getDeviceManagementService().addLicense(DeviceManagementConstants.
-                            MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, license);
-                    licenseEntry = entry;
-                    break;
-                }
-            }
-
-            if (licenseEntry != null) {
-                configs.remove(licenseEntry);
-            }
-            configuration.setConfiguration(configs);
-            AndroidAPIUtils.getDeviceManagementService().saveConfiguration(configuration);
-            Response.status(Response.Status.CREATED);
-            responseMsg.setResponseMessage("Android platform configuration saved successfully.");
-            responseMsg.setResponseCode(Response.Status.CREATED.toString());
-        } catch (DeviceManagementException e) {
-            msg = "Error occurred while configuring the android platform";
-            log.error(msg, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
-        }
-        return Response.status(Response.Status.CREATED).entity(responseMsg).build();
-    }
 
     @GET
     @Override
-    public Response getConfiguration() throws AndroidAgentException {
+    public Response getConfiguration(
+            @HeaderParam("If-Modified-Since") String ifModifiedSince) {
         String msg;
-        PlatformConfiguration PlatformConfiguration = null;
+        PlatformConfiguration PlatformConfiguration;
         List<ConfigurationEntry> configs;
         try {
             PlatformConfiguration = AndroidAPIUtils.getDeviceManagementService().
@@ -121,7 +83,7 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
 
     @PUT
     @Override
-    public Response updateConfiguration(PlatformConfiguration configuration) throws AndroidAgentException {
+    public Response updateConfiguration(PlatformConfiguration configuration) {
         String msg;
         Message responseMsg = new Message();
         ConfigurationEntry licenseEntry = null;
@@ -161,9 +123,10 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
 
     @GET
     @Path("license")
-    @Produces("text/plain")
-    public Response getLicense() throws AndroidAgentException {
-        License license = null;
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getLicense(
+            @HeaderParam("If-Modified-Since") String ifModifiedSince) {
+        License license;
 
         try {
             license =

@@ -35,24 +35,55 @@ public interface EventReceiverService {
     @POST
     @Path("/publish")
     @ApiOperation(
+            produces = MediaType.APPLICATION_JSON,
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
             value = "Event publishing via REST API.",
             notes = "Publish events received by the EMM Android client to WSO2 DAS using this API.",
             tags = "Event Receiver"
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created. \n Event is published successfully. Location header " +
-            "contains URL of newly enrolled device",
-                    responseHeaders = {
-                            @ResponseHeader(name = "Location", description = "URL of the newly published event.")
-                    }),
-            @ApiResponse(code = 400, message = "Bad Request. \n Invalid request or validation error."),
-            @ApiResponse(code = 500, message = "Internal Server Error. \n" +
-                    " Error occurred while publishing the events from Android agent.")
-    })
+    @ApiResponses(
+            value = {
+                    @ApiResponse(code = 201, message = "Created. \n Event is published successfully. Location header " +
+                            "contains URL of newly enrolled device",
+                            responseHeaders = {
+                                    @ResponseHeader(
+                                            name = "Content-Location",
+                                            description = "The URL of the added policy."),
+                                    @ResponseHeader(
+                                            name = "Content-Type",
+                                            description = "The content type of the body"),
+                                    @ResponseHeader(
+                                            name = "ETag",
+                                            description = "Entity Tag of the response resource.\n" +
+                                                    "Used by caches, or in conditional requests."),
+                                    @ResponseHeader(
+                                            name = "Last-Modified",
+                                            description = "Date and time the resource has been modified the last time.\n" +
+                                                    "Used by caches, or in conditional requests.")
+                            }),
+                    @ApiResponse(
+                            code = 303,
+                            message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                            responseHeaders = {
+                                    @ResponseHeader(
+                                            name = "Content-Location",
+                                            description = "The Source URL of the document.")}),
+                    @ApiResponse(
+                            code = 400,
+                            message = "Bad Request. \n Invalid request or validation error."),
+                    @ApiResponse(
+                            code = 415,
+                            message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+                    @ApiResponse(
+                            code = 500,
+                            message = "Internal Server Error. \n " +
+                                    "Server error occurred while publishing events.")
+            })
     Response publishEvents(
-            @ApiParam(name = "eventBeanWrapper", value = "Information of the agent event to be published on DAS.")
+            @ApiParam(
+                    name = "eventBeanWrapper",
+                    value = "Information of the agent event to be published on DAS.")
             EventBeanWrapper eventBeanWrapper);
 
     @GET
@@ -68,30 +99,57 @@ public interface EventReceiverService {
             responseContainer = "List",
             tags = "Event Receiver"
     )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Created \n Event details of a device for a given time duration",
-                    response = DeviceState.class, responseContainer = "List"),
-            @ApiResponse(code = 303, message = "See Other. \n Source can be retrieved from the URL specified at" +
-                    " the Location header.",
-                    responseHeaders = {
-                            @ResponseHeader(name = "Location", description = "The Source URL of the document.")
-                    }),
-            @ApiResponse(code = 304, message = "Not Modified. \n " +
-                    "Empty body because the client already has the latest version of the requested resource."),
-            @ApiResponse(code = 400, message = "Bad Request. \n Invalid request or validation error. You must provide" +
-                    " the device identifier. Additionally, the device identifier can be combined with either the type" +
-                    " OR date from and to."),
-            @ApiResponse(code = 404, message = "Not Found. \n Resource requested does not exist."),
-            @ApiResponse(code = 500, message = "Error occurred while getting published events for specific device.")
-    })
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            code = 200,
+                            message = "OK. \n Event details of a device for a given time duration have been successfully fetched",
+                            response = DeviceState.class, responseContainer = "List"),
+                    @ApiResponse(
+                            code = 303,
+                            message = "See Other. \n Source can be retrieved from the URL specified at" +
+                                    " the Location header.",
+                            responseHeaders = {
+                                    @ResponseHeader(name = "Content-Location", description = "Source URL of the document.")
+                            }),
+                    @ApiResponse(
+                            code = 304,
+                            message = "Not Modified. \n " +
+                                    "Empty body because the client already has the latest version of the requested resource."),
+                    @ApiResponse(
+                            code = 400,
+                            message = "Bad Request. \n Invalid request or validation error. You must provide" +
+                                    " the device identifier. Additionally, the device identifier can be combined with either the type" +
+                                    " OR date from and to."),
+                    @ApiResponse(
+                            code = 404,
+                            message = "Not Found. \n Resource requested does not exist."),
+                    @ApiResponse(
+                            code = 500,
+                            message = "Error occurred while getting published events for specific device.")
+            })
     Response retrieveAlerts(
-            @ApiParam(name = "id", value = "Device Identifier to be need to retrieve events.", required = true)
+            @ApiParam(
+                    name = "id",
+                    value = "Device Identifier to be need to retrieve events.",
+                    required = true)
             @QueryParam("id") String deviceId,
-            @ApiParam(name = "from", value = "From Date.")
+            @ApiParam(
+                    name = "from",
+                    value = "From Date.")
             @QueryParam("from") long from,
-            @ApiParam(name = "to", value = "To Date.")
+            @ApiParam(
+                    name = "to",
+                    value = "To Date.")
             @QueryParam("to") long to,
-            @ApiParam(name = "type", value = "Type of the Alert to be need to retrieve events.")
-            @QueryParam("type") String type);
+            @ApiParam(
+                    name = "type",
+                    value = "Type of the Alert to be need to retrieve events.")
+            @QueryParam("type") String type,
+            @ApiParam(
+                    name = "If-Modified-Since",
+                    value = "Validates if the requested variant has not been modified since the time specified",
+                    required = false)
+            @HeaderParam("If-Modified-Since") String ifModifiedSince);
 
 }

@@ -76,7 +76,9 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @PUT
     @Path("/{id}/pending-operations")
     @Override
-    public Response getPendingOperations(@PathParam("id") String id, List<? extends Operation> resultOperations) {
+    public Response getPendingOperations(@PathParam("id") String id,
+                                         @HeaderParam("If-Modified-Since") String ifModifiedSince,
+                                         List<? extends Operation> resultOperations) {
         if (id == null || id.isEmpty()) {
             String msg = "Device identifier is null or empty, hence returning device not found";
             log.error(msg);
@@ -189,7 +191,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @GET
     @Path("/{id}/status")
     @Override
-    public Response isEnrolled(@PathParam("id") String id) {
+    public Response isEnrolled(@PathParam("id") String id, @HeaderParam("If-Modified-Since") String ifModifiedSince) {
         boolean result;
         DeviceIdentifier deviceIdentifier = AndroidAPIUtils.convertToDeviceIdentifierObject(id);
         try {

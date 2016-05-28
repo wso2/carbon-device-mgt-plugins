@@ -71,10 +71,11 @@ public class EventReceiverServiceImpl implements EventReceiverService {
 
     @GET
     @Override
-    public Response retrieveAlerts(@QueryParam("id") String deviceId, @QueryParam ("from") long from,
-                                   @QueryParam ("to") long to, @QueryParam("type") String type) {
+    public Response retrieveAlerts(@QueryParam("id") String deviceId, @QueryParam("from") long from,
+                                   @QueryParam("to") long to, @QueryParam("type") String type,
+                                   @HeaderParam("If-Modified-Since") String ifModifiedSince) {
 
-        if(from != 0l && to != 0l && deviceId != null) {
+        if (from != 0l && to != 0l && deviceId != null) {
             return retrieveAlertFromDate(deviceId, from, to);
         } else if (deviceId != null && type != null) {
             return retrieveAlertByType(deviceId, type);

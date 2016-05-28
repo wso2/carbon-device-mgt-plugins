@@ -33,28 +33,9 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public interface DeviceTypeConfigurationService {
 
-    @POST
-    @ApiOperation(
-            consumes = MediaType.APPLICATION_JSON,
-            httpMethod = "POST",
-            value = "Configuring Android platform settings.",
-            notes = "Configure the Android platform settings using this REST API.",
-            tags = "Android Configuration Management"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created. \n Android platform configuration saved successfully",
-                    responseHeaders = {
-                        @ResponseHeader(name = "Location", description = "URL of the configuration added.")
-                    }),
-            @ApiResponse(code = 400, message = "Bad Request. \n Invalid request or validation error."),
-            @ApiResponse(code = 500, message = "Internal Server Error. \n" +
-                    " Error occurred while saving configurations for the android platform.")
-    })
-    Response addConfiguration(@ApiParam(name = "configuration",
-            value = "Android platform related configurations that must be added.")
-            PlatformConfiguration configuration);
     @GET
     @ApiOperation(
+            produces = MediaType.APPLICATION_JSON,
             httpMethod = "GET",
             value = "Getting Android Platform Configurations",
             notes = "Get the Android platform configuration details using this REST API",
@@ -62,18 +43,42 @@ public interface DeviceTypeConfigurationService {
             tags = "Android Configuration Management"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Get Android Configuration."),
-            @ApiResponse(code = 303, message = "See Other. \n " +
-                    "Source can be retrieved from the URL specified at the Location header.",
+            @ApiResponse(
+                    code = 200,
+                    message = "OK. \n Successfully fetched Android platform configuration.",
+                    response = PlatformConfiguration.class,
                     responseHeaders = {
-                            @ResponseHeader(name = "Location", description = "The Source URL of the document.")}),
-            @ApiResponse(code = 304, message = "Not Modified. \n " +
-                    "Empty body because the client already has the latest version of the requested resource."),
-            @ApiResponse(code = 404, message = "Not Found. \n Resource requested does not exist."),
-            @ApiResponse(code = 500, message = "Internal Server Error. \n Error occurred while fetching " +
-                    "configuration settings of Android platform.")
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests."),
+                    }),
+            @ApiResponse(
+                    code = 304,
+                    message = "Not Modified. \n Empty body because the client has already the latest version of the requested resource."),
+            @ApiResponse(
+                    code = 404,
+                    message = "Not Found. \n Resource to be deleted does not exist."),
+            @ApiResponse(
+                    code = 406,
+                    message = "Not Acceptable.\n The requested media type is not supported"),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n Server error occurred while fetching Android platform configuration.")
     })
-    Response getConfiguration() throws AndroidAgentException;
+    Response getConfiguration(
+            @ApiParam(
+                    name = "If-Modified-Since",
+                    value = "Validates if the requested variant has not been modified since the time specified",
+                    required = false)
+            @HeaderParam("If-Modified-Since") String ifModifiedSince);
 
     @PUT
     @ApiOperation(
@@ -85,20 +90,48 @@ public interface DeviceTypeConfigurationService {
             tags = "Android Configuration Management"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Created. \n Configurations was updated successfully."),
-            @ApiResponse(code = 400, message = "Bad Request. \n Invalid request or validation error."),
-            @ApiResponse(code = 404, message = "Not Found. \n Resource to be changed does not exist."),
-            @ApiResponse(code = 500, message = "Internal Server Error. \n Error occurred while modifying " +
-                    "configuration settings of Android platform.")
+            @ApiResponse(
+                    code = 200,
+                    message = "OK. \n Android platform configuration has been updated successfully",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the updated Android platform configuration."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 404,
+                    message = "Not Found. \n Resource to be deleted does not exist."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while modifying Android platform configuration.")
     })
-    Response updateConfiguration(@ApiParam(name = "configuration", value = "AndroidPlatformConfiguration")
-                                 PlatformConfiguration configuration) throws AndroidAgentException;
+    Response updateConfiguration(
+            @ApiParam(name = "configuration",
+                    value = "AndroidPlatformConfiguration")
+            PlatformConfiguration configuration);
 
     @GET
     @Path("license")
-    @Produces("text/plain")
+    @Produces(MediaType.TEXT_PLAIN)
     @ApiOperation(
-            produces = MediaType.APPLICATION_JSON,
+            produces = MediaType.TEXT_PLAIN,
             httpMethod = "GET",
             value = "Getting the License Agreement for Android Device Registration",
             notes = "Use this REST API to retrieve the license agreement that is used for the Android device " +
@@ -106,10 +139,41 @@ public interface DeviceTypeConfigurationService {
             response = String.class,
             tags = "Android Configuration Management")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Licence agreement"),
-            @ApiResponse(code = 500, message = "Error occurred while retrieving the license configured for Android " +
-                    "device enrolment")
+            @ApiResponse(
+                    code = 200,
+                    message = "OK. \n Successfully fetched Android license configuration.",
+                    response = PlatformConfiguration.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests."),
+                    }),
+            @ApiResponse(
+                    code = 304,
+                    message = "Not Modified. \n Empty body because the client has already the latest version of the requested resource."),
+            @ApiResponse(
+                    code = 404,
+                    message = "Not Found. \n Resource to be deleted does not exist."),
+            @ApiResponse(
+                    code = 406,
+                    message = "Not Acceptable.\n The requested media type is not supported"),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n Server error occurred while fetching Android license configuration.")
     })
-    Response getLicense() throws AndroidAgentException;
+    Response getLicense(
+            @ApiParam(
+                    name = "If-Modified-Since",
+                    value = "Validates if the requested variant has not been modified since the time specified",
+                    required = false)
+            @HeaderParam("If-Modified-Since") String ifModifiedSince) throws AndroidAgentException;
 
 }

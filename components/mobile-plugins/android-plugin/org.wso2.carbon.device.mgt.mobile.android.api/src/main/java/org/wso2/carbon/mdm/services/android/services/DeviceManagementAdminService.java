@@ -48,10 +48,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created \n Lock operation has successfully been scheduled",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n Invalid request or validation error."),
-            @ApiResponse(code = 500, message = "Internal Server Error. \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Device lock operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new lock operation.")
     })
     Response configureDeviceLock(
             @ApiParam(name = "deviceLockBeanWrapper",
@@ -69,9 +101,42 @@ public interface DeviceManagementAdminService {
             response = Activity.class,
             tags = "Android Device Management Administrative Service")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added unlock.", response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n Device identifier list is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Device un-lock operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new un-lock operation.")
     })
     Response configureDeviceUnlock(
             @ApiParam(name = "deviceIDs", value = "DeviceIds to be enable device unlock operation")
@@ -89,9 +154,42 @@ public interface DeviceManagementAdminService {
             response = Activity.class,
             tags = "Android Device Management Administrative Service")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Requested Device Coordinates", response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n Device identifier list is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")})
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Get-location operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new get-location operation.")})
     Response getDeviceLocation(
             @ApiParam(name = "deviceIDs", value = "DeviceIDs to be requested to get device location")
             List<String> deviceIDs);
@@ -107,9 +205,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully cleared password.", response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n Device identifier list is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Clear password operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new clear password operation.")
     })
     Response removePassword(
             @ApiParam(name = "deviceIDs",
@@ -126,10 +257,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Camera operation performed successfully.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n Invalid request or validation error."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Issue in creating a new camera instance")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Control camera operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new control camera operation.")
     })
     Response configureCamera(
             @ApiParam(name = "cameraBeanWrapper", value = "Camera enable/disable configurations with device IDs")
@@ -149,10 +312,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Device information request operation added.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n Device identifier list is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Device info operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new device info operation.")
     })
     Response getDeviceInformation(
             @ApiParam(name = "deviceIds", value = "Device IDs to be requested to get device information")
@@ -171,11 +366,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Enterprise wipe operation added.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n Device identifier list is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation."
-            )})
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Enterprise wipe operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a enterprise wipe operation.")})
     Response wipeDevice(@ApiParam(name = "deviceIDs", value = "Device IDs to be requested to do enterprise-wipe")
                         List<String> deviceIDs);
 
@@ -191,9 +417,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Added wipe operation", response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n WipeData bean is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")})
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Device wipe operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a device wipe operation.")})
     Response wipeData(
             @ApiParam(name = "wipeDataBeanWrapper", value = "Configurations and DeviceIds needed to do wipe-data")
             WipeDataBeanWrapper wipeDataBeanWrapper);
@@ -213,10 +472,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n List of applications for specific deviceIdentifier",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n Device identifier list is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Get-applications operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new get-applications operation.")
     })
     Response getApplications(
             @ApiParam(name = "deviceIDs", value = "Device Ids needed to get applications that are already installed")
@@ -233,10 +524,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added ring operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n Device identifier list is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Device ring operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new device ring operation.")
     })
     Response ringDevice(
             @ApiParam(name = "deviceIDs", value = "Device Ids needed for ring") List<String> deviceIDs);
@@ -252,10 +575,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added reboot operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n Device identifier list is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Device reboot operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new device reboot operation.")
     })
     Response rebootDevice(
             @ApiParam(name = "deviceIDs", value = "Device Ids needed for reboot.") List<String> deviceIDs);
@@ -270,10 +625,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added  mute operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n Device identifier list is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Device mute operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new device mute operation.")
     })
     @Path("/mute")
     Response muteDevice(
@@ -293,10 +680,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added  install application operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n applicationInstallationBeanWrapper is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Install application operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new install-application operation.")
     })
     Response installApplication(
             @ApiParam(name = "applicationInstallationBeanWrapper", value = "Properties of installed apps and device IDs")
@@ -316,10 +735,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added update application operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n applicationInstallationBeanWrapper is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Update-application operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new update-application operation.")
     })
     Response updateApplication(
             @ApiParam(name = "applicationUpdateBeanWrapper", value = "Properties of updated apps and device IDs")
@@ -336,10 +787,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added uninstall application operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n applicationInstallationBeanWrapper is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Uninstall-application operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new uninstall-application operation.")
     })
     Response uninstallApplication(
             @ApiParam(name = "applicationUninstallationBeanWrapper",
@@ -358,10 +841,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added blacklist application operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n blacklistApplicationsBeanWrapper is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Blacklist-applications operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new blacklist-applications operation.")
     })
     Response blacklistApplications(
             @ApiParam(name = "blacklistApplicationsBeanWrapper", value = "BlacklistApplications " +
@@ -380,10 +895,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added firmware upgrade  operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n upgradeFirmwareBeanWrapper is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Upgrade firmware operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new upgrade firmware operation.")
     })
     Response upgradeFirmware(
             @ApiParam(name = "upgradeFirmwareBeanWrapper",
@@ -402,10 +949,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added configure vpn operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n vpnBeanWrapper is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Configure VPN operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new configure VPN operation.")
     })
     Response configureVPN(
             @ApiParam(name = "vpnBeanWrapper",
@@ -423,10 +1002,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added send notification operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n notificationBeanWrapper is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Send notification operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new send notification operation.")
     })
     Response sendNotification(
             @ApiParam(name = "notificationBeanWrapper",
@@ -444,10 +1055,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added configure wifi operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n WifiConfigurations is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Configure wifi operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new configure wifi operation.")
     })
     Response configureWifi(
             @ApiParam(name = "wifiBeanWrapper",
@@ -464,10 +1107,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added encrypt storage operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n encryptionBeanWrapper is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Encrypt storage operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new encrypt storage operation.")
     })
     Response encryptStorage(
             @ApiParam(name = "encryptionBeanWrapper",
@@ -485,10 +1160,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added change lock code operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n lockCodeBeanWrapper is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Change lock code operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new change lock code operation.")
     })
     Response changeLockCode(
             @ApiParam(name = "lockCodeBeanWrapper",
@@ -506,10 +1213,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created  \n Successfully added set passcode policy operation.",
-                    response = Activity.class),
-            @ApiResponse(code = 400, message = "Bad Request. \n passwordPolicyBeanWrapper is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Set password policy operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new set password policy operation.")
     })
     Response setPasswordPolicy(
             @ApiParam(name = "passwordPolicyBeanWrapper",
@@ -527,9 +1266,42 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created \n Successfully added web clip operation."),
-            @ApiResponse(code = 400, message = "Bad Request. \n webClipBeanWrapper is empty."),
-            @ApiResponse(code = 500, message = "Internal Server Error.  \n Error occurred when adding operation.")
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Set webclip operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while adding a new set webclip operation.")
     })
     Response setWebClip(
             @ApiParam(name = "webClipBeanWrapper",
