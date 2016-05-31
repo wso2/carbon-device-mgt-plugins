@@ -60,7 +60,6 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
                 PlatformConfiguration = new PlatformConfiguration();
                 configs = new ArrayList<>();
             }
-
             ConfigurationEntry entry = new ConfigurationEntry();
             License license = AndroidAPIUtils.getDeviceManagementService().getLicense(
                     DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, AndroidConstants.
@@ -110,7 +109,7 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
             AndroidAPIUtils.getDeviceManagementService().saveConfiguration(configuration);
             //AndroidAPIUtils.getGCMService().resetTenantConfigCache();
             Response.status(Response.Status.ACCEPTED);
-            responseMsg.setResponseMessage("Android platform configuration has updated successfully.");
+            responseMsg.setResponseMessage("Android platform configuration has been updated successfully.");
             responseMsg.setResponseCode(Response.Status.ACCEPTED.toString());
         } catch (DeviceManagementException e) {
             msg = "Error occurred while modifying configuration settings of Android platform";
