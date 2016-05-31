@@ -146,7 +146,7 @@
     <Permission>
         <name>Install Application</name>
         <path>/device-mgt/android/operations/install-application</path>
-        <url>/operation/install-application</url>
+        <url>/admin/devices/install-application</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
     </Permission>
