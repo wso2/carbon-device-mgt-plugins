@@ -63,7 +63,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
                         entity(message).build();
             }
         } catch (DataPublisherConfigurationException e) {
-            String msg = "Error occurred while publishing the events from Android agent.";
+            String msg = "Error occurred while getting the Data publisher Service.";
             log.error(msg, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
