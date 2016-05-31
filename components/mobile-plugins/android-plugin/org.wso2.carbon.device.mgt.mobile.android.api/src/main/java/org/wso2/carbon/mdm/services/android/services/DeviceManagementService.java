@@ -87,11 +87,11 @@ public interface DeviceManagementService {
                     value = "List of applications that need to be persisted against the device")
             List<Application> applications);
 
-    @GET
+    @PUT
     @Path("/{id}/pending-operations")
     @ApiOperation(
             produces = MediaType.APPLICATION_JSON,
-            httpMethod = "GET",
+            httpMethod = "PUT",
             value = "Get the operation list pending for the device",
             responseContainer = "List",
             notes = "The Android agent communicates with the server to get the operations that are queued up " +
