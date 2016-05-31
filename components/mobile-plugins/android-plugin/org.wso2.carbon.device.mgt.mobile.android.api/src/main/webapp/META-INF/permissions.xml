@@ -131,7 +131,8 @@
         <name>Upgrade Firmware</name>
         <path>/device-mgt/android/operations/upgrade-firmware</path>
         <url>/admin/devices/upgrade-firmware</url>
-        <url>/admin/devices/upgrade-firmware</url>
+        <method>POST</method>
+        <scope>emm_admin</scope>
     </Permission>
 
     <Permission>
