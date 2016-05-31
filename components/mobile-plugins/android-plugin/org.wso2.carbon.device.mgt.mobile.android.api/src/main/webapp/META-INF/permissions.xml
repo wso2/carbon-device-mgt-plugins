@@ -43,7 +43,7 @@
     <Permission>
         <name>Unlock</name>
         <path>/device-mgt/android/operations/unlock</path>
-        <url>/operation/unlock</url>
+        <url>/admin/devices/unlock-devices</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
     </Permission>
