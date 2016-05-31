@@ -121,12 +121,11 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
 
 
     @GET
-    @Path("license")
+    @Path("/license")
     @Produces(MediaType.TEXT_PLAIN)
     public Response getLicense(
             @HeaderParam("If-Modified-Since") String ifModifiedSince) {
         License license;
-
         try {
             license =
                     AndroidAPIUtils.getDeviceManagementService().getLicense(
