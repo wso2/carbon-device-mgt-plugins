@@ -381,7 +381,7 @@
     <Permission>
         <name>Event Addition</name>
         <path>/device-mgt/android/events/add</path>
-        <url>/events</url>
+        <url>/events/publish</url>
         <method>POST</method>
         <scope>emm_user,emm_admin</scope>
     </Permission>
@@ -389,20 +389,6 @@
         <name>Event Retrieve</name>
         <path>/device-mgt/android/events/view</path>
         <url>/events/*</url>
-        <method>GET</method>
-        <scope>emm_admin</scope>
-    </Permission>
-    <Permission>
-        <name>Event Retrieve</name>
-        <path>/device-mgt/android/events/date</path>
-        <url>/events/*/date</url>
-        <method>GET</method>
-        <scope>emm_admin</scope>
-    </Permission>
-    <Permission>
-        <name>Event Retrieve</name>
-        <path>/device-mgt/android/events/type</path>
-        <url>/events/*/type/*</url>
         <method>GET</method>
         <scope>emm_admin</scope>
     </Permission>
