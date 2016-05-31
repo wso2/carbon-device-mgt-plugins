@@ -23,19 +23,18 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
+import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EventBeanWrapper;
+import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.EventReceiverService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.Message;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/events")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class EventReceiverServiceImpl implements EventReceiverService {
 
     private static final String EVENT_STREAM_DEFINITION = "android_agent";
@@ -44,7 +43,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
     @POST
     @Path("/publish")
     @Override
-    public Response publishEvents(EventBeanWrapper eventBeanWrapper) {
+    public Response publishEvents(EventBeanWrapper eventBeanWrapper)  {
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android device even logging.");
         }
@@ -65,7 +64,8 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         } catch (DataPublisherConfigurationException e) {
             String msg = "Error occurred while getting the Data publisher Service.";
             log.error(msg, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
     }
 
@@ -105,7 +105,8 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         } catch (AnalyticsException e) {
             String msg = "Error occurred while getting published events for specific device: " + deviceId + ".";
             log.error(msg, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
     }
 
@@ -133,7 +134,8 @@ public class EventReceiverServiceImpl implements EventReceiverService {
             String msg = "Error occurred while getting published events for specific " +
                     "Device: " + deviceId + " on given Date.";
             log.error(msg, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
     }
 
@@ -158,7 +160,8 @@ public class EventReceiverServiceImpl implements EventReceiverService {
             String msg = "Error occurred while getting published events for specific " +
                     "Device: " + deviceId + "and given device Type.";
             log.error(msg, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
     }
 

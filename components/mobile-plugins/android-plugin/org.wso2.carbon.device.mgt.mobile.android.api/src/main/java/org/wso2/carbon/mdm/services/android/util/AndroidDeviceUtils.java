@@ -20,9 +20,6 @@ package org.wso2.carbon.mdm.services.android.util;
 
 import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.device.mgt.common.*;
-import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
-
-import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 

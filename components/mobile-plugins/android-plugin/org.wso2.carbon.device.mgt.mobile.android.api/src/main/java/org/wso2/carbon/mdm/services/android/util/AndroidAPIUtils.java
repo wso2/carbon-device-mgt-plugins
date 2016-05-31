@@ -47,7 +47,6 @@ import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManag
 import org.wso2.carbon.device.mgt.core.search.mgt.impl.Utils;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
-import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
 import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
@@ -140,8 +139,7 @@ public class AndroidAPIUtils {
 //            }
 //        }
         if (!deviceIDHolder.getErrorDeviceIdList().isEmpty()) {
-            return javax.ws.rs.core.Response.status(AndroidConstants.StatusCodes.
-                    MULTI_STATUS_HTTP_CODE).entity(deviceUtils.
+            return javax.ws.rs.core.Response.status(Response.Status.BAD_REQUEST).entity(deviceUtils.
                     convertErrorMapIntoErrorMessage(deviceIDHolder.getErrorDeviceIdList())).build();
         }
         return Response.status(Response.Status.CREATED).entity(activity).build();
