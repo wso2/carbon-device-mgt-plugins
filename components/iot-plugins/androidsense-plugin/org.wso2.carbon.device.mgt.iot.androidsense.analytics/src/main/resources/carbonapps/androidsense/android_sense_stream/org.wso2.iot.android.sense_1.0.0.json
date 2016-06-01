@@ -16,6 +16,8 @@
     {"name": "accelerometer_x", "type": "FLOAT"},
     {"name": "accelerometer_y", "type": "FLOAT"},
     {"name": "accelerometer_z", "type": "FLOAT"},
+    {"name": "speed_limit", "type": "FLOAT"},
+    {"name": "turn_way", "type": "STRING"},
     {"name": "magnetic_x", "type": "FLOAT"},
     {"name": "magnetic_y", "type": "FLOAT"},
     {"name": "magnetic_z", "type": "FLOAT"},
