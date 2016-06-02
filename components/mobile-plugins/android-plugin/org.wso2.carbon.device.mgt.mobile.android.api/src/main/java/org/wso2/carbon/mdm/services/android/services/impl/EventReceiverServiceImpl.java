@@ -150,7 +150,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
             deviceStates = AndroidAPIUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
             if (deviceStates == null) {
                 message.setResponseCode("No any alerts are published for given Device: " +
-                        "" + deviceId + " on specific date.");
+                        "" + deviceId + "and given specific Type.");
                 return Response.status(Response.Status.NOT_FOUND).entity(message).build();
 
             } else {
@@ -158,7 +158,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
             }
         } catch (AnalyticsException e) {
             String msg = "Error occurred while getting published events for specific " +
-                    "Device: " + deviceId + "and given device Type.";
+                    "Device: " + deviceId + "and given specific Type.";
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
