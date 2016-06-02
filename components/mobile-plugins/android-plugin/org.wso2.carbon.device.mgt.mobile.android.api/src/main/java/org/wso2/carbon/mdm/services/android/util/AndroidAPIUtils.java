@@ -287,7 +287,10 @@ public class AndroidAPIUtils {
         } else if (AndroidConstants.OperationCodes.DEVICE_LOCATION.equals(operation.getCode())) {
             try {
                 DeviceLocation location = new Gson().fromJson(operation.getOperationResponse(), DeviceLocation.class);
-                if (location != null) {
+                // reason for checking "location.getLatitude() != null" because when device fails to provide
+                // device location and send status instead, above Gson converter create new location object
+                // with null attributes
+                if (location != null && location.getLatitude() != null) {
                     location.setDeviceIdentifier(deviceIdentifier);
                     updateDeviceLocation(location);
                 }
@@ -295,7 +298,6 @@ public class AndroidAPIUtils {
                 throw new OperationManagementException("Error occurred while updating the device location.", e);
             }
         }
-
         getDeviceManagementService().updateOperation(deviceIdentifier, operation);
     }
 
