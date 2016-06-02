@@ -27,7 +27,6 @@ public class AgentConstants {
     /*	---------------------------------------------------------------------------------------
                                 IoT-Server specific information
          ---------------------------------------------------------------------------------------	*/
-    public static final String DEVICE_CONTROLLER_API_EP = "/virtual_firealarm/controller";
     public static final String DEVICE_ENROLLMENT_API_EP = "/scep";
     public static final String DEVICE_REGISTER_API_EP = "/register";
     public static final String DEVICE_PUSH_TEMPERATURE_API_EP = "/temperature";
@@ -38,7 +37,6 @@ public class AgentConstants {
             "{\"owner\":\"%s\",\"deviceId\":\"%s\",\"reply\":\"%s\",\"value\":\"%s\",\"isSimulated\":\"%s\"," +
                     "\"duration\":\"%s\",\"frequency\":\"%s\"}";
 
-    public static final String AGENT_CONTROL_APP_EP = "/devicemgt/device/%s?id=%s";
     public static final String DEVICE_DETAILS_PAGE_EP = "/devicemgt/device/%s?id=%s";
     public static final String DEVICE_ANALYTICS_PAGE_URL =
             "/devicemgt/device/virtual_firealarm/analytics?deviceId=%s&deviceName=%s";
@@ -51,7 +49,7 @@ public class AgentConstants {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String CONTENT_TYPE_HEADER = "Content-Type";
     public static final String APPLICATION_JSON = "application/json";
-    public static final String X_WWW_FORM_URLENCODED = "x-www-form-urlencoded";
+    public static final String X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
     public static final String REGISTERED = "Registered";
     public static final String NOT_REGISTERED = "Not-Registered";
     public static final String REGISTRATION_FAILED = "Registration Failed";
@@ -113,4 +111,17 @@ public class AgentConstants {
     public static final String HTTP_PROTOCOL = "HTTP";
     public static final String MQTT_PROTOCOL = "MQTT";
     public static final String XMPP_PROTOCOL = "XMPP";
+    public static final String PROTOCOL_PROPERTY = "Protocol";
+    public static final String HOST_PROPERTY = "Host";
+    public static final String PORT_PROPERTY = "Port";
+
+    /*	---------------------------------------------------------------------------------------
+                    Keystore specific strings for the device trustStore
+        ---------------------------------------------------------------------------------------	*/
+    public static final String DEVICE_KEYSTORE_TYPE = "JKS";
+    public static final String DEVICE_KEYSTORE = "virtual_firealarm.jks";
+    public static final String DEVICE_KEYSTORE_PASSWORD = "wso2@virtual_firealarm";
+    public static final String DEVICE_PRIVATE_KEY_ALIAS = "virtual_firealarm_key";
+    public static final String DEVICE_CERT_ALIAS = "virtual_firealarm_cert";
+    public static final String SERVER_PUBLIC_KEY_ALIAS = "iotServer_key";
 }

@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentUtilOperations;
@@ -42,6 +43,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
 
     private ScheduledExecutorService service = Executors.newScheduledThreadPool(2);
     private ScheduledFuture<?> dataPushServiceHandler;
+    private static final String DEFAULT_PASSWORD = "";
 
     public FireAlarmMQTTCommunicator(String deviceOwner, String deviceType,
                                      String mqttBrokerEndPoint, String subscribeTopic) {
@@ -68,18 +70,23 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
             public void run() {
                 while (!isConnected()) {
                     try {
-                        connectToQueue();
+                        connectToQueue(agentManager.getAgentConfigs().getAuthToken(), DEFAULT_PASSWORD);
                         agentManager.updateAgentStatus("Connected to MQTT Queue");
                     } catch (TransportHandlerException e) {
                         log.warn(AgentConstants.LOG_APPENDER + "Connection to MQTT Broker at: " + mqttBrokerEndPoint +
                                          " failed.\n Will retry in " + timeoutInterval + " milli-seconds.");
+
+                        if (e.getCause() != null && e.getCause() instanceof MqttSecurityException) {
+                            refreshOAuthToken((MqttSecurityException) e.getCause());
+                        }
                     }
 
-                    try{
-                        subscribeToQueue();
-                        agentManager.updateAgentStatus("Subscribed to MQTT Queue");
-                        publishDeviceData();
-
+                    try {
+                        if (isConnected()) {
+                            subscribeToQueue();
+                            agentManager.updateAgentStatus("Subscribed to MQTT Queue");
+                            publishDeviceData();
+                        }
                     } catch (TransportHandlerException e) {
                         log.warn(AgentConstants.LOG_APPENDER + "Subscription to MQTT Broker at: " +
                                          mqttBrokerEndPoint + " failed");
@@ -100,6 +107,26 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
         connectorThread.start();
     }
 
+    private void refreshOAuthToken(final MqttSecurityException exception) {
+        Runnable tokenRefresher = new Runnable() {
+            public void run() {
+                String authenticationMethod = AgentUtilOperations.getAuthenticationMethod();
+
+                try {
+                    if (exception.getReasonCode() == MqttSecurityException.REASON_CODE_FAILED_AUTHENTICATION &&
+                            authenticationMethod.equals(AgentConstants.TOKEN_AUTHENTICATION_METHOD)) {
+                        AgentUtilOperations.refreshOAuthToken();
+                    }
+                } catch (AgentCoreOperationException e1) {
+                    log.error(AgentConstants.LOG_APPENDER + "Token Refresh Attempt Failed. " + e1);
+                }
+            }
+        };
+
+        Thread connectorThread = new Thread(tokenRefresher);
+        connectorThread.setDaemon(true);
+        connectorThread.start();
+    }
 
     @Override
     public void processIncomingMessage(MqttMessage message, String... messageParams) {

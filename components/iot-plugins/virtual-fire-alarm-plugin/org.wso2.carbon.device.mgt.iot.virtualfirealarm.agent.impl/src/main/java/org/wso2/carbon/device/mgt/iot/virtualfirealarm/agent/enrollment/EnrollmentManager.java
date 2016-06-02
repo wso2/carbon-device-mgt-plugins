@@ -44,18 +44,24 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.exception.AgentCoreOperationException;
 import sun.security.x509.X509CertImpl;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Key;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertStore;
 import java.security.cert.CertStoreException;
 import java.security.cert.Certificate;
@@ -96,6 +102,7 @@ public class EnrollmentManager {
     private PublicKey publicKey;
     private PublicKey serverPublicKey;
     private X509Certificate SCEPCertificate;
+    private boolean isEnrolled = false;
 
 
     /**
@@ -104,6 +111,7 @@ public class EnrollmentManager {
      */
     private EnrollmentManager() {
         this.SCEPUrl = AgentManager.getInstance().getEnrollmentEP();
+        setEnrollmentStatus();
     }
 
     /**
@@ -118,6 +126,58 @@ public class EnrollmentManager {
         return enrollmentManager;
     }
 
+
+    public void setEnrollmentStatus() {
+        KeyStore keyStore;
+
+        try {
+            keyStore = KeyStore.getInstance(AgentConstants.DEVICE_KEYSTORE_TYPE);
+            keyStore.load(new FileInputStream(AgentConstants.DEVICE_KEYSTORE),
+                          AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray());
+
+            this.isEnrolled = (keyStore.containsAlias(AgentConstants.DEVICE_CERT_ALIAS) &&
+                    keyStore.containsAlias(AgentConstants.DEVICE_PRIVATE_KEY_ALIAS));
+
+        } catch (KeyStoreException e) {
+            log.error(AgentConstants.LOG_APPENDER + "An error occurred whilst accessing the device KeyStore '" +
+                              AgentConstants.DEVICE_KEYSTORE + "' with keystore type [" +
+                              AgentConstants.DEVICE_KEYSTORE_TYPE + "] to ensure enrollment status.");
+            log.error(AgentConstants.LOG_APPENDER + e);
+            log.warn(AgentConstants.LOG_APPENDER + "Device will be re-enrolled.");
+            return;
+        } catch (CertificateException | NoSuchAlgorithmException e) {
+            log.error(AgentConstants.LOG_APPENDER + "An error occurred whilst trying to [load] the device KeyStore '" +
+                              AgentConstants.DEVICE_KEYSTORE + "'.");
+            log.error(AgentConstants.LOG_APPENDER + e);
+            log.warn(AgentConstants.LOG_APPENDER + "Device will be re-enrolled.");
+            return;
+        } catch (IOException e) {
+            log.error(AgentConstants.LOG_APPENDER +
+                              "An error occurred whilst trying to load input stream with the keystore file: " +
+                              AgentConstants.DEVICE_KEYSTORE);
+            log.error(AgentConstants.LOG_APPENDER + e);
+            log.warn(AgentConstants.LOG_APPENDER + "Device will be re-enrolled.");
+            return;
+        }
+
+        try {
+            if (this.isEnrolled) {
+                this.SCEPCertificate = (X509Certificate) keyStore.getCertificate(AgentConstants.DEVICE_CERT_ALIAS);
+                this.privateKey = (PrivateKey) keyStore.getKey(AgentConstants.DEVICE_PRIVATE_KEY_ALIAS,
+                                                               AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray());
+                this.serverPublicKey = (PublicKey) keyStore.getKey(AgentConstants.SERVER_PUBLIC_KEY_ALIAS,
+                                                                   AgentConstants.DEVICE_KEYSTORE_PASSWORD
+                                                                           .toCharArray());
+                this.publicKey = SCEPCertificate.getPublicKey();
+            }
+        } catch (UnrecoverableKeyException | NoSuchAlgorithmException | KeyStoreException e) {
+            log.error(AgentConstants.LOG_APPENDER + "An error occurred whilst accessing the device KeyStore '" +
+                              AgentConstants.DEVICE_KEYSTORE + "' to ensure enrollment status.");
+            log.error(AgentConstants.LOG_APPENDER + e);
+            log.warn(AgentConstants.LOG_APPENDER + "Device will be re-enrolled.");
+            this.isEnrolled = false;
+        }
+    }
 
     /**
      * Method to control the entire enrollment flow. This method calls the method to create the Private-Public Key
@@ -181,13 +241,66 @@ public class EnrollmentManager {
         this.SCEPCertificate = getSignedCertificateFromServer(tmpCert, certSignRequest);
         this.serverPublicKey = initPublicKeyOfServer();
 
+        storeCertificateToStore(AgentConstants.DEVICE_CERT_ALIAS, SCEPCertificate);
+        storeKeyToKeyStore(AgentConstants.DEVICE_PRIVATE_KEY_ALIAS, this.privateKey, SCEPCertificate);
+        storeKeyToKeyStore(AgentConstants.SERVER_PUBLIC_KEY_ALIAS, this.serverPublicKey, SCEPCertificate);
+
         if (log.isDebugEnabled()) {
+            log.info(AgentConstants.LOG_APPENDER +
+                             "SCEPCertificate, DevicePrivateKey, ServerPublicKey was saved to device keystore [" +
+                             AgentConstants.DEVICE_KEYSTORE + "]");
             log.info(AgentConstants.LOG_APPENDER + "TemporaryCertPublicKey:\n[\n" + tmpCert.getPublicKey() + "\n]\n");
             log.info(AgentConstants.LOG_APPENDER + "ServerPublicKey:\n[\n" + serverPublicKey + "\n]\n");
         }
-
     }
 
+    private void storeCertificateToStore(String alias, Certificate certificate) {
+        KeyStore keyStore;
+        try {
+            keyStore = KeyStore.getInstance(AgentConstants.DEVICE_KEYSTORE_TYPE);
+            keyStore.load(new FileInputStream(AgentConstants.DEVICE_KEYSTORE),
+                          AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray());
+
+            keyStore.setCertificateEntry(alias, certificate);
+            keyStore.store(new FileOutputStream(AgentConstants.DEVICE_KEYSTORE),
+                           AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray());
+
+        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
+            log.error(AgentConstants.LOG_APPENDER +
+                              "An error occurred whilst trying to store the Certificate received from the SCEP " +
+                              "Enrollment.");
+            log.error(AgentConstants.LOG_APPENDER + e);
+            log.warn(AgentConstants.LOG_APPENDER +
+                             "SCEP Certificate was not stored in the keystore; " +
+                             "Hence the device will be re-enrolled during next restart.");
+        }
+    }
+
+
+    private void storeKeyToKeyStore(String alias, Key cryptoKey, Certificate certInCertChain) {
+        KeyStore keyStore;
+        try {
+            keyStore = KeyStore.getInstance(AgentConstants.DEVICE_KEYSTORE_TYPE);
+            keyStore.load(new FileInputStream(AgentConstants.DEVICE_KEYSTORE),
+                          AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray());
+
+            Certificate[] certChain = new Certificate[1];
+            certChain[0] = certInCertChain;
+
+            keyStore.setKeyEntry(alias, cryptoKey, AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray(), certChain);
+            keyStore.store(new FileOutputStream(AgentConstants.DEVICE_KEYSTORE),
+                           AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray());
+
+        } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException e) {
+            log.error(AgentConstants.LOG_APPENDER +
+                              "An error occurred whilst trying to store the key with alias " +
+                              "[" + alias + "] in the device keystore.");
+            log.error(AgentConstants.LOG_APPENDER + e);
+            log.warn(AgentConstants.LOG_APPENDER +
+                             "Key [" + alias + "] was not stored in the keystore; " +
+                             "Hence the device will be re-enrolled during next restart.");
+        }
+    }
 
     /**
      * This method creates the Public-Private Key pair for the current client.
@@ -407,9 +520,9 @@ public class EnrollmentManager {
         return serverCertPublicKey;
     }
 
-
     /**
      * Gets the Public-Key of the client.
+     *
      * @return the public key of the client.
      */
     public PublicKey getPublicKey() {
@@ -418,6 +531,7 @@ public class EnrollmentManager {
 
     /**
      * Gets the Private-Key of the client.
+     *
      * @return the private key of the client.
      */
     public PrivateKey getPrivateKey() {
@@ -426,6 +540,7 @@ public class EnrollmentManager {
 
     /**
      * Gets the SCEP-Certificate of the client.
+     *
      * @return the SCEP Certificate of the client.
      */
     public X509Certificate getSCEPCertificate() {
@@ -434,9 +549,19 @@ public class EnrollmentManager {
 
     /**
      * Gets the Public-Key of the Server.
+     *
      * @return the pubic key of the server.
      */
     public PublicKey getServerPublicKey() {
         return serverPublicKey;
+    }
+
+    /**
+     * Checks whether the device has already been enrolled with the SCEP Server.
+     *
+     * @return the enrollment status; 'TRUE' if already enrolled else 'FALSE'.
+     */
+    public boolean isEnrolled() {
+        return isEnrolled;
     }
 }

@@ -77,7 +77,7 @@ public class ZipUtil {
                 xmppEndpoint = xmppEndpoint.replace(LOCALHOST, iotServerIP);
             }
 
-            String base64EncodedApplicationKey = getBase64EncodedAPIAppKey(apiApplicationKey);
+            String base64EncodedApplicationKey = getBase64EncodedAPIAppKey(apiApplicationKey).trim();
 
             Map<String, String> contextParams = new HashMap<>();
             contextParams.put(VirtualFireAlarmUtilConstants.TENANT_DOMAIN, APIUtil.getTenantDomainOftheUser());

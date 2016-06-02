@@ -74,18 +74,19 @@ public class AgentManager {
     public void init() {
 
         agentCommunicator = new HashMap<>();
-
         // Read IoT-Server specific configurations from the 'deviceConfig.properties' file
         try {
             this.agentConfigs = AgentUtilOperations.readIoTServerConfigs();
         } catch (AgentCoreOperationException e) {
-            log.error("Reading device configuration from configd file failed:\n");
+            log.error("Reading device configuration from configuration file failed:\n");
             log.error(e);
             System.exit(0);
         }
 
         // Initialise IoT-Server URL endpoints from the configuration read from file
         AgentUtilOperations.initializeServerEndPoints();
+        // Set the hostNameVerifier to the APIM-Server IPAddress to enable HTTPS handshake
+        AgentUtilOperations.setHTTPSConfigurations();
 
         String analyticsPageContext = String.format(AgentConstants.DEVICE_ANALYTICS_PAGE_URL,
                                                     agentConfigs.getDeviceId(),
@@ -153,7 +154,9 @@ public class AgentManager {
         }
 
         try {
-            EnrollmentManager.getInstance().beginEnrollmentFlow();
+            if (!EnrollmentManager.getInstance().isEnrolled()) {
+                EnrollmentManager.getInstance().beginEnrollmentFlow();
+            }
         } catch (AgentCoreOperationException e) {
             log.error("Device Enrollment Failed:\n");
             log.error(e);
