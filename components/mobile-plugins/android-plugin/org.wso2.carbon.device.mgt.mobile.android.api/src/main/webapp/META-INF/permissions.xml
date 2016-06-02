@@ -388,7 +388,7 @@
     <Permission>
         <name>Event Retrieve</name>
         <path>/device-mgt/android/events/view</path>
-        <url>/events/*</url>
+        <url>/events</url>
         <method>GET</method>
         <scope>emm_admin</scope>
     </Permission>

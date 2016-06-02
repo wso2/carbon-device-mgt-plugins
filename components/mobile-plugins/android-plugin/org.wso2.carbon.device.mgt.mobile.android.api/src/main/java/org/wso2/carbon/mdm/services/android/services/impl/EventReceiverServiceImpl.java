@@ -43,7 +43,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
     @POST
     @Path("/publish")
     @Override
-    public Response publishEvents(EventBeanWrapper eventBeanWrapper)  {
+    public Response publishEvents(EventBeanWrapper eventBeanWrapper) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android device even logging.");
         }
@@ -62,7 +62,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
                         entity(message).build();
             }
         } catch (DataPublisherConfigurationException e) {
-            String msg = "Error occurred while getting the Data publisher Service.";
+            String msg = "Error occurred while getting the Data publisher Service instance.";
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
