@@ -26,7 +26,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Api(value = "Event Receiver", description = "Event publishing/retrieving related APIs.")
+@Api(value = "Event Receiver", description = "Event publishing/retrieving related APIs.To enable Eventing need to" +
+        " configure as ref-https://docs.wso2.com/display/EMM210/Managing+Event+Publishing+with+WSO2+Data+Analytics+Server, " +
+        "https://docs.wso2.com/display/EMM210/Creating+a+New+Event+Stream+and+Receiver")
 @Path("/events")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
