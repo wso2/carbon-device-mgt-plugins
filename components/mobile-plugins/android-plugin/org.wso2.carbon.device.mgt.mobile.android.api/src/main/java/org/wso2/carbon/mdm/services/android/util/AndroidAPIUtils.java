@@ -36,6 +36,7 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
+import org.wso2.carbon.device.mgt.common.device.details.DeviceInfo;
 import org.wso2.carbon.device.mgt.common.device.details.DeviceLocation;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementService;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
@@ -277,8 +278,7 @@ public class AndroidAPIUtils {
             try {
                 Device device = new Gson().fromJson(operation.getOperationResponse(), Device.class);
                 org.wso2.carbon.device.mgt.common.device.details.DeviceInfo deviceInfo = convertDeviceToInfo(device);
-                deviceInfo.setDeviceIdentifier(deviceIdentifier);
-                updateDeviceInfo(deviceInfo);
+                updateDeviceInfo(deviceIdentifier, deviceInfo);
             } catch (DeviceDetailsMgtException e) {
                 throw new OperationManagementException("Error occurred while updating the device information.", e);
             }
@@ -344,14 +344,14 @@ public class AndroidAPIUtils {
     }
 
 
-    private static void updateDeviceInfo(org.wso2.carbon.device.mgt.common.device.details.DeviceInfo deviceInfo)
+    private static void updateDeviceInfo(DeviceIdentifier deviceId, DeviceInfo deviceInfo)
             throws DeviceDetailsMgtException {
 
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         DeviceInformationManager informationManager =
                 (DeviceInformationManager) ctx.getOSGiService(DeviceInformationManager.class, null);
 
-        informationManager.addDeviceInfo(deviceInfo);
+        informationManager.addDeviceInfo(deviceId, deviceInfo);
     }
 
 
