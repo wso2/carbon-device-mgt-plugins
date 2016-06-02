@@ -25,7 +25,7 @@ public class VirtualFirealarmMqttContentTransformer implements ContentTransforme
             Long serialNo = (Long) jsonPayload.get(VirtualFireAlarmConstants.JSON_SERIAL_KEY);
             // the hash-code of the deviceId is used as the alias for device certificates during SCEP enrollment.
             // hence, the same is used here to fetch the device-specific-certificate from the key store.
-            PublicKey clientPublicKey = VirtualFireAlarmUtils.getDevicePublicKey("" + serialNo);
+            PublicKey clientPublicKey = VirtualFireAlarmUtils.getDevicePublicKey("" + serialNo.hashCode());
 
             // the MQTT-messages from VirtualFireAlarm devices are in the form {"Msg":<MESSAGE>, "Sig":<SIGNATURE>}
             String actualMessage = VirtualFireAlarmUtils.extractMessageFromPayload((String) message, clientPublicKey);
