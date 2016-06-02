@@ -26,7 +26,7 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.DeviceManager;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
-import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
@@ -50,13 +50,13 @@ public class VirtualFireAlarmManager implements DeviceManager {
     }
 
     @Override
-    public boolean saveConfiguration(TenantConfiguration tenantConfiguration)
+    public boolean saveConfiguration(PlatformConfiguration PlatformConfiguration)
             throws DeviceManagementException {
         return false;
     }
 
     @Override
-    public TenantConfiguration getConfiguration() throws DeviceManagementException {
+    public PlatformConfiguration getConfiguration() throws DeviceManagementException {
         return null;
     }
 

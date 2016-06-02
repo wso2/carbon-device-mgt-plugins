@@ -31,7 +31,7 @@ import java.util.List;
           description = "Mapping between web clip operation and device list to be applied.")
 public class WebClipBeanWrapper {
 
-    @ApiModelProperty(name = "operation", value = "the information of setting up webclip", required = true)
+    @ApiModelProperty(name = "operation", value = "the information of setting up webclip.", required = true)
 	private WebClip operation;
     @ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
 	private List<String> deviceIDs;

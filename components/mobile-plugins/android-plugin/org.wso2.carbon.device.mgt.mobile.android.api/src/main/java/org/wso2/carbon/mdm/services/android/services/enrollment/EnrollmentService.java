@@ -20,11 +20,9 @@ package org.wso2.carbon.mdm.services.android.services.enrollment;
 
 import io.swagger.annotations.*;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
-import org.wso2.carbon.mdm.services.android.util.Message;
-
-import javax.jws.WebService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * Android Device Enrollment REST-API implementation.
@@ -32,7 +30,6 @@ import javax.ws.rs.core.MediaType;
  */
 
 @Api(value = "EnrollmentService", description = "Android Device Enrollment REST-API implementation.")
-@WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
 public interface EnrollmentService {
@@ -51,7 +48,7 @@ public interface EnrollmentService {
             @ApiResponse(code = 201, message = "Device enrollment succeeded"),
             @ApiResponse(code = 500, message = "Device enrollment failed"),
     })
-    Message enrollDevice(@ApiParam(name = "device", value = "Device Information to be enroll")
+    Response enrollDevice(@ApiParam(name = "device", value = "Device Information to be enroll")
                                  org.wso2.carbon.device.mgt.common.Device device) throws AndroidAgentException;
 
     @GET
@@ -65,7 +62,7 @@ public interface EnrollmentService {
             @ApiResponse(code = 202, message = "Device has already enrolled"),
             @ApiResponse(code = 404, message = "Device not found")
     })
-    Message isEnrolled(@ApiParam(name = "deviceId", value = "DeviceIdentifier") @PathParam("deviceId") String id)
+    Response isEnrolled(@ApiParam(name = "deviceId", value = "DeviceIdentifier") @PathParam("deviceId") String id)
             throws AndroidAgentException;
 
     @PUT
@@ -79,7 +76,7 @@ public interface EnrollmentService {
             @ApiResponse(code = 202, message = "Device enrollment has updated successfully"),
             @ApiResponse(code = 404, message = "Device not found for enrollment")
     })
-    Message modifyEnrollment(@ApiParam(name = "deviceId", value = "DeviceIdentifier") @PathParam("deviceId") String id,
+    Response modifyEnrollment(@ApiParam(name = "deviceId", value = "DeviceIdentifier") @PathParam("deviceId") String id,
                              @ApiParam(name = "device", value = "Device information to be modify")
                                      org.wso2.carbon.device.mgt.common.Device device)
             throws AndroidAgentException;
@@ -95,6 +92,6 @@ public interface EnrollmentService {
             @ApiResponse(code = 404, message = "Device not found")
     })
     @Path("{deviceId}")
-    Message disEnrollDevice(@ApiParam(name = "deviceId", value = "DeviceIdentifier") @PathParam("deviceId") String id)
+    Response disEnrollDevice(@ApiParam(name = "deviceId", value = "DeviceIdentifier") @PathParam("deviceId") String id)
             throws AndroidAgentException;
 }

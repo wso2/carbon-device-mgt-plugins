@@ -18,10 +18,11 @@
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.configurationmgtservice;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.mdm.mobileservices.windows.common.util.Message;
 
@@ -36,6 +37,7 @@ import javax.ws.rs.core.MediaType;
 @WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
+@Api(value = "ConfigurationMgtService", description = "Windows Device Management REST-API implementation.")
 public interface ConfigurationMgtService {
 
     /**
@@ -56,7 +58,7 @@ public interface ConfigurationMgtService {
             @ApiResponse(code = 201, message = "Windows platform configuration saved successfully"),
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    Message ConfigureSettings(TenantConfiguration configuration) throws WindowsConfigurationException;
+    Message ConfigureSettings(PlatformConfiguration configuration) throws WindowsConfigurationException;
 
     /**
      * Retrieve Tenant configurations according to the device type.
@@ -69,13 +71,13 @@ public interface ConfigurationMgtService {
             httpMethod = "GET",
             value = "Getting Windows Platform Configurations",
             notes = "Get the Windows platform configuration details using this REST API",
-            response = TenantConfiguration.class
+            response = PlatformConfiguration.class
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Get Windows Configurations"),
             @ApiResponse(code = 500, message = "Server Error")
     })
-    TenantConfiguration getConfiguration() throws WindowsConfigurationException;
+    PlatformConfiguration getConfiguration() throws WindowsConfigurationException;
 
     /**
      * Update Tenant Configurations for the specific Device type.
@@ -97,5 +99,5 @@ public interface ConfigurationMgtService {
             @ApiResponse(code = 500, message = "Error occurred while modifying configuration settings of " +
                     "windows platform")
     })
-    Message updateConfiguration(TenantConfiguration configuration) throws WindowsConfigurationException;
+    Message updateConfiguration(PlatformConfiguration configuration) throws WindowsConfigurationException;
 }

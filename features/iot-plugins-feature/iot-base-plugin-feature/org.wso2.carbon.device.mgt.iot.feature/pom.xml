@@ -18,20 +18,19 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<parent>
 		<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
 		<artifactId>iot-base-plugin-feature</artifactId>
-		<version>2.1.0-SNAPSHOT</version>
+		<version>2.1.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>org.wso2.carbon.device.mgt.iot.feature</artifactId>
 	<packaging>pom</packaging>
-	<version>2.1.0-SNAPSHOT</version>
+	<version>2.1.1-SNAPSHOT</version>
 	<name>WSO2 Carbon - IoT Device Management Feature</name>
 	<url>http://wso2.org</url>
 	<description>This feature contains the core bundles required for IoT Server</description>
@@ -137,15 +136,6 @@
 								</bundleDef>
 								<bundleDef>
 									org.json.wso2:json:${commons-json.version}
-								</bundleDef>
-								<bundleDef>
-									org.eclipse.paho:org.eclipse.paho.client.mqttv3:${eclipse.paho.version}
-								</bundleDef>
-								<bundleDef>
-									org.igniterealtime.smack.wso2:smack:${smack.wso2.version}
-								</bundleDef>
-								<bundleDef>
-									org.igniterealtime.smack.wso2:smackx:${smackx.wso2.version}
 								</bundleDef>
 							</bundles>
 							<importFeatures>

@@ -47,6 +47,14 @@
     </Permission>
 
     <Permission>
+        <name>Unlock</name>
+        <path>/device-mgt/android/operations/unlock</path>
+        <url>/operation/unlock</url>
+        <method>POST</method>
+        <scope>emm_admin,emm_user</scope>
+    </Permission>
+
+    <Permission>
         <name>Mute</name>
         <path>/device-mgt/android/operations/mute</path>
         <url>/operation/mute</url>
@@ -118,9 +126,41 @@
     </Permission>
 
     <Permission>
+        <name>Reboot</name>
+        <path>/device-mgt/android/operations/reboot-device</path>
+        <url>/operation/reboot-device</url>
+        <method>POST</method>
+        <scope>emm_admin,emm_user</scope>
+    </Permission>
+
+    <Permission>
+        <name>Upgrade Firmware</name>
+        <path>/device-mgt/android/operations/upgrade-firmware</path>
+        <url>/operation/upgrade-firmware</url>
+        <method>POST</method>
+        <scope>emm_admin,emm_user</scope>
+    </Permission>
+
+    <Permission>
+        <name>Configure VPN</name>
+        <path>/device-mgt/android/operations/vpn</path>
+        <url>/operation/vpn</url>
+        <method>POST</method>
+        <scope>emm_admin,emm_user</scope>
+    </Permission>
+
+    <Permission>
         <name>Install Application</name>
         <path>/device-mgt/android/operations/install-application</path>
         <url>/operation/install-application</url>
+        <method>POST</method>
+        <scope>emm_admin,emm_user</scope>
+    </Permission>
+
+    <Permission>
+        <name>Update Application</name>
+        <path>/device-mgt/android/operations/update-application</path>
+        <url>/operation/update-application</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
     </Permission>
@@ -310,6 +350,34 @@
         <path>/device-mgt/android/tenant/configuration</path>
         <url>/configuration</url>
         <method>PUT</method>
+        <scope>emm_admin</scope>
+    </Permission>
+    <Permission>
+        <name>Event Addition</name>
+        <path>/device-mgt/android/events/add</path>
+        <url>/events</url>
+        <method>POST</method>
+        <scope>emm_user,emm_admin</scope>
+    </Permission>
+    <Permission>
+        <name>Event Retrieve</name>
+        <path>/device-mgt/android/events/view</path>
+        <url>/events/*</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+    <Permission>
+        <name>Event Retrieve</name>
+        <path>/device-mgt/android/events/date</path>
+        <url>/events/*/date</url>
+        <method>GET</method>
+        <scope>emm_admin</scope>
+    </Permission>
+    <Permission>
+        <name>Event Retrieve</name>
+        <path>/device-mgt/android/events/type</path>
+        <url>/events/*/type/*</url>
+        <method>GET</method>
         <scope>emm_admin</scope>
     </Permission>
 </PermissionConfiguration>

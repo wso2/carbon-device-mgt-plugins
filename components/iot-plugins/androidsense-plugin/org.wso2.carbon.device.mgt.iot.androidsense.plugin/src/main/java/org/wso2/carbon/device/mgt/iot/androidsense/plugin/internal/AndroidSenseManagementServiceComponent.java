@@ -28,6 +28,7 @@ import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.AndroidSenseManag
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.util.AndroidSenseStartupListener;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.util.AndroidSenseUtils;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
+import org.wso2.carbon.ndatasource.core.DataSourceService;
 
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.android.internal.AndroidSenseManagementServiceComponent"
@@ -38,6 +39,12 @@ import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
  * policy="dynamic"
  * bind="setOutputEventAdapterService"
  * unbind="unsetOutputEventAdapterService"
+ * @scr.reference name="org.wso2.carbon.ndatasource"
+ * interface="org.wso2.carbon.ndatasource.core.DataSourceService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setDataSourceService"
+ * unbind="unsetDataSourceService"
  */
 public class AndroidSenseManagementServiceComponent {
 	
@@ -57,8 +64,7 @@ public class AndroidSenseManagementServiceComponent {
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
                 if (log.isDebugEnabled()) {
-                    log.debug(
-                            "-Dsetup is enabled. Iot Device management repository schema initialization is about " +
+                    log.debug("-Dsetup is enabled. Iot Device management repository schema initialization is about " +
                                     "to begin");
                 }
                 try {
@@ -107,5 +113,17 @@ public class AndroidSenseManagementServiceComponent {
      */
     protected void unsetOutputEventAdapterService(OutputEventAdapterService outputEventAdapterService) {
         AndroidSenseManagementDataHolder.getInstance().setOutputEventAdapterService(null);
+    }
+
+    protected void setDataSourceService(DataSourceService dataSourceService) {
+        /* This is to avoid mobile device management component getting initialized before the underlying datasources
+        are registered */
+        if (log.isDebugEnabled()) {
+            log.debug("Data source service set to service component");
+        }
+    }
+
+    protected void unsetDataSourceService(DataSourceService dataSourceService) {
+        //do nothing
     }
 }
