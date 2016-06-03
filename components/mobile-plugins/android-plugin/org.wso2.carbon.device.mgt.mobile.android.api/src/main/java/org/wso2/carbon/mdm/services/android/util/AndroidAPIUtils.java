@@ -312,26 +312,31 @@ public class AndroidAPIUtils {
     private static void updateApplicationList(Operation operation, DeviceIdentifier deviceIdentifier)
             throws ApplicationManagementException {
         // Parsing json string to get applications list.
-        JsonElement jsonElement = new JsonParser().parse(operation.getOperationResponse());
-        JsonArray jsonArray = jsonElement.getAsJsonArray();
-        Application app;
-        List<Application> applications = new ArrayList<Application>(jsonArray.size());
-        for (JsonElement element : jsonArray) {
-            app = new Application();
-            app.setName(element.getAsJsonObject().
-                    get(AndroidConstants.ApplicationProperties.NAME).getAsString());
-            app.setApplicationIdentifier(element.getAsJsonObject().
-                    get(AndroidConstants.ApplicationProperties.IDENTIFIER).getAsString());
-            app.setPlatform(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
-            if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.USS) != null) {
-                app.setMemoryUsage(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.USS).getAsInt());
+        if (operation.getOperationResponse() != null) {
+            JsonElement jsonElement = new JsonParser().parse(operation.getOperationResponse());
+            JsonArray jsonArray = jsonElement.getAsJsonArray();
+            Application app;
+            List<Application> applications = new ArrayList<Application>(jsonArray.size());
+            for (JsonElement element : jsonArray) {
+                app = new Application();
+                app.setName(element.getAsJsonObject().
+                        get(AndroidConstants.ApplicationProperties.NAME).getAsString());
+                app.setApplicationIdentifier(element.getAsJsonObject().
+                        get(AndroidConstants.ApplicationProperties.IDENTIFIER).getAsString());
+                app.setPlatform(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+                if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.USS) != null) {
+                    app.setMemoryUsage(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.USS).getAsInt());
+                }
+                if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION) != null) {
+                    app.setVersion(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION).getAsString());
+                }
+                applications.add(app);
             }
-            if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION) != null) {
-                app.setVersion(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION).getAsString());
-            }
-            applications.add(app);
+            getApplicationManagerService().updateApplicationListInstalledInDevice(deviceIdentifier, applications);
+        } else {
+            log.error("Operation Response is null.");
         }
-        getApplicationManagerService().updateApplicationListInstalledInDevice(deviceIdentifier, applications);
+
     }
 
 
