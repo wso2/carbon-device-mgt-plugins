@@ -74,8 +74,6 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
         }
     }
 
-
-
     @PUT
     @Path("/{id}/pending-operations")
     @Override
@@ -85,14 +83,14 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
         if (id == null || id.isEmpty()) {
             String msg = "Device identifier is null or empty, hence returning device not found";
             log.error(msg);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
         }
         DeviceIdentifier deviceIdentifier = AndroidAPIUtils.convertToDeviceIdentifierObject(id);
         try {
             if (!AndroidDeviceUtils.isValidDeviceIdentifier(deviceIdentifier)) {
                 String msg = "Device not found for identifier '" + id + "'";
                 log.error(msg);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+                return Response.status(Response.Status.NOT_FOUND).entity(msg).build();
             }
             if (log.isDebugEnabled()) {
                 log.debug("Invoking Android pending operations:" + id);
@@ -133,7 +131,8 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
         } catch (OperationManagementException e) {
             String msg = "Issue in retrieving operation management service instance";
             log.error(msg, e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
         return Response.status(Response.Status.CREATED).entity(pendingOperations).build();
     }
