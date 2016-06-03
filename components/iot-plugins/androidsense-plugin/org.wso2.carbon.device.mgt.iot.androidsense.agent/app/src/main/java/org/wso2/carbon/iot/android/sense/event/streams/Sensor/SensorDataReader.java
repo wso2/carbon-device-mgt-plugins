@@ -24,7 +24,6 @@ import android.util.Log;
 import org.wso2.carbon.iot.android.sense.event.streams.DataReader;
 import org.wso2.carbon.iot.android.sense.realtimeviewer.sensorlisting.SupportedSensors;
 import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * This is used to retrieve the sensor data.
@@ -44,6 +44,13 @@ public class SensorDataReader extends DataReader implements SensorEventListener 
     private List<Sensor> sensorList = new ArrayList<>();
     private SupportedSensors supportedSensors = SupportedSensors.getInstance();
     private static final String TAG = SensorDataReader.class.getName();
+
+//    private float last_x, last_y, last_z;
+//    private long lastUpdate;
+//    String xTurnAxis;
+//    private float speed;
+//    private float x,y,z;
+
 
     public SensorDataReader(Context context) {
         ctx = context;
@@ -92,16 +99,67 @@ public class SensorDataReader extends DataReader implements SensorEventListener 
     @Override
     public void onSensorChanged(SensorEvent event) {
         senseDataStruct.put(event.sensor.getName(), new SensorData(event));
+
+//        Sensor mySensor = event.sensor;
+//
+//        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+//             x = event.values[0];
+//             y = event.values[1];
+//             z = event.values[2];
+//
+//
+//            if(Round(x,4)>10.0000){
+//                Log.d("sensor", "X Right axis: " + x);
+//                xTurnAxis = "Right";
+//            }
+//            else if(Round(x,4)<-10.0000){
+//                Log.d("sensor", "X Left axis: " + x);
+//                xTurnAxis = "Left";
+//
+//
+//            }
+//
+//            long curTime = System.currentTimeMillis();
+//
+//            long diffTime = (curTime - lastUpdate);
+//            lastUpdate = curTime;
+//
+//            speed = Math.abs(x+y+z - last_x - last_y - last_z)/ diffTime * 10000;
+//
+//            Log.d("ADebugTag2", "DevSpeed Sensor: " + Float.toString(speed));
+//
+//            last_x = x;
+//            last_y = y;
+//            last_z = z;
+//
+//        }
+
+//        Event events = new Event();
+//        events.setSpeed(speed);
+//        events.setTurns(xTurnAxis);
+
     }
+
+
+//    public static float Round(float Rval, int Rpl) {
+//        float p = (float)Math.pow(10,Rpl);
+//        Rval = Rval * p;
+//        float tmp = Math.round(Rval);
+//        Log.d("round", "round: " + tmp/p);
+//
+//        return tmp/p;
+//    }
 
     @Override
     public void run() {
         Log.d(TAG, "running -sensorDataMap");
-        Vector<SensorData> sensorDatas = getSensorData();
-        for (SensorData data : sensorDatas) {
+        Vector<SensorData> sensorDetails = getSensorData();
+        for (SensorData data : sensorDetails) {
             SenseDataHolder.getSensorDataHolder().add(data);
         }
     }
+
+
 
     public void selectedSensorList(Set<String> set) {
         if (set != null) {

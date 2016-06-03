@@ -19,7 +19,6 @@ package org.wso2.carbon.iot.android.sense.data.publisher.mqtt;
 
 import android.content.Context;
 import android.util.Log;
-
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.transport.MQTTTransportHandler;
@@ -27,7 +26,6 @@ import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.transport.Transport
 import org.wso2.carbon.iot.android.sense.constants.SenseConstants;
 import org.wso2.carbon.iot.android.sense.speech.detector.util.ProcessWords;
 import org.wso2.carbon.iot.android.sense.util.LocalRegistry;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 

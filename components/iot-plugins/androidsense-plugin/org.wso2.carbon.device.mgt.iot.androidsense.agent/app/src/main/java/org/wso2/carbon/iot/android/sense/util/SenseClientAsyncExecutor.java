@@ -98,7 +98,7 @@ public class SenseClientAsyncExecutor extends AsyncTask<String, Void, Map<String
         responseMap.put(STATUS, "200");
         AccessTokenInfo accessTokenInfo = null;
         try {
-            //DynamicClientRegistraiton.
+            //DynamicClientRegistration.
             DynamicClientRegistrationService dynamicClientRegistrationService = Feign.builder()
                     .client(disableHostnameVerification).contract(new
                     JAXRSContract()).encoder(new JacksonEncoder()).decoder(new JacksonDecoder())

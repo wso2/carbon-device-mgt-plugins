@@ -16,7 +16,6 @@ package org.wso2.carbon.iot.android.sense.speech.detector.util;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.EditText;
-
 import org.apache.commons.codec.language.Soundex;
 import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationData;
 import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.tartarus.snowball.ext.englishStemmer;
-
 import agent.sense.android.iot.carbon.wso2.org.wso2_senseagent.R;
 
 /**
@@ -162,7 +160,7 @@ public class ProcessWords extends AsyncTask<String, Void, String> {
     }
 
     /**
-     * clean in memory content and pubish it to the server.
+     * clean in memory content and publish it to the server.
      */
     public static synchronized void cleanAndPushToWordMap() {
         for (String word : wordDataMap.keySet()) {

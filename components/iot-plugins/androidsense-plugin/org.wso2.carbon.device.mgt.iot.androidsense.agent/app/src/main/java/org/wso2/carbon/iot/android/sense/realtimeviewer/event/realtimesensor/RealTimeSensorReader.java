@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-
 import org.wso2.carbon.iot.android.sense.realtimeviewer.datastore.TempStore;
 import org.wso2.carbon.iot.android.sense.realtimeviewer.sensorlisting.SupportedSensors;
 import org.wso2.carbon.iot.android.sense.realtimeviewer.view.adaptor.SensorViewAdaptor;

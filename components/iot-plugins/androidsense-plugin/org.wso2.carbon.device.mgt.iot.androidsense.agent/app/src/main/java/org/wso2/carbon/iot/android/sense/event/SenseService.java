@@ -48,6 +48,8 @@ public class SenseService extends Service {
         //Below triggers the data collection for sensors,location and battery.
         SenseDataCollector Sensor = new SenseDataCollector(this, SenseDataCollector.DataType.SENSOR);
         SenseDataCollector Location = new SenseDataCollector(this, SenseDataCollector.DataType.LOCATION);
+        SenseDataCollector speed = new SenseDataCollector(this, SenseDataCollector.DataType.SPEED);
+
         registerReceiver(new BatteryDataReceiver(), new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
         //service will not be stopped until we manually stop the service

@@ -19,11 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import org.wso2.carbon.iot.android.sense.realtimeviewer.event.realtimesensor.RealTimeSensor;
-
 import java.util.List;
-
 import agent.sense.android.iot.carbon.wso2.org.wso2_senseagent.R;
 
 /**

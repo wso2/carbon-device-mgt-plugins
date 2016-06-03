@@ -35,7 +35,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import org.wso2.carbon.iot.android.sense.RegisterActivity;
 import org.wso2.carbon.iot.android.sense.data.publisher.DataPublisherReceiver;
 import org.wso2.carbon.iot.android.sense.data.publisher.DataPublisherService;
@@ -49,11 +48,9 @@ import org.wso2.carbon.iot.android.sense.realtimeviewer.view.adaptor.SensorViewA
 import org.wso2.carbon.iot.android.sense.realtimeviewer.view.sensor.selector.SelectSensorDialog;
 import org.wso2.carbon.iot.android.sense.speech.detector.WordRecognitionActivity;
 import org.wso2.carbon.iot.android.sense.util.LocalRegistry;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
 import agent.sense.android.iot.carbon.wso2.org.wso2_senseagent.R;
 
 /**

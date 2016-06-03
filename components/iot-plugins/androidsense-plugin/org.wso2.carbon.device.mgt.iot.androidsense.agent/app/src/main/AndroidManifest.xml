@@ -67,6 +67,10 @@
             android:label="Speech Recongnizer"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+
+
+
+
     </application>
 
 </manifest>

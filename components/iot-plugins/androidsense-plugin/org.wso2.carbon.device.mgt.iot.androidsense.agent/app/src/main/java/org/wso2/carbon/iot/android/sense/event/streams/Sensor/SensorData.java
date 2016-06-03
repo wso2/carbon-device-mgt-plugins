@@ -34,6 +34,7 @@ public class SensorData {
     private String collectTimestamp;
     private SupportedSensors supportedSensors = SupportedSensors.getInstance();
 
+
     SensorData(SensorEvent event) {
         sensorValues = event.values;
         accuracyStatus = event.accuracy;
@@ -43,6 +44,10 @@ public class SensorData {
         sensorVendor = event.sensor.getVendor();
         sensorType = event.sensor.getType();
     }
+
+
+
+
 
     public int getSensorType() {
         return sensorType;

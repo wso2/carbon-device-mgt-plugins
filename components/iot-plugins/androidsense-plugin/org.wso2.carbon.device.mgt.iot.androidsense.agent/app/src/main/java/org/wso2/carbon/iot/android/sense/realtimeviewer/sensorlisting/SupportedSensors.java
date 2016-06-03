@@ -53,6 +53,7 @@ public class SupportedSensors {
      */
     private void setList() {
         sensorList.add("Accelerometer");
+       // sensorList.add("Acceleration");
         sensorList.add("Magnetometer");
         sensorList.add("Gravity");
         sensorList.add("Rotation Vector");
@@ -67,6 +68,7 @@ public class SupportedSensors {
      */
     private void setSensorTypeMap() {
         sensorTypeMap.put("accelerometer", Sensor.TYPE_ACCELEROMETER);
+       // sensorTypeMap.put("acceleration", Sensor.TYPE_LINEAR_ACCELERATION);
         sensorTypeMap.put("magnetometer", Sensor.TYPE_MAGNETIC_FIELD);
         sensorTypeMap.put("gravity", Sensor.TYPE_GRAVITY);
         sensorTypeMap.put("rotation vector", Sensor.TYPE_GAME_ROTATION_VECTOR);
@@ -81,6 +83,7 @@ public class SupportedSensors {
      */
     private void setTypeSensorMap() {
         typeSensorMap.put(Sensor.TYPE_ACCELEROMETER, "accelerometer");
+        //typeSensorMap.put(Sensor.TYPE_LINEAR_ACCELERATION, "acceleration");
         typeSensorMap.put(Sensor.TYPE_MAGNETIC_FIELD, "magnetometer");
         typeSensorMap.put(Sensor.TYPE_GRAVITY, "gravity");
         typeSensorMap.put(Sensor.TYPE_GAME_ROTATION_VECTOR, "rotation vector");
