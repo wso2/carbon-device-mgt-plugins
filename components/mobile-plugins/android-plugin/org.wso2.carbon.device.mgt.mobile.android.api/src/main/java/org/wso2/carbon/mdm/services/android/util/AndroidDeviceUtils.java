@@ -55,8 +55,8 @@ public class AndroidDeviceUtils {
                 if (isValidDeviceIdentifier(deviceIdentifier)) {
                     validDeviceIDList.add(deviceIdentifier);
                 } else {
-                    errorDeviceIdList.add(String.format(AndroidConstants.DeviceConstants.DEVICE_ID_NOT_FOUND,
-                            deviceIDCounter));
+                    errorDeviceIdList.add(String.format(AndroidConstants.DeviceConstants.
+                        DEVICE_ID_NOT_FOUND, deviceID));
                 }
             } catch (DeviceManagementException e) {
                 errorDeviceIdList.add(String.format(AndroidConstants.DeviceConstants.DEVICE_ID_SERVICE_NOT_FOUND,
