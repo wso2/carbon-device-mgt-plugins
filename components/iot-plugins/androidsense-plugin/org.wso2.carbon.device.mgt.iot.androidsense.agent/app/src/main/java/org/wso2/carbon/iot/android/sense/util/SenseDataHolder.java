@@ -16,10 +16,11 @@ package org.wso2.carbon.iot.android.sense.util;
 import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationData;
 import org.wso2.carbon.iot.android.sense.event.streams.Sensor.SensorData;
 import org.wso2.carbon.iot.android.sense.event.streams.battery.BatteryData;
+import org.wso2.carbon.iot.android.sense.event.streams.Speed.SpeedData;
 import org.wso2.carbon.iot.android.sense.speech.detector.util.WordData;
-
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import android.util.Log;
 
 /**
  * This holds the sensor,battery and location data inmemory.
@@ -29,7 +30,9 @@ public class SenseDataHolder {
     private static List<SensorData> sensorDataHolder;
     private static List<BatteryData> batteryDataHolder;
     private static List<LocationData> locationDataHolder;
+    private static List<SpeedData> speedDataHolder;
     private static List<WordData> wordDataHolder;
+
 
     public static List<SensorData> getSensorDataHolder(){
         if(sensorDataHolder == null){
@@ -46,10 +49,21 @@ public class SenseDataHolder {
     }
 
     public static List<LocationData> getLocationDataHolder(){
+
+
         if(locationDataHolder == null){
+
             locationDataHolder = new CopyOnWriteArrayList<>();
         }
         return locationDataHolder;
+
+    }
+
+    public static List<SpeedData> getSpeedDataHolder(){
+        if(speedDataHolder == null){
+            speedDataHolder = new CopyOnWriteArrayList<>();
+        }
+        return speedDataHolder;
     }
 
     public static List<WordData> getWordDataHolder(){
@@ -73,6 +87,10 @@ public class SenseDataHolder {
 
     public static void resetWordDataHolder() {
         wordDataHolder = null;
+    }
+
+    public static void resetSpeedDataHolder() {
+        speedDataHolder = null;
     }
 
 }
