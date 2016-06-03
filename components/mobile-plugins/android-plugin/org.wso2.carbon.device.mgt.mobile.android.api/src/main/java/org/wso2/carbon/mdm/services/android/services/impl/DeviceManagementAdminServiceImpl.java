@@ -554,8 +554,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(AndroidConstants.OperationCodes.UPGRADE_FIRMWARE);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(upgradeFirmware.toJSON());
-            return AndroidAPIUtils.getOperationResponse(upgradeFirmwareBeanWrapper.getDeviceIDs(),
-                    operation);
+            return AndroidAPIUtils.getOperationResponse(upgradeFirmwareBeanWrapper.getDeviceIDs(), operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
             log.error(errorMessage, e);
