@@ -39,6 +39,7 @@ import org.wso2.carbon.iot.android.sense.util.LocalRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.wso2.carbon.iot.android.sense.event.streams.Speed.SpeedData;
 
 /**
  * This is an android service which publishes the data to the server.
@@ -148,6 +149,20 @@ public class DataPublisherService extends Service {
                         }
                     }
                     SenseDataHolder.resetWordDataHolder();
+
+                    //retrieve speed data.
+                    List<SpeedData> speedDataMap = SenseDataHolder.getSpeedDataHolder();
+                    if (!speedDataMap.isEmpty()) {
+                        for (SpeedData speedData : speedDataMap) {
+                            Event event = new Event();
+                            event.setTimestamp(speedData.getTimeStamp());
+                            event.setSpeed(speedData.getSpeed());
+                            event.setTurns(speedData.getTurns());
+                            events.add(event);
+                        }
+                    }
+                    SenseDataHolder.resetSpeedDataHolder();
+
                     //publish the data
                     if (events.size() > 0 && LocalRegistry.isEnrolled(context)) {
                         String user = LocalRegistry.getUsername(context);
