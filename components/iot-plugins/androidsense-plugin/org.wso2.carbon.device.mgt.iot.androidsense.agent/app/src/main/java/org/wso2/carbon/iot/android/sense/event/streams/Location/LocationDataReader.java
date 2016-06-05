@@ -18,8 +18,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
+import java.util.Calendar;
+import android.content.Intent;
 import org.wso2.carbon.iot.android.sense.event.streams.DataReader;
+import org.wso2.carbon.iot.android.sense.event.streams.Speed.SpeedData;
+import org.wso2.carbon.iot.android.sense.event.streams.Speed.SpeedDataReader;
 import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
 import java.util.concurrent.TimeUnit;
 
@@ -28,7 +34,19 @@ import java.util.concurrent.TimeUnit;
  */
 public class LocationDataReader extends DataReader implements LocationListener {
     protected LocationManager locationManager;
-    private Context mContext;
+    private final Context mContext;
+
+    LocationData gps;
+
+    static final Double EARTH_RADIUS = 6371.00;
+
+    // flag for GPS status
+    private boolean isGPSEnabled = false;
+
+    // flag for network status
+    private boolean isNetworkEnabled = false;
+
+    // flag for GPS status
     private boolean canGetLocation = false;
     private static final String TAG = LocationDataReader.class.getName();
 
@@ -36,62 +54,81 @@ public class LocationDataReader extends DataReader implements LocationListener {
     double latitude; // latitude
     double longitude; // longitude
 
+    double lat_old=0.0;
+    double lon_old=0.0;
+    double time;
+    float speed = 0.0f;
+    private long lastUpdate;
+
+
+    // The minimum distance to change Updates in meters
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+
+    // The minimum time between updates in milliseconds
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
+
     public LocationDataReader(Context context) {
         mContext = context;
         getLocation();
     }
 
     public Location getLocation() {
-        locationManager = (LocationManager) mContext.getSystemService(mContext.LOCATION_SERVICE);
+        try {
 
-        // getting GPS status
-        boolean isGPSEnabled = locationManager
-                .isProviderEnabled(LocationManager.GPS_PROVIDER);
+            locationManager = (LocationManager) mContext
+                    .getSystemService(mContext.LOCATION_SERVICE);
 
-        // getting network status
-        boolean isNetworkEnabled = locationManager
-                .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            // getting GPS status
+            isGPSEnabled = locationManager
+                    .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        if (!isGPSEnabled && !isNetworkEnabled) {
-            // no network provider is enabled
-        } else {
-            this.canGetLocation = true;
-            // First get location from Network Provider
-            if (isNetworkEnabled) {
-                locationManager.requestLocationUpdates(
-                        LocationManager.NETWORK_PROVIDER, 0, 0, this);
-                // MIN_TIME_BW_UPDATES,
-                // MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+            // getting network status
+            isNetworkEnabled = locationManager
+                    .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-                if (locationManager != null) {
-                    location = locationManager
-                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    if (location != null) {
-                        latitude = location.getLatitude();
-                        longitude = location.getLongitude();
-                    }
-                }
-            }
-            // if GPS Enabled get lat/long using GPS Services
-            if (isGPSEnabled) {
-                if (location == null) {
+            if (!isGPSEnabled && !isNetworkEnabled) {
+                // no network provider is enabled
+            } else {
+                this.canGetLocation = true;
+                if (isNetworkEnabled) {
                     locationManager.requestLocationUpdates(
-                            LocationManager.GPS_PROVIDER, 0, 0, this);
-                    //MIN_TIME_BW_UPDATES,
-                    //MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-
-                    Log.d(TAG, "GPS Enabled");
+                            LocationManager.NETWORK_PROVIDER,
+                            MIN_TIME_BW_UPDATES,
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    Log.d("Network", "Network");
                     if (locationManager != null) {
                         location = locationManager
-                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
                         }
                     }
                 }
+                // if GPS Enabled get lat/long using GPS Services
+                if (isGPSEnabled) {
+                    if (location == null) {
+                        locationManager.requestLocationUpdates(
+                                LocationManager.GPS_PROVIDER,
+                                MIN_TIME_BW_UPDATES,
+                                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                        Log.d("GPS Enabled", "GPS Enabled");
+                        if (locationManager != null) {
+                            location = locationManager
+                                    .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            if (location != null) {
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
+                            }
+                        }
+                    }
+                }
             }
+
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to capture location data.");
         }
+
         return location;
     }
 
@@ -127,7 +164,39 @@ public class LocationDataReader extends DataReader implements LocationListener {
     @Override
     public void onLocationChanged(Location arg0) {
         // TODO Auto-generated method stub
+        Log.v("Debug", "in onLocation changed..");
+        if(location!=null){
+            long curTime = System.currentTimeMillis();
 
+            long diffTime = (curTime - lastUpdate);
+            lastUpdate = curTime;
+            Calendar c=Calendar.getInstance();
+            c.setTimeInMillis(diffTime);
+
+            time=c.get(Calendar.HOUR);
+
+
+
+            locationManager.removeUpdates(LocationDataReader.this);
+            //String Speed = "Device Speed: " +location.getSpeed();
+            latitude=location.getLongitude();
+            longitude =location.getLatitude();
+
+            double distance =CalculationByDistance(latitude, longitude, lat_old, lon_old)/1000;
+
+
+            speed = (float)distance/(float)time;
+            Toast.makeText(mContext, longitude+"\n"+latitude+"\nDistance is: "
+                    +distance+"\nSpeed is: "+speed , Toast.LENGTH_SHORT).show();
+
+
+            Intent intent = new Intent("speedUpdate");
+            intent.putExtra("speed", speed);
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+
+            lat_old=latitude;
+            lon_old=longitude;
+        }
     }
 
     @Override

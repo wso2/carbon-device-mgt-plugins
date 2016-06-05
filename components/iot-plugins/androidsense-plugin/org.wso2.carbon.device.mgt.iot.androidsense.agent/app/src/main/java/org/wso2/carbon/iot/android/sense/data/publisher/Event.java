@@ -2,6 +2,11 @@ package org.wso2.carbon.iot.android.sense.data.publisher;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wso2.carbon.iot.android.sense.event.streams.Speed.SpeedData;
+
+import android.hardware.SensorEvent;
+import android.util.Log;
+
 
 /**
  * This hold the definition of the stream that android sense is publishing to.
@@ -25,6 +30,9 @@ public class Event {
     private String word;
     private String wordStatus;
     private long timestamp;
+    private static float speed;
+    private String turn;
+    public static final float SPEED_LIMIT = 60;
 
     private int getBattery() {
         return battery;
@@ -165,6 +173,32 @@ public class Event {
         this.wordStatus = wordStatus;
     }
 
+    public void setSpeed(float speed) {
+        this.type = "speed";
+        this.speed = speed;
+    }
+
+    public float getSpeed() {
+
+        this.type = "speed";
+
+        return speed;
+    }
+
+    public void setTurns(String turn) {
+
+        this.type = "turn";
+        this.turn = turn;
+    }
+
+    public String getTurns() {
+
+        if (turn == null || turn.isEmpty() || turn.equals("null")){
+            turn = "No Turns";
+        }
+        return turn;
+    }
+
     public JSONObject getEvent() throws JSONException {
         JSONObject jsonEvent = new JSONObject();
         JSONObject jsonMetaData = new JSONObject();
@@ -185,6 +219,16 @@ public class Event {
         jsonPayloadData.put("accelerometer_x", events[0]);
         jsonPayloadData.put("accelerometer_y", events[1]);
         jsonPayloadData.put("accelerometer_z", events[2]);
+
+        //speed
+
+        //if (getSpeed()>SPEED_LIMIT) {
+        jsonPayloadData.put("speed_limit", getSpeed());
+        //}
+
+        //turn
+        jsonPayloadData.put("turn_way", getTurns());
+
         //magnetic
         events = getMagnetic();
         jsonPayloadData.put("magnetic_x", events[0]);
