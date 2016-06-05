@@ -32,7 +32,7 @@ public class Event {
     private long timestamp;
     private static float speed;
     private String turn;
-    public static final float SPEED_LIMIT = 60;
+    public static final float SPEED_LIMIT = 60; // speed limit
 
     private int getBattery() {
         return battery;
