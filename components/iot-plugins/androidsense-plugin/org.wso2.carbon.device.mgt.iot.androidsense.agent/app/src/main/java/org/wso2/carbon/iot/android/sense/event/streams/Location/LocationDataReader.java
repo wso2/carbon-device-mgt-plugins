@@ -14,13 +14,19 @@
 package org.wso2.carbon.iot.android.sense.event.streams.Location;
 
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
+
 import org.wso2.carbon.iot.android.sense.event.streams.DataReader;
 import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
+
+import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,6 +37,9 @@ public class LocationDataReader extends DataReader implements LocationListener {
     private final Context mContext;
 
     LocationData gps;
+
+    static final Double EARTH_RADIUS = 6371.00;
+
 
     // flag for GPS status
     private boolean isGPSEnabled = false;
@@ -46,6 +55,12 @@ public class LocationDataReader extends DataReader implements LocationListener {
     Location location; // location
     double latitude; // latitude
     double longitude; // longitude
+
+    double lat_old=0.0;
+    double lon_old=0.0;
+    double time;
+    float speed = 0.0f;
+    private long lastUpdate;
 
     // The minimum distance to change Updates in meters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
@@ -150,6 +165,39 @@ public class LocationDataReader extends DataReader implements LocationListener {
     @Override
     public void onLocationChanged(Location arg0) {
         // TODO Auto-generated method stub
+        Log.v("Debug", "in onLocation changed..");
+        if(location!=null){
+            long curTime = System.currentTimeMillis();
+
+            long diffTime = (curTime - lastUpdate);
+            lastUpdate = curTime;
+            Calendar c=Calendar.getInstance();
+            c.setTimeInMillis(diffTime);
+
+            time=c.get(Calendar.HOUR);
+
+
+
+            locationManager.removeUpdates(LocationDataReader.this);
+            //String Speed = "Device Speed: " +location.getSpeed();
+            latitude=location.getLongitude();
+            longitude =location.getLatitude();
+
+            double distance =CalculationByDistance(latitude, longitude, lat_old, lon_old)/1000;
+
+
+            speed = (float)distance/(float)time;
+            Toast.makeText(mContext, longitude+"\n"+latitude+"\nDistance is: "
+                    +distance+"\nSpeed is: "+speed , Toast.LENGTH_SHORT).show();
+
+
+            Intent intent = new Intent("speedUpdate");
+            intent.putExtra("speed", speed);
+            LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
+
+            lat_old=latitude;
+            lon_old=longitude;
+        }
 
     }
 
@@ -191,5 +239,18 @@ public class LocationDataReader extends DataReader implements LocationListener {
             Log.e(TAG, " Location Data Retrieval Failed");
         }
     }
+
+    public double CalculationByDistance(double lat1, double lon1, double lat2, double lon2) {
+        double Radius = EARTH_RADIUS;
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLon = Math.toRadians(lon2-lon1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon/2) * Math.sin(dLon/2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        return Radius * c;
+    }
+
+
 
 }
