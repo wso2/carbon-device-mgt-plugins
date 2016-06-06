@@ -30,7 +30,7 @@ import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.transport.Transport
 import org.wso2.carbon.iot.android.sense.constants.SenseConstants;
 import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationData;
 import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationDataReader;
-
+import org.wso2.carbon.iot.android.sense.event.streams.Speed.SpeedData;
 import org.wso2.carbon.iot.android.sense.event.streams.Sensor.SensorData;
 import org.wso2.carbon.iot.android.sense.event.streams.battery.BatteryData;
 import org.wso2.carbon.iot.android.sense.speech.detector.util.ProcessWords;
@@ -133,6 +133,19 @@ public class DataPublisherService extends Service {
                         }
                      }
                     SenseDataHolder.resetLocationDataHolder();
+
+                    //retrieve speed data.
+                    List<SpeedData> speedDataMap = SenseDataHolder.getSpeedDataHolder();
+                    if (!speedDataMap.isEmpty()) {
+                        for (SpeedData speedData : speedDataMap) {
+                            Event event = new Event();
+                            event.setTimestamp(speedData.getTimeStamp());
+                            event.setSpeed(speedData.getSpeed());
+                            event.setTurns(speedData.getTurns());
+                            events.add(event);
+                        }
+                    }
+                    SenseDataHolder.resetSpeedDataHolder();
 
                     //retrieve words
                     ProcessWords.cleanAndPushToWordMap();

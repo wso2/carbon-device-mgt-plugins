@@ -49,6 +49,8 @@ public class SenseService extends Service {
         SenseDataCollector Sensor = new SenseDataCollector(this, SenseDataCollector.DataType.SENSOR);
         SenseDataCollector Location = new SenseDataCollector(this, SenseDataCollector.DataType.LOCATION);
         registerReceiver(new BatteryDataReceiver(), new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        SenseDataCollector speed = new SenseDataCollector(this, SenseDataCollector.DataType.SPEED);
+
 
         //service will not be stopped until we manually stop the service
         return Service.START_NOT_STICKY;
