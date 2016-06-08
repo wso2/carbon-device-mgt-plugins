@@ -36,6 +36,7 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
+import org.wso2.carbon.device.mgt.common.device.details.DeviceInfo;
 import org.wso2.carbon.device.mgt.common.device.details.DeviceLocation;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementService;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
@@ -277,8 +278,7 @@ public class AndroidAPIUtils {
             try {
                 Device device = new Gson().fromJson(operation.getOperationResponse(), Device.class);
                 org.wso2.carbon.device.mgt.common.device.details.DeviceInfo deviceInfo = convertDeviceToInfo(device);
-                deviceInfo.setDeviceIdentifier(deviceIdentifier);
-                updateDeviceInfo(deviceInfo);
+                updateDeviceInfo(deviceIdentifier, deviceInfo);
             } catch (DeviceDetailsMgtException e) {
                 throw new OperationManagementException("Error occurred while updating the device information.", e);
             }
@@ -312,26 +312,31 @@ public class AndroidAPIUtils {
     private static void updateApplicationList(Operation operation, DeviceIdentifier deviceIdentifier)
             throws ApplicationManagementException {
         // Parsing json string to get applications list.
-        JsonElement jsonElement = new JsonParser().parse(operation.getOperationResponse());
-        JsonArray jsonArray = jsonElement.getAsJsonArray();
-        Application app;
-        List<Application> applications = new ArrayList<Application>(jsonArray.size());
-        for (JsonElement element : jsonArray) {
-            app = new Application();
-            app.setName(element.getAsJsonObject().
-                    get(AndroidConstants.ApplicationProperties.NAME).getAsString());
-            app.setApplicationIdentifier(element.getAsJsonObject().
-                    get(AndroidConstants.ApplicationProperties.IDENTIFIER).getAsString());
-            app.setPlatform(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
-            if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.USS) != null) {
-                app.setMemoryUsage(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.USS).getAsInt());
+        if (operation.getOperationResponse() != null) {
+            JsonElement jsonElement = new JsonParser().parse(operation.getOperationResponse());
+            JsonArray jsonArray = jsonElement.getAsJsonArray();
+            Application app;
+            List<Application> applications = new ArrayList<Application>(jsonArray.size());
+            for (JsonElement element : jsonArray) {
+                app = new Application();
+                app.setName(element.getAsJsonObject().
+                        get(AndroidConstants.ApplicationProperties.NAME).getAsString());
+                app.setApplicationIdentifier(element.getAsJsonObject().
+                        get(AndroidConstants.ApplicationProperties.IDENTIFIER).getAsString());
+                app.setPlatform(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+                if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.USS) != null) {
+                    app.setMemoryUsage(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.USS).getAsInt());
+                }
+                if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION) != null) {
+                    app.setVersion(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION).getAsString());
+                }
+                applications.add(app);
             }
-            if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION) != null) {
-                app.setVersion(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION).getAsString());
-            }
-            applications.add(app);
+            getApplicationManagerService().updateApplicationListInstalledInDevice(deviceIdentifier, applications);
+        } else {
+            log.error("Operation Response is null.");
         }
-        getApplicationManagerService().updateApplicationListInstalledInDevice(deviceIdentifier, applications);
+
     }
 
 
@@ -344,14 +349,14 @@ public class AndroidAPIUtils {
     }
 
 
-    private static void updateDeviceInfo(org.wso2.carbon.device.mgt.common.device.details.DeviceInfo deviceInfo)
+    private static void updateDeviceInfo(DeviceIdentifier deviceId, DeviceInfo deviceInfo)
             throws DeviceDetailsMgtException {
 
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         DeviceInformationManager informationManager =
                 (DeviceInformationManager) ctx.getOSGiService(DeviceInformationManager.class, null);
 
-        informationManager.addDeviceInfo(deviceInfo);
+        informationManager.addDeviceInfo(deviceId, deviceInfo);
     }
 
 
