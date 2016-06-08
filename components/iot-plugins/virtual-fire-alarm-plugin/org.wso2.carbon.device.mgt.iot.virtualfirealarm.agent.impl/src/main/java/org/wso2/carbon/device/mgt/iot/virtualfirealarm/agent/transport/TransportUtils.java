@@ -20,6 +20,7 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandlerException;
 
 import java.io.BufferedReader;
@@ -67,9 +68,9 @@ public class TransportUtils {
 			throw new TransportHandlerException(errorMsg);
 		}
 
-		ipPortMap.put("Protocol", ipPortArray[0]);
-		ipPortMap.put("Host", ipPortArray[1].replace("/", ""));
-		ipPortMap.put("Port", ipPortArray[2]);
+		ipPortMap.put(AgentConstants.PROTOCOL_PROPERTY, ipPortArray[0]);
+		ipPortMap.put(AgentConstants.HOST_PROPERTY, ipPortArray[1].replace("/", ""));
+		ipPortMap.put(AgentConstants.PORT_PROPERTY, ipPortArray[2]);
 		return ipPortMap;
 	}
 
@@ -99,8 +100,7 @@ public class TransportUtils {
 			return !ipAddress.endsWith(".");
 
 		} catch (NumberFormatException nfe) {
-			log.warn("The IP Address: " + ipAddress + " could not " +
-					         "be validated against IPv4-style");
+			log.warn("The IP Address: " + ipAddress + " could not be validated against IPv4-style");
 			return false;
 		}
 	}

@@ -52,7 +52,6 @@ import java.nio.charset.StandardCharsets;
 public abstract class MQTTTransportHandler
         implements MqttCallback, TransportHandler<MqttMessage> {
     private static final Log log = LogFactory.getLog(MQTTTransportHandler.class);
-    private static final String DEFAULT_PASSWORD = "";
     public static final int DEFAULT_MQTT_QUALITY_OF_SERVICE = 0;
 
     private MqttClient client;
@@ -82,8 +81,6 @@ public abstract class MQTTTransportHandler
         this.mqttBrokerEndPoint = mqttBrokerEndPoint;
         this.timeoutInterval = DEFAULT_TIMEOUT_INTERVAL;
         this.initSubscriber();
-        options.setUserName(AgentManager.getInstance().getAgentConfigs().getAuthToken());
-        options.setPassword(DEFAULT_PASSWORD.toCharArray());
     }
 
     /**
@@ -108,8 +105,6 @@ public abstract class MQTTTransportHandler
         this.mqttBrokerEndPoint = mqttBrokerEndPoint;
         this.timeoutInterval = intervalInMillis;
         this.initSubscriber();
-        options.setUserName(AgentManager.getInstance().getAgentConfigs().getAuthToken());
-        options.setPassword(DEFAULT_PASSWORD.toCharArray());
     }
 
     public void setTimeoutInterval(int timeoutInterval) {
@@ -155,6 +150,12 @@ public abstract class MQTTTransportHandler
         return client.isConnected();
     }
 
+
+    protected void connectToQueue(String username, String password) throws TransportHandlerException {
+        options.setUserName(username);
+        options.setPassword(password.toCharArray());
+        connectToQueue();
+    }
 
     /**
      * Connects to the MQTT-Broker and if successfully established connection.
@@ -248,8 +249,7 @@ public abstract class MQTTTransportHandler
         try {
             client.publish(topic, payLoad.getBytes(StandardCharsets.UTF_8), qos, retained);
             if (log.isDebugEnabled()) {
-                log.debug("Message: " + payLoad + " to MQTT topic [" + topic +
-                                  "] published successfully");
+                log.debug("Message: " + payLoad + " to MQTT topic [" + topic + "] published successfully");
             }
         } catch (MqttException ex) {
             String errorMsg =
@@ -267,8 +267,7 @@ public abstract class MQTTTransportHandler
         try {
             client.publish(topic, message);
             if (log.isDebugEnabled()) {
-                log.debug("Message: " + message.toString() + " to MQTT topic [" + topic +
-                                  "] published successfully");
+                log.debug("Message: " + message.toString() + " to MQTT topic [" + topic + "] published successfully");
             }
         } catch (MqttException ex) {
             //TODO:: Compulsory log of errors and remove formatted error
@@ -291,8 +290,7 @@ public abstract class MQTTTransportHandler
     @Override
     public void connectionLost(Throwable throwable) {
         log.warn("Lost Connection for client: " + this.clientId +
-                         " to " + this.mqttBrokerEndPoint + ".\nThis was due to - " +
-                         throwable.getMessage());
+                         " to " + this.mqttBrokerEndPoint + ".\nThis was due to - " + throwable.getMessage());
 
         Thread reconnectThread = new Thread() {
             public void run() {
@@ -340,8 +338,7 @@ public abstract class MQTTTransportHandler
         } catch (MqttException e) {
             //TODO:: Throw errors
             log.error(
-                    "Error occurred whilst trying to read the message from the MQTT delivery " +
-                            "token.");
+                    "Error occurred whilst trying to read the message from the MQTT delivery token.");
         }
         String topic = iMqttDeliveryToken.getTopics()[0];
         String client = iMqttDeliveryToken.getClient().getClientId();
