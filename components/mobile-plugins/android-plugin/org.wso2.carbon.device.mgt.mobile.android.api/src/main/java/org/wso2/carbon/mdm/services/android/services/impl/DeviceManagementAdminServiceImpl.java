@@ -56,13 +56,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            DeviceLock lock = deviceLockBeanWrapper.getOperation();
-
-            if (lock == null) {
+            if (deviceLockBeanWrapper == null || deviceLockBeanWrapper.getOperation() == null) {
                 String errorMessage = "Lock bean is empty.";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
+            DeviceLock lock = deviceLockBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_LOCK);
             operation.setType(Operation.Type.PROFILE);
@@ -170,12 +169,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            Camera camera = cameraBeanWrapper.getOperation();
-            if (camera == null) {
+            if (cameraBeanWrapper == null || cameraBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the configure camera operation is incorrect.";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
+            Camera camera = cameraBeanWrapper.getOperation();
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.CAMERA);
             operation.setType(Operation.Type.COMMAND);
@@ -254,14 +253,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            WipeData wipeData = wipeDataBeanWrapper.getOperation();
-
-            if (wipeData == null) {
+            if (wipeDataBeanWrapper == null || wipeDataBeanWrapper.getOperation() == null) {
                 String errorMessage = "WipeData bean is empty.";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            WipeData wipeData = wipeDataBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.WIPE_DATA);
             operation.setType(Operation.Type.PROFILE);
@@ -394,14 +391,13 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            ApplicationInstallation applicationInstallation = applicationInstallationBeanWrapper.getOperation();
-
-            if (applicationInstallation == null) {
+            if (applicationInstallationBeanWrapper == null || applicationInstallationBeanWrapper.getOperation() ==
+                    null) {
                 String errorMessage = "The payload of the application installing operation is incorrect";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            ApplicationInstallation applicationInstallation = applicationInstallationBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.INSTALL_APPLICATION);
             operation.setType(Operation.Type.PROFILE);
@@ -430,14 +426,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            ApplicationUpdate applicationUpdate = applicationUpdateBeanWrapper.getOperation();
-
-            if (applicationUpdate == null) {
+            if (applicationUpdateBeanWrapper == null || applicationUpdateBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the application update operation is incorrect";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            ApplicationUpdate applicationUpdate = applicationUpdateBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.UPDATE_APPLICATION);
             operation.setType(Operation.Type.PROFILE);
@@ -467,14 +461,13 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            ApplicationUninstallation applicationUninstallation = applicationUninstallationBeanWrapper.getOperation();
-
-            if (applicationUninstallation == null) {
+            if (applicationUninstallationBeanWrapper == null ||
+                    applicationUninstallationBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the application uninstalling operation is incorrect";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            ApplicationUninstallation applicationUninstallation = applicationUninstallationBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.UNINSTALL_APPLICATION);
             operation.setType(Operation.Type.PROFILE);
@@ -504,14 +497,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            BlacklistApplications blacklistApplications = blacklistApplicationsBeanWrapper.getOperation();
-
-            if (blacklistApplications == null) {
+            if (blacklistApplicationsBeanWrapper == null || blacklistApplicationsBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the blacklisting apps operation is incorrect";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            BlacklistApplications blacklistApplications = blacklistApplicationsBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.BLACKLIST_APPLICATIONS);
             operation.setType(Operation.Type.PROFILE);
@@ -542,14 +533,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            UpgradeFirmware upgradeFirmware = upgradeFirmwareBeanWrapper.getOperation();
-
-            if (upgradeFirmware == null) {
+            if (upgradeFirmwareBeanWrapper == null || upgradeFirmwareBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the upgrade firmware operation is incorrect";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            UpgradeFirmware upgradeFirmware = upgradeFirmwareBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.UPGRADE_FIRMWARE);
             operation.setType(Operation.Type.PROFILE);
@@ -578,14 +567,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            Vpn vpn = vpnBeanWrapper.getOperation();
-
-            if (vpn == null) {
+            if (vpnBeanWrapper == null || vpnBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the VPN operation is incorrect";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            Vpn vpn = vpnBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.VPN);
             operation.setType(Operation.Type.PROFILE);
@@ -614,14 +601,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            Notification notification = notificationBeanWrapper.getOperation();
-
-            if (notification == null) {
+            if (notificationBeanWrapper == null || notificationBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the notification operation is incorrect";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            Notification notification = notificationBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.NOTIFICATION);
             operation.setType(Operation.Type.PROFILE);
@@ -651,14 +636,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            Wifi wifi = wifiBeanWrapper.getOperation();
-
-            if (wifi == null) {
+            if (wifiBeanWrapper == null || wifiBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the wifi operation is incorrect";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            Wifi wifi = wifiBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.WIFI);
             operation.setType(Operation.Type.PROFILE);
@@ -689,14 +672,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            DeviceEncryption deviceEncryption = encryptionBeanWrapper.getOperation();
-
-            if (deviceEncryption == null) {
+            if (encryptionBeanWrapper == null || encryptionBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the device encryption operation is incorrect";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            DeviceEncryption deviceEncryption = encryptionBeanWrapper.getOperation();
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.ENCRYPT_STORAGE);
             operation.setType(Operation.Type.COMMAND);
@@ -726,14 +707,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            LockCode lockCode = lockCodeBeanWrapper.getOperation();
-
-            if (lockCode == null) {
+            if (lockCodeBeanWrapper == null || lockCodeBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the change lock code operation is incorrect";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            LockCode lockCode = lockCodeBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.CHANGE_LOCK_CODE);
             operation.setType(Operation.Type.PROFILE);
@@ -763,13 +742,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            PasscodePolicy passcodePolicy = passwordPolicyBeanWrapper.getOperation();
-            if (passcodePolicy == null) {
+            if (passwordPolicyBeanWrapper == null || passwordPolicyBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the change password policy operation is incorrect";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            PasscodePolicy passcodePolicy = passwordPolicyBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.PASSCODE_POLICY);
             operation.setType(Operation.Type.PROFILE);
@@ -800,14 +778,14 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-            WebClip webClip = webClipBeanWrapper.getOperation();
 
-            if (webClip == null) {
+
+            if (webClipBeanWrapper == null || webClipBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the add webclip operation is incorrect";
                 log.error(errorMessage);
                 return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
             }
-
+            WebClip webClip = webClipBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.WEBCLIP);
             operation.setType(Operation.Type.PROFILE);
