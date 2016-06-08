@@ -358,8 +358,12 @@ public class AgentUtilOperations {
                 log.info(AgentConstants.LOG_APPENDER +
                                  "Response " + responseMessage + " was received for the token refresh call.");
                 updateExistingTokens(responseMessage.toString());
+            } else if (httpConnection.getResponseCode() == HttpStatus.BAD_REQUEST_400) {
+                log.error(AgentConstants.LOG_APPENDER +
+                                  "Token refresh call returned with a [400 Bad Request].\nThe refresh-token has " +
+                                  "probably expired.\nPlease contact System-Admin to get a valid refresh-token.");
             } else {
-                log.info(AgentConstants.LOG_APPENDER + "There was an issue with refreshing the Access Token.");
+                log.warn(AgentConstants.LOG_APPENDER + "There was an issue with refreshing the Access Token.");
             }
 
         } catch (TransportHandlerException e) {

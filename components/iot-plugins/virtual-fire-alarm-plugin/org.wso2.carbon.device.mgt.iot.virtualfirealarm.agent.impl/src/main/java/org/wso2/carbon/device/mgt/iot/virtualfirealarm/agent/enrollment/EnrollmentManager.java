@@ -136,7 +136,8 @@ public class EnrollmentManager {
                           AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray());
 
             this.isEnrolled = (keyStore.containsAlias(AgentConstants.DEVICE_CERT_ALIAS) &&
-                    keyStore.containsAlias(AgentConstants.DEVICE_PRIVATE_KEY_ALIAS));
+                    keyStore.containsAlias(AgentConstants.DEVICE_PRIVATE_KEY_ALIAS) &&
+                    keyStore.containsAlias(AgentConstants.SERVER_CA_CERT_ALIAS));
 
         } catch (KeyStoreException e) {
             log.error(AgentConstants.LOG_APPENDER + "An error occurred whilst accessing the device KeyStore '" +
@@ -165,10 +166,14 @@ public class EnrollmentManager {
                 this.SCEPCertificate = (X509Certificate) keyStore.getCertificate(AgentConstants.DEVICE_CERT_ALIAS);
                 this.privateKey = (PrivateKey) keyStore.getKey(AgentConstants.DEVICE_PRIVATE_KEY_ALIAS,
                                                                AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray());
-                this.serverPublicKey = (PublicKey) keyStore.getKey(AgentConstants.SERVER_PUBLIC_KEY_ALIAS,
-                                                                   AgentConstants.DEVICE_KEYSTORE_PASSWORD
-                                                                           .toCharArray());
                 this.publicKey = SCEPCertificate.getPublicKey();
+
+                X509Certificate serverCACert = (X509Certificate) keyStore.getCertificate(
+                        AgentConstants.SERVER_CA_CERT_ALIAS);
+                this.serverPublicKey = serverCACert.getPublicKey();
+                log.info(AgentConstants.LOG_APPENDER +
+                                 "Device has already been enrolled. Hence, loaded certificate information from device" +
+                                 " trust-store.");
             }
         } catch (UnrecoverableKeyException | NoSuchAlgorithmException | KeyStoreException e) {
             log.error(AgentConstants.LOG_APPENDER + "An error occurred whilst accessing the device KeyStore '" +
@@ -243,7 +248,6 @@ public class EnrollmentManager {
 
         storeCertificateToStore(AgentConstants.DEVICE_CERT_ALIAS, SCEPCertificate);
         storeKeyToKeyStore(AgentConstants.DEVICE_PRIVATE_KEY_ALIAS, this.privateKey, SCEPCertificate);
-        storeKeyToKeyStore(AgentConstants.SERVER_PUBLIC_KEY_ALIAS, this.serverPublicKey, SCEPCertificate);
 
         if (log.isDebugEnabled()) {
             log.info(AgentConstants.LOG_APPENDER +
@@ -495,6 +499,7 @@ public class EnrollmentManager {
                     // This is because the returned keystore may contain many certificates including RAs.
                     if (((Boolean) ((X509CertImpl) cert).getBasicConstraintsExtension().get(CERT_IS_CA_EXTENSION))) {
                         serverCertPublicKey = cert.getPublicKey();
+                        storeCertificateToStore(AgentConstants.SERVER_CA_CERT_ALIAS, cert);
                     }
                 }
             }

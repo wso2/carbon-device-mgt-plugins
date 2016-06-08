@@ -123,5 +123,5 @@ public class AgentConstants {
     public static final String DEVICE_KEYSTORE_PASSWORD = "wso2@virtual_firealarm";
     public static final String DEVICE_PRIVATE_KEY_ALIAS = "virtual_firealarm_key";
     public static final String DEVICE_CERT_ALIAS = "virtual_firealarm_cert";
-    public static final String SERVER_PUBLIC_KEY_ALIAS = "iotServer_key";
+    public static final String SERVER_CA_CERT_ALIAS = "ca_iotServer";
 }
