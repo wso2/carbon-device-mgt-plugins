@@ -54,13 +54,27 @@ import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.user.api.UserStoreException;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
 
 public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
 
@@ -136,7 +150,8 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
 
                     List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
                     deviceIdentifiers.add(new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE));
-                    APIUtil.getDeviceManagementService().addOperation(VirtualFireAlarmConstants.DEVICE_TYPE, commandOp, deviceIdentifiers);
+                    APIUtil.getDeviceManagementService().addOperation(VirtualFireAlarmConstants.DEVICE_TYPE, commandOp,
+                                                                      deviceIdentifiers);
                     break;
             }
             return Response.ok().build();
@@ -319,14 +334,16 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                                                                    scopes);
         String accessToken = accessTokenInfo.getAccessToken();
         String refreshToken = accessTokenInfo.getRefreshToken();
-        //adding registering data
-        XmppAccount newXmppAccount = new XmppAccount();
-        newXmppAccount.setAccountName(deviceId);
-        newXmppAccount.setUsername(deviceId);
-        newXmppAccount.setPassword(accessToken);
-        newXmppAccount.setEmail(deviceId + "@" + APIUtil.getTenantDomainOftheUser());
+
         boolean status;
         if (XmppConfig.getInstance().isEnabled()) {
+
+            XmppAccount newXmppAccount = new XmppAccount();
+            newXmppAccount.setAccountName(deviceId);
+            newXmppAccount.setUsername(deviceId);
+            newXmppAccount.setPassword(accessToken);
+            newXmppAccount.setEmail(deviceId + "@" + APIUtil.getTenantDomainOftheUser());
+
             status = XmppServerClient.createAccount(newXmppAccount);
             if (!status) {
                 String msg = "XMPP Account was not created for device - " + deviceId + " of owner - " + owner +
@@ -335,14 +352,16 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                 throw new DeviceManagementException(msg);
             }
         }
+
         status = register(deviceId, deviceName);
         if (!status) {
             String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;
             throw new DeviceManagementException(msg);
         }
+
         ZipUtil ziputil = new ZipUtil();
-        return ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(), sketchType, deviceId,
-                                                   deviceName, accessToken, refreshToken);
+        return ziputil.createZipFile(owner, sketchType, deviceId, deviceName, apiApplicationKey.toString(),
+                                     accessToken, refreshToken);
     }
 
     private static String shortUUID() {
@@ -350,5 +369,4 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
         long l = ByteBuffer.wrap(uuid.toString().getBytes(StandardCharsets.UTF_8)).getLong();
         return Long.toString(l, Character.MAX_RADIX);
     }
-
 }
