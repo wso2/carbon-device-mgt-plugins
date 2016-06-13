@@ -60,6 +60,7 @@
         <activity
             android:name="org.wso2.carbon.iot.android.sense.realtimeviewer.ActivitySelectSensor"
             android:label="My Sensors"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
