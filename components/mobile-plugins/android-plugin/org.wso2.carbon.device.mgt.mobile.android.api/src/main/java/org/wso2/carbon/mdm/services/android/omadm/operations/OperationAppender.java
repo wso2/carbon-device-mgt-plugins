@@ -2,7 +2,6 @@ package org.wso2.carbon.mdm.services.android.omadm.operations;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;

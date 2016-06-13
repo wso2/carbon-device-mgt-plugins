@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.mdm.services.android.omadm.syncml.parsers;
 
-import com.google.gson.Gson;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.beans.*;
 import org.wso2.carbon.mdm.services.android.omadm.syncml.util.SyncMLConstants;
@@ -42,7 +41,6 @@ public class ResponseGenerator {
     private static final String GET_COMMAND_TEXT = "Get";
     private static final String EXEC_COMMAND_TEXT = "Exec";
     private List<? extends Operation> operations;
-    Gson gson = new Gson();
 
     public ResponseGenerator(SyncMLDocument syncMLDocument) {
         this.syncMLDocument = syncMLDocument;

@@ -188,5 +188,11 @@
             <artifactId>org.wso2.carbon.analytics.api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+            <version>0.5</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 </project>
