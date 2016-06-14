@@ -20,14 +20,14 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.http.FireAlarmHTTPCommunicator;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.mqtt.FireAlarmMQTTCommunicator;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.xmpp.FireAlarmXMPPCommunicator;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.enrollment.EnrollmentManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.exception.AgentCoreOperationException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandlerException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportUtils;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.http.FireAlarmHTTPCommunicator;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.mqtt.FireAlarmMQTTCommunicator;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.communication.xmpp.FireAlarmXMPPCommunicator;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.virtual.VirtualHardwareManager;
 
 import java.util.ArrayList;
@@ -74,18 +74,19 @@ public class AgentManager {
     public void init() {
 
         agentCommunicator = new HashMap<>();
-
         // Read IoT-Server specific configurations from the 'deviceConfig.properties' file
         try {
             this.agentConfigs = AgentUtilOperations.readIoTServerConfigs();
         } catch (AgentCoreOperationException e) {
-            log.error("Reading device configuration from configd file failed:\n");
+            log.error("Reading device configuration from configuration file failed:\n");
             log.error(e);
             System.exit(0);
         }
 
         // Initialise IoT-Server URL endpoints from the configuration read from file
         AgentUtilOperations.initializeServerEndPoints();
+        // Set the hostNameVerifier to the APIM-Server IPAddress to enable HTTPS handshake
+        AgentUtilOperations.setHTTPSConfigurations();
 
         String analyticsPageContext = String.format(AgentConstants.DEVICE_ANALYTICS_PAGE_URL,
                                                     agentConfigs.getDeviceId(),
@@ -153,7 +154,9 @@ public class AgentManager {
         }
 
         try {
-            EnrollmentManager.getInstance().beginEnrollmentFlow();
+            if (!EnrollmentManager.getInstance().isEnrolled()) {
+                EnrollmentManager.getInstance().beginEnrollmentFlow();
+            }
         } catch (AgentCoreOperationException e) {
             log.error("Device Enrollment Failed:\n");
             log.error(e);
@@ -217,10 +220,14 @@ public class AgentManager {
 
 	/*------------------------------------------------------------------------------------------*/
     /* 		            Getter and Setter Methods for the private variables                 	*/
-	/*------------------------------------------------------------------------------------------*/
+    /*------------------------------------------------------------------------------------------*/
 
     public void setRootPath(String rootPath) {
         this.rootPath = rootPath;
+    }
+
+    public String getRootPath() {
+        return rootPath;
     }
 
     public void setDeviceReady(boolean deviceReady) {
@@ -324,6 +331,7 @@ public class AgentManager {
 
     /**
      * Get temperature reading from device
+     *
      * @return Temperature
      */
     public int getTemperature() {
@@ -332,9 +340,10 @@ public class AgentManager {
 
     /**
      * Get humidity reading from device
+     *
      * @return Humidity
      */
-    public int getHumidity(){
+    public int getHumidity() {
         return VirtualHardwareManager.getInstance().getHumidity();
     }
 

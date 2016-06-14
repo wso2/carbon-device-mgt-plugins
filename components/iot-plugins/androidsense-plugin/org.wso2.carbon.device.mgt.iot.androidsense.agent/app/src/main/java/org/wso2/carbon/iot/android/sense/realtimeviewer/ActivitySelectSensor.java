@@ -69,7 +69,7 @@ public class ActivitySelectSensor extends AppCompatActivity
     private ListView listView;
     private SensorManager sensorManager;
     private ArrayList<Sensor> sensors = new ArrayList<>();
-
+    private EditText sessionIdText;
     private RealTimeSensorReader sensorReader = null;
     private RealTimeSensorChangeReceiver realTimeSensorChangeReceiver = new RealTimeSensorChangeReceiver();
     private SupportedSensors supportedSensors = SupportedSensors.getInstance();
@@ -81,10 +81,20 @@ public class ActivitySelectSensor extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sessionIdText = (EditText) findViewById(R.id.sessionId);
+        sessionIdText.setCursorVisible(false);
 
         listView = (ListView) findViewById(R.id.senseListContainer);
 
         registerReceiver(realTimeSensorChangeReceiver, new IntentFilter("sensorDataMap"));
+
+        sessionIdText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sessionIdText.setCursorVisible(true);
+
+            }
+        });
 
         //Publish data
         FloatingActionButton fbtnPublishData = (FloatingActionButton) findViewById(R.id.publish);
@@ -113,7 +123,6 @@ public class ActivitySelectSensor extends AppCompatActivity
         fbtnSpeechRecongnizer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText sessionIdText = (EditText) findViewById(R.id.sessionId);
                 String sessionId = sessionIdText.getText().toString();
                 if (!sessionId.isEmpty()) {
                     Intent intent = new Intent(getApplicationContext(), WordRecognitionActivity.class);
@@ -214,6 +223,8 @@ public class ActivitySelectSensor extends AppCompatActivity
         return true;
     }
 
+
+
     @Override
     public void onDialogPositiveClick(SelectSensorDialog dialog) {
 
@@ -274,6 +285,7 @@ public class ActivitySelectSensor extends AppCompatActivity
             }
         }
     }
+
 
     /**
      * This method unregisters the real-time broadcast receiver.

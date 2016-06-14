@@ -29,8 +29,11 @@ import java.io.Serializable;
 @ApiModel(value = "UpgradeFirmware",
         description = "This class carries all information related to UpgradeFirmware.")
 public class UpgradeFirmware extends AndroidOperation implements Serializable {
-    @ApiModelProperty(name = "schedule", value = "Schedule of the UpgradeFirmware.", required = true)
+    @ApiModelProperty(name = "schedule", value = "Schedule of the UpgradeFirmware.")
     private String schedule;
+
+    @ApiModelProperty(name = "server", value = "Firmware package server.")
+    private String server;
 
     public String getSchedule() {
         return schedule;
@@ -38,6 +41,14 @@ public class UpgradeFirmware extends AndroidOperation implements Serializable {
 
     public void setSchedule(String schedule) {
         this.schedule = schedule;
+    }
+
+    public String getServer() {
+        return server;
+    }
+
+    public void setServer(String server) {
+        this.server = server;
     }
 
 }

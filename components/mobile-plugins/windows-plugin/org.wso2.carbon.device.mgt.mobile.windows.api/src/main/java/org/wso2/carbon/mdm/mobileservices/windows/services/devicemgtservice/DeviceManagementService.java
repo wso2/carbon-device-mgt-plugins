@@ -27,7 +27,6 @@ import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.mdm.mobileservices.windows.common.util.Message;
 
-import javax.jws.WebService;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -37,7 +36,6 @@ import java.util.List;
  * All end points supports JSON, XMl with content negotiation.
  */
 @Api(value = "DeviceManagementService", description = "Windows Device Management REST-API implementation.")
-@WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
 public interface DeviceManagementService {

@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
-import org.wso2.carbon.device.mgt.common.configuration.mgt.TenantConfiguration;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
 import org.wso2.carbon.mdm.services.android.services.configuration.ConfigurationMgtService;
@@ -45,7 +45,7 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
     private static Log log = LogFactory.getLog(ConfigurationMgtServiceImpl.class);
 
     @POST
-    public Response configureSettings(TenantConfiguration configuration)
+    public Response configureSettings(PlatformConfiguration configuration)
             throws AndroidAgentException {
 
         Message responseMsg = new Message();
@@ -87,15 +87,15 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
     @GET
     public Response getConfiguration() throws AndroidAgentException {
         String msg;
-        TenantConfiguration tenantConfiguration = null;
+        PlatformConfiguration PlatformConfiguration = null;
         List<ConfigurationEntry> configs;
         try {
-            tenantConfiguration = AndroidAPIUtils.getDeviceManagementService().
+            PlatformConfiguration = AndroidAPIUtils.getDeviceManagementService().
                     getConfiguration(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
-            if (tenantConfiguration != null) {
-                configs = tenantConfiguration.getConfiguration();
+            if (PlatformConfiguration != null) {
+                configs = PlatformConfiguration.getConfiguration();
             } else {
-                tenantConfiguration = new TenantConfiguration();
+                PlatformConfiguration = new PlatformConfiguration();
                 configs = new ArrayList<>();
             }
 
@@ -109,18 +109,18 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
                 entry.setName(AndroidConstants.TenantConfigProperties.LICENSE_KEY);
                 entry.setValue(license.getText());
                 configs.add(entry);
-                tenantConfiguration.setConfiguration(configs);
+                PlatformConfiguration.setConfiguration(configs);
             }
         } catch (DeviceManagementException e) {
             msg = "Error occurred while retrieving the Android tenant configuration";
             log.error(msg, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
         }
-        return Response.status(Response.Status.OK).entity(tenantConfiguration).build();
+        return Response.status(Response.Status.OK).entity(PlatformConfiguration).build();
     }
 
     @PUT
-    public Response updateConfiguration(TenantConfiguration configuration) throws AndroidAgentException {
+    public Response updateConfiguration(PlatformConfiguration configuration) throws AndroidAgentException {
         String msg;
         Message responseMsg = new Message();
         ConfigurationEntry licenseEntry = null;
@@ -145,7 +145,7 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
             }
             configuration.setConfiguration(configs);
             AndroidAPIUtils.getDeviceManagementService().saveConfiguration(configuration);
-            AndroidAPIUtils.getGCMService().resetTenantConfigCache();
+            //AndroidAPIUtils.getGCMService().resetTenantConfigCache();
             Response.status(Response.Status.ACCEPTED);
             responseMsg.setResponseMessage("Android platform configuration has updated successfully.");
             responseMsg.setResponseCode(Response.Status.ACCEPTED.toString());

@@ -6,6 +6,7 @@ import org.wso2.carbon.device.mgt.iot.input.adapter.extension.ContentTransformer
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
 
+import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class VirtualFirealarmMqttContentTransformer implements ContentTransforme
             PrivilegedCarbonContext.startTenantFlow();
             PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
             ctx.setTenantDomain(tenantDomain, true);
-            Long serialNo = (Long) jsonPayload.get(VirtualFireAlarmConstants.JSON_SERIAL_KEY);
+            Integer serialNo = (Integer) jsonPayload.get(VirtualFireAlarmConstants.JSON_SERIAL_KEY);
             // the hash-code of the deviceId is used as the alias for device certificates during SCEP enrollment.
             // hence, the same is used here to fetch the device-specific-certificate from the key store.
             PublicKey clientPublicKey = VirtualFireAlarmUtils.getDevicePublicKey("" + serialNo);

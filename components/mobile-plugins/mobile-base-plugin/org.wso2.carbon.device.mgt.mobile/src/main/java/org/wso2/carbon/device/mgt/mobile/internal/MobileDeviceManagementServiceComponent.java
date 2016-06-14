@@ -23,20 +23,13 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceConfigurationManager;
 import org.wso2.carbon.device.mgt.mobile.config.MobileDeviceManagementConfig;
 import org.wso2.carbon.device.mgt.mobile.config.datasource.MobileDataSourceConfig;
 import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidDeviceManagementService;
-import org.wso2.carbon.device.mgt.mobile.impl.android.AndroidPolicyMonitoringService;
-import org.wso2.carbon.device.mgt.mobile.impl.android.gcm.GCMService;
-import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsDeviceManagementService;
-import org.wso2.carbon.device.mgt.mobile.impl.windows.WindowsPolicyMonitoringService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
-import org.wso2.carbon.policy.mgt.common.spi.PolicyMonitoringService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 import java.util.Map;
@@ -60,8 +53,6 @@ import java.util.Map;
  */
 public class MobileDeviceManagementServiceComponent {
 
-    private ServiceRegistration androidServiceRegRef;
-    private ServiceRegistration windowsServiceRegRef;
     private ServiceRegistration gcmServiceRegRef;
 
     private static final Log log = LogFactory.getLog(MobileDeviceManagementServiceComponent.class);
@@ -100,30 +91,7 @@ public class MobileDeviceManagementServiceComponent {
                     log.error("Exception occurred while initializing mobile device management database schema", e);
                 }
             }
-            DeviceManagementService androidDeviceManagementService = new AndroidDeviceManagementService();
-            GCMService gcmService = new GCMService();
 
-            androidServiceRegRef =
-                    bundleContext.registerService(DeviceManagementService.class.getName(),
-                                                  androidDeviceManagementService, null);
-            windowsServiceRegRef =
-                    bundleContext.registerService(DeviceManagementService.class.getName(),
-                            new WindowsDeviceManagementService(), null);
-
-            gcmServiceRegRef =
-                    bundleContext.registerService(GCMService.class.getName(), gcmService, null);
-
-
-            // Policy management service
-
-            bundleContext.registerService(PolicyMonitoringService.class,
-                    new AndroidPolicyMonitoringService(), null);
-            bundleContext.registerService(PolicyMonitoringService.class,
-                    new WindowsPolicyMonitoringService(), null);
-
-            MobileDeviceManagementDataHolder.getInstance().setAndroidDeviceManagementService(
-                    androidDeviceManagementService);
-            MobileDeviceManagementDataHolder.getInstance().setGCMService(gcmService);
             if (log.isDebugEnabled()) {
                 log.debug("Mobile Device Management Service Component has been successfully activated");
             }
@@ -137,12 +105,6 @@ public class MobileDeviceManagementServiceComponent {
             log.debug("De-activating Mobile Device Management Service Component");
         }
         try {
-            if (androidServiceRegRef != null) {
-                androidServiceRegRef.unregister();
-            }
-            if (windowsServiceRegRef != null) {
-                windowsServiceRegRef.unregister();
-            }
             if (gcmServiceRegRef != null) {
                 gcmServiceRegRef.unregister();
             }

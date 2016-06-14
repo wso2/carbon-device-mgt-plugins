@@ -23,12 +23,12 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.http.HttpStatus;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandlerException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportUtils;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.http.HTTPTransportHandler;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.core.AgentManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.exception.AgentCoreOperationException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportHandlerException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.TransportUtils;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.transport.http.HTTPTransportHandler;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -191,21 +191,19 @@ public class FireAlarmHTTPCommunicator extends HTTPTransportHandler {
 
     private void executeDataPush(String pushDataPayload) {
         AgentManager agentManager = AgentManager.getInstance();
-        int responseCode = -1;
         String pushDataEndPointURL = agentManager.getPushDataAPIEP();
-        HttpURLConnection httpConnection = null;
+        HttpURLConnection httpConnection;
+        int responseCode = -1;
 
         try {
             httpConnection = TransportUtils.getHttpConnection(agentManager.getPushDataAPIEP());
             httpConnection.setRequestMethod(AgentConstants.HTTP_POST);
-            httpConnection.setRequestProperty("Authorization", "Bearer " +
-                    agentManager.getAgentConfigs().getAuthToken());
-            httpConnection.setRequestProperty("Content-Type",
-                                              AgentConstants.APPLICATION_JSON_TYPE);
+            httpConnection.setRequestProperty("Authorization",
+                                              "Bearer " + agentManager.getAgentConfigs().getAuthToken());
+            httpConnection.setRequestProperty("Content-Type", AgentConstants.APPLICATION_JSON);
 
             httpConnection.setDoOutput(true);
-            DataOutputStream dataOutPutWriter = new DataOutputStream(
-                    httpConnection.getOutputStream());
+            DataOutputStream dataOutPutWriter = new DataOutputStream(httpConnection.getOutputStream());
             dataOutPutWriter.writeBytes(pushDataPayload);
             dataOutPutWriter.flush();
             dataOutPutWriter.close();
@@ -225,39 +223,34 @@ public class FireAlarmHTTPCommunicator extends HTTPTransportHandler {
         } catch (IOException exception) {
             String errorMsg =
                     "An IO error occurred whilst trying to get the response code from: " +
-                            pushDataEndPointURL + " for a " + AgentConstants.HTTP_POST +
-                            " " + "method.";
+                            pushDataEndPointURL + " for a " + AgentConstants.HTTP_POST + " method.";
             log.error(AgentConstants.LOG_APPENDER + errorMsg);
 
         } catch (TransportHandlerException exception) {
             log.error(AgentConstants.LOG_APPENDER +
-                              "Error encountered whilst trying to create HTTP-Connection " +
-                              "to IoT-Server EP at: " +
+                              "Error encountered whilst trying to create HTTP-Connection to IoT-Server EP at: " +
                               pushDataEndPointURL);
         }
 
         if (responseCode == HttpStatus.CONFLICT_409 ||
                 responseCode == HttpStatus.PRECONDITION_FAILED_412) {
             log.warn(AgentConstants.LOG_APPENDER +
-                             "DeviceIP is being Re-Registered due to Push-Data failure " +
-                             "with response code: " +
+                             "DeviceIP is being Re-Registered due to Push-Data failure with response code: " +
                              responseCode);
             registerThisDevice();
 
         } else if (responseCode != HttpStatus.NO_CONTENT_204) {
             if (log.isDebugEnabled()) {
                 log.error(AgentConstants.LOG_APPENDER + "Status Code: " + responseCode +
-                                  " encountered whilst trying to Push-Device-Data to IoT " +
-                                  "Server at: " +
+                                  " encountered whilst trying to Push-Device-Data to IoT Server at: " +
                                   agentManager.getPushDataAPIEP());
             }
             agentManager.updateAgentStatus(AgentConstants.SERVER_NOT_RESPONDING);
         }
 
         if (log.isDebugEnabled()) {
-            log.debug(AgentConstants.LOG_APPENDER + "Push-Data call with payload - " +
-                              pushDataPayload + ", to IoT Server returned status " +
-                              responseCode);
+            log.debug(AgentConstants.LOG_APPENDER + "Push-Data call with payload - " + pushDataPayload +
+                              ", to IoT Server returned status " + responseCode);
         }
     }
 
@@ -272,16 +265,14 @@ public class FireAlarmHTTPCommunicator extends HTTPTransportHandler {
                         closeConnection();
                     } catch (Exception e) {
                         if (log.isDebugEnabled()) {
-                            log.warn(AgentConstants.LOG_APPENDER +
-                                             "Unable to 'STOP' HTTP server at port: " + port);
+                            log.warn(AgentConstants.LOG_APPENDER + "Unable to 'STOP' HTTP server at port: " + port);
                         }
 
                         try {
                             Thread.sleep(timeoutInterval);
                         } catch (InterruptedException e1) {
-                            log.error(AgentConstants.LOG_APPENDER +
-                                              "HTTP-Termination: Thread Sleep Interrupt " +
-                                              "Exception");
+                            log.error(
+                                    AgentConstants.LOG_APPENDER + "HTTP-Termination: Thread Sleep Interrupt Exception");
                         }
                     }
                 }
@@ -398,8 +389,7 @@ public class FireAlarmHTTPCommunicator extends HTTPTransportHandler {
         } catch (TransportHandlerException e) {
             String errorMsg =
                     "Protocol specific error occurred when trying to fetch an HTTPConnection to:" +
-                            " " +
-                            registerEndpointURLString;
+                            " " + registerEndpointURLString;
             log.error(AgentConstants.LOG_APPENDER + errorMsg);
             throw new AgentCoreOperationException();
         }
@@ -419,8 +409,7 @@ public class FireAlarmHTTPCommunicator extends HTTPTransportHandler {
 
         } catch (IOException exception) {
             String errorMsg = "An IO error occurred whilst trying to get the response code from:" +
-                    " " +
-                    registerEndpointURLString + " for a " + AgentConstants.HTTP_POST + " method.";
+                    " " + registerEndpointURLString + " for a " + AgentConstants.HTTP_POST + " method.";
             log.error(AgentConstants.LOG_APPENDER + errorMsg);
             throw new AgentCoreOperationException(errorMsg, exception);
         }
@@ -436,7 +425,7 @@ public class FireAlarmHTTPCommunicator extends HTTPTransportHandler {
 
 	/*------------------------------------------------------------------------------------------*/
     /* 		Utility methods relevant to creating and sending HTTP requests to the Iot-Server 	*/
-	/*------------------------------------------------------------------------------------------*/
+    /*------------------------------------------------------------------------------------------*/
 
     /**
      * This method is used to get the IP of the device in which the agent is run on.

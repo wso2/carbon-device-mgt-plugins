@@ -21,7 +21,6 @@ package org.wso2.carbon.mdm.services.android.services.event;
 import io.swagger.annotations.*;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EventBeanWrapper;
-import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -49,7 +48,8 @@ public interface EventService {
                            @HeaderParam(ACCEPT) String acceptHeader,
                            @ApiParam(name = "eventBeanWrapper",
                                    value = "Information of the agent event to be published on DAS.")
-                           EventBeanWrapper eventBeanWrapper) throws AndroidAgentException;
+                           EventBeanWrapper eventBeanWrapper);
+
     @GET
     @Path("{deviceId}")
     @Produces("application/json")
@@ -70,7 +70,7 @@ public interface EventService {
     Response retrieveAlert(@ApiParam(name = "acceptHeader", value = "Accept Header.")
                            @HeaderParam(ACCEPT) String acceptHeader,
                            @ApiParam(name = "deviceId", value = "DeviceId which need to retrieve published events.")
-                           @PathParam("deviceId") String deviceId) throws AndroidAgentException;
+                           @PathParam("deviceId") String deviceId);
 
     @GET
     @Path("{deviceId}/date")
@@ -97,7 +97,7 @@ public interface EventService {
                                    @ApiParam(name = "from", value = "From Date.")
                                    @QueryParam("from") long from,
                                    @ApiParam(name = "to", value = "To Date.")
-                                   @QueryParam("to") long to) throws AndroidAgentException;
+                                   @QueryParam("to") long to);
 
     @GET
     @Path("{deviceId}/type/{type}")
@@ -120,5 +120,5 @@ public interface EventService {
                                @ApiParam(name = "deviceId", value = "Device Identifier to be need to retrieve events.")
                                @PathParam("deviceId") String deviceId,
                                @ApiParam(name = "type", value = "Type of the Alert to be need to retrieve events.")
-                               @PathParam("type") String type) throws AndroidAgentException;
+                               @PathParam("type") String type);
 }

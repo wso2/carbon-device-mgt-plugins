@@ -22,18 +22,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
 import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.mdm.mobileservices.windows.common.util.Message;
 
-import javax.jws.WebService;
 import javax.ws.rs.*;
 
 /**
  * Endpoint for Enforce Effective Policy.
  */
 @Api(value = "PolicyMgtService", description = "Windows Device Management REST-API implementation.")
-@WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
 public interface PolicyMgtService {

@@ -39,8 +39,22 @@ define stream battery (meta_owner string, meta_deviceType string, meta_deviceId 
 @Export('org.wso2.iot.devices.accelerometer:1.0.0')
 define stream accelerometer (meta_owner string, meta_deviceType string, meta_deviceId string, meta_time long, x float, y float, z float);
 
+@Export("org.wso2.iot.devices.speed:1.0.0")
+define stream speed (meta_owner string, meta_deviceType string, meta_deviceId string, meta_time long, limit float);
+
+@Export("org.wso2.iot.devices.turn:1.0.0")
+define stream turn (meta_owner string, meta_deviceType string, meta_deviceId string, meta_time long, turn string);
+
 @Import('org.wso2.iot.android.sense:1.0.0')
-define stream androidsense (meta_owner string, meta_deviceId string, meta_type string, meta_timestamp long, battery int, gps_lat double, gps_long double, accelerometer_x float, accelerometer_y float, accelerometer_z float, magnetic_x float, magnetic_y float, magnetic_z float, gyroscope_x float, gyroscope_y float, gyroscope_z float, light float, pressure float, proximity float, gravity_x float, gravity_y float, gravity_z float, rotation_x float, rotation_y float, rotation_z float, word string, word_sessionId string, word_status string);
+define stream androidsense (meta_owner string, meta_deviceId string, meta_type string, meta_timestamp long, battery int, gps_lat double, gps_long double, accelerometer_x float, accelerometer_y float, accelerometer_z float,speed_limit float,turn_way string, magnetic_x float, magnetic_y float, magnetic_z float, gyroscope_x float, gyroscope_y float, gyroscope_z float, light float, pressure float, proximity float, gravity_x float, gravity_y float, gravity_z float, rotation_x float, rotation_y float, rotation_z float, word string, word_sessionId string, word_status string);
+
+from androidsense[meta_type == 'speed' and speed_limit > 25]
+select meta_owner, 'android_sense' as meta_deviceType, meta_deviceId, meta_timestamp as meta_time, speed_limit as limit
+insert into speed;
+
+from androidsense[meta_type == 'turn']
+select meta_owner, 'android_sense' as meta_deviceType, meta_deviceId, meta_timestamp as meta_time, turn_way as turn
+insert into turn;
 
 from androidsense[meta_type == 'accelerometer']
 select meta_owner, 'android_sense' as meta_deviceType, meta_deviceId, meta_timestamp as meta_time, accelerometer_x as x, accelerometer_y as y, accelerometer_z as z
