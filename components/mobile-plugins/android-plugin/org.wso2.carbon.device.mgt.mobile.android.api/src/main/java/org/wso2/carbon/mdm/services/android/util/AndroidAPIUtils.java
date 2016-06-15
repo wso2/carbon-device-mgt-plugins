@@ -262,18 +262,21 @@ public class AndroidAPIUtils {
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
 
-        if (AndroidConstants.OperationCodes.MONITOR.equals(operation.getCode())) {
+        if (!Operation.Status.ERROR.equals(operation.getStatus()) &&
+            AndroidConstants.OperationCodes.MONITOR.equals(operation.getCode())) {
             if (log.isDebugEnabled()) {
                 log.info("Received compliance status from MONITOR operation ID: " + operation.getId());
             }
             getPolicyManagerService().checkPolicyCompliance(deviceIdentifier, operation.getPayLoad());
-        } else if (AndroidConstants.OperationCodes.APPLICATION_LIST.equals(operation.getCode())) {
+        } else if (!Operation.Status.ERROR.equals(operation.getStatus()) && AndroidConstants.
+                OperationCodes.APPLICATION_LIST.equals(operation.getCode())) {
             if (log.isDebugEnabled()) {
                 log.info("Received applications list from device '" + deviceId + "'");
             }
             updateApplicationList(operation, deviceIdentifier);
 
-        } else if (AndroidConstants.OperationCodes.DEVICE_INFO.equals(operation.getCode())) {
+        } else if (!Operation.Status.ERROR.equals(operation.getStatus()) && AndroidConstants.
+                OperationCodes.DEVICE_INFO.equals(operation.getCode())) {
 
             try {
                 Device device = new Gson().fromJson(operation.getOperationResponse(), Device.class);
@@ -284,7 +287,8 @@ public class AndroidAPIUtils {
             }
 
 
-        } else if (AndroidConstants.OperationCodes.DEVICE_LOCATION.equals(operation.getCode())) {
+        } else if (!Operation.Status.ERROR.equals(operation.getStatus()) &&
+                   AndroidConstants.OperationCodes.DEVICE_LOCATION.equals(operation.getCode())) {
             try {
                 DeviceLocation location = new Gson().fromJson(operation.getOperationResponse(), DeviceLocation.class);
                 // reason for checking "location.getLatitude() != null" because when device fails to provide
