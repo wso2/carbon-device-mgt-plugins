@@ -27,6 +27,7 @@ import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
 import org.wso2.carbon.device.mgt.core.operation.mgt.ProfileOperation;
 import org.wso2.carbon.mdm.services.android.bean.*;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.*;
+import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
 import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.DeviceManagementAdminService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
@@ -59,7 +60,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (deviceLockBeanWrapper == null || deviceLockBeanWrapper.getOperation() == null) {
                 String errorMessage = "Lock bean is empty.";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             DeviceLock lock = deviceLockBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
@@ -172,7 +174,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (cameraBeanWrapper == null || cameraBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the configure camera operation is incorrect.";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             Camera camera = cameraBeanWrapper.getOperation();
             CommandOperation operation = new CommandOperation();
@@ -256,7 +259,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (wipeDataBeanWrapper == null || wipeDataBeanWrapper.getOperation() == null) {
                 String errorMessage = "WipeData bean is empty.";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             WipeData wipeData = wipeDataBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
@@ -395,7 +399,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     null) {
                 String errorMessage = "The payload of the application installing operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             ApplicationInstallation applicationInstallation = applicationInstallationBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
@@ -429,7 +434,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (applicationUpdateBeanWrapper == null || applicationUpdateBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the application update operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             ApplicationUpdate applicationUpdate = applicationUpdateBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
@@ -465,7 +471,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     applicationUninstallationBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the application uninstalling operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             ApplicationUninstallation applicationUninstallation = applicationUninstallationBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
@@ -500,14 +507,14 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (blacklistApplicationsBeanWrapper == null || blacklistApplicationsBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the blacklisting apps operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             BlacklistApplications blacklistApplications = blacklistApplicationsBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.BLACKLIST_APPLICATIONS);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(blacklistApplications.toJSON());
-
             return AndroidAPIUtils.getOperationResponse(blacklistApplicationsBeanWrapper.getDeviceIDs(),
                     operation);
 
@@ -536,7 +543,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (upgradeFirmwareBeanWrapper == null || upgradeFirmwareBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the upgrade firmware operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             UpgradeFirmware upgradeFirmware = upgradeFirmwareBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
@@ -569,7 +577,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (vpnBeanWrapper == null || vpnBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the VPN operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             Vpn vpn = vpnBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
@@ -603,7 +612,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (notificationBeanWrapper == null || notificationBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the notification operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             Notification notification = notificationBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
@@ -638,7 +648,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (wifiBeanWrapper == null || wifiBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the wifi operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             Wifi wifi = wifiBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
@@ -674,7 +685,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (encryptionBeanWrapper == null || encryptionBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the device encryption operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             DeviceEncryption deviceEncryption = encryptionBeanWrapper.getOperation();
             CommandOperation operation = new CommandOperation();
@@ -709,7 +721,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (lockCodeBeanWrapper == null || lockCodeBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the change lock code operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             LockCode lockCode = lockCodeBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
@@ -744,7 +757,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (passwordPolicyBeanWrapper == null || passwordPolicyBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the change password policy operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             PasscodePolicy passcodePolicy = passwordPolicyBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();
@@ -782,7 +796,8 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             if (webClipBeanWrapper == null || webClipBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the add webclip operation is incorrect";
                 log.error(errorMessage);
-                return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             WebClip webClip = webClipBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();

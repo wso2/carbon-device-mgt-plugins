@@ -25,6 +25,8 @@ import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublish
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EventBeanWrapper;
+import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
+import org.wso2.carbon.mdm.services.android.exception.NotFoundException;
 import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.EventReceiverService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
@@ -57,9 +59,9 @@ public class EventReceiverServiceImpl implements EventReceiverService {
                 message.setResponseCode("Event is published successfully.");
                 return Response.status(Response.Status.CREATED).entity(message).build();
             } else {
-                message.setResponseCode("Error occurred while publishing the event.");
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).
-                        entity(message).build();
+                throw new UnexpectedServerErrorException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage("Error occurred while " +
+                                "publishing the event.").build());
             }
         } catch (DataPublisherConfigurationException e) {
             String msg = "Error occurred while getting the Data publisher Service instance.";
@@ -82,8 +84,10 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         } else if (deviceId != null) {
             return retrieveAlert(deviceId);
         } else {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Request must contain the device identifier. " +
-                    "Optionally, both from and to value should be present to get alerts between times.").build();
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage("Request must contain " +
+                            "the device identifier. Optionally, both from and to value should be present to get " +
+                            "alerts between times.").build());
         }
     }
 
@@ -91,14 +95,14 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         if (log.isDebugEnabled()) {
             log.debug("Retrieving events for given device Identifier.");
         }
-        Message message = new Message();
         String query = "deviceIdentifier:" + deviceId;
         List<DeviceState> deviceStates;
         try {
             deviceStates = AndroidAPIUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
             if (deviceStates == null) {
-                message.setResponseCode("No any alerts are published for Device: " + deviceId + ".");
-                return Response.status(Response.Status.NOT_FOUND).entity(message).build();
+                throw new NotFoundException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(404l).setMessage("No any alerts are " +
+                                "published for Device: " + deviceId + ".").build());
             } else {
                 return Response.status(Response.Status.OK).entity(deviceStates).build();
             }
@@ -116,16 +120,15 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         if (log.isDebugEnabled()) {
             log.debug("Retrieving events for given device Identifier and time period.");
         }
-        Message message = new Message();
 
         String query = "deviceIdentifier:" + deviceId + " AND _timestamp: [" + fromDate + " TO " + toDate + "]";
         List<DeviceState> deviceStates;
         try {
             deviceStates = AndroidAPIUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
             if (deviceStates == null) {
-                message.
-                        setResponseCode("No any alerts are published on given date for given Device: " + deviceId + ".");
-                return Response.status(Response.Status.NOT_FOUND).entity(message).build();
+                throw new NotFoundException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(404l).setMessage("No any alerts are " +
+                                "published on given date for given Device: " + deviceId + ".").build());
 
             } else {
                 return Response.status(Response.Status.OK).entity(deviceStates).build();
@@ -143,15 +146,14 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         if (log.isDebugEnabled()) {
             log.debug("Retrieving events for given device identifier and type.");
         }
-        Message message = new Message();
         String query = "deviceIdentifier:" + deviceId + " AND type:" + type;
         List<DeviceState> deviceStates;
         try {
             deviceStates = AndroidAPIUtils.getAllEventsForDevice(EVENT_STREAM_DEFINITION, query);
             if (deviceStates == null) {
-                message.setResponseCode("No any alerts are published for given Device: " +
-                        "" + deviceId + "and given specific Type.");
-                return Response.status(Response.Status.NOT_FOUND).entity(message).build();
+                throw new NotFoundException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(404l).setMessage("No any alerts are " +
+                                "published for given Device: '" + deviceId + "' and given specific Type.").build());
 
             } else {
                 return Response.status(Response.Status.OK).entity(deviceStates).build();

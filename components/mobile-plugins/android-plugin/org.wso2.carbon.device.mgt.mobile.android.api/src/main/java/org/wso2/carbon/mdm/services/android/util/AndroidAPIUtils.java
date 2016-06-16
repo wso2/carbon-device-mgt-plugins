@@ -48,6 +48,8 @@ import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManag
 import org.wso2.carbon.device.mgt.core.search.mgt.impl.Utils;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
+import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
+import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
 import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
@@ -120,7 +122,8 @@ public class AndroidAPIUtils {
         if (deviceIDs == null || deviceIDs.size() == 0) {
             String errorMessage = "Device identifier list is empty";
             log.error(errorMessage);
-            return Response.status(Response.Status.BAD_REQUEST).entity(errorMessage).build();
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
         AndroidDeviceUtils deviceUtils = new AndroidDeviceUtils();
         DeviceIDHolder deviceIDHolder = deviceUtils.validateDeviceIdentifiers(deviceIDs);
@@ -140,8 +143,9 @@ public class AndroidAPIUtils {
 //            }
 //        }
         if (!deviceIDHolder.getErrorDeviceIdList().isEmpty()) {
-            return javax.ws.rs.core.Response.status(Response.Status.BAD_REQUEST).entity(deviceUtils.
-                    convertErrorMapIntoErrorMessage(deviceIDHolder.getErrorDeviceIdList())).build();
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(deviceUtils.
+                            convertErrorMapIntoErrorMessage(deviceIDHolder.getErrorDeviceIdList())).build());
         }
         return Response.status(Response.Status.CREATED).entity(activity).build();
     }
