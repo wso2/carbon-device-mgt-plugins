@@ -13,9 +13,15 @@ import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationService;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfigurationManagementService;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
+import org.wso2.carbon.device.mgt.iot.util.Utils;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
+import org.wso2.carbon.utils.CarbonUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -185,4 +191,34 @@ public class APIUtil {
 		return threadLocalCarbonContext.getTenantDomain();
 	}
 
+	public static PlatformConfigurationManagementService getTenantConfigurationManagementService() {
+		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+		PlatformConfigurationManagementService tenantConfigurationManagementService =
+				(PlatformConfigurationManagementService) ctx.getOSGiService(PlatformConfigurationManagementService.class, null);
+		if (tenantConfigurationManagementService == null) {
+			String msg = "Tenant configuration Management service not initialized.";
+			log.error(msg);
+			throw new IllegalStateException(msg);
+		}
+		return tenantConfigurationManagementService;
+	}
+
+	public static String getMqttEndpoint() throws ConfigurationManagementException {
+		String iotServerIP = Constants.DEFAULT_ENDPOINT;
+		iotServerIP = iotServerIP.replace(Constants.LOCALHOST, Utils.getServerUrl());;
+		PlatformConfiguration configuration = APIUtil.getTenantConfigurationManagementService().getConfiguration(
+				Constants.CONFIG_TYPE);
+		if (configuration != null && configuration.getConfiguration() != null && configuration
+				.getConfiguration().size() > 0) {
+			List<ConfigurationEntry> configurations = configuration.getConfiguration();
+			for (ConfigurationEntry configurationEntry : configurations) {
+				switch (configurationEntry.getName()) {
+					case "ANDROID_SENSE_MQTT_EP":
+						iotServerIP = (String)configurationEntry.getValue();
+						break;
+				}
+			}
+		}
+		return iotServerIP;
+	}
 }
