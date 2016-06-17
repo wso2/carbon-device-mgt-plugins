@@ -28,6 +28,7 @@ import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
@@ -216,11 +217,7 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
             if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
                 AndroidConfiguration androidConfiguration = new AndroidConfiguration();
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
-                String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
-                if (mqttEndpoint.contains(Constants.LOCALHOST)) {
-                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, Utils.getServerUrl());
-                }
-                androidConfiguration.setMqttEndpoint(mqttEndpoint);
+                androidConfiguration.setMqttEndpoint(APIUtil.getMqttEndpoint());
                 return Response.status(Response.Status.ACCEPTED.getStatusCode()).entity(androidConfiguration.toString())
                         .build();
             }
@@ -249,6 +246,9 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
                 return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).entity(false).build();
             }
         } catch (DeviceManagementException e) {
+            log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(false).build();
+        } catch (ConfigurationManagementException e) {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(false).build();
         }

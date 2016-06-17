@@ -24,8 +24,12 @@ import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 import org.wso2.carbon.apimgt.application.extension.constants.ApiApplicationConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.iot.util.Utils;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppConfig;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -33,6 +37,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,6 +52,7 @@ public class ZipUtil {
     private static final String LOCALHOST = "localhost";
     private static final String HTTPS_PROTOCOL_APPENDER = "https://";
     private static final String HTTP_PROTOCOL_APPENDER = "http://";
+    private static final String CONFIG_TYPE = "general";
 
     public ZipArchive createZipFile(String owner, String deviceType, String deviceId, String deviceName,
                                     String apiApplicationKey, String token, String refreshToken)
@@ -65,7 +71,6 @@ public class ZipUtil {
             String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
             String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
             String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
-            String apimEndpoint = httpsServerEP;
             String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
             if (mqttEndpoint.contains(LOCALHOST)) {
                 mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
@@ -77,6 +82,28 @@ public class ZipUtil {
                 xmppEndpoint = xmppEndpoint.replace(LOCALHOST, iotServerIP);
             }
 
+            PlatformConfiguration configuration = APIUtil.getTenantConfigurationManagementService().getConfiguration(
+                    CONFIG_TYPE);
+            if (configuration != null && configuration.getConfiguration() != null && configuration
+                    .getConfiguration().size() > 0) {
+                List<ConfigurationEntry> configurations = configuration.getConfiguration();
+                for (ConfigurationEntry configurationEntry : configurations) {
+                    switch (configurationEntry.getName()) {
+                        case VirtualFireAlarmUtilConstants.VIRTUAL_FIREALARM_HTTPS_EP:
+                            httpsServerEP = (String)configurationEntry.getValue();
+                            break;
+                        case VirtualFireAlarmUtilConstants.VIRTUAL_FIREALARM_HTTP_EP:
+                            httpServerEP = (String)configurationEntry.getValue();
+                            break;
+                        case VirtualFireAlarmUtilConstants.VIRTUAL_FIREALARM_MQTT_EP:
+                            mqttEndpoint = (String)configurationEntry.getValue();
+                            break;
+                        case VirtualFireAlarmUtilConstants.VIRTUAL_FIREALARM_XMPP_EP:
+                            xmppEndpoint = (String)configurationEntry.getValue();
+                            break;
+                    }
+                }
+            }
             String base64EncodedApplicationKey = getBase64EncodedAPIAppKey(apiApplicationKey).trim();
 
             Map<String, String> contextParams = new HashMap<>();
@@ -86,7 +113,7 @@ public class ZipUtil {
             contextParams.put(VirtualFireAlarmUtilConstants.DEVICE_NAME, deviceName);
             contextParams.put(VirtualFireAlarmUtilConstants.HTTPS_EP, httpsServerEP);
             contextParams.put(VirtualFireAlarmUtilConstants.HTTP_EP, httpServerEP);
-            contextParams.put(VirtualFireAlarmUtilConstants.APIM_EP, apimEndpoint);
+            contextParams.put(VirtualFireAlarmUtilConstants.APIM_EP, httpServerEP);
             contextParams.put(VirtualFireAlarmUtilConstants.MQTT_EP, mqttEndpoint);
             contextParams.put(VirtualFireAlarmUtilConstants.XMPP_EP, "XMPP:" + xmppEndpoint);
             contextParams.put(VirtualFireAlarmUtilConstants.API_APPLICATION_KEY, base64EncodedApplicationKey);
@@ -98,6 +125,8 @@ public class ZipUtil {
             return zipFile;
         } catch (IOException e) {
             throw new DeviceManagementException("Zip File Creation Failed", e);
+        } catch (ConfigurationManagementException e) {
+            throw new DeviceManagementException("Failed to retrieve configuration", e);
         }
     }
 

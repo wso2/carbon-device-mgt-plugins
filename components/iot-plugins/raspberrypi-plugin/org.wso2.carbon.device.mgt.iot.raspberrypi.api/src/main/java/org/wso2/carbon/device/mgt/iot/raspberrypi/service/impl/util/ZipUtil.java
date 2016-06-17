@@ -19,6 +19,9 @@
 package org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util;
 
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.util.Utils;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
@@ -27,6 +30,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +44,7 @@ public class ZipUtil {
     private static final String LOCALHOST = "localhost";
     private static final String HTTPS_PROTOCOL_APPENDER = "https://";
     private static final String HTTP_PROTOCOL_APPENDER = "http://";
+    private static final String CONFIG_TYPE = "general";
 
     public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
                                     String deviceId, String deviceName, String token,
@@ -63,6 +68,26 @@ public class ZipUtil {
                 mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
             }
 
+            PlatformConfiguration configuration = APIUtil.getTenantConfigurationManagementService().getConfiguration(
+                    CONFIG_TYPE);
+            if (configuration != null && configuration.getConfiguration() != null && configuration
+                    .getConfiguration().size() > 0) {
+                List<ConfigurationEntry> configurations = configuration.getConfiguration();
+                for (ConfigurationEntry configurationEntry : configurations) {
+                    switch (configurationEntry.getName()) {
+                        case "RASPBERRYPI_HTTPS_EP":
+                            httpsServerEP = (String)configurationEntry.getValue();
+                            break;
+                        case "RASPBERRYPI_HTTP_EP":
+                            httpServerEP = (String)configurationEntry.getValue();
+                            break;
+                        case "RASPBERRYPI_MQTT_EP":
+                            mqttEndpoint = (String)configurationEntry.getValue();
+                            break;
+                    }
+                }
+            }
+
             Map<String, String> contextParams = new HashMap<>();
             contextParams.put("SERVER_NAME", APIUtil.getTenantDomainOftheUser());
             contextParams.put("DEVICE_OWNER", owner);
@@ -80,6 +105,8 @@ public class ZipUtil {
             return zipFile;
         } catch (IOException e) {
             throw new DeviceManagementException("Zip File Creation Failed", e);
+        } catch (ConfigurationManagementException e) {
+            throw new DeviceManagementException("Failed to retrieve configuration", e);
         }
     }
 }
