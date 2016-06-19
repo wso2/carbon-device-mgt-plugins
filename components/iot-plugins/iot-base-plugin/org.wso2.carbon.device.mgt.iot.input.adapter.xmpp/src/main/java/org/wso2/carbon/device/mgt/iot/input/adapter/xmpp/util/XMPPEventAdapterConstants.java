@@ -40,8 +40,6 @@ public class XMPPEventAdapterConstants {
     public static final String ADAPTER_CONF_TIMEOUT_INTERVAL_HINT = "timeoutInterval.hint";
     public static final String ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME = "contentValidator";
     public static final String ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME_HINT = "contentValidator.hint";
-    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS = "contentValidatorParams";
-    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS_HINT = "contentValidatorParams.hint";
     public static final String ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME = "contentTransformer";
     public static final String ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME_HINT = "contentTransformer.hint";
     public static final String ADAPTER_CONF_RECIEVER_JID = "jid";
@@ -53,8 +51,6 @@ public class XMPPEventAdapterConstants {
     public static final int RECONNECTION_PROGRESS_FACTOR = 2;
 
     public static final String DEFAULT = "default";
-
-    public static final String XMPP_CONTENT_VALIDATION_DEFAULT_PARAMETERS = "";
     public static final String FROM_KEY = "from";
     public static final String SUBJECT_KEY = "subject";
 }

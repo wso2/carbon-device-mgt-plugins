@@ -24,7 +24,9 @@ import org.wso2.carbon.device.mgt.common.ProvisioningConfig;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
 import org.wso2.carbon.device.mgt.common.push.notification.PushNotificationConfig;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.internal.RaspberrypiManagementDataHolder;
 
 public class RaspberrypiManagerService implements DeviceManagementService {
 
@@ -52,7 +54,12 @@ public class RaspberrypiManagerService implements DeviceManagementService {
 
     @Override
     public ProvisioningConfig getProvisioningConfig() {
-        return new ProvisioningConfig(RaspberrypiConstants.DEVICE_TYPE_PROVIDER_DOMAIN, false);
+		DeviceManagementConfiguration deviceManagementConfiguration = RaspberrypiManagementDataHolder.getInstance()
+				.getDeviceTypeConfigService().getConfiguration(RaspberrypiConstants.DEVICE_TYPE,
+															   RaspberrypiConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
+		boolean sharedWithAllTenants = deviceManagementConfiguration.getDeviceManagementConfigRepository()
+				.getProvisioningConfig().isSharedWithAllTenants();
+        return new ProvisioningConfig(RaspberrypiConstants.DEVICE_TYPE_PROVIDER_DOMAIN, sharedWithAllTenants);
     }
 
     @Override

@@ -27,6 +27,7 @@ import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.exception.ArduinoDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.ArduinoManagerService;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.util.ArduinoUtils;
+import org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 
 /**
@@ -38,6 +39,12 @@ import org.wso2.carbon.ndatasource.core.DataSourceService;
  * policy="dynamic"
  * bind="setDataSourceService"
  * unbind="unsetDataSourceService"
+ * @scr.reference name="devicetype.configuration.service"
+ * interface="org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setDeviceTypeConfigService"
+ * unbind="unsetDeviceTypeConfigService"
  */
 public class ArduinoManagementServiceComponent {
 
@@ -102,5 +109,13 @@ public class ArduinoManagementServiceComponent {
 
     protected void unsetDataSourceService(DataSourceService dataSourceService) {
         //do nothing
+    }
+
+    protected void setDeviceTypeConfigService(DeviceTypeConfigService deviceTypeConfigService) {
+        ArduinoManagementDataHolder.getInstance().setDeviceTypeConfigService(deviceTypeConfigService);
+    }
+
+    protected void unsetDeviceTypeConfigService(DeviceTypeConfigService deviceTypeConfigService) {
+        ArduinoManagementDataHolder.getInstance().setDeviceTypeConfigService(null);
     }
 }

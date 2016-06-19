@@ -22,7 +22,6 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
-import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.util.Utils;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -45,6 +44,7 @@ public class ZipUtil {
     private static final String HTTPS_PROTOCOL_APPENDER = "https://";
     private static final String HTTP_PROTOCOL_APPENDER = "http://";
     private static final String CONFIG_TYPE = "general";
+    private static final String DEFAULT_MQTT_ENDPOINT = "tcp://localhost:1883";
 
     public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
                                     String deviceId, String deviceName, String token,
@@ -63,7 +63,7 @@ public class ZipUtil {
             String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
             String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
             String apimEndpoint = httpsServerEP;
-            String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
+            String mqttEndpoint = DEFAULT_MQTT_ENDPOINT;
             if (mqttEndpoint.contains(LOCALHOST)) {
                 mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
             }

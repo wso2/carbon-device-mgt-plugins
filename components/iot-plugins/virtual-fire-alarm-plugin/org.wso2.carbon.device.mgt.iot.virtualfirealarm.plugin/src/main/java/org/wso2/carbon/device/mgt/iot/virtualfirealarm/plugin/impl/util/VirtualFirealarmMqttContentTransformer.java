@@ -13,8 +13,8 @@ import java.util.Map;
 public class VirtualFirealarmMqttContentTransformer implements ContentTransformer {
 
     @Override
-    public Object transform(Object message, Map<String, String> dynamicProperties) {
-        String topic = dynamicProperties.get("topic");
+    public Object transform(Object message, Map<String, Object> dynamicProperties) {
+        String topic = (String) dynamicProperties.get("topic");
         String[] topicParams = topic.split("/");
         String tenantDomain = topicParams[0];
         String deviceId = topicParams[2];

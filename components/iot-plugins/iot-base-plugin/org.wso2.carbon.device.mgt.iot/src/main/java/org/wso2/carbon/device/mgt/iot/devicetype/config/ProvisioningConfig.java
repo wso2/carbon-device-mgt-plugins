@@ -15,27 +15,35 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config;
+package org.wso2.carbon.device.mgt.iot.devicetype.config;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Class for holding data source configuration in malformed-cdm-config-no-mgt-repo.xml at parsing
- * with JAXB.
+ * Class for holding device type configuration and parsing with JAXB.
  */
-@XmlRootElement(name = "DataSourceConfiguration")
-public class DataSourceConfig {
+@XmlRootElement(name = "ProvisioningConfig")
+public class ProvisioningConfig {
 
-	private JNDILookupDefinition jndiLookupDefinition;
+	private String tenantDomain;
+	private boolean sharedWithAllTenants;
 
-	@XmlElement(name = "JndiLookupDefinition", required = true)
-	public JNDILookupDefinition getJndiLookupDefinition() {
-		return jndiLookupDefinition;
+	@XmlElement(name = "TenantDomain", required = true)
+	public String getTenantDomain() {
+		return tenantDomain;
 	}
 
-	public void setJndiLookupDefinition(JNDILookupDefinition jndiLookupDefinition) {
-		this.jndiLookupDefinition = jndiLookupDefinition;
+	public void setTenantDomain(String tenantDomain) {
+		this.tenantDomain = tenantDomain;
 	}
 
+	@XmlElement(name = "SharedWithAllTenants", required = true)
+	public boolean isSharedWithAllTenants() {
+		return sharedWithAllTenants;
+	}
+
+	public void setSharedWithAllTenants(boolean sharedWithAllTenants) {
+		this.sharedWithAllTenants = sharedWithAllTenants;
+	}
 }

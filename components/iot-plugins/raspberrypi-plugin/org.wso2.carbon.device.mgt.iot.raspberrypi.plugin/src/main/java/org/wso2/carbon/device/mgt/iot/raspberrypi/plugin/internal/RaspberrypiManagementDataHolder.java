@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.internal;
 
+import org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 
 /**
@@ -25,7 +26,7 @@ import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
  */
 public class RaspberrypiManagementDataHolder {
 
-    private OutputEventAdapterService outputEventAdapterService;
+    private DeviceTypeConfigService deviceTypeConfigService;
 
 	private static RaspberrypiManagementDataHolder thisInstance = new RaspberrypiManagementDataHolder();
 
@@ -36,13 +37,13 @@ public class RaspberrypiManagementDataHolder {
 		return thisInstance;
 	}
 
-    public OutputEventAdapterService getOutputEventAdapterService() {
-        return outputEventAdapterService;
+    public DeviceTypeConfigService getDeviceTypeConfigService() {
+        return deviceTypeConfigService;
     }
 
-    public void setOutputEventAdapterService(
-            OutputEventAdapterService outputEventAdapterService) {
-        this.outputEventAdapterService = outputEventAdapterService;
+    public void setDeviceTypeConfigService(
+            DeviceTypeConfigService deviceTypeConfigService) {
+        this.deviceTypeConfigService = deviceTypeConfigService;
     }
 
 }

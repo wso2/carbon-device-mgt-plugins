@@ -8,7 +8,7 @@ import java.util.Map;
 public class DefaultContentTransformer implements ContentTransformer{
 
     @Override
-    public Object transform(Object message, Map<String, String> dynamicProperties) {
+    public Object transform(Object message, Map<String, Object> dynamicProperties) {
         return message;
     }
 }

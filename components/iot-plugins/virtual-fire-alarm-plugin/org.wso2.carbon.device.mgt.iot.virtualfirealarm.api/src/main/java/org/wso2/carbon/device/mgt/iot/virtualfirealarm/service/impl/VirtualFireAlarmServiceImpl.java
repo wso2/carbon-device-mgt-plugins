@@ -86,8 +86,7 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
 
     @POST
     @Path("device/{deviceId}/buzz")
-    public Response switchBuzzer(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
-                                 @FormParam("state") String state) {
+    public Response switchBuzzer(@PathParam("deviceId") String deviceId, @FormParam("state") String state) {
         if (state == null || state.isEmpty()) {
             log.error("State is not defined for the buzzer operation");
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -97,18 +96,6 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                 VirtualFireAlarmConstants.STATE_OFF)) {
             log.error("The requested state change shoud be either - 'ON' or 'OFF'");
             return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-        String protocolString;
-
-        if (protocol == null || protocol.isEmpty()) {
-            protocolString = MQTT_PROTOCOL;
-        } else {
-            protocolString = protocol.toUpperCase();
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("Sending request to switch-bulb of device [" + deviceId + "] via " +
-                              protocolString);
         }
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(
@@ -121,39 +108,28 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             String actualMessage = resource + ":" + switchToState;
             String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage,
                                                                                     serverPrivateKey);
-            Map<String, String> dynamicProperties = new HashMap<>();
-            switch (protocolString) {
-                case XMPP_PROTOCOL:
-                    dynamicProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY,
-                                          deviceId + "@" + XmppConfig.getInstance().getXmppServerName());
-                    dynamicProperties.put(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "CONTROL-REQUEST");
-                    dynamicProperties.put(VirtualFireAlarmConstants.MESSAGE_TYPE_PROPERTY_KEY,
-                                          VirtualFireAlarmConstants.CHAT_PROPERTY_KEY);
-                    APIUtil.getOutputEventAdapterService().publish(VirtualFireAlarmConstants.XMPP_ADAPTER_NAME,
-                                                                   dynamicProperties, encryptedMsg);
-                    break;
-                default:
-                    String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
-                            + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
-                    dynamicProperties.put(VirtualFireAlarmConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
-                    APIUtil.getOutputEventAdapterService().publish(VirtualFireAlarmConstants.MQTT_ADAPTER_NAME,
-                                                                   dynamicProperties, encryptedMsg);
-                    Operation commandOp = new CommandOperation();
-                    commandOp.setCode("buzz");
-                    commandOp.setType(Operation.Type.COMMAND);
-                    commandOp.setEnabled(true);
-                    commandOp.setPayLoad(encryptedMsg);
+            String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
+                    + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
 
-                    Properties props = new Properties();
-                    props.setProperty(VirtualFireAlarmConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
-                    commandOp.setProperties(props);
+            Operation commandOp = new CommandOperation();
+            commandOp.setCode("buzz");
+            commandOp.setType(Operation.Type.COMMAND);
+            commandOp.setEnabled(true);
+            commandOp.setPayLoad(encryptedMsg);
 
-                    List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
-                    deviceIdentifiers.add(new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE));
-                    APIUtil.getDeviceManagementService().addOperation(VirtualFireAlarmConstants.DEVICE_TYPE, commandOp,
-                                                                      deviceIdentifiers);
-                    break;
-            }
+            Properties props = new Properties();
+            props.setProperty(VirtualFireAlarmConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
+            props.setProperty(VirtualFireAlarmConstants.CLIENT_JID_PROPERTY_KEY, deviceId + "@" + XmppConfig
+                    .getInstance().getServerName());
+            props.setProperty(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "CONTROL-REQUEST");
+            props.setProperty(VirtualFireAlarmConstants.MESSAGE_TYPE_PROPERTY_KEY,
+                              VirtualFireAlarmConstants.CHAT_PROPERTY_KEY);
+            commandOp.setProperties(props);
+
+            List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+            deviceIdentifiers.add(new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE));
+            APIUtil.getDeviceManagementService().addOperation(VirtualFireAlarmConstants.DEVICE_TYPE, commandOp,
+                                                              deviceIdentifiers);
             return Response.ok().build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
@@ -191,7 +167,7 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             switch (protocolString) {
                 case XMPP_PROTOCOL:
                     dynamicProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY,
-                                          deviceId + "@" + XmppConfig.getInstance().getXmppServerName());
+                                          deviceId + "@" + XmppConfig.getInstance().getServerName());
                     dynamicProperties.put(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "POLICTY-REQUEST");
                     dynamicProperties.put(VirtualFireAlarmConstants.MESSAGE_TYPE_PROPERTY_KEY,
                                           VirtualFireAlarmConstants.CHAT_PROPERTY_KEY);
@@ -318,6 +294,11 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                    UserStoreException, VirtualFirealarmDeviceMgtPluginException {
         //create new device id
         String deviceId = shortUUID();
+        boolean status = register(deviceId, deviceName);
+        if (!status) {
+            String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;
+            throw new DeviceManagementException(msg);
+        }
         if (apiApplicationKey == null) {
             String applicationUsername =
                     PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
@@ -328,37 +309,25 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                     VirtualFireAlarmConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
-        String scopes = "device_type_" + VirtualFireAlarmConstants.DEVICE_TYPE + " device_" + deviceId;
+        String scopes = "cdmf/" + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
                                                                    apiApplicationKey.getConsumerSecret(), owner,
                                                                    scopes);
         String accessToken = accessTokenInfo.getAccessToken();
         String refreshToken = accessTokenInfo.getRefreshToken();
+        XmppAccount newXmppAccount = new XmppAccount();
+        newXmppAccount.setAccountName(deviceId);
+        newXmppAccount.setUsername(deviceId);
+        newXmppAccount.setPassword(accessToken);
+        newXmppAccount.setEmail(deviceId + "@" + APIUtil.getTenantDomainOftheUser());
 
-        boolean status;
-        if (XmppConfig.getInstance().isEnabled()) {
-
-            XmppAccount newXmppAccount = new XmppAccount();
-            newXmppAccount.setAccountName(deviceId);
-            newXmppAccount.setUsername(deviceId);
-            newXmppAccount.setPassword(accessToken);
-            newXmppAccount.setEmail(deviceId + "@" + APIUtil.getTenantDomainOftheUser());
-
-            status = XmppServerClient.createAccount(newXmppAccount);
-            if (!status) {
-                String msg = "XMPP Account was not created for device - " + deviceId + " of owner - " + owner +
-                        ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot" +
-                        ".common.config.server.configs";
-                throw new DeviceManagementException(msg);
-            }
-        }
-
-        status = register(deviceId, deviceName);
+        status = XmppServerClient.createAccount(newXmppAccount);
         if (!status) {
-            String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;
+            String msg = "XMPP Account was not created for device - " + deviceId + " of owner - " + owner +
+                    ".XMPP might have been disabled in org.wso2.carbon.device.mgt.iot" +
+                    ".common.config.server.configs";
             throw new DeviceManagementException(msg);
         }
-
         ZipUtil ziputil = new ZipUtil();
         return ziputil.createZipFile(owner, sketchType, deviceId, deviceName, apiApplicationKey.toString(),
                                      accessToken, refreshToken);

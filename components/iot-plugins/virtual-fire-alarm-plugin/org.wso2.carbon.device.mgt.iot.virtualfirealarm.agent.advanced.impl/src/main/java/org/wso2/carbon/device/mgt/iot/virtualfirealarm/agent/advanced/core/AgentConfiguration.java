@@ -40,6 +40,7 @@ public class AgentConfiguration {
 	private String refreshToken;
 	private int dataPushInterval;
 	private String xmppServerName;
+	private String serverJID;
 
 	public String getTenantDomain() {
 		return tenantDomain;
@@ -59,6 +60,14 @@ public class AgentConfiguration {
 
 	public String getDeviceId() {
 		return deviceId;
+	}
+
+	public String getServerJID() {
+		return serverJID;
+	}
+
+	public void setServerJID(String serverJID) {
+		this.serverJID = serverJID;
 	}
 
 	public void setDeviceId(String deviceId) {

@@ -8,7 +8,7 @@ import java.util.Map;
 public class DefaultContentValidator implements ContentValidator {
 
     @Override
-    public ContentInfo validate(Object message, Map<String, String> params, Map<String, String> dynamicParams) {
+    public ContentInfo validate(Object message, Map<String, Object> dynamicParams) {
         return new ContentInfo(true, message);
     }
 

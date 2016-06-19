@@ -64,7 +64,6 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
     private int tenantId;
     private boolean connectionSucceeded = false;
     ContentValidator contentValidator;
-    Map<String, String> contentValidationParams;
     ContentTransformer contentTransformer;
 
     private InputEventAdapterListener eventAdapterListener = null;
@@ -86,7 +85,6 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
         //SORTING messages until the server fetches them
         String temp_directory = System.getProperty("java.io.tmpdir");
         MqttDefaultFilePersistence dataStore = new MqttDefaultFilePersistence(temp_directory);
-
 
         try {
             connectionOptions = new MqttConnectOptions();
@@ -118,8 +116,6 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                     throw new MQTTContentInitializationException("Access of the instance in not allowed.", e);
                 }
             }
-
-            contentValidationParams = mqttBrokerConnectionConfiguration.getContentValidatorParams();
 
             String contentTransformerClassName = this.mqttBrokerConnectionConfiguration.getContentTransformerClassName();
             if (contentTransformerClassName != null && contentTransformerClassName.equals(MQTTEventAdapterConstants.DEFAULT)) {
@@ -244,10 +240,10 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
 
             if (contentValidator != null && contentTransformer != null) {
                 ContentInfo contentInfo;
-                Map<String, String> dynamicProperties = new HashMap<>();
+                Map<String, Object> dynamicProperties = new HashMap<>();
                 dynamicProperties.put(MQTTEventAdapterConstants.TOPIC, topic);
                 msgText = (String) contentTransformer.transform(msgText, dynamicProperties);
-                contentInfo = contentValidator.validate(msgText,contentValidationParams, dynamicProperties);
+                contentInfo = contentValidator.validate(msgText, dynamicProperties);
                 if (contentInfo != null && contentInfo.isValidContent()) {
                     eventAdapterListener.onEvent(contentInfo.getMessage());
                 }

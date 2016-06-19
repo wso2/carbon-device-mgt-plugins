@@ -16,7 +16,7 @@
  *   under the License.
  *
  */
-package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config.exception;
+package org.wso2.carbon.device.mgt.iot.devicetype.config.exception;
 
 public class InvalidConfigurationStateException extends RuntimeException {
 

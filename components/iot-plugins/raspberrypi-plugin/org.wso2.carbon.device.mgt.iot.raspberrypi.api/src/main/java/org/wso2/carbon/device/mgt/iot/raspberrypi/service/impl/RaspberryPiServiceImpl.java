@@ -34,6 +34,9 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
@@ -60,6 +63,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.UUID;
 
 public class RaspberryPiServiceImpl implements RaspberryPiService {
@@ -83,15 +87,30 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
                 return Response.status(Response.Status.BAD_REQUEST.getStatusCode()).build();
             }
             String actualMessage = RaspberrypiConstants.BULB_CONTEXT + ":" + state;
-            Map<String, String> dynamicProperties = new HashMap<>();
             String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
                     + RaspberrypiConstants.DEVICE_TYPE + "/" + deviceId;
-            dynamicProperties.put(RaspberrypiConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
-            APIUtil.getOutputEventAdapterService().publish(RaspberrypiConstants.MQTT_ADAPTER_NAME,
-                                                           dynamicProperties, actualMessage);
+
+            Operation commandOp = new CommandOperation();
+            commandOp.setCode("bulb");
+            commandOp.setType(Operation.Type.COMMAND);
+            commandOp.setEnabled(true);
+            commandOp.setPayLoad(actualMessage);
+
+            Properties props = new Properties();
+            props.setProperty(RaspberrypiConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
+            commandOp.setProperties(props);
+
+            List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+            deviceIdentifiers.add(new DeviceIdentifier(deviceId, RaspberrypiConstants.DEVICE_TYPE));
+            APIUtil.getDeviceManagementService().addOperation(RaspberrypiConstants.DEVICE_TYPE, commandOp,
+                                                              deviceIdentifiers);
             return Response.ok().build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (OperationManagementException e) {
+            String msg = "Error occurred while executing command operation upon switch the bulb";
+            log.error(msg, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -191,6 +210,11 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
                    UserStoreException {
         //create new device id
         String deviceId = shortUUID();
+        boolean status = register(deviceId, deviceName);
+        if (!status) {
+            String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;
+            throw new DeviceManagementException(msg);
+        }
         if (apiApplicationKey == null) {
             String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
                     .getRealmConfiguration().getAdminUserName();
@@ -200,17 +224,12 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
                     RaspberrypiConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
-        String scopes = "device_type_" + RaspberrypiConstants.DEVICE_TYPE + " device_" + deviceId;
+        String scopes = "cdmf/" + RaspberrypiConstants.DEVICE_TYPE + "/" + deviceId;
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
                                                                    apiApplicationKey.getConsumerSecret(), owner, scopes);
         //create token
         String accessToken = accessTokenInfo.getAccessToken();
         String refreshToken = accessTokenInfo.getRefreshToken();
-        boolean status = register(deviceId, deviceName);
-        if (!status) {
-            String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;
-            throw new DeviceManagementException(msg);
-        }
         ZipUtil ziputil = new ZipUtil();
         return ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(), sketchType,
                                                    deviceId, deviceName, accessToken, refreshToken);

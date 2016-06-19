@@ -23,6 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.exception.ArduinoDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.iot.arduino.plugin.internal.ArduinoManagementDataHolder;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -94,15 +96,20 @@ public class ArduinoUtils {
      * Creates the device management schema.
      */
     public static void setupDeviceManagementSchema() throws ArduinoDeviceMgtPluginException {
+        DeviceManagementConfiguration deviceManagementConfiguration = ArduinoManagementDataHolder.getInstance()
+                .getDeviceTypeConfigService().getConfiguration(ArduinoConstants.DEVICE_TYPE,
+                                                               ArduinoConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
+        String datasource = deviceManagementConfiguration.getDeviceManagementConfigRepository().getDataSourceConfig()
+                .getJndiLookupDefinition().getJndiName();
         try {
             Context ctx = new InitialContext();
-            DataSource dataSource = (DataSource) ctx.lookup(ArduinoConstants.DATA_SOURCE_NAME);
+            DataSource dataSource = (DataSource) ctx.lookup(datasource);
             DeviceSchemaInitializer initializer = new DeviceSchemaInitializer(dataSource);
             log.info("Initializing device management repository database schema");
             initializer.createRegistryDatabase();
 
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + ArduinoConstants.DATA_SOURCE_NAME, e);
+            log.error("Error while looking up the data source: " + datasource, e);
         } catch (Exception e) {
             throw new ArduinoDeviceMgtPluginException("Error occurred while initializing Iot Device " +
                                                                    "Management database schema", e);

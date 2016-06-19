@@ -18,15 +18,14 @@
 
 package org.wso2.carbon.device.mgt.iot.androidsense.plugin.internal;
 
-import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
+import org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService;
 
 /**
  * DataHolder class of plugins component.
  */
 public class AndroidSenseManagementDataHolder {
 
-    private OutputEventAdapterService outputEventAdapterService;
-
+    private DeviceTypeConfigService deviceTypeConfigService;
 	private static AndroidSenseManagementDataHolder thisInstance = new AndroidSenseManagementDataHolder();
 
 	private AndroidSenseManagementDataHolder() {
@@ -36,13 +35,13 @@ public class AndroidSenseManagementDataHolder {
 		return thisInstance;
 	}
 
-    public OutputEventAdapterService getOutputEventAdapterService() {
-        return outputEventAdapterService;
+    public DeviceTypeConfigService getDeviceTypeConfigService() {
+        return deviceTypeConfigService;
     }
 
-    public void setOutputEventAdapterService(
-            OutputEventAdapterService outputEventAdapterService) {
-        this.outputEventAdapterService = outputEventAdapterService;
+    public void setDeviceTypeConfigService(
+            DeviceTypeConfigService deviceTypeConfigService) {
+        this.deviceTypeConfigService = deviceTypeConfigService;
     }
 
 }

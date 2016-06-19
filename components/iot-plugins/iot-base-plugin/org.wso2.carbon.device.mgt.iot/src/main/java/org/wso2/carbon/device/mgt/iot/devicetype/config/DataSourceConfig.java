@@ -15,26 +15,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config;
+package org.wso2.carbon.device.mgt.iot.devicetype.config;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Class for holding management repository data.
+ * Class for holding device type configuration and parsing with JAXB.
  */
-@XmlRootElement(name = "ManagementRepository")
-public class DeviceManagementConfigRepository {
+@XmlRootElement(name = "DataSourceConfiguration")
+public class DataSourceConfig {
 
-	private DataSourceConfig dataSourceConfig;
+	private JNDILookupDefinition jndiLookupDefinition;
 
-    @XmlElement(name = "DataSourceConfiguration", required = true)
-    public DataSourceConfig getDataSourceConfig() {
-        return dataSourceConfig;
-    }
+	@XmlElement(name = "JndiLookupDefinition", required = true)
+	public JNDILookupDefinition getJndiLookupDefinition() {
+		return jndiLookupDefinition;
+	}
 
-    public void setDataSourceConfig(DataSourceConfig dataSourceConfig) {
-        this.dataSourceConfig = dataSourceConfig;
-    }
+	public void setJndiLookupDefinition(JNDILookupDefinition jndiLookupDefinition) {
+		this.jndiLookupDefinition = jndiLookupDefinition;
+	}
 
 }

@@ -26,6 +26,7 @@ public class AuthenticationInfo {
 	private String username;
 	private String tenantDomain;
 	private int tenantId;
+	private String[] scopes;
 	/**
 	 * returns whether the client is authenticated
 	 */
@@ -65,5 +66,13 @@ public class AuthenticationInfo {
 
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public String[] getScopes() {
+		return scopes;
+	}
+
+	public void setScopes(String[] scopes) {
+		this.scopes = scopes;
 	}
 }

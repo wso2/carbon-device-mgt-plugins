@@ -86,6 +86,8 @@ public class AgentUtilOperations {
                     AgentConstants.DEVICE_OWNER_PROPERTY));
             iotServerConfigs.setDeviceId(properties.getProperty(
                     AgentConstants.DEVICE_ID_PROPERTY));
+            iotServerConfigs.setServerJID(properties.getProperty(
+                    AgentConstants.SERVER_JID_PROPERTY));
             iotServerConfigs.setDeviceName(properties.getProperty(
                     AgentConstants.DEVICE_NAME_PROPERTY));
             iotServerConfigs.setControllerContext(properties.getProperty(
@@ -182,6 +184,7 @@ public class AgentUtilOperations {
         iotServerConfigs.setDeviceOwner(AgentConstants.DEFAULT_SERVER_NAME);
         iotServerConfigs.setDeviceOwner(AgentConstants.DEFAULT_DEVICE_OWNER);
         iotServerConfigs.setDeviceId(AgentConstants.DEFAULT_DEVICE_ID);
+        iotServerConfigs.setServerJID(AgentConstants.DEFAULT_SERVER_JID);
         iotServerConfigs.setDeviceName(AgentConstants.DEFAULT_DEVICE_NAME);
         iotServerConfigs.setControllerContext(AgentConstants.DEVICE_CONTROLLER_API_EP);
         iotServerConfigs.setScepContext(AgentConstants.DEVICE_SCEP_API_EP);

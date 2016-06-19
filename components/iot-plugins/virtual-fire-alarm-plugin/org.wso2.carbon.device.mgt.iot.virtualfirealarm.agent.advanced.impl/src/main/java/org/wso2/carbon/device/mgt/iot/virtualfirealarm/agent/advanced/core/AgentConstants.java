@@ -70,6 +70,7 @@ public class AgentConstants {
 	public static final String TENANT_DOMAIN = "tenantDomain";
 	public static final String DEVICE_OWNER_PROPERTY = "owner";
 	public static final String DEVICE_ID_PROPERTY = "deviceId";
+	public static final String SERVER_JID_PROPERTY = "server-jid";
 	public static final String DEVICE_NAME_PROPERTY = "device-name";
 	public static final String DEVICE_CONTROLLER_CONTEXT_PROPERTY = "controller-context";
 	public static final String DEVICE_SCEP_CONTEXT_PROPERTY = "scep-context";
@@ -89,6 +90,7 @@ public class AgentConstants {
 	public static final String DEFAULT_SERVER_NAME = "WSO2IoTServer";
 	public static final String DEFAULT_DEVICE_OWNER = "admin";
 	public static final String DEFAULT_DEVICE_ID = "1234567890";
+	public static final String DEFAULT_SERVER_JID = "admin@localhost";
 	public static final String DEFAULT_DEVICE_NAME = "admin_1234567890";
 	public static final String DEFAULT_HTTPS_SERVER_EP = "https://localhost:9443";
 	public static final String DEFAULT_HTTP_SERVER_EP = "http://localhost:9763";
