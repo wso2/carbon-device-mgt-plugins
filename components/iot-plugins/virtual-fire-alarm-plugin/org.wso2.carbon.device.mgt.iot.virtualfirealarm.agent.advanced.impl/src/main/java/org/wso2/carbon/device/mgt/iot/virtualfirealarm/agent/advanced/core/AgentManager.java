@@ -204,7 +204,7 @@ public class AgentManager {
 
                 if (protocol.equals(AgentConstants.HTTP_PROTOCOL) && !protocol.equals(
                         prevProtocol)) {
-                    switchCommunicator(protocol, protocol);
+                    switchCommunicator(prevProtocol, protocol);
                 }
             }
         }

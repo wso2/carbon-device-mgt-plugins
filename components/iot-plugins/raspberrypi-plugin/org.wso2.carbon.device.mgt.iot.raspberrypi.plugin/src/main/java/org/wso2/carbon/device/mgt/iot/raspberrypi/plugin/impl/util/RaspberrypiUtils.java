@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.util.Utils;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.exception.RaspberrypiDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.internal.RaspberrypiManagementDataHolder;
@@ -84,96 +85,22 @@ public class RaspberrypiUtils {
      * Creates the device management schema.
      */
     public static void setupDeviceManagementSchema() throws RaspberrypiDeviceMgtPluginException {
+        DeviceManagementConfiguration deviceManagementConfiguration = RaspberrypiManagementDataHolder.getInstance()
+                .getDeviceTypeConfigService().getConfiguration(RaspberrypiConstants.DEVICE_TYPE,
+                                                               RaspberrypiConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
+        String datasource = deviceManagementConfiguration.getDeviceManagementConfigRepository().getDataSourceConfig()
+                .getJndiLookupDefinition().getJndiName();
         try {
             Context ctx = new InitialContext();
-            DataSource dataSource = (DataSource) ctx.lookup(RaspberrypiConstants.DATA_SOURCE_NAME);
+            DataSource dataSource = (DataSource) ctx.lookup(datasource);
             DeviceSchemaInitializer initializer = new DeviceSchemaInitializer(dataSource);
             log.info("Initializing device management repository database schema");
             initializer.createRegistryDatabase();
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + RaspberrypiConstants.DATA_SOURCE_NAME, e);
+            log.error("Error while looking up the data source: " + datasource, e);
         } catch (Exception e) {
             throw new RaspberrypiDeviceMgtPluginException("Error occurred while initializing Iot Device " +
                                                                      "Management database schema", e);
-        }
-    }
-
-    public static void setupMqttOutputAdapter() throws IOException {
-        OutputEventAdapterConfiguration outputEventAdapterConfiguration =
-                createMqttOutputEventAdapterConfiguration(RaspberrypiConstants.MQTT_ADAPTER_NAME,
-                                                          RaspberrypiConstants.MQTT_ADAPTER_TYPE, MessageType.TEXT);
-        try {
-            PrivilegedCarbonContext.startTenantFlow();
-            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
-                    RaspberrypiConstants.DEVICE_TYPE_PROVIDER_DOMAIN, true);
-            RaspberrypiManagementDataHolder.getInstance().getOutputEventAdapterService()
-                    .create(outputEventAdapterConfiguration);
-        } catch (OutputEventAdapterException e) {
-            log.error("Unable to create Output Event Adapter : " + RaspberrypiConstants.MQTT_ADAPTER_NAME, e);
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
-        }
-    }
-
-    /**
-     * Create Output Event Adapter Configuration for given configuration.
-     *
-     * @param name      Output Event Adapter name
-     * @param type      Output Event Adapter type
-     * @param msgFormat Output Event Adapter message format
-     * @return OutputEventAdapterConfiguration instance for given configuration
-     */
-    private static OutputEventAdapterConfiguration createMqttOutputEventAdapterConfiguration(String name, String type,
-                                                   String msgFormat) throws IOException {
-        OutputEventAdapterConfiguration outputEventAdapterConfiguration = new OutputEventAdapterConfiguration();
-        outputEventAdapterConfiguration.setName(name);
-        outputEventAdapterConfiguration.setType(type);
-        outputEventAdapterConfiguration.setMessageFormat(msgFormat);
-        File configFile = new File(RaspberrypiConstants.MQTT_CONFIG_LOCATION);
-        if (configFile.exists()) {
-            Map<String, String> mqttAdapterProperties = new HashMap<>();
-            InputStream propertyStream = configFile.toURI().toURL().openStream();
-            Properties properties = new Properties();
-            properties.load(propertyStream);
-            mqttAdapterProperties.put(RaspberrypiConstants.USERNAME_PROPERTY_KEY, properties.getProperty(
-                    RaspberrypiConstants.USERNAME_PROPERTY_KEY));
-            mqttAdapterProperties.put(RaspberrypiConstants.DCR_PROPERTY_KEY, Utils.replaceSystemProperty(
-                    properties.getProperty(RaspberrypiConstants.DCR_PROPERTY_KEY)));
-            mqttAdapterProperties.put(RaspberrypiConstants.BROKER_URL_PROPERTY_KEY, replaceMqttProperty(
-                    properties.getProperty(RaspberrypiConstants.BROKER_URL_PROPERTY_KEY)));
-            mqttAdapterProperties.put(RaspberrypiConstants.SCOPES_PROPERTY_KEY, properties.getProperty(
-                    RaspberrypiConstants.SCOPES_PROPERTY_KEY));
-            mqttAdapterProperties.put(RaspberrypiConstants.CLEAR_SESSION_PROPERTY_KEY, properties.getProperty(
-                    RaspberrypiConstants.CLEAR_SESSION_PROPERTY_KEY));
-            mqttAdapterProperties.put(RaspberrypiConstants.QOS_PROPERTY_KEY, properties.getProperty(
-                    RaspberrypiConstants.QOS_PROPERTY_KEY));
-            mqttAdapterProperties.put(RaspberrypiConstants.CLIENT_ID_PROPERTY_KEY, "");
-            outputEventAdapterConfiguration.setStaticProperties(mqttAdapterProperties);
-        }
-        return outputEventAdapterConfiguration;
-    }
-
-    public static String replaceMqttProperty(String urlWithPlaceholders) {
-        urlWithPlaceholders = Utils.replaceSystemProperty(urlWithPlaceholders);
-        urlWithPlaceholders = urlWithPlaceholders.replaceAll(RaspberrypiConstants.MQTT_PORT, "" +
-                (RaspberrypiConstants.DEFAULT_MQTT_PORT + getPortOffset()));
-        urlWithPlaceholders = urlWithPlaceholders.replaceAll(RaspberrypiConstants.MQTT_BROKER_HOST,
-                       System.getProperty(RaspberrypiConstants.DEFAULT_CARBON_LOCAL_IP_PROPERTY, "localhost"));
-        return urlWithPlaceholders;
-    }
-
-    private static int getPortOffset() {
-        ServerConfiguration carbonConfig = ServerConfiguration.getInstance();
-        String portOffset = System.getProperty("portOffset", carbonConfig.getFirstProperty(
-                RaspberrypiConstants.CARBON_CONFIG_PORT_OFFSET));
-        try {
-            if ((portOffset != null)) {
-                return Integer.parseInt(portOffset.trim());
-            } else {
-                return RaspberrypiConstants.CARBON_DEFAULT_PORT_OFFSET;
-            }
-        } catch (NumberFormatException e) {
-            return RaspberrypiConstants.CARBON_DEFAULT_PORT_OFFSET;
         }
     }
 

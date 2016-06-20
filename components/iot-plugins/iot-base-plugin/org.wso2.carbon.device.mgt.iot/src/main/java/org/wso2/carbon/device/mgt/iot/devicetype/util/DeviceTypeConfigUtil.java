@@ -16,28 +16,34 @@
  *   under the License.
  *
  */
-package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.util;
+package org.wso2.carbon.device.mgt.iot.devicetype.util;
 
 import org.w3c.dom.Document;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config.exception.VirtualFireAlarmConfigurationException;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.exception.DeviceTypeConfigurationException;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
-public class VirtualFireAlarmUtil {
+public class DeviceTypeConfigUtil {
 
-    public static Document convertToDocument(File file) throws VirtualFireAlarmConfigurationException {
+    public static Document convertToDocument(File file) throws DeviceTypeConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         try {
             DocumentBuilder docBuilder = factory.newDocumentBuilder();
             return docBuilder.parse(file);
         } catch (Exception e) {
-            throw new VirtualFireAlarmConfigurationException("Error occurred while parsing file, while converting " +
+            throw new DeviceTypeConfigurationException("Error occurred while parsing file, while converting " +
                     "to a org.w3c.dom.Document", e);
         }
     }
+
+
 
 
 }

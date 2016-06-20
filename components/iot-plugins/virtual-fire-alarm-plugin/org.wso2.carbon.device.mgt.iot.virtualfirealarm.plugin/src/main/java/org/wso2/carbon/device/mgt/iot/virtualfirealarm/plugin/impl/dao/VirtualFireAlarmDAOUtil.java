@@ -20,8 +20,10 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.VirtualFirealarmManagementDataHolder;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -41,11 +43,16 @@ public class VirtualFireAlarmDAOUtil {
     }
 
     public static void initFireAlarmDAO() {
+        DeviceManagementConfiguration deviceManagementConfiguration = VirtualFirealarmManagementDataHolder.getInstance()
+                .getDeviceTypeConfigService().getConfiguration(VirtualFireAlarmConstants.DEVICE_TYPE,
+                                                               VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
+        String datasourceName = deviceManagementConfiguration.getDeviceManagementConfigRepository()
+                .getDataSourceConfig().getJndiLookupDefinition().getJndiName();
         try {
             Context ctx = new InitialContext();
-            dataSource = (DataSource) ctx.lookup(VirtualFireAlarmConstants.DATA_SOURCE_NAME);
+            dataSource = (DataSource) ctx.lookup(datasourceName);
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + VirtualFireAlarmConstants.DATA_SOURCE_NAME, e);
+            log.error("Error while looking up the data source: " + datasourceName, e);
         }
     }
 

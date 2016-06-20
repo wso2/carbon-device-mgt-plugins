@@ -21,19 +21,11 @@ package org.wso2.carbon.device.mgt.iot.arduino.plugin.constants;
 public class ArduinoConstants {
     public final static String DEVICE_TYPE = "arduino";
     public final static String DEVICE_PLUGIN_DEVICE_NAME = "DEVICE_NAME";
+    public final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
     public final static String DEVICE_PLUGIN_DEVICE_ID = "ARDUINO_DEVICE_ID";
-    public final static String STATE_ON = "ON";
-    public final static String STATE_OFF = "OFF";
 
     public static final String URL_PREFIX = "http://";
-    public static final String BULB_CONTEXT = "/BULB/";
-    public static final String SONAR_CONTEXT = "/HUMIDITY/";
-    public static final String TEMPERATURE_CONTEXT = "/TEMPERATURE/";
-
-    //type of the sensor
-    public static final String SENSOR_TEMPERATURE = "temperature";
     //sensor events summerized table name
     public static final String TEMPERATURE_EVENT_TABLE = "DEVICE_TEMPERATURE_SUMMARY";
-    public static final String DATA_SOURCE_NAME = "jdbc/ArduinoDM_DB";
 
 }

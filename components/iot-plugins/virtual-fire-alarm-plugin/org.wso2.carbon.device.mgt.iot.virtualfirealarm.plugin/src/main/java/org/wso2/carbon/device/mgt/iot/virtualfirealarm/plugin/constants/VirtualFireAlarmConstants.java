@@ -35,7 +35,6 @@ public class VirtualFireAlarmConstants {
 
     //sensor events sumerized table name for temperature
     public static final String TEMPERATURE_EVENT_TABLE = "DEVICE_TEMPERATURE_SUMMARY";
-    public static final String DATA_SOURCE_NAME = "jdbc/VirtualFireAlarmDM_DB";
     public final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
 
     //mqtt tranport related constants
@@ -54,8 +53,9 @@ public class VirtualFireAlarmConstants {
     public static final String XMPP_ADAPTER_TYPE = "xmpp";
     public static final String PASSWORD_PROPERTY_KEY = "password";
     public static final String JID_PROPERTY_KEY = "jid";
-    public static final String SUBJECT_PROPERTY_KEY = "subject";
-    public static final String MESSAGE_TYPE_PROPERTY_KEY = "messageType";
+    public static final String CLIENT_JID_PROPERTY_KEY = "xmpp.client.jid";
+    public static final String SUBJECT_PROPERTY_KEY = "xmpp.client.subject";
+    public static final String MESSAGE_TYPE_PROPERTY_KEY = "xmpp.client.messageType";
     public static final String CHAT_PROPERTY_KEY = "chat";
 
     public static final String USERNAME_PROPERTY_KEY = "username";
@@ -77,19 +77,10 @@ public class VirtualFireAlarmConstants {
     public static final String JSON_MESSAGE_KEY = "Msg";
     public static final String JSON_SIGNATURE_KEY = "Sig";
 
-    public static final String IS_ENABLED_KEY = "enabled";
     public static final String HOST_KEY = "host";
     public static final String PORT_KEY = "port";
-    public static final String ADMIN_USERNAME = "admin.username";
-    public static final String ADMIN_PASSWORD = "admin.password";
-    public static final String XMPP_SERVER_PASSWORD = "admin@123456789";
 
     public static final String SERVER_NAME = "serverName";
-
-    public static final String MQTT_CONFIG_LOCATION = CarbonUtils.getEtcCarbonConfigDirPath() + File.separator
-            + "mqtt.properties";
-    public static final String XMPP_CONFIG_LOCATION = CarbonUtils.getEtcCarbonConfigDirPath() + File.separator
-            + "xmpp.properties";
 
     public static final String MQTT_ADAPTER_TOPIC_PROPERTY_NAME = "mqtt.adapter.topic";
 }

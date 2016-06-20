@@ -24,8 +24,9 @@ import org.wso2.carbon.device.mgt.common.ProvisioningConfig;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
 import org.wso2.carbon.device.mgt.common.push.notification.PushNotificationConfig;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config.VirtualFireAlarmConfig;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.VirtualFirealarmManagementDataHolder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,14 +48,17 @@ public class VirtualFireAlarmManagerService implements DeviceManagementService {
     }
 
     private PushNotificationConfig populatePushNotificationConfig() {
-        org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config.PushNotificationConfig sourceConfig =
-                VirtualFireAlarmConfig.getInstance().getPushNotificationConfig();
+        DeviceManagementConfiguration deviceManagementConfiguration = VirtualFirealarmManagementDataHolder.getInstance()
+                .getDeviceTypeConfigService().getConfiguration(VirtualFireAlarmConstants.DEVICE_TYPE,
+                                                               VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
+        org.wso2.carbon.device.mgt.iot.devicetype.config.PushNotificationConfig sourceConfig =
+                deviceManagementConfiguration.getPushNotificationConfig();
         Map<String, String> staticProps = new HashMap<>();
-        for (org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config.PushNotificationConfig.Property
+        for (org.wso2.carbon.device.mgt.iot.devicetype.config.PushNotificationConfig.Property
                 property : sourceConfig.getProperties()) {
             staticProps.put(property.getName(), property.getValue());
         }
-        return new PushNotificationConfig("MQTT", staticProps);
+        return new PushNotificationConfig(sourceConfig.getPushNotificationProvider(), staticProps);
     }
 
     @Override
@@ -69,7 +73,12 @@ public class VirtualFireAlarmManagerService implements DeviceManagementService {
 
     @Override
     public ProvisioningConfig getProvisioningConfig() {
-        return new ProvisioningConfig(VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN, false);
+        DeviceManagementConfiguration deviceManagementConfiguration = VirtualFirealarmManagementDataHolder.getInstance()
+                .getDeviceTypeConfigService().getConfiguration(VirtualFireAlarmConstants.DEVICE_TYPE,
+                                                               VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
+        boolean sharedWithAllTenants = deviceManagementConfiguration.getDeviceManagementConfigRepository()
+                .getProvisioningConfig().isSharedWithAllTenants();
+        return new ProvisioningConfig(VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN, sharedWithAllTenants);
     }
 
     @Override

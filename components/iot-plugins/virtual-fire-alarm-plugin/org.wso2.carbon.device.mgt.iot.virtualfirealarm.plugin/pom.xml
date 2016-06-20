@@ -71,10 +71,6 @@
 							org.wso2.carbon.device.mgt.iot.*,
 							org.wso2.carbon.device.mgt.extensions.feature.mgt.*,
 							org.wso2.carbon.utils.*,
-							org.wso2.carbon.event.output.adapter.core,
-							org.wso2.carbon.event.output.adapter.core.exception,
-							org.wso2.carbon.base,
-							org.wso2.carbon.core.util,
 							org.wso2.carbon.context,
 							org.wso2.carbon.core,
 							javax.crypto,
@@ -88,10 +84,7 @@
 							org.wso2.carbon.event.input.adapter.core,
 							org.wso2.carbon.event.input.adapter.core.exception,
 							org.jivesoftware.smack.*,
-                            javax.xml.bind,
-                            javax.xml.bind.annotation,
-                            javax.xml.parsers,
-                            org.w3c.dom,
+							org.wso2.carbon.device.mgt.iot.devicetype.*
 						</Import-Package>
 						<Export-Package>
 							!org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal,
@@ -142,10 +135,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.wso2.carbon.analytics-common</groupId>
-			<artifactId>org.wso2.carbon.event.output.adapter.core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.analytics-common</groupId>
 			<artifactId>org.wso2.carbon.event.input.adapter.core</artifactId>
 		</dependency>
 		<dependency>
@@ -171,6 +160,10 @@
 		<dependency>
 			<groupId>org.igniterealtime.smack.wso2</groupId>
 			<artifactId>smackx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.iot</artifactId>
 		</dependency>
 	</dependencies>
 </project>

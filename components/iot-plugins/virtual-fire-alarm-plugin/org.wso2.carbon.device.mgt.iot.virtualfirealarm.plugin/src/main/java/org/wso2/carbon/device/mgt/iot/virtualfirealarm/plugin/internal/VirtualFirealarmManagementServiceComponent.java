@@ -27,25 +27,18 @@ import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService
 import org.wso2.carbon.core.ServerStartupObserver;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
+import org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.VirtualFireAlarmManagerService;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFireAlarmUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFirealarmSecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFirealarmStartupListener;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config.VirtualFireAlarmConfig;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterService;
-import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal
  * .VirtualFirealarmManagementServiceComponent"
  * immediate="true"
- * @scr.reference name="event.output.adapter.service"
- * interface="org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService"
- * cardinality="1..1"
- * policy="dynamic"
- * bind="setOutputEventAdapterService"
- * unbind="unsetOutputEventAdapterService"
  * @scr.reference name="event.input.adapter.service"
  * interface="org.wso2.carbon.event.input.adapter.core.InputEventAdapterService"
  * cardinality="1..1"
@@ -64,6 +57,12 @@ import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
  * policy="dynamic"
  * bind="setEventsPublisherService"
  * unbind="unsetEventsPublisherService"
+ * @scr.reference name="devicetype.configuration.service"
+ * interface="org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setDeviceTypeConfigService"
+ * unbind="unsetDeviceTypeConfigService"
  */
 public class VirtualFirealarmManagementServiceComponent {
 
@@ -75,8 +74,6 @@ public class VirtualFirealarmManagementServiceComponent {
             log.debug("Activating Virtual Firealarm Device Management Service Component");
         }
         try {
-            /* Initializing Virtual Fire Alarm Configuration */
-            VirtualFireAlarmConfig.init();
 
             VirtualFireAlarmManagerService virtualFireAlarmManagerService = new VirtualFireAlarmManagerService();
             BundleContext bundleContext = ctx.getBundleContext();
@@ -122,22 +119,6 @@ public class VirtualFirealarmManagementServiceComponent {
     }
 
     /**
-     * Initialize the Output EventAdapter Service dependency
-     *
-     * @param outputEventAdapterService Output EventAdapter Service reference
-     */
-    protected void setOutputEventAdapterService(OutputEventAdapterService outputEventAdapterService) {
-        VirtualFirealarmManagementDataHolder.getInstance().setOutputEventAdapterService(outputEventAdapterService);
-    }
-
-    /**
-     * De-reference the Output EventAdapter Service dependency.
-     */
-    protected void unsetOutputEventAdapterService(OutputEventAdapterService outputEventAdapterService) {
-        VirtualFirealarmManagementDataHolder.getInstance().setOutputEventAdapterService(null);
-    }
-
-    /**
      * Initialize the Input EventAdapter Service dependency
      *
      * @param inputEventAdapterService Input EventAdapter Service reference
@@ -167,5 +148,13 @@ public class VirtualFirealarmManagementServiceComponent {
 
     protected void unsetEventsPublisherService(EventsPublisherService eventsPublisherService) {
         VirtualFirealarmManagementDataHolder.getInstance().setEventsPublisherService(null);
+    }
+
+    protected void setDeviceTypeConfigService(DeviceTypeConfigService deviceTypeConfigService) {
+        VirtualFirealarmManagementDataHolder.getInstance().setDeviceTypeConfigService(deviceTypeConfigService);
+    }
+
+    protected void unsetDeviceTypeConfigService(DeviceTypeConfigService deviceTypeConfigService) {
+        VirtualFirealarmManagementDataHolder.getInstance().setDeviceTypeConfigService(null);
     }
 }

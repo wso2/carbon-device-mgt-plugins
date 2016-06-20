@@ -20,19 +20,18 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal;
 
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.VirtualFireAlarmManagerService;
+import org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterService;
-import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 
 /**
  * DataHolder class of virtual firealarm plugins component.
  */
 public class VirtualFirealarmManagementDataHolder {
 
-    private OutputEventAdapterService outputEventAdapterService;
     private InputEventAdapterService inputEventAdapterService;
     private EventsPublisherService eventsPublisherService;
     private CertificateManagementService certificateManagementService;
+    private DeviceTypeConfigService deviceTypeConfigService;
 
 	private static VirtualFirealarmManagementDataHolder thisInstance = new VirtualFirealarmManagementDataHolder();
 
@@ -42,15 +41,6 @@ public class VirtualFirealarmManagementDataHolder {
 	public static VirtualFirealarmManagementDataHolder getInstance() {
 		return thisInstance;
 	}
-
-    public OutputEventAdapterService getOutputEventAdapterService() {
-        return outputEventAdapterService;
-    }
-
-    public void setOutputEventAdapterService(
-            OutputEventAdapterService outputEventAdapterService) {
-        this.outputEventAdapterService = outputEventAdapterService;
-    }
 
     public InputEventAdapterService getInputEventAdapterService() {
         return inputEventAdapterService;
@@ -75,5 +65,14 @@ public class VirtualFirealarmManagementDataHolder {
 
     public void setCertificateManagementService(CertificateManagementService certificateManagementService) {
         this.certificateManagementService = certificateManagementService;
+    }
+
+    public DeviceTypeConfigService getDeviceTypeConfigService() {
+        return deviceTypeConfigService;
+    }
+
+    public void setDeviceTypeConfigService(
+            DeviceTypeConfigService deviceTypeConfigService) {
+        this.deviceTypeConfigService = deviceTypeConfigService;
     }
 }

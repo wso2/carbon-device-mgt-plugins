@@ -22,6 +22,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.exception.ArduinoDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.iot.arduino.plugin.internal.ArduinoManagementDataHolder;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -41,11 +43,16 @@ public class ArduinoDAOUtil {
     }
 
     public static void initArduinoDAO() {
+        DeviceManagementConfiguration deviceManagementConfiguration = ArduinoManagementDataHolder.getInstance()
+                .getDeviceTypeConfigService().getConfiguration(ArduinoConstants.DEVICE_TYPE,
+                                                               ArduinoConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
+        String datasource = deviceManagementConfiguration.getDeviceManagementConfigRepository().getDataSourceConfig()
+                .getJndiLookupDefinition().getJndiName();
         try {
             Context ctx = new InitialContext();
-            dataSource = (DataSource) ctx.lookup(ArduinoConstants.DATA_SOURCE_NAME);
+            dataSource = (DataSource) ctx.lookup(datasource);
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + ArduinoConstants.DATA_SOURCE_NAME, e);
+            log.error("Error while looking up the data source: " + datasource, e);
         }
     }
 

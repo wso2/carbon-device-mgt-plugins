@@ -16,14 +16,19 @@
  *   under the License.
  *
  */
-package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config;
+package org.wso2.carbon.device.mgt.iot.devicetype.config;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 import java.util.List;
 
 @XmlRootElement(name = "PushNotificationConfiguration")
 public class PushNotificationConfig {
 
+    private String pushNotificationProvider;
     private List<Property> properties;
 
     @XmlElementWrapper(name = "Properties", required = true)
@@ -34,6 +39,15 @@ public class PushNotificationConfig {
 
     public void setProperties(List<Property> properties) {
         this.properties = properties;
+    }
+
+    @XmlElement(name = "PushNotificationProvider", required = true)
+    public String getPushNotificationProvider() {
+        return pushNotificationProvider;
+    }
+
+    public void setPushNotificationProvider(String pushNotificationProvider) {
+        this.pushNotificationProvider = pushNotificationProvider;
     }
 
     @XmlRootElement(name = "Property")

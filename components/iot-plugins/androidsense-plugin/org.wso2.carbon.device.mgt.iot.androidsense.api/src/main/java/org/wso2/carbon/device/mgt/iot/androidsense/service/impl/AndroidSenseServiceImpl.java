@@ -30,7 +30,9 @@ import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
-import org.wso2.carbon.device.mgt.iot.androidsense.plugin.mqtt.MqttConfig;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.AndroidConfiguration;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.Constants;
@@ -52,6 +54,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * The api for
@@ -59,6 +62,7 @@ import java.util.Map;
 public class AndroidSenseServiceImpl implements AndroidSenseService {
 
     private static Log log = LogFactory.getLog(AndroidSenseServiceImpl.class);
+    private static String DEFAULT_MQTT_ENDPOINT = "tcp://localhost:1883";
 
     @Path("device/{deviceId}/words")
     @POST
@@ -68,16 +72,31 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
                       AndroidSenseConstants.DEVICE_TYPE))) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
-            Map<String, String> dynamicProperties = new HashMap<>();
             String publishTopic = APIUtil.getAuthenticatedUserTenantDomain()
                     + "/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command/words";
-            dynamicProperties.put(AndroidSenseConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
-            APIUtil.getOutputEventAdapterService().publish(AndroidSenseConstants.MQTT_ADAPTER_NAME,
-                                                           dynamicProperties, keywords);
+
+            Operation commandOp = new CommandOperation();
+            commandOp.setCode("keywords");
+            commandOp.setType(Operation.Type.COMMAND);
+            commandOp.setEnabled(true);
+            commandOp.setPayLoad(keywords);
+
+            Properties props = new Properties();
+            props.setProperty(AndroidSenseConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
+            commandOp.setProperties(props);
+
+            List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+            deviceIdentifiers.add(new DeviceIdentifier(deviceId, AndroidSenseConstants.DEVICE_TYPE));
+            APIUtil.getDeviceManagementService().addOperation(AndroidSenseConstants.DEVICE_TYPE, commandOp,
+                                                              deviceIdentifiers);
             return Response.ok().build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        } catch (OperationManagementException e) {
+            String msg = "Error occurred while executing command operation to send keywords";
+            log.error(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -89,15 +108,30 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
                     AndroidSenseConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
-            Map<String, String> dynamicProperties = new HashMap<>();
             String publishTopic = APIUtil.getAuthenticatedUserTenantDomain()
                     + "/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command/threshold";
-            dynamicProperties.put(AndroidSenseConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
-            APIUtil.getOutputEventAdapterService().publish(AndroidSenseConstants.MQTT_ADAPTER_NAME,
-                                                           dynamicProperties, threshold);
+
+            Operation commandOp = new CommandOperation();
+            commandOp.setCode("threshold");
+            commandOp.setType(Operation.Type.COMMAND);
+            commandOp.setEnabled(true);
+            commandOp.setPayLoad(threshold);
+
+            Properties props = new Properties();
+            props.setProperty(AndroidSenseConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
+            commandOp.setProperties(props);
+
+            List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+            deviceIdentifiers.add(new DeviceIdentifier(deviceId, AndroidSenseConstants.DEVICE_TYPE));
+            APIUtil.getDeviceManagementService().addOperation(AndroidSenseConstants.DEVICE_TYPE, commandOp,
+                                                              deviceIdentifiers);
             return Response.ok().build();
         } catch (DeviceAccessAuthorizationException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        } catch (OperationManagementException e) {
+            String msg = "Error occurred while executing command operation to set threashold";
+            log.error(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -109,16 +143,31 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
                 AndroidSenseConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
-            Map<String, String> dynamicProperties = new HashMap<>();
             String publishTopic = APIUtil.getAuthenticatedUserTenantDomain()
                     + "/" + AndroidSenseConstants.DEVICE_TYPE + "/" + deviceId + "/command/remove";
-            dynamicProperties.put(AndroidSenseConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
-            APIUtil.getOutputEventAdapterService().publish(AndroidSenseConstants.MQTT_ADAPTER_NAME,
-                                                           dynamicProperties, words);
+
+            Operation commandOp = new CommandOperation();
+            commandOp.setCode("remove");
+            commandOp.setType(Operation.Type.COMMAND);
+            commandOp.setEnabled(true);
+            commandOp.setPayLoad(words);
+
+            Properties props = new Properties();
+            props.setProperty(AndroidSenseConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
+            commandOp.setProperties(props);
+
+            List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+            deviceIdentifiers.add(new DeviceIdentifier(deviceId, AndroidSenseConstants.DEVICE_TYPE));
+            APIUtil.getDeviceManagementService().addOperation(AndroidSenseConstants.DEVICE_TYPE, commandOp,
+                                                              deviceIdentifiers);
             return Response.ok().build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+        } catch (OperationManagementException e) {
+            String msg = "Error occurred while executing command operation to remove words";
+            log.error(msg, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -236,7 +285,7 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
             if (added) {
                 AndroidConfiguration androidConfiguration = new AndroidConfiguration();
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
-                String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
+                String mqttEndpoint = DEFAULT_MQTT_ENDPOINT;
                 if (mqttEndpoint.contains(Constants.LOCALHOST)) {
                     mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, Utils.getServerUrl());
                 }

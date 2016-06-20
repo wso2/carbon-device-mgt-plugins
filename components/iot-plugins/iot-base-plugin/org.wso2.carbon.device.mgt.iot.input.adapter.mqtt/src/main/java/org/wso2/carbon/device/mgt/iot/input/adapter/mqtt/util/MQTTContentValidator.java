@@ -34,17 +34,11 @@ public class MQTTContentValidator implements ContentValidator {
     private static final Log log = LogFactory.getLog(MQTTContentValidator.class);
 
     @Override
-    public ContentInfo validate(Object msgPayload, Map<String, String> contentValidationParams,
-                                Map<String, String> dynamicParams) {
-        String topic = dynamicParams.get(MQTTEventAdapterConstants.TOPIC);
+    public ContentInfo validate(Object msgPayload, Map<String, Object> dynamicParams) {
+        String topic = (String) dynamicParams.get(MQTTEventAdapterConstants.TOPIC);
         String topics[] = topic.split("/");
-        String deviceIdJsonPath = contentValidationParams.get(MQTTEventAdapterConstants.DEVICE_ID_JSON_PATH);
-        String deviceIdInTopicHierarchyLevel = contentValidationParams.get(
-                MQTTEventAdapterConstants.DEVICE_ID_TOPIC_HIERARCHY_INDEX);
-        int deviceIdInTopicHierarchyLevelIndex = 0;
-        if (deviceIdInTopicHierarchyLevel != null && !deviceIdInTopicHierarchyLevel.isEmpty()) {
-            deviceIdInTopicHierarchyLevelIndex = Integer.parseInt(deviceIdInTopicHierarchyLevel);
-        }
+        String deviceIdJsonPath = MQTTEventAdapterConstants.DEVICE_ID_JSON_PATH;
+        int deviceIdInTopicHierarchyLevelIndex = MQTTEventAdapterConstants.DEVICE_ID_TOPIC_HIERARCHY_INDEX;
         String deviceIdFromTopic = topics[deviceIdInTopicHierarchyLevelIndex];
         boolean status;
         String message = (String) msgPayload;

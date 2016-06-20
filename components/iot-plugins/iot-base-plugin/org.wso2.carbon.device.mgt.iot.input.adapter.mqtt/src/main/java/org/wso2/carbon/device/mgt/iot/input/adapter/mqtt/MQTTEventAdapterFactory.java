@@ -80,16 +80,6 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
         contentValidator.setDefaultValue(MQTTEventAdapterConstants.DEFAULT);
         propertyList.add(contentValidator);
 
-        //Content Validator Params details
-        Property contentValidatorParams = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS);
-        contentValidatorParams.setDisplayName(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS));
-        contentValidatorParams.setRequired(false);
-        contentValidatorParams.setHint(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS_HINT));
-        contentValidatorParams.setDefaultValue(MQTTEventAdapterConstants.MQTT_CONTENT_VALIDATION_DEFAULT_PARAMETERS);
-        propertyList.add(contentValidatorParams);
-
         //Broker Username
         Property userName = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME);
         userName.setDisplayName(

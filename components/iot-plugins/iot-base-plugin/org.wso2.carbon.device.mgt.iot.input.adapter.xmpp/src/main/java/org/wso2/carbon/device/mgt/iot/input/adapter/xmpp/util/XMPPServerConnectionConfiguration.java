@@ -32,7 +32,6 @@ public class XMPPServerConnectionConfiguration {
     private String resource;
     private String jid;
     private String contentValidatorClassName;
-    private Map<String, String> contentValidatorParams;
     private String contentTransformerClassName;
 
     public String getHost() {
@@ -63,10 +62,6 @@ public class XMPPServerConnectionConfiguration {
         return contentValidatorClassName;
     }
 
-    public Map<String, String> getContentValidatorParams() {
-        return contentValidatorParams;
-    }
-
     public String getJid() {
         return jid;
     }
@@ -76,8 +71,7 @@ public class XMPPServerConnectionConfiguration {
     }
 
     public XMPPServerConnectionConfiguration(String host, int port, String username, String password,
-                                             int timeoutInterval, String resource, String contentValidatorClassName,
-                                             Map<String, String> contentValidatorParams, String jid,
+                                             int timeoutInterval, String resource, String contentValidatorClassName, String jid,
                                              String contentTransformerClassName) {
         this.host = host;
         this.port = port;
@@ -86,9 +80,6 @@ public class XMPPServerConnectionConfiguration {
         this.timeoutInterval = timeoutInterval;
         this.resource = resource;
         this.contentValidatorClassName = contentValidatorClassName;
-        if (contentValidatorParams != null) {
-            this.contentValidatorParams = contentValidatorParams;
-        }
         this.contentTransformerClassName = contentTransformerClassName;
         this.jid = jid;
     }

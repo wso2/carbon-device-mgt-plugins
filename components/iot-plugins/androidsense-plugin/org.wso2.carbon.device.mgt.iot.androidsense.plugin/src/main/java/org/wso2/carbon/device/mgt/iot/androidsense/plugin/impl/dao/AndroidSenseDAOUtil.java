@@ -20,6 +20,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.exception.AndroidSenseDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
+import org.wso2.carbon.device.mgt.iot.androidsense.plugin.internal.AndroidSenseManagementDataHolder;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -39,11 +41,16 @@ public class AndroidSenseDAOUtil {
     }
 
     public static void initAndroidDAO() {
+        DeviceManagementConfiguration deviceManagementConfiguration = AndroidSenseManagementDataHolder.getInstance()
+                .getDeviceTypeConfigService().getConfiguration(AndroidSenseConstants.DEVICE_TYPE,
+                                                               AndroidSenseConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
+        String datasource = deviceManagementConfiguration.getDeviceManagementConfigRepository().getDataSourceConfig()
+                .getJndiLookupDefinition().getJndiName();
         try {
             Context ctx = new InitialContext();
-            dataSource = (DataSource) ctx.lookup(AndroidSenseConstants.DATA_SOURCE_NAME);
+            dataSource = (DataSource) ctx.lookup(datasource);
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + AndroidSenseConstants.DATA_SOURCE_NAME, e);
+            log.error("Error while looking up the data source: " + datasource, e);
         }
     }
 

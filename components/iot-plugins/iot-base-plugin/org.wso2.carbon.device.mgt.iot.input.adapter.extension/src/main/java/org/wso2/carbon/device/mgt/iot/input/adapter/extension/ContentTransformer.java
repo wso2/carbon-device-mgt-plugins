@@ -13,5 +13,5 @@ public interface ContentTransformer {
      * @param dynamicProperties related to transport.
      * @return transformed message
      */
-    Object transform(Object message, Map<String, String> dynamicProperties);
+    Object transform(Object message, Map<String, Object> dynamicProperties);
 }

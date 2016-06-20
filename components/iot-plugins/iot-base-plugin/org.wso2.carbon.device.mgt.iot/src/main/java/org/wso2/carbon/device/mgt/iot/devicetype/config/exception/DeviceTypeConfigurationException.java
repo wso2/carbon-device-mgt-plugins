@@ -16,37 +16,37 @@
  *   under the License.
  *
  */
-package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config.exception;
+package org.wso2.carbon.device.mgt.iot.devicetype.config.exception;
 
-public class VirtualFireAlarmConfigurationException extends Exception {
+public class DeviceTypeConfigurationException extends Exception {
 
     private static final long serialVersionUID = -3151279431229070297L;
 
-    public VirtualFireAlarmConfigurationException(int errorCode, String message) {
+    public DeviceTypeConfigurationException(int errorCode, String message) {
         super(message);
     }
 
-    public VirtualFireAlarmConfigurationException(int errorCode, String message, Throwable cause) {
+    public DeviceTypeConfigurationException(int errorCode, String message, Throwable cause) {
         super(message, cause);
     }
 
-    public VirtualFireAlarmConfigurationException(String msg, Exception nestedEx) {
+    public DeviceTypeConfigurationException(String msg, Exception nestedEx) {
         super(msg, nestedEx);
     }
 
-    public VirtualFireAlarmConfigurationException(String message, Throwable cause) {
+    public DeviceTypeConfigurationException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public VirtualFireAlarmConfigurationException(String msg) {
+    public DeviceTypeConfigurationException(String msg) {
         super(msg);
     }
 
-    public VirtualFireAlarmConfigurationException() {
+    public DeviceTypeConfigurationException() {
         super();
     }
 
-    public VirtualFireAlarmConfigurationException(Throwable cause) {
+    public DeviceTypeConfigurationException(Throwable cause) {
         super(cause);
     }
 

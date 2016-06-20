@@ -31,7 +31,6 @@ public class MQTTBrokerConnectionConfiguration {
     private String brokerUrl;
     private String dcrUrl;
     private String contentValidatorClassName;
-    private Map<String, String> contentValidatorParams;
     private String contentTransformerClassName;
 
     public String getBrokerScopes() {
@@ -62,18 +61,13 @@ public class MQTTBrokerConnectionConfiguration {
         return contentValidatorClassName;
     }
 
-    public Map<String, String> getContentValidatorParams() {
-        return contentValidatorParams;
-    }
-
     public String getContentTransformerClassName() {
         return contentTransformerClassName;
     }
 
     public MQTTBrokerConnectionConfiguration(String brokerUrl, String brokerUsername, String brokerScopes,
                                              String dcrUrl, String cleanSession, int keepAlive,
-                                             String contentValidatorClassName, Map<String, String> contentValidatorParams,
-                                             String contentTransformerClassName) {
+                                             String contentValidatorClassName, String contentTransformerClassName) {
         this.brokerUsername = brokerUsername;
         this.brokerScopes = brokerScopes;
         if (brokerScopes == null) {
@@ -86,9 +80,6 @@ public class MQTTBrokerConnectionConfiguration {
             this.cleanSession = Boolean.parseBoolean(cleanSession);
         }
         this.keepAlive = keepAlive;
-        if (contentValidatorParams != null) {
-            this.contentValidatorParams = contentValidatorParams;
-        }
         this.contentTransformerClassName = contentTransformerClassName;
     }
 }

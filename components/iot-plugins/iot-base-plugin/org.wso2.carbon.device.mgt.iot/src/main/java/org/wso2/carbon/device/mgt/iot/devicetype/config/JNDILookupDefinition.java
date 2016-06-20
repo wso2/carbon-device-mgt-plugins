@@ -16,13 +16,17 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.config;
+package org.wso2.carbon.device.mgt.iot.devicetype.config;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 import java.util.List;
 
 /**
- * Class for hold JndiLookupDefinition of rss-manager.xml at parsing with JAXB.
+ * Class for hold JndiLookupDefinition parsing with JAXB.
  */
 @XmlRootElement(name = "JndiLookupDefinition")
 public class JNDILookupDefinition {

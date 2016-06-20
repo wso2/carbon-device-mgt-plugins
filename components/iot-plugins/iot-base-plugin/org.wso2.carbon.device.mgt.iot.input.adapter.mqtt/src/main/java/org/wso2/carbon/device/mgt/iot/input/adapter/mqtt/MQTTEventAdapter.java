@@ -62,18 +62,6 @@ public class MQTTEventAdapter implements InputEventAdapter {
             } else {
                 keepAlive = MQTTEventAdapterConstants.ADAPTER_CONF_DEFAULT_KEEP_ALIVE;
             }
-            String contentValidationParams = eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS);
-            Map<String, String> paramsMap = new HashMap<>();
-            if (contentValidationParams != null && !contentValidationParams.isEmpty()) {
-                String params[] = contentValidationParams.split(",");
-                for (String param : params) {
-                    String paramsKeyAndValue[] = splitOnFirst(param, ':');
-                    if (paramsKeyAndValue.length != 2) {
-                        throw new InputEventAdapterException("Invalid parameters for content validation - " + param);
-                    }
-                    paramsMap.put(paramsKeyAndValue[0], paramsKeyAndValue[1]);
-                }
-            }
             mqttBrokerConnectionConfiguration = new MQTTBrokerConnectionConfiguration(
                     eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_URL),
                     eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME),
@@ -82,7 +70,6 @@ public class MQTTEventAdapter implements InputEventAdapter {
                     eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION),
                     keepAlive,
                     eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME),
-                    paramsMap,
                     eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME)
                     );
             mqttAdapterListener = new MQTTAdapterListener(mqttBrokerConnectionConfiguration,

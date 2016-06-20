@@ -23,30 +23,28 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.core.ServerStartupObserver;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
+import org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.exception.RaspberrypiDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.RaspberrypiManagerService;
-import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.util.RaspberrypiStartupListener;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.util.RaspberrypiUtils;
-import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.raspberrypi.internal.RaspberrypiManagementServiceComponent"
  * immediate="true"
- * @scr.reference name="event.output.adapter.service"
- * interface="org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService"
- * cardinality="1..1"
- * policy="dynamic"
- * bind="setOutputEventAdapterService"
- * unbind="unsetOutputEventAdapterService"
  * @scr.reference name="org.wso2.carbon.ndatasource"
  * interface="org.wso2.carbon.ndatasource.core.DataSourceService"
  * cardinality="1..1"
  * policy="dynamic"
  * bind="setDataSourceService"
  * unbind="unsetDataSourceService"
+ * @scr.reference name="devicetype.configuration.service"
+ * interface="org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setDeviceTypeConfigService"
+ * unbind="unsetDeviceTypeConfigService"
  */
 public class RaspberrypiManagementServiceComponent {
 
@@ -59,11 +57,8 @@ public class RaspberrypiManagementServiceComponent {
 		}
 		try {
 			BundleContext bundleContext = ctx.getBundleContext();
-			raspberrypiServiceRegRef =
-					bundleContext.registerService(DeviceManagementService.class.getName(),
+			raspberrypiServiceRegRef = bundleContext.registerService(DeviceManagementService.class.getName(),
 												  new RaspberrypiManagerService(), null);
-			bundleContext.registerService(ServerStartupObserver.class.getName(), new RaspberrypiStartupListener(),
-										  null);
 			String setupOption = System.getProperty("setup");
 			if (setupOption != null) {
 				if (log.isDebugEnabled()) {
@@ -101,22 +96,6 @@ public class RaspberrypiManagementServiceComponent {
 		}
 	}
 
-	/**
-	 * Initialize the Output EventAdapter Service dependency
-	 *
-	 * @param outputEventAdapterService Output EventAdapter Service reference
-	 */
-	protected void setOutputEventAdapterService(OutputEventAdapterService outputEventAdapterService) {
-		RaspberrypiManagementDataHolder.getInstance().setOutputEventAdapterService(outputEventAdapterService);
-	}
-
-	/**
-	 * De-reference the Output EventAdapter Service dependency.
-	 */
-	protected void unsetOutputEventAdapterService(OutputEventAdapterService outputEventAdapterService) {
-		RaspberrypiManagementDataHolder.getInstance().setOutputEventAdapterService(null);
-	}
-
 	protected void setDataSourceService(DataSourceService dataSourceService) {
         /* This is to avoid mobile device management component getting initialized before the underlying datasources
         are registered */
@@ -127,6 +106,14 @@ public class RaspberrypiManagementServiceComponent {
 
 	protected void unsetDataSourceService(DataSourceService dataSourceService) {
 		//do nothing
+	}
+
+	protected void setDeviceTypeConfigService(DeviceTypeConfigService deviceTypeConfigService) {
+		RaspberrypiManagementDataHolder.getInstance().setDeviceTypeConfigService(deviceTypeConfigService);
+	}
+
+	protected void unsetDeviceTypeConfigService(DeviceTypeConfigService deviceTypeConfigService) {
+		RaspberrypiManagementDataHolder.getInstance().setDeviceTypeConfigService(null);
 	}
 
 }

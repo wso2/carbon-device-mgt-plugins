@@ -29,8 +29,6 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManageme
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.iot.util.Utils;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.mqtt.MqttConfig;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppConfig;
 import org.wso2.carbon.utils.CarbonUtils;
 
@@ -53,6 +51,7 @@ public class ZipUtil {
     private static final String HTTPS_PROTOCOL_APPENDER = "https://";
     private static final String HTTP_PROTOCOL_APPENDER = "http://";
     private static final String CONFIG_TYPE = "general";
+    private static final String DEFAULT_MQTT_ENDPOINT = "tcp://localhost:1883";
 
     public ZipArchive createZipFile(String owner, String deviceType, String deviceId, String deviceName,
                                     String apiApplicationKey, String token, String refreshToken)
@@ -71,17 +70,18 @@ public class ZipUtil {
             String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
             String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
             String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
-            String mqttEndpoint = MqttConfig.getInstance().getBrokerEndpoint();
+            String mqttEndpoint = DEFAULT_MQTT_ENDPOINT;
             if (mqttEndpoint.contains(LOCALHOST)) {
                 mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
             }
 
-            String xmppEndpoint = XmppConfig.getInstance().getXmppServerIP() + ":" +
-                    XmppConfig.getInstance().getXmppServerPort();
-            if (xmppEndpoint.contains(LOCALHOST)) {
-                xmppEndpoint = xmppEndpoint.replace(LOCALHOST, iotServerIP);
+            String xmppEndpoint = "";
+            if (XmppConfig.getInstance().isEnabled()) {
+                xmppEndpoint = XmppConfig.getInstance().getHost() + ":" + XmppConfig.getInstance().getPort();
+                if (xmppEndpoint.contains(LOCALHOST)) {
+                    xmppEndpoint = xmppEndpoint.replace(LOCALHOST, iotServerIP);
+                }
             }
-
             PlatformConfiguration configuration = APIUtil.getTenantConfigurationManagementService().getConfiguration(
                     CONFIG_TYPE);
             if (configuration != null && configuration.getConfiguration() != null && configuration
@@ -119,7 +119,11 @@ public class ZipUtil {
             contextParams.put(VirtualFireAlarmUtilConstants.API_APPLICATION_KEY, base64EncodedApplicationKey);
             contextParams.put(VirtualFireAlarmUtilConstants.DEVICE_TOKEN, token);
             contextParams.put(VirtualFireAlarmUtilConstants.DEVICE_REFRESH_TOKEN, refreshToken);
-            contextParams.put(VirtualFireAlarmUtilConstants.SERVER_NAME, XmppConfig.getInstance().getXmppServerName());
+            contextParams.put(VirtualFireAlarmUtilConstants.SERVER_NAME, XmppConfig.getInstance().getServerName() == null
+                    ? "" : XmppConfig.getInstance().getServerName());
+            contextParams.put(VirtualFireAlarmUtilConstants.SERVER_JID, XmppConfig.getInstance().getJid() == null
+                    ? "" : XmppConfig.getInstance().getJid());
+
             ZipArchive zipFile;
             zipFile = Utils.getSketchArchive(archivesPath, templateSketchPath, contextParams, deviceName);
             return zipFile;

@@ -20,32 +20,60 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.mqtt;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.PushNotificationConfig;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFireAlarmUtils;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.VirtualFirealarmManagementDataHolder;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.util.List;
 
 public class MqttConfig {
-
-    private static String brokerEndpoint;
 
     private static MqttConfig mqttConfig = new MqttConfig();
     private static final Log log = LogFactory.getLog(MqttConfig.class);
 
+    private boolean enabled;
+    private String url;
+    private String username;
+    private String dcrUrl;
+    private String qos;
+    private String scopes;
+    private String clearSession;
+
     private MqttConfig() {
-        File configFile = new File(VirtualFireAlarmConstants.MQTT_CONFIG_LOCATION);
-        if (configFile.exists()) {
-            try {
-                InputStream propertyStream = configFile.toURI().toURL().openStream();
-                Properties properties = new Properties();
-                properties.load(propertyStream);
-                brokerEndpoint = VirtualFireAlarmUtils.replaceMqttProperty(
-                        properties.getProperty(VirtualFireAlarmConstants.BROKER_URL_PROPERTY_KEY));
-            } catch (IOException e) {
-                log.error("Failed to read the mqtt.properties file" + e);
+        DeviceManagementConfiguration deviceManagementConfiguration = VirtualFirealarmManagementDataHolder.getInstance()
+                .getDeviceTypeConfigService().getConfiguration(VirtualFireAlarmConstants.DEVICE_TYPE,
+                                                               VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
+        List<PushNotificationConfig.Property> properties = deviceManagementConfiguration
+                .getPushNotificationConfig().getProperties();
+        String provider = deviceManagementConfiguration.getPushNotificationConfig().getPushNotificationProvider();
+        if (provider.equals("MQTT")) {
+            enabled = true;
+        }
+        if (enabled) {
+            for (PushNotificationConfig.Property property : properties) {
+                switch (property.getName()) {
+                    case "url":
+                        url = property.getValue();
+                        break;
+                    case "username":
+                        username = property.getValue();
+                        break;
+                    case "dcrUrl":
+                        dcrUrl = property.getValue();
+                        break;
+                    case "qos":
+                        qos = property.getValue();
+                        break;
+                    case "scopes":
+                        scopes = property.getValue();
+                        break;
+                    case "clearSession":
+                        clearSession = property.getValue();
+                        break;
+
+
+                }
             }
         }
     }
@@ -54,7 +82,31 @@ public class MqttConfig {
         return mqttConfig;
     }
 
-    public String getBrokerEndpoint() {
-        return brokerEndpoint;
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getDcrUrl() {
+        return dcrUrl;
+    }
+
+    public String getQos() {
+        return qos;
+    }
+
+    public String getScopes() {
+        return scopes;
+    }
+
+    public String getClearSession() {
+        return clearSession;
     }
 }
