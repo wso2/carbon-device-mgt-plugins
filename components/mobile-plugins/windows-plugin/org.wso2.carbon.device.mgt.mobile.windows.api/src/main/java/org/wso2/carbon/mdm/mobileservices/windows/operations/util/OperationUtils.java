@@ -87,10 +87,9 @@ public class OperationUtils {
                         Notification lockResetNotification = new Notification();
                         lockResetNotification.setOperationId(status.getCommandReference());
                         lockResetNotification.setStatus(String.valueOf(Notification.Status.NEW));
-                        lockResetNotification.setDeviceIdentifier(deviceIdentifier);
                         lockResetNotification.setDescription(
                                 Constants.SyncMLResponseCodes.LOCKRESET_NOTIFICATION);
-                        nmService.addNotification(lockResetNotification);
+                        nmService.addNotification(deviceIdentifier, lockResetNotification);
                     } catch (NotificationManagementException e) {
                         throw new WindowsOperationException("Failure occurred in getting notification service", e);
                     }
@@ -156,10 +155,9 @@ public class OperationUtils {
                         Notification lockResetNotification = new Notification();
                         lockResetNotification.setOperationId(status.getCommandReference());
                         lockResetNotification.setStatus(String.valueOf(Notification.Status.NEW));
-                        lockResetNotification.setDeviceIdentifier(deviceIdentifier);
                         lockResetNotification.setDescription(Constants.SyncMLResponseCodes.LOCKRESET_NOTIFICATION);
 
-                        nmService.addNotification(lockResetNotification);
+                        nmService.addNotification(deviceIdentifier, lockResetNotification);
                     } catch (NotificationManagementException e) {
                         String msg = "Failure occurred in getting notification service";
                         log.error(msg, e);
@@ -404,10 +402,9 @@ public class OperationUtils {
                         Notification notification = new Notification();
                         notification.setDescription("Auto generated DevicePin : " + pinValue);
                         notification.setOperationId(result.getCommandReference());
-                        notification.setDeviceIdentifier(deviceIdentifier);
                         notification.setStatus(String.valueOf(Notification.Status.NEW));
                         try {
-                            nmService.addNotification(notification);
+                            nmService.addNotification(deviceIdentifier, notification);
                         } catch (NotificationManagementException e) {
                             String msg = "Failure Occurred in getting notification service.";
                             log.error(msg, e);

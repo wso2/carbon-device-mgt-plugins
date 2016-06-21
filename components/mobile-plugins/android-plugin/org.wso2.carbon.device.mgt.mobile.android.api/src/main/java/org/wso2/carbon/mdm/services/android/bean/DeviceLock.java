@@ -26,7 +26,7 @@ import java.io.Serializable;
         description = "This class carries all information related to device lock operation.")
 public class DeviceLock extends AndroidOperation implements Serializable {
 
-    @ApiModelProperty(name = "message", value = "Pop up message of the lock operation.", required = true)
+    @ApiModelProperty(name = "message", value = "Pop up message of the lock operation.", required = false)
     private String message;
     @ApiModelProperty(name = "isHardLockEnabled", value = "Hard lock enable status of the Device", required = true)
     private boolean isHardLockEnabled;
