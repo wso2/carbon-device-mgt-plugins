@@ -27,7 +27,6 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value = "EventBeanWrapper",
         description = "Android agent's event related Information.")
 public class EventBeanWrapper {
-
     @ApiModelProperty(name = "deviceIdentifier", value = "DeviceIdentifier to be need to retrieve/publish Event.", required = true)
     private String deviceIdentifier;
     @ApiModelProperty(name = "payload", value = "Event payload.", required = true)

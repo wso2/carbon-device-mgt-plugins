@@ -51,5 +51,4 @@ public class NotificationBeanWrapper {
 	public void setOperation(Notification operation) {
 		this.operation = operation;
 	}
-
 }

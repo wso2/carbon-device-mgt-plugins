@@ -295,10 +295,10 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
                 return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).entity(false).build();
             }
         } catch (DeviceManagementException e) {
-            log.error(e.getMessage(), e);
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(false).build();
         } catch (ConfigurationManagementException e) {
-            log.error(e.getMessage(), e);
+            log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(false).build();
         }
     }

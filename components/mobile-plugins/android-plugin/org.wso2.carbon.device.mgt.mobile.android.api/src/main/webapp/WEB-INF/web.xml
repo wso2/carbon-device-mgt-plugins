@@ -28,11 +28,6 @@
         <servlet-class>
             org.apache.cxf.transport.servlet.CXFServlet
         </servlet-class>
-        <!-- configure a security filter -->
-        <init-param>
-            <param-name>swagger.security.filter</param-name>
-            <param-value>ApiAuthorizationFilterImpl</param-value>
-        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
@@ -78,14 +73,5 @@
             <transport-guarantee>CONFIDENTIAL</transport-guarantee>
         </user-data-constraint>
     </security-constraint-->
-
-    <filter>
-        <filter-name>ApiOriginFilter</filter-name>
-        <filter-class>org.wso2.carbon.mdm.services.android.util.ApiOriginFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>ApiOriginFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
 
 </web-app>

@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.mdm.services.android.exception;
 
-import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.util.Message;
 
 import javax.ws.rs.WebApplicationException;
@@ -30,8 +29,8 @@ import javax.ws.rs.core.Response;
  */
 public class BadRequestException extends WebApplicationException {
 
-	public BadRequestException(ErrorResponse error) {
-		super(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
+	public BadRequestException(Message message, MediaType mediaType) {
+		super(Response.status(Response.Status.BAD_REQUEST).entity(message).
+				type(mediaType).build());
 	}
-
 }

@@ -1,5 +1,5 @@
 instructions.configure = \
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/webapps/api#device-mgt#android#v1.0.war,target:${installFolder}/../../deployment/server/webapps/api#device-mgt#android#v1.0.war,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/webapps/mdm-android-agent.war,target:${installFolder}/../../deployment/server/webapps/mdm-android-agent.war,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/jaggeryapps/,target:${installFolder}/../../deployment/server/jaggeryapps/,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/conf/mobile-config.xml,target:${installFolder}/../../conf/mobile-config.xml,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/dbscripts/plugins/,target:${installFolder}/../../../dbscripts/cdm/plugins/android,overwrite:true);\

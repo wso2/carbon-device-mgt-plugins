@@ -30,25 +30,14 @@ import java.io.Serializable;
           description = "Details related to notifications passed to device.")
 public class Notification extends AndroidOperation implements Serializable {
 
-    @ApiModelProperty(name = "messageText", value = "The message text to be sent to the device.", required = true)
-	private String messageText;
+    @ApiModelProperty(name = "message", value = "The message to be sent to the device.", required = true)
+	private String message;
 
-	@ApiModelProperty(name = "messageTitle", value = "The message title to be sent to the device.", required = true)
-	private String messageTitle;
-
-	public String getMessageText() {
-		return messageText;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setMessageText(String messageText) {
-		this.messageText = messageText;
-	}
-
-	public String getMessageTitle() {
-		return messageTitle;
-	}
-
-	public void setMessageTitle(String messageTitle) {
-		this.messageTitle = messageTitle;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }
