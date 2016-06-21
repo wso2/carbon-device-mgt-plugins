@@ -34,7 +34,7 @@
 
     <Permission>
         <name>Lock</name>
-        <path>/device-mgt/emm-admin/operations/android/lock</path>
+        <path>/device-mgt/admin/operations/android/lock</path>
         <url>/admin/devices/lock-devices</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -42,7 +42,7 @@
 
     <Permission>
         <name>Unlock</name>
-        <path>/device-mgt/emm-admin/operations/android/unlock</path>
+        <path>/device-mgt/admin/operations/android/unlock</path>
         <url>/admin/devices/unlock-devices</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -50,7 +50,7 @@
 
     <Permission>
         <name>Mute</name>
-        <path>/device-mgt/emm-admin/operations/android/mute</path>
+        <path>/device-mgt/admin/operations/android/mute</path>
         <url>/admin/devices/mute</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -58,7 +58,7 @@
 
     <Permission>
         <name>Location</name>
-        <path>/device-mgt/emm-admin/operations/android/location</path>
+        <path>/device-mgt/admin/operations/android/location</path>
         <url>/admin/devices/location</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -66,7 +66,7 @@
 
     <Permission>
         <name>Clear Passcode</name>
-        <path>/device-mgt/emm-admin/operations/android/clear-password</path>
+        <path>/device-mgt/admin/operations/android/clear-password</path>
         <url>/admin/devices/clear-password</url>
         <method>POST</method>
         <scope>emm_admin</scope>
@@ -74,7 +74,7 @@
 
     <Permission>
         <name>Camera</name>
-        <path>/device-mgt/emm-admin/operations/android/camera</path>
+        <path>/device-mgt/admin/operations/android/camera</path>
         <url>/admin/devices/control-camera</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -82,7 +82,7 @@
 
     <Permission>
         <name>Device Info</name>
-        <path>/device-mgt/emm-admin/operations/android/device-info</path>
+        <path>/device-mgt/admin/operations/android/device-info</path>
         <url>/admin/devices/info</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -90,7 +90,7 @@
 
     <Permission>
         <name>Enterprise Wipe</name>
-        <path>/device-mgt/emm-admin/operations/android/enterprise-wipe</path>
+        <path>/device-mgt/admin/operations/android/enterprise-wipe</path>
         <url>/admin/devices/enterprise-wipe</url>
         <method>POST</method>
         <scope>emm_admin</scope>
@@ -98,7 +98,7 @@
 
     <Permission>
         <name>Wipe Data</name>
-        <path>/device-mgt/emm-admin/operations/android/wipe-data</path>
+        <path>/device-mgt/admin/operations/android/wipe-data</path>
         <url>/admin/devices/wipe</url>
         <method>POST</method>
         <scope>emm_admin</scope>
@@ -106,7 +106,7 @@
 
     <Permission>
         <name>Application List</name>
-        <path>/device-mgt/emm-admin/operations/android/application-list</path>
+        <path>/device-mgt/admin/operations/android/application-list</path>
         <url>/admin/devices/applications</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -114,7 +114,7 @@
 
     <Permission>
         <name>Ring</name>
-        <path>/device-mgt/emm-admin/operations/android/ring-device</path>
+        <path>/device-mgt/admin/operations/android/ring-device</path>
         <url>/admin/devices/ring</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -122,7 +122,7 @@
 
     <Permission>
         <name>Reboot</name>
-        <path>/device-mgt/emm-admin/operations/android/reboot-device</path>
+        <path>/device-mgt/admin/operations/android/reboot-device</path>
         <url>/admin/devices/reboot</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -130,7 +130,7 @@
 
     <Permission>
         <name>Upgrade Firmware</name>
-        <path>/device-mgt/emm-admin/operations/android/upgrade-firmware</path>
+        <path>/device-mgt/admin/operations/android/upgrade-firmware</path>
         <url>/admin/devices/upgrade-firmware</url>
         <method>POST</method>
         <scope>emm_admin</scope>
@@ -138,7 +138,7 @@
 
     <Permission>
         <name>Configure VPN</name>
-        <path>/device-mgt/emm-admin/operations/android/vpn</path>
+        <path>/device-mgt/admin/operations/android/vpn</path>
         <url>/admin/devices/configure-vpn</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -154,7 +154,7 @@
 
     <Permission>
         <name>Update Application</name>
-        <path>/device-mgt/emm-admin/operations/android/install-application</path>
+        <path>/device-mgt/admin/operations/android/install-application</path>
         <url>/admin/devices/update-application</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -162,7 +162,7 @@
 
     <Permission>
         <name>Uninstall Application</name>
-        <path>/device-mgt/emm-admin/operations/android/uninstall-application</path>
+        <path>/device-mgt/admin/operations/android/uninstall-application</path>
         <url>/admin/devices/uninstall-application</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -170,7 +170,7 @@
 
     <Permission>
         <name>Blacklist Applications</name>
-        <path>/device-mgt/emm-admin/operations/android/blacklist-applications</path>
+        <path>/device-mgt/admin/operations/android/blacklist-applications</path>
         <url>/admin/devices/blacklist-applications</url>
         <method>POST</method>
         <scope>emm_admin</scope>
@@ -178,7 +178,7 @@
 
     <Permission>
         <name>Notification</name>
-        <path>/device-mgt/emm-admin/operations/android/notification</path>
+        <path>/device-mgt/admin/operations/android/notification</path>
         <url>/admin/devices/send-notification</url>
         <method>POST</method>
         <scope>emm_admin,emm_user</scope>
@@ -186,7 +186,7 @@
 
     <Permission>
         <name>Wifi</name>
-        <path>/device-mgt/emm-admin/operations/android/wifi</path>
+        <path>/device-mgt/admin/operations/android/wifi</path>
         <url>/admin/devices/configure-wifi</url>
         <method>POST</method>
         <scope>emm_admin</scope>
@@ -194,7 +194,7 @@
 
     <Permission>
         <name>Encryption</name>
-        <path>/device-mgt/emm-admin/operations/android/encrypt</path>
+        <path>/device-mgt/admin/operations/android/encrypt</path>
         <url>/admin/devices/encrypt-storage</url>
         <method>POST</method>
         <scope>emm_admin</scope>
@@ -202,7 +202,7 @@
 
     <Permission>
         <name>Change lock code</name>
-        <path>/device-mgt/emm-admin/operations/android/change-lock-code</path>
+        <path>/device-mgt/admin/operations/android/change-lock-code</path>
         <url>/admin/devices/change-lock-code</url>
         <method>POST</method>
         <scope>emm_admin</scope>
@@ -210,7 +210,7 @@
 
     <Permission>
         <name>Password Policy</name>
-        <path>/device-mgt/emm-admin/operations/android/password-policy</path>
+        <path>/device-mgt/admin/operations/android/password-policy</path>
         <url>/admin/devices/set-password-policy</url>
         <method>POST</method>
         <scope>emm_admin</scope>
@@ -218,7 +218,7 @@
 
     <Permission>
         <name>Webclip</name>
-        <path>/device-mgt/emm-admin/operations/android/webclip</path>
+        <path>/device-mgt/admin/operations/android/webclip</path>
         <url>/admin/devices/set-webclip</url>
         <method>POST</method>
         <scope>emm_admin</scope>
@@ -226,7 +226,7 @@
 
     <Permission>
         <name>Disenroll</name>
-        <path>/device-mgt/emm-admin/operations/android/disenroll</path>
+        <path>/device-mgt/admin/operations/android/disenroll</path>
         <url>/operation/disenroll</url>
         <method>POST</method>
         <scope>emm_android_agent</scope>
@@ -235,7 +235,7 @@
     <!-- Device management related permissions -->
     <Permission>
         <name>View devices</name>
-        <path>/device-mgt/emm-admin/devices/view</path>
+        <path>/device-mgt/admin/devices/view</path>
         <url>/device</url>
         <method>GET</method>
         <scope>emm_admin</scope>
@@ -243,7 +243,7 @@
 
     <Permission>
         <name>View device</name>
-        <path>/device-mgt/emm-admin/devices/view</path>
+        <path>/device-mgt/admin/devices/view</path>
         <url>/device/*</url>
         <method>GET</method>
         <scope>emm_admin,emm_user</scope>
@@ -251,7 +251,7 @@
 
     <Permission>
         <name>Update device</name>
-        <path>/device-mgt/emm-admin/devices/update</path>
+        <path>/device-mgt/admin/devices/update</path>
         <url>/device/*</url>
         <method>PUT</method>
         <scope>emm_admin,emm_user</scope>
@@ -259,7 +259,7 @@
 
     <Permission>
         <name>Update application list</name>
-        <path>/device-mgt/emm-admin/operations/android/update-applist</path>
+        <path>/device-mgt/admin/operations/android/update-applist</path>
         <url>/device/appList/*</url>
         <method>POST</method>
         <scope>emm_admin</scope>
@@ -358,7 +358,7 @@
     <!-- Configuration related permissions -->
     <Permission>
         <name>View Tenant configuration</name>
-        <path>/device-mgt/emm-admin/platform-configs/view</path>
+        <path>/device-mgt/admin/platform-configs/view</path>
         <url>/configuration</url>
         <method>GET</method>
         <scope>emm_admin</scope>
@@ -366,7 +366,7 @@
 
     <Permission>
         <name>Add Tenant configuration</name>
-        <path>/device-mgt/emm-admin/platform-configs/add</path>
+        <path>/device-mgt/admin/platform-configs/add</path>
         <url>/configuration</url>
         <method>POST</method>
         <scope>emm_admin</scope>
@@ -374,7 +374,7 @@
 
     <Permission>
         <name>Update Tenant configuration</name>
-        <path>/device-mgt/emm-admin/platform-configs/modify</path>
+        <path>/device-mgt/admin/platform-configs/modify</path>
         <url>/configuration</url>
         <method>PUT</method>
         <scope>emm_admin</scope>
