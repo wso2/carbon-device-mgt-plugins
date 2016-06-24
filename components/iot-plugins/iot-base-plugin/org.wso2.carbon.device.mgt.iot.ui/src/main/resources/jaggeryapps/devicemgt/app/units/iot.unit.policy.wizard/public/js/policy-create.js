@@ -254,9 +254,6 @@ var savePolicy = function (policy, state) {
                     $(".add-policy").addClass("hidden");
                     $(".policy-naming").addClass("hidden");
                     $(".policy-message").removeClass("hidden");
-                    if (state == "publish") {
-                        publishToDevice();
-                    }
                 }
             },
             function (err) {
@@ -264,43 +261,6 @@ var savePolicy = function (policy, state) {
             }
     );
 };
-
-function publishToDevice() {
-    var payload = {
-        "policyName": policy["policyName"],
-        "description": policy["description"],
-        "compliance": policy["selectedNonCompliantAction"],
-        "ownershipType": "ANY",
-        "deviceId": getParameterByName('deviceId'),
-        "profile": {
-            "profileName": policy["policyName"],
-            "deviceType": {
-                "id": policy["platformId"],
-                "name": policy["platform"]
-            },
-            "policyDefinition": window.queryEditor.getValue(),
-            "policyDescription": policy["description"]
-        }
-    };
-
-    var successCallback =  function (data, status) {
-        console.log("Data: " + data + "\nStatus: " + status);
-    };
-
-    var data = {
-        url: "/devicemgt/api/policies/add",
-        type: "POST",
-        contentType: "application/json",
-        accept: "application/json",
-        success: successCallback,
-        data: JSON.stringify(payload)
-    };
-
-    $.ajax(data).fail(function (jqXHR) {
-        console.log("Error: " + jqXHR);
-    });
-
-}
 
 // Start of functions related to grid-input-view
 
