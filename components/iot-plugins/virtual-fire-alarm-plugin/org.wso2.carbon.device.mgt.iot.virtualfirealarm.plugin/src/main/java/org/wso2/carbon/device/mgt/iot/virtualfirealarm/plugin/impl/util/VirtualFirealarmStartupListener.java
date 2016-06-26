@@ -21,6 +21,7 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.ServerStartupObserver;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.VirtualFirealarmManagementDataHolder;
 
 import java.io.IOException;
 
@@ -36,7 +37,7 @@ public class VirtualFirealarmStartupListener implements ServerStartupObserver {
         try {
             VirtualFireAlarmUtils.setupMqttInputAdapter();
             VirtualFireAlarmUtils.setupXmppInputAdapter();
-
+            VirtualFirealarmManagementDataHolder.getInstance().getInputEventAdapterService().start();
         } catch (IOException e) {
             log.error("Failed to intilaize the virtual firealarm input adapter", e);
         }

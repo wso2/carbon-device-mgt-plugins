@@ -96,7 +96,10 @@ public class MQTTEventAdapter implements InputEventAdapter {
 
     @Override
     public void connect() {
-        mqttAdapterListener.createConnection();
+        if (!mqttAdapterListener.isConnectionInitialized()) {
+            mqttAdapterListener.createConnection();
+        }
+
     }
 
     @Override
@@ -147,7 +150,7 @@ public class MQTTEventAdapter implements InputEventAdapter {
 
     @Override
     public boolean isPolling() {
-        return true;
+        return mqttAdapterListener.isConnectionInitialized();
     }
 
 }

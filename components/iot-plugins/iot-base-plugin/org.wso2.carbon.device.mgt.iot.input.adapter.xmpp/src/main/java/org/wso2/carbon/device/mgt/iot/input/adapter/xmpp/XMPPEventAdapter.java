@@ -103,7 +103,9 @@ public class XMPPEventAdapter implements InputEventAdapter {
 
     @Override
     public void connect() {
-        xmppAdapterListener.createConnection();
+        if (xmppAdapterListener.isConnectionInitialized()) {
+            xmppAdapterListener.createConnection();
+        }
     }
 
     @Override
@@ -142,7 +144,7 @@ public class XMPPEventAdapter implements InputEventAdapter {
 
     @Override
     public boolean isPolling() {
-        return true;
+        return xmppAdapterListener.isConnectionInitialized();
     }
 
 }
