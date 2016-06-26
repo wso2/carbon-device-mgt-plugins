@@ -174,9 +174,7 @@ public class Event {
     }
 
     public float getSpeed() {
-
         this.type = "speed";
-
         return speed;
     }
 
@@ -209,14 +207,13 @@ public class Event {
         double gpsEvents[] = getGps();
         jsonPayloadData.put("gps_lat", gpsEvents[0]);
         jsonPayloadData.put("gps_long", gpsEvents[1]);
-        //acceleromter
+        //accelerometer
         float events[] = getAccelerometer();
         jsonPayloadData.put("accelerometer_x", events[0]);
         jsonPayloadData.put("accelerometer_y", events[1]);
         jsonPayloadData.put("accelerometer_z", events[2]);
 
         //speed
-
         //if (getSpeed()>SPEED_LIMIT) {
         jsonPayloadData.put("speed_limit", getSpeed());
         //}

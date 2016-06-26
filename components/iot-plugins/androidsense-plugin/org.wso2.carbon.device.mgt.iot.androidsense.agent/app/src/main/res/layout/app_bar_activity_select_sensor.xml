@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="org.wso2.carbon.iot.android.sense.realtimeviewer.ActivitySelectSensor">
+    tools:context="org.wso2.carbon.iot.android.sense.realtimeviewer.ActivitySelectSensor"
+    android:touchscreenBlocksFocus="false">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -24,30 +25,40 @@
 
     <include layout="@layout/content_activity_select_sensor"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/publish"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:adjustViewBounds="false"
-        android:src="@drawable/pushtoserver"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom|center"
+        android:layout_height="wrap_content" >
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/speech"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/mic"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addSensors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@android:drawable/ic_input_add"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addSensors"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_input_add"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/speech"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/mic"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/beacon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/beacon"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/publish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:adjustViewBounds="false"
+            android:src="@drawable/pushtoserver"/>
+    </LinearLayout>
 
 
 </android.support.design.widget.CoordinatorLayout>

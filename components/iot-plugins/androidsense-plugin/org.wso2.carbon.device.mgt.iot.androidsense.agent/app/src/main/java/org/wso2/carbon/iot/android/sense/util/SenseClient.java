@@ -51,7 +51,7 @@ public class SenseClient {
         String responseStatus = response.get("status");
         RegisterInfo registerInfo = new RegisterInfo();
         if (responseStatus.trim().contains(SenseConstants.Request.REQUEST_SUCCESSFUL)) {
-            registerInfo.setMsg("Login Succesful");
+            registerInfo.setMsg("Login Successful");
             registerInfo.setIsRegistered(true);
             return registerInfo;
         } else {

@@ -140,8 +140,9 @@ public class DataPublisherService extends Service {
                         for (SpeedData speedData : speedDataMap) {
                             Event event = new Event();
                             event.setTimestamp(speedData.getTimeStamp());
-                            event.setSpeed(speedData.getSpeed());
                             event.setTurns(speedData.getTurns());
+                            event.setSpeed(speedData.getSpeed());
+
                             events.add(event);
                         }
                     }
