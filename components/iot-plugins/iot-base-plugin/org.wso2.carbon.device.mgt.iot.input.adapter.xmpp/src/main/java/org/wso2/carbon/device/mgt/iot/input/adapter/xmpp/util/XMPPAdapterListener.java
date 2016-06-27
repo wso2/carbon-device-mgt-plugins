@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -53,6 +54,7 @@ public class XMPPAdapterListener implements Runnable {
     private ContentValidator contentValidator;
     private ContentTransformer contentTransformer;
     private PacketListener packetListener;
+    private boolean connectionInitialized;
 
     private InputEventAdapterListener eventAdapterListener = null;
 
@@ -217,6 +219,11 @@ public class XMPPAdapterListener implements Runnable {
     }
 
     public void createConnection() {
+        connectionInitialized = true;
         new Thread(this).start();
+    }
+
+    public boolean isConnectionInitialized() {
+        return connectionInitialized;
     }
 }

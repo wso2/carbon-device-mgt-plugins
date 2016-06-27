@@ -58,6 +58,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
     private MqttClient mqttClient;
     private MqttConnectOptions connectionOptions;
     private boolean cleanSession;
+    private boolean connectionInitialized;
 
     private MQTTBrokerConnectionConfiguration mqttBrokerConnectionConfiguration;
     private String topic;
@@ -279,6 +280,11 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
     }
 
     public void createConnection() {
+        connectionInitialized = true;
         new Thread(this).start();
+    }
+
+    public boolean isConnectionInitialized() {
+        return connectionInitialized;
     }
 }
