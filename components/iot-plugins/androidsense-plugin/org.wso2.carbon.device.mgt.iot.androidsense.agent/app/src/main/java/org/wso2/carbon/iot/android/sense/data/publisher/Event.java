@@ -28,6 +28,12 @@ public class Event {
     private static float speed;
     private String turn;
     public static final float SPEED_LIMIT = 60;
+    private int beaconMajor;
+    private int beaconMinor;
+    private int beaconUuid;
+    private String beaconProximity;
+
+
 
     private int getBattery() {
         return battery;
@@ -174,11 +180,12 @@ public class Event {
     }
 
     public float getSpeed() {
-
         this.type = "speed";
-
         return speed;
     }
+
+
+
 
     public void setTurns(String turn) {
 
@@ -192,6 +199,46 @@ public class Event {
             turn = "No Turns";
         }
         return turn;
+    }
+
+    public void setBeaconMajor(int beaconMajor) {
+        this.type = "beaconMajor";
+        this.beaconMajor = beaconMajor;
+    }
+
+    public int getBeaconMajor() {
+        this.type = "beaconMajor";
+        return beaconMajor;
+    }
+
+    public void setBeaconMinor(int beaconMinor) {
+        this.type = "beaconMinor";
+        this.beaconMinor = beaconMinor;
+    }
+
+    public int getBeaconMinor() {
+        this.type = "beaconMinor";
+        return beaconMinor;
+    }
+
+    public void setBeaconUuid(int beaconUuid) {
+        this.type = "beaconUuid";
+        this.beaconUuid = beaconUuid;
+    }
+
+    public int getBeaconUuid() {
+        this.type = "beaconUuid";
+        return beaconUuid;
+    }
+
+    public void setBeaconProximity(String beaconProximity) {
+        this.type = "beaconProximity";
+        this.beaconProximity = beaconProximity;
+    }
+
+    public String getBeaconProximity() {
+        this.type = "beaconProximity";
+        return beaconProximity;
     }
 
     public JSONObject getEvent() throws JSONException {
@@ -209,17 +256,22 @@ public class Event {
         double gpsEvents[] = getGps();
         jsonPayloadData.put("gps_lat", gpsEvents[0]);
         jsonPayloadData.put("gps_long", gpsEvents[1]);
-        //acceleromter
+        //accelerometer
         float events[] = getAccelerometer();
         jsonPayloadData.put("accelerometer_x", events[0]);
         jsonPayloadData.put("accelerometer_y", events[1]);
         jsonPayloadData.put("accelerometer_z", events[2]);
 
         //speed
-
         //if (getSpeed()>SPEED_LIMIT) {
         jsonPayloadData.put("speed_limit", getSpeed());
         //}
+
+        //Beacon
+        jsonPayloadData.put("beacon_major", getBeaconMajor());
+        jsonPayloadData.put("beacon_minor", getBeaconMinor());
+        jsonPayloadData.put("beacon_proximity", getBeaconProximity());
+        jsonPayloadData.put("beacon_uuid", getBeaconUuid());
 
         //turn
         jsonPayloadData.put("turn_way", getTurns());

@@ -35,7 +35,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
-
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import org.wso2.carbon.iot.android.sense.RegisterActivity;
 import org.wso2.carbon.iot.android.sense.data.publisher.DataPublisherReceiver;
 import org.wso2.carbon.iot.android.sense.data.publisher.DataPublisherService;
@@ -48,11 +49,13 @@ import org.wso2.carbon.iot.android.sense.realtimeviewer.sensorlisting.SupportedS
 import org.wso2.carbon.iot.android.sense.realtimeviewer.view.adaptor.SensorViewAdaptor;
 import org.wso2.carbon.iot.android.sense.realtimeviewer.view.sensor.selector.SelectSensorDialog;
 import org.wso2.carbon.iot.android.sense.speech.detector.WordRecognitionActivity;
-import org.wso2.carbon.iot.android.sense.util.LocalRegistry;
+import org.wso2.carbon.iot.android.sense.beacon.MonitoringActivity;
 
+import org.wso2.carbon.iot.android.sense.util.LocalRegistry;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import org.altbeacon.beacon.BeaconManager;
 
 import agent.sense.android.iot.carbon.wso2.org.wso2_senseagent.R;
 
@@ -73,6 +76,8 @@ public class ActivitySelectSensor extends AppCompatActivity
     private RealTimeSensorReader sensorReader = null;
     private RealTimeSensorChangeReceiver realTimeSensorChangeReceiver = new RealTimeSensorChangeReceiver();
     private SupportedSensors supportedSensors = SupportedSensors.getInstance();
+    protected static final String TAG =  ActivitySelectSensor.class.getName();
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +90,7 @@ public class ActivitySelectSensor extends AppCompatActivity
         sessionIdText.setCursorVisible(false);
 
         listView = (ListView) findViewById(R.id.senseListContainer);
+        verifyBluetooth();
 
         registerReceiver(realTimeSensorChangeReceiver, new IntentFilter("sensorDataMap"));
 
@@ -135,6 +141,18 @@ public class ActivitySelectSensor extends AppCompatActivity
 
             }
         });
+
+        FloatingActionButton fbtnBeaconMonitor = (FloatingActionButton) findViewById(R.id.beacon);
+        fbtnBeaconMonitor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), MonitoringActivity.class);
+                    startActivity(intent);
+
+
+            }
+        });
+
 
         sharedPreferences = getSharedPreferences(SupportedSensors.SELECTED_SENSORS, 0);
 
@@ -292,5 +310,45 @@ public class ActivitySelectSensor extends AppCompatActivity
      */
     public void unregisterReceivers() {
         unregisterReceiver(realTimeSensorChangeReceiver);
+    }
+
+    private void verifyBluetooth() {
+
+        try {
+            if (!BeaconManager.getInstanceForApplication(this).checkAvailability()) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Bluetooth not enabled");
+                builder.setMessage("Please enable bluetooth in settings and restart this application.");
+                builder.setPositiveButton(android.R.string.ok, null);
+                builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        finish();
+                        System.exit(0);
+                    }
+
+                });
+                builder.show();
+
+            }
+        } catch (RuntimeException e) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Bluetooth LE not available");
+            builder.setMessage("Sorry, this device does not support Bluetooth LE.");
+            builder.setPositiveButton(android.R.string.ok, null);
+            builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    finish();
+                    System.exit(0);
+                }
+
+            });
+            builder.show();
+
+        }
+
     }
 }

@@ -21,7 +21,7 @@
   <mapping customMapping="disable" type="text"/>
   <to eventAdapterType="email">
     <property name="email.subject">Email Alerts Speed</property>
-    <property name="email.address"></property>
+    <property name="email.address">pacificcontrolsapps@gmail.com</property>
     <property name="email.type">text/html</property>
   </to>
 </eventPublisher>
