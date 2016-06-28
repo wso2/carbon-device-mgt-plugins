@@ -184,9 +184,6 @@ public class Event {
         return speed;
     }
 
-
-
-
     public void setTurns(String turn) {
 
         this.type = "turn";
@@ -267,7 +264,7 @@ public class Event {
         jsonPayloadData.put("speed_limit", getSpeed());
         //}
 
-        //Beacon
+        //Beacon Data
         jsonPayloadData.put("beacon_major", getBeaconMajor());
         jsonPayloadData.put("beacon_minor", getBeaconMinor());
         jsonPayloadData.put("beacon_proximity", getBeaconProximity());
