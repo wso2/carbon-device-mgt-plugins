@@ -24,6 +24,7 @@ import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wso2.carbon.iot.android.sense.beacon.BeaconScanedData;
 import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.AndroidSenseMQTTHandler;
 import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.transport.MQTTTransportHandler;
 import org.wso2.carbon.iot.android.sense.data.publisher.mqtt.transport.TransportHandlerException;
@@ -142,6 +143,21 @@ public class DataPublisherService extends Service {
                             event.setTimestamp(speedData.getTimeStamp());
                             event.setTurns(speedData.getTurns());
                             event.setSpeed(speedData.getSpeed());
+
+                            events.add(event);
+                        }
+                    }
+                    SenseDataHolder.resetSpeedDataHolder();
+
+                    //retrieve speed data.
+                    List<BeaconScanedData> beaconDataMap = SenseDataHolder.getBeaconScanedDataHolder();
+                    if (!speedDataMap.isEmpty()) {
+                        for (BeaconScanedData beaconData : beaconDataMap) {
+                            Event event = new Event();
+                            event.setBeaconMajor(beaconData.getBeaconMajor());
+                            event.setBeaconMinor(beaconData.getBeaconMinor());
+                            event.setBeaconProximity(beaconData.getBeaconProximity());
+                            event.setBeaconUuid(beaconData.getBeaconUuid());
 
                             events.add(event);
                         }

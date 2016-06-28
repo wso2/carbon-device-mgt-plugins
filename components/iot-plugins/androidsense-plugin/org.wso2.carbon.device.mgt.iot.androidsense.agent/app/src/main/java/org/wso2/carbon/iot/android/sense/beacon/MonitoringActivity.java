@@ -41,6 +41,10 @@ import android.widget.TextView;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.Region;
+import  org.wso2.carbon.iot.android.sense.beacon.BeaconScanedData;
+import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import agent.sense.android.iot.carbon.wso2.org.wso2_senseagent.R;
@@ -56,6 +60,8 @@ public class MonitoringActivity extends Activity implements BeaconConsumer {
     private BeaconServiceUtility beaconUtill = null;
     private BeaconManager iBeaconManager = BeaconManager.getInstanceForApplication(this);
 
+    BeaconScanedData beaconData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +71,15 @@ public class MonitoringActivity extends Activity implements BeaconConsumer {
         adapter = new BeaconAdapter();
         list.setAdapter(adapter);
         inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        iBeaconManager.setRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                for(Beacon beacon : beacons) {
+                    Log.d(TAG, "UUID:" + beacon.getId1() + ", major:" + beacon.getId2() + ", minor:" + beacon.getId3() + ", Distance:" + beacon.getDistance() + ",RSSI" + beacon.getRssi() + ", TxPower" + beacon.getTxPower());
+                }
+            }
+        });
 
     }
 
@@ -85,16 +100,22 @@ public class MonitoringActivity extends Activity implements BeaconConsumer {
         super.onStop();
     }
 
+
     @Override
     public void onBeaconServiceConnect() {
 
         iBeaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> iBeacons, Region region) {
+                for (Beacon beacon: iBeacons) {
+                    Log.i(TAG, "This beacon has identifiers:"+beacon.getId1()+", "+beacon.getId2()+", "+beacon.getId3());
 
-                arrayL.clear();
-                arrayL.addAll((ArrayList<Beacon>) iBeacons);
-               // adapter.notifyDataSetChanged();
+
+                }
+
+//                arrayL.clear();
+//                arrayL.addAll((ArrayList<Beacon>) iBeacons);
+//                adapter.notifyDataSetChanged();
             }
 
         });
@@ -163,20 +184,25 @@ public class MonitoringActivity extends Activity implements BeaconConsumer {
                 } else {
                     holder = new ViewHolder(convertView = inflater.inflate(R.layout.tupple_monitoring, null));
                 }
-                if (arrayL.get(position).getId1() != null)
-                    holder.beacon_uuid.setText("UUID: " + arrayL.get(position).getServiceUuid());
+                holder.beacon_uuid.setText("UUID: " + arrayL.get(position).getId1().toString().toUpperCase());
 
-                holder.beacon_major.setText("Major: " + arrayL.get(position).getId1());
+                holder.beacon_major.setText("Major: " + arrayL.get(position).getId2());
 
-                holder.beacon_minor.setText(", Minor: " + arrayL.get(position).getId2());
+                holder.beacon_minor.setText(" Minor: " + arrayL.get(position).getId3());
 
-                holder.beacon_proximity.setText("Proximity: " + arrayL.get(position).getId3());
+                double proximity = arrayL.get(position).getDistance();
+                holder.beacon_proximity.setText("Proximity: " + (new BigDecimal(proximity).setScale(5, BigDecimal.ROUND_HALF_UP).doubleValue()));
 
-                holder.beacon_rssi.setText(", Rssi: " + arrayL.get(position).getRssi());
+                holder.beacon_rssi.setText(" Rssi: " + arrayL.get(position).getRssi());
 
-                holder.beacon_txpower.setText(", TxPower: " + arrayL.get(position).getTxPower());
+                holder.beacon_txpower.setText(" TxPower: " + arrayL.get(position).getTxPower());
 
                 holder.beacon_range.setText("" + arrayL.get(position).getDistance());
+
+                beaconData = new BeaconScanedData(arrayL.get(position).getId2().toInt(), arrayL.get(position).getId3().toInt(),holder.beacon_uuid.toString(),arrayL.get(position).getRssi());
+                SenseDataHolder.getBeaconScanedDataHolder().add(beaconData);
+
+
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -194,6 +220,7 @@ public class MonitoringActivity extends Activity implements BeaconConsumer {
             private TextView beacon_txpower;
             private TextView beacon_range;
 
+
             public ViewHolder(View view) {
                 beacon_uuid = (TextView) view.findViewById(R.id.BEACON_uuid);
                 beacon_major = (TextView) view.findViewById(R.id.BEACON_major);
@@ -202,6 +229,7 @@ public class MonitoringActivity extends Activity implements BeaconConsumer {
                 beacon_rssi = (TextView) view.findViewById(R.id.BEACON_rssi);
                 beacon_txpower = (TextView) view.findViewById(R.id.BEACON_txpower);
                 beacon_range = (TextView) view.findViewById(R.id.BEACON_range);
+
 
                 view.setTag(this);
             }

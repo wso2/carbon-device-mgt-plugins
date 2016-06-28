@@ -2,8 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dip"
-    tools:context=".RangingActivity" >
+    android:padding="5dip" >
 
     <TextView
         android:layout_width="fill_parent"

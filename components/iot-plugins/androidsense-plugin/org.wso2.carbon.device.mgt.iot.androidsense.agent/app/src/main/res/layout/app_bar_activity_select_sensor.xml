@@ -31,6 +31,13 @@
         android:layout_height="wrap_content" >
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/beacon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/beacon"/>
+
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/addSensors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,12 +51,7 @@
             android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/mic"/>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/beacon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/beacon"/>
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/publish"
