@@ -40,7 +40,6 @@ public class LocationDataReader extends DataReader implements LocationListener {
 
     static final Double EARTH_RADIUS = 6371.00;
 
-
     // flag for GPS status
     private boolean isGPSEnabled = false;
 
@@ -176,15 +175,12 @@ public class LocationDataReader extends DataReader implements LocationListener {
 
             time=c.get(Calendar.HOUR);
 
-
-
             locationManager.removeUpdates(LocationDataReader.this);
             //String Speed = "Device Speed: " +location.getSpeed();
             latitude=location.getLongitude();
             longitude =location.getLatitude();
 
             double distance =CalculationByDistance(latitude, longitude, lat_old, lon_old)/1000;
-
 
             speed = (float)distance/(float)time;
             Toast.makeText(mContext, longitude+"\n"+latitude+"\nDistance is: "
@@ -218,7 +214,6 @@ public class LocationDataReader extends DataReader implements LocationListener {
         // TODO Auto-generated method stub
 
     }
-
 
     @Override
     public void run() {
