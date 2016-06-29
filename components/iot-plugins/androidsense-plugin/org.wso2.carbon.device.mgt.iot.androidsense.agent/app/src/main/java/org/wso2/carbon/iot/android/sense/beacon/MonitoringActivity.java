@@ -47,13 +47,14 @@ import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.logging.Handler;
 import agent.sense.android.iot.carbon.wso2.org.wso2_senseagent.R;
 
 public class MonitoringActivity extends Activity implements BeaconConsumer {
     protected static final String TAG = MonitoringActivity.class.getName();
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 1;
     private ListView list = null;
-    private BeaconAdapter adapter = null;
+    private BeaconAdapter adapter;
     private ArrayList<Beacon> arrayL = new ArrayList<>();
     private LayoutInflater inflater;
 
@@ -63,46 +64,10 @@ public class MonitoringActivity extends Activity implements BeaconConsumer {
     BeaconScanedData beaconData;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_monitor);
-        beaconUtill = new BeaconServiceUtility(this);
-        list = (ListView) findViewById(R.id.list);
-        adapter = new BeaconAdapter();
-        list.setAdapter(adapter);
-        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        iBeaconManager.setRangeNotifier(new RangeNotifier() {
-            @Override
-            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
-                for(Beacon beacon : beacons) {
-                    Log.d(TAG, "UUID:" + beacon.getId1() + ", major:" + beacon.getId2() + ", minor:" + beacon.getId3() + ", Distance:" + beacon.getDistance() + ",RSSI" + beacon.getRssi() + ", TxPower" + beacon.getTxPower());
-                }
-            }
-        });
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        beaconUtill.onStart(iBeaconManager, this);
-    }
-
-    @Override
-    protected void onStop() {
-        beaconUtill.onStop(iBeaconManager, this);
-        super.onStop();
-    }
-
-
-    @Override
     public void onBeaconServiceConnect() {
+
+        iBeaconManager.setBackgroundMode(true);
+
 
         iBeaconManager.setRangeNotifier(new RangeNotifier() {
             @Override
@@ -113,9 +78,9 @@ public class MonitoringActivity extends Activity implements BeaconConsumer {
 
                 }
 
-//                arrayL.clear();
-//                arrayL.addAll((ArrayList<Beacon>) iBeacons);
-//                adapter.notifyDataSetChanged();
+                arrayL.clear();
+                arrayL.addAll(iBeacons);
+                //adapter.notifyDataSetChanged();
             }
 
         });
@@ -153,6 +118,53 @@ public class MonitoringActivity extends Activity implements BeaconConsumer {
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_monitor);
+        beaconUtill = new BeaconServiceUtility(this);
+        list = (ListView) findViewById(R.id.list);
+        adapter = new BeaconAdapter();
+        list.setAdapter(adapter);
+        inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        //iBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=beac,i:4-19,i:20-21,i:22-23,p:24-24,d:25-25"));
+        iBeaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+
+        iBeaconManager.bind(this);
+
+        iBeaconManager.setRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                for(Beacon beacon : beacons) {
+                    Log.d(TAG, "UUID:" + beacon.getId1() + ", major:" + beacon.getId2() + ", minor:" + beacon.getId3() + ", Distance:" + beacon.getDistance() + ",RSSI" + beacon.getRssi() + ", TxPower" + beacon.getTxPower());
+                }
+                arrayL.clear();
+                arrayL.addAll(beacons);
+            }
+        });
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        beaconUtill.onStart(iBeaconManager, this);
+        beaconUtill = new BeaconServiceUtility(this);
+    }
+
+    @Override
+    protected void onStop() {
+        beaconUtill.onStop(iBeaconManager, this);
+        super.onStop();
+    }
+
 
     private class BeaconAdapter extends BaseAdapter {
 

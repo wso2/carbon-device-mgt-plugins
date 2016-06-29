@@ -29,6 +29,11 @@ android {
     packagingOptions {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
     }
     productFlavors {
     }
@@ -48,4 +53,5 @@ dependencies {
     compile 'com.netflix.feign:feign-jaxrs:8.16.0'
     compile 'com.netflix.feign:feign-jackson:8.16.0'
     compile 'org.altbeacon:android-beacon-library:2.8.1'
+
 }
