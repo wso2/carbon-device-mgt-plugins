@@ -13,6 +13,7 @@
  */
 package org.wso2.carbon.iot.android.sense.util;
 
+import org.wso2.carbon.iot.android.sense.beacon.BeaconScanedData;
 import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationData;
 import org.wso2.carbon.iot.android.sense.event.streams.Sensor.SensorData;
 import org.wso2.carbon.iot.android.sense.event.streams.Speed.SpeedData;
@@ -33,7 +34,7 @@ public class SenseDataHolder {
     private static List<LocationData> locationDataHolder;
     private static List<WordData> wordDataHolder;
     private static List<SpeedData> speedDataHolder;
-
+    private static List<BeaconScanedData> beaconScanedDataHolder;
 
     //LocationData gps;
 
@@ -80,6 +81,13 @@ public class SenseDataHolder {
         return speedDataHolder;
     }
 
+    public static List<BeaconScanedData> getBeaconScanedDataHolder(){
+        if(beaconScanedDataHolder == null){
+            beaconScanedDataHolder = new CopyOnWriteArrayList<>();
+        }
+        return beaconScanedDataHolder;
+    }
+
     public static void resetSensorDataHolder(){
         sensorDataHolder = null;
     }
@@ -98,6 +106,10 @@ public class SenseDataHolder {
 
     public static void resetSpeedDataHolder() {
         speedDataHolder = null;
+    }
+
+    public static void resetBeaconScanedDataHolder() {
+        beaconScanedDataHolder = null;
     }
 
 
