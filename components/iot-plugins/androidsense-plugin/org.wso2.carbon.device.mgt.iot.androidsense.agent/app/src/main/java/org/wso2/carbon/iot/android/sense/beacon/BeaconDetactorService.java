@@ -45,20 +45,29 @@ public class BeaconDetactorService extends Service implements BeaconConsumer {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+
+		new Thread(){
+			@Override
+			public void run() {
+				iBeaconManager.bind(BeaconDetactorService.this);
+			}
+		}.start();
+
+
 		return START_STICKY;
 	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		iBeaconManager.bind(this);
+
 
 		final Handler handler = new Handler();
 		final Runnable runnable = new Runnable() {
 
 			@Override
 			public void run() {
-				stopSelf();
+				//stopSelf();
 			}
 		};
 		handler.postDelayed(runnable, 10000);

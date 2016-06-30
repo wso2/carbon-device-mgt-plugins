@@ -11,6 +11,12 @@ android {
         versionName "1.0"
 
     }
+    repositories {
+        maven {
+            url "https://dl.bintray.com/alt236/maven"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -53,5 +59,7 @@ dependencies {
     compile 'com.netflix.feign:feign-jaxrs:8.16.0'
     compile 'com.netflix.feign:feign-jackson:8.16.0'
     compile 'org.altbeacon:android-beacon-library:2.8.1'
+    compile 'uk.co.alt236:easycursor-android:1.0.0'
+    compile 'uk.co.alt236:bluetooth-le-library-android:1.0.0'
 
 }

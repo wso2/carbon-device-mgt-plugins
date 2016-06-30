@@ -38,6 +38,7 @@ import android.widget.Toast;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import org.wso2.carbon.iot.android.sense.RegisterActivity;
+import org.wso2.carbon.iot.android.sense.bmonitor.BeaconMonitoringActivity;
 import org.wso2.carbon.iot.android.sense.data.publisher.DataPublisherReceiver;
 import org.wso2.carbon.iot.android.sense.data.publisher.DataPublisherService;
 import org.wso2.carbon.iot.android.sense.event.SenseScheduleReceiver;
@@ -146,7 +147,7 @@ public class ActivitySelectSensor extends AppCompatActivity
         fbtnBeaconMonitor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), MonitoringActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), BeaconMonitoringActivity.class);
                     startActivity(intent);
 
 
