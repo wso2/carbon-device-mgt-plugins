@@ -101,15 +101,6 @@ public class XMPPEventAdapterFactory extends InputEventAdapterFactory {
                 resourceBundle.getString(XMPPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME_HINT));
         contentValidator.setDefaultValue(XMPPEventAdapterConstants.DEFAULT);
 
-        //Content Validator Params details
-        Property contentValidatorParams = new Property(XMPPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS);
-        contentValidatorParams.setDisplayName(
-                resourceBundle.getString(XMPPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS));
-        contentValidatorParams.setRequired(false);
-        contentValidatorParams.setHint(
-                resourceBundle.getString(XMPPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS_HINT));
-        contentValidatorParams.setDefaultValue(XMPPEventAdapterConstants.XMPP_CONTENT_VALIDATION_DEFAULT_PARAMETERS);
-
         Property jid = new Property(XMPPEventAdapterConstants.ADAPTER_CONF_RECIEVER_JID);
         jid.setDisplayName(resourceBundle.getString(XMPPEventAdapterConstants.ADAPTER_CONF_RECIEVER_JID));
         jid.setRequired(true);
@@ -131,7 +122,6 @@ public class XMPPEventAdapterFactory extends InputEventAdapterFactory {
         propertyList.add(timooutInterval);
         propertyList.add(resource);
         propertyList.add(contentValidator);
-        propertyList.add(contentValidatorParams);
         propertyList.add(jid);
         propertyList.add(contentTransformer);
         return propertyList;

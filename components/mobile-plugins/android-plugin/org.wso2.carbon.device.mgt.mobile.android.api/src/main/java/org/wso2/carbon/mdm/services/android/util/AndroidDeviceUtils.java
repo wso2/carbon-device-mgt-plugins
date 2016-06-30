@@ -20,9 +20,6 @@ package org.wso2.carbon.mdm.services.android.util;
 
 import org.apache.commons.lang.StringUtils;
 import org.wso2.carbon.device.mgt.common.*;
-import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
-
-import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +30,7 @@ public class AndroidDeviceUtils {
 
     private static final String COMMA_SEPARATION_PATTERN = ", ";
 
-    public DeviceIDHolder validateDeviceIdentifiers(List<String> deviceIDs,
-                                                    Message message, MediaType responseMediaType) {
-
-        if (deviceIDs == null || deviceIDs.isEmpty()) {
-            message.setResponseMessage("Device identifier list is empty");
-            throw new BadRequestException(message, responseMediaType);
-        }
+    public DeviceIDHolder validateDeviceIdentifiers(List<String> deviceIDs) {
 
         List<String> errorDeviceIdList = new ArrayList<String>();
         List<DeviceIdentifier> validDeviceIDList = new ArrayList<DeviceIdentifier>();
@@ -64,8 +55,8 @@ public class AndroidDeviceUtils {
                 if (isValidDeviceIdentifier(deviceIdentifier)) {
                     validDeviceIDList.add(deviceIdentifier);
                 } else {
-                    errorDeviceIdList.add(String.format(AndroidConstants.DeviceConstants.DEVICE_ID_NOT_FOUND,
-                            deviceIDCounter));
+                    errorDeviceIdList.add(String.format(AndroidConstants.DeviceConstants.
+                        DEVICE_ID_NOT_FOUND, deviceID));
                 }
             } catch (DeviceManagementException e) {
                 errorDeviceIdList.add(String.format(AndroidConstants.DeviceConstants.DEVICE_ID_SERVICE_NOT_FOUND,

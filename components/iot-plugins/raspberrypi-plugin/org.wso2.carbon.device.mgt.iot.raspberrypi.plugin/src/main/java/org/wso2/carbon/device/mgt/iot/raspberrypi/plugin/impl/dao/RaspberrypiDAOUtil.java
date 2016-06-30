@@ -20,8 +20,10 @@ package org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.exception.RaspberrypiDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.internal.RaspberrypiManagementDataHolder;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -45,11 +47,16 @@ public class RaspberrypiDAOUtil {
     }
 
     public static void initRaspberrypiDAO() {
+        DeviceManagementConfiguration deviceManagementConfiguration = RaspberrypiManagementDataHolder.getInstance()
+                .getDeviceTypeConfigService().getConfiguration(RaspberrypiConstants.DEVICE_TYPE,
+                                                               RaspberrypiConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
+        String datasource = deviceManagementConfiguration.getDeviceManagementConfigRepository().getDataSourceConfig()
+                .getJndiLookupDefinition().getJndiName();
         try {
             Context ctx = new InitialContext();
-            dataSource = (DataSource) ctx.lookup(RaspberrypiConstants.DATA_SOURCE_NAME);
+            dataSource = (DataSource) ctx.lookup(datasource);
         } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + RaspberrypiConstants.DATA_SOURCE_NAME, e);
+            log.error("Error while looking up the data source: " + datasource, e);
         }
     }
 

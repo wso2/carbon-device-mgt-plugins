@@ -51,7 +51,6 @@ public class HTTPMessageServlet extends HttpServlet {
 
 	private static Log log = LogFactory.getLog(HTTPMessageServlet.class);
 
-	private static Map<String, String> contentValidationProperties;
 	private static ContentValidator contentValidator;
 	private static ContentTransformer contentTransformer;
 	private InputEventAdapterListener eventAdaptorListener;
@@ -66,18 +65,6 @@ public class HTTPMessageServlet extends HttpServlet {
 		this.tenantId = tenantId;
 		this.exposedTransports = eventAdapterConfiguration.getProperties().get(
 				HTTPEventAdapterConstants.EXPOSED_TRANSPORTS);
-		HTTPMessageServlet.contentValidationProperties = new HashMap<>();
-		String contentValidationParams = eventAdapterConfiguration.getProperties().get(
-				HTTPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS);
-		if (contentValidationParams != null && !contentValidationParams.isEmpty()) {
-			String validationParams[] = contentValidationParams.split(",");
-			for (String validationParam : validationParams) {
-				String[] validationProperty = validationParam.split(":");
-				if (validationProperty.length == 2) {
-					contentValidationProperties.put(validationProperty[0], validationProperty[1]);
-				}
-			}
-		}
 
 		String className = eventAdapterConfiguration.getProperties().get(
 				HTTPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME);
@@ -180,7 +167,7 @@ public class HTTPMessageServlet extends HttpServlet {
 		}
 
 		if (authenticationInfo != null) {
-			Map<String, String> paramMap = new HashMap<>();
+			Map<String, Object> paramMap = new HashMap<>();
 			Enumeration<String> reqParameterNames = req.getParameterNames();
 			while (reqParameterNames.hasMoreElements()) {
 				String paramterName = reqParameterNames.nextElement();
@@ -188,9 +175,10 @@ public class HTTPMessageServlet extends HttpServlet {
 			}
 			paramMap.put(HTTPEventAdapterConstants.USERNAME_TAG, authenticationInfo.getUsername());
 			paramMap.put(HTTPEventAdapterConstants.TENANT_DOMAIN_TAG, authenticationInfo.getTenantDomain());
+			paramMap.put(HTTPEventAdapterConstants.SCOPE_TAG, authenticationInfo.getScopes());
 			if (contentValidator != null && contentTransformer != null) {
 				data = (String) contentTransformer.transform(data, paramMap);
-				ContentInfo contentInfo = contentValidator.validate(data, contentValidationProperties, paramMap);
+				ContentInfo contentInfo = contentValidator.validate(data, paramMap);
 				if (contentInfo != null && contentInfo.isValidContent()) {
 					HTTPEventAdapter.executorService.submit(new HTTPRequestProcessor(eventAdaptorListener,
 																					 (String) contentInfo.getMessage(), tenantId));

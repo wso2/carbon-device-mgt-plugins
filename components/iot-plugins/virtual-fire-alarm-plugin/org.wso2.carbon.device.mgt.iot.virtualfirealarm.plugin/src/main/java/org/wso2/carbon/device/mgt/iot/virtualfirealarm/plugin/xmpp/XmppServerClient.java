@@ -29,36 +29,39 @@ import java.util.Map;
 
 public class XmppServerClient {
 
-    public static boolean createAccount(XmppAccount xmppAccount)
-            throws VirtualFirealarmDeviceMgtPluginException {
-        if (xmppAccount != null) {
-            try {
-                ConnectionConfiguration config = new ConnectionConfiguration(XmppConfig.getInstance().getXmppServerIP(),
-                                                                             XmppConfig.getInstance().getXmppServerPort(),
-                                                                             "Accounts");
-                XMPPConnection xmppConnection = new XMPPConnection(config);
-                xmppConnection.connect();
-                xmppConnection.login(XmppConfig.getInstance().getXmppUsername(), XmppConfig.getInstance().getXmppPassword());
-                AccountManager accountManager = xmppConnection.getAccountManager();
-                Map<String, String> attributes = new HashMap<>();
-                attributes.put("username", xmppAccount.getUsername());
-                attributes.put("password", xmppAccount.getPassword());
-                attributes.put("email", xmppAccount.getEmail());
-                attributes.put("name", xmppAccount.getAccountName());
-                accountManager.createAccount(xmppAccount.getUsername(), xmppAccount.getPassword(), attributes);
-                xmppConnection.disconnect();
-                return true;
-            } catch (XMPPException e) {
-                if (e.getXMPPError().getCode() == 409) {
-                    //AccountAlreadyExist
+    public static boolean createAccount(XmppAccount xmppAccount) throws VirtualFirealarmDeviceMgtPluginException {
+        if (XmppConfig.getInstance().isEnabled()) {
+            if (xmppAccount != null) {
+                try {
+                    ConnectionConfiguration config = new ConnectionConfiguration(XmppConfig.getInstance().getHost(),
+                                                                                 XmppConfig.getInstance().getPort(),
+                                                                                 "Accounts");
+                    XMPPConnection xmppConnection = new XMPPConnection(config);
+                    xmppConnection.connect();
+                    xmppConnection.login(XmppConfig.getInstance().getUsername(), XmppConfig.getInstance().getPassword());
+                    AccountManager accountManager = xmppConnection.getAccountManager();
+                    Map<String, String> attributes = new HashMap<>();
+                    attributes.put("username", xmppAccount.getUsername());
+                    attributes.put("password", xmppAccount.getPassword());
+                    attributes.put("email", xmppAccount.getEmail());
+                    attributes.put("name", xmppAccount.getAccountName());
+                    accountManager.createAccount(xmppAccount.getUsername(), xmppAccount.getPassword(), attributes);
+                    xmppConnection.disconnect();
                     return true;
-                } else {
-                    throw new VirtualFirealarmDeviceMgtPluginException(
-                            "XMPP account creation failed. Error: " + e.getLocalizedMessage(), e);
+                } catch (XMPPException e) {
+                    if (e.getXMPPError().getCode() == 409) {
+                        //AccountAlreadyExist
+                        return true;
+                    } else {
+                        throw new VirtualFirealarmDeviceMgtPluginException(
+                                "XMPP account creation failed. Error: " + e.getLocalizedMessage(), e);
+                    }
                 }
+            } else {
+                throw new VirtualFirealarmDeviceMgtPluginException("Invalid XMPP attributes");
             }
         } else {
-            throw new VirtualFirealarmDeviceMgtPluginException("Invalid XMPP attributes");
+            return true;
         }
     }
 }

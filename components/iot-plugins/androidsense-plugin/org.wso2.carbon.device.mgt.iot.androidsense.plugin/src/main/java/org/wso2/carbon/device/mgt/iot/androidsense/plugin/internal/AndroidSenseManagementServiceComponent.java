@@ -21,30 +21,28 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.core.ServerStartupObserver;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.exception.AndroidSenseDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.AndroidSenseManagerService;
-import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.util.AndroidSenseStartupListener;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.util.AndroidSenseUtils;
-import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
+import org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 
 /**
  * @scr.component name="org.wso2.carbon.device.mgt.iot.android.internal.AndroidSenseManagementServiceComponent"
  * immediate="true"
- * @scr.reference name="event.output.adapter.service"
- * interface="org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService"
- * cardinality="1..1"
- * policy="dynamic"
- * bind="setOutputEventAdapterService"
- * unbind="unsetOutputEventAdapterService"
  * @scr.reference name="org.wso2.carbon.ndatasource"
  * interface="org.wso2.carbon.ndatasource.core.DataSourceService"
  * cardinality="1..1"
  * policy="dynamic"
  * bind="setDataSourceService"
  * unbind="unsetDataSourceService"
+ * @scr.reference name="devicetype.configuration.service"
+ * interface="org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setDeviceTypeConfigService"
+ * unbind="unsetDeviceTypeConfigService"
  */
 public class AndroidSenseManagementServiceComponent {
 	
@@ -59,8 +57,6 @@ public class AndroidSenseManagementServiceComponent {
             BundleContext bundleContext = ctx.getBundleContext();
             androidServiceRegRef =
                     bundleContext.registerService(DeviceManagementService.class.getName(), new AndroidSenseManagerService(), null);
-            bundleContext.registerService(ServerStartupObserver.class.getName(), new AndroidSenseStartupListener(),
-                                          null);
             String setupOption = System.getProperty("setup");
             if (setupOption != null) {
                 if (log.isDebugEnabled()) {
@@ -99,22 +95,6 @@ public class AndroidSenseManagementServiceComponent {
         }
     }
 
-    /**
-     * Initialize the Output EventAdapter Service dependency
-     *
-     * @param outputEventAdapterService Output EventAdapter Service reference
-     */
-    protected void setOutputEventAdapterService(OutputEventAdapterService outputEventAdapterService) {
-        AndroidSenseManagementDataHolder.getInstance().setOutputEventAdapterService(outputEventAdapterService);
-    }
-
-    /**
-     * De-reference the Output EventAdapter Service dependency.
-     */
-    protected void unsetOutputEventAdapterService(OutputEventAdapterService outputEventAdapterService) {
-        AndroidSenseManagementDataHolder.getInstance().setOutputEventAdapterService(null);
-    }
-
     protected void setDataSourceService(DataSourceService dataSourceService) {
         /* This is to avoid mobile device management component getting initialized before the underlying datasources
         are registered */
@@ -125,5 +105,13 @@ public class AndroidSenseManagementServiceComponent {
 
     protected void unsetDataSourceService(DataSourceService dataSourceService) {
         //do nothing
+    }
+
+    protected void setDeviceTypeConfigService(DeviceTypeConfigService deviceTypeConfigService) {
+        AndroidSenseManagementDataHolder.getInstance().setDeviceTypeConfigService(deviceTypeConfigService);
+    }
+
+    protected void unsetDeviceTypeConfigService(DeviceTypeConfigService deviceTypeConfigService) {
+        AndroidSenseManagementDataHolder.getInstance().setDeviceTypeConfigService(null);
     }
 }

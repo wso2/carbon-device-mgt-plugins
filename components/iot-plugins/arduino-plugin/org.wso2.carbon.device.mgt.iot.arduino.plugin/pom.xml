@@ -70,7 +70,8 @@
 							org.wso2.carbon.device.mgt.iot.*,
 							org.wso2.carbon.device.mgt.extensions.feature.mgt.*,
 							org.wso2.carbon.utils.*,
-							org.wso2.carbon.ndatasource.core
+							org.wso2.carbon.ndatasource.core,
+							org.wso2.carbon.device.mgt.iot.devicetype.*
 						</Import-Package>
 
 						<Export-Package>
@@ -111,6 +112,10 @@
 		<dependency>
 			<groupId>org.wso2.carbon</groupId>
 			<artifactId>org.wso2.carbon.utils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.iot</artifactId>
 		</dependency>
 	</dependencies>
 </project>

@@ -20,7 +20,6 @@
     <from eventAdapterType="oauth-http">
         <property name="maximumHttpConnectionPerHost">2</property>
         <property name="username">admin</property>
-        <property name="contentValidatorParams">device_id_json_path:event.metaData.deviceId</property>
         <property name="contentValidator">org.wso2.carbon.device.mgt.iot.input.adapter.http.util.HTTPContentValidator</property>
         <property name="contentTransformer">default</property>
         <property name="transports">all</property>

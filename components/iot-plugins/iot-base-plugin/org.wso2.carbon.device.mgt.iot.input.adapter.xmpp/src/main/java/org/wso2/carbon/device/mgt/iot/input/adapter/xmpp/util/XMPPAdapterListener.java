@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.PacketListener;
+import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -51,9 +52,9 @@ public class XMPPAdapterListener implements Runnable {
     private int tenantId;
     private boolean connectionSucceeded = false;
     private ContentValidator contentValidator;
-    private Map<String, String> contentValidationParams;
     private ContentTransformer contentTransformer;
     private PacketListener packetListener;
+    private boolean connectionInitialized;
 
     private InputEventAdapterListener eventAdapterListener = null;
 
@@ -83,7 +84,6 @@ public class XMPPAdapterListener implements Runnable {
                     throw new XMPPContentInitializationException("Access of the instance in not allowed.", e);
                 }
             }
-            contentValidationParams = xmppServerConnectionConfiguration.getContentValidatorParams();
 
             String contentTransformerClassName = this.xmppServerConnectionConfiguration.getContentTransformerClassName();
             if (contentTransformerClassName != null && contentTransformerClassName.equals(XMPPEventAdapterConstants.DEFAULT)) {
@@ -184,11 +184,11 @@ public class XMPPAdapterListener implements Runnable {
             }
 
             if (contentValidator != null && contentTransformer != null) {
-                Map<String, String> dynamicParmaters = new HashMap<>();
+                Map<String, Object> dynamicParmaters = new HashMap<>();
                 dynamicParmaters.put(XMPPEventAdapterConstants.FROM_KEY, from);
                 dynamicParmaters.put(XMPPEventAdapterConstants.SUBJECT_KEY, subject);
                 message = (String) contentTransformer.transform(message, dynamicParmaters);
-                ContentInfo contentInfo = contentValidator.validate(message, contentValidationParams, dynamicParmaters);
+                ContentInfo contentInfo = contentValidator.validate(message, dynamicParmaters);
                 if (contentInfo != null && contentInfo.isValidContent()) {
                     eventAdapterListener.onEvent(contentInfo.getMessage());
                 }
@@ -219,6 +219,11 @@ public class XMPPAdapterListener implements Runnable {
     }
 
     public void createConnection() {
+        connectionInitialized = true;
         new Thread(this).start();
+    }
+
+    public boolean isConnectionInitialized() {
+        return connectionInitialized;
     }
 }

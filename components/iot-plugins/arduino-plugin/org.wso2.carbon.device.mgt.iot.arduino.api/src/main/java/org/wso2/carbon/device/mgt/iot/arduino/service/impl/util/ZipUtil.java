@@ -20,6 +20,9 @@ package org.wso2.carbon.device.mgt.iot.arduino.service.impl.util;
 
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.iot.util.Utils;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -27,6 +30,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,6 +39,7 @@ import java.util.Map;
 public class ZipUtil {
 
     private static final String HTTP_PORT_PROPERTY = "httpPort";
+    private static final String CONFIG_TYPE = "general";
 
     public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
                                     String deviceId, String deviceName, String token,
@@ -57,6 +62,23 @@ public class ZipUtil {
             } else {
                 contextParams.put("TENANT_DOMAIN", "/t/" + tenantDomain);
             }
+            PlatformConfiguration configuration = APIUtil.getTenantConfigurationManagementService().getConfiguration(
+                    CONFIG_TYPE);
+            if (configuration != null && configuration.getConfiguration() != null && configuration
+                    .getConfiguration().size() > 0) {
+                List<ConfigurationEntry> configurations = configuration.getConfiguration();
+                for (ConfigurationEntry configurationEntry : configurations) {
+                    switch (configurationEntry.getName()) {
+                        case "ARDUINO_HTTP_IP":
+                            iotServerIP = (String)configurationEntry.getValue();
+                            break;
+                        case "ARDUINO_HTTP_PORT":
+                            httpServerPort = (String)configurationEntry.getValue();
+                            break;
+                    }
+                }
+            }
+
             contextParams.put("DEVICE_OWNER", owner);
             contextParams.put("DEVICE_ID", deviceId);
             contextParams.put("DEVICE_NAME", deviceName);
@@ -70,6 +92,8 @@ public class ZipUtil {
             return zipFile;
         } catch (IOException e) {
             throw new DeviceManagementException("Zip File Creation Failed", e);
+        } catch (ConfigurationManagementException e) {
+            throw new DeviceManagementException("Failed to retrieve configuration", e);
         }
     }
 }

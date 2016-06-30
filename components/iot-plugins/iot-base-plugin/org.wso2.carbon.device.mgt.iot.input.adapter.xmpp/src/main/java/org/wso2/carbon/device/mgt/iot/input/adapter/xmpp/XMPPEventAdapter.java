@@ -54,20 +54,6 @@ public class XMPPEventAdapter implements InputEventAdapter {
     public void init(InputEventAdapterListener eventAdapterListener) throws InputEventAdapterException {
         this.eventAdapterListener = eventAdapterListener;
         try {
-
-            String contentValidationParams = eventAdapterConfiguration.getProperties().get(
-                    XMPPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS);
-            Map<String, String> paramsMap = new HashMap<>();
-            if (contentValidationParams != null && !contentValidationParams.isEmpty()) {
-                String params[] = contentValidationParams.split(",");
-                for (String param : params) {
-                    String paramsKeyAndValue[] = splitOnFirst(param, ':');
-                    if (paramsKeyAndValue.length != 2) {
-                        throw new InputEventAdapterException("Invalid parameters for content validation - " + param);
-                    }
-                    paramsMap.put(paramsKeyAndValue[0], paramsKeyAndValue[1]);
-                }
-            }
             int xmppPort = XMPPEventAdapterConstants.DEFAULT_XMPP_PORT;
             String xmppPortString = eventAdapterConfiguration.getProperties()
                     .get(XMPPEventAdapterConstants.ADAPTER_CONF_PORT);
@@ -90,7 +76,6 @@ public class XMPPEventAdapter implements InputEventAdapter {
                         eventAdapterConfiguration.getProperties().get(XMPPEventAdapterConstants.ADAPTER_CONF_RESOURCE),
                         eventAdapterConfiguration.getProperties().get(XMPPEventAdapterConstants
                                                                           .ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME),
-                        paramsMap,
                         eventAdapterConfiguration.getProperties().get(XMPPEventAdapterConstants.ADAPTER_CONF_RECIEVER_JID),
                         eventAdapterConfiguration.getProperties().get(XMPPEventAdapterConstants
                                                                               .ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME)
@@ -118,7 +103,9 @@ public class XMPPEventAdapter implements InputEventAdapter {
 
     @Override
     public void connect() {
-        xmppAdapterListener.createConnection();
+        if (xmppAdapterListener.isConnectionInitialized()) {
+            xmppAdapterListener.createConnection();
+        }
     }
 
     @Override
@@ -157,7 +144,7 @@ public class XMPPEventAdapter implements InputEventAdapter {
 
     @Override
     public boolean isPolling() {
-        return true;
+        return xmppAdapterListener.isConnectionInitialized();
     }
 
 }

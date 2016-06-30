@@ -43,7 +43,6 @@ public interface VirtualFireAlarmService {
      * to connect-to and send the command to the device.
      *
      * @param deviceId the ID of the VirtualFirealarm device on which the buzzer needs to switched `ON` or `OFF`.
-     * @param protocol the protocol (HTTP, MQTT, XMPP) to be used to connect-to & send the message to the device.
      * @param state    the state to which the buzzer on the device needs to be changed. Either "ON" or "OFF".
      *                 (Case-Insensitive String)
      */
@@ -51,7 +50,7 @@ public interface VirtualFireAlarmService {
     @Path("device/{deviceId}/buzz")
     @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user/operations"})
     @Feature(code = "buzz", name = "Buzzer On / Off", description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
-    Response switchBuzzer(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
+    Response switchBuzzer(@PathParam("deviceId") String deviceId,
                              @FormParam("state") String state);
 
     /**

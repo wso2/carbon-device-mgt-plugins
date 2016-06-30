@@ -119,6 +119,7 @@ public class OAuthAuthenticator {
             RealmService realmService = InputAdapterServiceDataHolder.getRealmService();
             int tenantId = realmService.getTenantManager().getTenantId(authenticationInfo.getTenantDomain());
             authenticationInfo.setTenantId(tenantId);
+            authenticationInfo.setScopes(tokenValidationResponse.getScope());
         } else {
             if (log.isDebugEnabled()) {
                 log.debug("Token validation failed for token: " + token);

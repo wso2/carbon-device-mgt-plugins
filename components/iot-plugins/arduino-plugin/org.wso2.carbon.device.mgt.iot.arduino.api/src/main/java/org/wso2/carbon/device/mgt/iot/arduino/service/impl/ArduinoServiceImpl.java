@@ -34,6 +34,9 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
@@ -62,6 +65,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Properties;
 import java.util.UUID;
 
 public class ArduinoServiceImpl implements ArduinoService {
@@ -80,18 +84,24 @@ public class ArduinoServiceImpl implements ArduinoService {
                         ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
-            LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
             String operation = "BULB:" + state.toUpperCase();
-            if (deviceControlList == null) {
-                deviceControlList = new LinkedList<>();
-                deviceControlList.add(operation);
-                internalControlsQueue.put(deviceId, deviceControlList);
-            } else {
-                deviceControlList.add(operation);
-            }
+            Operation commandOp = new CommandOperation();
+            commandOp.setCode("bulb");
+            commandOp.setType(Operation.Type.COMMAND);
+            commandOp.setEnabled(true);
+            commandOp.setPayLoad(operation);
+
+            List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+            deviceIdentifiers.add(new DeviceIdentifier(deviceId, ArduinoConstants.DEVICE_TYPE));
+            APIUtil.getDeviceManagementService().addOperation(ArduinoConstants.DEVICE_TYPE, commandOp,
+                                                              deviceIdentifiers);
             return Response.status(Response.Status.OK.getStatusCode()).build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (OperationManagementException e) {
+            String msg = "Error occurred while executing command operation upon ringing the buzzer";
+            log.error(msg, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -106,9 +116,11 @@ public class ArduinoServiceImpl implements ArduinoService {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             String result;
-            LinkedList<String> deviceControlList = internalControlsQueue.get(deviceId);
+            Operation operation = APIUtil.getDeviceManagementService()
+                    .getNextPendingOperation(new DeviceIdentifier(deviceId, ArduinoConstants.DEVICE_TYPE));
+
             String owner = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUsername();
-            if (deviceControlList == null) {
+            if (operation == null) {
                 result = "No controls have been set for device " + deviceId + " of owner " + owner;
                 if (log.isDebugEnabled()) {
                     log.debug(result);
@@ -116,9 +128,13 @@ public class ArduinoServiceImpl implements ArduinoService {
                 return Response.status(Response.Status.CONFLICT.getStatusCode()).entity(result).build();
             } else {
                 try {
-                    result = deviceControlList.remove();
-                    if (log.isDebugEnabled()) {
-                        log.debug(result);
+                    if (operation.getType() == Operation.Type.COMMAND) {
+                        result = (String) operation.getPayLoad();
+                        if (log.isDebugEnabled()) {
+                            log.debug(result);
+                        }
+                    } else {
+                        result = "No controls have been found";
                     }
                     return Response.status(Response.Status.ACCEPTED.getStatusCode()).entity(result).build();
                 } catch (NoSuchElementException ex) {
@@ -131,6 +147,10 @@ public class ArduinoServiceImpl implements ArduinoService {
             }
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        } catch (OperationManagementException e) {
+            String msg = "Error occurred while retriving operation";
+            log.error(msg, e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -211,6 +231,11 @@ public class ArduinoServiceImpl implements ArduinoService {
         }
         //create new device id
         String deviceId = shortUUID();
+        boolean status = register(deviceId, deviceName);
+        if (!status) {
+            String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;
+            throw new DeviceManagementException(msg);
+        }
         String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
                 .getRealmConfiguration().getAdminUserName();
         if (apiApplicationKey == null) {
@@ -220,18 +245,13 @@ public class ArduinoServiceImpl implements ArduinoService {
                     ArduinoConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
-        String scopes = "arduino_device device_type_" + ArduinoConstants.DEVICE_TYPE + " device_" + deviceId;
+        String scopes = "arduino_device cdmf/" + ArduinoConstants.DEVICE_TYPE + "/" + deviceId;
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
                                                                    apiApplicationKey.getConsumerSecret(), owner, scopes);
         //create token
         String accessToken = accessTokenInfo.getAccessToken();
         String refreshToken = accessTokenInfo.getRefreshToken();
         //Register the device with CDMF
-        boolean status = register(deviceId, deviceName);
-        if (!status) {
-            String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;
-            throw new DeviceManagementException(msg);
-        }
         ZipUtil ziputil = new ZipUtil();
         return ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(),
                                                    ArduinoConstants.DEVICE_TYPE, deviceId, deviceName, accessToken, refreshToken);

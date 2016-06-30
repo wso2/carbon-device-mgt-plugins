@@ -104,6 +104,8 @@ public class AgentUtilOperations {
                         AgentConstants.DEVICE_OWNER_PROPERTY));
                 iotServerConfigs.setDeviceId(properties.getProperty(
                         AgentConstants.DEVICE_ID_PROPERTY));
+                iotServerConfigs.setServerJID(properties.getProperty(
+                        AgentConstants.SERVER_JID_PROPERTY));
                 iotServerConfigs.setDeviceName(properties.getProperty(
                         AgentConstants.DEVICE_NAME_PROPERTY));
                 iotServerConfigs.setControllerContext(properties.getProperty(

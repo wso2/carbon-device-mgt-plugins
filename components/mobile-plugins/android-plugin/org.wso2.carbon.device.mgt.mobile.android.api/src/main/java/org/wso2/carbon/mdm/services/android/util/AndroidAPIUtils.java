@@ -36,6 +36,7 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
+import org.wso2.carbon.device.mgt.common.device.details.DeviceInfo;
 import org.wso2.carbon.device.mgt.common.device.details.DeviceLocation;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementService;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
@@ -47,6 +48,8 @@ import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManag
 import org.wso2.carbon.device.mgt.core.search.mgt.impl.Utils;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
+import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
+import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
 import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
@@ -114,13 +117,16 @@ public class AndroidAPIUtils {
         return responseMediaType;
     }
 
-    public static Response getOperationResponse(List<String> deviceIDs, Operation operation,
-                                                Message message, MediaType responseMediaType)
+    public static Response getOperationResponse(List<String> deviceIDs, Operation operation)
             throws DeviceManagementException, OperationManagementException {
-
+        if (deviceIDs == null || deviceIDs.size() == 0) {
+            String errorMessage = "Device identifier list is empty";
+            log.error(errorMessage);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        }
         AndroidDeviceUtils deviceUtils = new AndroidDeviceUtils();
-        DeviceIDHolder deviceIDHolder = deviceUtils.validateDeviceIdentifiers(deviceIDs,
-                message, responseMediaType);
+        DeviceIDHolder deviceIDHolder = deviceUtils.validateDeviceIdentifiers(deviceIDs);
 
         List<DeviceIdentifier> validDeviceIds = deviceIDHolder.getValidDeviceIDList();
         Activity activity = getDeviceManagementService().addOperation(
@@ -137,13 +143,11 @@ public class AndroidAPIUtils {
 //            }
 //        }
         if (!deviceIDHolder.getErrorDeviceIdList().isEmpty()) {
-            return javax.ws.rs.core.Response.status(AndroidConstants.StatusCodes.
-                    MULTI_STATUS_HTTP_CODE).type(
-                    responseMediaType).entity(deviceUtils.
-                    convertErrorMapIntoErrorMessage(deviceIDHolder.getErrorDeviceIdList())).build();
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(deviceUtils.
+                            convertErrorMapIntoErrorMessage(deviceIDHolder.getErrorDeviceIdList())).build());
         }
-        return javax.ws.rs.core.Response.status(javax.ws.rs.core.Response.Status.CREATED).entity(activity).
-                type(responseMediaType).build();
+        return Response.status(Response.Status.CREATED).entity(activity).build();
     }
 
 
@@ -262,33 +266,39 @@ public class AndroidAPIUtils {
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
 
-        if (AndroidConstants.OperationCodes.MONITOR.equals(operation.getCode())) {
+        if (!Operation.Status.ERROR.equals(operation.getStatus()) &&
+            AndroidConstants.OperationCodes.MONITOR.equals(operation.getCode())) {
             if (log.isDebugEnabled()) {
                 log.info("Received compliance status from MONITOR operation ID: " + operation.getId());
             }
             getPolicyManagerService().checkPolicyCompliance(deviceIdentifier, operation.getPayLoad());
-        } else if (AndroidConstants.OperationCodes.APPLICATION_LIST.equals(operation.getCode())) {
+        } else if (!Operation.Status.ERROR.equals(operation.getStatus()) && AndroidConstants.
+                OperationCodes.APPLICATION_LIST.equals(operation.getCode())) {
             if (log.isDebugEnabled()) {
                 log.info("Received applications list from device '" + deviceId + "'");
             }
             updateApplicationList(operation, deviceIdentifier);
 
-        } else if (AndroidConstants.OperationCodes.DEVICE_INFO.equals(operation.getCode())) {
+        } else if (!Operation.Status.ERROR.equals(operation.getStatus()) && AndroidConstants.
+                OperationCodes.DEVICE_INFO.equals(operation.getCode())) {
 
             try {
                 Device device = new Gson().fromJson(operation.getOperationResponse(), Device.class);
                 org.wso2.carbon.device.mgt.common.device.details.DeviceInfo deviceInfo = convertDeviceToInfo(device);
-                deviceInfo.setDeviceIdentifier(deviceIdentifier);
-                updateDeviceInfo(deviceInfo);
+                updateDeviceInfo(deviceIdentifier, deviceInfo);
             } catch (DeviceDetailsMgtException e) {
                 throw new OperationManagementException("Error occurred while updating the device information.", e);
             }
 
 
-        } else if (AndroidConstants.OperationCodes.DEVICE_LOCATION.equals(operation.getCode())) {
+        } else if (!Operation.Status.ERROR.equals(operation.getStatus()) &&
+                   AndroidConstants.OperationCodes.DEVICE_LOCATION.equals(operation.getCode())) {
             try {
                 DeviceLocation location = new Gson().fromJson(operation.getOperationResponse(), DeviceLocation.class);
-                if (location != null) {
+                // reason for checking "location.getLatitude() != null" because when device fails to provide
+                // device location and send status instead, above Gson converter create new location object
+                // with null attributes
+                if (location != null && location.getLatitude() != null) {
                     location.setDeviceIdentifier(deviceIdentifier);
                     updateDeviceLocation(location);
                 }
@@ -296,7 +306,6 @@ public class AndroidAPIUtils {
                 throw new OperationManagementException("Error occurred while updating the device location.", e);
             }
         }
-
         getDeviceManagementService().updateOperation(deviceIdentifier, operation);
     }
 
@@ -311,31 +320,35 @@ public class AndroidAPIUtils {
     private static void updateApplicationList(Operation operation, DeviceIdentifier deviceIdentifier)
             throws ApplicationManagementException {
         // Parsing json string to get applications list.
-        JsonElement jsonElement = new JsonParser().parse(operation.getOperationResponse());
-        JsonArray jsonArray = jsonElement.getAsJsonArray();
-        Application app;
-        List<Application> applications = new ArrayList<Application>(jsonArray.size());
-        for (JsonElement element : jsonArray) {
-            app = new Application();
-            app.setName(element.getAsJsonObject().
-                    get(AndroidConstants.ApplicationProperties.NAME).getAsString());
-            app.setApplicationIdentifier(element.getAsJsonObject().
-                    get(AndroidConstants.ApplicationProperties.IDENTIFIER).getAsString());
-            app.setPlatform(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
-            if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.USS) != null) {
-                app.setMemoryUsage(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.USS).getAsInt());
+        if (operation.getOperationResponse() != null) {
+            JsonElement jsonElement = new JsonParser().parse(operation.getOperationResponse());
+            JsonArray jsonArray = jsonElement.getAsJsonArray();
+            Application app;
+            List<Application> applications = new ArrayList<Application>(jsonArray.size());
+            for (JsonElement element : jsonArray) {
+                app = new Application();
+                app.setName(element.getAsJsonObject().
+                        get(AndroidConstants.ApplicationProperties.NAME).getAsString());
+                app.setApplicationIdentifier(element.getAsJsonObject().
+                        get(AndroidConstants.ApplicationProperties.IDENTIFIER).getAsString());
+                app.setPlatform(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+                if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.USS) != null) {
+                    app.setMemoryUsage(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.USS).getAsInt());
+                }
+                if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION) != null) {
+                    app.setVersion(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION).getAsString());
+                }
+                applications.add(app);
             }
-            if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION) != null) {
-                app.setVersion(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION).getAsString());
-            }
-            applications.add(app);
+            getApplicationManagerService().updateApplicationListInstalledInDevice(deviceIdentifier, applications);
+        } else {
+            log.error("Operation Response is null.");
         }
-        getApplicationManagerService().updateApplicationListInstalledInDevice(deviceIdentifier, applications);
+
     }
 
 
     private static void updateDeviceLocation(DeviceLocation deviceLocation) throws DeviceDetailsMgtException {
-
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         DeviceInformationManager informationManager =
                 (DeviceInformationManager) ctx.getOSGiService(DeviceInformationManager.class, null);
@@ -344,14 +357,14 @@ public class AndroidAPIUtils {
     }
 
 
-    private static void updateDeviceInfo(org.wso2.carbon.device.mgt.common.device.details.DeviceInfo deviceInfo)
+    private static void updateDeviceInfo(DeviceIdentifier deviceId, DeviceInfo deviceInfo)
             throws DeviceDetailsMgtException {
 
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         DeviceInformationManager informationManager =
                 (DeviceInformationManager) ctx.getOSGiService(DeviceInformationManager.class, null);
 
-        informationManager.addDeviceInfo(deviceInfo);
+        informationManager.addDeviceInfo(deviceId, deviceInfo);
     }
 
 

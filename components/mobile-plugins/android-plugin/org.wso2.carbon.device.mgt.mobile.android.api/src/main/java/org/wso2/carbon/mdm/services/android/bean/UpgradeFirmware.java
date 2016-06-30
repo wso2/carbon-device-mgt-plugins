@@ -29,24 +29,29 @@ import java.io.Serializable;
 @ApiModel(value = "UpgradeFirmware",
         description = "This class carries all information related to UpgradeFirmware.")
 public class UpgradeFirmware extends AndroidOperation implements Serializable {
-    @ApiModelProperty(name = "schedule", value = "Schedule of the UpgradeFirmware.")
+
+    @ApiModelProperty(name = "schedule", value = "Schedule of the UpgradeFirmware.", required = true)
     private String schedule;
 
     @ApiModelProperty(name = "server", value = "Firmware package server.")
     private String server;
 
+    @SuppressWarnings("unused")
     public String getSchedule() {
         return schedule;
     }
 
+    @SuppressWarnings("unused")
     public void setSchedule(String schedule) {
         this.schedule = schedule;
     }
 
+    @SuppressWarnings("unused")
     public String getServer() {
         return server;
     }
 
+    @SuppressWarnings("unused")
     public void setServer(String server) {
         this.server = server;
     }

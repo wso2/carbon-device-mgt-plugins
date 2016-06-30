@@ -49,6 +49,28 @@
                 <artifactId>swagger-annotations</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-core</artifactId>
+                <version>${swagger.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-jaxrs</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
+                <scope>provided</scope>
+            </dependency>
 
             <!--Carbon Kernel Dependencies-->
             <dependency>
@@ -1180,6 +1202,8 @@
 
         <!-- Release plugin ID for github-->
         <project.scm.id>github-scm</project.scm.id>
+
+        <servlet-api.version>2.5</servlet-api.version>
     </properties>
 
     <scm>

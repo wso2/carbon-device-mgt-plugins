@@ -18,6 +18,7 @@ import android.content.Context;
 import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationDataReader;
 import org.wso2.carbon.iot.android.sense.event.streams.Sensor.SensorDataReader;
 import org.wso2.carbon.iot.android.sense.event.streams.Speed.SpeedDataReader;
+import org.wso2.carbon.iot.android.sense.beacon.MonitoringActivity;
 
 /**
  * This class triggered by service to collect the sensor data.
@@ -39,6 +40,7 @@ public class SenseDataCollector {
             case SPEED:
                 dr = new SpeedDataReader(ctx);
                 break;
+
         }
         if (dr != null) {
             Thread DataCollector = new Thread(dr);

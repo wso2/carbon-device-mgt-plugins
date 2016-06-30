@@ -71,6 +71,7 @@ public class AgentConstants {
     public static final String TENANT_DOMAIN = "tenantDomain";
     public static final String DEVICE_OWNER_PROPERTY = "owner";
     public static final String DEVICE_ID_PROPERTY = "deviceId";
+    public static final String SERVER_JID_PROPERTY = "server-jid";
     public static final String DEVICE_NAME_PROPERTY = "device-name";
     public static final String DEVICE_CONTROLLER_CONTEXT_PROPERTY = "controller-context";
     public static final String DEVICE_SCEP_CONTEXT_PROPERTY = "scep-context";

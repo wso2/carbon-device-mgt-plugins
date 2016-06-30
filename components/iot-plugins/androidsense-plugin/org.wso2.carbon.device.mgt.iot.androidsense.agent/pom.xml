@@ -51,4 +51,70 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+        <repository>
+            <id>wso2.releases</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!--Dependency on Sidhdhi - required for PolicyMgt-->
+        <dependency>
+            <groupId>org.wso2.siddhi</groupId>
+            <artifactId>siddhi-query-compiler</artifactId>
+            <version>${sidhdhi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.siddhi</groupId>
+            <artifactId>siddhi-query-api</artifactId>
+            <version>${sidhdhi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.siddhi</groupId>
+            <artifactId>siddhi-core</artifactId>
+            <version>${sidhdhi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${apache-httpclient.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+    </dependencies>
+
+    <properties>
+        <!-- Java Version Compatibility -->
+        <wso2.maven.compiler.source>1.7</wso2.maven.compiler.source>
+        <wso2.maven.compiler.target>1.7</wso2.maven.compiler.target>
+        <!--Apache HTTP Components-->
+        <apache-httpclient.version>4.5</apache-httpclient.version>
+        <!-- Sidhdhi Version -->
+        <sidhdhi.version>3.0.5</sidhdhi.version>
+        <gson.version>2.3.1</gson.version>
+    </properties>
+
 </project>

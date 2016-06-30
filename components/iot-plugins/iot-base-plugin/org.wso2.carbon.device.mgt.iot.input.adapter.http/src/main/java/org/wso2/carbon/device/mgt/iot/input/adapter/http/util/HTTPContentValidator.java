@@ -27,23 +27,28 @@ import org.json.simple.parser.ParseException;
 import org.wso2.carbon.device.mgt.iot.input.adapter.extension.ContentInfo;
 import org.wso2.carbon.device.mgt.iot.input.adapter.extension.ContentValidator;
 
+import java.util.List;
 import java.util.Map;
 
 public class HTTPContentValidator implements ContentValidator {
 	private static final Log log = LogFactory.getLog(HTTPContentValidator.class);
 	private static String JSON_ARRAY_START_CHAR = "[";
+	private static String CDMF_SCOPE_PREFIX = "cdmf";
+	private static String CDMF_SCOPE_SEPERATOR = "/";
 
 	@Override
-	public ContentInfo validate(Object msgPayload, Map<String, String>  contentValidationParams,
-								Map<String, String> dynamicParams) {
-		String deviceId = dynamicParams.get("deviceId");
+	public ContentInfo validate(Object msgPayload, Map<String, Object> dynamicParams) {
+		String deviceId = (String) dynamicParams.get("deviceId");
+		String deviceType = (String) dynamicParams.get("deviceType");
 		String msg = (String) msgPayload;
-		String deviceIdJsonPath = contentValidationParams.get(HTTPEventAdapterConstants.DEVICE_ID_JSON_PATH);
+		String deviceIdJsonPath = HTTPEventAdapterConstants.DEVICE_ID_JSON_PATH;
 		boolean status;
-		if (msg.startsWith(JSON_ARRAY_START_CHAR)) {
-			status = processMultipleEvents(msg, deviceId, deviceIdJsonPath);
-		} else {
-			status = processSingleEvent(msg, deviceId, deviceIdJsonPath);
+		if (status = isValidDevice(deviceId, deviceType, dynamicParams)) {
+			if (msg.startsWith(JSON_ARRAY_START_CHAR)) {
+				status = processMultipleEvents(msg, deviceId, deviceIdJsonPath);
+			} else {
+				status = processSingleEvent(msg, deviceId, deviceIdJsonPath);
+			}
 		}
 		return new ContentInfo(status, msg);
 	}
@@ -73,5 +78,22 @@ public class HTTPContentValidator implements ContentValidator {
 			log.error("Invalid input " + msg, e);
 			return false;
 		}
+	}
+
+	private boolean isValidDevice(String deviceId, String deviceType, Map<String, Object> dynamicParams) {
+		List<String> scopes = (List<String>) dynamicParams.get(HTTPEventAdapterConstants.SCOPE_TAG);
+		if (scopes != null) {
+			for (String scope : scopes) {
+				if (scope.startsWith(CDMF_SCOPE_PREFIX)) {
+					String deviceIdInfo[] = scope.split(CDMF_SCOPE_SEPERATOR);
+					if (deviceIdInfo.length == 3) {
+						if (deviceId.equals(deviceIdInfo[2]) && deviceType.equals(deviceIdInfo[1])) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
 	}
 }

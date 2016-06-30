@@ -46,4 +46,5 @@ public class DisenrollmentBeanWrapper {
 	public void setDeviceIDs(List<String> deviceIDs) {
 		this.deviceIDs = deviceIDs;
 	}
+
 }

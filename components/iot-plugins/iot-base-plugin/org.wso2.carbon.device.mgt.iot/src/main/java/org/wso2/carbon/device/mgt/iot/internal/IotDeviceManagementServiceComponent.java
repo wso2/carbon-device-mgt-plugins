@@ -23,6 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.core.ServerStartupObserver;
+import org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService;
+import org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigServiceImpl;
 import org.wso2.carbon.device.mgt.iot.url.printer.URLPrinterStartupHandler;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
@@ -50,6 +52,10 @@ public class IotDeviceManagementServiceComponent {
             if (log.isDebugEnabled()) {
                 log.debug("Iot Device Management Service Component has been successfully activated");
             }
+            DeviceTypeConfigServiceImpl deviceTypeConfigLoaderService = new DeviceTypeConfigServiceImpl();
+            deviceTypeConfigLoaderService.initialize();
+            bundleContext.registerService(DeviceTypeConfigService.class.getName(), deviceTypeConfigLoaderService,
+                                          null);
         } catch (Throwable e) {
             log.error("Error occurred while activating Iot Device Management Service Component", e);
         }

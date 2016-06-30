@@ -124,16 +124,6 @@ public class HTTPEventAdapterFactory extends InputEventAdapterFactory {
 		contentValidator.setDefaultValue(HTTPEventAdapterConstants.DEFAULT);
 		propertyList.add(contentValidator);
 
-		//Content Validator Params details
-		Property contentValidatorParams = new Property(HTTPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS);
-		contentValidatorParams.setDisplayName(
-				resourceBundle.getString(HTTPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS));
-		contentValidatorParams.setRequired(false);
-		contentValidatorParams.setHint(
-				resourceBundle.getString(HTTPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_PARAMS_HINT));
-		contentValidatorParams.setDefaultValue(HTTPEventAdapterConstants.HTTP_CONTENT_VALIDATION_DEFAULT_PARAMETERS);
-		propertyList.add(contentValidatorParams);
-
 		//Content Transformer details
 		Property contentTransformer = new Property(HTTPEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME);
 		contentTransformer.setDisplayName(

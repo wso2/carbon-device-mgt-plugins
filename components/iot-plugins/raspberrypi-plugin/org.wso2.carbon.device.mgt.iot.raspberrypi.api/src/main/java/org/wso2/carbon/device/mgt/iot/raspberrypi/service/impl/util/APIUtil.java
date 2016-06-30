@@ -14,6 +14,7 @@ import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationService;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfigurationManagementService;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.SensorRecord;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
@@ -179,6 +180,18 @@ public class APIUtil {
 			throw new IllegalStateException(msg);
 		}
 		return outputEventAdapterService;
+	}
+
+	public static PlatformConfigurationManagementService getTenantConfigurationManagementService() {
+		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+		PlatformConfigurationManagementService tenantConfigurationManagementService =
+				(PlatformConfigurationManagementService) ctx.getOSGiService(PlatformConfigurationManagementService.class, null);
+		if (tenantConfigurationManagementService == null) {
+			String msg = "Tenant configuration Management service not initialized.";
+			log.error(msg);
+			throw new IllegalStateException(msg);
+		}
+		return tenantConfigurationManagementService;
 	}
 
 }
