@@ -128,6 +128,7 @@ public final class AndroidConstants {
         public static final String USS = "USS";
         public static final String VERSION = "version";
         public static final String ICON = "icon";
+        public static final String IS_ACTIVE = "isActive";
     }
 
 }

@@ -19,6 +19,7 @@
 package org.wso2.carbon.device.mgt.mobile.dto;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +37,8 @@ public class MobileDevice implements Serializable {
     private String imei;
     private String imsi;
     private String serial;
+    private String osBuildDate;
+
     private Map<String, String> deviceProperties;
 
     public MobileDevice() {
@@ -122,4 +125,11 @@ public class MobileDevice implements Serializable {
         this.deviceProperties = deviceProperties;
     }
 
+    public String getOsBuildDate() {
+        return osBuildDate;
+    }
+
+    public void setOsBuildDate(String osBuildDate) {
+        this.osBuildDate = osBuildDate;
+    }
 }

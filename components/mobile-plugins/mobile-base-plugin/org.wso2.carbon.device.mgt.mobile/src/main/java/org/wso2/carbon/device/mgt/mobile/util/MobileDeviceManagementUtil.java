@@ -38,6 +38,9 @@ import org.wso2.carbon.registry.core.Registry;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -54,6 +57,7 @@ public class MobileDeviceManagementUtil {
 	private static final String MOBILE_DEVICE_LATITUDE = "LATITUDE";
 	private static final String MOBILE_DEVICE_LONGITUDE = "LONGITUDE";
 	private static final String MOBILE_DEVICE_SERIAL = "SERIAL";
+	private static final String MOBILE_DEVICE_OS_BUILD_DATE = "OS_BUILD_DATE";
 
 	public static Document convertToDocument(File file) throws DeviceManagementException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -100,6 +104,7 @@ public class MobileDeviceManagementUtil {
 			mobileDevice.setLatitude(getPropertyValue(device, MOBILE_DEVICE_LATITUDE));
 			mobileDevice.setLongitude(getPropertyValue(device, MOBILE_DEVICE_LONGITUDE));
 			mobileDevice.setSerial(getPropertyValue(device, MOBILE_DEVICE_SERIAL));
+			mobileDevice.setOsBuildDate(getPropertyValue(device, MOBILE_DEVICE_OS_BUILD_DATE));
 
 			if (device.getProperties() != null) {
 				Map<String, String> deviceProperties = new HashMap<String, String>();
@@ -124,6 +129,7 @@ public class MobileDeviceManagementUtil {
 			propertyList.add(getProperty(MOBILE_DEVICE_IMSI, mobileDevice.getImsi()));
 			propertyList.add(getProperty(MOBILE_DEVICE_MODEL, mobileDevice.getModel()));
 			propertyList.add(getProperty(MOBILE_DEVICE_OS_VERSION, mobileDevice.getOsVersion()));
+			propertyList.add(getProperty(MOBILE_DEVICE_OS_BUILD_DATE, mobileDevice.getOsBuildDate()));
 			propertyList.add(getProperty(MOBILE_DEVICE_VENDOR, mobileDevice.getVendor()));
             if(mobileDevice.getLatitude() != null) {
                 propertyList.add(getProperty(MOBILE_DEVICE_LATITUDE, mobileDevice.getLatitude()));

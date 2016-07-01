@@ -36,6 +36,7 @@ public class AndroidPluginConstants {
 	public static final String IMSI = "IMSI";
 	public static final String VENDOR = "VENDOR";
 	public static final String OS_VERSION = "OS_VERSION";
+	public static final String OS_BUILD_DATE = "OS_BUILD_DATE";
 	public static final String MAC_ADDRESS = "MAC_ADDRESS";
 
 	//Properties related to AD_FEATURE table

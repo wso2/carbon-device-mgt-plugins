@@ -78,6 +78,12 @@
             android:label="Beacon Monitor"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+
+        <activity
+            android:name="org.wso2.carbon.iot.android.sense.bmonitor.BeaconMonitoringActivity"
+            android:label="Beacon Monitor"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>
