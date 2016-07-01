@@ -53,7 +53,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			conn = AndroidDAOFactory.getConnection();
 			String selectDBQuery =
 					"SELECT DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, " +
-					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION" +
+					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION, OS_BUILD_DATE" +
 					" FROM AD_DEVICE WHERE DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
 			stmt.setString(1, mblDeviceId);
@@ -70,6 +70,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 				mobileDevice.setImei(rs.getString(AndroidPluginConstants.IMEI));
 				mobileDevice.setImsi(rs.getString(AndroidPluginConstants.IMSI));
 				mobileDevice.setOsVersion(rs.getString(AndroidPluginConstants.OS_VERSION));
+				mobileDevice.setOsBuildDate(rs.getString(AndroidPluginConstants.OS_BUILD_DATE));
 
 				Map<String, String> propertyMap = new HashMap<String, String>();
 				propertyMap.put(AndroidPluginConstants.GCM_TOKEN, rs.getString(AndroidPluginConstants.GCM_TOKEN));
@@ -104,7 +105,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			String createDBQuery =
 					"INSERT INTO AD_DEVICE(DEVICE_ID, GCM_TOKEN, DEVICE_INFO, SERIAL, " +
 					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, " +
-					"OS_VERSION, DEVICE_MODEL) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+					"OS_VERSION, DEVICE_MODEL, OS_BUILD_DATE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 			stmt = conn.prepareStatement(createDBQuery);
 			stmt.setString(1, mobileDevice.getMobileDeviceId());
@@ -122,6 +123,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			stmt.setString(11, mobileDevice.getImsi());
 			stmt.setString(12, mobileDevice.getOsVersion());
 			stmt.setString(13, mobileDevice.getModel());
+			stmt.setString(14, mobileDevice.getOsBuildDate());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
@@ -149,7 +151,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			String updateDBQuery =
 					"UPDATE AD_DEVICE SET GCM_TOKEN = ?, DEVICE_INFO = ?, SERIAL = ?, VENDOR = ?, " +
 					"MAC_ADDRESS = ?, DEVICE_NAME = ?, LATITUDE = ?, LONGITUDE = ?, IMEI = ?, " +
-					"IMSI = ?, OS_VERSION = ?, DEVICE_MODEL = ? WHERE DEVICE_ID = ?";
+					"IMSI = ?, OS_VERSION = ?, DEVICE_MODEL = ?, OS_BUILD_DATE = ? WHERE DEVICE_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 
 			Map<String, String> properties = mobileDevice.getDeviceProperties();
@@ -166,6 +168,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			stmt.setString(11, mobileDevice.getOsVersion());
 			stmt.setString(12, mobileDevice.getModel());
 			stmt.setString(13, mobileDevice.getMobileDeviceId());
+			stmt.setString(14, mobileDevice.getOsBuildDate());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
@@ -225,7 +228,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			conn = AndroidDAOFactory.getConnection();
 			String selectDBQuery =
 					"SELECT DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, " +
-					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION " +
+					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION, OS_BUILD_DATE " +
 					"FROM AD_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
 			rs = stmt.executeQuery();
@@ -241,6 +244,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 				mobileDevice.setImei(rs.getString(AndroidPluginConstants.IMEI));
 				mobileDevice.setImsi(rs.getString(AndroidPluginConstants.IMSI));
 				mobileDevice.setOsVersion(rs.getString(AndroidPluginConstants.OS_VERSION));
+				mobileDevice.setOsBuildDate(rs.getString(AndroidPluginConstants.OS_BUILD_DATE));
 
 				Map<String, String> propertyMap = new HashMap<>();
 				propertyMap.put(AndroidPluginConstants.GCM_TOKEN, rs.getString(AndroidPluginConstants.GCM_TOKEN));
