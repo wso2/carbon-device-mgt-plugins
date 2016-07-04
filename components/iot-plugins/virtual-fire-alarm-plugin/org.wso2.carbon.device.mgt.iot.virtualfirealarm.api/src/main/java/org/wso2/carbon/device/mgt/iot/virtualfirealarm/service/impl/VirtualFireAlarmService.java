@@ -48,7 +48,7 @@ public interface VirtualFireAlarmService {
      */
     @POST
     @Path("device/{deviceId}/buzz")
-    @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user/operations"})
+    @Permission(scope = "virtual_firealarm_user", roles = {"emm-user"})
     @Feature(code = "buzz", name = "Buzzer On / Off", description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
     Response switchBuzzer(@PathParam("deviceId") String deviceId,
                              @FormParam("state") String state);
@@ -58,7 +58,7 @@ public interface VirtualFireAlarmService {
      */
     @Path("device/stats/{deviceId}")
     @GET
-    @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user/stats"})
+    @Permission(scope = "virtual_firealarm_user", roles = {"emm-user"})
     @Consumes("application/json")
     @Produces("application/json")
     Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
@@ -67,7 +67,7 @@ public interface VirtualFireAlarmService {
     @Path("device/download")
     @GET
     @Produces("application/zip")
-    @Permission(scope = "virtual_firealarm_user", permissions = {"/permission/admin/device-mgt/user/devices"})
+    @Permission(scope = "virtual_firealarm_user", roles = {"emm-user"})
     Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketchType") String sketchType);
 
 }

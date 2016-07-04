@@ -19,12 +19,18 @@
 package org.wso2.carbon.mdm.services.android.services;
 
 import io.swagger.annotations.*;
+import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EventBeanWrapper;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+@API(name = "Android Event Receiver", version = "1.0.0",
+        context = "api-device-mgt-android-v1.0/configuration",
+        tags = {"devicemgt_android"})
 
 @Api(value = "Event Receiver", description = "Event publishing/retrieving related APIs.To enable Eventing need to" +
         " configure as ref-https://docs.wso2.com/display/EMM210/Managing+Event+Publishing+with+WSO2+Data+Analytics+Server, " +
@@ -82,6 +88,7 @@ public interface EventReceiverService {
                             message = "Internal Server Error. \n " +
                                     "Server error occurred while publishing events.")
             })
+    @Permission(scope = "device:android:event:publish", roles = {"admin"})
     Response publishEvents(
             @ApiParam(
                     name = "eventBeanWrapper",
@@ -130,6 +137,7 @@ public interface EventReceiverService {
                             code = 500,
                             message = "Error occurred while getting published events for specific device.")
             })
+    @Permission(scope = "device:android:event:view", roles = {"admin"})
     Response retrieveAlerts(
             @ApiParam(
                     name = "id",

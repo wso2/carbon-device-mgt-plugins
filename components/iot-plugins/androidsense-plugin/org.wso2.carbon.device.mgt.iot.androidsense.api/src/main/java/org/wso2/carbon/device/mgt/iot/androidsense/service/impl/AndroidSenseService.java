@@ -45,7 +45,7 @@ public interface AndroidSenseService {
     @Path("device/{deviceId}/words")
     @POST
     @Feature(code = "keywords", name = "Add Keywords", description = "Send keywords to the device")
-    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/operations"})
+    @Permission(scope = "android_sense_user", roles = {"/permission/admin/device-mgt/user/operations"})
     Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords);
 
     /**
@@ -57,13 +57,13 @@ public interface AndroidSenseService {
     @Path("device/{deviceId}/words/threshold")
     @POST
     @Feature(code = "threshold", name = "Add a Threshold", description = "Set a threshold for word in the device")
-    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/operations"})
+    @Permission(scope = "android_sense_user", roles = {"emm-user"})
     Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold);
 
     @Path("device/{deviceId}/words")
     @DELETE
     @Feature(code = "remove", name = "Remove Keywords", description = "Remove the keywords")
-    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/operations"})
+    @Permission(scope = "android_sense_user", roles = {"emm-user"})
     Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words);
 
     /**
@@ -72,7 +72,7 @@ public interface AndroidSenseService {
     @Path("stats/{deviceId}/sensors/{sensorName}")
     @GET
     @Consumes("application/json")
-    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/stats"})
+    @Permission(scope = "android_sense_user", roles = {"emm-user"})
     @Produces("application/json")
     Response getAndroidSenseDeviceStats(@PathParam("deviceId") String deviceId, @PathParam("sensorName") String sensor,
                                         @QueryParam("from") long from, @QueryParam("to") long to);
@@ -82,7 +82,7 @@ public interface AndroidSenseService {
      */
     @Path("device/{device_id}/register")
     @POST
-    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/devices"})
+    @Permission(scope = "android_sense_user", roles = {"emm-user"})
     Response register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName);
 
 }

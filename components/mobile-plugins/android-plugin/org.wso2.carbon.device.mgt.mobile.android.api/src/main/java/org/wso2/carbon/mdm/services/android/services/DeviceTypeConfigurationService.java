@@ -19,12 +19,18 @@
 package org.wso2.carbon.mdm.services.android.services;
 
 import io.swagger.annotations.*;
+import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+@API(name = "Android Configuration Management", version = "1.0.0",
+        context = "api-device-mgt-android-v1.0/configuration",
+        tags = {"devicemgt_android"})
 
 @Api(value = "Android Configuration Management", description = "This API carries all resource associated with " +
         "manipulating the general configurations of Android platform")
@@ -73,6 +79,7 @@ public interface DeviceTypeConfigurationService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching Android platform configuration.")
     })
+    @Permission(scope = "configuration:view", roles = {"admin"})
     Response getConfiguration(
             @ApiParam(
                     name = "If-Modified-Since",
@@ -122,6 +129,7 @@ public interface DeviceTypeConfigurationService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while modifying Android platform configuration.")
     })
+    @Permission(scope = "configuration:modify", roles = {"admin"})
     Response updateConfiguration(
             @ApiParam(name = "configuration",
                     value = "AndroidPlatformConfiguration")
@@ -169,6 +177,7 @@ public interface DeviceTypeConfigurationService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching Android license configuration.")
     })
+    @Permission(scope = "device:android:enroll", roles = {"admin"})
     Response getLicense(
             @ApiParam(
                     name = "If-Modified-Since",

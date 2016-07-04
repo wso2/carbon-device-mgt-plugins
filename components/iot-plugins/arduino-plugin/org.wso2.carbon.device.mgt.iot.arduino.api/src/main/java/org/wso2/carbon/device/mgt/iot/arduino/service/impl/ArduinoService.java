@@ -38,12 +38,12 @@ public interface ArduinoService {
     @Path("device/{deviceId}/bulb")
     @POST
     @Feature(code = "bulb", name = "Control Bulb", description = "Control Bulb on Arduino Uno")
-    @Permission(scope = "arduino_user", permissions = {"/permission/admin/device-mgt/user/operations"})
+    @Permission(scope = "arduino_user", roles = {"emm-user"})
     Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
     @Path("device/{deviceId}/controls")
     @GET
-    @Permission(scope = "arduino_device", permissions = {"/permission/admin/device-mgt/user/operations"})
+    @Permission(scope = "arduino_device", roles = {"emm-user"})
     Response readControls(@PathParam("deviceId") String deviceId);
 
     /**
@@ -53,7 +53,7 @@ public interface ArduinoService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    @Permission(scope = "arduino_user", permissions = {"/permission/admin/device-mgt/user/stats"})
+    @Permission(scope = "arduino_user", roles = {"emm-user"})
     Response getArduinoTemperatureStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
                                                @QueryParam("to") long to);
 
@@ -63,7 +63,7 @@ public interface ArduinoService {
     @Path("device/download")
     @GET
     @Produces("application/octet-stream")
-    @Permission(scope = "arduino_user", permissions = {"/permission/admin/device-mgt/user/devices"})
+    @Permission(scope = "arduino_user", roles = {"emm-user"})
     Response downloadSketch(@QueryParam("deviceName") String customDeviceName);
 
 }

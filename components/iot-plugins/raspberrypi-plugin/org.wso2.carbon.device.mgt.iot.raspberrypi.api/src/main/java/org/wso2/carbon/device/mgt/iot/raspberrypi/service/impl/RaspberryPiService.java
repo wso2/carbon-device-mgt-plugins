@@ -39,7 +39,7 @@ public interface RaspberryPiService {
     @Path("device/{deviceId}/bulb")
     @POST
     @Feature(code = "bulb", name = "Bulb On / Off", description = "Switch on/off Raspberry Pi agent's bulb. (On / Off)")
-    @Permission(scope = "raspberrypi_user", permissions = {"/permission/admin/device-mgt/user/operations"})
+    @Permission(scope = "raspberrypi_user", roles = {"emm-user"})
     Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
     /**
@@ -49,7 +49,7 @@ public interface RaspberryPiService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    @Permission(scope = "raspberrypi_user", permissions = {"/permission/admin/device-mgt/user/stats"})
+    @Permission(scope = "raspberrypi_user", roles = {"emm-user"})
     Response getRaspberryPiTemperatureStats(@PathParam("deviceId") String deviceId,
                                         @QueryParam("from") long from, @QueryParam("to") long to);
 
@@ -59,7 +59,7 @@ public interface RaspberryPiService {
     @Path("device/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Permission(scope = "raspberrypi_user", permissions = {"/permission/admin/device-mgt/user/devices"})
+    @Permission(scope = "raspberrypi_user", roles = {"emm-user"})
     Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketch_type") String sketchType);
 
 }

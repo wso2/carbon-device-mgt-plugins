@@ -19,6 +19,8 @@
 package org.wso2.carbon.mdm.services.android.services;
 
 import io.swagger.annotations.*;
+import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
@@ -27,6 +29,10 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+
+@API(name = "Android Device Management", version = "1.0.0",
+        context = "api-device-mgt-android-v1.0/devices",
+        tags = {"devicemgt_android"})
 
 @Api(value = "Android Device Management",
         description = "This carries all the resources related to Android device management functionalities")
@@ -77,6 +83,7 @@ public interface DeviceManagementService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while updating the application list.")
     })
+    @Permission(scope = "device:android:enroll", roles = {"admin"})
     Response updateApplicationList(
             @ApiParam(
                     name = "id",
@@ -127,6 +134,7 @@ public interface DeviceManagementService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching policies.")
     })
+    @Permission(scope = "device:android:enroll", roles = {"admin"})
     Response getPendingOperations(
             @ApiParam(
                     name = "id",
@@ -191,6 +199,7 @@ public interface DeviceManagementService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new policy.")
     })
+    @Permission(scope = "device:android:enroll", roles = {"admin"})
     Response enrollDevice(@ApiParam(name = "device", value = "Device Information to be enroll") Device device);
 
     @GET
@@ -228,6 +237,7 @@ public interface DeviceManagementService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching the enrollment status of the Android device.")
     })
+    @Permission(scope = "device:android:enroll", roles = {"admin"})
     Response isEnrolled(
             @ApiParam(
                     name = "id",
@@ -281,6 +291,7 @@ public interface DeviceManagementService {
                             message = "Internal Server Error. \n " +
                                     "Server error occurred while updating the device enrollment.")
             })
+    @Permission(scope = "device:android:enroll", roles = {"admin"})
     Response modifyEnrollment(
             @ApiParam(
                     name = "id",
@@ -310,6 +321,7 @@ public interface DeviceManagementService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while dis-enrolling the device.")
     })
+    @Permission(scope = "device:android:enroll", roles = {"admin"})
     Response disEnrollDevice(
             @ApiParam(
                     name = "id",
