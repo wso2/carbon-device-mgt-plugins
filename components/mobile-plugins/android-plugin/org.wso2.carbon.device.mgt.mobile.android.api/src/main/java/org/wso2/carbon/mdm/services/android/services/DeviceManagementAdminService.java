@@ -899,7 +899,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new blacklist-applications operation.")
     })
-    @Permission(scope = "device:android:blacklist-application", roles = {"admin"})
+    @Permission(scope = "device:android:blacklist-applications", roles = {"admin"})
     Response blacklistApplications(
             @ApiParam(name = "blacklistApplicationsBeanWrapper", value = "BlacklistApplications " +
                     "Configuration and DeviceIds")
