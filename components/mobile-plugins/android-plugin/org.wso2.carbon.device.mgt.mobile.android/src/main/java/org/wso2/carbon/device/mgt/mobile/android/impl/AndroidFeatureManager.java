@@ -457,6 +457,12 @@ public class AndroidFeatureManager implements FeatureManager {
         feature.setDescription("remove device owner");
         supportedFeatures.add(feature);
 
+        feature = new Feature();
+        feature.setCode("LOGCAT");
+        feature.setName("Fetch Logcat");
+        feature.setDescription("Fetch device logcat");
+        supportedFeatures.add(feature);
+
         return supportedFeatures;
     }
 }

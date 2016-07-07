@@ -354,6 +354,61 @@ public interface DeviceManagementAdminService {
             List<String> deviceIDs);
 
     @POST
+    @Path("/info")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Requesting Information from Android Devices",
+            notes = "Using this REST API you are able to request for Android device details. Once this REST API is" +
+                    " executed it will be in the Android operation queue until the device calls the server to retrieve " +
+                    "the list of operations that needs to be executed on the device",
+            response = Activity.class,
+            tags = "Android Device Management Administrative Service"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 201,
+                    message = "Created. \n Device logcat operation has successfully been scheduled",
+                    response = Activity.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                                  "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                                  "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                              "Server error occurred while adding a new device logcat operation.")
+    })
+    Response getDeviceLogcat(
+            @ApiParam(name = "deviceIds", value = "Device IDs to be requested to get device logcat")
+                    List<String> deviceIDs);
+
+    @POST
     @Path("/enterprise-wipe")
     @ApiOperation(
             consumes = MediaType.APPLICATION_JSON,
