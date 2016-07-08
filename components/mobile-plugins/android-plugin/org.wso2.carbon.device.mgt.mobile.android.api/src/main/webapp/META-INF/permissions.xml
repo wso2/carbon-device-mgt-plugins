@@ -187,7 +187,7 @@
     <Permission>
         <name>Get device info</name>
         <path>/device-mgt/admin/device/android/operation/get-info</path>
-        <url>/admin/devices/info/url>
+        <url>/admin/devices/info</url>
         <method>POST</method>
     </Permission>
 
