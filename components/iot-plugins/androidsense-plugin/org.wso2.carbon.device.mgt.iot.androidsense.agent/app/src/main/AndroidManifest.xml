@@ -13,6 +13,10 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-sdk android:minSdkVersion="19" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/wso2logo"
@@ -66,6 +70,18 @@
         <activity
             android:name="org.wso2.carbon.iot.android.sense.speech.detector.WordRecognitionActivity"
             android:label="Speech Recongnizer"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+
+        <activity
+            android:name="org.wso2.carbon.iot.android.sense.beacon.MonitoringActivity"
+            android:label="Beacon Monitor"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+
+        <activity
+            android:name="org.wso2.carbon.iot.android.sense.bmonitor.BeaconMonitoringActivity"
+            android:label="Beacon Monitor"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>

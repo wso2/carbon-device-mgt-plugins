@@ -338,6 +338,9 @@ public class AndroidAPIUtils {
                 if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION) != null) {
                     app.setVersion(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.VERSION).getAsString());
                 }
+                if (element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.IS_ACTIVE) != null) {
+                    app.setActive(element.getAsJsonObject().get(AndroidConstants.ApplicationProperties.IS_ACTIVE).getAsBoolean());
+                }
                 applications.add(app);
             }
             getApplicationManagerService().updateApplicationListInstalledInDevice(deviceIdentifier, applications);
@@ -393,6 +396,8 @@ public class AndroidAPIUtils {
                     deviceInfo.getDeviceDetailsMap().put("mac", prop.getValue());
                 } else if (prop.getName().equalsIgnoreCase("SERIAL")) {
                     deviceInfo.getDeviceDetailsMap().put("serial", prop.getValue());
+                } else if (prop.getName().equalsIgnoreCase("OS_BUILD_DATE")) {
+                    deviceInfo.setOsBuildDate(prop.getValue());
                 }
             } else {
                 if (prop.getName().equalsIgnoreCase("CPU_INFO")) {

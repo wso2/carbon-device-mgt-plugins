@@ -32,7 +32,7 @@ import java.util.List;
 		description = "Information related to VPN Configuration.")
 public class VpnBeanWrapper {
 	@ApiModelProperty(name = "operation",
-			value = "List of device Ids to be need to execute UpgradeFirmware operation.", required = true)
+			value = "List of device Ids to be need to execute VPN operation.", required = true)
 	private Vpn operation;
 	@ApiModelProperty(name = "deviceIDs",
 			value = "List of device Ids to be need to execute VPN operation.", required = true)
