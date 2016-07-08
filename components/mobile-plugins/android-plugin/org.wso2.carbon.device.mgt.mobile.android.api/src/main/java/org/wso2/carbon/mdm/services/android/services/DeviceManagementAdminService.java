@@ -22,6 +22,7 @@ import io.swagger.annotations.*;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.*;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -244,7 +245,7 @@ public interface DeviceManagementAdminService {
     })
     Response removePassword(
             @ApiParam(name = "deviceIDs",
-                    value = "DeviceIds to be requested to remove password") List<String> deviceIDs);
+                    value = "DeviceIds to be requested to remove password")  List<String> deviceIDs);
 
     @POST
     @Path("/control-camera")
@@ -562,7 +563,8 @@ public interface DeviceManagementAdminService {
                             "Server error occurred while adding a new device ring operation.")
     })
     Response ringDevice(
-            @ApiParam(name = "deviceIDs", value = "Device Ids needed for ring") List<String> deviceIDs);
+            @ApiParam(name = "deviceIDs", value = "Device Ids needed for ring")
+            List<String> deviceIDs);
 
     @POST
     @Path("/reboot")
@@ -613,7 +615,8 @@ public interface DeviceManagementAdminService {
                             "Server error occurred while adding a new device reboot operation.")
     })
     Response rebootDevice(
-            @ApiParam(name = "deviceIDs", value = "Device Ids needed for reboot.") List<String> deviceIDs);
+            @ApiParam(name = "deviceIDs", value = "Device Ids needed for reboot.")
+            List<String> deviceIDs);
 
     @POST
     @ApiOperation(
@@ -664,7 +667,8 @@ public interface DeviceManagementAdminService {
     })
     @Path("/mute")
     Response muteDevice(
-            @ApiParam(name = "deviceIDs", value = "DeviceIDs need to be muted") List<String> deviceIDs);
+            @ApiParam(name = "deviceIDs", value = "DeviceIDs need to be muted")
+            List<String> deviceIDs);
 
     @POST
     @Path("/install-application")
@@ -1094,7 +1098,7 @@ public interface DeviceManagementAdminService {
     })
     Response configureWifi(
             @ApiParam(name = "wifiBeanWrapper",
-                    value = "WifiConfigurations and Device Ids") WifiBeanWrapper wifiBeanWrapper);
+                    value = "WifiConfigurations and Device Ids") @Valid WifiBeanWrapper wifiBeanWrapper);
 
     @POST
     @Path("/encrypt-storage")

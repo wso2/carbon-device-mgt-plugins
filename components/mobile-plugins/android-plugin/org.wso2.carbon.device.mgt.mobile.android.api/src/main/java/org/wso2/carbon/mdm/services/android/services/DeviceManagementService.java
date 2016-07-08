@@ -19,10 +19,14 @@
 package org.wso2.carbon.mdm.services.android.services;
 
 import io.swagger.annotations.*;
-import org.wso2.carbon.device.mgt.common.Device;
-import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidApplication;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidDevice;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -81,11 +85,15 @@ public interface DeviceManagementService {
             @ApiParam(
                     name = "id",
                     value = "Device Identifier")
+            @NotNull
+            @Size(min = 2 , max = 45)
+            @Pattern(regexp = "^[A-Za-z0-9]*$")
             @PathParam("id") String id,
             @ApiParam(
                     name = "applications",
                     value = "List of applications that need to be persisted against the device")
-            List<Application> applications);
+                    @Valid
+            List<AndroidApplication> androidApplications);
 
     @PUT
     @Path("/{id}/pending-operations")
@@ -191,7 +199,8 @@ public interface DeviceManagementService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new policy.")
     })
-    Response enrollDevice(@ApiParam(name = "device", value = "Device Information to be enroll") Device device);
+    Response enrollDevice(@ApiParam(name = "device", value = "Device Information to be enroll")
+                          @Valid AndroidDevice device);
 
     @GET
     @Path("/{id}/status")
@@ -285,10 +294,13 @@ public interface DeviceManagementService {
             @ApiParam(
                     name = "id",
                     value = "Device Identifier")
+            @NotNull
+            @Size(min = 2 , max = 45)
+            @Pattern(regexp = "^[A-Za-z0-9]*$")
             @PathParam("id") String id,
             @ApiParam(
                     name = "device",
-                    value = "Device information to be modify") Device device);
+                    value = "Device information to be modify") @Valid AndroidDevice androidDevice);
 
     @DELETE
     @Path("/{id}")
@@ -314,6 +326,9 @@ public interface DeviceManagementService {
             @ApiParam(
                     name = "id",
                     value = "Device Identifier")
+            @NotNull
+            @Size(min = 2 , max = 45)
+            @Pattern(regexp = "^[A-Za-z0-9]*$")
             @PathParam("id") String id);
 
 }

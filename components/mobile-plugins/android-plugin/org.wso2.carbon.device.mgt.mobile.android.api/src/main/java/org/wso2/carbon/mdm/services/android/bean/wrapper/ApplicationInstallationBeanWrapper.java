@@ -33,7 +33,6 @@ public class ApplicationInstallationBeanWrapper {
 
 	@ApiModelProperty(name = "deviceIDs", value = "List of Devices", required = true)
 	private List<String> deviceIDs;
-
 	@ApiModelProperty(name = "operation", value = "App Installation property", required = true)
 	private ApplicationInstallation operation;
 

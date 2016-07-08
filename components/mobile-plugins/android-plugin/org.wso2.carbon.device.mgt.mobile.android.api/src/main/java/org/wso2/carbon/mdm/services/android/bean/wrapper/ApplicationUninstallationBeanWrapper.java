@@ -27,28 +27,28 @@ import java.util.List;
  * This class is used to wrap the UninstallApplication bean with devices.
  */
 @ApiModel(value = "ApplicationUninstallationBeanWrapper",
-		description = "This class carries all information related to Uninstall Application")
+        description = "This class carries all information related to Uninstall Application")
 public class ApplicationUninstallationBeanWrapper {
 
-	@ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
-	private List<String> deviceIDs;
+    @ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
+    private List<String> deviceIDs;
 
-	@ApiModelProperty(name = "operation", value = "Name of the device", required = true)
-	private ApplicationUninstallation operation;
+    @ApiModelProperty(name = "operation", value = "Name of the device", required = true)
+    private ApplicationUninstallation operation;
 
-	public List<String> getDeviceIDs() {
-		return deviceIDs;
-	}
+    public List<String> getDeviceIDs() {
+        return deviceIDs;
+    }
 
-	public void setDeviceIDs(List<String> deviceIDs) {
-		this.deviceIDs = deviceIDs;
-	}
+    public void setDeviceIDs(List<String> deviceIDs) {
+        this.deviceIDs = deviceIDs;
+    }
 
-	public ApplicationUninstallation getOperation() {
-		return operation;
-	}
+    public ApplicationUninstallation getOperation() {
+        return operation;
+    }
 
-	public void setOperation(ApplicationUninstallation operation) {
-		this.operation = operation;
-	}
+    public void setOperation(ApplicationUninstallation operation) {
+        this.operation = operation;
+    }
 }

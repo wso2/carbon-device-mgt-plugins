@@ -18,17 +18,34 @@
 
 package org.wso2.carbon.mdm.services.android.exception;
 
-import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
+import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 
 /**
- * Custom exception class for wrapping BadRequest related exceptions.
+ * Exception class that is corresponding to 401 Forbidden response
  */
-public class BadRequestException extends WebApplicationException {
 
-	public BadRequestException(ErrorResponse error) {
-		super(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
-	}
+public class ForbiddenException extends WebApplicationException {
+
+    private String message;
+
+    public ForbiddenException() {
+        super(Response.status(Response.Status.FORBIDDEN)
+                .build());
+    }
+
+    public ForbiddenException(ErrorDTO errorDTO) {
+        super(Response.status(Response.Status.FORBIDDEN)
+                .entity(errorDTO)
+                .header(AndroidConstants.HEADER_CONTENT_TYPE, AndroidConstants.APPLICATION_JSON)
+                .build());
+        message = errorDTO.getDescription();
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }

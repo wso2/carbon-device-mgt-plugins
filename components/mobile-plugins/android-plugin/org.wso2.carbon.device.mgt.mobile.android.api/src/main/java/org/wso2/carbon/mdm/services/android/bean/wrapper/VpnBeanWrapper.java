@@ -21,6 +21,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.mdm.services.android.bean.Vpn;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 /**
@@ -34,6 +36,8 @@ public class VpnBeanWrapper {
 	private Vpn operation;
 	@ApiModelProperty(name = "deviceIDs",
 			value = "List of device Ids to be need to execute VPN operation.", required = true)
+	@Size(min = 2, max = 45)
+	@Pattern(regexp = "^[A-Za-z0-9]*$")
 	private List<String> deviceIDs;
 
 	public Vpn getOperation() {

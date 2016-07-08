@@ -27,27 +27,27 @@ import java.util.List;
  * This class is used to wrap the WipeData bean with devices.
  */
 @ApiModel(value = "WipeDataBeanWrapper",
-          description = "Mapping between wipe operation and device list to be applied.")
+        description = "Mapping between wipe operation and device list to be applied.")
 public class WipeDataBeanWrapper {
 
     @ApiModelProperty(name = "operation", value = "The information of wipedata operation", required = true)
-	private WipeData operation;
+    private WipeData operation;
     @ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
-	private List<String> deviceIDs;
+    private List<String> deviceIDs;
 
-	public WipeData getOperation() {
-		return operation;
-	}
+    public WipeData getOperation() {
+        return operation;
+    }
 
-	public void setOperation(WipeData operation) {
-		this.operation = operation;
-	}
+    public void setOperation(WipeData operation) {
+        this.operation = operation;
+    }
 
-	public List<String> getDeviceIDs() {
-		return deviceIDs;
-	}
+    public List<String> getDeviceIDs() {
+        return deviceIDs;
+    }
 
-	public void setDeviceIDs(List<String> deviceIDs) {
-		this.deviceIDs = deviceIDs;
-	}
+    public void setDeviceIDs(List<String> deviceIDs) {
+        this.deviceIDs = deviceIDs;
+    }
 }

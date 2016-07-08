@@ -1062,6 +1062,11 @@
                 <artifactId>javax.ws.rs-api</artifactId>
                 <version>${javax.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1204,6 +1209,8 @@
         <project.scm.id>github-scm</project.scm.id>
 
         <servlet-api.version>2.5</servlet-api.version>
+
+        <hibernate-validator.version>5.0.2.Final</hibernate-validator.version>
     </properties>
 
     <scm>

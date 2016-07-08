@@ -33,6 +33,7 @@ import org.wso2.carbon.mdm.services.android.services.DeviceManagementAdminServic
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -568,7 +569,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     @POST
     @Path("/configure-vpn")
     @Override
-    public Response configureVPN(VpnBeanWrapper vpnBeanWrapper) {
+    public Response configureVPN(@Valid VpnBeanWrapper vpnBeanWrapper) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android VPN device operation");
         }
@@ -791,7 +792,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-
 
             if (webClipBeanWrapper == null || webClipBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the add webclip operation is incorrect";

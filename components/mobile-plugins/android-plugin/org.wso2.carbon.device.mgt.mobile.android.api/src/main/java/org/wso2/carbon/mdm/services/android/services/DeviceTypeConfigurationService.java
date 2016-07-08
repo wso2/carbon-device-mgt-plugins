@@ -20,6 +20,7 @@ package org.wso2.carbon.mdm.services.android.services;
 
 import io.swagger.annotations.*;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
+import org.wso2.carbon.mdm.services.android.bean.AndroidPlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
 
 import javax.ws.rs.*;
@@ -125,7 +126,7 @@ public interface DeviceTypeConfigurationService {
     Response updateConfiguration(
             @ApiParam(name = "configuration",
                     value = "AndroidPlatformConfiguration")
-            PlatformConfiguration configuration);
+            AndroidPlatformConfiguration androidPlatformConfiguration);
 
     @GET
     @Path("license")

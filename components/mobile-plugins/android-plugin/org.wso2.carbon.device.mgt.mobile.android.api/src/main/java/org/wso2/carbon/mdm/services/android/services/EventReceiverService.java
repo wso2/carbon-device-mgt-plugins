@@ -22,6 +22,9 @@ import io.swagger.annotations.*;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EventBeanWrapper;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -86,6 +89,7 @@ public interface EventReceiverService {
             @ApiParam(
                     name = "eventBeanWrapper",
                     value = "Information of the agent event to be published on DAS.")
+                    @Valid
             EventBeanWrapper eventBeanWrapper);
 
     @GET
@@ -130,11 +134,14 @@ public interface EventReceiverService {
                             code = 500,
                             message = "Error occurred while getting published events for specific device.")
             })
+
     Response retrieveAlerts(
             @ApiParam(
                     name = "id",
                     value = "Device Identifier to be need to retrieve events.",
                     required = true)
+            @Size(min = 2, max = 45)
+            @Pattern(regexp = "^[A-Za-z0-9]*$")
             @QueryParam("id") String deviceId,
             @ApiParam(
                     name = "from",
@@ -147,6 +154,8 @@ public interface EventReceiverService {
             @ApiParam(
                     name = "type",
                     value = "Type of the Alert to be need to retrieve events.")
+            @Size(min = 2, max = 45)
+            @Pattern(regexp = "^[A-Za-z0-9]*$")
             @QueryParam("type") String type,
             @ApiParam(
                     name = "If-Modified-Since",
