@@ -24,6 +24,8 @@ package org.wso2.carbon.mdm.services.android.util;
 public final class AndroidConstants {
 
     public static final String DEVICE_TYPE_ANDROID = "android";
+    public static final String HEADER_CONTENT_TYPE = "Content-Type";
+    public static final String APPLICATION_JSON = "application/json";
 
     public final class DeviceProperties {
         private DeviceProperties() {
@@ -96,6 +98,7 @@ public final class AndroidConstants {
         public static final String DISENROLL = "DISENROLL";
         public static final String MONITOR = "MONITOR";
         public static final String VPN = "VPN";
+        public static final String LOGCAT = "LOGCAT";
         public static final String APP_RESTRICTION = "APP-RESTRICTION";
         public static final String WORK_PROFILE = "WORK_PROFILE";
     }
@@ -129,6 +132,13 @@ public final class AndroidConstants {
         public static final String VERSION = "version";
         public static final String ICON = "icon";
         public static final String IS_ACTIVE = "isActive";
+    }
+
+    public final class ErrorMessages {
+        private ErrorMessages () { throw new AssertionError(); }
+
+        public static final String STATUS_BAD_REQUEST_MESSAGE_DEFAULT = "Bad Request";
+
     }
 
 }

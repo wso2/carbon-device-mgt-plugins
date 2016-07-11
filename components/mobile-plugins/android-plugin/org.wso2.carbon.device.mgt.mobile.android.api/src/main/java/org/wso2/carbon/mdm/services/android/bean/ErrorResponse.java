@@ -34,9 +34,6 @@ public class ErrorResponse {
     private String moreInfo = null;
     private List<ErrorListItem> errorItems = new ArrayList<>();
 
-    private ErrorResponse() {
-    }
-
     @JsonProperty(value = "code")
     @ApiModelProperty(required = true, value = "")
     public Long getCode() {

@@ -25,6 +25,7 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
+import org.wso2.carbon.mdm.services.android.bean.AndroidPlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.DeviceTypeConfigurationService;
@@ -32,6 +33,7 @@ import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 import org.wso2.carbon.mdm.services.android.util.Message;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -84,10 +86,12 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
 
     @PUT
     @Override
-    public Response updateConfiguration(PlatformConfiguration configuration) {
+    public Response updateConfiguration(@Valid AndroidPlatformConfiguration androidPlatformConfiguration) {
         String msg;
         Message responseMsg = new Message();
         ConfigurationEntry licenseEntry = null;
+        PlatformConfiguration configuration = new PlatformConfiguration();
+        configuration.setConfiguration(androidPlatformConfiguration.getConfiguration());
         try {
             configuration.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
             List<ConfigurationEntry> configs = configuration.getConfiguration();

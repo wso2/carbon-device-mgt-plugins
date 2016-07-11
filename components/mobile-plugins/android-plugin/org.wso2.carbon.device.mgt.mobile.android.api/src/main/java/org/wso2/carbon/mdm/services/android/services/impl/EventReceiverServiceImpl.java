@@ -32,6 +32,9 @@ import org.wso2.carbon.mdm.services.android.services.EventReceiverService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.Message;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -45,7 +48,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
     @POST
     @Path("/publish")
     @Override
-    public Response publishEvents(EventBeanWrapper eventBeanWrapper) {
+    public Response publishEvents(@Valid EventBeanWrapper eventBeanWrapper) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android device even logging.");
         }
@@ -73,8 +76,14 @@ public class EventReceiverServiceImpl implements EventReceiverService {
 
     @GET
     @Override
-    public Response retrieveAlerts(@QueryParam("id") String deviceId, @QueryParam("from") long from,
-                                   @QueryParam("to") long to, @QueryParam("type") String type,
+    public Response retrieveAlerts(@QueryParam("id")
+                                       @Size(min = 2, max = 45)
+                                       @Pattern(regexp = "^[A-Za-z0-9]*$") String deviceId,
+                                   @QueryParam("from") long from,
+                                   @QueryParam("to") long to,
+                                       @Size(min = 2, max = 45)
+                                       @Pattern(regexp = "^[A-Za-z0-9]*$")
+                                   @QueryParam("type") String type,
                                    @HeaderParam("If-Modified-Since") String ifModifiedSince) {
 
         if (from != 0l && to != 0l && deviceId != null) {

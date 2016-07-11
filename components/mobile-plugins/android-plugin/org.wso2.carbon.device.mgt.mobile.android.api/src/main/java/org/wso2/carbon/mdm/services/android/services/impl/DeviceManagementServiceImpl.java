@@ -30,6 +30,8 @@ import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagement
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidApplication;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidDevice;
 import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.DeviceManagementService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
@@ -40,9 +42,14 @@ import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
 import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/devices")
@@ -56,7 +63,27 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @PUT
     @Path("/{id}/applications")
     @Override
-    public Response updateApplicationList(@PathParam("id") String id, List<Application> applications) {
+    public Response updateApplicationList(@PathParam("id")
+                                          @NotNull
+                                          @Size(min = 2, max = 45)
+                                          @Pattern(regexp = "^[A-Za-z0-9]*$")
+                                          String id, List<AndroidApplication> androidApplications) {
+        Application application;
+        List<Application> applications = new ArrayList<>();
+        for (AndroidApplication androidApplication : androidApplications) {
+            application = new Application();
+            application.setPlatform(androidApplication.getPlatform());
+            application.setCategory(androidApplication.getCategory());
+            application.setName(androidApplication.getName());
+            application.setLocationUrl(androidApplication.getLocationUrl());
+            application.setImageUrl(androidApplication.getImageUrl());
+            application.setVersion(androidApplication.getVersion());
+            application.setType(androidApplication.getType());
+            application.setAppProperties(androidApplication.getAppProperties());
+            application.setApplicationIdentifier(androidApplication.getApplicationIdentifier());
+            application.setMemoryUsage(androidApplication.getMemoryUsage());
+            applications.add(application);
+        }
         Message responseMessage = new Message();
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
         deviceIdentifier.setId(id);
@@ -164,32 +191,42 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
 
     @POST
     @Override
-    public Response enrollDevice(Device device) {
+    public Response enrollDevice(@Valid AndroidDevice androidDevice) {
         try {
+            Device device = new Device();
             device.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+            device.setEnrolmentInfo(androidDevice.getEnrolmentInfo());
             device.getEnrolmentInfo().setOwner(AndroidAPIUtils.getAuthenticatedUser());
+            device.setDeviceInfo(androidDevice.getDeviceInfo());
+            device.setDeviceIdentifier(androidDevice.getDeviceIdentifier());
+            device.setDescription(androidDevice.getDescription());
+            device.setType(androidDevice.getType());
+            device.setName(androidDevice.getName());
+            device.setFeatures(androidDevice.getFeatures());
+            device.setProperties(androidDevice.getProperties());
+
             boolean status = AndroidAPIUtils.getDeviceManagementService().enrollDevice(device);
 
             PolicyManagerService policyManagerService = AndroidAPIUtils.getPolicyManagerService();
-            policyManagerService.getEffectivePolicy(new DeviceIdentifier(device.getDeviceIdentifier(), device.getType()));
+            policyManagerService.getEffectivePolicy(new DeviceIdentifier(androidDevice.getDeviceIdentifier(), androidDevice.getType()));
             if (status) {
                 return Response.status(Response.Status.OK).entity("Android device, which carries the id '" +
-                        device.getDeviceIdentifier() + "' has successfully been enrolled").build();
+                        androidDevice.getDeviceIdentifier() + "' has successfully been enrolled").build();
             } else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to enroll '" +
-                        device.getType() + "' device, which carries the id '" +
-                        device.getDeviceIdentifier() + "'").build();
+                        androidDevice.getType() + "' device, which carries the id '" +
+                        androidDevice.getDeviceIdentifier() + "'").build();
             }
         } catch (DeviceManagementException e) {
-            String msg = "Error occurred while enrolling the '" + device.getType() + "', which carries the id '" +
-                    device.getDeviceIdentifier() + "'";
+            String msg = "Error occurred while enrolling the '" + androidDevice.getType() + "', which carries the id '" +
+                    androidDevice.getDeviceIdentifier() + "'";
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         } catch (PolicyManagementException e) {
-            String msg = "Error occurred while enforcing default enrollment policy upon '" + device.getType() +
+            String msg = "Error occurred while enforcing default enrollment policy upon '" + androidDevice.getType() +
                     "', which carries the id '" +
-            device.getDeviceIdentifier() + "'";
+                    androidDevice.getDeviceIdentifier() + "'";
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
@@ -222,7 +259,18 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @PUT
     @Path("/{id}")
     @Override
-    public Response modifyEnrollment(@PathParam("id") String id, Device device) {
+    public Response modifyEnrollment(@PathParam("id") String id, @Valid AndroidDevice androidDevice) {
+        Device device = new Device();
+        device.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+        device.setEnrolmentInfo(androidDevice.getEnrolmentInfo());
+        device.getEnrolmentInfo().setOwner(AndroidAPIUtils.getAuthenticatedUser());
+        device.setDeviceInfo(androidDevice.getDeviceInfo());
+        device.setDeviceIdentifier(androidDevice.getDeviceIdentifier());
+        device.setDescription(androidDevice.getDescription());
+        device.setType(androidDevice.getType());
+        device.setName(androidDevice.getName());
+        device.setFeatures(androidDevice.getFeatures());
+        device.setProperties(androidDevice.getProperties());
         boolean result;
         try {
             device.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);

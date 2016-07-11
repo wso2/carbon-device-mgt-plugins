@@ -22,8 +22,10 @@ import io.swagger.annotations.*;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
+import org.wso2.carbon.mdm.services.android.bean.AndroidPlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
 
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -133,7 +135,7 @@ public interface DeviceTypeConfigurationService {
     Response updateConfiguration(
             @ApiParam(name = "configuration",
                     value = "AndroidPlatformConfiguration")
-            PlatformConfiguration configuration);
+            @Valid AndroidPlatformConfiguration androidPlatformConfiguration);
 
     @GET
     @Path("license")

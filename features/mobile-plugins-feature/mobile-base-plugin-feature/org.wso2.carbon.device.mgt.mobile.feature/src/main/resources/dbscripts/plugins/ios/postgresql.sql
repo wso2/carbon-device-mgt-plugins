@@ -2,11 +2,11 @@
 -- Table IOS_FEATURE
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS IOS_FEATURE (
-  ID SERIAL NOT NULL,
+  FEATURE_ID SERIAL NOT NULL,
   CODE VARCHAR(45) NOT NULL,
   NAME VARCHAR(100) NULL,
   DESCRIPTION VARCHAR(200) NULL,
-  PRIMARY KEY (ID) 
+  PRIMARY KEY (FEATURE_ID) 
 );
 
 -- -----------------------------------------------------

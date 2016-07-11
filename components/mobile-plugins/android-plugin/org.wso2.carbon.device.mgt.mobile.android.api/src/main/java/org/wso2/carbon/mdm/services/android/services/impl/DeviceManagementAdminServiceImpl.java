@@ -33,6 +33,7 @@ import org.wso2.carbon.mdm.services.android.services.DeviceManagementAdminServic
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -207,6 +208,31 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         try {
             CommandOperation operation = new CommandOperation();
             operation.setCode(AndroidConstants.OperationCodes.DEVICE_INFO);
+            operation.setType(Operation.Type.COMMAND);
+            return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
+        } catch (OperationManagementException e) {
+            String errorMessage = "Issue in retrieving operation management service instance";
+            log.error(errorMessage, e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(errorMessage).build();
+        } catch (DeviceManagementException e) {
+            String errorMessage = "Issue in retrieving device management service instance";
+            log.error(errorMessage, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+        }
+    }
+
+    @POST
+    @Path("/logcat")
+    @Override
+    public Response getDeviceLogcat(List<String> deviceIDs) {
+        if (log.isDebugEnabled()) {
+            log.debug("Invoking get Android device logcat operation");
+        }
+
+        try {
+            CommandOperation operation = new CommandOperation();
+            operation.setCode(AndroidConstants.OperationCodes.LOGCAT);
             operation.setType(Operation.Type.COMMAND);
             return AndroidAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
@@ -568,24 +594,24 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     @POST
     @Path("/configure-vpn")
     @Override
-    public Response configureVPN(VpnBeanWrapper vpnBeanWrapper) {
+    public Response configureVPN(VpnBeanWrapper vpnConfiguration) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking Android VPN device operation");
         }
 
         try {
-            if (vpnBeanWrapper == null || vpnBeanWrapper.getOperation() == null) {
+            if (vpnConfiguration == null || vpnConfiguration.getOperation() == null) {
                 String errorMessage = "The payload of the VPN operation is incorrect";
                 log.error(errorMessage);
                 throw new BadRequestException(
                         new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
-            Vpn vpn = vpnBeanWrapper.getOperation();
+            Vpn vpn = vpnConfiguration.getOperation();
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.VPN);
             operation.setType(Operation.Type.PROFILE);
             operation.setPayLoad(vpn.toJSON());
-            return AndroidAPIUtils.getOperationResponse(vpnBeanWrapper.getDeviceIDs(),
+            return AndroidAPIUtils.getOperationResponse(vpnConfiguration.getDeviceIDs(),
                     operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
@@ -791,7 +817,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
 
         try {
-
 
             if (webClipBeanWrapper == null || webClipBeanWrapper.getOperation() == null) {
                 String errorMessage = "The payload of the add webclip operation is incorrect";
