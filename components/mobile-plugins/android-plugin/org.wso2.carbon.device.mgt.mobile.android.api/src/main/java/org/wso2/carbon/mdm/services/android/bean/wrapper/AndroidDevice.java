@@ -46,7 +46,6 @@ public class AndroidDevice implements Serializable {
             value = "The OS type of the device.",
             required = true
     )
-    @NotNull
     @Size(min = 2, max = 45)
     @Pattern(regexp = "^[A-Za-z]*$")
     private String type;

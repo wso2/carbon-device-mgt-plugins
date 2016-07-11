@@ -92,7 +92,6 @@ public interface DeviceManagementService {
             @ApiParam(
                     name = "applications",
                     value = "List of applications that need to be persisted against the device")
-                    @Valid
             List<AndroidApplication> androidApplications);
 
     @PUT

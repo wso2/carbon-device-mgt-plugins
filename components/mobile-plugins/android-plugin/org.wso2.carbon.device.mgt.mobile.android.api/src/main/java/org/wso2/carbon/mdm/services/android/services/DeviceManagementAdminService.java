@@ -22,7 +22,6 @@ import io.swagger.annotations.*;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.*;
 
-import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -1153,7 +1152,7 @@ public interface DeviceManagementAdminService {
     })
     Response configureWifi(
             @ApiParam(name = "wifiBeanWrapper",
-                    value = "WifiConfigurations and Device Ids") @Valid WifiBeanWrapper wifiBeanWrapper);
+                    value = "WifiConfigurations and Device Ids") WifiBeanWrapper wifiBeanWrapper);
 
     @POST
     @Path("/encrypt-storage")

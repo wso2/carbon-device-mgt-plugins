@@ -64,10 +64,10 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @Path("/{id}/applications")
     @Override
     public Response updateApplicationList(@PathParam("id")
-                                              @NotNull
-                                              @Size(min = 2 , max = 45)
-                                              @Pattern(regexp = "^[A-Za-z0-9]*$")
-                                              String id,@Valid List<AndroidApplication> androidApplications) {
+                                          @NotNull
+                                          @Size(min = 2, max = 45)
+                                          @Pattern(regexp = "^[A-Za-z0-9]*$")
+                                          String id, List<AndroidApplication> androidApplications) {
         Application application;
         List<Application> applications = new ArrayList<>();
         for (AndroidApplication androidApplication : androidApplications) {
@@ -259,7 +259,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @PUT
     @Path("/{id}")
     @Override
-    public Response modifyEnrollment(@PathParam("id") String id, AndroidDevice androidDevice) {
+    public Response modifyEnrollment(@PathParam("id") String id, @Valid AndroidDevice androidDevice) {
         Device device = new Device();
         device.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
         device.setEnrolmentInfo(androidDevice.getEnrolmentInfo());
