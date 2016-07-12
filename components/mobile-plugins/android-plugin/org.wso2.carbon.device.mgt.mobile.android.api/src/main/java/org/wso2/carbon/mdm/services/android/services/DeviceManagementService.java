@@ -293,9 +293,6 @@ public interface DeviceManagementService {
             @ApiParam(
                     name = "id",
                     value = "Device Identifier")
-            @NotNull
-            @Size(min = 2 , max = 45)
-            @Pattern(regexp = "^[A-Za-z0-9]*$")
             @PathParam("id") String id,
             @ApiParam(
                     name = "device",
@@ -325,9 +322,6 @@ public interface DeviceManagementService {
             @ApiParam(
                     name = "id",
                     value = "Device Identifier")
-            @NotNull
-            @Size(min = 2 , max = 45)
-            @Pattern(regexp = "^[A-Za-z0-9]*$")
             @PathParam("id") String id);
 
 }
