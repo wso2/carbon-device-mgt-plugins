@@ -200,7 +200,6 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             device.setDeviceInfo(androidDevice.getDeviceInfo());
             device.setDeviceIdentifier(androidDevice.getDeviceIdentifier());
             device.setDescription(androidDevice.getDescription());
-            device.setType(androidDevice.getType());
             device.setName(androidDevice.getName());
             device.setFeatures(androidDevice.getFeatures());
             device.setProperties(androidDevice.getProperties());
@@ -208,23 +207,23 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             boolean status = AndroidAPIUtils.getDeviceManagementService().enrollDevice(device);
 
             PolicyManagerService policyManagerService = AndroidAPIUtils.getPolicyManagerService();
-            policyManagerService.getEffectivePolicy(new DeviceIdentifier(androidDevice.getDeviceIdentifier(), androidDevice.getType()));
+            policyManagerService.getEffectivePolicy(new DeviceIdentifier(androidDevice.getDeviceIdentifier(), device.getType()));
             if (status) {
                 return Response.status(Response.Status.OK).entity("Android device, which carries the id '" +
                         androidDevice.getDeviceIdentifier() + "' has successfully been enrolled").build();
             } else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to enroll '" +
-                        androidDevice.getType() + "' device, which carries the id '" +
+                        device.getType() + "' device, which carries the id '" +
                         androidDevice.getDeviceIdentifier() + "'").build();
             }
         } catch (DeviceManagementException e) {
-            String msg = "Error occurred while enrolling the '" + androidDevice.getType() + "', which carries the id '" +
+            String msg = "Error occurred while enrolling the android, which carries the id '" +
                     androidDevice.getDeviceIdentifier() + "'";
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         } catch (PolicyManagementException e) {
-            String msg = "Error occurred while enforcing default enrollment policy upon '" + androidDevice.getType() +
+            String msg = "Error occurred while enforcing default enrollment policy upon android " +
                     "', which carries the id '" +
                     androidDevice.getDeviceIdentifier() + "'";
             log.error(msg, e);
@@ -267,7 +266,6 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
         device.setDeviceInfo(androidDevice.getDeviceInfo());
         device.setDeviceIdentifier(androidDevice.getDeviceIdentifier());
         device.setDescription(androidDevice.getDescription());
-        device.setType(androidDevice.getType());
         device.setName(androidDevice.getName());
         device.setFeatures(androidDevice.getFeatures());
         device.setProperties(androidDevice.getProperties());
