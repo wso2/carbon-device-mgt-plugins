@@ -42,14 +42,6 @@ public class AndroidDevice implements Serializable {
     @Pattern(regexp = "^[A-Za-z0-9]*$")
     private String name;
     @ApiModelProperty(
-            name = "type",
-            value = "The OS type of the device.",
-            required = true
-    )
-    @Size(min = 2, max = 45)
-    @Pattern(regexp = "^[A-Za-z]*$")
-    private String type;
-    @ApiModelProperty(
             name = "description",
             value = "Additional information on the device.",
             required = true
@@ -93,9 +85,8 @@ public class AndroidDevice implements Serializable {
     public AndroidDevice() {
     }
 
-    public AndroidDevice(String name, String type, String description, String deviceId, EnrolmentInfo enrolmentInfo, List<Feature> features, List<Device.Property> properties) {
+    public AndroidDevice(String name, String description, String deviceId, EnrolmentInfo enrolmentInfo, List<Feature> features, List<Device.Property> properties) {
         this.name = name;
-        this.type = type;
         this.description = description;
         this.deviceIdentifier = deviceId;
         this.enrolmentInfo = enrolmentInfo;
@@ -109,14 +100,6 @@ public class AndroidDevice implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getType() {
-        return this.type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getDescription() {
@@ -176,7 +159,7 @@ public class AndroidDevice implements Serializable {
     }
 
     public String toString() {
-        return "device [name=" + this.name + ";" + "type=" + this.type + ";" + "description=" + this.description + ";" + "identifier=" + this.deviceIdentifier + ";" + "]";
+        return "device [name=" + this.name + ";" + ";" + "description=" + this.description + ";" + "identifier=" + this.deviceIdentifier + ";" + "]";
     }
 
     public boolean equals(Object o) {
