@@ -81,21 +81,21 @@
     <Permission>
         <name>Enroll</name>
         <path>/device-mgt/user/device/android/enroll</path>
-        <url>/device/*/applications</url>
+        <url>/devices/*/applications</url>
         <method>PUT</method>
     </Permission>
 
     <Permission>
         <name>Enroll</name>
         <path>/device-mgt/user/device/android/enroll</path>
-        <url>/device/*/pending-operations</url>
+        <url>/devices/*/pending-operations</url>
         <method>PUT</method>
     </Permission>
 
     <Permission>
         <name>Enroll</name>
         <path>/device-mgt/user/device/android/enroll</path>
-        <url>/device/*/status</url>
+        <url>/devices/*/status</url>
         <method>GET</method>
     </Permission>
 

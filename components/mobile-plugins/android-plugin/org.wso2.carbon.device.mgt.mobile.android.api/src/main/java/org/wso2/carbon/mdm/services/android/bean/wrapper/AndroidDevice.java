@@ -39,7 +39,6 @@ public class AndroidDevice implements Serializable {
             required = true
     )
     @Size(min = 2, max = 45)
-    @Pattern(regexp = "^[A-Za-z0-9]*$")
     private String name;
     @ApiModelProperty(
             name = "description",

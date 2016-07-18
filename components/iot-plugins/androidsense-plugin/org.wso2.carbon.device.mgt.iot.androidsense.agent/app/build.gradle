@@ -61,5 +61,4 @@ dependencies {
     compile 'org.altbeacon:android-beacon-library:2.8.1'
     compile 'uk.co.alt236:easycursor-android:1.0.0'
     compile 'uk.co.alt236:bluetooth-le-library-android:1.0.0'
-
 }
