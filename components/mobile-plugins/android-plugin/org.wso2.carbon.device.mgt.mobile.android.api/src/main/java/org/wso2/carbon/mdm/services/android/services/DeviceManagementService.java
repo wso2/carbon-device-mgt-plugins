@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @API(name = "Android Device Management", version = "1.0.0",
-        context = "api-device-mgt-android-v1.0/devices",
+        context = "api/device-mgt/android/v1.0/devices",
         tags = {"devicemgt_android"})
 
 @Api(value = "Android Device Management",
