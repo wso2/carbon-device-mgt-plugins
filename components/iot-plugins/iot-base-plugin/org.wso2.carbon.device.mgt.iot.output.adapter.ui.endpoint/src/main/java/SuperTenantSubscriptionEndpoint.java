@@ -16,13 +16,14 @@
  * under the License.
  */
 
-import oauth.OAuthTokenValdiator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.authentication.AuthenticationInfo;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.authentication.Authenticator;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.authorization.Authorizer;
 import util.ServiceHolder;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import util.AuthenticationInfo;
 
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
@@ -56,16 +57,22 @@ public class SuperTenantSubscriptionEndpoint extends SubscriptionEndpoint {
 		if (log.isDebugEnabled()) {
 			log.debug("WebSocket opened, for Session id: " + session.getId() + ", for the Stream:" + streamName);
 		}
-		AuthenticationInfo authenticationInfo = OAuthTokenValdiator.getInstance().validateToken(session);
-		//TODO Authorization
+		Authenticator authenticator = ServiceHolder.getWebsocketValidationService().getAuthenticator();
+		AuthenticationInfo authenticationInfo = authenticator.isAutenticated(session);
 		if (authenticationInfo != null && authenticationInfo.isAuthenticated()) {
-			try {
-				PrivilegedCarbonContext.startTenantFlow();
-				PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-				ServiceHolder.getInstance().getUiOutputCallbackControllerService().subscribeWebsocket(streamName,
-																									  version, session);
-			} finally {
-				PrivilegedCarbonContext.endTenantFlow();
+			Authorizer authorizer = ServiceHolder.getWebsocketValidationService().getAuthorizer();
+			boolean isAuthorized = authorizer.isAuthorized(authenticationInfo, session, streamName);
+			if (isAuthorized) {
+				try {
+					PrivilegedCarbonContext.startTenantFlow();
+					PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(
+							MultitenantConstants.SUPER_TENANT_ID);
+					ServiceHolder.getInstance().getUiOutputCallbackControllerService().subscribeWebsocket(streamName,
+																										  version,
+																										  session);
+				} finally {
+					PrivilegedCarbonContext.endTenantFlow();
+				}
 			}
 		} else {
 			try {

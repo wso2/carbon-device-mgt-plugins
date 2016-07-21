@@ -15,9 +15,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package oauth;
+package org.wso2.carbon.device.mgt.iot.output.adapter.ui.authentication.oauth;
 
-import oauth.exception.OAuthTokenValidationException;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.client.Options;
@@ -33,8 +32,9 @@ import org.apache.commons.httpclient.protocol.Protocol;
 import org.apache.commons.httpclient.protocol.ProtocolSocketFactory;
 import org.apache.commons.pool.BasePoolableObjectFactory;
 import org.apache.log4j.Logger;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.authentication.oauth.exception.OAuthTokenValidationException;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.constants.WebsocketConstants;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
-import util.UIConstants;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -91,7 +91,7 @@ public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
 	private OAuth2TokenValidationServiceStub generateStub() throws OAuthTokenValidationException {
 		OAuth2TokenValidationServiceStub stub;
 		try {
-			URL hostURL = new URL(tokenValidationProperties.getProperty((UIConstants.TOKEN_VALIDATION_ENDPOINT_URL)));
+			URL hostURL = new URL(tokenValidationProperties.getProperty((WebsocketConstants.TOKEN_VALIDATION_ENDPOINT_URL)));
 			if (hostURL != null) {
 				stub = new OAuth2TokenValidationServiceStub(hostURL.toString());
 				if (stub != null) {
@@ -102,8 +102,8 @@ public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
 					HttpTransportProperties.Authenticator auth =
 							new HttpTransportProperties.Authenticator();
 					auth.setPreemptiveAuthentication(true);
-					String username = tokenValidationProperties.getProperty(UIConstants.USERNAME);
-					String password = tokenValidationProperties.getProperty(UIConstants.PASSWORD);
+					String username = tokenValidationProperties.getProperty(WebsocketConstants.USERNAME);
+					String password = tokenValidationProperties.getProperty(WebsocketConstants.PASSWORD);
 					auth.setPassword(username);
 					auth.setUsername(password);
 					Options options = client.getOptions();
@@ -167,9 +167,9 @@ public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
 	private HttpClient createHttpClient() {
 		HttpConnectionManagerParams params = new HttpConnectionManagerParams();
 		params.setDefaultMaxConnectionsPerHost(Integer.parseInt(tokenValidationProperties.getProperty(
-				UIConstants.MAXIMUM_HTTP_CONNECTION_PER_HOST)));
+				WebsocketConstants.MAXIMUM_HTTP_CONNECTION_PER_HOST)));
 		params.setMaxTotalConnections(Integer.parseInt(tokenValidationProperties.getProperty(
-				UIConstants.MAXIMUM_TOTAL_HTTP_CONNECTION)));
+				WebsocketConstants.MAXIMUM_TOTAL_HTTP_CONNECTION)));
 		HttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
 		connectionManager.setParams(params);
 		return new HttpClient(connectionManager);

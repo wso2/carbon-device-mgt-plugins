@@ -24,6 +24,12 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.iot.output.adapter.ui.UIEventAdapterFactory;
 import org.wso2.carbon.device.mgt.iot.output.adapter.ui.UIOutputCallbackControllerServiceImpl;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.authentication.Authenticator;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.authorization.Authorizer;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.config.WebsocketConfig;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.config.WebsocketValidationConfigurationFailedException;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.service.WebsocketValidationService;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.service.WebsocketValidationServiceImpl;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterFactory;
 import org.wso2.carbon.device.mgt.iot.output.adapter.ui.UIOutputCallbackControllerService;
 import org.wso2.carbon.event.stream.core.EventStreamService;
@@ -57,6 +63,32 @@ public class UILocalEventAdapterServiceComponent {
                     UIOutputCallbackRegisterServiceImpl);
             if (log.isDebugEnabled()) {
                 log.debug("Successfully deployed the output ui adapter service");
+            }
+            try {
+                WebsocketConfig.getInstance().init();
+                WebsocketValidationServiceImpl websocketValidationService = new WebsocketValidationServiceImpl();
+                String authenticatorClassName = WebsocketConfig.getInstance().getWebsocketValidationConfigs()
+                        .getAuthenticator().getClazz();
+                String authorizerClassName = WebsocketConfig.getInstance().getWebsocketValidationConfigs()
+                        .getAuthorizer().getClazz();
+                if (authenticatorClassName != null && !authenticatorClassName.isEmpty()) {
+                    Class<? extends Authenticator> authenticatorClass = Class.forName(authenticatorClassName)
+                            .asSubclass(Authenticator.class);
+                    Authenticator authenticator = authenticatorClass.newInstance();
+                    websocketValidationService.setAuthenticator(authenticator);
+                }
+                if (authorizerClassName != null && !authorizerClassName.isEmpty()) {
+                    Class<? extends Authorizer> authorizerClass = Class.forName(authorizerClassName)
+                            .asSubclass(Authorizer.class);
+                    Authorizer authorizer = authorizerClass.newInstance();
+                    websocketValidationService.setAuthorizer(authorizer);
+                }
+                context.getBundleContext().registerService(
+                        WebsocketValidationService.class.getName(), websocketValidationService, null);
+            } catch (WebsocketValidationConfigurationFailedException e) {
+                log.error("Failed to initialize configuration for websocket.", e);
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
             }
         } catch (RuntimeException e) {
             log.error("Can not create the output ui adapter service ", e);

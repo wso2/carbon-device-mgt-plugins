@@ -55,21 +55,6 @@
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxrs</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents.wso2</groupId>
-            <artifactId>httpcore</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity</groupId>
-            <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>
