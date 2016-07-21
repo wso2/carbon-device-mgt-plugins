@@ -10,7 +10,7 @@
         "login": {
             "onSuccess": {
                 "script": "/app/modules/login.js",
-                "page": "cdmf.page.dashboard"
+                "page": "mdm.page.dashboard"
             },
             "onFail": {
                 "script": "/app/modules/login.js",
@@ -22,7 +22,7 @@
                 "page": "cdmf.page.sign-in"
             },
             "onFail": {
-                "page": "cdmf.page.dashboard"
+                "page": "mdm.page.dashboard"
             }
         },
         "sso": {
@@ -30,11 +30,20 @@
             "issuer" : "emm",
             "appName" : "emm",
             "identityProviderUrl" : "https://localhost:9443/samlsso",
-            "acs": "https://localhost:9443/devicemgt/uuf/sso/acs",
+            "acs": "https://localhost:9443/emm/uuf/sso/acs",
             "identityAlias": "wso2carbon",
             "responseSigningEnabled" : "true",
             "useTenantKey": false
         }
+    },
+    "generalConfig" : {
+        "host" : "https://localhost:9443",
+        "companyName" : "WSO2 Enterprise Mobility Manager",
+        "browserTitle" : "WSO2 EMM",
+        "copyrightPrefix" : "\u00A9 %date-year%, ",
+        "copyrightOwner" : "WSO2 Inc.",
+        "copyrightOwnersSite" : "http://www.wso2.org",
+        "copyrightSuffix" : ""
     },
     "errorPages": {
         "default": "uuf.page.error"
