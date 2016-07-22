@@ -17,7 +17,6 @@
  */
 
 var updateStats = function (serviceURL, id) {
-    console.log(serviceURL);
     invokerUtil.get(
         serviceURL,
         function (data, textStatus, jqXHR) {
