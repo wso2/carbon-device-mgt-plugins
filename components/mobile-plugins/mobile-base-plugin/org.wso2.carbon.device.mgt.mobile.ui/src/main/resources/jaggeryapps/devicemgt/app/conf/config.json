@@ -1,24 +1,25 @@
 {
-  "appContext" : "/emm/",
-  "clientName" : "emm",
-  "webAgentContext" : "/devicemgt-web-agent/",
-  "apiContext" : "api",
-  "httpsURL" : "https://localhost:9443",
+  "appContext": "/emm/",
+  "clientName": "emm",
+  "webAgentContext" : "/emm-web-agent/",
+  "apiContext": "api",
+  "httpsURL" : "%https.ip%",
   "httpURL" : "%http.ip%",
   "httpsWebURL" : "%https.ip%",
   "wssURL" : "%https.ip%",
   "wsURL" : "%http.ip%",
-  "dashboardserverURL" : "%https.ip%",
+  "dashboardServerURL" : "%https.ip%",
   "enrollmentDir": "/emm-web-agent/enrollment",
   "iOSConfigRoot" : "%https.ip%/ios-enrollment/",
   "iOSAPIRoot" : "%https.ip%/ios/",
   "dynamicClientRegistrationEndPoint" : "https://localhost:9443/dynamic-client-web/register/",
-  "adminService":"%https.ip%",
+  "adminService": "%https.ip%",
   "idPServer":"%https.ip%/oauth2/token",
   "callBackUrl":"%https.ip%/api/device-mgt/v1.0",
   "adminUser":"admin@carbon.super",
   "adminRole":"admin",
   "usernameLength":30,
+  "pageSize":10,
   "ssoConfiguration" : {
     "enabled" : false,
     "issuer" : "devicemgt",
@@ -46,9 +47,9 @@
     "groupNameHelpMsg": "Should be in minimum 3 characters long and should not include any whitespaces."
   },
   "roleValidationConfig" : {
-    "rolenameJSRegEx" : "^[\\S]{3,30}$",
-    "rolenameRegExViolationErrorMsg" : "Provided role name is invalid.",
-    "rolenameHelpMsg" : "should be in minimum 3 characters long and do not include any whitespaces."
+    "roleNameJSRegEx" : "^[\\S]{3,30}$",
+    "roleNameRegExViolationErrorMsg" : "Provided role name is invalid.",
+    "roleNameHelpMsg" : "should be in minimum 3 characters long and do not include any whitespaces."
   },
   "generalConfig" : {
     "host" : "https://localhost:9443",
@@ -64,9 +65,11 @@
     "device-modify", "device-search", "operation-install", "operation-view", "operation-modify", "operation-uninstall",
     "group-add", "group-share", "group-modify", "group-view", "group-remove", "certificate-modify", "certificate-view",
     "configuration-view", "configuration-modify", "policy-view", "policy-modify", "device-notification-view",
-    "device-notification-modify", "feature-view", "arduino_device", "arduino_user", " android_sense_user",
-    "virtual_firealarm_user", "raspberrypi_user", "roles-view", "roles-modify", "roles-remove", "roles-add",
+    "device-notification-modify", "feature-view", "roles-view", "roles-modify", "roles-remove", "roles-add",
     "user-password-reset", "user-password-modify", "user-modify", "user-view", "user-invite", "user-remove", "user-add"
   ],
-  "isOAuthEnabled" : true
+  "isOAuthEnabled" : true,
+  "backendRestEndpoints" : {
+    "deviceMgt" : "/api/device-mgt/v1.0"
+  }
 }
