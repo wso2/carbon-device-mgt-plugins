@@ -19,7 +19,7 @@
 function onRequest(context) {
     var log = new Log("stats.js");
     var device = context.unit.params.device;
-    var devicemgtProps = require('/app/conf/devicemgt-props.js').config();
+    var devicemgtProps = require("/app/conf/reader/main.js")["conf"];
     var constants = require("/app/modules/constants.js");
     var websocketEndpoint = devicemgtProps["wssURL"].replace("https", "wss");
     var tokenPair = session.get(constants.ACCESS_TOKEN_PAIR_IDENTIFIER);
