@@ -53,7 +53,6 @@ public class AndroidDevice implements Serializable {
     )
     @NotNull
     @Size(min = 2, max = 45)
-    @Pattern(regexp = "^[A-Za-z0-9]*$")
     private String deviceIdentifier;
     @ApiModelProperty(
             name = "enrolmentInfo",
