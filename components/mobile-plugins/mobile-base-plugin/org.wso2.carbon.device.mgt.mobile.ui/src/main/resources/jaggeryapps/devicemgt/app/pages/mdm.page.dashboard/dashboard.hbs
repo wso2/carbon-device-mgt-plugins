@@ -1,3 +1,4 @@
+{{unit "cdmf.unit.lib.qrcode"}}
 {{#zone "content"}}
     {{#if permissions.VIEW_DASHBOARD}}
         {{#if permissions.LIST_DEVICES}}
@@ -131,15 +132,12 @@
         <div class="content">
             <div class="row">
                 <div class="col-lg-5 col-md-6 col-centered">
-                    <h3>
-                        Scan QR code to start enrollment
-                    </h3>
+                    <h3>Scan QR code to start enrollment</h3>
                     <h4>
                         Please scan the QR code using your mobile device to retrieve enrollment URL.
                     </h4>
-
                     <div class="panel panel-default">
-                        <div class="panel-body col-centered ">
+                        <div class="panel-body col-centered text-center">
                             <div class="qr-code"></div>
                         </div>
                     </div>
@@ -150,5 +148,4 @@
 {{/zone}}
 {{#zone "bottomJs"}}
     {{js "js/dashboard.js"}}
-    {{js "js/jquery.qrcode.min.js"}}
 {{/zone}}
