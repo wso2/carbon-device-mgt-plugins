@@ -17,7 +17,7 @@
  */
 
 function onRequest(context) {
-    var devicemgtProps = require('/app/conf/devicemgt-props.js').config();
+    var devicemgtProps = require("/app/conf/reader/main.js")["conf"];
     
     var devices = context.unit.params.devices;
     var deviceType = context.uriParams.deviceType;

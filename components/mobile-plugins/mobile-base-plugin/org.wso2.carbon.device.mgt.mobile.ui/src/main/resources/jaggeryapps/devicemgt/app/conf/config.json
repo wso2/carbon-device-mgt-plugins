@@ -1,75 +1,80 @@
 {
-  "appContext": "/emm/",
-  "clientName": "emm",
-  "webAgentContext" : "/emm-web-agent/",
-  "apiContext": "api",
-  "httpsURL" : "%https.ip%",
-  "httpURL" : "%http.ip%",
-  "httpsWebURL" : "%https.ip%",
-  "wssURL" : "%https.ip%",
-  "wsURL" : "%http.ip%",
-  "dashboardServerURL" : "%https.ip%",
-  "enrollmentDir": "/emm-web-agent/enrollment",
-  "iOSConfigRoot" : "%https.ip%/ios-enrollment/",
-  "iOSAPIRoot" : "%https.ip%/ios/",
-  "dynamicClientRegistrationEndPoint" : "https://localhost:9443/dynamic-client-web/register/",
-  "adminService": "%https.ip%",
-  "idPServer":"%https.ip%/oauth2/token",
-  "callBackUrl":"%https.ip%/api/device-mgt/v1.0",
-  "adminUser":"admin@carbon.super",
-  "adminRole":"admin",
-  "usernameLength":30,
-  "pageSize":10,
-  "ssoConfiguration" : {
-    "enabled" : false,
-    "issuer" : "devicemgt",
-    "appName" : "devicemgt",
-    "identityProviderURL" : "%https.ip%/sso/samlsso.jag",
-    "responseSigningEnabled" : "true",
-    "keyStorePassword" : "wso2carbon",
-    "identityAlias" : "wso2carbon",
-    "keyStoreName" : "/repository/resources/security/wso2carbon.jks"
-  },
-  "userValidationConfig" : {
-    "usernameJSRegEx" : "^[\\S]{3,30}$",
-    "usernameRegExViolationErrorMsg" : "Provided username is invalid.",
-    "usernameHelpMsg" : "Should be in minimum 3 characters long and do not include any whitespaces.",
-    "firstnameJSRegEx" : "^[\\S]{3,30}$",
-    "firstnameRegExViolationErrorMsg" : "Provided first name is invalid.",
-    "lastnameJSRegEx" : "^[\\S]{3,30}$",
-    "lastnameRegExViolationErrorMsg" : "Provided last name is invalid.",
-    "emailJSRegEx" : "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/",
-    "emailRegExViolationErrorMsg" : "Provided email is invalid."
-  },
-  "groupValidationConfig": {
-    "groupNameJSRegEx": "^[\\S]{3,30}$",
-    "groupNameRegExViolationErrorMsg": "Provided group name is invalid.",
-    "groupNameHelpMsg": "Should be in minimum 3 characters long and should not include any whitespaces."
-  },
-  "roleValidationConfig" : {
-    "roleNameJSRegEx" : "^[\\S]{3,30}$",
-    "roleNameRegExViolationErrorMsg" : "Provided role name is invalid.",
-    "roleNameHelpMsg" : "should be in minimum 3 characters long and do not include any whitespaces."
-  },
-  "generalConfig" : {
-    "host" : "https://localhost:9443",
-    "companyName" : "WSO2 Carbon Device Manager",
-    "browserTitle" : "WSO2 Device Manager",
-    "copyrightPrefix" : "\u00A9 %date-year%, ",
-    "copyrightOwner" : "WSO2 Inc.",
-    "copyrightOwnersSite" : "http://www.wso2.org",
-    "copyrightSuffix" : " All Rights Reserved."
-  },
-  "scopes" : [
-    "license-add", "license-view", "device-view", "device-info", "device-list", "device-view-own",
-    "device-modify", "device-search", "operation-install", "operation-view", "operation-modify", "operation-uninstall",
-    "group-add", "group-share", "group-modify", "group-view", "group-remove", "certificate-modify", "certificate-view",
-    "configuration-view", "configuration-modify", "policy-view", "policy-modify", "device-notification-view",
-    "device-notification-modify", "feature-view", "roles-view", "roles-modify", "roles-remove", "roles-add",
-    "user-password-reset", "user-password-modify", "user-modify", "user-view", "user-invite", "user-remove", "user-add"
-  ],
-  "isOAuthEnabled" : true,
-  "backendRestEndpoints" : {
-    "deviceMgt" : "/api/device-mgt/v1.0"
-  }
+    "appContext": "/emm/",
+    "clientName": "emm",
+    "webAgentContext" : "/emm-web-agent/",
+    "apiContext": "api",
+    "httpsURL" : "%https.ip%",
+    "httpURL" : "%http.ip%",
+    "httpsWebURL" : "%https.ip%",
+    "wssURL" : "%https.ip%",
+    "wsURL" : "%http.ip%",
+    "dashboardServerURL" : "%https.ip%",
+    "enrollmentDir": "/emm-web-agent/enrollment",
+    "iOSConfigRoot" : "%https.ip%/ios-enrollment/",
+    "iOSAPIRoot" : "%https.ip%/ios/",
+    "dynamicClientRegistrationEndPoint" : "https://localhost:9443/dynamic-client-web/register/",
+    "adminService": "%https.ip%",
+    "idPServer":"%https.ip%/oauth2/token",
+    "callBackUrl":"%https.ip%/api/device-mgt/v1.0",
+    "adminUser":"admin@carbon.super",
+    "adminRole":"admin",
+    "usernameLength":30,
+    "pageSize":10,
+    "ssoConfiguration" : {
+        "enabled" : false,
+        "issuer" : "devicemgt",
+        "appName" : "devicemgt",
+        "identityProviderURL" : "%https.ip%/sso/samlsso.jag",
+        "responseSigningEnabled" : "true",
+        "keyStorePassword" : "wso2carbon",
+        "identityAlias" : "wso2carbon",
+        "keyStoreName" : "/repository/resources/security/wso2carbon.jks"
+    },
+    "userValidationConfig" : {
+        "usernameJSRegEx" : "^[\\S]{3,30}$",
+        "usernameRegExViolationErrorMsg" : "Provided username is invalid.",
+        "usernameHelpMsg" : "Should be in minimum 3 characters long and do not include any whitespaces.",
+        "firstnameJSRegEx" : "^[\\S]{3,30}$",
+        "firstnameRegExViolationErrorMsg" : "Provided first name is invalid.",
+        "lastnameJSRegEx" : "^[\\S]{3,30}$",
+        "lastnameRegExViolationErrorMsg" : "Provided last name is invalid.",
+        "emailJSRegEx" : "/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/",
+        "emailRegExViolationErrorMsg" : "Provided email is invalid."
+    },
+    "groupValidationConfig": {
+        "groupNameJSRegEx": "^[\\S]{3,30}$",
+        "groupNameRegExViolationErrorMsg": "Provided group name is invalid.",
+        "groupNameHelpMsg": "Should be in minimum 3 characters long and should not include any whitespaces."
+    },
+    "roleValidationConfig" : {
+        "roleNameJSRegEx" : "^[\\S]{3,30}$",
+        "roleNameRegExViolationErrorMsg" : "Provided role name is invalid.",
+        "roleNameHelpMsg" : "should be in minimum 3 characters long and do not include any whitespaces."
+    },
+    "generalConfig" : {
+        "host" : "https://localhost:9443",
+        "companyName" : "WSO2 Carbon Device Manager",
+        "browserTitle" : "WSO2 Device Manager",
+        "copyrightPrefix" : "\u00A9 %date-year%, ",
+        "copyrightOwner" : "WSO2 Inc.",
+        "copyrightOwnersSite" : "http://www.wso2.org",
+        "copyrightSuffix" : " All Rights Reserved."
+    },
+    "scopes" : [
+        "license-add", "license-view", "device-view",
+        "device-info", "device-list", "device-view-own", "device-modify", "device-search",
+        "operation-install", "operation-view", "operation-modify", "operation-uninstall",
+        "group-add", "group-share", "group-modify", "group-view", "group-remove",
+        "certificate-modify", "certificate-view",
+        "configuration-view", "configuration-modify",
+        "policy-view", "policy-modify",
+        "device-notification-view", "device-notification-modify",
+        "feature-view",
+        "roles-view", "roles-modify", "roles-remove", "roles-add",
+        "user-password-reset", "user-password-modify", "user-modify", "user-view", "user-invite", "user-remove", "user-add"
+    ],
+    "isOAuthEnabled" : true,
+    "backendRestEndpoints" : {
+        "deviceMgt" : "/api/device-mgt/v1.0"
+    }
 }
