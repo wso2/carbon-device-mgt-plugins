@@ -135,8 +135,17 @@
                             org.wso2.carbon.databridge.commons,
                             org.wso2.carbon.event.stream.core,
                             org.wso2.carbon.event.stream.core.exception,
-                            org.wso2.carbon.utils
+                            org.wso2.carbon.utils,
+                            javax.xml.bind,
+                            javax.xml.bind.annotation,
+                            javax.xml.parsers; version=0.0.0,
+                            org.w3c.dom,
+                            org.wso2.carbon.identity.oauth2.stub,
+                            org.wso2.carbon.identity.oauth2.stub.dto,
+                            org.wso2.carbon.user.api,
+                            org.wso2.carbon.utils.multitenancy
                         </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
             </plugin>

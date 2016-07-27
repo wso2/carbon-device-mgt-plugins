@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class Authorizer {
 
-    @XmlElement(name = "Properties", required = true)
+    @XmlElement(name = "Properties", required = false)
     protected Properties properties;
     @XmlAttribute(name = "class")
     protected String clazz;

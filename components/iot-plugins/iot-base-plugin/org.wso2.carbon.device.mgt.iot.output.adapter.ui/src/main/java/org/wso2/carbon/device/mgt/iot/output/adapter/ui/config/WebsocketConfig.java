@@ -38,9 +38,6 @@ public class WebsocketConfig {
             Unmarshaller unmarshaller = ctx.createUnmarshaller();
             //unmarshaller.setSchema(getSchema());
             websocketValidationConfigs = (WebsocketValidationConfigs) unmarshaller.unmarshal(doc);
-            if (websocketValidationConfigs != null) {
-
-            }
         } catch (JAXBException e) {
             throw new WebsocketValidationConfigurationFailedException("Error occurred while un-marshalling Websocket" +
                                                                           " Config", e);
