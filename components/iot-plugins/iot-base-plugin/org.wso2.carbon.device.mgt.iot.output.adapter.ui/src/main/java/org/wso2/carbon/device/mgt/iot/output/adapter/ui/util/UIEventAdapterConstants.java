@@ -27,7 +27,7 @@ public class UIEventAdapterConstants {
     private UIEventAdapterConstants() {
     }
 
-    public static final String ADAPTER_TYPE_UI = "iot-ui";
+    public static final String ADAPTER_TYPE_UI = "secured-ui";
     public static final String ADAPTER_USAGE_TIPS_PREFIX = "ui.usage.tips_prefix";
     public static final String ADAPTER_USAGE_TIPS_POSTFIX = "ui.usage.tips_postfix";
     public static final String ADAPTER_UI_DEFAULT_OUTPUT_STREAM_VERSION = "1.0.0";

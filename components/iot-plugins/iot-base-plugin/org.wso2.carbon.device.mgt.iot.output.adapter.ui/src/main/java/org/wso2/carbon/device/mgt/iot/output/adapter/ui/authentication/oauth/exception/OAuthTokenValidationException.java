@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package oauth.exception;
+package org.wso2.carbon.device.mgt.iot.output.adapter.ui.authentication.oauth.exception;
 
 /**
  * This Exception will be thrown, when there any interference with token validation flow.

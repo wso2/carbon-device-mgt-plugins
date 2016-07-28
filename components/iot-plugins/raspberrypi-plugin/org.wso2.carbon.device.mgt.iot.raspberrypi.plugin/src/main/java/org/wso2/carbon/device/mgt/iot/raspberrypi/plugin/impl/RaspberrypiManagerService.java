@@ -28,9 +28,13 @@ import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfigur
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.constants.RaspberrypiConstants;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.internal.RaspberrypiManagementDataHolder;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RaspberrypiManagerService implements DeviceManagementService {
 
 	private DeviceManager deviceManager;
+	private PushNotificationConfig pushNotificationConfig;
 
 	@Override
 	public String getType() {
@@ -40,6 +44,21 @@ public class RaspberrypiManagerService implements DeviceManagementService {
 	@Override
 	public void init() throws DeviceManagementException {
 		deviceManager = new RaspberrypiManager();
+		this.pushNotificationConfig = this.populatePushNotificationConfig();
+	}
+
+	private PushNotificationConfig populatePushNotificationConfig() {
+		DeviceManagementConfiguration deviceManagementConfiguration = RaspberrypiManagementDataHolder.getInstance()
+				.getDeviceTypeConfigService().getConfiguration(RaspberrypiConstants.DEVICE_TYPE,
+															   RaspberrypiConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
+		org.wso2.carbon.device.mgt.iot.devicetype.config.PushNotificationConfig sourceConfig =
+				deviceManagementConfiguration.getPushNotificationConfig();
+		Map<String, String> staticProps = new HashMap<>();
+		for (org.wso2.carbon.device.mgt.iot.devicetype.config.PushNotificationConfig.Property
+				property : sourceConfig.getProperties()) {
+			staticProps.put(property.getName(), property.getValue());
+		}
+		return new PushNotificationConfig(sourceConfig.getPushNotificationProvider(), staticProps);
 	}
 
 	@Override
@@ -64,7 +83,7 @@ public class RaspberrypiManagerService implements DeviceManagementService {
 
     @Override
     public PushNotificationConfig getPushNotificationConfig() {
-        return null;
+        return pushNotificationConfig;
     }
 
 

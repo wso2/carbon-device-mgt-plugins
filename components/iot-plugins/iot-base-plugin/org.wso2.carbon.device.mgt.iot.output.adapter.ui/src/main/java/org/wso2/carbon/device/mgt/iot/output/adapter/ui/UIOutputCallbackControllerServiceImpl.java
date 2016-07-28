@@ -19,10 +19,9 @@
  */
 package org.wso2.carbon.device.mgt.iot.output.adapter.ui;
 
-import com.google.gson.JsonObject;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.iot.output.adapter.ui.internal.UIEventAdaptorServiceDataHolder;
-import org.wso2.carbon.device.mgt.iot.output.adapter.ui.util.WebSocketSessionUtil;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.util.WebSocketSessionRequest;
 import org.wso2.carbon.device.mgt.iot.output.adapter.ui.util.UIEventAdapterConstants;
 
 import javax.websocket.Session;
@@ -36,7 +35,7 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 public class UIOutputCallbackControllerServiceImpl implements UIOutputCallbackControllerService {
 
-    private ConcurrentHashMap<Integer, ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketSessionUtil>>>
+    private ConcurrentHashMap<Integer, ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketSessionRequest>>>
             outputEventAdaptorSessionMap;
 
     public UIOutputCallbackControllerServiceImpl() {
@@ -58,7 +57,7 @@ public class UIOutputCallbackControllerServiceImpl implements UIOutputCallbackCo
             version = UIEventAdapterConstants.ADAPTER_UI_DEFAULT_OUTPUT_STREAM_VERSION;
         }
         String streamId = streamName + UIEventAdapterConstants.ADAPTER_UI_COLON + version;
-        ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketSessionUtil>> tenantSpecificAdaptorMap =
+        ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketSessionRequest>> tenantSpecificAdaptorMap =
                 outputEventAdaptorSessionMap.get(tenantId);
         if (tenantSpecificAdaptorMap == null) {
             tenantSpecificAdaptorMap = new ConcurrentHashMap<>();
@@ -66,7 +65,7 @@ public class UIOutputCallbackControllerServiceImpl implements UIOutputCallbackCo
                 tenantSpecificAdaptorMap = outputEventAdaptorSessionMap.get(tenantId);
             }
         }
-        CopyOnWriteArrayList<WebSocketSessionUtil> adapterSpecificSessions = tenantSpecificAdaptorMap.get(streamId);
+        CopyOnWriteArrayList<WebSocketSessionRequest> adapterSpecificSessions = tenantSpecificAdaptorMap.get(streamId);
         if (adapterSpecificSessions == null) {
             adapterSpecificSessions = new CopyOnWriteArrayList<>();
             if (null != tenantSpecificAdaptorMap.putIfAbsent(streamId, adapterSpecificSessions)) {
@@ -74,7 +73,7 @@ public class UIOutputCallbackControllerServiceImpl implements UIOutputCallbackCo
             }
         }
 
-        WebSocketSessionUtil webSocketSessionUtil = new WebSocketSessionUtil(session);
+        WebSocketSessionRequest webSocketSessionUtil = new WebSocketSessionRequest(session);
         adapterSpecificSessions.add(webSocketSessionUtil);
     }
 
@@ -85,8 +84,8 @@ public class UIOutputCallbackControllerServiceImpl implements UIOutputCallbackCo
      * @param streamId - Stream name and version which user register to.
      * @return the sessions list.
      */
-    public CopyOnWriteArrayList<WebSocketSessionUtil> getSessions(int tenantId, String streamId) {
-        ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketSessionUtil>> tenantSpecificAdaptorMap
+    public CopyOnWriteArrayList<WebSocketSessionRequest> getSessions(int tenantId, String streamId) {
+        ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketSessionRequest>> tenantSpecificAdaptorMap
                 = outputEventAdaptorSessionMap.get(tenantId);
         if (tenantSpecificAdaptorMap != null) {
             return tenantSpecificAdaptorMap.get(streamId);
@@ -125,15 +124,15 @@ public class UIOutputCallbackControllerServiceImpl implements UIOutputCallbackCo
             version = UIEventAdapterConstants.ADAPTER_UI_DEFAULT_OUTPUT_STREAM_VERSION;
         }
         String id = streamName + UIEventAdapterConstants.ADAPTER_UI_COLON + version;
-        ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketSessionUtil>> tenantSpecificAdaptorMap
+        ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketSessionRequest>> tenantSpecificAdaptorMap
                 = outputEventAdaptorSessionMap.get(tenantId);
         if (tenantSpecificAdaptorMap != null) {
-            CopyOnWriteArrayList<WebSocketSessionUtil> adapterSpecificSessions = tenantSpecificAdaptorMap.get(id);
+            CopyOnWriteArrayList<WebSocketSessionRequest> adapterSpecificSessions = tenantSpecificAdaptorMap.get(id);
             if (adapterSpecificSessions != null) {
-                WebSocketSessionUtil sessionToRemove = null;
-                Iterator<WebSocketSessionUtil> iterator = adapterSpecificSessions.iterator();
+                WebSocketSessionRequest sessionToRemove = null;
+                Iterator<WebSocketSessionRequest> iterator = adapterSpecificSessions.iterator();
                 while (iterator.hasNext()) {
-                    WebSocketSessionUtil webSocketSessionUtil = iterator.next();
+                    WebSocketSessionRequest webSocketSessionUtil = iterator.next();
                     if (session.getId().equals(webSocketSessionUtil.getSession().getId())) {
                         sessionToRemove = webSocketSessionUtil;
                         break;

@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -82,6 +83,7 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
     private static final String MQTT_PROTOCOL = "MQTT";
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
+    private static final String DEVICE_MGT_SCOPE_IDENTIFIER = "device-mgt";
     private static Log log = LogFactory.getLog(VirtualFireAlarmServiceImpl.class);
 
     @POST
@@ -309,10 +311,13 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                     VirtualFireAlarmConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
-        String scopes = "cdmf/" + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
+        String device = "{ \"scope\":\"mqtt-publisher mqtt-subscriber\", \"deviceIdentifiers\":[{\"id\":\""+deviceId+"\", " +
+                "\"type\":\""+VirtualFireAlarmConstants.DEVICE_TYPE+"\"}]}";
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("device", Base64.encodeBase64String(device.getBytes()));
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
                                                                    apiApplicationKey.getConsumerSecret(), owner,
-                                                                   scopes);
+                                                                   null, params);
         String accessToken = accessTokenInfo.getAccessToken();
         String refreshToken = accessTokenInfo.getRefreshToken();
         XmppAccount newXmppAccount = new XmppAccount();

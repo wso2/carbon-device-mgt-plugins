@@ -13,15 +13,15 @@ import java.util.Map;
  * of the Session object derived from processing some of the (default) existing attributes.
  * Ex: Query-String's [Key:Value] Map derived from the queryString attribute of the original class.
  */
-public class WebSocketSessionUtil {
-    private static final Log log = LogFactory.getLog(WebSocketSessionUtil.class);
+public class WebSocketSessionRequest {
+    private static final Log log = LogFactory.getLog(WebSocketSessionRequest.class);
 
     private static final String QUERY_STRING_SEPERATOR = "&";
     private static final String QUERY_KEY_VALUE_SEPERATOR = "=";
     private Map<String, String> queryParamValuePairs = null;
     private Session session;
 
-    public WebSocketSessionUtil(Session session) {
+    public WebSocketSessionRequest(Session session) {
         this.session = session;
         setQueryParamValuePairs();
     }
@@ -42,19 +42,15 @@ public class WebSocketSessionUtil {
         if (session.getQueryString() != null) {
             String queryString = session.getQueryString();
             String[] allQueryParamPairs = queryString.split(QUERY_STRING_SEPERATOR);
-
             for (String keyValuePair : allQueryParamPairs) {
                 String[] thisQueryParamPair = keyValuePair.split(QUERY_KEY_VALUE_SEPERATOR);
-
                 if (thisQueryParamPair.length != 2) {
                     log.warn("Invalid query string [" + queryString + "] passed in.");
                     break;
                 }
-
                 if (queryParamValuePairs == null) {
                     queryParamValuePairs = new HashMap<>();
                 }
-
                 queryParamValuePairs.put(thisQueryParamPair[0], thisQueryParamPair[1]);
             }
         }

@@ -12,13 +12,17 @@
  *
  */
 
-package oauth;
+package org.wso2.carbon.device.mgt.iot.output.adapter.ui.authentication.oauth;
 
 import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.authentication.AuthenticationInfo;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.config.Property;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.config.WebsocketConfig;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.constants.WebsocketConstants;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
@@ -26,14 +30,14 @@ import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
-import util.AuthenticationInfo;
 
 import javax.websocket.Session;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -68,7 +72,7 @@ public class OAuthTokenValdiator {
 			Properties properties = getWebSocketConfig();
 			this.stubs = new GenericObjectPool(new OAuthTokenValidaterStubFactory(properties));
 		} catch (IOException e) {
-			log.error("Failed to parse the web socket config file " + WEBSOCKET_CONFIG_LOCATION);
+			log.error("Failed to parse the web socket org.wso2.carbon.device.mgt.iot.output.adapter.ui.config file " + WEBSOCKET_CONFIG_LOCATION);
 		}
 	}
 
@@ -152,6 +156,12 @@ public class OAuthTokenValdiator {
 			String tenantDomain = MultitenantUtils.getTenantDomain(authorizedUser);
 			authenticationInfo.setUsername(username);
 			authenticationInfo.setTenantDomain(tenantDomain);
+			String scopes[] = tokenValidationResponse.getScope();
+			if (scopes != null) {
+				Map<String, Object> properties = new HashMap<>();
+				properties.put(WebsocketConstants.SCOPE_IDENTIFIER, scopes);
+				authenticationInfo.setProperties(properties);
+			}
 		} else {
 			if (log.isDebugEnabled()) {
 				log.debug("Token validation failed for token: " + token);
@@ -169,12 +179,10 @@ public class OAuthTokenValdiator {
 	 */
 	private Properties getWebSocketConfig() throws IOException {
 		Properties properties = new Properties();
-		File configFile =new File(WEBSOCKET_CONFIG_LOCATION);
-		if (configFile.exists()) {
-			InputStream fileInputStream = new FileInputStream(configFile);
-			if (fileInputStream != null) {
-				properties.load(fileInputStream);
-			}
+		List<Property> propertyList = WebsocketConfig.getInstance().getWebsocketValidationConfigs().getAuthenticator()
+				.getProperties().getProperty();
+		for (Property property : propertyList) {
+			properties.put(property.getName(), property.getValue());
 		}
 		return properties;
 	}
