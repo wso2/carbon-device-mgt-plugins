@@ -34,7 +34,7 @@ public class DeviceTypeConfigServiceImpl implements DeviceTypeConfigService {
                         String deviceType = deviceManagementConfiguration.getDeviceType();
                         String tenantDomain = deviceManagementConfiguration.getDeviceManagementConfigRepository()
                                 .getProvisioningConfig().getTenantDomain();
-                        if ( deviceType != null && !deviceType.isEmpty() && tenantDomain != null
+                        if (deviceType != null && !deviceType.isEmpty() && tenantDomain != null
                                 && !tenantDomain.isEmpty()) {
                             deviceTypeConfigurationMap.put(new DeviceTypeConfigIdentifier(deviceType, tenantDomain),
                                                            deviceManagementConfiguration);
