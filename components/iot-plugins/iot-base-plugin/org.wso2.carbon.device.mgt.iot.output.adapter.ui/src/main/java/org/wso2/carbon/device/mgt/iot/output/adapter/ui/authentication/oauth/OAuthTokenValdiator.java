@@ -72,7 +72,8 @@ public class OAuthTokenValdiator {
 			Properties properties = getWebSocketConfig();
 			this.stubs = new GenericObjectPool(new OAuthTokenValidaterStubFactory(properties));
 		} catch (IOException e) {
-			log.error("Failed to parse the web socket org.wso2.carbon.device.mgt.iot.output.adapter.ui.config file " + WEBSOCKET_CONFIG_LOCATION);
+			log.error("Failed to parse the web socket org.wso2.carbon.device.mgt.iot.output.adapter.ui.config file " +
+							  WEBSOCKET_CONFIG_LOCATION, e);
 		}
 	}
 

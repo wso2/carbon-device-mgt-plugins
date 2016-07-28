@@ -18,9 +18,9 @@ public class ServiceHolder {
                 .getThreadLocalCarbonContext().getOSGiService(UIOutputCallbackControllerService.class, null);
     }
 
-    public synchronized static ServiceHolder getInstance(){
-        if (instance==null){
-            instance= new ServiceHolder();
+    public synchronized static ServiceHolder getInstance() {
+        if (instance == null) {
+            instance = new ServiceHolder();
         }
         return instance;
     }

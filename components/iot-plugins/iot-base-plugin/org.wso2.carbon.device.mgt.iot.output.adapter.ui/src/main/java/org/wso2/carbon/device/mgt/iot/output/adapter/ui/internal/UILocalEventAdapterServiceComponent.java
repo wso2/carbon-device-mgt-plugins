@@ -88,10 +88,13 @@ public class UILocalEventAdapterServiceComponent {
             } catch (WebsocketValidationConfigurationFailedException e) {
                 log.error("Failed to initialize configuration for websocket.", e);
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+                log.error("Failed to initialize the class authentication and authorization given " +
+                                  "in the websocket validation configuration.", e);
             }
         } catch (RuntimeException e) {
             log.error("Can not create the output ui adapter service ", e);
+        } catch (Throwable e) {
+            log.error("Error occurred while activating UI Event Adapter Service Component", e);
         }
     }
 
