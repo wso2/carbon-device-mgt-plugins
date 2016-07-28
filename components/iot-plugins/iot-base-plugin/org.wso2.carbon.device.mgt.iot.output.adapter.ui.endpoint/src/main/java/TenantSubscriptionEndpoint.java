@@ -77,7 +77,7 @@ public class TenantSubscriptionEndpoint extends SubscriptionEndpoint {
             try {
                 session.close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, "Unauthorized Access"));
             } catch (IOException e) {
-                log.error("Failed to disconnect the unauthorized client.");
+                log.error("Failed to disconnect the unauthorized client.", e);
             }
         }
     }
@@ -92,7 +92,8 @@ public class TenantSubscriptionEndpoint extends SubscriptionEndpoint {
     @OnMessage
     public void onMessage (Session session, String message, @PathParam("streamname") String streamName, @PathParam("tdomain") String tdomain) {
         if (log.isDebugEnabled()) {
-            log.debug("Received and dropped message from client. Message: " + message+", for Session id: "+session.getId()+", for tenant domain"+tdomain+", for the Adaptor:"+streamName);
+            log.debug("Received and dropped message from client. Message: " + message + ", for Session id: " +
+                              session.getId() + ", for tenant domain" + tdomain + ", for the Adaptor:" + streamName);
         }
     }
 

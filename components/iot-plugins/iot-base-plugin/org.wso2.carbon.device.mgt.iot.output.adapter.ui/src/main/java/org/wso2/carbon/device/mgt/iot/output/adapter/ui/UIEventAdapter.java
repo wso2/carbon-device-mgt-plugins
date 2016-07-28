@@ -1,5 +1,4 @@
 /*
- *
  *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
@@ -78,7 +77,6 @@ public class UIEventAdapter implements OutputEventAdapter {
 
     @Override
     public void init() throws OutputEventAdapterException {
-
         tenantId = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
 
         //ExecutorService will be assigned  if it is null
@@ -198,7 +196,6 @@ public class UIEventAdapter implements OutputEventAdapter {
 
     @Override
     public void publish(Object message, Map<String, String> dynamicProperties) {
-
         Event event = (Event) message;
         StringBuilder eventBuilder = new StringBuilder("[");
 
@@ -275,7 +272,6 @@ public class UIEventAdapter implements OutputEventAdapter {
 
     @Override
     public void destroy() {
-
         int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
 
         ConcurrentHashMap<String, String> tenantSpecificAdapterMap = UIEventAdaptorServiceDataHolder

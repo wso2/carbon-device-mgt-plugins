@@ -78,7 +78,7 @@ public class SuperTenantSubscriptionEndpoint extends SubscriptionEndpoint {
 			try {
 				session.close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, "Unauthorized Access"));
 			} catch (IOException e) {
-				log.error("Failed to disconnect the unauthorized client.");
+				log.error("Failed to disconnect the unauthorized client.", e);
 			}
 		}
 	}
