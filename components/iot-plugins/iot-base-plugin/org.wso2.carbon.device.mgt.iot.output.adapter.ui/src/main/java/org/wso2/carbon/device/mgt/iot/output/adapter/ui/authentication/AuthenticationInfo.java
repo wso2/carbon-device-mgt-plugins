@@ -12,7 +12,9 @@
  *
  */
 
-package util;
+package org.wso2.carbon.device.mgt.iot.output.adapter.ui.authentication;
+
+import java.util.Map;
 
 /**
  * This is returned after authentication.
@@ -25,6 +27,12 @@ public class AuthenticationInfo {
 	private boolean authenticated;
 	private String username;
 	private String tenantDomain;
+
+	/**
+	 * To hold authentication related properties eg: scopes in oauth
+	 */
+	private Map<String, Object> properties;
+
 	/**
 	 * returns whether the client is authenticated
 	 */
@@ -56,5 +64,13 @@ public class AuthenticationInfo {
 
 	public void setTenantDomain(String tenantDomain) {
 		this.tenantDomain = tenantDomain;
+	}
+
+	public Map<String, Object> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(Map<String, Object> properties) {
+		this.properties = properties;
 	}
 }
