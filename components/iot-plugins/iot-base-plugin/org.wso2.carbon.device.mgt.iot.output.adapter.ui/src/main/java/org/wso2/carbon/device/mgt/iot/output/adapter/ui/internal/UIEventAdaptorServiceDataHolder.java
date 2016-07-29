@@ -1,5 +1,4 @@
 /*
- *
  *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
@@ -31,10 +30,10 @@ import java.util.concurrent.LinkedBlockingDeque;
 public final class UIEventAdaptorServiceDataHolder {
 
     private static UIOutputCallbackControllerServiceImpl UIOutputCallbackRegisterServiceImpl;
-    private static ConcurrentHashMap<Integer,ConcurrentHashMap<String, String>>
-            tenantSpecificOutputEventStreamAdapterMap = new ConcurrentHashMap<Integer,ConcurrentHashMap<String, String>>();
+    private static ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>
+            tenantSpecificOutputEventStreamAdapterMap = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<Integer, ConcurrentHashMap<String, LinkedBlockingDeque<Object>>>
-            tenantSpecificStreamEventMap = new ConcurrentHashMap<Integer, ConcurrentHashMap<String, LinkedBlockingDeque<Object>>>();
+            tenantSpecificStreamEventMap = new ConcurrentHashMap<>();
     private static EventStreamService eventStreamService;
 
     public static void registerEventStreamService(EventStreamService eventBuilderService) {

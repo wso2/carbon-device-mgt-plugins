@@ -45,7 +45,7 @@ public class XmppConfig {
         List<PushNotificationConfig.Property> properties = deviceManagementConfiguration.getPushNotificationConfig()
                 .getProperties();
         String provider = deviceManagementConfiguration.getPushNotificationConfig().getPushNotificationProvider();
-        if (provider.equals("XMPP")) {
+        if ("XMPP".equals(provider)) {
             enabled = true;
         }
         if (enabled) {

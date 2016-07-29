@@ -129,8 +129,14 @@ public class AndroidAPIUtils {
         DeviceIDHolder deviceIDHolder = deviceUtils.validateDeviceIdentifiers(deviceIDs);
 
         List<DeviceIdentifier> validDeviceIds = deviceIDHolder.getValidDeviceIDList();
-        Activity activity = getDeviceManagementService().addOperation(
-                DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, validDeviceIds);
+        Activity activity = null;
+        if(validDeviceIds.size() > 0) {
+            activity = getDeviceManagementService().addOperation(
+                    DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, validDeviceIds);
+        } else {
+            throw new IllegalArgumentException("Invalid device Identifiers found");
+        }
+
 //        if (activity != null) {
 //            GCMService gcmService = getGCMService();
 //            if (gcmService.isGCMEnabled()) {
@@ -142,11 +148,7 @@ public class AndroidAPIUtils {
 //                getGCMService().sendNotification(operation.getCode(), devices);
 //            }
 //        }
-        if (!deviceIDHolder.getErrorDeviceIdList().isEmpty()) {
-            throw new BadRequestException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(deviceUtils.
-                            convertErrorMapIntoErrorMessage(deviceIDHolder.getErrorDeviceIdList())).build());
-        }
+
         return Response.status(Response.Status.CREATED).entity(activity).build();
     }
 

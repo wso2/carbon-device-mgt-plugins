@@ -139,9 +139,7 @@ public class ArduinoServiceImpl implements ArduinoService {
                     return Response.status(Response.Status.ACCEPTED.getStatusCode()).entity(result).build();
                 } catch (NoSuchElementException ex) {
                     result = "There are no more controls for device " + deviceId + " of owner " + owner;
-                    if (log.isDebugEnabled()) {
-                        log.debug(result);
-                    }
+                    log.error(result, ex);
                     return Response.status(Response.Status.NO_CONTENT.getStatusCode()).entity(result).build();
                 }
             }
