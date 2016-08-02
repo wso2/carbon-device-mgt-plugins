@@ -285,6 +285,9 @@ public class AndroidAPIUtils {
                 OperationCodes.DEVICE_INFO.equals(operation.getCode())) {
 
             try {
+                if (log.isDebugEnabled()){
+                    log.debug("Operation response: " + operation.getOperationResponse());
+                }
                 Device device = new Gson().fromJson(operation.getOperationResponse(), Device.class);
                 org.wso2.carbon.device.mgt.common.device.details.DeviceInfo deviceInfo = convertDeviceToInfo(device);
                 updateDeviceInfo(deviceIdentifier, deviceInfo);
@@ -403,8 +406,6 @@ public class AndroidAPIUtils {
                 }
             } else {
                 if (prop.getName().equalsIgnoreCase("CPU_INFO")) {
-                    deviceInfo.setTotalRAMMemory(Double.parseDouble(getProperty(prop.getValue(), "User")));
-
                     deviceInfo.getDeviceDetailsMap().put("cpuUser",
                             getProperty(prop.getValue(), "User"));
                     deviceInfo.getDeviceDetailsMap().put("cpuSystem",
