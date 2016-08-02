@@ -19,10 +19,12 @@
 function onRequest(context) {
     var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
     var generalConfig = context.app.conf["generalConfig"];
+    var mdmProps = require('/app/conf/reader/main.js')["conf"];
 
-    context["permissions"] = userModule.getUIPermissions();
-    new Log().info("## Permissions : "+ stringify(userModule.getUIPermissions()));
-    context["enrollmentURL"] = generalConfig["host"] + generalConfig["enrollmentDir"];
-
-    return context;
+    var viewModel = {};
+    viewModel.permissions = userModule.getUIPermissions();
+    new Log().debug("## Permissions : " + stringify(userModule.getUIPermissions()));
+    //TODO: Move enrollment URL into app-conf.json
+    viewModel.enrollmentURL = mdmProps.enrollmentUrl;
+    return viewModel;
 }
