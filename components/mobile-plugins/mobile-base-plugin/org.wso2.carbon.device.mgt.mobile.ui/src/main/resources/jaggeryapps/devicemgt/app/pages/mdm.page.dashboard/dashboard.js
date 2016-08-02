@@ -19,7 +19,7 @@
 function onRequest(context) {
     var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
     var generalConfig = context.app.conf["generalConfig"];
-    var mdmProps = require('/app/conf/reader/main.js')["conf"];
+    var mdmProps = require("/app/modules/conf-reader/main.js")["conf"];
 
     var viewModel = {};
     viewModel.permissions = userModule.getUIPermissions();
