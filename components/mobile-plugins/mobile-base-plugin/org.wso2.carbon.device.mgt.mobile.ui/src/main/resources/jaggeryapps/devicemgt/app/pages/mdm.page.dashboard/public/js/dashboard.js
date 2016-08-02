@@ -56,9 +56,3 @@ $(document).ready(function () {
         updateStats("/api/device-mgt/v1.0/roles?offset=0&limit=1", "#role-count");
     }
 });
-
-function toggleEnrollment() {
-    $(".modalpopup-content").html($("#qr-code-modal").html());
-    generateQRCode(".modalpopup-content .qr-code");
-    showPopup();
-}

@@ -17,7 +17,7 @@
  */
 
 function onRequest(context) {
-    var userModule = require("/app/modules/user.js")["userModule"];
+    var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
     var generalConfig = context.app.conf["generalConfig"];
 
     context["permissions"] = userModule.getUIPermissions();

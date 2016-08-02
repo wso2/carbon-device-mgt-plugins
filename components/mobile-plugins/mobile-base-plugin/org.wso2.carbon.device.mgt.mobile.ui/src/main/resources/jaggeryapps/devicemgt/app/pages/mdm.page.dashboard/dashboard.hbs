@@ -1,3 +1,4 @@
+{{unit "cdmf.unit.lib.qrcode"}}
 {{#zone "content"}}
     {{#if permissions.VIEW_DASHBOARD}}
         {{#if permissions.LIST_DEVICES}}
@@ -47,7 +48,7 @@
                                     View
                                 </a>
                                 {{#if permissions.ADD_POLICY}}
-                                    <a href="/emm/policies/add-policy">
+                                    <a href="/emm/policy/add">
                                         <span class="fw-stack">
                                             <i class="fw fw-ring fw-stack-2x"></i>
                                             <i class="fw fw-add fw-stack-1x"></i>
@@ -78,7 +79,7 @@
                                     View
                                 </a>
                                 {{#if permissions.ADD_USER}}
-                                    <a href="/emm/users/add-user">
+                                    <a href="/emm/user/add">
                                         <span class="fw-stack">
                                             <i class="fw fw-ring fw-stack-2x"></i>
                                             <i class="fw fw-add fw-stack-1x"></i>
@@ -109,7 +110,7 @@
                                     View
                                 </a>
                                 {{#if permissions.ADD_ROLE}}
-                                    <a href="/emm/roles/add-role">
+                                    <a href="/emm/role/add">
                                         <span class="fw-stack">
                                             <i class="fw fw-ring fw-stack-2x"></i>
                                             <i class="fw fw-add fw-stack-1x"></i>
@@ -131,15 +132,12 @@
         <div class="content">
             <div class="row">
                 <div class="col-lg-5 col-md-6 col-centered">
-                    <h3>
-                        Scan QR code to start enrollment
-                    </h3>
+                    <h3>Scan QR code to start enrollment</h3>
                     <h4>
                         Please scan the QR code using your mobile device to retrieve enrollment URL.
                     </h4>
-
                     <div class="panel panel-default">
-                        <div class="panel-body col-centered ">
+                        <div class="panel-body col-centered text-center">
                             <div class="qr-code"></div>
                         </div>
                     </div>
@@ -150,5 +148,4 @@
 {{/zone}}
 {{#zone "bottomJs"}}
     {{js "js/dashboard.js"}}
-    {{js "js/jquery.qrcode.min.js"}}
 {{/zone}}

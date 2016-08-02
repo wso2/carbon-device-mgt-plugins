@@ -1,5 +1,4 @@
 /*
- *
  *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
@@ -34,7 +33,7 @@ import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterConfiguration
 import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
 import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterRuntimeException;
 import org.wso2.carbon.event.output.adapter.core.exception.TestConnectionNotSupportedException;
-import org.wso2.carbon.device.mgt.iot.output.adapter.ui.util.WebSocketSessionUtil;
+import org.wso2.carbon.device.mgt.iot.output.adapter.ui.util.WebSocketSessionRequest;
 import org.wso2.carbon.event.stream.core.EventStreamService;
 import org.wso2.carbon.event.stream.core.exception.EventStreamConfigurationException;
 
@@ -78,7 +77,6 @@ public class UIEventAdapter implements OutputEventAdapter {
 
     @Override
     public void init() throws OutputEventAdapterException {
-
         tenantId = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
 
         //ExecutorService will be assigned  if it is null
@@ -198,7 +196,6 @@ public class UIEventAdapter implements OutputEventAdapter {
 
     @Override
     public void publish(Object message, Map<String, String> dynamicProperties) {
-
         Event event = (Event) message;
         StringBuilder eventBuilder = new StringBuilder("[");
 
@@ -257,7 +254,7 @@ public class UIEventAdapter implements OutputEventAdapter {
         streamSpecificEvents.add(eventValues);
 
         // fetch all valid sessions checked against any queryParameters provided when subscribing.
-        CopyOnWriteArrayList<WebSocketSessionUtil> validSessions = getValidSessions(event);
+        CopyOnWriteArrayList<WebSocketSessionRequest> validSessions = getValidSessions(event);
 
         try {
             executorService.execute(new WebSocketSender(validSessions, eventString));
@@ -275,7 +272,6 @@ public class UIEventAdapter implements OutputEventAdapter {
 
     @Override
     public void destroy() {
-
         int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
 
         ConcurrentHashMap<String, String> tenantSpecificAdapterMap = UIEventAdaptorServiceDataHolder
@@ -331,15 +327,15 @@ public class UIEventAdapter implements OutputEventAdapter {
      * @param event the current event received and that which needs to be published to subscribed sessions.
      * @return a list of all validated web-socket sessions against the queryString values.
      */
-    private CopyOnWriteArrayList<WebSocketSessionUtil> getValidSessions(Event event) {
-        CopyOnWriteArrayList<WebSocketSessionUtil> validSessions = new CopyOnWriteArrayList<>();
+    private CopyOnWriteArrayList<WebSocketSessionRequest> getValidSessions(Event event) {
+        CopyOnWriteArrayList<WebSocketSessionRequest> validSessions = new CopyOnWriteArrayList<>();
         UIOutputCallbackControllerServiceImpl uiOutputCallbackControllerServiceImpl =
                 UIEventAdaptorServiceDataHolder.getUIOutputCallbackRegisterServiceImpl();
         // get all subscribed web-socket sessions.
-        CopyOnWriteArrayList<WebSocketSessionUtil> webSocketSessionUtils =
+        CopyOnWriteArrayList<WebSocketSessionRequest> webSocketSessionUtils =
                 uiOutputCallbackControllerServiceImpl.getSessions(tenantId, streamId);
         if (webSocketSessionUtils != null) {
-            for (WebSocketSessionUtil webSocketSessionUtil : webSocketSessionUtils) {
+            for (WebSocketSessionRequest webSocketSessionUtil : webSocketSessionUtils) {
                 boolean isValidSession = validateEventAgainstSessionFilters(event, webSocketSessionUtil);
                 if (isValidSession) {
                     validSessions.add(webSocketSessionUtil);
@@ -360,7 +356,7 @@ public class UIEventAdapter implements OutputEventAdapter {
      * @param webSocketSessionUtil the session which needs validated for its authenticity to receive this event.
      * @return "true" if the session is valid to receive the event else "false".
      */
-    private boolean validateEventAgainstSessionFilters(Event event, WebSocketSessionUtil webSocketSessionUtil) {
+    private boolean validateEventAgainstSessionFilters(Event event, WebSocketSessionRequest webSocketSessionUtil) {
 
         // fetch the queryString Key:Value pair map of the given session.
         Map<String, String> queryParamValuePairs = webSocketSessionUtil.getQueryParamValuePairs();
@@ -412,9 +408,9 @@ public class UIEventAdapter implements OutputEventAdapter {
     private class WebSocketSender implements Runnable {
 
         private String message;
-        private CopyOnWriteArrayList<WebSocketSessionUtil> webSocketSessionUtils;
+        private CopyOnWriteArrayList<WebSocketSessionRequest> webSocketSessionUtils;
 
-        public WebSocketSender(CopyOnWriteArrayList<WebSocketSessionUtil> webSocketSessionUtils, String message) {
+        public WebSocketSender(CopyOnWriteArrayList<WebSocketSessionRequest> webSocketSessionUtils, String message) {
             this.webSocketSessionUtils = webSocketSessionUtils;
             this.message = message;
         }
@@ -434,8 +430,8 @@ public class UIEventAdapter implements OutputEventAdapter {
         public void run() {
             if (webSocketSessionUtils != null) {
                 doLogDroppedMessage = true;
-                for (WebSocketSessionUtil webSocketSessionUtil : webSocketSessionUtils) {
-                    synchronized (WebSocketSessionUtil.class) {
+                for (WebSocketSessionRequest webSocketSessionUtil : webSocketSessionUtils) {
+                    synchronized (WebSocketSessionRequest.class) {
                         try {
                             webSocketSessionUtil.getSession().getBasicRemote().sendText(message);
                         } catch (IOException e) {
