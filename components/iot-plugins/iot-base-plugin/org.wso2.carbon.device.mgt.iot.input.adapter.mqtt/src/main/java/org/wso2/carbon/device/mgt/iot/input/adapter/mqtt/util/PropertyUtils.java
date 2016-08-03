@@ -42,7 +42,7 @@ public class PropertyUtils {
         ServerConfiguration carbonConfig = ServerConfiguration.getInstance();
         String portOffset = System.getProperty("portOffset", carbonConfig.getFirstProperty(CARBON_CONFIG_PORT_OFFSET));
         try {
-            if ((portOffset != null)) {
+            if (portOffset != null) {
                 return Integer.parseInt(portOffset.trim());
             } else {
                 return CARBON_DEFAULT_PORT_OFFSET;

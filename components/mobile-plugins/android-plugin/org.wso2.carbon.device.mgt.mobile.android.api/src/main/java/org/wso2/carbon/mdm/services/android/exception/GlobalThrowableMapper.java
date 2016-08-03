@@ -57,11 +57,6 @@ public class GlobalThrowableMapper implements ExceptionMapper {
         if (e instanceof NotFoundException) {
             return ((NotFoundException) e).getResponse();
         }
-        if (e instanceof ConstraintViolationException) {
-            log.error("Constraint violation", e);
-            return Response.status(Response.Status.BAD_REQUEST).header("Content-Type", "application/json")
-                    .entity(400l).build();
-        }
         if (e instanceof UnexpectedServerErrorException) {
             log.error("Unexpected server error", e);
             return ((UnexpectedServerErrorException) e).getResponse();
@@ -70,9 +65,15 @@ public class GlobalThrowableMapper implements ExceptionMapper {
             return ((ParameterValidationException) e).getResponse();
         }
         if (e instanceof IllegalArgumentException) {
-            log.error("Illegal exception.", e);
-            return Response.status(Response.Status.BAD_REQUEST).header("Content-Type", "application/json")
-                    .entity(400l).build();
+            ErrorDTO errorDetail = new ErrorDTO();
+            errorDetail.setCode((long) 400);
+            errorDetail.setMoreInfo("");
+            errorDetail.setMessage("");
+            errorDetail.setDescription(e.getMessage());
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(errorDetail)
+                    .build();
         }
         if (e instanceof ClientErrorException) {
             log.error("Client error", e);

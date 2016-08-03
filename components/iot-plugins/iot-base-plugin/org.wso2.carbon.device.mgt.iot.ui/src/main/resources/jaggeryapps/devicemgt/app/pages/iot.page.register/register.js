@@ -23,7 +23,7 @@
  * @returns {*} A context object that returns the dynamic state of this page to be presented
  */
 function onRequest(context) {
-    var devicemgtProps = require('/app/conf/devicemgt-props.js').config();
+    var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
     var page = {};
     page["usernameJSRegEx"] = devicemgtProps.userValidationConfig.usernameJSRegEx;
     page["usernameHelpText"] = devicemgtProps.userValidationConfig.usernameHelpMsg;

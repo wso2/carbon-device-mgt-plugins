@@ -15,27 +15,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package oauth.exception;
+package org.wso2.carbon.device.mgt.iot.output.adapter.ui.authentication.oauth.exception;
 
 /**
  * This Exception will be thrown, when there any interference with token validation flow.
  */
 public class OAuthTokenValidationException extends Exception {
-	private String errMessage;
 
 	public OAuthTokenValidationException(String msg, Exception nestedEx) {
 		super(msg, nestedEx);
-		setErrorMessage(msg);
 	}
 
 	public OAuthTokenValidationException(String message, Throwable cause) {
 		super(message, cause);
-		setErrorMessage(message);
 	}
 
 	public OAuthTokenValidationException(String msg) {
 		super(msg);
-		setErrorMessage(msg);
 	}
 
 	public OAuthTokenValidationException() {
@@ -46,11 +42,4 @@ public class OAuthTokenValidationException extends Exception {
 		super(cause);
 	}
 
-	public String getErrorMessage() {
-		return errMessage;
-	}
-
-	public void setErrorMessage(String errMessage) {
-		this.errMessage = errMessage;
-	}
 }
