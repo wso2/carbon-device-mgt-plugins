@@ -23,6 +23,7 @@ function onRequest(context) {
     var DTYPE_CONF_DEVICE_TYPE_LABEL_KEY = "label";
 
     var userModule = require("/app/modules/user.js")["userModule"];
+    var deviceModule = require("/app/modules/device.js").deviceModule;
     var utility = require('/app/modules/utility.js').utility;
     var response = userModule.getRoles();
     var wizardPage = {};
@@ -30,7 +31,7 @@ function onRequest(context) {
         wizardPage["roles"] = response["content"];
     }
     var deviceType = context.uriParams.deviceType;
-    var typesListResponse = userModule.getPlatforms();
+    var typesListResponse = deviceModule.getDeviceTypes();
     if (typesListResponse["status"] == "success") {
         for (var type in typesListResponse["content"]) {
             if (deviceType == typesListResponse["content"][type]["name"]) {
