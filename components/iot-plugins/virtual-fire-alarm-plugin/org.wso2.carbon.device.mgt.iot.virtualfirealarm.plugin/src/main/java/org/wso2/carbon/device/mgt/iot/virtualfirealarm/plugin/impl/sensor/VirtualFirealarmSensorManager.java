@@ -57,7 +57,7 @@ public class VirtualFirealarmSensorManager implements SensorManager {
         // Sensor ID will added during the time of Device instantiation.
         DeviceTypeSensor leftTempSensor = new DeviceTypeSensor(
                 sensorTypeList.get(VirtualFirealarmSensorTypes.DHT11_TEMPERATURE_SENSOR));
-        leftTempSensor.setName("Left_End_Temperature");
+        leftTempSensor.setUniqueSensorName("Left_End_Temperature");
         leftTempSensor.setDescription("The DHT11 Temperature sensor found at the left end of the firealarm");
         leftTempSensor.addMetaPropertyToStreamDefinition("sensorId", "STRING");
 
@@ -67,7 +67,7 @@ public class VirtualFirealarmSensorManager implements SensorManager {
         // --------------------------------------------------------------
         DeviceTypeSensor rightTempSensor = new DeviceTypeSensor(
                 sensorTypeList.get(VirtualFirealarmSensorTypes.DHT11_TEMPERATURE_SENSOR));
-        rightTempSensor.setName("Right_End_Temperature");
+        rightTempSensor.setUniqueSensorName("Right_End_Temperature");
         rightTempSensor.setDescription("The DHT11 Temperature sensor found at the right end of the firealarm");
         rightTempSensor.addMetaPropertyToStreamDefinition("sensorId", "STRING");
 
@@ -77,7 +77,7 @@ public class VirtualFirealarmSensorManager implements SensorManager {
         // --------------------------------------------------------------
         DeviceTypeSensor leftCamera = new DeviceTypeSensor(
                 sensorTypeList.get(VirtualFirealarmSensorTypes.ADAFRUIT_CAMERA_SENSOR));
-        leftCamera.setName("Left_End_Camera");
+        leftCamera.setUniqueSensorName("Left_End_Camera");
         leftCamera.setDescription("The Adafruit Technologies camera at the left end of the firealarm");
         leftCamera.addMetaPropertyToStreamDefinition("sensorId", "STRING");
 
@@ -87,7 +87,7 @@ public class VirtualFirealarmSensorManager implements SensorManager {
         // --------------------------------------------------------------
         DeviceTypeSensor rightCamera = new DeviceTypeSensor(
                 sensorTypeList.get(VirtualFirealarmSensorTypes.ADAFRUIT_CAMERA_SENSOR));
-        rightCamera.setName("Right_End_Camera");
+        rightCamera.setUniqueSensorName("Right_End_Camera");
         rightCamera.setDescription("The Adafruit Technologies camera at the left end of the firealarm");
         rightCamera.addMetaPropertyToStreamDefinition("sensorId", "STRING");
 
