@@ -30,6 +30,7 @@ import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
+import org.wso2.carbon.device.mgt.common.sensor.mgt.SensorManager;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.exception.ArduinoDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.dao.ArduinoDAOUtil;
 import org.wso2.carbon.device.mgt.iot.arduino.plugin.impl.feature.ArduinoFeatureManager;
@@ -48,6 +49,11 @@ public class ArduinoManager implements DeviceManager {
     @Override
     public FeatureManager getFeatureManager() {
         return arduinoFeatureManager;
+    }
+
+    @Override
+    public SensorManager getSensorManager() {
+        return null;
     }
 
     @Override

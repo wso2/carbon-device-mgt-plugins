@@ -28,6 +28,7 @@ import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
+import org.wso2.carbon.device.mgt.common.sensor.mgt.SensorManager;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.exception.AndroidSenseDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.feature.AndroidSenseFeatureManager;
 import org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.dao.AndroidSenseDAOUtil;
@@ -46,6 +47,11 @@ public class AndroidSenseManager implements DeviceManager {
     @Override
     public FeatureManager getFeatureManager() {
         return androidSenseFeatureManager;
+    }
+
+    @Override
+    public SensorManager getSensorManager() {
+        return null;
     }
 
     @Override

@@ -29,6 +29,7 @@ import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
+import org.wso2.carbon.device.mgt.common.sensor.mgt.SensorManager;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.exception.RaspberrypiDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.dao.RaspberrypiDAOUtil;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.feature.RaspberrypiFeatureManager;
@@ -46,6 +47,11 @@ public class RaspberrypiManager implements DeviceManager {
     @Override
     public FeatureManager getFeatureManager() {
         return raspberrypiFeatureManager;
+    }
+
+    @Override
+    public SensorManager getSensorManager() {
+        return null;
     }
 
     @Override
