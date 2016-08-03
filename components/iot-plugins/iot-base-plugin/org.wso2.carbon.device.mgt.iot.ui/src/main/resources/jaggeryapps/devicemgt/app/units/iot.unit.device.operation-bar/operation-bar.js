@@ -18,7 +18,7 @@
 
 function onRequest(context) {
     var log = new Log("operation.js");
-    var operationModule = require("/app/modules/operation.js").operationModule;
+    var operationModule = require("/app/modules/business-controllers/operation.js")["operationModule"];
     var device = context.unit.params.device;
     var autoCompleteParams = context.unit.params.autoCompleteParams;
     var controlOperations = operationModule.getControlOperations(device.type);
