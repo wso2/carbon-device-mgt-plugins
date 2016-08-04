@@ -40,6 +40,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Path("/admin/devices")
@@ -48,6 +51,7 @@ import java.util.List;
 public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminService {
 
     private static final Log log = LogFactory.getLog(DeviceManagementAdminServiceImpl.class);
+    private static final String DATE_FORMAT = "MM-dd-yyyy hh:mm a";
 
     @POST
     @Path("/lock-devices")
@@ -573,6 +577,14 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                         new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             UpgradeFirmware upgradeFirmware = upgradeFirmwareBeanWrapper.getOperation();
+
+            //validate date
+            if(upgradeFirmware != null && upgradeFirmware.getSchedule() != null){
+                SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+                sdf.setLenient(false);
+                Date date = sdf.parse(upgradeFirmware.getSchedule());
+            }
+
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.UPGRADE_FIRMWARE);
             operation.setType(Operation.Type.PROFILE);
@@ -588,6 +600,11 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+        }catch (ParseException e) {
+            String errorMessage = "Issue in validating the schedule date";
+            log.error(errorMessage, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
     }
 

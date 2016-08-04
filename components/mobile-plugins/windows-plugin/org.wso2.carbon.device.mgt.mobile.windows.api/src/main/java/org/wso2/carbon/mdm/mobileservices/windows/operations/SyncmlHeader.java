@@ -1,25 +1,23 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -27,19 +25,12 @@ import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
 /**
  * Represents the header details of a syncml.
  */
-@ApiModel(value = "SyncmlHeader", description = "This class carries all information related to SyncmlHeader.")
 public class SyncmlHeader {
-    @ApiModelProperty(name = "sessionId", value = "SessionId of the syncml Message.", required = true)
     private int sessionId = -1;
-    @ApiModelProperty(name = "MsgID", value = "MessageId of the syncml Session.", required = true)
     private int MsgID = -1;
-    @ApiModelProperty(name = "target", value = "Target of the syncml Message.(Ex:Device/Server.)", required = true)
-    private Target target;
-    @ApiModelProperty(name = "source", value = "Source of the Syncml Message.(Ex:Server/Device.)", required = true)
-    private Source source;
-    @ApiModelProperty(name = "credential", value = "Credentials of the Syncml header.", required = true)
-    private Credential credential;
-    @ApiModelProperty(name = "hexadecimalSessionId", value = "HexaDecimal SessionId of the syncmlHeader.", required = true)
+    private TargetTag target;
+    private SourceTag source;
+    private CredentialTag credential;
     private String hexadecimalSessionId;
 
     public String getHexadecimalSessionId() {
@@ -50,11 +41,11 @@ public class SyncmlHeader {
         this.hexadecimalSessionId = hexSessionId;
     }
 
-    public Credential getCredential() {
+    public CredentialTag getCredential() {
         return credential;
     }
 
-    public void setCredential(Credential credential) {
+    public void setCredential(CredentialTag credential) {
         this.credential = credential;
     }
 
@@ -74,19 +65,19 @@ public class SyncmlHeader {
         this.MsgID = msgID;
     }
 
-    public Target getTarget() {
+    public TargetTag getTarget() {
         return target;
     }
 
-    public void setTarget(Target target) {
+    public void setTarget(TargetTag target) {
         this.target = target;
     }
 
-    public Source getSource() {
+    public SourceTag getSource() {
         return source;
     }
 
-    public void setSource(Source source) {
+    public void setSource(SourceTag source) {
         this.source = source;
     }
 
