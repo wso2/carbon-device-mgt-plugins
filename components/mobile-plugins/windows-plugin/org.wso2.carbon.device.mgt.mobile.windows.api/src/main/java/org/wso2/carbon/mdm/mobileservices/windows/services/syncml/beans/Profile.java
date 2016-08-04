@@ -1,40 +1,31 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.syncml.beans;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 /**
  * Class for contains device active policy.
  */
-@ApiModel(value = "Profile",
-        description = "This class carries all information related to Profile features.")
 public class Profile {
 
-    @ApiModelProperty(name = "featureCode", value = "Profile type operation feature code.", required = true)
     String featureCode;
-    @ApiModelProperty(name = "data", value = "Profile type operation data content..", required = true)
     String data;
-    @ApiModelProperty(name = "enable", value = "Status of the Profile operation.", required = true)
     boolean enable;
-    @ApiModelProperty(name = "compliance", value = "Status of the operation compliance.", required = true)
     boolean compliance;
 
     public boolean isCompliance() {

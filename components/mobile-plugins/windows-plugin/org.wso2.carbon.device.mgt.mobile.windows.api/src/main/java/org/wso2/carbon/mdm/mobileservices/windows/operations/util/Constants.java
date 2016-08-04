@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -22,7 +22,6 @@ package org.wso2.carbon.mdm.mobileservices.windows.operations.util;
  * Constant values used in syncml generator.
  */
 public class Constants {
-
     public static final String PROVIDER_ID = "MobiCDMServer";
     public static final String SERVER_SECRET = "dummy";
     public static final String INITIAL_NONCE = "ZHVtbXk=";
@@ -35,8 +34,6 @@ public class Constants {
     public static final String UTF_8 = "UTF-8";
     public static final String MD5 = "MD5";
     public static final String YES = "yes";
-    public static final String ERROR = "Error";
-    public static final String INFORMATION = "information";
 
     public static final String EXECUTE = "Exec";
     public static final String ATOMIC = "Atomic";
@@ -82,17 +79,26 @@ public class Constants {
     public static final String META_FORMAT_CHARACTER = "chr";
 
     /**
-     * SynclML service related constants
+     * SynclML service related constants.
      */
     public final class SyncMLResponseCodes {
         public static final String AUTHENTICATION_ACCEPTED = "212";
         public static final String ACCEPTED = "200";
         public static final String ACCEPTED_FOR_PROCESSING = "202";
         public static final String PIN_NOTFOUND = "405";
-        public static final String CREDENTIALS_MISSING = "407";
-        public static final String INVALID_CREDENTIALS = "401";
-        public static final String LOCKRESET_NOTIFICATION = "Error occurred in Device Lock Operation. " +
+        public static final String LOCK_RESET_NOTIFICATION = "Error occurred in Device Lock Operation. " +
                 "Please trigger lock-reset operation.";
+        public static final String POSITIVE_CSP_DATA = "1";
+        public static final String NEGATIVE_CSP_DATA = "0";
     }
 
+    /**
+     * SyncmML message related constants.
+     */
+    public final class SyncmlMessageCodes {
+        public static final int replaceCommandId = 300;
+        public static final int elementCommandId = 75;
+        public static final int atomicCommandId = 400;
+        public static final int addCommandId = 90;
+    }
 }
