@@ -54,7 +54,7 @@ public class DeviceUtil {
         if (deviceID != null) {
             cacheEntry.setDeviceID(deviceID);
         }
-        getTokenCache().put(token, cacheEntry);
+        getTokenCache().put(token.trim(), cacheEntry);
     }
 
     public static void removeToken(String token) {
