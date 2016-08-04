@@ -1,34 +1,40 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
 package org.wso2.carbon.mdm.mobileservices.windows.services.configurationmgtservice;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
+import org.wso2.carbon.device.mgt.common.license.mgt.License;
+import org.wso2.carbon.mdm.mobileservices.windows.common.PluginConstants;
 import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.mdm.mobileservices.windows.common.util.Message;
+import org.wso2.carbon.mdm.mobileservices.windows.common.util.WindowsAPIUtils;
 
 import javax.jws.WebService;
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Windows Platform Configuration REST-API implementation.
@@ -37,8 +43,9 @@ import javax.ws.rs.core.MediaType;
 @WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
-@Api(value = "ConfigurationMgtService", description = "Windows Device Management REST-API implementation.")
-public interface ConfigurationMgtService {
+public class ConfigurationMgtService {
+
+    private static Log log = LogFactory.getLog(ConfigurationMgtService.class);
 
     /**
      * Save Tenant configurations.
@@ -48,17 +55,49 @@ public interface ConfigurationMgtService {
      * @throws WindowsConfigurationException
      */
     @POST
-    @ApiOperation(
-            consumes = MediaType.APPLICATION_JSON,
-            httpMethod = "POST",
-            value = "Configuring Windows Platform Settings",
-            notes = "Configure the Windows platform settings using this REST API"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Windows platform configuration saved successfully"),
-            @ApiResponse(code = 500, message = "Internal Server Error")
-    })
-    Message ConfigureSettings(PlatformConfiguration configuration) throws WindowsConfigurationException;
+    public Message ConfigureSettings(PlatformConfiguration configuration) throws WindowsConfigurationException {
+        Message responseMsg = new Message();
+        ConfigurationEntry licenseEntry = null;
+        String message;
+
+        try {
+            configuration.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+            if (!configuration.getConfiguration().isEmpty()) {
+                List<ConfigurationEntry> configs = configuration.getConfiguration();
+                for (ConfigurationEntry entry : configs) {
+                    if (PluginConstants.TenantConfigProperties.LICENSE_KEY.equals(entry.getName())) {
+                        License license = new License();
+                        license.setName(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+                        license.setLanguage(PluginConstants.TenantConfigProperties.LANGUAGE_US);
+                        license.setVersion("1.0.0");
+                        license.setText(entry.getValue().toString());
+                        WindowsAPIUtils.getDeviceManagementService().addLicense(DeviceManagementConstants.
+                                MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS, license);
+                        licenseEntry = entry;
+                    }
+                }
+
+                if (licenseEntry != null) {
+                    configs.remove(licenseEntry);
+                }
+                configuration.setConfiguration(configs);
+                WindowsAPIUtils.getDeviceManagementService().saveConfiguration(configuration);
+                Response.status(Response.Status.CREATED);
+                responseMsg.setResponseMessage("Windows platform configuration saved successfully.");
+                responseMsg.setResponseCode(Response.Status.CREATED.toString());
+                return responseMsg;
+            } else {
+                Response.status(Response.Status.BAD_REQUEST);
+                responseMsg.setResponseMessage("Windows platform configuration can not be saved.");
+                responseMsg.setResponseCode(Response.Status.CREATED.toString());
+            }
+        } catch (DeviceManagementException e) {
+            message = "Error Occurred while configuring Windows Platform.";
+            log.error(message, e);
+            throw new WindowsConfigurationException(message, e);
+        }
+        return responseMsg;
+    }
 
     /**
      * Retrieve Tenant configurations according to the device type.
@@ -67,17 +106,39 @@ public interface ConfigurationMgtService {
      * @throws WindowsConfigurationException
      */
     @GET
-    @ApiOperation(
-            httpMethod = "GET",
-            value = "Getting Windows Platform Configurations",
-            notes = "Get the Windows platform configuration details using this REST API",
-            response = PlatformConfiguration.class
-    )
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Get Windows Configurations"),
-            @ApiResponse(code = 500, message = "Server Error")
-    })
-    PlatformConfiguration getConfiguration() throws WindowsConfigurationException;
+    public PlatformConfiguration getConfiguration() throws WindowsConfigurationException {
+        String msg;
+        PlatformConfiguration tenantConfiguration;
+        List<ConfigurationEntry> configs;
+        try {
+            tenantConfiguration = WindowsAPIUtils.getDeviceManagementService().
+                    getConfiguration(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+            if (tenantConfiguration != null) {
+                configs = tenantConfiguration.getConfiguration();
+            } else {
+                tenantConfiguration = new PlatformConfiguration();
+                configs = new ArrayList<>();
+            }
+
+            ConfigurationEntry entry = new ConfigurationEntry();
+            License license = WindowsAPIUtils.getDeviceManagementService().getLicense(
+                    DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS,
+                    PluginConstants.TenantConfigProperties.LANGUAGE_US);
+
+            if (license != null && configs != null) {
+                entry.setContentType(PluginConstants.TenantConfigProperties.CONTENT_TYPE_TEXT);
+                entry.setName(PluginConstants.TenantConfigProperties.LICENSE_KEY);
+                entry.setValue(license.getText());
+                configs.add(entry);
+                tenantConfiguration.setConfiguration(configs);
+            }
+        } catch (DeviceManagementException e) {
+            msg = "Error occurred while retrieving the Windows tenant configuration";
+            log.error(msg, e);
+            throw new WindowsConfigurationException(msg, e);
+        }
+        return tenantConfiguration;
+    }
 
     /**
      * Update Tenant Configurations for the specific Device type.
@@ -87,17 +148,39 @@ public interface ConfigurationMgtService {
      * @throws WindowsConfigurationException
      */
     @PUT
-    @ApiOperation(
-            consumes = MediaType.APPLICATION_JSON,
-            produces = MediaType.APPLICATION_JSON,
-            httpMethod = "PUT",
-            value = "Updating Windows Platform Configurations",
-            notes = "Update the Windows platform configurations using this REST API"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created"),
-            @ApiResponse(code = 500, message = "Error occurred while modifying configuration settings of " +
-                    "windows platform")
-    })
-    Message updateConfiguration(PlatformConfiguration configuration) throws WindowsConfigurationException;
+    public Message updateConfiguration(PlatformConfiguration configuration) throws WindowsConfigurationException {
+        String message;
+        Message responseMsg = new Message();
+        ConfigurationEntry licenseEntry = null;
+        try {
+            configuration.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+            List<ConfigurationEntry> configs = configuration.getConfiguration();
+            for (ConfigurationEntry entry : configs) {
+                if (PluginConstants.TenantConfigProperties.LICENSE_KEY.equals(entry.getName())) {
+                    License license = new License();
+                    license.setName(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+                    license.setLanguage(PluginConstants.TenantConfigProperties.LANGUAGE_US);
+                    license.setVersion("1.0.0");
+                    license.setText(entry.getValue().toString());
+                    WindowsAPIUtils.getDeviceManagementService().addLicense(DeviceManagementConstants.
+                            MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS, license);
+                    licenseEntry = entry;
+                }
+            }
+
+            if (licenseEntry != null) {
+                configs.remove(licenseEntry);
+            }
+            configuration.setConfiguration(configs);
+            WindowsAPIUtils.getDeviceManagementService().saveConfiguration(configuration);
+            Response.status(Response.Status.CREATED);
+            responseMsg.setResponseMessage("Windows platform configuration succeeded.");
+            responseMsg.setResponseCode(Response.Status.CREATED.toString());
+        } catch (DeviceManagementException e) {
+            message = "Error occurred while modifying configuration settings of Windows platform.";
+            log.error(message, e);
+            throw new WindowsConfigurationException(message, e);
+        }
+        return responseMsg;
+    }
 }
