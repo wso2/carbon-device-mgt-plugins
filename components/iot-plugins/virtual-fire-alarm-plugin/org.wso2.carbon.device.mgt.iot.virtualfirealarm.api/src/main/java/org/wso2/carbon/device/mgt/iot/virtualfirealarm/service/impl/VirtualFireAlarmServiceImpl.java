@@ -264,16 +264,13 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
         }
     }
 
-    private boolean register(String deviceId, String name) {
+    private boolean register(DeviceIdentifier deviceIdentifier, String name) {
         try {
-            DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-            deviceIdentifier.setId(deviceId);
-            deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
             if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
                 return false;
             }
             Device device = new Device();
-            device.setDeviceIdentifier(deviceId);
+            device.setDeviceIdentifier(deviceIdentifier.getId());
             EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
             enrolmentInfo.setDateOfEnrolment(new Date().getTime());
             enrolmentInfo.setDateOfLastUpdate(new Date().getTime());
@@ -296,17 +293,24 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                    UserStoreException, VirtualFirealarmDeviceMgtPluginException {
         //create new device id
         String deviceId = VirtualFireAlarmUtils.shortUUID();
-        boolean status = register(deviceId, deviceName);
+        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+        deviceIdentifier.setId(deviceId);
+        deviceIdentifier.setType(VirtualFireAlarmConstants.DEVICE_TYPE);
+        boolean status = register(deviceIdentifier, deviceName);
         if (!status) {
             String msg = "Error occurred while registering the device with " + "id: " + deviceId + " owner:" + owner;
             throw new DeviceManagementException(msg);
         }
 
         // SensorManagement
-        List<Sensor> deviceSensors = APIUtil.getDeviceManagementService().getSensorManager(
-                VirtualFireAlarmConstants.DEVICE_TYPE).getSensors(deviceId);
+        List<Sensor> deviceSensors = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier).getSensors();
+        Map<String, String> sensorMetaDataList = new HashMap<>();
 
-
+        for (Sensor deviceSensor : deviceSensors) {
+            String deviceSensorName = deviceSensor.getDeviceTypeSensor().getUniqueSensorName();
+            String devicesSensorIdentifier = deviceSensor.getSensorIdentifier();
+            sensorMetaDataList.put(deviceSensorName, devicesSensorIdentifier);
+        }
 
         if (apiApplicationKey == null) {
             String applicationUsername =
@@ -340,8 +344,18 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                     ".common.config.server.configs";
             throw new DeviceManagementException(msg);
         }
+
+        Map<String, Object> configFileProperties = new HashMap<>();
+        configFileProperties.put(ZipUtil.DeviceConfigConstants.OWNER, owner);
+        configFileProperties.put(ZipUtil.DeviceConfigConstants.DEVICE_TYPE, sketchType);
+        configFileProperties.put(ZipUtil.DeviceConfigConstants.DEVICE_ID, deviceId);
+        configFileProperties.put(ZipUtil.DeviceConfigConstants.DEVICE_NAME, deviceName);
+        configFileProperties.put(ZipUtil.DeviceConfigConstants.API_APPLICATION_KEY, apiApplicationKey.toString());
+        configFileProperties.put(ZipUtil.DeviceConfigConstants.ACCESS_TOKEN, accessToken);
+        configFileProperties.put(ZipUtil.DeviceConfigConstants.REFRESH_TOKEN, refreshToken);
+        configFileProperties.put(ZipUtil.DeviceConfigConstants.SENSOR_LIST, sensorMetaDataList);
+
         ZipUtil ziputil = new ZipUtil();
-        return ziputil.createZipFile(owner, sketchType, deviceId, deviceName, apiApplicationKey.toString(),
-                                     accessToken, refreshToken);
+        return ziputil.createZipFile(configFileProperties);
     }
 }

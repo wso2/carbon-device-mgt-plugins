@@ -24,12 +24,11 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.sensor.mgt.DeviceTypeSensor;
 import org.wso2.carbon.device.mgt.common.sensor.mgt.Sensor;
 import org.wso2.carbon.device.mgt.common.sensor.mgt.SensorManager;
-import org.wso2.carbon.device.mgt.common.sensor.mgt.SensorType;
 import org.wso2.carbon.device.mgt.common.sensor.mgt.dao.DeviceSensorDAOException;
+import org.wso2.carbon.device.mgt.common.sensor.mgt.dao.SensorTransactionObject;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao.VirtualFireAlarmDAOUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao.VirtualFirealarmSensorDAO;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFireAlarmUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,7 +39,6 @@ public class VirtualFirealarmSensorManager implements SensorManager {
 
     private static final Log log = LogFactory.getLog(VirtualFirealarmSensorManager.class);
 
-    private Map<String, SensorType> sensorTypeList = new HashMap<>();
     private List<DeviceTypeSensor> deviceTypeSensorList = new ArrayList<>();
     private VirtualFirealarmSensorDAO virtualFirealarmSensorDAO = new VirtualFirealarmSensorDAO();
 
@@ -51,55 +49,48 @@ public class VirtualFirealarmSensorManager implements SensorManager {
 
     @Override
     public void initDeviceTypeSensors() throws DeviceManagementException {
-        loadSensorTypes();
-
-        Map<String, Object> sensorProperties = new HashMap<>();
+        Map<String, String> sensorProperties = new HashMap<>();
         // Sensor ID will added during the time of Device instantiation.
         DeviceTypeSensor leftTempSensor = new DeviceTypeSensor(
-                sensorTypeList.get(VirtualFirealarmSensorTypes.DHT11_TEMPERATURE_SENSOR));
+                VirtualFirealarmSensorTypes.DHT11_TEMPERATURE_SENSOR, "NO STREAMDEF");
         leftTempSensor.setUniqueSensorName("Left_End_Temperature");
         leftTempSensor.setDescription("The DHT11 Temperature sensor found at the left end of the firealarm");
         leftTempSensor.addMetaPropertyToStreamDefinition("sensorId", "STRING");
 
         sensorProperties.put("Tilted_Angle", "60");
         leftTempSensor.setStaticProperties(sensorProperties);
-        sensorProperties.clear();
+        this.deviceTypeSensorList.add(leftTempSensor);
         // --------------------------------------------------------------
         DeviceTypeSensor rightTempSensor = new DeviceTypeSensor(
-                sensorTypeList.get(VirtualFirealarmSensorTypes.DHT11_TEMPERATURE_SENSOR));
+                VirtualFirealarmSensorTypes.DHT11_TEMPERATURE_SENSOR, "NO STREAMDEF");
         rightTempSensor.setUniqueSensorName("Right_End_Temperature");
         rightTempSensor.setDescription("The DHT11 Temperature sensor found at the right end of the firealarm");
         rightTempSensor.addMetaPropertyToStreamDefinition("sensorId", "STRING");
 
         sensorProperties.put("Tilted_Angle", "75");
         rightTempSensor.setStaticProperties(sensorProperties);
-        sensorProperties.clear();
+        this.deviceTypeSensorList.add(rightTempSensor);
         // --------------------------------------------------------------
         DeviceTypeSensor leftCamera = new DeviceTypeSensor(
-                sensorTypeList.get(VirtualFirealarmSensorTypes.ADAFRUIT_CAMERA_SENSOR));
+                VirtualFirealarmSensorTypes.ADAFRUIT_CAMERA_SENSOR, "NO STREAMDEF");
         leftCamera.setUniqueSensorName("Left_End_Camera");
         leftCamera.setDescription("The Adafruit Technologies camera at the left end of the firealarm");
         leftCamera.addMetaPropertyToStreamDefinition("sensorId", "STRING");
 
         sensorProperties.put("Quality", "LOW");
         leftCamera.setStaticProperties(sensorProperties);
-        sensorProperties.clear();
+        this.deviceTypeSensorList.add(leftCamera);
         // --------------------------------------------------------------
         DeviceTypeSensor rightCamera = new DeviceTypeSensor(
-                sensorTypeList.get(VirtualFirealarmSensorTypes.ADAFRUIT_CAMERA_SENSOR));
+                VirtualFirealarmSensorTypes.ADAFRUIT_CAMERA_SENSOR, "NO STREAMDEF");
         rightCamera.setUniqueSensorName("Right_End_Camera");
         rightCamera.setDescription("The Adafruit Technologies camera at the left end of the firealarm");
         rightCamera.addMetaPropertyToStreamDefinition("sensorId", "STRING");
 
         sensorProperties.put("Quality", "HIGH");
         rightCamera.setStaticProperties(sensorProperties);
-        sensorProperties.clear();
-        // --------------------------------------------------------------
-
-        this.deviceTypeSensorList.add(leftTempSensor);
-        this.deviceTypeSensorList.add(leftCamera);
-        this.deviceTypeSensorList.add(rightTempSensor);
         this.deviceTypeSensorList.add(rightCamera);
+        // --------------------------------------------------------------
     }
 
     @Override
@@ -108,15 +99,16 @@ public class VirtualFirealarmSensorManager implements SensorManager {
     }
 
     @Override
-    public boolean addSensor(String deviceId, Sensor sensor) throws DeviceManagementException {
-        String sensorId = sensor.getSensorIdentifier();
+    public boolean addSensor(SensorTransactionObject sensorTObject) throws DeviceManagementException {
+        String sensorIdentifier = sensorTObject.getSensorIdentifier();
+        String deviceIdentifier = sensorTObject.getDeviceIdentifier();
         try {
             if (log.isDebugEnabled()) {
-                log.debug("Adding sensor [" + sensorId + "] for Virtual Firealarm device : " + deviceId);
+                log.debug(
+                        "Adding sensor [" + sensorIdentifier + "] for Virtual Firealarm device : " + deviceIdentifier);
             }
-            sensor.setDeviceIdentifier(deviceId);
             VirtualFireAlarmDAOUtil.beginTransaction();
-            virtualFirealarmSensorDAO.addSensor(sensor);
+            virtualFirealarmSensorDAO.addSensor(sensorTObject);
             VirtualFireAlarmDAOUtil.commitTransaction();
 
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
@@ -124,15 +116,16 @@ public class VirtualFirealarmSensorManager implements SensorManager {
                 VirtualFireAlarmDAOUtil.rollbackTransaction();
             } catch (VirtualFirealarmDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred whilst rolling back the Sensor addition transaction of " +
-                        "VirtualFirealarm [" + deviceId + "] for sensor [" + sensorId + "]";
+                        "VirtualFirealarm [" + deviceIdentifier + "] for sensor [" + sensorIdentifier + "]";
                 log.warn(msg, iotDAOEx);
             }
             String msg = "Error in getting connection to the DB or Committing the transaction when adding Sensor [" +
-                    sensorId + "] of the VirtualFirealarm with Id [" + deviceId + "]";
+                    sensorIdentifier + "] of the VirtualFirealarm with Id [" + deviceIdentifier + "]";
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);
         } catch (DeviceSensorDAOException e) {
-            String msg = "Error while adding Sensor [" + sensorId + "] of the VirtualFirealarm with Id [" + deviceId + "]";
+            String msg = "Error while adding Sensor [" + sensorIdentifier + "] of the VirtualFirealarm with Id [" +
+                    deviceIdentifier + "]";
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);
         }
@@ -140,16 +133,18 @@ public class VirtualFirealarmSensorManager implements SensorManager {
     }
 
     @Override
-    public boolean addSensors(String deviceId, List<Sensor> sensors) throws DeviceManagementException {
+    public boolean addSensors(String deviceIdentifier, List<SensorTransactionObject> sensorTObjects)
+            throws DeviceManagementException {
         try {
             VirtualFireAlarmDAOUtil.beginTransaction();
-            for (Sensor sensor : sensors) {
+            for (SensorTransactionObject sensorTObject : sensorTObjects) {
+                String sensorIdentifier = sensorTObject.getSensorIdentifier();
+
                 if (log.isDebugEnabled()) {
-                    log.debug("Adding sensor [" + sensor.getSensorIdentifier() + "] for " +
-                                      "Virtual Firealarm device : " + deviceId);
+                    log.debug("Adding sensor [" + sensorIdentifier + "] for Virtual Firealarm " +
+                                      "device : " + deviceIdentifier);
                 }
-                sensor.setDeviceIdentifier(deviceId);
-                virtualFirealarmSensorDAO.addSensor(sensor);
+                virtualFirealarmSensorDAO.addSensor(sensorTObject);
             }
             VirtualFireAlarmDAOUtil.commitTransaction();
 
@@ -158,15 +153,15 @@ public class VirtualFirealarmSensorManager implements SensorManager {
                 VirtualFireAlarmDAOUtil.rollbackTransaction();
             } catch (VirtualFirealarmDeviceMgtPluginException iotDAOEx) {
                 String msg = "Error occurred whilst rolling back the Sensor addition transaction of " +
-                        "VirtualFirealarm [" + deviceId + "]";
+                        "VirtualFirealarm [" + deviceIdentifier + "]";
                 log.warn(msg, iotDAOEx);
             }
             String msg = "Error in getting connection to the DB or Committing the transaction when adding Sensors " +
-                    "of the VirtualFirealarm with Id [" + deviceId + "]";
+                    "of the VirtualFirealarm with Id [" + deviceIdentifier + "]";
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);
         } catch (DeviceSensorDAOException e) {
-            String msg = "Error while adding Sensors of the VirtualFirealarm with Id [" + deviceId + "]";
+            String msg = "Error while adding Sensors of the VirtualFirealarm with Id [" + deviceIdentifier + "]";
             log.error(msg, e);
             throw new DeviceManagementException(msg, e);
         }
@@ -174,88 +169,202 @@ public class VirtualFirealarmSensorManager implements SensorManager {
     }
 
     @Override
-    public boolean updateSensor(String deviceId, Sensor sensor) throws DeviceManagementException {
-        return false;
+    public boolean updateSensor(SensorTransactionObject sensorTObject) throws DeviceManagementException {
+        String sensorIdentifier = sensorTObject.getSensorIdentifier();
+        String deviceIdentifier = sensorTObject.getDeviceIdentifier();
+
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug(
+                        "Updating sensor [" + sensorIdentifier + "] for Virtual Firealarm device : " +
+                                deviceIdentifier);
+            }
+            VirtualFireAlarmDAOUtil.beginTransaction();
+            virtualFirealarmSensorDAO.updateSensor(sensorTObject);
+            VirtualFireAlarmDAOUtil.commitTransaction();
+
+        } catch (VirtualFirealarmDeviceMgtPluginException e) {
+            try {
+                VirtualFireAlarmDAOUtil.rollbackTransaction();
+            } catch (VirtualFirealarmDeviceMgtPluginException iotDAOEx) {
+                String msg = "Error occurred whilst rolling back the Sensor update transaction of " +
+                        "VirtualFirealarm [" + deviceIdentifier + "] for sensor [" + sensorIdentifier + "]";
+                log.warn(msg, iotDAOEx);
+            }
+            String msg = "Error in getting connection to the DB or Committing the transaction when updating Sensor [" +
+                    sensorIdentifier + "] of the VirtualFirealarm with Id [" + deviceIdentifier + "]";
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        } catch (DeviceSensorDAOException e) {
+            String msg = "Error while updating Sensor [" + sensorIdentifier + "] of the VirtualFirealarm with Id [" +
+                    deviceIdentifier + "]";
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return true;
     }
 
     @Override
-    public boolean updateSensors(String deviceId, List<Sensor> sensors) throws DeviceManagementException {
-        return false;
+    public boolean updateSensors(String deviceIdentifier, List<SensorTransactionObject> sensorTObjects)
+            throws DeviceManagementException {
+        try {
+            VirtualFireAlarmDAOUtil.beginTransaction();
+            for (SensorTransactionObject sensorTObject : sensorTObjects) {
+                String sensorIdentifier = sensorTObject.getSensorIdentifier();
+
+                if (log.isDebugEnabled()) {
+                    log.debug("Adding sensor [" + sensorIdentifier + "] for Virtual Firealarm " +
+                                      "device : " + deviceIdentifier);
+                }
+                virtualFirealarmSensorDAO.updateSensor(sensorTObject);
+            }
+            VirtualFireAlarmDAOUtil.commitTransaction();
+
+        } catch (VirtualFirealarmDeviceMgtPluginException e) {
+            try {
+                VirtualFireAlarmDAOUtil.rollbackTransaction();
+            } catch (VirtualFirealarmDeviceMgtPluginException iotDAOEx) {
+                String msg = "Error occurred whilst rolling back the Sensor update transaction of " +
+                        "VirtualFirealarm [" + deviceIdentifier + "]";
+                log.warn(msg, iotDAOEx);
+            }
+            String msg = "Error in getting connection to the DB or Committing the transaction when updating Sensors " +
+                    "of the VirtualFirealarm with Id [" + deviceIdentifier + "]";
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        } catch (DeviceSensorDAOException e) {
+            String msg = "Error while updating Sensors of the VirtualFirealarm with Id [" + deviceIdentifier + "]";
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return true;
     }
 
     @Override
-    public Sensor getSensor(String deviceId, String sensorId) throws DeviceManagementException {
-        return null;
+    public SensorTransactionObject getSensor(String deviceIdentifier, String sensorIdentifier)
+            throws DeviceManagementException {
+        SensorTransactionObject sensorTObject;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug(
+                        "Fetching sensor [" + sensorIdentifier + "] for Virtual Firealarm device : " +
+                                deviceIdentifier);
+            }
+            VirtualFireAlarmDAOUtil.beginTransaction();
+            sensorTObject = virtualFirealarmSensorDAO.getSensor(deviceIdentifier, sensorIdentifier);
+            VirtualFireAlarmDAOUtil.commitTransaction();
+        } catch (VirtualFirealarmDeviceMgtPluginException e) {
+            try {
+                VirtualFireAlarmDAOUtil.rollbackTransaction();
+            } catch (VirtualFirealarmDeviceMgtPluginException iotDAOEx) {
+                String msg = "Error occurred whilst rolling back the Sensor fetch transaction of " +
+                        "VirtualFirealarm [" + deviceIdentifier + "] for sensor [" + sensorIdentifier + "]";
+                log.warn(msg, iotDAOEx);
+            }
+            String msg = "Error in getting connection to the DB or Committing the transaction after fetching Sensor [" +
+                    sensorIdentifier + "] of the VirtualFirealarm with Id [" + deviceIdentifier + "]";
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        } catch (DeviceSensorDAOException e) {
+            String msg = "Error while fetching Sensor [" + sensorIdentifier + "] of the VirtualFirealarm with Id [" +
+                    deviceIdentifier + "]";
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return sensorTObject;
     }
 
     @Override
-    public List<Sensor> getSensors(String deviceId) throws DeviceManagementException {
-        return null;
+    public List<SensorTransactionObject> getSensors(String deviceIdentifier) throws DeviceManagementException {
+        List<SensorTransactionObject> sensorTObjects;
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug(
+                        "Fetching sensors for Virtual Firealarm device : " + deviceIdentifier);
+            }
+            VirtualFireAlarmDAOUtil.beginTransaction();
+            sensorTObjects = virtualFirealarmSensorDAO.getSensors(deviceIdentifier);
+            VirtualFireAlarmDAOUtil.commitTransaction();
+        } catch (VirtualFirealarmDeviceMgtPluginException e) {
+            try {
+                VirtualFireAlarmDAOUtil.rollbackTransaction();
+            } catch (VirtualFirealarmDeviceMgtPluginException iotDAOEx) {
+                String msg = "Error occurred whilst rolling back the Sensors fetch transaction of " +
+                        "VirtualFirealarm [" + deviceIdentifier + "].";
+                log.warn(msg, iotDAOEx);
+            }
+            String msg = "Error in getting connection to the DB or Committing the transaction after fetching Sensors " +
+                    "of the VirtualFirealarm with Id [" + deviceIdentifier + "]";
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        } catch (DeviceSensorDAOException e) {
+            String msg = "Error while fetching Sensors of the VirtualFirealarm with Id [" + deviceIdentifier + "]";
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return sensorTObjects;
     }
 
     @Override
-    public boolean removeSensor(String deviceId, String sensorId) throws DeviceManagementException {
-        return false;
+    public boolean removeSensor(String deviceIdentifier, String sensorIdentifier) throws DeviceManagementException {
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug(
+                        "Deleting sensor [" + sensorIdentifier + "] for Virtual Firealarm device : " +
+                                deviceIdentifier);
+            }
+            VirtualFireAlarmDAOUtil.beginTransaction();
+            virtualFirealarmSensorDAO.removeSensor(deviceIdentifier, sensorIdentifier);
+            VirtualFireAlarmDAOUtil.commitTransaction();
+        } catch (VirtualFirealarmDeviceMgtPluginException e) {
+            try {
+                VirtualFireAlarmDAOUtil.rollbackTransaction();
+            } catch (VirtualFirealarmDeviceMgtPluginException iotDAOEx) {
+                String msg = "Error occurred whilst rolling back the Sensor remove transaction of " +
+                        "VirtualFirealarm [" + deviceIdentifier + "] for sensor [" + sensorIdentifier + "]";
+                log.warn(msg, iotDAOEx);
+            }
+            String msg = "Error in getting connection to the DB or Committing the transaction after removing Sensor [" +
+                    sensorIdentifier + "] of the VirtualFirealarm with Id [" + deviceIdentifier + "]";
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        } catch (DeviceSensorDAOException e) {
+            String msg = "Error while removing Sensor [" + sensorIdentifier + "] of the VirtualFirealarm with Id [" +
+                    deviceIdentifier + "]";
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return true;
     }
 
     @Override
-    public boolean removeSensors(String deviceId) throws DeviceManagementException {
-        return false;
+    public boolean removeSensors(String deviceIdentifier) throws DeviceManagementException {
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug(
+                        "Removing sensors for Virtual Firealarm device : " + deviceIdentifier);
+            }
+            VirtualFireAlarmDAOUtil.beginTransaction();
+            virtualFirealarmSensorDAO.removeSensors(deviceIdentifier);
+            VirtualFireAlarmDAOUtil.commitTransaction();
+        } catch (VirtualFirealarmDeviceMgtPluginException e) {
+            try {
+                VirtualFireAlarmDAOUtil.rollbackTransaction();
+            } catch (VirtualFirealarmDeviceMgtPluginException iotDAOEx) {
+                String msg = "Error occurred whilst rolling back the Sensors remove transaction of " +
+                        "VirtualFirealarm [" + deviceIdentifier + "].";
+                log.warn(msg, iotDAOEx);
+            }
+            String msg = "Error in getting connection to the DB or Committing the transaction after removing Sensors " +
+                    "of the VirtualFirealarm with Id [" + deviceIdentifier + "]";
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        } catch (DeviceSensorDAOException e) {
+            String msg = "Error while removing Sensors of the VirtualFirealarm with Id [" + deviceIdentifier + "]";
+            log.error(msg, e);
+            throw new DeviceManagementException(msg, e);
+        }
+        return true;
     }
 
-    public void loadSensorTypes() throws DeviceManagementException {
-//        Sensor Type 1 - DHT Sensor
-        SensorType dht11TemperatureSensor = new SensorType();
-        dht11TemperatureSensor.setTypeID(VirtualFireAlarmUtils.shortUUID());
-        dht11TemperatureSensor.setTypeName(VirtualFirealarmSensorTypes.DHT11_TEMPERATURE_SENSOR);
-        dht11TemperatureSensor.setTypeTAG(SensorType.CommonSensorTypes.TEMPERATURE.getValue());
-        dht11TemperatureSensor.setDescription("A DHT11 type Temperature sensor.");
-
-        Map<String, Object> sensorTypeProperties_1 = new HashMap<>();
-        sensorTypeProperties_1.put("Unit", "C");
-        sensorTypeProperties_1.put("Max_Measure", "100");
-        sensorTypeProperties_1.put("Min_Meansure", "10");
-        dht11TemperatureSensor.setTypeProperties(sensorTypeProperties_1);
-        dht11TemperatureSensor.setStreamDefinitionVersion("1.0.0");
-
-        Map<String, String> metaData_1 = new HashMap<>();
-        metaData_1.put("owner", "STRING");
-        metaData_1.put("deviceType", "STRING");
-        metaData_1.put("deviceId", "STRING");
-        metaData_1.put("time", "STRING");
-        dht11TemperatureSensor.setMetaData(metaData_1);
-
-        Map<String, String> payLoadData_1 = new HashMap<>();
-        payLoadData_1.put("temperature", "FLOAT");
-        dht11TemperatureSensor.setPayloadData(payLoadData_1);
-        dht11TemperatureSensor.buildStreamDefinition();
-//-----------------------------------------------------------------------
-//        Sensor Type 2 - GPS Sensor
-        SensorType adafruitGPSSensor = new SensorType();
-        adafruitGPSSensor.setTypeID(VirtualFireAlarmUtils.shortUUID());
-        adafruitGPSSensor.setTypeName(VirtualFirealarmSensorTypes.ADAFRUIT_CAMERA_SENSOR);
-        adafruitGPSSensor.setTypeTAG(SensorType.CommonSensorTypes.CAMERA.getValue());
-        adafruitGPSSensor.setDescription("An Adafruit technologies Camera module.");
-
-        Map<String, Object> sensorTypeProperties_2 = new HashMap<>();
-        sensorTypeProperties_2.put("Pixels", "360p");
-        sensorTypeProperties_2.put("Lag", "2sec");
-        adafruitGPSSensor.setTypeProperties(sensorTypeProperties_2);
-        adafruitGPSSensor.setStreamDefinitionVersion("1.0.0");
-
-        Map<String, String> metaData_2 = new HashMap<>();
-        metaData_2.put("owner", "STRING");
-        metaData_2.put("deviceType", "STRING");
-        metaData_2.put("deviceId", "STRING");
-        metaData_2.put("time", "STRING");
-        adafruitGPSSensor.setMetaData(metaData_2);
-
-        Map<String, String> payLoadData_2 = new HashMap<>();
-        payLoadData_2.put("cameraStream", "STRING");
-        adafruitGPSSensor.setPayloadData(payLoadData_2);
-        adafruitGPSSensor.buildStreamDefinition();
-
-        sensorTypeList.put(VirtualFirealarmSensorTypes.DHT11_TEMPERATURE_SENSOR, dht11TemperatureSensor);
-        sensorTypeList.put(VirtualFirealarmSensorTypes.ADAFRUIT_CAMERA_SENSOR, adafruitGPSSensor);
-    }
 }

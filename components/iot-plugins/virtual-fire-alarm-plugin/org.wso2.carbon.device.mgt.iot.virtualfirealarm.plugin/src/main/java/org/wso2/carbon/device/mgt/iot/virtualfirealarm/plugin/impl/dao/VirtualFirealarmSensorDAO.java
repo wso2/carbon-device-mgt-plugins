@@ -20,23 +20,19 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.common.sensor.mgt.DeviceTypeSensor;
-import org.wso2.carbon.device.mgt.common.sensor.mgt.Sensor;
 import org.wso2.carbon.device.mgt.common.sensor.mgt.dao.DeviceSensorDAO;
 import org.wso2.carbon.device.mgt.common.sensor.mgt.dao.DeviceSensorDAOException;
+import org.wso2.carbon.device.mgt.common.sensor.mgt.dao.SensorTransactionObject;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFireAlarmUtils;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,63 +40,48 @@ public class VirtualFirealarmSensorDAO implements DeviceSensorDAO {
     private static final Log log = LogFactory.getLog(VirtualFirealarmSensorDAO.class);
 
     @Override
-    public boolean addSensor(Sensor sensor) throws DeviceSensorDAOException {
+    public boolean addSensor(SensorTransactionObject sensorTObject) throws DeviceSensorDAOException {
         Connection conn;
         PreparedStatement stmt = null;
 
-        String sensorIdentifier = sensor.getSensorIdentifier();
-        String deviceIdentifier = sensor.getDeviceIdentifier();
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream;
-        byte[] sensorTypeAsBytes;
-        byte[] sensorPropertiesAsBytes;
-        ByteArrayInputStream sensorTypeByteStream;
-        ByteArrayInputStream sensorPropertiesByteStream;
+        String sensorIdentifier = sensorTObject.getSensorIdentifier();
+        String deviceIdentifier = sensorTObject.getDeviceIdentifier();
+        String sensorTypeUniqueName = sensorTObject.getSensorTypeUniqueName();
+        Map<String, String> deviceSensorDynamicProperties = sensorTObject.getDynamicProperties();
 
         try {
-            objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            // Write byte stream of the DeviceTypeSensor Object of this Device Sensor.
-            objectOutputStream.writeObject(sensor.getDeviceTypeSensor());
-            sensorTypeAsBytes = byteArrayOutputStream.toByteArray();
-            sensorTypeByteStream = new ByteArrayInputStream(sensorTypeAsBytes);
-            // Flush the ByteStream plus the ObjectStreams before reuse.
-            byteArrayOutputStream.flush();
-            objectOutputStream.flush();
-            // Write byte stream of the properties HashMap Object of this DeviceType Sensor
-            objectOutputStream.writeObject(sensor.getDynamicProperties());
-            sensorPropertiesAsBytes = byteArrayOutputStream.toByteArray();
-            sensorPropertiesByteStream = new ByteArrayInputStream(sensorPropertiesAsBytes);
-
             conn = this.getConnection();
             String insertDBQuery =
                     "INSERT INTO VIRTUAL_FIREALARM_DEVICE_SENSORS (" +
-                            "SENSOR_ID," +
-                            "DEVICE_ID," +
-                            "DEVICE_TYPE_SENSOR," +
-                            "DYNAMIC_PROPERTIES," +
-                            "VALUES (?,?,?,?)";
+                            "SENSOR_IDENTIFIER," +
+                            "DEVICE_IDENTIFIER," +
+                            "SENSOR_TYPE_NAME) " +
+                            "VALUES (?,?,?)";
 
             stmt = conn.prepareStatement(insertDBQuery);
             stmt.setString(1, sensorIdentifier);
             stmt.setString(2, deviceIdentifier);
-            stmt.setBinaryStream(3, sensorTypeByteStream, sensorTypeAsBytes.length);
-            stmt.setBinaryStream(4, sensorPropertiesByteStream, sensorPropertiesAsBytes.length);
+            stmt.setString(3, sensorTypeUniqueName);
             int rows = stmt.executeUpdate();
 
-            if (rows > 0 && log.isDebugEnabled()) {
-                log.debug("DeviceSensor [" + sensorIdentifier + "] of VirtualFirealarm with " +
-                                  "Id [" + deviceIdentifier + "] was added successfully.");
+            if (rows > 0) {
+                if (log.isDebugEnabled()) {
+                    log.debug("DeviceSensor [" + sensorIdentifier + "] of VirtualFirealarm with " +
+                                      "Id [" + deviceIdentifier + "] was added successfully.");
+                }
+
+                if (deviceSensorDynamicProperties != null &&
+                        !addSensorProperties(sensorIdentifier, deviceSensorDynamicProperties)) {
+                    String msg = "Error occurred whilst adding Properties of the Sensor " +
+                            "[" + sensorTypeUniqueName + "] attached to the VirtualFirealarm with " +
+                            "Id [" + deviceIdentifier + "]";
+                    log.error(msg);
+                    throw new DeviceSensorDAOException(msg);
+                }
             }
         } catch (SQLException e) {
             String msg = "Error occurred whilst registering a new Sensor [" + sensorIdentifier + "] for the " +
                     "VirtualFirealarm with Id [" + deviceIdentifier + "]";
-            log.error(msg, e);
-            throw new DeviceSensorDAOException(msg, e);
-        } catch (IOException e) {
-            String msg = "Error occurred whilst trying to get the byte streams of the " +
-                    "'DeviceTypeSensor' Object and 'dynamicProperties' HashMap of the " +
-                    "Sensor [" + sensorIdentifier + "] to store as BLOBs in the DB";
             log.error(msg, e);
             throw new DeviceSensorDAOException(msg, e);
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
@@ -114,62 +95,46 @@ public class VirtualFirealarmSensorDAO implements DeviceSensorDAO {
     }
 
     @Override
-    public boolean updateSensor(Sensor sensor) throws DeviceSensorDAOException {
+    public boolean updateSensor(SensorTransactionObject sensorTObject) throws DeviceSensorDAOException {
         Connection conn;
         PreparedStatement stmt = null;
 
-        String sensorIdentifier = sensor.getSensorIdentifier();
-        String deviceIdentifier = sensor.getDeviceIdentifier();
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream;
-        byte[] sensorTypeAsBytes;
-        byte[] sensorPropertiesAsBytes;
-        ByteArrayInputStream sensorTypeByteStream;
-        ByteArrayInputStream sensorPropertiesByteStream;
+        String sensorIdentifier = sensorTObject.getSensorIdentifier();
+        String deviceIdentifier = sensorTObject.getDeviceIdentifier();
+        String sensorTypeUniqueName = sensorTObject.getSensorTypeUniqueName();
+        Map<String, String> deviceSensorDynamicProperties = sensorTObject.getDynamicProperties();
 
         try {
-            objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            // Write byte stream of the SensorType Object of this DeviceType Sensor.
-            objectOutputStream.writeObject(sensor.getDeviceTypeSensor());
-            sensorTypeAsBytes = byteArrayOutputStream.toByteArray();
-            sensorTypeByteStream = new ByteArrayInputStream(sensorTypeAsBytes);
-            // Flush the ByteStream plus the ObjectStreams before reuse.
-            byteArrayOutputStream.flush();
-            objectOutputStream.flush();
-            // Write byte stream of the properties HashMap Object of this DeviceType Sensor
-            objectOutputStream.writeObject(sensor.getDynamicProperties());
-            sensorPropertiesAsBytes = byteArrayOutputStream.toByteArray();
-            sensorPropertiesByteStream = new ByteArrayInputStream(sensorPropertiesAsBytes);
-
             conn = this.getConnection();
             String updateDBQuery =
-                    "UPDATE VIRTUAL_FIREALARM_DEVICE_SENSORS SET " +
-                            "DEVICE_TYPE_SENSOR = ?," +
-                            "DYNAMIC_PROPERTIES = ?," +
-                            "WHERE SENSOR_ID = ? AND DEVICE_ID = ?";
+                    "UPDATE VIRTUAL_FIREALARM_DEVICE_SENSORS SET SENSOR_TYPE_NAME = ? " +
+                            "WHERE SENSOR_IDENTIFIER = ? AND DEVICE_IDENTIFIER = ?";
 
             stmt = conn.prepareStatement(updateDBQuery);
-            stmt.setBinaryStream(1, sensorTypeByteStream, sensorTypeAsBytes.length);
-            stmt.setBinaryStream(2, sensorPropertiesByteStream, sensorPropertiesAsBytes.length);
-            stmt.setString(3, sensorIdentifier);
-            stmt.setString(4, deviceIdentifier);
+            stmt.setString(1, sensorTypeUniqueName);
+            stmt.setString(2, sensorIdentifier);
+            stmt.setString(3, deviceIdentifier);
             int rows = stmt.executeUpdate();
 
-            if (rows > 0 && log.isDebugEnabled()) {
-                log.debug(
-                        "Details of Sensor [" + sensorIdentifier + "] of VirtualFirealarm with " +
-                                "Id [" + deviceIdentifier + "] was updated successfully.");
+            if (rows > 0) {
+                if (log.isDebugEnabled()) {
+                    log.debug(
+                            "Details of Sensor [" + sensorIdentifier + "] of VirtualFirealarm with " +
+                                    "Id [" + deviceIdentifier + "] was updated successfully.");
+                }
+
+                if (deviceSensorDynamicProperties != null &&
+                        !addSensorProperties(sensorIdentifier, deviceSensorDynamicProperties)) {
+                    String msg = "Error occurred whilst upbating Properties of the Sensor " +
+                            "[" + sensorTypeUniqueName + "] in VirtualFirealarm with " +
+                            "Id [" + deviceIdentifier + "]";
+                    log.error(msg);
+                    throw new DeviceSensorDAOException(msg);
+                }
             }
         } catch (SQLException e) {
             String msg = "Error occurred whilst registering the new Sensor [" + sensorIdentifier + "] for the " +
                     "VirtualFirealarm with Id [" + deviceIdentifier + "]";
-            log.error(msg, e);
-            throw new DeviceSensorDAOException(msg, e);
-        } catch (IOException e) {
-            String msg = "Error occurred whilst trying to get the byte streams of the " +
-                    "'DeviceTypeSensor' Object and 'dynamicProperties' HashMap of the " +
-                    "Sensor [" + sensorIdentifier + "] to store as BLOBs in the DB";
             log.error(msg, e);
             throw new DeviceSensorDAOException(msg, e);
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
@@ -183,54 +148,40 @@ public class VirtualFirealarmSensorDAO implements DeviceSensorDAO {
     }
 
     @Override
-    public Sensor getSensor(String deviceId, String sensorId) throws DeviceSensorDAOException {
+    public SensorTransactionObject getSensor(String deviceIdentifier, String sensorIdentifier)
+            throws DeviceSensorDAOException {
         Connection conn;
         PreparedStatement stmt = null;
         ResultSet resultSet = null;
-        Sensor sensor = null;
+        SensorTransactionObject sensorTransactionObject = null;
 
         try {
             conn = this.getConnection();
             String selectDBQuery =
-                    "SELECT " +
-                            "DEVICE_TYPE_SENSOR AS DEVICE_TYPE_SENSOR " +
-                            "DYNAMIC_PROPERTIES AS DYNAMIC_PROPERTIES " +
+                    "SELECT SENSOR_TYPE_NAME " +
                             "FROM VIRTUAL_FIREALARM_DEVICE_SENSORS " +
-                            "WHERE DEVICE_ID = ? AND SENSOR_ID = ?";
+                            "WHERE DEVICE_IDENTIFIER = ? AND SENSOR_IDENTIFIER = ?";
             stmt = conn.prepareStatement(selectDBQuery);
-            stmt.setString(1, deviceId);
-            stmt.setString(2, sensorId);
+            stmt.setString(1, deviceIdentifier);
+            stmt.setString(2, sensorIdentifier);
             resultSet = stmt.executeQuery();
 
             while (resultSet.next()) {
-                DeviceTypeSensor deviceTypeSensor;
-                Map<String, Object> dynamicProperties;
+                String sensorTypeUniqueName = resultSet.getString(
+                        SensorTransactionObject.DAOConstants.SENSOR_TYPE_NAME);
+                Map<String, String> dynamicProperties = getSensorProperties(sensorIdentifier);
 
-                try {
-                    // Read the BLOB of SensorType Object from DB as bytes.
-                    deviceTypeSensor = (DeviceTypeSensor) deSerializeBlobData(
-                            resultSet.getObject(Sensor.DAOConstants.DEVICE_TYPE_SENSOR), DeviceTypeSensor.class);
-                    // Read the BLOB of Static-Properties Map from DB as bytes.
-                    dynamicProperties = (Map<String, Object>) deSerializeBlobData(
-                            resultSet.getObject(Sensor.DAOConstants.DYNAMIC_PROPERTIES), Map.class);
-                } catch (ClassNotFoundException | IOException e) {
-                    String msg = "An error occurred whilst trying to cast the BLOB data of Sensor [" + sensorId + "] " +
-                            "of VirtualFirealarm with id [" + deviceId + "]";
-                    log.error(msg, e);
-                    throw new DeviceSensorDAOException(msg, e);
-                }
-
-                sensor = new Sensor();
-                sensor.setSensorIdentifier(sensorId);
-                sensor.setDeviceIdentifier(deviceId);
-                sensor.setDeviceTypeSensor(deviceTypeSensor);
-                sensor.setDynamicProperties(dynamicProperties);
+                sensorTransactionObject = new SensorTransactionObject();
+                sensorTransactionObject.setSensorIdentifier(sensorIdentifier);
+                sensorTransactionObject.setDeviceIdentifier(deviceIdentifier);
+                sensorTransactionObject.setSensorTypeUniqueName(sensorTypeUniqueName);
+                sensorTransactionObject.setDynamicProperties(dynamicProperties);
             }
 
-            return sensor;
+            return sensorTransactionObject;
         } catch (SQLException e) {
-            String msg = "A SQL error occurred whilst trying to get the Sensor [" + sensorId + "] of the " +
-                    "VirtualFirealarm with id [" + deviceId + "]";
+            String msg = "A SQL error occurred whilst trying to get the Sensor [" + sensorIdentifier + "] of the " +
+                    "VirtualFirealarm with id [" + deviceIdentifier + "]";
             log.error(msg, e);
             throw new DeviceSensorDAOException(msg, e);
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
@@ -243,54 +194,39 @@ public class VirtualFirealarmSensorDAO implements DeviceSensorDAO {
     }
 
     @Override
-    public Sensor getSensor(String sensorId) throws DeviceSensorDAOException {
+    public SensorTransactionObject getSensor(String sensorIdentifier) throws DeviceSensorDAOException {
         Connection conn;
         PreparedStatement stmt = null;
         ResultSet resultSet = null;
-        Sensor sensor = null;
+        SensorTransactionObject sensorTObject = null;
 
         try {
             conn = this.getConnection();
             String selectDBQuery =
-                    "SELECT " +
-                            "DEVICE_ID AS DEVICE_ID, " +
-                            "DEVICE_TYPE_SENSOR AS DEVICE_TYPE_SENSOR " +
-                            "DYNAMIC_PROPERTIES AS DYNAMIC_PROPERTIES " +
+                    "SELECT DEVICE_IDENTIFIER, " +
+                            "SENSOR_TYPE_NAME " +
                             "FROM VIRTUAL_FIREALARM_DEVICE_SENSORS " +
-                            "WHERE SENSOR_ID = ?";
+                            "WHERE SENSOR_IDENTIFIER = ?";
             stmt = conn.prepareStatement(selectDBQuery);
-            stmt.setString(1, sensorId);
+            stmt.setString(1, sensorIdentifier);
             resultSet = stmt.executeQuery();
 
             while (resultSet.next()) {
-                DeviceTypeSensor deviceTypeSensor;
-                Map<String, Object> dynamicProperties;
-                String deviceIdentifier = resultSet.getString(Sensor.DAOConstants.DEVICE_ID);
+                Map<String, String> dynamicProperties = getSensorProperties(sensorIdentifier);
+                String deviceIdentifier = resultSet.getString(SensorTransactionObject.DAOConstants.DEVICE_IDENTIFIER);
+                String sensorTypeUniqueName = resultSet.getString(
+                        SensorTransactionObject.DAOConstants.SENSOR_TYPE_NAME);
 
-                try {
-                    // Read the BLOB of SensorType Object from DB as bytes.
-                    deviceTypeSensor = (DeviceTypeSensor) deSerializeBlobData(
-                            resultSet.getObject(Sensor.DAOConstants.DEVICE_TYPE_SENSOR), DeviceTypeSensor.class);
-                    // Read the BLOB of Static-Properties Map from DB as bytes.
-                    dynamicProperties = (Map<String, Object>) deSerializeBlobData(
-                            resultSet.getObject(Sensor.DAOConstants.DYNAMIC_PROPERTIES), Map.class);
-                } catch (ClassNotFoundException | IOException e) {
-                    String msg = "An error occurred whilst trying to cast the BLOB data of Sensor [" + sensorId + "] " +
-                            "of VirtualFirealarm with id [" + deviceIdentifier + "]";
-                    log.error(msg, e);
-                    throw new DeviceSensorDAOException(msg, e);
-                }
-
-                sensor = new Sensor();
-                sensor.setSensorIdentifier(sensorId);
-                sensor.setDeviceIdentifier(deviceIdentifier);
-                sensor.setDeviceTypeSensor(deviceTypeSensor);
-                sensor.setDynamicProperties(dynamicProperties);
+                sensorTObject = new SensorTransactionObject();
+                sensorTObject.setSensorIdentifier(sensorIdentifier);
+                sensorTObject.setDeviceIdentifier(deviceIdentifier);
+                sensorTObject.setSensorTypeUniqueName(sensorTypeUniqueName);
+                sensorTObject.setDynamicProperties(dynamicProperties);
             }
 
-            return sensor;
+            return sensorTObject;
         } catch (SQLException e) {
-            String msg = "A SQL error occurred whilst trying to get the Sensor [" + sensorId + "] of the " +
+            String msg = "A SQL error occurred whilst trying to get the Sensor [" + sensorIdentifier + "] of the " +
                     "VirtualFirealarm device.";
             log.error(msg, e);
             throw new DeviceSensorDAOException(msg, e);
@@ -304,56 +240,41 @@ public class VirtualFirealarmSensorDAO implements DeviceSensorDAO {
     }
 
     @Override
-    public List<Sensor> getSensors(String deviceId) throws DeviceSensorDAOException {
+    public List<SensorTransactionObject> getSensors(String deviceIdentifier) throws DeviceSensorDAOException {
         Connection conn;
         PreparedStatement stmt = null;
         ResultSet resultSet = null;
-        List<Sensor> deviceSensors = new ArrayList<>();
+        List<SensorTransactionObject> deviceSensorTObjects = new ArrayList<>();
 
         try {
             conn = this.getConnection();
             String selectDBQuery =
-                    "SELECT " +
-                            "SENSOR_ID AS SENSOR_ID, " +
-                            "DEVICE_TYPE_SENSOR AS DEVICE_TYPE_SENSOR " +
-                            "DYNAMIC_PROPERTIES AS DYNAMIC_PROPERTIES " +
+                    "SELECT SENSOR_IDENTIFIER, " +
+                            "SENSOR_TYPE_NAME " +
                             "FROM VIRTUAL_FIREALARM_DEVICE_SENSORS " +
-                            "WHERE DEVICE_ID = ?";
+                            "WHERE DEVICE_IDENTIFIER = ?";
             stmt = conn.prepareStatement(selectDBQuery);
-            stmt.setString(1, deviceId);
+            stmt.setString(1, deviceIdentifier);
             resultSet = stmt.executeQuery();
 
             while (resultSet.next()) {
-                DeviceTypeSensor deviceTypeSensor;
-                Map<String, Object> dynamicProperties;
-                String sensorIdentifier = resultSet.getString(Sensor.DAOConstants.SENSOR_ID);
+                String sensorIdentifier = resultSet.getString(SensorTransactionObject.DAOConstants.SENSOR_IDENTIFIER);
+                String sensorTypeUniqueName = resultSet.getString(
+                        SensorTransactionObject.DAOConstants.SENSOR_TYPE_NAME);
+                Map<String, String> dynamicProperties = getSensorProperties(sensorIdentifier);
 
-                try {
-                    // Read the BLOB of DeviceSensorType Object from DB as bytes.
-                    deviceTypeSensor = (DeviceTypeSensor) deSerializeBlobData(
-                            resultSet.getObject(Sensor.DAOConstants.DEVICE_TYPE_SENSOR), DeviceTypeSensor.class);
-                    // Read the BLOB of Dynamic-Properties Map from DB as bytes.
-                    dynamicProperties = (Map<String, Object>) deSerializeBlobData(
-                            resultSet.getObject(Sensor.DAOConstants.DYNAMIC_PROPERTIES), Map.class);
-                } catch (ClassNotFoundException | IOException e) {
-                    String msg = "An error occurred whilst trying to cast the BLOB data of Sensor " +
-                            "[" + sensorIdentifier + "] of VirtualFirealarm with id [" + deviceId + "]";
-                    log.error(msg, e);
-                    throw new DeviceSensorDAOException(msg, e);
-                }
-
-                Sensor sensor = new Sensor();
-                sensor.setSensorIdentifier(sensorIdentifier);
-                sensor.setDeviceIdentifier(deviceId);
-                sensor.setDeviceTypeSensor(deviceTypeSensor);
-                sensor.setDynamicProperties(dynamicProperties);
-                deviceSensors.add(sensor);
+                SensorTransactionObject sensorTObject = new SensorTransactionObject();
+                sensorTObject.setSensorIdentifier(sensorIdentifier);
+                sensorTObject.setDeviceIdentifier(deviceIdentifier);
+                sensorTObject.setSensorTypeUniqueName(sensorTypeUniqueName);
+                sensorTObject.setDynamicProperties(dynamicProperties);
+                deviceSensorTObjects.add(sensorTObject);
             }
-            return deviceSensors;
+            return deviceSensorTObjects;
         } catch (SQLException e) {
             String msg =
                     "A SQL error occurred whilst trying to get all the Sensors of the VirtualFirealarm with " +
-                            "id [" + deviceId + "]";
+                            "id [" + deviceIdentifier + "]";
             log.error(msg, e);
             throw new DeviceSensorDAOException(msg, e);
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
@@ -366,26 +287,37 @@ public class VirtualFirealarmSensorDAO implements DeviceSensorDAO {
     }
 
     @Override
-    public boolean removeSensor(String deviceId, String sensorId) throws DeviceSensorDAOException {
+    public boolean removeSensor(String deviceIdentifier, String sensorIdentifier) throws DeviceSensorDAOException {
         Connection conn;
         PreparedStatement stmt = null;
         try {
             conn = this.getConnection();
+            if (!removeSensorProperties(sensorIdentifier)) {
+                String msg = "Error occurred whilst deleting Properties of the Sensor with " +
+                        "Id [" + sensorIdentifier + "] of VirtualFirealarm with Id [" + deviceIdentifier + "]";
+                log.error(msg);
+                throw new DeviceSensorDAOException(msg);
+            }
+
             String deleteDBQuery =
-                    "DELETE FROM VIRTUAL_FIREALARM_DEVICE_SENSORS WHERE DEVICE_ID = ? AND SENSOR_ID = ?";
+                    "DELETE FROM VIRTUAL_FIREALARM_DEVICE_SENSORS " +
+                            "WHERE DEVICE_IDENTIFIER = ? AND SENSOR_IDENTIFIER = ?";
             stmt = conn.prepareStatement(deleteDBQuery);
-            stmt.setString(1, deviceId);
-            stmt.setString(2, sensorId);
+            stmt.setString(1, deviceIdentifier);
+            stmt.setString(2, sensorIdentifier);
             int rows = stmt.executeUpdate();
             if (rows > 0) {
                 if (log.isDebugEnabled()) {
-                    log.debug("DeviceTypeSensor [" + sensorId + "] of VirtualFirealarm with Id [" + deviceId + "] " +
+                    log.debug("Sensor [" + sensorIdentifier + "] of VirtualFirealarm with Id [" + deviceIdentifier +
+                                      "] " +
                                       "has been deleted successfully.");
                 }
             }
         } catch (SQLException e) {
-            String msg = "Error occurred whilst trying to delete the Sensor [" + sensorId + "] of the VirtualFirealarm " +
-                    "device with Id [" + deviceId + "].";
+            String msg =
+                    "Error occurred whilst trying to delete the Sensor [" + sensorIdentifier +
+                            "] of the VirtualFirealarm " +
+                            "device with Id [" + deviceIdentifier + "].";
             log.error(msg, e);
             throw new DeviceSensorDAOException(msg, e);
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
@@ -399,25 +331,32 @@ public class VirtualFirealarmSensorDAO implements DeviceSensorDAO {
     }
 
     @Override
-    public boolean removeSensor(String sensorId) throws DeviceSensorDAOException {
+    public boolean removeSensor(String sensorIdentifier) throws DeviceSensorDAOException {
         Connection conn;
         PreparedStatement stmt = null;
         try {
             conn = this.getConnection();
+            if (!removeSensorProperties(sensorIdentifier)) {
+                String msg = "Error occurred whilst deleting Properties of VirtualFirealarm Sensor with " +
+                        "Id [" + sensorIdentifier + "]";
+                log.error(msg);
+                throw new DeviceSensorDAOException(msg);
+            }
+
             String deleteDBQuery =
-                    "DELETE FROM VIRTUAL_FIREALARM_DEVICE_SENSORS WHERE SENSOR_ID = ?";
+                    "DELETE FROM VIRTUAL_FIREALARM_DEVICE_SENSORS WHERE SENSOR_IDENTIFIER = ?";
             stmt = conn.prepareStatement(deleteDBQuery);
-            stmt.setString(1, sensorId);
+            stmt.setString(1, sensorIdentifier);
             int rows = stmt.executeUpdate();
             if (rows > 0) {
                 if (log.isDebugEnabled()) {
-                    log.debug("VirtualFirealarm Sensor with Id [" + sensorId + "] " +
+                    log.debug("VirtualFirealarm Sensor with Id [" + sensorIdentifier + "] " +
                                       "has been deleted successfully.");
                 }
             }
         } catch (SQLException e) {
             String msg = "Error occurred whilst trying to delete the VirtualFirealarm Sensor with " +
-                    "Id [" + sensorId + "].";
+                    "Id [" + sensorIdentifier + "].";
             log.error(msg, e);
             throw new DeviceSensorDAOException(msg, e);
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
@@ -431,25 +370,47 @@ public class VirtualFirealarmSensorDAO implements DeviceSensorDAO {
     }
 
     @Override
-    public boolean removeSensors(String deviceId) throws DeviceSensorDAOException {
+    public boolean removeSensors(String deviceIdentifier) throws DeviceSensorDAOException {
         Connection conn;
         PreparedStatement stmt = null;
+        ResultSet resultSet;
+        String sensorIdentifier;
+
         try {
             conn = this.getConnection();
+            String selectDBQuery =
+                    "SELECT SENSOR_IDENTIFIER " +
+                            "FROM VIRTUAL_FIREALARM_DEVICE_SENSORS " +
+                            "WHERE DEVICE_IDENTIFIER = ?";
+
+            stmt = conn.prepareStatement(selectDBQuery);
+            stmt.setString(1, deviceIdentifier);
+            resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                sensorIdentifier = resultSet.getString(SensorTransactionObject.DAOConstants.SENSOR_IDENTIFIER);
+                if (!removeSensorProperties(sensorIdentifier)) {
+                    String msg = "Error occurred whilst deleting Properties of a VirtualFirealarm Sensor with " +
+                            "Id [" + sensorIdentifier + "].";
+                    log.error(msg);
+                    throw new DeviceSensorDAOException(msg);
+                }
+            }
+            stmt.close();
+
             String deleteDBQuery =
                     "DELETE FROM VIRTUAL_FIREALARM_DEVICE_SENSORS WHERE DEVICE_ID = ?";
             stmt = conn.prepareStatement(deleteDBQuery);
-            stmt.setString(1, deviceId);
+            stmt.setString(1, deviceIdentifier);
             int rows = stmt.executeUpdate();
             if (rows > 0) {
                 if (log.isDebugEnabled()) {
-                    log.debug("All Sensors of VirtualFirealarm with Id [" + deviceId + "] " +
+                    log.debug("All Sensors of VirtualFirealarm with Id [" + deviceIdentifier + "] " +
                                       "has been deleted successfully.");
                 }
             }
         } catch (SQLException e) {
             String msg = "Error occurred whilst trying to delete the Sensors of the VirtualFirealarm with " +
-                    "Id [" + deviceId + "].";
+                    "Id [" + deviceIdentifier + "].";
             log.error(msg, e);
             throw new DeviceSensorDAOException(msg, e);
         } catch (VirtualFirealarmDeviceMgtPluginException e) {
@@ -470,23 +431,115 @@ public class VirtualFirealarmSensorDAO implements DeviceSensorDAO {
         return VirtualFireAlarmDAOUtil.getConnection();
     }
 
-    /**
-     * @param blobObjectFromDB
-     * @param blobClass
-     * @return
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    private Object deSerializeBlobData(Object blobObjectFromDB, Class blobClass)
-            throws IOException, ClassNotFoundException {
-        Object dataObjectFromDB = null;
 
-        byte[] blobByteArray = (byte[]) blobObjectFromDB;
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(blobByteArray);
-        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-        if (blobClass.isInstance(objectInputStream.readObject())) {
-            dataObjectFromDB = objectInputStream.readObject();
+    private boolean addSensorProperties(String sensorIdentifier, Map<String, String> deviceSensorProperties)
+            throws DeviceSensorDAOException {
+        Connection conn;
+        PreparedStatement stmt = null;
+        try {
+            for (String property : deviceSensorProperties.keySet()) {
+                String value = deviceSensorProperties.get(property);
+
+                conn = this.getConnection();
+                String insertDBQuery =
+                        "INSERT INTO VIRTUAL_FIREALARM_SENSOR_DYNAMIC_PROPERTIES (" +
+                                "SENSOR_IDENTIFIER," +
+                                "PROPERTY_KEY," +
+                                "PROPERTY_VALUE) " +
+                                "VALUES (?,?,?)";
+
+                stmt = conn.prepareStatement(insertDBQuery, Statement.RETURN_GENERATED_KEYS);
+                stmt.setString(1, sensorIdentifier);
+                stmt.setString(2, property);
+                stmt.setString(3, value);
+                int rows = stmt.executeUpdate();
+
+                if (rows > 0 && log.isDebugEnabled()) {
+                    log.debug("Properties of Sensor with Id [" + sensorIdentifier + "] " +
+                                      "was added successfully.");
+                }
+            }
+        } catch (SQLException e) {
+            String msg = "Error occurred whilst adding properties (after adding the sensor) of a new " +
+                    "Sensor whose is Id [" + sensorIdentifier + "].";
+            log.error(msg, e);
+            throw new DeviceSensorDAOException(msg, e);
+        } catch (VirtualFirealarmDeviceMgtPluginException e) {
+            String msg = "Error occurred whilst trying to open connection to DB to register a new Sensor.";
+            log.error(msg, e);
+            throw new DeviceSensorDAOException(msg, e);
+        } finally {
+            VirtualFireAlarmUtils.cleanupResources(stmt, null);
         }
-        return dataObjectFromDB;
+        return true;
     }
+
+
+    private Map<String, String> getSensorProperties(String sensorIdentifier) throws DeviceSensorDAOException {
+        Connection conn;
+        PreparedStatement stmt = null;
+        ResultSet resultSet = null;
+        Map<String, String> deviceSensorProperties = new HashMap<>();
+
+        try {
+            conn = this.getConnection();
+            String selectDBQuery =
+                    "SELECT PROPERTY_KEY, " +
+                            "PROPERTY_VALUE " +
+                            "FROM VIRTUAL_FIREALARM_SENSOR_DYNAMIC_PROPERTIES " +
+                            "WHERE SENSOR_IDENTIFIER = ?";
+            stmt = conn.prepareStatement(selectDBQuery);
+            stmt.setString(1, sensorIdentifier);
+            resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                String propertyKey = resultSet.getString(SensorTransactionObject.DAOConstants.PROPERTY_KEY);
+                String propertyVal = resultSet.getString(SensorTransactionObject.DAOConstants.PROPERTY_VALUE);
+                deviceSensorProperties.put(propertyKey, propertyVal);
+            }
+        } catch (SQLException e) {
+            String msg = "A SQL error occurred whilst trying to get the properties of Sensor with " +
+                    "ID [" + sensorIdentifier + "].";
+            log.error(msg, e);
+            throw new DeviceSensorDAOException(msg, e);
+        } catch (VirtualFirealarmDeviceMgtPluginException e) {
+            String msg = "Error occurred whilst trying to open connection to DB to register a new Sensor.";
+            log.error(msg, e);
+            throw new DeviceSensorDAOException(msg, e);
+        } finally {
+            VirtualFireAlarmUtils.cleanupResources(stmt, resultSet);
+        }
+        return deviceSensorProperties;
+    }
+
+    private boolean removeSensorProperties(String sensorIdentifier) throws DeviceSensorDAOException {
+        Connection conn;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = this.getConnection();
+            String deleteDBQuery =
+                    "DELETE FROM VIRTUAL_FIREALARM_SENSOR_DYNAMIC_PROPERTIES WHERE SENSOR_IDENTIFIER = ?";
+            stmt = conn.prepareStatement(deleteDBQuery);
+            stmt.setString(1, sensorIdentifier);
+            int rows = stmt.executeUpdate();
+
+            if (rows > 0 && log.isDebugEnabled()) {
+                log.debug("Properties of Sensor with Id [" + sensorIdentifier + "] " + "was deleted successfully.");
+            }
+        } catch (SQLException e) {
+            String msg = "Error occurred whilst adding properties (after adding the sensor) of a new " +
+                    "Sensor whose is Id [" + sensorIdentifier + "].";
+            log.error(msg, e);
+            throw new DeviceSensorDAOException(msg, e);
+        } catch (VirtualFirealarmDeviceMgtPluginException e) {
+            String msg = "Error occurred whilst trying to open connection to DB to register a new Sensor.";
+            log.error(msg, e);
+            throw new DeviceSensorDAOException(msg, e);
+        } finally {
+            VirtualFireAlarmUtils.cleanupResources(stmt, null);
+        }
+        return true;
+    }
+
 }
