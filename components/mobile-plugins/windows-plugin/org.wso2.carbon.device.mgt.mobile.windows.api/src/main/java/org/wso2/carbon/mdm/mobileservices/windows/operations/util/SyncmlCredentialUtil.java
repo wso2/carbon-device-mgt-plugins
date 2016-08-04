@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -26,11 +26,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * Class for generate security token for client and server.
+ * Generate security token to client and server.
  */
-public class SyncmlCredentials {
+public class SyncmlCredentialUtil {
 
-    public String generateCredData(String nextNonce) throws SyncmlMessageFormatException {
+    public static String generateCredData(String nextNonce) throws SyncmlMessageFormatException {
         MessageDigest digest;
         String usrPwdNonceHash;
         String nonce;
@@ -42,14 +42,15 @@ public class SyncmlCredentials {
             String usrPwdNonce = usrPwdHash + ":" + nonce;
             usrPwdNonceHash = Base64.encodeBase64String(digest.digest(usrPwdNonce.getBytes(Constants.UTF_8)));
         } catch (UnsupportedEncodingException e) {
-            throw new SyncmlMessageFormatException("Problem occurred in encoding credentials data.", e);
+            throw new SyncmlMessageFormatException("Problem occurred while decoding credentials data.", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new SyncmlMessageFormatException("Problem occurred in generating password hash.", e);
+            throw new SyncmlMessageFormatException("Application environment does not have an implementation " +
+                    "available/configured for the requested algorithm", e);
         }
         return usrPwdNonceHash;
     }
 
-    public String generateRST(String username, String password) throws SyncmlMessageFormatException {
+    public static String generateRST(String username, String password) throws SyncmlMessageFormatException {
         MessageDigest digest;
         String usrPwdNonceHash;
         String nonce;
@@ -61,9 +62,10 @@ public class SyncmlCredentials {
             String usrPwdNonce = usrPwdHash + ":" + nonce;
             usrPwdNonceHash = Base64.encodeBase64String(digest.digest(usrPwdNonce.getBytes(Constants.UTF_8)));
         } catch (UnsupportedEncodingException e) {
-            throw new SyncmlMessageFormatException("Problem occurred in encoding credentials data.", e);
+            throw new SyncmlMessageFormatException("Problem occurred while decoding credentials data.", e);
         } catch (NoSuchAlgorithmException e) {
-            throw new SyncmlMessageFormatException("Problem occurred in generating password hash.", e);
+            throw new SyncmlMessageFormatException("Application environment does not have an implementation " +
+                    "available/configured for the requested algorithm", e);
         }
         return usrPwdNonceHash;
     }

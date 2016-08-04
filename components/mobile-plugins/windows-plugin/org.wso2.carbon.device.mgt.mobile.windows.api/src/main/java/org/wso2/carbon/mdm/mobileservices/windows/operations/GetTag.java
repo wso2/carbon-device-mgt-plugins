@@ -1,25 +1,23 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -28,15 +26,11 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Commands sent from the device.
+ * Data that needs to be retrieved from the device.
  */
-@ApiModel(value = "Replace",
-        description = "This class carries all information related to Syncml ReplaceTag.")
-public class Replace {
-    @ApiModelProperty(name = "commandId", value = "CommandId of the syncml ReplaceTag.", required = true)
+public class GetTag {
     int commandId = -1;
-    @ApiModelProperty(name = "items", value = "List of items of the syncml ReplaceTag.", required = true)
-    List<Item> items;
+    List<ItemTag> items;
 
     public int getCommandId() {
         return commandId;
@@ -46,31 +40,32 @@ public class Replace {
         this.commandId = commandId;
     }
 
-    public List<Item> getItems() {
+    public List<ItemTag> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(List<ItemTag> items) {
         this.items = items;
     }
 
-    public void buildReplaceElement(Document doc, Element rootElement) {
+    public void buildGetElement(Document doc, Element rootElement) {
         if (getItems() != null) {
-            Element replace = doc.createElement(Constants.REPLACE);
-            rootElement.appendChild(replace);
+            Element get = doc.createElement(Constants.GET);
+            rootElement.appendChild(get);
             if (getCommandId() != -1) {
                 Element commandId = doc.createElement(Constants.COMMAND_ID);
                 commandId.appendChild(doc.createTextNode(String.valueOf(getCommandId())));
-                replace.appendChild(commandId);
+                get.appendChild(commandId);
             }
             if (getItems() != null) {
-                for (Iterator<Item> itemIterator = getItems().iterator(); itemIterator.hasNext(); ) {
-                    Item item = itemIterator.next();
+                for (Iterator<ItemTag> itemIterator = getItems().iterator(); itemIterator.hasNext(); ) {
+                    ItemTag item = itemIterator.next();
                     if (item != null) {
-                        item.buildItemElement(doc, replace);
+                        item.buildItemElement(doc, get);
                     }
                 }
             }
         }
     }
+
 }

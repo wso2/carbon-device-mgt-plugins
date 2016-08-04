@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -22,11 +22,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.mdm.mobileservices.windows.common.PluginConstants;
-import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.SyncmlMessageFormatException;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.*;
 
 import java.util.ArrayList;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 /**
@@ -80,15 +78,17 @@ public class SyncmlParser {
      * @param syncmlPayload - Received SyncML XML payload
      * @return - SyncmlDocument object generated from the received payload
      */
-    public static SyncmlDocument parseSyncmlPayload(Document syncmlPayload) throws SyncmlMessageFormatException {
+    public static SyncmlDocument parseSyncmlPayload(Document syncmlPayload) {
         SyncmlDocument syncmlDocument = new SyncmlDocument();
         if (syncmlPayload.getElementsByTagName(SYNC_HEADER) == null) {
-            throw new SyncmlMessageFormatException();
+            throw new IllegalStateException();
         }
         NodeList syncHeaderList = syncmlPayload.getElementsByTagName(SYNC_HEADER);
         Node syncHeader = syncHeaderList.item(0);
         SyncmlHeader header = generateSyncmlHeader(syncHeader);
-
+        if (syncmlPayload.getElementsByTagName(SYNC_BODY) == null) {
+            throw new IllegalStateException();
+        }
         NodeList syncBodyList = syncmlPayload.getElementsByTagName(SYNC_BODY);
         Node syncBody = syncBodyList.item(0);
         SyncmlBody body = generateSyncmlBody(syncBody);
@@ -108,9 +108,9 @@ public class SyncmlParser {
 
         String sessionID = null;
         String messageID = null;
-        Target target = null;
-        Source source = null;
-        Credential credential = null;
+        TargetTag target = null;
+        SourceTag source = null;
+        CredentialTag credential = null;
         SyncmlHeader header = new SyncmlHeader();
 
         NodeList headerElements = syncHeader.getChildNodes();
@@ -122,31 +122,31 @@ public class SyncmlParser {
 
                 if (SyncMLHeaderParameter.MSG_ID.getValue().equals(nodeName)) {
                     if (node.getTextContent().trim() == null) {
-                        throw new IllegalFormatCodePointException(2);
+                        throw new IllegalStateException();
                     } else {
                         messageID = node.getTextContent().trim();
                     }
                 } else if (SyncMLHeaderParameter.SESSION_ID.getValue().equals(nodeName)) {
                     if (node.getTextContent().trim() == null) {
-                        throw new IllegalFormatCodePointException(2);
+                        throw new IllegalStateException();
                     } else {
                         sessionID = node.getTextContent().trim();
                     }
                 } else if (SyncMLHeaderParameter.TARGET.getValue().equals(nodeName)) {
                     if (node.getTextContent().trim() == null) {
-                        throw new IllegalFormatCodePointException(2);
+                        throw new IllegalStateException();
                     } else {
                         target = generateTarget(node);
                     }
                 } else if (SyncMLHeaderParameter.SOURCE.getValue().equals(nodeName)) {
                     if (node.getTextContent().trim() == null) {
-                        throw new IllegalFormatCodePointException(2);
+                        throw new IllegalStateException();
                     } else {
                         source = generateSource(node);
                     }
                 } else if (SyncMLHeaderParameter.CRED.getValue().equals(nodeName)) {
                     if (node.getTextContent().trim() == null) {
-                        throw new IllegalFormatCodePointException(2);
+                        throw new IllegalStateException();
                     } else {
                         credential = generateCredential(node);
                     }
@@ -170,10 +170,10 @@ public class SyncmlParser {
      */
     private static SyncmlBody generateSyncmlBody(Node syncBody) {
 
-        Alert alert = null;
-        Replace replace = null;
-        Results results = null;
-        List<Status> status = new ArrayList<>();
+        AlertTag alert = null;
+        ReplaceTag replace = null;
+        ResultsTag results = null;
+        List<StatusTag> status = new ArrayList<>();
         NodeList bodyElements = syncBody.getChildNodes();
 
         for (int i = 0; i < bodyElements.getLength(); i++) {
@@ -207,9 +207,9 @@ public class SyncmlParser {
      * @param node - XML node which represents Source
      * @return - Source object
      */
-    private static Source generateSource(Node node) {
+    private static SourceTag generateSource(Node node) {
 
-        Source source = new Source();
+        SourceTag source = new SourceTag();
         Node sourceURIItem = node.getChildNodes().item(0);
         Node sourceNameItem = node.getChildNodes().item(1);
         String sourceURI = null;
@@ -232,9 +232,9 @@ public class SyncmlParser {
      * @param node - XML node which represents Target
      * @return - Target object
      */
-    private static Target generateTarget(Node node) {
+    private static TargetTag generateTarget(Node node) {
 
-        Target target = new Target();
+        TargetTag target = new TargetTag();
         Node targetURIItem = node.getChildNodes().item(0);
         Node targetNameItem = node.getChildNodes().item(1);
         String targetURI = null;
@@ -257,10 +257,10 @@ public class SyncmlParser {
      * @param node - XML node which represents Results
      * @return - Results object
      */
-    private static Results generateResults(Node node) {
+    private static ResultsTag generateResults(Node node) {
 
-        Results results = new Results();
-        List<Item> item = new ArrayList<>();
+        ResultsTag results = new ResultsTag();
+        List<ItemTag> item = new ArrayList<>();
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
 
@@ -298,9 +298,9 @@ public class SyncmlParser {
      * @param node - XML node which represents Status
      * @return - Status object
      */
-    private static Status generateStatus(Node node) {
+    private static StatusTag generateStatus(Node node) {
 
-        Status status = new Status();
+        StatusTag status = new StatusTag();
         for (int x = 0; x < node.getChildNodes().getLength(); x++) {
             String nodeName = node.getChildNodes().item(x).getNodeName();
             switch (nodeName) {
@@ -321,17 +321,17 @@ public class SyncmlParser {
                     status.setCommand(command);
                     break;
                 case PluginConstants.SyncML.SYNCML_CHAL:
-                    NodeList chalNodes = node.getChildNodes().item(x).getChildNodes();
+                    NodeList childNodes = node.getChildNodes().item(x).getChildNodes();
                     MetaTag meta = new MetaTag();
-                    ChallengeTag chal = new ChallengeTag();
-                    String format = chalNodes.item(0).getFirstChild().getTextContent();
+                    ChallengeTag challengeTag = new ChallengeTag();
+                    String format = childNodes.item(0).getFirstChild().getTextContent();
                     meta.setFormat(format);
-                    String type = chalNodes.item(0).getFirstChild().getNextSibling().getTextContent();
+                    String type = childNodes.item(0).getFirstChild().getNextSibling().getTextContent();
                     meta.setType(type);
-                    String nonce = chalNodes.item(0).getFirstChild().getNextSibling().getNextSibling().getTextContent();
+                    String nonce = childNodes.item(0).getFirstChild().getNextSibling().getNextSibling().getTextContent();
                     meta.setNextNonce(nonce);
-                    chal.setMeta(meta);
-                    status.setChallenge(chal);
+                    challengeTag.setMeta(meta);
+                    status.setChallenge(challengeTag);
                     break;
                 case PluginConstants.SyncML.SYNCML_DATA:
                     String data = node.getChildNodes().item(x).getTextContent().trim();
@@ -352,11 +352,11 @@ public class SyncmlParser {
      * @param node - XML node which represents Replace
      * @return - Replace object
      */
-    private static Replace generateReplace(Node node) {
+    private static ReplaceTag generateReplace(Node node) {
 
-        Replace replace = new Replace();
+        ReplaceTag replace = new ReplaceTag();
         String commandId = node.getChildNodes().item(0).getTextContent().trim();
-        List<Item> items = new ArrayList<>();
+        List<ItemTag> items = new ArrayList<>();
         for (int i = 0; i < node.getChildNodes().getLength() - 1; i++) {
             items.add(generateItem(node.getChildNodes().item(i + 1)));
         }
@@ -371,8 +371,8 @@ public class SyncmlParser {
      * @param node - XML node which represents Alert
      * @return - Alert object
      */
-    private static Alert generateAlert(Node node) {
-        Alert alert = new Alert();
+    private static AlertTag generateAlert(Node node) {
+        AlertTag alert = new AlertTag();
         String commandID = node.getChildNodes().item(0).getTextContent().trim();
         String data = node.getChildNodes().item(1).getTextContent().trim();
         alert.setCommandId(Integer.valueOf(commandID));
@@ -386,39 +386,41 @@ public class SyncmlParser {
      * @param node - XML node which represents Item
      * @return - Item object
      */
-    private static Item generateItem(Node node) {
-        Item item = new Item();
-        Source source = new Source();
+    private static ItemTag generateItem(Node node) {
+        ItemTag item = new ItemTag();
+        SourceTag source = new SourceTag();
         String data;
         String nodeName;
         String childNodeName;
         String locUri;
         for (int x = 0; x < node.getChildNodes().getLength(); x++) {
-            if (node.getChildNodes().item(x).getNodeName() != null) {
+            Node itemNode;
+            itemNode = node.getChildNodes().item(x);
+            if (itemNode.getNodeName() != null) {
                 nodeName = node.getChildNodes().item(x).getNodeName();
             } else {
-                throw new IllegalFormatCodePointException(2);
+                throw new IllegalStateException();
             }
-            if (nodeName == PluginConstants.SyncML.SYNCML_SOURCE) {
-                if (node.getChildNodes().item(x).getChildNodes().item(x).getNodeName() != null) {
-                    childNodeName = node.getChildNodes().item(x).getChildNodes().item(x).getNodeName();
+            if (PluginConstants.SyncML.SYNCML_SOURCE.equals(nodeName)) {
+                if (itemNode.getChildNodes().item(x).getNodeName() != null) {
+                    childNodeName = itemNode.getChildNodes().item(x).getNodeName();
                 } else {
-                    throw new IllegalFormatCodePointException(2);
+                    throw new IllegalStateException();
                 }
-                if (childNodeName == PluginConstants.SyncML.SYNCML_LOCATION_URI) {
-                    if (node.getChildNodes().item(x).getChildNodes().item(x).getTextContent().trim() != null) {
-                        locUri = node.getChildNodes().item(x).getChildNodes().item(x).getTextContent().trim();
+                if ((PluginConstants.SyncML.SYNCML_LOCATION_URI.equals(childNodeName))) {
+                    if (itemNode.getChildNodes().item(x).getTextContent().trim() != null) {
+                        locUri = itemNode.getChildNodes().item(x).getTextContent().trim();
                     } else {
-                        throw new IllegalFormatCodePointException(2);
+                        throw new IllegalStateException();
                     }
                     source.setLocURI(locUri);
                     item.setSource(source);
                 }
-            } else if (nodeName == PluginConstants.SyncML.SYNCML_DATA) {
-                if (node.getChildNodes().item(x).getTextContent().trim() != null) {
-                    data = node.getChildNodes().item(x).getTextContent().trim();
+            } else if (PluginConstants.SyncML.SYNCML_DATA.equals(nodeName)) {
+                if (itemNode.getTextContent().trim() != null) {
+                    data = itemNode.getTextContent().trim();
                 } else {
-                    throw new IllegalFormatCodePointException(2);
+                    throw new IllegalStateException();
                 }
                 item.setData(data);
             }
@@ -432,8 +434,8 @@ public class SyncmlParser {
      * @param node - XML node which represents Credential
      * @return - Credential object
      */
-    private static Credential generateCredential(Node node) {
-        Credential credential = new Credential();
+    private static CredentialTag generateCredential(Node node) {
+        CredentialTag credential = new CredentialTag();
         MetaTag meta = generateMeta(node.getChildNodes().item(0));
         String data = node.getChildNodes().item(1).getTextContent().trim();
         credential.setMeta(meta);

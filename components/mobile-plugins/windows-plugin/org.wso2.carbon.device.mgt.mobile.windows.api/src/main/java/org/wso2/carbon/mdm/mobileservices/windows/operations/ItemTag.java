@@ -1,25 +1,23 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
 package org.wso2.carbon.mdm.mobileservices.windows.operations;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
@@ -27,16 +25,11 @@ import org.wso2.carbon.mdm.mobileservices.windows.operations.util.Constants;
 /**
  * Represents an items that should be retrieved from the device or a command.
  */
-@ApiModel(value = "Item",
-        description = "This class carries all information related to Syncml Item.")
-public class Item {
-    @ApiModelProperty(name = "target", value = "Target reference value of the Syncml Message(ex:Device).", required = true)
-    Target target;
-    @ApiModelProperty(name = "source", value = "Source reference of the syncml message.(Ex:EMM Server).", required = true)
-    Source source;
-    @ApiModelProperty(name = "data", value = "Content of the syncml message.", required = true)
+public class ItemTag {
+
+    TargetTag target;
+    SourceTag source;
     String data;
-    @ApiModelProperty(name = "meta", value = "Meta data of the syncml messsage.", required = true)
     MetaTag meta;
 
     public MetaTag getMeta() {
@@ -55,19 +48,19 @@ public class Item {
         this.data = data;
     }
 
-    public Source getSource() {
+    public SourceTag getSource() {
         return source;
     }
 
-    public void setSource(Source source) {
+    public void setSource(SourceTag source) {
         this.source = source;
     }
 
-    public Target getTarget() {
+    public TargetTag getTarget() {
         return target;
     }
 
-    public void setTarget(Target target) {
+    public void setTarget(TargetTag target) {
         this.target = target;
     }
 
