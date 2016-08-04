@@ -19,16 +19,11 @@
 package org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl;
 
 import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -39,7 +34,7 @@ public interface RaspberryPiService {
     @Path("device/{deviceId}/bulb")
     @POST
     @Feature(code = "bulb", name = "Bulb On / Off", description = "Switch on/off Raspberry Pi agent's bulb. (On / Off)")
-    @Permission(scope = "raspberrypi_user", roles = {"emm-user"})
+    @Scope(key = "device:raspberrypi:enroll", name = "", description = "")
     Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
     /**
@@ -49,7 +44,7 @@ public interface RaspberryPiService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    @Permission(scope = "raspberrypi_user", roles = {"emm-user"})
+    @Scope(key = "device:raspberrypi:enroll", name = "", description = "")
     Response getRaspberryPiTemperatureStats(@PathParam("deviceId") String deviceId,
                                         @QueryParam("from") long from, @QueryParam("to") long to);
 
@@ -59,7 +54,7 @@ public interface RaspberryPiService {
     @Path("device/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Permission(scope = "raspberrypi_user", roles = {"emm-user"})
+    @Scope(key = "device:raspberrypi:enroll", name = "", description = "")
     Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketch_type") String sketchType);
 
 }

@@ -19,7 +19,7 @@
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl;
 
 import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 
@@ -48,7 +48,7 @@ public interface VirtualFireAlarmService {
      */
     @POST
     @Path("device/{deviceId}/buzz")
-    @Permission(scope = "virtual_firealarm_user", roles = {"emm-user"})
+    @Scope(key = "device:firealarm:enroll", name = "", description = "")
     @Feature(code = "buzz", name = "Buzzer On / Off", description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
     Response switchBuzzer(@PathParam("deviceId") String deviceId,
                              @FormParam("state") String state);
@@ -58,7 +58,7 @@ public interface VirtualFireAlarmService {
      */
     @Path("device/stats/{deviceId}")
     @GET
-    @Permission(scope = "virtual_firealarm_user", roles = {"emm-user"})
+    @Scope(key = "device:firealarm:enroll", name = "", description = "")
     @Consumes("application/json")
     @Produces("application/json")
     Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
@@ -67,7 +67,7 @@ public interface VirtualFireAlarmService {
     @Path("device/download")
     @GET
     @Produces("application/zip")
-    @Permission(scope = "virtual_firealarm_user", roles = {"emm-user"})
+    @Scope(key = "device:firealarm:enroll", name = "", description = "")
     Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketchType") String sketchType);
 
 }

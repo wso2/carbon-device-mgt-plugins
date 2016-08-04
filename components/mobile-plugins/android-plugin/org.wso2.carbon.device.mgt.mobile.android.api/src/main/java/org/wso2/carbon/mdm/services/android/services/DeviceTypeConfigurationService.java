@@ -20,7 +20,7 @@ package org.wso2.carbon.mdm.services.android.services;
 
 import io.swagger.annotations.*;
 import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.bean.AndroidPlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
@@ -81,7 +81,7 @@ public interface DeviceTypeConfigurationService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching Android platform configuration.")
     })
-    @Permission(scope = "configuration:view", roles = {"admin"})
+    @Scope(key = "configuration:read", name = "View configurations", description = "")
     Response getConfiguration(
             @ApiParam(
                     name = "If-Modified-Since",
@@ -131,7 +131,7 @@ public interface DeviceTypeConfigurationService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while modifying Android platform configuration.")
     })
-    @Permission(scope = "configuration:modify", roles = {"admin"})
+    @Scope(key = "configuration:write", name = "Add configurations", description = "")
     Response updateConfiguration(
             @ApiParam(name = "configuration",
                     value = "AndroidPlatformConfiguration")
@@ -179,7 +179,7 @@ public interface DeviceTypeConfigurationService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching Android license configuration.")
     })
-    @Permission(scope = "device:android:enroll", roles = {"admin"})
+    @Scope(key = "device:android:enroll", name = "Enroll Android device", description = "")
     Response getLicense(
             @ApiParam(
                     name = "If-Modified-Since",
