@@ -52,10 +52,12 @@ public class GlobalThrowableMapper implements ExceptionMapper {
             String errorMessage = "Malformed request body.";
             log.error(errorMessage);
             return AndroidDeviceUtils.buildBadRequestException(errorMessage).getResponse();
-
         }
         if (e instanceof NotFoundException) {
             return ((NotFoundException) e).getResponse();
+        }
+        if (e instanceof BadRequestException) {
+            return ((BadRequestException) e).getResponse();
         }
         if (e instanceof UnexpectedServerErrorException) {
             log.error("Unexpected server error", e);
