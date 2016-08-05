@@ -51,7 +51,7 @@ import java.util.List;
 public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminService {
 
     private static final Log log = LogFactory.getLog(DeviceManagementAdminServiceImpl.class);
-    private static final String DATE_FORMAT = "MM-dd-yyyy hh:mm a";
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
 
     @POST
     @Path("/lock-devices")
