@@ -58,6 +58,9 @@ public class GlobalThrowableMapper implements ExceptionMapper {
         if (e instanceof NotFoundException) {
             return ((NotFoundException) e).getResponse();
         }
+        if (e instanceof BadRequestException) {
+            return ((BadRequestException) e).getResponse();
+        }
         if (e instanceof UnexpectedServerErrorException) {
             if (log.isDebugEnabled()) {
                 log.error("Unexpected server error", e);
