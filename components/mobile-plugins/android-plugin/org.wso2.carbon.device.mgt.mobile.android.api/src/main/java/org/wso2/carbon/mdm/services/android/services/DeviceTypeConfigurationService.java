@@ -81,7 +81,7 @@ public interface DeviceTypeConfigurationService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching Android platform configuration.")
     })
-    @Scope(key = "configuration:read", name = "View configurations", description = "")
+    @Scope(key = "configuration:view", name = "View configurations", description = "")
     Response getConfiguration(
             @ApiParam(
                     name = "If-Modified-Since",
@@ -131,7 +131,7 @@ public interface DeviceTypeConfigurationService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while modifying Android platform configuration.")
     })
-    @Scope(key = "configuration:write", name = "Add configurations", description = "")
+    @Scope(key = "configuration:manage", name = "Add configurations", description = "")
     Response updateConfiguration(
             @ApiParam(name = "configuration",
                     value = "AndroidPlatformConfiguration")

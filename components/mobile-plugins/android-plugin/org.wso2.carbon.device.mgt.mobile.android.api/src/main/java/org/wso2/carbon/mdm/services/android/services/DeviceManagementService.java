@@ -329,7 +329,7 @@ public interface DeviceManagementService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while dis-enrolling the device.")
     })
-    @Scope(key = "device:android:enroll", name = "Enroll Android device", description = "")
+    @Scope(key = "device:android:disenroll", name = "Enroll Android device", description = "")
     Response disEnrollDevice(
             @ApiParam(
                     name = "id",
