@@ -23,7 +23,6 @@ import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EventBeanWrapper;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -141,7 +140,6 @@ public interface EventReceiverService {
                     value = "Device Identifier to be need to retrieve events.",
                     required = true)
             @Size(min = 2, max = 45)
-            @Pattern(regexp = "^[A-Za-z0-9]*$")
             @QueryParam("id") String deviceId,
             @ApiParam(
                     name = "from",
@@ -155,7 +153,6 @@ public interface EventReceiverService {
                     name = "type",
                     value = "Type of the Alert to be need to retrieve events.")
             @Size(min = 2, max = 45)
-            @Pattern(regexp = "^[A-Za-z0-9]*$")
             @QueryParam("type") String type,
             @ApiParam(
                     name = "If-Modified-Since",
