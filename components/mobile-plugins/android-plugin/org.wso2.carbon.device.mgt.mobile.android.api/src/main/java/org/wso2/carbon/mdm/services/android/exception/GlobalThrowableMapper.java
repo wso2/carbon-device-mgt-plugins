@@ -50,7 +50,9 @@ public class GlobalThrowableMapper implements ExceptionMapper {
 
         if (e instanceof JsonParseException) {
             String errorMessage = "Malformed request body.";
-            log.error(errorMessage);
+            if (log.isDebugEnabled()) {
+                log.error(errorMessage, e);
+            }
             return AndroidDeviceUtils.buildBadRequestException(errorMessage).getResponse();
         }
         if (e instanceof NotFoundException) {
@@ -60,7 +62,9 @@ public class GlobalThrowableMapper implements ExceptionMapper {
             return ((BadRequestException) e).getResponse();
         }
         if (e instanceof UnexpectedServerErrorException) {
-            log.error("Unexpected server error", e);
+            if (log.isDebugEnabled()) {
+                log.error("Unexpected server error", e);
+            }
             return ((UnexpectedServerErrorException) e).getResponse();
         }
         if (e instanceof ConstraintViolationException) {
@@ -78,7 +82,9 @@ public class GlobalThrowableMapper implements ExceptionMapper {
                     .build();
         }
         if (e instanceof ClientErrorException) {
-            log.error("Client error", e);
+            if (log.isDebugEnabled()) {
+                log.error("Client error", e);
+            }
             return ((ClientErrorException) e).getResponse();
         }
         if (e instanceof AuthenticationException) {
@@ -93,11 +99,15 @@ public class GlobalThrowableMapper implements ExceptionMapper {
                     .build();
         }
         if (e instanceof ForbiddenException) {
-            log.error("Resource forbidden", e);
+            if (log.isDebugEnabled()) {
+                log.error("Resource forbidden", e);
+            }
             return ((ForbiddenException) e).getResponse();
         }
         //unknown exception log and return
-        log.error("An Unknown exception has been captured by global exception mapper.", e);
+        if (log.isDebugEnabled()) {
+            log.error("An Unknown exception has been captured by global exception mapper.", e);
+        }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Content-Type", "application/json")
                 .entity(e500).build();
     }

@@ -21,7 +21,6 @@ package org.wso2.carbon.mdm.services.android.bean.wrapper;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
@@ -33,7 +32,6 @@ public class EventBeanWrapper {
 
     @ApiModelProperty(name = "deviceIdentifier", value = "DeviceIdentifier to be need to retrieve/publish Event.", required = true)
     @Size(min = 2, max = 45)
-    @Pattern(regexp = "^[A-Za-z0-9]*$")
     private String deviceIdentifier;
     @ApiModelProperty(name = "payload", value = "Event payload.", required = true)
     private String payload;

@@ -215,7 +215,6 @@ public class CertificateEnrollmentServiceImpl implements CertificateEnrollmentSe
     private String prepareWapProvisioningXML(String binarySecurityToken, String wapProvisioningFilePath,
                                              String headerBst) throws CertificateGenerationException,
             WAPProvisioningException, WindowsDeviceEnrolmentException {
-
         String rootCertEncodedString;
         String signedCertEncodedString;
         X509Certificate signedCertificate;
@@ -225,11 +224,11 @@ public class CertificateEnrollmentServiceImpl implements CertificateEnrollmentSe
         Base64 base64Encoder = new Base64();
         try {
             rootCACertificate = (X509Certificate) certMgtServiceImpl.getCACertificate();
-            rootCertEncodedString = base64Encoder.encodeToString(rootCACertificate.getEncoded());
+            rootCertEncodedString = base64Encoder.encodeAsString(rootCACertificate.getEncoded());
 
 
             signedCertificate = certMgtServiceImpl.getSignedCertificateFromCSR(binarySecurityToken);
-            signedCertEncodedString = base64Encoder.encodeToString(signedCertificate.getEncoded());
+            signedCertEncodedString = base64Encoder.encodeAsString(signedCertificate.getEncoded());
 
             DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder;
@@ -242,7 +241,7 @@ public class CertificateEnrollmentServiceImpl implements CertificateEnrollmentSe
             //Adding SHA1 CA certificate finger print to wap-provisioning xml.
             caCertificatePosition.getParentNode().getAttributes().getNamedItem(PluginConstants.
                     CertificateEnrolment.TYPE).setTextContent(String.valueOf(
-                    DigestUtils.sha256Hex(rootCACertificate.getEncoded())).toUpperCase());
+                    DigestUtils.sha1Hex(rootCACertificate.getEncoded())).toUpperCase());
             //Adding encoded CA certificate to wap-provisioning file after removing new line
             // characters.
             NamedNodeMap rootCertAttributes = caCertificatePosition.getAttributes();
@@ -261,7 +260,7 @@ public class CertificateEnrollmentServiceImpl implements CertificateEnrollmentSe
             //Adding SHA1 signed certificate finger print to wap-provisioning xml.
             signedCertificatePosition.getParentNode().getAttributes().getNamedItem(PluginConstants.
                     CertificateEnrolment.TYPE).setTextContent(String.valueOf(
-                    DigestUtils.sha256Hex(signedCertificate.getEncoded())).toUpperCase());
+                    DigestUtils.sha1Hex(signedCertificate.getEncoded())).toUpperCase());
 
             //Adding encoded signed certificate to wap-provisioning file after removing new line
             // characters.
@@ -326,7 +325,7 @@ public class CertificateEnrollmentServiceImpl implements CertificateEnrollmentSe
         } catch (KeystoreException e) {
             throw new CertificateGenerationException("CA certificate cannot be generated.", e);
         }
-        return base64Encoder.encodeToString(provisioningXmlString.getBytes());
+        return base64Encoder.encodeAsString(provisioningXmlString.getBytes());
     }
 
     /**
