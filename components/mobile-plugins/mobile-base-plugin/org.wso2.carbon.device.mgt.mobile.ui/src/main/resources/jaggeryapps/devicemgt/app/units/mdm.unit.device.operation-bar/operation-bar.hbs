@@ -15,10 +15,14 @@
   specific language governing permissions and limitations
   under the License.
 }}
-<div class="wr-operations" style="height: 87px;"></div>
+{{#zone "content"}}
+    <div id = "operations-mod">
+        {{unit "mdm.unit.device.operation-mod"}}
+    </div>
+{{/zone}}
 
 {{#zone "bottomJs"}}
     <script id="operations-bar" src="{{@unit.publicUri}}/templates/operations.hbs"
             type="text/x-handlebars-template"></script>
-	{{js "js/operation-bar.js"}}
+    {{js "js/operation-bar.js"}}
 {{/zone}}
