@@ -16,17 +16,20 @@
  * under the License.
  */
 
-function onRequest(context) {
-    var DTYPE_CONF_DEVICE_TYPE_KEY = "deviceType";
-    var DTYPE_CONF_DEVICE_TYPE_LABEL_KEY = "label";
+function onRequest() {
+    var log = new Log("/app/units/mdm.unit.policy.create");
 
-    var utility = require("/app/modules/utility.js").utility;
+    var CONF_DEVICE_TYPE_KEY = "deviceType";
+    var CONF_DEVICE_TYPE_LABEL_KEY = "label";
+
+    var utility = require("/app/modules/utility.js")["utility"];
     var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
 
-    var types = {};
-    types["types"] = [];
+    var viewModelData = {};
+    viewModelData["types"] = [];
     var typesListResponse = userModule.getPlatforms();
     var deviceTypes = typesListResponse["content"]["deviceTypes"];
+
     if (typesListResponse["status"] == "success") {
         for (var i = 0; i < deviceTypes.length; i++) {
             var content = {};
@@ -34,16 +37,25 @@ function onRequest(context) {
             content["name"] = deviceType;
             var configs = utility.getDeviceTypeConfig(deviceType);
             var deviceTypeLabel = deviceType;
-            if (configs && configs[DTYPE_CONF_DEVICE_TYPE_KEY][DTYPE_CONF_DEVICE_TYPE_LABEL_KEY]) {
-                deviceTypeLabel = configs[DTYPE_CONF_DEVICE_TYPE_KEY][DTYPE_CONF_DEVICE_TYPE_LABEL_KEY];
+            if (configs && configs[CONF_DEVICE_TYPE_KEY][CONF_DEVICE_TYPE_LABEL_KEY]) {
+                deviceTypeLabel = configs[CONF_DEVICE_TYPE_KEY][CONF_DEVICE_TYPE_LABEL_KEY];
             }
             var policyWizard = new File("/app/units/" + utility.getTenantedDeviceUnitName(deviceType, "policy-wizard"));
+
+            log.error("/app/units/" + utility.getTenantedDeviceUnitName(deviceType, "policy-wizard"));
+
             if (policyWizard.isExists()) {
                 content["icon"] = utility.getDeviceThumb(deviceType);
                 content["label"] = deviceTypeLabel;
-                types["types"].push(content);
+                viewModelData["types"].push(content);
             }
         }
     }
-    return types;
+
+    var result = userModule.getRolesByUserStore();
+    if (result["status"] == "success") {
+        viewModelData["roles"] = result["content"];
+    }
+
+    return viewModelData;
 }
