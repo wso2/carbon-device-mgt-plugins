@@ -290,7 +290,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                         "carries the id '" + id + "' has not been updated").build();
             }
         } catch (DeviceManagementException e) {
-            String msg = "Error occurred while modifying enrollment of the Android device that carries the id '" +
+            msg = "Error occurred while modifying enrollment of the Android device that carries the id '" +
                     id + "'";
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
