@@ -25,6 +25,6 @@ function onRequest(context) {
     viewModel.permissions = userModule.getUIPermissions();
     new Log().debug("## Permissions : " + stringify(userModule.getUIPermissions()));
     //TODO: Move enrollment URL into app-conf.json
-    viewModel.enrollmentURL = mdmProps.enrollmentUrl;
+    viewModel.enrollmentURL = mdmProps.generalConfig.host +  mdmProps.enrollmentDir;
     return viewModel;
 }
