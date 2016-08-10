@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -22,6 +22,8 @@ var stepForwardFrom = {};
 var stepBackFrom = {};
 var policy = {};
 var configuredOperations = [];
+
+var base_api_url = "/api/device-mgt/v1.0";
 
 // Constants to define platform types available
 var platformTypeConstants = {
@@ -102,8 +104,7 @@ var updateGroupedInputVisibility = function (domElement) {
 
 skipStep["policy-platform"] = function (policyPayloadObj) {
     policy["name"] = policyPayloadObj["policyName"];
-    policy["platform"] = policyPayloadObj["profile"]["deviceType"]["name"];
-    policy["platformId"] = policyPayloadObj["profile"]["deviceType"]["id"];
+    policy["platform"] = policyPayloadObj["profile"]["deviceType"];
     var userRoleInput = $("#user-roles-input");
     var ownershipInput = $("#ownership-input");
     var userInput = $("#users-select-field");
@@ -1788,7 +1789,7 @@ var updatePolicy = function (policy, state) {
         if (policy["profile"].hasOwnProperty(key)) {
             profilePayloads.push({
                 "featureCode": key,
-                "deviceTypeId": policy["platformId"],
+                "deviceType": policy["platform"],
                 "content": policy["profile"][key]
             });
         }
@@ -1800,9 +1801,7 @@ var updatePolicy = function (policy, state) {
         "ownershipType": policy["selectedOwnership"],
         "profile": {
             "profileName": policy["policyName"],
-            "deviceType": {
-                "id": policy["platformId"]
-            },
+            "deviceType": policy["platform"],
             "profileFeaturesList": profilePayloads
         }
     };
@@ -1815,7 +1814,7 @@ var updatePolicy = function (policy, state) {
         payload["users"] = [];
         payload["roles"] = [];
     }
-    var serviceURL = "/devicemgt_admin/policies/" + getParameterByName("id");
+    var serviceURL = base_api_url + "/policies/" + getParameterByName("id");
     invokerUtil.put(
         serviceURL,
         payload,
@@ -1824,7 +1823,7 @@ var updatePolicy = function (policy, state) {
             if (state == "save") {
                 var policyList = [];
                 policyList.push(getParameterByName("id"));
-                serviceURL = "/devicemgt_admin/policies/inactivate";
+                serviceURL = base_api_url + "/policies/deactivate-policy";
                 invokerUtil.put(
                     serviceURL,
                     policyList,
@@ -1841,7 +1840,7 @@ var updatePolicy = function (policy, state) {
             } else if (state == "publish") {
                 var policyList = [];
                 policyList.push(getParameterByName("id"));
-                serviceURL = "/devicemgt_admin/policies/activate";
+                serviceURL = base_api_url + "/policies/activate-policy";
                 invokerUtil.put(
                     serviceURL,
                     policyList,
@@ -1882,6 +1881,10 @@ var showAdvanceOperation = function (operation, button) {
  */
 var slideDownPaneAgainstValueSet = function (selectElement, paneID, valueSet) {
     var selectedValueOnChange = $(selectElement).find("option:selected").val();
+    if ($(selectElement).is("input:checkbox")) {
+        selectedValueOnChange = $(selectElement).is(":checked").toString();
+    }
+
     var i, slideDownVotes = 0;
     for (i = 0; i < valueSet.length; i++) {
         if (selectedValueOnChange == valueSet[i]) {
@@ -1979,6 +1982,36 @@ var showHideHelpText = function (addFormContainer) {
     }
 };
 
+/**
+ * This method will display appropriate fields based on wifi type
+ * @param {object} wifi type select object
+ */
+var changeAndroidWifiPolicy = function (select) {
+    slideDownPaneAgainstValueSet(select, 'control-wifi-password', ['wep', 'wpa', '802eap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-eap', ['802eap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-phase2', ['802eap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-identity', ['802eap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-anoidentity', ['802eap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-cacert', ['802eap']);
+};
+
+/**
+ * This method will display appropriate fields based on wifi EAP type
+ * @param {object} wifi eap select object
+ * @param {object} wifi type select object
+ */
+var changeAndroidWifiPolicyEAP = function (select, superSelect) {
+    slideDownPaneAgainstValueSet(select, 'control-wifi-password', ['peap', 'ttls', 'pwd' , 'fast', 'leap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-phase2', ['peap', 'ttls', 'fast']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-provisioning', ['fast']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-identity', ['peap', 'tls', 'ttls', 'pwd', 'fast', 'leap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-anoidentity', ['peap', 'ttls']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-cacert', ['peap', 'tls', 'ttls']);
+    if (superSelect.value != '802eap') {
+        changeAndroidWifiPolicy(superSelect);
+    }
+};
+
 // End of functions related to grid-input-view
 
 /**
@@ -2000,17 +2033,17 @@ $(document).ready(function () {
 
     var policyPayloadObj;
     invokerUtil.get(
-            "/devicemgt_admin/policies/" + getParameterByName("id"),
+            base_api_url + "/policies/" + getParameterByName("id"),
         // on success
-        function (data) {
-            // console.log("success: " + JSON.stringify(data));
-            data = JSON.parse(data);
-            policyPayloadObj = data["responseContent"];
-            skipStep["policy-platform"](policyPayloadObj);
+        function (data, textStatus, jqXHR) {
+            if (jqXHR.status == 200 && data) {
+                policyPayloadObj = JSON.parse(data);
+                skipStep["policy-platform"](policyPayloadObj);
+            }
         },
         // on error
-        function (data) {
-            console.log(data);
+        function (jqXHR) {
+            console.log(jqXHR);
             // should be redirected to an error page
         }
     );
