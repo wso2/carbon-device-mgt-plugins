@@ -260,7 +260,16 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @Override
     public Response modifyEnrollment(@PathParam("id") String id, @Valid AndroidDevice androidDevice) {
         Device device = new Device();
+        String msg = "";
         device.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+        if(androidDevice.getEnrolmentInfo().getDateOfEnrolment() <= 0){
+            msg = "Invalid Enrollment date.";
+            return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+        }
+        if(androidDevice.getEnrolmentInfo().getDateOfLastUpdate() <= 0){
+            msg = "Invalid Last Updated date.";
+            return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+        }
         device.setEnrolmentInfo(androidDevice.getEnrolmentInfo());
         device.getEnrolmentInfo().setOwner(AndroidAPIUtils.getAuthenticatedUser());
         device.setDeviceInfo(androidDevice.getDeviceInfo());
