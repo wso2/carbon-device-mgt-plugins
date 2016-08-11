@@ -172,7 +172,7 @@
                                     org.igniterealtime.smack.wso2:smackx:${smackx.wso2.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.oauth.stub:${carbon.identity.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.oauth.stub:${identity.inbound.auth.oauth.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>
