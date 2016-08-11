@@ -76,6 +76,9 @@
 {{/zone}}
 
 {{#zone "content"}}
+    {{#equal isUpdated true}}
+        <input type="hidden" id="is-updated" value="UPDATED">
+    {{/equal}}
     {{#equal noPolicy true}}
         <div id="ast-container" class="ast-container list-view">
             <div class="ctrl-info-panel col-centered text-center wr-login">
@@ -167,79 +170,79 @@
             </thead>
 
             <tbody>
-                {{#each policyListToView}}
-                    <tr data-type="selectable" data-id="{{id}}" data-status="{{status}}">
-                        <td class="remove-padding icon-only content-fill viewEnabledIcon"
-                            data-url="{{@app.context}}/policy/view?id={{id}}" data-id="{{id}}">
-                            <div class="thumbnail icon">
-                                <img src="{{icon}}"/>
-                            </div>
-                        </td>
-                        <td class="fade-edge"
-                            data-search="{{name}}"
-                            data-display="{{name}}">
-                            <h4>{{name}}</h4>
-                            <div>({{platform}})</div>
-                            {{#equal status "Active/Updated"}}
-                                <span><i class="fw fw-warning icon-success"></i> Active/Updated</span>
-                            {{/equal}}
-                            {{#equal status "Active"}}
-                                <span><i class="fw fw-ok icon-success"></i> Active</span>
-                            {{/equal}}
-                            {{#equal status "Inactive/Updated"}}
-                                <span><i class="fw fw-warning icon-warning"></i> Inactive/Updated</span>
-                            {{/equal}}
-                            {{#equal status "Inactive"}}
-                                <span><i class="fw fw-error icon-danger"></i> Inactive</span>
-                            {{/equal}}
-                        </td>
-                        <td class="fade-edge remove-padding-top"
-                            data-search="{{platform}}"
-                            data-display="{{platform}}">
-                        </td>
-                        <td class="fade-edge remove-padding-top"
-                            data-search="{{ownershipType}}"
-                            data-display="{{ownershipType}}"
-                            data-grid-label="Ownership">
-                            {{ownershipType}}
-                        </td>
-                        <td id="policy-roles" class="fade-edge remove-padding-top"
-                            data-search="{{roles}}"
-                            data-display="{{roles}}"
-                            data-grid-label="Role(s)">
-                            {{roles}}
-                        </td>
-                        <td id="policy-users" class="fade-edge remove-padding-top"
-                            data-search="{{users}}"
-                            data-display="{{users}}"
-                            data-grid-label="User(s)">
-                            {{users}}
-                        </td>
-                        <td class="fade-edge remove-padding-top"
-                            data-search="{{compliance}}"
-                            data-display="{{compliance}}"
-                            data-grid-label="Compliance">
-                            {{compliance}}
-                        </td>
-                        <td id="policy-status" class="fade-edge remove-padding-top"
-                            data-search="{{status}}"
-                            data-display="{{status}}">
-                        </td>
-                        <td class="text-right content-fill text-left-on-grid-view no-wrap">
-                            <a href="{{@app.context}}/policy/edit?id={{id}}"
-                               data-id="{{id}}"
-                                data-click-event="remove-form"
-                                class="btn padding-reduce-on-grid-view policy-update-link">
+            {{#each policyListToView}}
+                <tr data-type="selectable" data-id="{{id}}" data-status="{{status}}">
+                    <td class="remove-padding icon-only content-fill viewEnabledIcon"
+                        data-url="{{@app.context}}/policy/view?id={{id}}" data-id="{{id}}">
+                        <div class="thumbnail icon">
+                            <img src="{{icon}}"/>
+                        </div>
+                    </td>
+                    <td class="fade-edge"
+                        data-search="{{name}}"
+                        data-display="{{name}}">
+                        <h4>{{name}}</h4>
+                        <div>({{platform}})</div>
+                        {{#equal status "Active/Updated"}}
+                            <span><i class="fw fw-warning icon-success"></i> Active/Updated</span>
+                        {{/equal}}
+                        {{#equal status "Active"}}
+                            <span><i class="fw fw-ok icon-success"></i> Active</span>
+                        {{/equal}}
+                        {{#equal status "Inactive/Updated"}}
+                            <span><i class="fw fw-warning icon-warning"></i> Inactive/Updated</span>
+                        {{/equal}}
+                        {{#equal status "Inactive"}}
+                            <span><i class="fw fw-error icon-danger"></i> Inactive</span>
+                        {{/equal}}
+                    </td>
+                    <td class="fade-edge remove-padding-top"
+                        data-search="{{platform}}"
+                        data-display="{{platform}}">
+                    </td>
+                    <td class="fade-edge remove-padding-top"
+                        data-search="{{ownershipType}}"
+                        data-display="{{ownershipType}}"
+                        data-grid-label="Ownership">
+                        {{ownershipType}}
+                    </td>
+                    <td id="policy-roles" class="fade-edge remove-padding-top"
+                        data-search="{{roles}}"
+                        data-display="{{roles}}"
+                        data-grid-label="Role(s)">
+                        {{roles}}
+                    </td>
+                    <td id="policy-users" class="fade-edge remove-padding-top"
+                        data-search="{{users}}"
+                        data-display="{{users}}"
+                        data-grid-label="User(s)">
+                        {{users}}
+                    </td>
+                    <td class="fade-edge remove-padding-top"
+                        data-search="{{compliance}}"
+                        data-display="{{compliance}}"
+                        data-grid-label="Compliance">
+                        {{compliance}}
+                    </td>
+                    <td id="policy-status" class="fade-edge remove-padding-top"
+                        data-search="{{status}}"
+                        data-display="{{status}}">
+                    </td>
+                    <td class="text-right content-fill text-left-on-grid-view no-wrap">
+                        <a href="{{@app.context}}/policy/edit?id={{id}}"
+                           data-id="{{id}}"
+                           data-click-event="remove-form"
+                           class="btn padding-reduce-on-grid-view policy-update-link">
                                 <span class="fw-stack">
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                     <i class="fw fw-edit fw-stack-1x"></i>
                                 </span>
-                                <span class="hidden-xs hidden-on-grid-view">Re-Configure</span>
-                            </a>
-                        </td>
-                    </tr>
-                {{/each}}
-                <br class="c-both"/>
+                            <span class="hidden-xs hidden-on-grid-view">Re-Configure</span>
+                        </a>
+                    </td>
+                </tr>
+            {{/each}}
+            <br class="c-both"/>
             </tbody>
         </table>
     {{/equal}}
