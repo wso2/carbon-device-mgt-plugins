@@ -54,4 +54,20 @@
             <Property Name="server.name">localhost</Property>
         </Properties-->
     </PushNotificationConfiguration>
+    <CertificateKeystore>
+        <!-- Certificate Keystore file location-->
+        <CertificateKeystoreLocation>${carbon.home}/repository/resources/security/wso2certs.jks</CertificateKeystoreLocation>
+        <!-- Certificate Keystore type (JKS/PKCS12 etc.)-->
+        <CertificateKeystoreType>JKS</CertificateKeystoreType>
+        <!-- Certificate Keystore password-->
+        <CertificateKeystorePassword>wso2carbon</CertificateKeystorePassword>
+        <!-- Certificate authority certificate alias -->
+        <CACertAlias>cacert</CACertAlias>
+        <!-- Certificate authority private key password -->
+        <CAPrivateKeyPassword>cacert</CAPrivateKeyPassword>
+        <!-- Registration authority certificate alias -->
+        <RACertAlias>racert</RACertAlias>
+        <!-- Registration authority private key password -->
+        <RAPrivateKeyPassword>racert</RAPrivateKeyPassword>
+    </CertificateKeystore>
 </DeviceManagementConfiguration>

@@ -22,8 +22,11 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
-import org.wso2.carbon.certificate.mgt.core.util.ConfigurationUtil;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.CertificateKeystoreConfig;
+import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.VirtualFirealarmManagementDataHolder;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -46,11 +49,11 @@ import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
-
 public class VirtualFirealarmSecurityManager {
     private static final Log log = LogFactory.getLog(VirtualFirealarmSecurityManager.class);
 
     private static PrivateKey serverPrivateKey;
+    private static CertificateKeystoreConfig certificateKeystoreConfig;
     private static final String SIGNATURE_ALG = "SHA1withRSA";
     private static final String CIPHER_PADDING = "RSA/ECB/PKCS1Padding";
 
@@ -58,26 +61,34 @@ public class VirtualFirealarmSecurityManager {
 
     }
 
-    public static void initVerificationManager() {
-        serverPrivateKey = retrievePrivateKey(ConfigurationUtil.CA_CERT_ALIAS,
-                                              ConfigurationUtil.KEYSTORE_CA_CERT_PRIV_PASSWORD);
+    private static CertificateKeystoreConfig getCertKeyStoreConfig() {
+        if (certificateKeystoreConfig == null) {
+            DeviceManagementConfiguration deviceManagementConfiguration = VirtualFirealarmManagementDataHolder.getInstance().
+                    getDeviceTypeConfigService().getConfiguration(
+                    VirtualFireAlarmConstants.DEVICE_TYPE,
+                    VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
+            certificateKeystoreConfig = deviceManagementConfiguration.getCertificateKeystoreConfig();
+        }
+        return certificateKeystoreConfig;
     }
 
-    public static PrivateKey retrievePrivateKey(String alias, String password){
+    public static void initVerificationManager() {
+        serverPrivateKey = retrievePrivateKey();
+    }
+
+    public static PrivateKey retrievePrivateKey() {
         PrivateKey privateKey = null;
         InputStream inputStream = null;
         KeyStore keyStore;
-
+        CertificateKeystoreConfig certificateKeystoreConfig = getCertKeyStoreConfig();
         try {
-            keyStore = KeyStore.getInstance(ConfigurationUtil.getConfigEntry(ConfigurationUtil.CERTIFICATE_KEYSTORE));
-            inputStream = new FileInputStream(ConfigurationUtil.getConfigEntry(
-                    ConfigurationUtil.PATH_CERTIFICATE_KEYSTORE));
+            keyStore = KeyStore.getInstance(certificateKeystoreConfig.getCertificateKeystoreType());
+            inputStream = new FileInputStream(certificateKeystoreConfig.getCertificateKeystoreLocation());
 
-            keyStore.load(inputStream, ConfigurationUtil.getConfigEntry(ConfigurationUtil.CERTIFICATE_KEYSTORE_PASSWORD)
-                    .toCharArray());
+            keyStore.load(inputStream, certificateKeystoreConfig.getCertificateKeystorePassword().toCharArray());
 
-            privateKey = (PrivateKey) (keyStore.getKey(ConfigurationUtil.getConfigEntry(alias),
-                                                       ConfigurationUtil.getConfigEntry(password).toCharArray()));
+            privateKey = (PrivateKey) (keyStore.getKey(certificateKeystoreConfig.getCACertAlias(),
+                                                       certificateKeystoreConfig.getCAPrivateKeyPassword().toCharArray()));
 
         } catch (KeyStoreException e) {
             String errorMsg = "Could not load KeyStore of given type in [certificate-config.xml] file." ;
@@ -93,9 +104,6 @@ public class VirtualFirealarmSecurityManager {
             log.error(errorMsg, e);
         } catch (IOException e) {
             String errorMsg = "Input output issue occurred when loading KeyStore";
-            log.error(errorMsg, e);
-        } catch (KeystoreException e) {
-            String errorMsg = "An error occurred whilst trying load Configs for KeyStoreReader";
             log.error(errorMsg, e);
         } catch (UnrecoverableKeyException e) {
             String errorMsg = "Key is unrecoverable when retrieving CA private key";

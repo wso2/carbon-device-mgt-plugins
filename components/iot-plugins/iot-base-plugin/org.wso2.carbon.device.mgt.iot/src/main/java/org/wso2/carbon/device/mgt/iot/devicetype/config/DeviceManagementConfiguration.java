@@ -30,6 +30,7 @@ public class DeviceManagementConfiguration {
     private DeviceManagementConfigRepository deviceManagementConfigRepository;
     private PushNotificationConfig pushNotificationConfig;
     private String deviceType;
+    private CertificateKeystoreConfig certificateKeystoreConfig;
 
     private static final Log log = LogFactory.getLog(DeviceManagementConfiguration.class);
 
@@ -63,4 +64,13 @@ public class DeviceManagementConfiguration {
         this.pushNotificationConfig = pushNotificationConfig;
     }
 
+    @XmlElement(name = "CertificateKeystore", required = false)
+    public CertificateKeystoreConfig getCertificateKeystoreConfig() {
+        return certificateKeystoreConfig;
+    }
+
+    public void setCertificateKeystoreConfig(
+            CertificateKeystoreConfig certificateKeystoreConfig) {
+        this.certificateKeystoreConfig = certificateKeystoreConfig;
+    }
 }
