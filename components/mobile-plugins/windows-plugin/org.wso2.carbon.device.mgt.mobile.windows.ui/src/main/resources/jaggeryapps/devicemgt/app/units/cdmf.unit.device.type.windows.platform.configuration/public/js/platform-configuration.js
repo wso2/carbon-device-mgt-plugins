@@ -18,8 +18,6 @@
 
 // Constants to define platform types available
 var platformTypeConstants = {
-    "ANDROID": "android",
-    "IOS": "ios",
     "WINDOWS": "windows"
 };
 
@@ -73,9 +71,6 @@ function promptErrorPolicyPlatform(errorMsg) {
 }
 
 $(document).ready(function () {
-
-    var platformsSupported = $("#typeDiv").attr("typeData");
-    $("#gcm-inputs").hide();
     tinymce.init({
         selector: "textarea",
         height:500,
@@ -89,13 +84,11 @@ $(document).ready(function () {
         toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
     });
 
-    var windowsConfigAPI = "/api/device-mgt/windows/v1.0/configuration";
+    var windowsConfigAPI = "/api/device-mgt/windows/v1.0/services/configuration";
 
     invokerUtil.get(
         windowsConfigAPI,
-        function (data, textStatus, jqXHR) {
-            console.log(jqXHR);
-            console.log(data);
+        function (data) {
             data = JSON.parse(data);
             if (data != null && data.configuration != null) {
                 for (var i = 0; i < data.configuration.length; i++) {
@@ -156,7 +149,7 @@ $(document).ready(function () {
     $("button#save-windows-btn").click(function () {
 
         var notifierFrequency = $("#windows-config-notifier-frequency").val();
-        var windowsLicense = tinymce.get('windows-eula').getContent();
+        var windowsLicense = tinyMCE.activeEditor.getContent();
 
         if (!notifierFrequency) {
             $(errorMsgWindows).text("Polling Interval is a required field. It cannot be empty.");

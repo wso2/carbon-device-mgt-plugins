@@ -161,7 +161,6 @@ $(document).ready(function () {
         var gcmAPIKey = $("input#android-config-gcm-api-key").val();
         var gcmSenderId = $("input#android-config-gcm-sender-id").val();
         var androidLicense = tinyMCE.activeEditor.getContent();
-        alert(androidLicense);
         var errorMsgWrapper = "#android-config-error-msg";
         var errorMsg = "#android-config-error-msg span";
         if (notifierType == notifierTypeConstants["LOCAL"] && !notifierFrequency) {
