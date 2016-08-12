@@ -20,6 +20,8 @@ package org.wso2.carbon.mdm.mobileservices.windows.services.configurationmgtserv
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
@@ -40,6 +42,10 @@ import java.util.List;
  * Windows Platform Configuration REST-API implementation.
  * All end points supports JSON, XMl with content negotiation.
  */
+@API(name = "Windows Configuration Management", version = "1.0.0",
+     context = "api/device-mgt/windows/v1.0/configuration",
+     tags = {"windows"})
+
 @WebService
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
@@ -55,6 +61,7 @@ public class ConfigurationMgtService {
      * @throws WindowsConfigurationException
      */
     @POST
+    @Scope(key = "configuration:manage", name = "Add configurations", description = "")
     public Message ConfigureSettings(PlatformConfiguration configuration) throws WindowsConfigurationException {
         Message responseMsg = new Message();
         ConfigurationEntry licenseEntry = null;
@@ -106,6 +113,7 @@ public class ConfigurationMgtService {
      * @throws WindowsConfigurationException
      */
     @GET
+    @Scope(key = "configuration:view", name = "View configurations", description = "")
     public PlatformConfiguration getConfiguration() throws WindowsConfigurationException {
         String msg;
         PlatformConfiguration tenantConfiguration;
@@ -148,6 +156,7 @@ public class ConfigurationMgtService {
      * @throws WindowsConfigurationException
      */
     @PUT
+    @Scope(key = "configuration:manage", name = "Add configurations", description = "")
     public Message updateConfiguration(PlatformConfiguration configuration) throws WindowsConfigurationException {
         String message;
         Message responseMsg = new Message();
