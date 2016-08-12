@@ -202,6 +202,6 @@
           class="org.wso2.carbon.mdm.mobileservices.windows.services.policymgtservice.PolicyMgtService"/>
     <bean id="errorHandler" class="org.wso2.carbon.mdm.mobileservices.windows.common.util.ErrorHandler"/>
     <bean id="deviceMgtServiceBean"
-          class="org.wso2.carbon.mdm.mobileservices.windows.services.devicemgtservice.DeviceManagementService"/>
+          class="org.wso2.carbon.mdm.mobileservices.windows.services.devicemgtservice.impl.DeviceManagementServiceImpl"/>
 </beans>
 
