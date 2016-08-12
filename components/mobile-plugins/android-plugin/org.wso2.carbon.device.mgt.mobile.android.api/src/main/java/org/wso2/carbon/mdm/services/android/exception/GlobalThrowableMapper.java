@@ -50,32 +50,41 @@ public class GlobalThrowableMapper implements ExceptionMapper {
 
         if (e instanceof JsonParseException) {
             String errorMessage = "Malformed request body.";
-            log.error(errorMessage);
+            if (log.isDebugEnabled()) {
+                log.error(errorMessage, e);
+            }
             return AndroidDeviceUtils.buildBadRequestException(errorMessage).getResponse();
-
         }
         if (e instanceof NotFoundException) {
             return ((NotFoundException) e).getResponse();
         }
-        if (e instanceof ConstraintViolationException) {
-            log.error("Constraint violation", e);
-            return Response.status(Response.Status.BAD_REQUEST).header("Content-Type", "application/json")
-                    .entity(400l).build();
+        if (e instanceof BadRequestException) {
+            return ((BadRequestException) e).getResponse();
         }
         if (e instanceof UnexpectedServerErrorException) {
-            log.error("Unexpected server error", e);
+            if (log.isDebugEnabled()) {
+                log.error("Unexpected server error", e);
+            }
             return ((UnexpectedServerErrorException) e).getResponse();
         }
         if (e instanceof ConstraintViolationException) {
             return ((ParameterValidationException) e).getResponse();
         }
         if (e instanceof IllegalArgumentException) {
-            log.error("Illegal exception.", e);
-            return Response.status(Response.Status.BAD_REQUEST).header("Content-Type", "application/json")
-                    .entity(400l).build();
+            ErrorDTO errorDetail = new ErrorDTO();
+            errorDetail.setCode((long) 400);
+            errorDetail.setMoreInfo("");
+            errorDetail.setMessage("");
+            errorDetail.setDescription(e.getMessage());
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(errorDetail)
+                    .build();
         }
         if (e instanceof ClientErrorException) {
-            log.error("Client error", e);
+            if (log.isDebugEnabled()) {
+                log.error("Client error", e);
+            }
             return ((ClientErrorException) e).getResponse();
         }
         if (e instanceof AuthenticationException) {
@@ -90,11 +99,15 @@ public class GlobalThrowableMapper implements ExceptionMapper {
                     .build();
         }
         if (e instanceof ForbiddenException) {
-            log.error("Resource forbidden", e);
+            if (log.isDebugEnabled()) {
+                log.error("Resource forbidden", e);
+            }
             return ((ForbiddenException) e).getResponse();
         }
         //unknown exception log and return
-        log.error("An Unknown exception has been captured by global exception mapper.", e);
+        if (log.isDebugEnabled()) {
+            log.error("An Unknown exception has been captured by global exception mapper.", e);
+        }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).header("Content-Type", "application/json")
                 .entity(e500).build();
     }

@@ -40,6 +40,13 @@
     </Permission>
 
     <Permission>
+        <name>Modify Tenant configuration</name>
+        <path>/device-mgt/admin/platform-configs/add</path>
+        <url>/configuration</url>
+        <method>PUT</method>
+    </Permission>
+
+    <Permission>
         <name>Add Tenant configuration</name>
         <path>/device-mgt/admin/platform-configs/add</path>
         <url>/configuration</url>

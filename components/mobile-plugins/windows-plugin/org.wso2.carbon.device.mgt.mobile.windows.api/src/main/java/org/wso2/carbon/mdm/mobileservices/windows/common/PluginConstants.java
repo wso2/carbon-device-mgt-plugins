@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -28,11 +28,9 @@ public final class PluginConstants {
     public static final String DISCOVERY_SERVICE_ENDPOINT =
             "org.wso2.carbon.mdm.mobileservices.windows.services.discovery.DiscoveryService";
     public static final String CERTIFICATE_ENROLLMENT_SERVICE_ENDPOINT =
-            "org.wso2.carbon.mdm.mobileservices.windows.services.wstep" +
-                    ".CertificateEnrollmentService";
+            "org.wso2.carbon.mdm.mobileservices.windows.services.wstep.CertificateEnrollmentService";
     public static final String CERTIFICATE_ENROLLMENT_POLICY_SERVICE_ENDPOINT =
-            "org.wso2.carbon.mdm.mobileservices.windows.services.xcep" +
-                    ".CertificateEnrollmentPolicyService";
+            "org.wso2.carbon.mdm.mobileservices.windows.services.xcep.CertificateEnrollmentPolicyService";
 
     //Services' target namespaces
     public static final String DISCOVERY_SERVICE_TARGET_NAMESPACE =
@@ -60,11 +58,11 @@ public final class PluginConstants {
 
     //Servlet Context attributes names
     public static final String CONTEXT_WAP_PROVISIONING_FILE = "WAP_PROVISIONING_FILE";
-    public static final String WINDOWS_PLUGIN_PROPERTIES = "WINDOWS_PLUGIN_PROPERTIES";
 
     //Message handler constants
     public static final String CONTENT_LENGTH = "Content-Length";
     public static final String SECURITY = "Security";
+    public static final String TO = "To";
     public static final String CXF_REQUEST_URI = "org.apache.cxf.request.uri";
 
     //Web services media types
@@ -78,20 +76,16 @@ public final class PluginConstants {
             throw new AssertionError();
         }
 
-        public static final String ENROLL_SUBDOMAIN = "https://EnterpriseEnrollment.";
+        public static final String DEVICE_ENROLLMENT_SUBDOMAIN = "https://EnterpriseEnrollment.";
         public static final String CERTIFICATE_ENROLLMENT_POLICY_SERVICE_URL =
-                "/ENROLLMENTSERVER/PolicyEnrollmentWebservice" +
-                        ".svc";
+                "/ENROLLMENTSERVER/PolicyEnrollmentWebservice.svc";
         public static final String CERTIFICATE_ENROLLMENT_SERVICE_URL =
-                "/ENROLLMENTSERVER/DeviceEnrollmentWebservice" +
-                        ".svc";
+                "/ENROLLMENTSERVER/DeviceEnrollmentWebservice.svc";
         public static final String ONPREMISE_CERTIFICATE_ENROLLMENT_POLICY =
-                "/ENROLLMENTSERVER/ONPREMISE/" +
-                        "PolicyEnrollmentWebservice.svc";
+                "/ENROLLMENTSERVER/ONPREMISE/PolicyEnrollmentWebservice.svc";
         public static final String ONPREMISE_CERTIFICATE_ENROLLMENT_SERVICE_URL =
                 "/ENROLLMENTSERVER/ONPREMISE/DeviceEnrollmentWebservice.svc";
-        public static final String WAB_URL = "/mdm/enrollments/windows/login-agent";
-
+        public static final String WAB_URL = "/emm-web-agent/enrollments/windows/login-agent";
     }
 
     /**
@@ -113,7 +107,7 @@ public final class PluginConstants {
     }
 
     /**
-     * Certificate enrollment Service related constants
+     * Certificate enrollment Service related constants.
      */
     public final class CertificateEnrolment {
         private CertificateEnrolment() {
@@ -121,17 +115,14 @@ public final class PluginConstants {
         }
 
         public static final String TOKEN_TYPE =
-                "http://schemas.microsoft.com/5.0.0" +
-                        ".0/ConfigurationManager/Enrollment/DeviceEnrollmentToken";
+                "http://schemas.microsoft.com/5.0.0.0/ConfigurationManager/Enrollment/DeviceEnrollmentToken";
         public static final String PARM = "parm";
         public static final String TYPE = "type";
         public static final String VALUE = "value";
         public static final String VALUE_TYPE =
-                "http://schemas.microsoft.com/5.0.0" +
-                        ".0/ConfigurationManager/Enrollment/DeviceEnrollmentProvisionDoc";
+                "http://schemas.microsoft.com/5.0.0.0/ConfigurationManager/Enrollment/DeviceEnrollmentProvisionDoc";
         public static final String ENCODING_TYPE =
-                "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0" +
-                        ".xsd#base64binary";
+                "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd#base64binary";
         public static final String CA_CERT = "cacert";
         public static final String X_509 = "X.509";
         public static final String PROPERTIES_XML = "properties.xml";
@@ -141,8 +132,7 @@ public final class PluginConstants {
         public static final String JKS = "JKS";
         public static final String SECURITY = "Security";
         public static final String WSS_SECURITY_UTILITY =
-                "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0" +
-                        ".xsd";
+                "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
         public static final String TIMESTAMP_ID = "Id";
         public static final String TIMESTAMP_U = "u";
         public static final String TIMESTAMP = "Timestamp";
@@ -150,10 +140,23 @@ public final class PluginConstants {
         public static final String CREATED = "Created";
         public static final String EXPIRES = "Expires";
         public static final String UTF_8 = "utf-8";
+
+        public static final int DOMAIN_SEGMENT = 1;
+        public static final int EMAIL_SEGMENT = 0;
+        public static final int REQUEST_ID = 0;
+        public static final int CA_CERTIFICATE_POSITION = 0;
+        public static final int SIGNED_CERTIFICATE_POSITION = 1;
+        public static final int APPAUTH_USERNAME_POSITION = 21;
+        public static final int APPAUTH_PASSWORD_POSITION = 22;
+        public static final int POLLING_FREQUENCY_POSITION = 24;
+        public static final int SYNCML_PROVISIONING_ADDR_POSITION = 8;
+        public static final int DOMAIN_POSITION = 7;
+        public static final String ENROLL_SUBDOMAIN = "https://EnterpriseEnrollment.";
+        public static final String SYNCML_PROVISIONING_SERVICE_URL = "/Syncml/initialquery";
     }
 
     /**
-     * SynclML service related constants
+     * SynclML service related constants.
      */
     public final class SyncML {
         private SyncML() {
@@ -182,9 +185,9 @@ public final class PluginConstants {
         public static final int DEVICE_LANG_POSITION = 4;
         public static final int IMSI_POSITION = 1;
         public static final int IMEI_POSITION = 2;
-        public static final int VENDER_POSITION = 4;
+        public static final int VENDOR_POSITION = 4;
         public static final int MODEL_POSITION = 5;
-        public static final int MACADDRESS_POSITION = 7;
+        public static final int MAC_ADDRESS_POSITION = 7;
         public static final int RESOLUTION_POSITION = 8;
         public static final int DEVICE_NAME_POSITION = 9;
         public static final String SYNCML_DATA_ONE = "1";
@@ -275,7 +278,8 @@ public final class PluginConstants {
         public static final String CONTENT_TYPE_TEXT = "text";
         public static final String NOTIFIER_FREQUENCY = "notifierFrequency";
         public static final String DEFAULT_FREQUENCY = "8";
-
+        public static final String AUTH_POLICY = "authPolicy";
+        public static final String DEFAULT_AUTH_POLICY = "Federated";
     }
 
     /**
@@ -289,5 +293,14 @@ public final class PluginConstants {
         public static final String POLICY_ENABLE = "enabled";
         public static final String ENCRYPTED_ENABLE = "encrypted";
         public static final String ENABLE_PASSWORD = "enablePassword";
+    }
+
+    /**
+     * Authentication related constants.
+     */
+    public final class AuthenticatorProperties {
+        private AuthenticatorProperties() { throw new AssertionError(); }
+        public static final String MAX_CONNECTION_PER_HOST = "MaxConnectionsPerHost";
+        public static final String MAX_TOTAL_CONNECTIONS = "MaxTotalConnections";
     }
 }

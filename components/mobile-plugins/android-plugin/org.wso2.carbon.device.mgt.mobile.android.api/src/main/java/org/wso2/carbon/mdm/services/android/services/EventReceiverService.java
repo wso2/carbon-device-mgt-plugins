@@ -19,15 +19,20 @@
 package org.wso2.carbon.mdm.services.android.services;
 
 import io.swagger.annotations.*;
+import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EventBeanWrapper;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+@API(name = "Android Event Receiver", version = "1.0.0",
+        context = "api/device-mgt/android/v1.0/events",
+        tags = {"devicemgt_android"})
 
 @Api(value = "Event Receiver", description = "Event publishing/retrieving related APIs.To enable Eventing need to" +
         " configure as ref-https://docs.wso2.com/display/EMM210/Managing+Event+Publishing+with+WSO2+Data+Analytics+Server, " +
@@ -85,6 +90,7 @@ public interface EventReceiverService {
                             message = "Internal Server Error. \n " +
                                     "Server error occurred while publishing events.")
             })
+    @Scope(key = "device:android:event:write", name = "Publish events to DAS", description = "")
     Response publishEvents(
             @ApiParam(
                     name = "eventBeanWrapper",
@@ -134,14 +140,13 @@ public interface EventReceiverService {
                             code = 500,
                             message = "Error occurred while getting published events for specific device.")
             })
-
+    @Scope(key = "device:android:event:read", name = "View events", description = "")
     Response retrieveAlerts(
             @ApiParam(
                     name = "id",
                     value = "Device Identifier to be need to retrieve events.",
                     required = true)
             @Size(min = 2, max = 45)
-            @Pattern(regexp = "^[A-Za-z0-9]*$")
             @QueryParam("id") String deviceId,
             @ApiParam(
                     name = "from",
@@ -155,7 +160,6 @@ public interface EventReceiverService {
                     name = "type",
                     value = "Type of the Alert to be need to retrieve events.")
             @Size(min = 2, max = 45)
-            @Pattern(regexp = "^[A-Za-z0-9]*$")
             @QueryParam("type") String type,
             @ApiParam(
                     name = "If-Modified-Since",

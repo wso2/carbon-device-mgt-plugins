@@ -309,6 +309,11 @@
                 <artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
                 <version>${carbon.devicemgt.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt</groupId>
+                <artifactId>org.wso2.carbon.webapp.authenticator.framework</artifactId>
+                <version>${carbon.devicemgt.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.wso2.carbon.commons</groupId>
@@ -326,7 +331,7 @@
                 <version>${carbon.analytics.common.version}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>commons-codec</groupId>
+                        <groupId>commons-codec.wso2</groupId>
                         <artifactId>commons-codec</artifactId>
                     </exclusion>
                 </exclusions>
@@ -854,10 +859,15 @@
                 <artifactId>commons-httpclient</artifactId>
                 <version>${orbit.version.commons-httpclient}</version>
             </dependency>
+            <!--<dependency>-->
+                <!--<groupId>commons-codec.wso2</groupId>-->
+                <!--<artifactId>commons-codec</artifactId>-->
+                <!--<version>${commons-codec.wso2.version}</version>-->
+            <!--</dependency>-->
             <dependency>
-                <groupId>commons-codec.wso2</groupId>
+                <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>${commons-codec.wso2.version}</version>
+                <version>${commons-codec.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
@@ -1164,7 +1174,8 @@
         <gcm.server.version>1.0.2</gcm.server.version>
 
         <orbit.version.commons-httpclient>3.1.0.wso2v2</orbit.version.commons-httpclient>
-        <commons-codec.wso2.version>1.4.0.wso2v1</commons-codec.wso2.version>
+        <!--<commons-codec.wso2.version>1.4.0.wso2v1</commons-codec.wso2.version>-->
+        <commons-codec.version>1.7</commons-codec.version>
 
         <javaee-web-api.version>6.0</javaee-web-api.version>
 

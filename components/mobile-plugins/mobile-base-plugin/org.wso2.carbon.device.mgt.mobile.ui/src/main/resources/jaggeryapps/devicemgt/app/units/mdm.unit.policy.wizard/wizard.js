@@ -17,8 +17,8 @@
  */
 
 function onRequest(context) {
-    var userModule = require("/app/modules/user.js")["userModule"];
-    var deviceModule = require("/app/modules/device.js").deviceModule;
+    var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
+    var deviceModule = require("/app/modules/business-controllers/device.js").deviceModule;
     var utility = require('/app/modules/utility.js').utility;
     var response = userModule.getRoles();
     var wizardPage = {};

@@ -46,7 +46,7 @@
                 <version>2.2</version>
                 <configuration>
                     <!--<packagingExcludes>WEB-INF/lib/*cxf*.jar</packagingExcludes>-->
-                    <warName>${project.artifactId}</warName>
+                    <warName>api#device-mgt#windows#v1.0</warName>
                 </configuration>
             </plugin>
         </plugins>
@@ -72,7 +72,7 @@
                                     <tasks>
                                         <copy todir="${basedir}/../../../repository/deployment/server/webapps" overwrite="true">
                                             <fileset dir="${basedir}/target">
-                                                <include name="${project.artifactId}.war" />
+                                                <include name="api#device-mgt#windows#v1.0.war" />
                                             </fileset>
                                         </copy>
                                     </tasks>
@@ -230,7 +230,7 @@
             <artifactId>core</artifactId>
         </dependency>
         <dependency>
-            <groupId>commons-codec.wso2</groupId>
+            <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
         </dependency>
         <dependency>
@@ -261,6 +261,17 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.webapp.authenticator.framework</artifactId>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.carbon.identity</groupId>
+                    <artifactId>org.wso2.carbon.identity.base</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.identity</groupId>
             <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
             <scope>provided</scope>
@@ -281,6 +292,12 @@
             <artifactId>cache-api</artifactId>
             <version>0.5</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
@@ -318,6 +335,12 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-annotations</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>

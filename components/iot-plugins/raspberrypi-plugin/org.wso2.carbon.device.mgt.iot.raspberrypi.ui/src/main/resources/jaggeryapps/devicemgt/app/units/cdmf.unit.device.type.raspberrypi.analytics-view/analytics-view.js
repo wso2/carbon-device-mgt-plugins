@@ -17,7 +17,7 @@
  */
 
 function onRequest(context) {
-    var devicemgtProps = require("/app/conf/reader/main.js")["conf"];
+    var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
 
     var devices = context.unit.params.devices;
     var deviceType = context.uriParams.deviceType;
@@ -29,7 +29,7 @@ function onRequest(context) {
             "backendApiUri": devicemgtProps["httpsURL"] + "/raspberrypi/device/stats/"
         };
     } else if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
-        var deviceModule = require("/app/modules/device.js").deviceModule;
+        var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
         var device = deviceModule.viewDevice(deviceType, deviceId);
         if (device && device.status != "error") {
             return {
