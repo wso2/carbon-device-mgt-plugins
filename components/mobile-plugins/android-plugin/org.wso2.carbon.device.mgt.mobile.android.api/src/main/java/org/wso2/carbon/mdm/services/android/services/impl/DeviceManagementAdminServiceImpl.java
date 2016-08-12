@@ -25,43 +25,15 @@ import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
 import org.wso2.carbon.device.mgt.core.operation.mgt.ProfileOperation;
-import org.wso2.carbon.mdm.services.android.bean.ApplicationInstallation;
-import org.wso2.carbon.mdm.services.android.bean.ApplicationUninstallation;
-import org.wso2.carbon.mdm.services.android.bean.ApplicationUpdate;
-import org.wso2.carbon.mdm.services.android.bean.BlacklistApplications;
-import org.wso2.carbon.mdm.services.android.bean.Camera;
-import org.wso2.carbon.mdm.services.android.bean.DeviceEncryption;
-import org.wso2.carbon.mdm.services.android.bean.DeviceLock;
-import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
-import org.wso2.carbon.mdm.services.android.bean.LockCode;
-import org.wso2.carbon.mdm.services.android.bean.Notification;
-import org.wso2.carbon.mdm.services.android.bean.PasscodePolicy;
-import org.wso2.carbon.mdm.services.android.bean.UpgradeFirmware;
-import org.wso2.carbon.mdm.services.android.bean.Vpn;
-import org.wso2.carbon.mdm.services.android.bean.WebClip;
-import org.wso2.carbon.mdm.services.android.bean.Wifi;
-import org.wso2.carbon.mdm.services.android.bean.WipeData;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.ApplicationInstallationBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.ApplicationUninstallationBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.ApplicationUpdateBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.BlacklistApplicationsBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.CameraBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.DeviceLockBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.EncryptionBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.LockCodeBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.NotificationBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.PasswordPolicyBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.UpgradeFirmwareBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.VpnBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.WebClipBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.WifiBeanWrapper;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.WipeDataBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.*;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.*;
 import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
 import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.DeviceManagementAdminService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -556,7 +528,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
     @POST
     @Path("/blacklist-applications")
     @Override
-    public Response blacklistApplications(BlacklistApplicationsBeanWrapper blacklistApplicationsBeanWrapper) {
+    public Response blacklistApplications(@Valid BlacklistApplicationsBeanWrapper blacklistApplicationsBeanWrapper) {
         if (log.isDebugEnabled()) {
             log.debug("Invoking 'Blacklist-Applications' operation");
         }
