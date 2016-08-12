@@ -21,8 +21,6 @@ package org.wso2.carbon.mdm.services.android.bean;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
-
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -50,7 +48,6 @@ public class AndroidPlatformConfiguration implements Serializable {
             value = "type of device",
             required = true
     )
-    @NotNull
     @Size(min = 2, max = 10)
     @Pattern(regexp = "^[A-Za-z0-9]*$")
     private String type;
