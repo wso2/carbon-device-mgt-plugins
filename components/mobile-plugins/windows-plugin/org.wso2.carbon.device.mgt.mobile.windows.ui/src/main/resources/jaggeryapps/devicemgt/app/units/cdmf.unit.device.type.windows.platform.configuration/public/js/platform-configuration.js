@@ -189,7 +189,7 @@ $(document).ready(function () {
                 addConfigFormData,
                 function (data, textStatus, jqXHR) {
                     data = jqXHR.status;
-                    if (data == 201) {
+                    if (data == 200) {
                         $("#config-save-form").addClass("hidden");
                         $("#record-created-msg").removeClass("hidden");
                     } else if (data == 500) {
