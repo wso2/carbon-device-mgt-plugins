@@ -104,7 +104,7 @@
 {{/zone}}
 {{#zone "bottomJs"}}
     <script id="notifications" data-current-user="{{currentUser.username}}"
-            data-image-resource="{{self.publicURL}}/images/" src="{{self.publicURL}}/templates/notifications.hbs"
+            data-image-resource="{{@unit.publicUri}}/images/" src="{{@unit.publicUri}}/templates/notifications.hbs"
             type="text/x-handlebars-template"></script>
     {{js "js/nav-menu.js"}}
 {{/zone}}
