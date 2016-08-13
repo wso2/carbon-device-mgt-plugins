@@ -323,6 +323,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.codehaus.jettison.wso2</groupId>
             <artifactId>jettison</artifactId>
             <version>1.1.wso2v1</version>

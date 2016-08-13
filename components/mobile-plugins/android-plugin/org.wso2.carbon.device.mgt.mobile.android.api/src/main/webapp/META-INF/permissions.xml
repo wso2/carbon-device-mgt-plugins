@@ -50,7 +50,7 @@
         <name>Add Tenant configuration</name>
         <path>/device-mgt/admin/platform-configs/add</path>
         <url>/configuration</url>
-        <method>POST</method>
+        <method>PUT</method>
     </Permission>
 
     <Permission>

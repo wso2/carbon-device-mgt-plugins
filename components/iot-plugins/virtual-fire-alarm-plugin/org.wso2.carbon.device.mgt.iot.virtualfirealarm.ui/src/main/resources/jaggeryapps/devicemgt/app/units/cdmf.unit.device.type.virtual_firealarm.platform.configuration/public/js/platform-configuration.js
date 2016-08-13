@@ -39,16 +39,6 @@ $(document).ready(function () {
 
 });
 
-
-// Start of HTML embedded invoke methods
-var showAdvanceOperation = function (operation, button) {
-    $(button).addClass('selected');
-    $(button).siblings().removeClass('selected');
-    var hiddenOperation = ".wr-hidden-operations-content > div";
-    $(hiddenOperation + '[data-operation="' + operation + '"]').show();
-    $(hiddenOperation + '[data-operation="' + operation + '"]').siblings().hide();
-};
-
 // Start of HTML embedded invoke methods
 var addConfiguration = function () {
     var errorMsgWrapper = "#virtual_firelarm-config-error-msg";
