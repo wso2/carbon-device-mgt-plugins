@@ -19,7 +19,6 @@
 package org.wso2.carbon.mdm.services.android.services;
 
 import io.swagger.annotations.*;
-import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EventBeanWrapper;
 
@@ -86,8 +85,6 @@ public interface EventReceiverService {
                             message = "Internal Server Error. \n " +
                                     "Server error occurred while publishing events.")
             })
-
-    @Scope(key = "device:android:event:manage", name = "Publish events to DAS", description = "")
     Response publishEvents(
             @ApiParam(
                     name = "eventBeanWrapper",
