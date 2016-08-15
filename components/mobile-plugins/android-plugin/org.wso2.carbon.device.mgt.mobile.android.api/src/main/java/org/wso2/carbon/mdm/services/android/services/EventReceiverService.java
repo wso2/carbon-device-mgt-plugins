@@ -90,7 +90,7 @@ public interface EventReceiverService {
                             message = "Internal Server Error. \n " +
                                     "Server error occurred while publishing events.")
             })
-    @Scope(key = "device:android:event:write", name = "Publish events to DAS", description = "")
+    @Scope(key = "device:android:event:manage", name = "Publish events to DAS", description = "")
     Response publishEvents(
             @ApiParam(
                     name = "eventBeanWrapper",

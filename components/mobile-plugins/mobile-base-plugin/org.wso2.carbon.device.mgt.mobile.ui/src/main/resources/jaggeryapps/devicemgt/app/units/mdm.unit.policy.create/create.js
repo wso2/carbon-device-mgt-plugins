@@ -42,8 +42,6 @@ function onRequest() {
             }
             var policyWizard = new File("/app/units/" + utility.getTenantedDeviceUnitName(deviceType, "policy-wizard"));
 
-            log.error("/app/units/" + utility.getTenantedDeviceUnitName(deviceType, "policy-wizard"));
-
             if (policyWizard.isExists()) {
                 content["icon"] = utility.getDeviceThumb(deviceType);
                 content["label"] = deviceTypeLabel;
@@ -52,7 +50,7 @@ function onRequest() {
         }
     }
 
-    var result = userModule.getRolesByUserStore();
+    var result = userModule.getRoles();
     if (result["status"] == "success") {
         viewModelData["roles"] = result["content"];
     }
