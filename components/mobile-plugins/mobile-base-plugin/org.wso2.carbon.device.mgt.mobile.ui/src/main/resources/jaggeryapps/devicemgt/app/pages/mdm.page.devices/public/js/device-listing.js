@@ -222,9 +222,9 @@ function loadDevices(searchType, searchParam){
             }
         },{
             class: 'fade-edge remove-padding-top',
-            data: 'user',
-            render: function ( user, type, row, meta ) {
-                return '<div><label class="label-bold">Owner</label>' + user + '</div>';
+            data: 'owner',
+            render: function ( owner, type, row, meta ) {
+                return '<div><label class="label-bold">Owner&nbsp;:&nbsp;</label>' + owner + '</div>';
             }
         },{
             class: 'fade-edge remove-padding-top',
@@ -245,19 +245,19 @@ function loadDevices(searchType, searchParam){
                         html = '<span><i class="fw fw-delete icon-danger"></i> Removed</span>';
                         break;
                 }
-                return '<div><label class="label-bold">Status</label>'+html+'</div>';
+                return '<div><label class="label-bold">Status&nbsp;:&nbsp;</label>'+html+'</div>';
             }
         },{
             className: 'fade-edge remove-padding-top',
             data: 'deviceType',
             render: function ( deviceType, type, row, meta ) {
-                return '<div><label class="label-bold">Type</label>' + deviceType + '</div>';
+                return '<div><label class="label-bold">Type&nbsp;:&nbsp;</label>' + deviceType + '</div>';
             }
         },{
             className: 'fade-edge remove-padding-top',
             data: 'ownership',
             render: function ( ownership, type, row, meta ) {
-                return '<div><label class="label-bold">Ownership</label>' + ownership + '</div>';
+                return '<div><label class="label-bold">Ownership&nbsp;:&nbsp;</label>' + ownership + '</div>';
             }
         }
     ];
