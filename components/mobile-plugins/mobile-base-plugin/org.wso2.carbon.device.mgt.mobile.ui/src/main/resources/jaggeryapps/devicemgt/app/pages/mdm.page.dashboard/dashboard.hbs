@@ -1,4 +1,5 @@
 {{unit "cdmf.unit.lib.qrcode"}}
+{{unit "mdm.unit.device.qr-modal"}}
 {{#zone "content"}}
     {{#if permissions.VIEW_DASHBOARD}}
         {{#if permissions.LIST_DEVICES}}
@@ -128,23 +129,6 @@
     {{else}}
         Permission denied
     {{/if}}
-    <div id="qr-code-modal" data-enrollment-url="{{enrollmentURL}}" class="hidden">
-        <div class="content">
-            <div class="row">
-                <div class="col-lg-5 col-md-6 col-centered">
-                    <h3>Scan QR code to start enrollment</h3>
-                    <h4>
-                        Please scan the QR code using your mobile device to retrieve enrollment URL.
-                    </h4>
-                    <div class="panel panel-default">
-                        <div class="panel-body col-centered text-center">
-                            <div class="qr-code"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 {{/zone}}
 {{#zone "bottomJs"}}
     {{js "js/dashboard.js"}}
