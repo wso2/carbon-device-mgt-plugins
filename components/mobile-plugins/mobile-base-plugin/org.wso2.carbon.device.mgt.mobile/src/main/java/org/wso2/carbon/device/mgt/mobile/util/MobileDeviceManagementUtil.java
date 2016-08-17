@@ -76,7 +76,7 @@ public class MobileDeviceManagementUtil {
 		if (device != null && device.getProperties() != null) {
 			for (Device.Property prop : device.getProperties()) {
 				if (property.equals(prop.getName())) {
-				return prop.getValue();
+					return prop.getValue();
 				}
 			}
 		}
