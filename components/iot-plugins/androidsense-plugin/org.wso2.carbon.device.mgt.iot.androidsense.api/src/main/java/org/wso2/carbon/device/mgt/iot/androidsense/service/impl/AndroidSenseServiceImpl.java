@@ -79,7 +79,7 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
                     deviceIdentifiers);
             return Response.ok().build();
         } catch (InvalidDeviceException e) {
-            String msg = "Error occurred while executing command operation to send keywords";
+            String msg = "Invalid Device Identifiers found.";
             log.error(msg, e);
             return Response.status(Response.Status.BAD_REQUEST).build();
         } catch (DeviceAccessAuthorizationException e) {
@@ -119,7 +119,7 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
                                                               deviceIdentifiers);
             return Response.ok().build();
         } catch (InvalidDeviceException e) {
-            String msg = "Error occurred while executing command operation to send keywords";
+            String msg = "Invalid Device Identifiers found.";
             log.error(msg, e);
             return Response.status(Response.Status.BAD_REQUEST).build();
         } catch (DeviceAccessAuthorizationException e) {
@@ -158,7 +158,7 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
                                                               deviceIdentifiers);
             return Response.ok().build();
         } catch (InvalidDeviceException e) {
-            String msg = "Error occurred while executing command operation to send keywords";
+            String msg = "Invalid Device Identifiers found.";
             log.error(msg, e);
             return Response.status(Response.Status.BAD_REQUEST).build();
         } catch (DeviceAccessAuthorizationException e) {
