@@ -28,18 +28,15 @@ import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService
 import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
 import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.common.Device;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
+import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
+import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.APIUtil;
-import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.ZipUtil;
 import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
@@ -47,26 +44,12 @@ import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.user.api.UserStoreException;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 public class ArduinoServiceImpl implements ArduinoService {
 
@@ -81,7 +64,7 @@ public class ArduinoServiceImpl implements ArduinoService {
     public Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state) {
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                        ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
+                    ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_OPERATOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             String operation = "BULB:" + state.toUpperCase();
@@ -94,8 +77,12 @@ public class ArduinoServiceImpl implements ArduinoService {
             List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
             deviceIdentifiers.add(new DeviceIdentifier(deviceId, ArduinoConstants.DEVICE_TYPE));
             APIUtil.getDeviceManagementService().addOperation(ArduinoConstants.DEVICE_TYPE, commandOp,
-                                                              deviceIdentifiers);
+                    deviceIdentifiers);
             return Response.status(Response.Status.OK.getStatusCode()).build();
+        } catch (InvalidDeviceException e) {
+            String msg = "Error occurred while executing command operation to send keywords";
+            log.error(msg, e);
+            return Response.status(Response.Status.BAD_REQUEST).build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

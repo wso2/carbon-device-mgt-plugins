@@ -30,10 +30,7 @@ import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
-import org.wso2.carbon.device.mgt.common.Device;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
 import org.wso2.carbon.device.mgt.common.device.details.DeviceInfo;
@@ -118,24 +115,23 @@ public class AndroidAPIUtils {
     }
 
     public static Response getOperationResponse(List<String> deviceIDs, Operation operation)
-            throws DeviceManagementException, OperationManagementException {
+            throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
         if (deviceIDs == null || deviceIDs.size() == 0) {
             String errorMessage = "Device identifier list is empty";
             log.error(errorMessage);
             throw new BadRequestException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
-        AndroidDeviceUtils deviceUtils = new AndroidDeviceUtils();
-        DeviceIDHolder deviceIDHolder = deviceUtils.validateDeviceIdentifiers(deviceIDs);
-
-        List<DeviceIdentifier> validDeviceIds = deviceIDHolder.getValidDeviceIDList();
-        Activity activity = null;
-        if(validDeviceIds.size() > 0) {
-            activity = getDeviceManagementService().addOperation(
-                    DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, validDeviceIds);
-        } else {
-            throw new IllegalArgumentException("Invalid device Identifiers found");
+        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+        List<DeviceIdentifier> deviceids = new ArrayList<>();
+        for (String deviceId : deviceIDs) {
+            deviceIdentifier.setId(deviceId);
+            deviceIdentifier.setType(AndroidConstants.DEVICE_TYPE_ANDROID);
+            deviceids.add(deviceIdentifier);
         }
+        Activity activity = null;
+            activity = getDeviceManagementService().addOperation(
+                    DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, deviceids);
 
 //        if (activity != null) {
 //            GCMService gcmService = getGCMService();

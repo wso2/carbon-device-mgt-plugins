@@ -23,37 +23,25 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.dataservice.commons.SORT;
 import org.wso2.carbon.analytics.dataservice.commons.SortByField;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
-import org.wso2.carbon.device.mgt.common.Device;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
+import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
+import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.AndroidConfiguration;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.Constants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.SensorRecord;
-import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.util.Utils;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -69,7 +57,7 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
     public Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords) {
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                      AndroidSenseConstants.DEVICE_TYPE))) {
+                    AndroidSenseConstants.DEVICE_TYPE))) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             String publishTopic = APIUtil.getAuthenticatedUserTenantDomain()
@@ -88,8 +76,12 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
             List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
             deviceIdentifiers.add(new DeviceIdentifier(deviceId, AndroidSenseConstants.DEVICE_TYPE));
             APIUtil.getDeviceManagementService().addOperation(AndroidSenseConstants.DEVICE_TYPE, commandOp,
-                                                              deviceIdentifiers);
+                    deviceIdentifiers);
             return Response.ok().build();
+        } catch (InvalidDeviceException e) {
+            String msg = "Error occurred while executing command operation to send keywords";
+            log.error(msg, e);
+            return Response.status(Response.Status.BAD_REQUEST).build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
@@ -126,6 +118,10 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
             APIUtil.getDeviceManagementService().addOperation(AndroidSenseConstants.DEVICE_TYPE, commandOp,
                                                               deviceIdentifiers);
             return Response.ok().build();
+        } catch (InvalidDeviceException e) {
+            String msg = "Error occurred while executing command operation to send keywords";
+            log.error(msg, e);
+            return Response.status(Response.Status.BAD_REQUEST).build();
         } catch (DeviceAccessAuthorizationException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         } catch (OperationManagementException e) {
@@ -161,6 +157,10 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
             APIUtil.getDeviceManagementService().addOperation(AndroidSenseConstants.DEVICE_TYPE, commandOp,
                                                               deviceIdentifiers);
             return Response.ok().build();
+        } catch (InvalidDeviceException e) {
+            String msg = "Error occurred while executing command operation to send keywords";
+            log.error(msg, e);
+            return Response.status(Response.Status.BAD_REQUEST).build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
