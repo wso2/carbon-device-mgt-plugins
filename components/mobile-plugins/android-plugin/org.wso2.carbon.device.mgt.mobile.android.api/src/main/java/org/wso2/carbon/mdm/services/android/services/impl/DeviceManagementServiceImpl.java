@@ -210,10 +210,10 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             policyManagerService.getEffectivePolicy(new DeviceIdentifier(androidDevice.getDeviceIdentifier(), device.getType()));
             if (status) {
                 Message responseMessage = new Message();
-                responseMessage.setResponseCode(Response.Status.OK.toString());
+                responseMessage.setResponseCode(Response.Status.CREATED.toString());
                 responseMessage.setResponseMessage("Android device, which carries the id '" +
                         androidDevice.getDeviceIdentifier() + "' has successfully been enrolled");
-                return Response.status(Response.Status.OK).entity(responseMessage).build();
+                return Response.status(Response.Status.CREATED).entity(responseMessage).build();
             } else {
                 Message responseMessage = new Message();
                 responseMessage.setResponseCode(Response.Status.INTERNAL_SERVER_ERROR.toString());
