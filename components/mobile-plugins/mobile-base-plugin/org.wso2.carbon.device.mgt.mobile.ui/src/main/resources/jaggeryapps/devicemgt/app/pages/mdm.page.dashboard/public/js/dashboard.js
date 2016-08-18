@@ -17,11 +17,13 @@
  */
 
 var updateStats = function (serviceURL, id) {
+    //noinspection JSUnresolvedVariable invokerUtil
     invokerUtil.get(
         serviceURL,
         function (data, textStatus, jqXHR) {
             if (jqXHR.status == 200 && data) {
                 var responsePayload = JSON.parse(data);
+                //noinspection JSUnresolvedVariable count
                 var itemCount = responsePayload.count;
                 if (itemCount == 0) {
                     $(id).html(0);
@@ -42,6 +44,7 @@ var updateStats = function (serviceURL, id) {
     );
 };
 
+//noinspection JSUnresolvedFunction ready
 $(document).ready(function () {
     if ($("#device-count").data("device-count")) {
         updateStats("/api/device-mgt/v1.0/devices?offset=0&limit=1", "#device-count");
