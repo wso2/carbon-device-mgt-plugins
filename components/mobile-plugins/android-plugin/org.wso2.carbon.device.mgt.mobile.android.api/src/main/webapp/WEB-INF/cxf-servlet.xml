@@ -44,7 +44,7 @@
     <bean id="swaggerWriter" class="io.swagger.jaxrs.listing.SwaggerSerializers" />
     <bean id="swaggerResource" class="io.swagger.jaxrs.listing.ApiListingResource" />
     <bean id="GlobalExceptionMapper" class="org.wso2.carbon.mdm.services.android.exception.GlobalThrowableMapper"/>
-    <bean id="ValidationInterceptor" class="org.wso2.carbon.mdm.services.android.exception.ValidationInterceptor"/>
+    <bean id="ValidationInterceptor" class="org.wso2.carbon.mdm.services.android.common.ValidationInterceptor"/>
 
     <bean id="swaggerConfig" class="io.swagger.jaxrs.config.BeanConfig">
         <property name="resourcePackage" value="org.wso2.carbon.mdm.services.android.services"/>

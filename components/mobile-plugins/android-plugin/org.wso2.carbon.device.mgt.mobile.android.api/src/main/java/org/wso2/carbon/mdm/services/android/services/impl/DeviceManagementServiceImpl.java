@@ -32,7 +32,7 @@ import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementExcept
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidApplication;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidDevice;
-import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
+import org.wso2.carbon.mdm.services.android.exception.*;
 import org.wso2.carbon.mdm.services.android.services.DeviceManagementService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
@@ -192,6 +192,12 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @POST
     @Override
     public Response enrollDevice(@Valid AndroidDevice androidDevice) {
+        if (androidDevice == null) {
+            String errorMessage = "The payload of the android device enrollment is incorrect.";
+            log.error(errorMessage);
+            throw new org.wso2.carbon.mdm.services.android.exception.BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        }
         try {
             Device device = new Device();
             device.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);

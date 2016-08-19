@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.services.android.exception;
+package org.wso2.carbon.mdm.services.android.common;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
