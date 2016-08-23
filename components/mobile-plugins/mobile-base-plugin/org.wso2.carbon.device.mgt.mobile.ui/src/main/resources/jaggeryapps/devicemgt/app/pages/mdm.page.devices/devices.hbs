@@ -107,7 +107,7 @@
                 <th data-for="By Ownership" class="select-filter"></th>
                 <th class="no-sort"></th>
             </tr>
-            <tr class="bulk-action-row">
+            <tr class="bulk-action-row hidden">
                 <th colspan="7">
                     <div id="operation-bar">
                         {{unit "mdm.unit.device.operation-bar"}}
@@ -134,6 +134,26 @@
             <a href="#">By Status</a>
             <a href="#">By Platform</a>
             <a href="#">By Ownership</a>
+        </div>
+    </div>
+    <div id="no-device-view" class="ast-container list-view hidden">
+        <div class="ctrl-info-panel col-centered text-center wr-login">
+            <h2>You don't have any device registered at the moment.</h2>
+            <br/>
+            <p class="text-center">
+                <a href="javascript:toggleEnrollment()" class="wr-btn">
+                                <span class="fw-stack">
+                                   <i class="fw fw-ring fw-stack-2x"></i>
+                                   <i class="fw fw-mobile fw-stack-1x"></i>
+                                   <span class="fw-stack fw-move-right fw-move-bottom">
+                                      <i class="fw fw-circle fw-stack-2x fw-stroke fw-inverse"></i>
+                                       <i class="fw fw-circle fw-stack-2x"></i>
+                                      <i class="fw fw-add fw-stack-1x"></i>
+                                   </span>
+                                </span>
+                    Enroll New Device
+                </a>
+            </p>
         </div>
     </div>
 {{/zone}}
