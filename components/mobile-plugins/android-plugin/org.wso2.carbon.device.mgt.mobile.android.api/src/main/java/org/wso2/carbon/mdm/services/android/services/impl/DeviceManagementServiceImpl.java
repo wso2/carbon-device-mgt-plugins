@@ -32,7 +32,7 @@ import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementExcept
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidApplication;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidDevice;
-import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
+import org.wso2.carbon.mdm.services.android.exception.*;
 import org.wso2.carbon.mdm.services.android.services.DeviceManagementService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
@@ -192,6 +192,12 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @POST
     @Override
     public Response enrollDevice(@Valid AndroidDevice androidDevice) {
+        if (androidDevice == null) {
+            String errorMessage = "The payload of the android device enrollment is incorrect.";
+            log.error(errorMessage);
+            throw new org.wso2.carbon.mdm.services.android.exception.BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        }
         try {
             Device device = new Device();
             device.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
@@ -209,12 +215,18 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             PolicyManagerService policyManagerService = AndroidAPIUtils.getPolicyManagerService();
             policyManagerService.getEffectivePolicy(new DeviceIdentifier(androidDevice.getDeviceIdentifier(), device.getType()));
             if (status) {
-                return Response.status(Response.Status.OK).entity("Android device, which carries the id '" +
-                        androidDevice.getDeviceIdentifier() + "' has successfully been enrolled").build();
+                Message responseMessage = new Message();
+                responseMessage.setResponseCode(Response.Status.OK.toString());
+                responseMessage.setResponseMessage("Android device, which carries the id '" +
+                        androidDevice.getDeviceIdentifier() + "' has successfully been enrolled");
+                return Response.status(Response.Status.OK).entity(responseMessage).build();
             } else {
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Failed to enroll '" +
+                Message responseMessage = new Message();
+                responseMessage.setResponseCode(Response.Status.INTERNAL_SERVER_ERROR.toString());
+                responseMessage.setResponseMessage("Failed to enroll '" +
                         device.getType() + "' device, which carries the id '" +
-                        androidDevice.getDeviceIdentifier() + "'").build();
+                        androidDevice.getDeviceIdentifier() + "'");
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(responseMessage).build();
             }
         } catch (DeviceManagementException e) {
             String msg = "Error occurred while enrolling the android, which carries the id '" +
@@ -241,11 +253,16 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
         try {
             result = AndroidAPIUtils.getDeviceManagementService().isEnrolled(deviceIdentifier);
             if (result) {
-                return Response.status(Response.Status.OK).entity("Android device that carries the id '" +
-                        id + "' is enrolled").build();
+                Message responseMessage = new Message();
+                responseMessage.setResponseCode(Response.Status.OK.toString());
+                responseMessage.setResponseMessage("Android device that carries the id '" +
+                        id + "' is enrolled");
+                return Response.status(Response.Status.OK).entity(responseMessage).build();
             } else {
-                return Response.status(Response.Status.NOT_FOUND).entity("No Android device is found upon the id '" +
-                        id + "'").build();
+                Message responseMessage = new Message();
+                responseMessage.setResponseCode(Response.Status.NOT_FOUND.toString());
+                responseMessage.setResponseMessage("No Android device is found upon the id '" + id + "'");
+                return Response.status(Response.Status.NOT_FOUND).entity(responseMessage).build();
             }
         } catch (DeviceManagementException e) {
             String msg = "Error occurred while checking enrollment status of the device.";
@@ -260,7 +277,16 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @Override
     public Response modifyEnrollment(@PathParam("id") String id, @Valid AndroidDevice androidDevice) {
         Device device = new Device();
+        String msg = "";
         device.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
+        if(androidDevice.getEnrolmentInfo().getDateOfEnrolment() <= 0){
+            msg = "Invalid Enrollment date.";
+            return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+        }
+        if(androidDevice.getEnrolmentInfo().getDateOfLastUpdate() <= 0){
+            msg = "Invalid Last Updated date.";
+            return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+        }
         device.setEnrolmentInfo(androidDevice.getEnrolmentInfo());
         device.getEnrolmentInfo().setOwner(AndroidAPIUtils.getAuthenticatedUser());
         device.setDeviceInfo(androidDevice.getDeviceInfo());
@@ -274,14 +300,20 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             device.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
             result = AndroidAPIUtils.getDeviceManagementService().modifyEnrollment(device);
             if (result) {
-                return Response.status(Response.Status.ACCEPTED).entity("Enrollment of Android device that " +
-                        "carries the id '" + id + "' has successfully updated").build();
+                Message responseMessage = new Message();
+                responseMessage.setResponseCode(Response.Status.ACCEPTED.toString());
+                responseMessage.setResponseMessage("Enrollment of Android device that " +
+                        "carries the id '" + id + "' has successfully updated");
+                return Response.status(Response.Status.ACCEPTED).entity(responseMessage).build();
             } else {
-                return Response.status(Response.Status.NOT_MODIFIED).entity("Enrollment of Android device that " +
-                        "carries the id '" + id + "' has not been updated").build();
+                Message responseMessage = new Message();
+                responseMessage.setResponseCode(Response.Status.NOT_MODIFIED.toString());
+                responseMessage.setResponseMessage("Enrollment of Android device that " +
+                        "carries the id '" + id + "' has not been updated");
+                return Response.status(Response.Status.NOT_MODIFIED).entity(responseMessage).build();
             }
         } catch (DeviceManagementException e) {
-            String msg = "Error occurred while modifying enrollment of the Android device that carries the id '" +
+            msg = "Error occurred while modifying enrollment of the Android device that carries the id '" +
                     id + "'";
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
@@ -298,11 +330,17 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
         try {
             result = AndroidAPIUtils.getDeviceManagementService().disenrollDevice(deviceIdentifier);
             if (result) {
-                return Response.status(Response.Status.OK).entity("Android device that carries id '" + id +
-                        "' has successfully dis-enrolled").build();
+                Message responseMessage = new Message();
+                responseMessage.setResponseCode(Response.Status.OK.toString());
+                responseMessage.setResponseMessage("Android device that carries id '" + id +
+                        "' has successfully dis-enrolled");
+                return Response.status(Response.Status.OK).entity(responseMessage).build();
             } else {
-                return Response.status(Response.Status.NOT_FOUND).entity("Android device that carries id '" + id +
-                        "' has not been dis-enrolled").build();
+                Message responseMessage = new Message();
+                responseMessage.setResponseCode(Response.Status.NOT_FOUND.toString());
+                responseMessage.setResponseMessage("Android device that carries id '" + id +
+                        "' has not been dis-enrolled");
+                return Response.status(Response.Status.NOT_FOUND).entity(responseMessage).build();
             }
         } catch (DeviceManagementException e) {
             String msg = "Error occurred while dis-enrolling the Android device that carries the id '" + id + "'";

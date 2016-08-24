@@ -19,16 +19,11 @@
 package org.wso2.carbon.device.mgt.iot.arduino.service.impl;
 
 import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @API(name = "arduino", version = "1.0.0", context = "/arduino", tags = {"arduino"})
@@ -38,12 +33,12 @@ public interface ArduinoService {
     @Path("device/{deviceId}/bulb")
     @POST
     @Feature(code = "bulb", name = "Control Bulb", description = "Control Bulb on Arduino Uno")
-    @Permission(scope = "arduino_user", permissions = {"/permission/admin/device-mgt/user/operations"})
+    @Scope(key = "device:arduino:enroll", name = "", description = "")
     Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
     @Path("device/{deviceId}/controls")
     @GET
-    @Permission(scope = "arduino_device", permissions = {"/permission/admin/device-mgt/user/operations"})
+    @Scope(key = "device:arduino:enroll", name = "", description = "")
     Response readControls(@PathParam("deviceId") String deviceId);
 
     /**
@@ -53,7 +48,7 @@ public interface ArduinoService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    @Permission(scope = "arduino_user", permissions = {"/permission/admin/device-mgt/user/stats"})
+    @Scope(key = "device:arduino:enroll", name = "", description = "")
     Response getArduinoTemperatureStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
                                                @QueryParam("to") long to);
 
@@ -63,7 +58,7 @@ public interface ArduinoService {
     @Path("device/download")
     @GET
     @Produces("application/octet-stream")
-    @Permission(scope = "arduino_user", permissions = {"/permission/admin/device-mgt/user/devices"})
+    @Scope(key = "device:arduino:enroll", name = "", description = "")
     Response downloadSketch(@QueryParam("deviceName") String customDeviceName);
 
 }

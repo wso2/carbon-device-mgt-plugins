@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -103,8 +103,10 @@ function loadOperationBar(deviceType) {
     var operationBar = $("#operations-bar");
     var operationBarSrc = operationBar.attr("src");
     var platformType = deviceType;
+    //var selectedDeviceID = deviceId;
     $.template("operations-bar", operationBarSrc, function (template) {
-        var serviceURL = "/devicemgt_admin/features/" + platformType;
+        //var serviceURL = "/mdm-admin/features/" + platformType;
+        var serviceURL = "/api/device-mgt/v1.0/devices/" + platformType + "/*/features";
         var successCallback = function (data) {
             var viewModel = {};
             data = JSON.parse(data).filter(function (current) {
@@ -156,23 +158,22 @@ function runOperation(operationName) {
 
     var payload, serviceEndPoint;
     if (list[platformTypeConstants.IOS]) {
-        payload = operationModule.
-            generatePayload(platformTypeConstants.IOS, operationName, list[platformTypeConstants.IOS]);
+        payload = operationModule.generatePayload(platformTypeConstants.IOS, operationName, list[platformTypeConstants.IOS]);
         serviceEndPoint = operationModule.getIOSServiceEndpoint(operationName);
     } else if (list[platformTypeConstants.ANDROID]) {
         payload = operationModule
             .generatePayload(platformTypeConstants.ANDROID, operationName, list[platformTypeConstants.ANDROID]);
         serviceEndPoint = operationModule.getAndroidServiceEndpoint(operationName);
     } else if (list[platformTypeConstants.WINDOWS]) {
-        payload = operationModule.
-            generatePayload(platformTypeConstants.WINDOWS, operationName, list[platformTypeConstants.WINDOWS]);
+        payload = operationModule.generatePayload(platformTypeConstants.WINDOWS, operationName, list[platformTypeConstants.WINDOWS]);
         serviceEndPoint = operationModule.getWindowsServiceEndpoint(operationName);
     }
     if (operationName == "NOTIFICATION") {
         var errorMsgWrapper = "#notification-error-msg";
         var errorMsg = "#notification-error-msg span";
-        var message = $("#message").val();
-        if (!message) {
+        var messageTitle = $("#messageTitle").val();
+        var messageText = $("#messageText").val();
+        if (!(messageTitle && messageText)) {
             $(errorMsg).text("Enter a message. It cannot be empty.");
             $(errorMsgWrapper).removeClass("hidden");
         } else {

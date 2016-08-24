@@ -44,14 +44,14 @@
     <bean id="swaggerWriter" class="io.swagger.jaxrs.listing.SwaggerSerializers" />
     <bean id="swaggerResource" class="io.swagger.jaxrs.listing.ApiListingResource" />
     <bean id="GlobalExceptionMapper" class="org.wso2.carbon.mdm.services.android.exception.GlobalThrowableMapper"/>
-    <bean id="ValidationInterceptor" class="org.wso2.carbon.mdm.services.android.exception.ValidationInterceptor"/>
+    <bean id="ValidationInterceptor" class="org.wso2.carbon.mdm.services.android.common.ValidationInterceptor"/>
 
     <bean id="swaggerConfig" class="io.swagger.jaxrs.config.BeanConfig">
         <property name="resourcePackage" value="org.wso2.carbon.mdm.services.android.services"/>
         <property name="version" value="1.0"/>
         <property name="host" value="localhost:9443"/>
         <property name="schemes" value="https" />
-        <property name="basePath" value="/api/device-mgt/android/v1.0"/>
+        <property name="basePath" value="/api-device-mgt-android-v1.0"/>
         <property name="title" value="Android Device Management API Definitions"/>
         <property name="contact" value="dev@wso2.org"/>
         <property name="license" value="Apache 2.0"/>

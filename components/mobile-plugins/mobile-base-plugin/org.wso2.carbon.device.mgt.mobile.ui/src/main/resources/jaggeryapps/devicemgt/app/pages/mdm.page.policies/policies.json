@@ -1,0 +1,6 @@
+{
+    "version": "1.0.0",
+    "uri": "/policies",
+    "extends": "cdmf.page.policies",
+    "layout": "cdmf.layout.default"
+}

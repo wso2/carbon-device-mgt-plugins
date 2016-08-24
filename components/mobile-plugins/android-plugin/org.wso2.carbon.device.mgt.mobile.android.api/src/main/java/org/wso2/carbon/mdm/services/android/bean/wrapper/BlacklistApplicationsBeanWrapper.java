@@ -32,16 +32,15 @@ import java.util.List;
 public class BlacklistApplicationsBeanWrapper {
 
     @ApiModelProperty(name = "operation", value = "Blacklist applications information", required = true)
-    @Valid
-    private BlacklistApplications operation;
+    private  @Valid BlacklistApplications operation;
     @ApiModelProperty(name = "deviceIDs", value = "List of device Ids", required = true)
     private List<String> deviceIDs;
 
-    public BlacklistApplications getOperation() {
+    public @Valid BlacklistApplications getOperation() {
         return operation;
     }
 
-    public void setOperation(BlacklistApplications operation) {
+    public void setOperation(@Valid BlacklistApplications operation) {
         this.operation = operation;
     }
 

@@ -1,28 +1,26 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
 var validateStep = {};
-var skipStep = {};
 var stepForwardFrom = {};
 var stepBackFrom = {};
 var policy = {};
 var configuredOperations = [];
-var currentlyEffected = {};
 
 // Constants to define platform types available
 var platformTypeConstants = {
@@ -32,7 +30,7 @@ var platformTypeConstants = {
 };
 
 // Constants to define platform types ids.
-var platformTypeIds = {
+var platformIds = {
     "ANDROID": 1,
     "IOS": 3,
     "WINDOWS": 2
@@ -47,17 +45,11 @@ var androidOperationConstants = {
     "ENCRYPT_STORAGE_OPERATION": "encrypt-storage",
     "ENCRYPT_STORAGE_OPERATION_CODE": "ENCRYPT_STORAGE",
     "WIFI_OPERATION": "wifi",
-    "WIFI_OPERATION_CODE": "WIFI"
-};
-
-// Constants to define Android Operation Constants
-var windowsOperationConstants = {
-    "PASSCODE_POLICY_OPERATION": "passcode-policy",
-    "PASSCODE_POLICY_OPERATION_CODE": "PASSCODE_POLICY",
-    "CAMERA_OPERATION": "camera",
-    "CAMERA_OPERATION_CODE": "CAMERA",
-    "ENCRYPT_STORAGE_OPERATION": "encrypt-storage",
-    "ENCRYPT_STORAGE_OPERATION_CODE": "ENCRYPT_STORAGE"
+    "WIFI_OPERATION_CODE": "WIFI",
+    "VPN_OPERATION": "vpn",
+    "VPN_OPERATION_CODE": "VPN",
+    "APPLICATION_OPERATION":"app-restriction",
+    "APPLICATION_OPERATION_CODE":"APP-RESTRICTION"
 };
 
 // Constants to define iOS Operation Constants
@@ -81,13 +73,35 @@ var iosOperationConstants = {
     "APN_OPERATION": "apn",
     "APN_OPERATION_CODE": "APN",
     "CELLULAR_OPERATION": "cellular",
-    "CELLULAR_OPERATION_CODE": "CELLULAR"
+    "CELLULAR_OPERATION_CODE": "CELLULAR",
+    "DOMAIN": "DOMAIN",
+    "VPN_OPERATION_CODE": "VPN",
+    "VPN_OPERATION": "vpn",
+    "PER_APP_VPN_OPERATION_CODE": "PER_APP_VPN",
+    "PER_APP_VPN_OPERATION": "per-app-vpn",
+    "APP_TO_PER_APP_VPN_MAPPING_OPERATION_CODE": "APP_TO_PER_APP_VPN_MAPPING",
+    "APP_TO_PER_APP_VPN_MAPPING_OPERATION": "app-to-per-app-vpn-mapping"
+};
+
+// Constants to define Android Operation Constants
+var windowsOperationConstants = {
+    "PASSCODE_POLICY_OPERATION": "passcode-policy",
+    "PASSCODE_POLICY_OPERATION_CODE": "PASSCODE_POLICY",
+    "CAMERA_OPERATION": "camera",
+    "CAMERA_OPERATION_CODE": "CAMERA",
+    "ENCRYPT_STORAGE_OPERATION": "encrypt-storage",
+    "ENCRYPT_STORAGE_OPERATION_CODE": "ENCRYPT_STORAGE"
 };
 
 /**
- * Method to update the visibility (i.e. disabled or enabled view)
- * of grouped input according to the values
- * that they currently possess.
+ * @namespace $
+ * The $ is just a function.
+ * It is actually an alias for the function called jQuery.
+ * For ex: $(this) means jQuery(this) and S.fn.x means jQuery.fn.x
+ */
+
+/**
+ * Method to update the visibility of grouped input.
  * @param domElement HTML grouped-input element with class name "grouped-input"
  */
 var updateGroupedInputVisibility = function (domElement) {
@@ -108,32 +122,76 @@ var updateGroupedInputVisibility = function (domElement) {
     }
 };
 
-skipStep["policy-platform"] = function (policyPayloadObj) {
-    policy["name"] = policyPayloadObj["policyName"];
-    policy["platform"] = policyPayloadObj["profile"]["deviceType"]["name"];
-    policy["platformId"] = policyPayloadObj["profile"]["deviceType"]["id"];
-    var userRoleInput = $("#user-roles-input");
-    var ownershipInput = $("#ownership-input");
-    var userInput = $("#users-input");
-    var actionInput = $("#action-input");
-    var policyNameInput = $("#policy-name-input");
-    var policyDescriptionInput = $("#policy-description-input");
-    currentlyEffected["roles"] = policyPayloadObj.roles;
-    currentlyEffected["users"] = policyPayloadObj.users;
-    userRoleInput.val(currentlyEffected["roles"]).trigger("change");
-    userInput.val(currentlyEffected["users"]).trigger("change");
+var validateInline = {};
+var clearInline = {};
 
-    if (currentlyEffected["users"].length > 0) {
-        $("#users-radio-btn").prop("checked", true)
-        $("#users-select-field").show();
-        $("#user-roles-select-field").hide();
+var enableInlineError = function (inputField, errorMsg, errorSign) {
+    var fieldIdentifier = "#" + inputField;
+    var errorMsgIdentifier = "#" + inputField + " ." + errorMsg;
+    var errorSignIdentifier = "#" + inputField + " ." + errorSign;
+
+    if (inputField) {
+        $(fieldIdentifier).addClass(" has-error has-feedback");
     }
-    ownershipInput.val(policyPayloadObj.ownershipType);
-    actionInput.val(policyPayloadObj.compliance);
-    policyNameInput.val(policyPayloadObj["policyName"]);
-    policyDescriptionInput.val(policyPayloadObj["description"]);
+
+    if (errorMsg) {
+        $(errorMsgIdentifier).removeClass(" hidden");
+    }
+
+    if (errorSign) {
+        $(errorSignIdentifier).removeClass(" hidden");
+    }
+};
+
+var disableInlineError = function (inputField, errorMsg, errorSign) {
+    var fieldIdentifier = "#" + inputField;
+    var errorMsgIdentifier = "#" + inputField + " ." + errorMsg;
+    var errorSignIdentifier = "#" + inputField + " ." + errorSign;
+
+    if (inputField) {
+        $(fieldIdentifier).removeClass(" has-error has-feedback");
+    }
+
+    if (errorMsg) {
+        $(errorMsgIdentifier).addClass(" hidden");
+    }
+
+    if (errorSign) {
+        $(errorSignIdentifier).addClass(" hidden");
+    }
+};
+
+/**
+ *clear inline validation messages.
+ */
+clearInline["policy-name"] = function () {
+    disableInlineError("policyNameField", "nameEmpty", "nameError");
+};
+
+
+/**
+ * Validate if provided policy name is valid against RegEx configures.
+ */
+validateInline["policy-name"] = function () {
+    var policyName = $("input#policy-name-input").val();
+    if (policyName && inputIsValidAgainstLength(policyName, 1, 30)) {
+        disableInlineError("policyNameField", "nameEmpty", "nameError");
+    } else {
+        enableInlineError("policyNameField", "nameEmpty", "nameError");
+    }
+};
+
+$("#policy-name-input").focus(function(){
+    clearInline["policy-name"]();
+}).blur(function(){
+    validateInline["policy-name"]();
+});
+
+stepForwardFrom["policy-platform"] = function (actionButton) {
+    policy["platform"] = $(actionButton).data("platform");
+    policy["platformId"] = $(actionButton).data("platform-type");
     // updating next-page wizard title with selected platform
-    $("#policy-profile-page-wizard-title").text("EDIT " + policy["platform"] + " POLICY - " + policy["name"]);
+    $("#policy-profile-page-wizard-title").text("ADD " + policy["platform"] + " POLICY");
 
     var deviceType = policy["platform"];
     var hiddenOperationsByDeviceType = $("#hidden-operations-" + deviceType);
@@ -144,23 +202,10 @@ skipStep["policy-platform"] = function (policyPayloadObj) {
         function () {
             $.template(hiddenOperationsByDeviceTypeCacheKey, hiddenOperationsByDeviceTypeSrc, function (template) {
                 var content = template();
-                // pushing profile feature input elements
                 $(".wr-advance-operations").html(content);
-                // populating values and getting the list of configured features
-                var configuredOperations = operationModule.
-                    populateProfile(policy["platform"], policyPayloadObj["profile"]["profileFeaturesList"]);
-                // updating grouped input visibility according to the populated values
                 $(".wr-advance-operations li.grouped-input").each(function () {
                     updateGroupedInputVisibility(this);
                 });
-                // enabling previously configured options of last update
-                for (var i = 0; i < configuredOperations.length; ++i) {
-                    var configuredOperation = configuredOperations[i];
-                    $(".operation-data").filterByData("operation-code", configuredOperation).
-                        find(".panel-title .wr-input-control.switch input[type=checkbox]").each(function () {
-                            $(this).click();
-                        });
-                }
             });
         },
         250 // time delayed for the execution of above function, 250 milliseconds
@@ -321,9 +366,162 @@ validateStep["policy-profile"] = function () {
                 // updating validationStatusArray with validationStatus
                 validationStatusArray.push(validationStatus);
             }
+
+            if ($.inArray(androidOperationConstants["VPN_OPERATION_CODE"], configuredOperations) != -1) {
+                // if WIFI is configured
+                operation = androidOperationConstants["VPN_OPERATION"];
+                // initializing continueToCheckNextInputs to true
+                continueToCheckNextInputs = true;
+
+                var serverAddress = $("input#vpn-server-address").val();
+                if (!serverAddress) {
+                    validationStatus = {
+                        "error": true,
+                        "subErrorMsg": "Server address is required. You cannot proceed.",
+                        "erroneousFeature": operation
+                    };
+                    continueToCheckNextInputs = false;
+                }
+
+                if (continueToCheckNextInputs) {
+                    var serverPort = $("input#vpn-server-port").val();
+                    if (!serverPort) {
+                        validationStatus = {
+                            "error": true,
+                            "subErrorMsg": "VPN server port is required. You cannot proceed.",
+                            "erroneousFeature": operation
+                        };
+                        continueToCheckNextInputs = false;
+                    } else if (!$.isNumeric(serverPort)) {
+                        validationStatus = {
+                            "error": true,
+                            "subErrorMsg": "VPN server port requires a number input.",
+                            "erroneousFeature": operation
+                        };
+                        continueToCheckNextInputs = false;
+                    } else if (!inputIsValidAgainstRange(serverPort, 0, 65535)) {
+                        validationStatus = {
+                            "error": true,
+                            "subErrorMsg": "VPN server port is not within the range " +
+                                "of valid port numbers.",
+                            "erroneousFeature": operation
+                        };
+                        continueToCheckNextInputs = false;
+                    }
+                }
+
+                // at-last, if the value of continueToCheckNextInputs is still true
+                // this means that no error is found
+                if (continueToCheckNextInputs) {
+                    validationStatus = {
+                        "error": false,
+                        "okFeature": operation
+                    };
+                }
+
+                // updating validationStatusArray with validationStatus
+                validationStatusArray.push(validationStatus);
+            }
+            if ($.inArray(androidOperationConstants["APPLICATION_OPERATION_CODE"], configuredOperations) != -1) {
+                //If application restriction configured
+                operation = androidOperationConstants["APPLICATION_OPERATION"];
+                // Initializing continueToCheckNextInputs to true
+                continueToCheckNextInputs = true;
+
+                var appRestrictionType = $("#app-restriction-type").val();
+
+                var restrictedApplicationsGridChildInputs = "div#restricted-applications .child-input";
+
+                if (!appRestrictionType) {
+                    validationStatus = {
+                        "error": true,
+                        "subErrorMsg": "Applications restriction type is not provided.",
+                        "erroneousFeature": operation
+                    };
+                    continueToCheckNextInputs = false;
+                }
+
+                if (continueToCheckNextInputs) {
+                    if ($(restrictedApplicationsGridChildInputs).length == 0) {
+                        validationStatus = {
+                            "error": true,
+                            "subErrorMsg": "Applications are not provided in application restriction list.",
+                            "erroneousFeature": operation
+                        };
+                        continueToCheckNextInputs = false;
+                    }
+                    else {
+                        childInputCount = 0;
+                        childInputArray = [];
+                        emptyChildInputCount = 0;
+                        duplicatesExist = false;
+                        // Looping through each child input
+                        $(restrictedApplicationsGridChildInputs).each(function () {
+                            childInputCount++;
+                            if (childInputCount % 2 == 0) {
+                                // If child input is of second column
+                                childInput = $(this).val();
+                                childInputArray.push(childInput);
+                                // Updating emptyChildInputCount
+                                if (!childInput) {
+                                    // If child input field is empty
+                                    emptyChildInputCount++;
+                                }
+                            }
+                        });
+                        // Checking for duplicates
+                        initialChildInputArrayLength = childInputArray.length;
+                        if (emptyChildInputCount == 0 && initialChildInputArrayLength > 1) {
+                            for (m = 0; m < (initialChildInputArrayLength - 1); m++) {
+                                poppedChildInput = childInputArray.pop();
+                                for (n = 0; n < childInputArray.length; n++) {
+                                    if (poppedChildInput == childInputArray[n]) {
+                                        duplicatesExist = true;
+                                        break;
+                                    }
+                                }
+                                if (duplicatesExist) {
+                                    break;
+                                }
+                            }
+                        }
+                        // Updating validationStatus
+                        if (emptyChildInputCount > 0) {
+                            // If empty child inputs are present
+                            validationStatus = {
+                                "error": true,
+                                "subErrorMsg": "One or more package names of " +
+                                    "applications are empty.",
+                                "erroneousFeature": operation
+                            };
+                            continueToCheckNextInputs = false;
+                        } else if (duplicatesExist) {
+                            // If duplicate input is present
+                            validationStatus = {
+                                "error": true,
+                                "subErrorMsg": "Duplicate values exist with " +
+                                    "for package names.",
+                                "erroneousFeature": operation
+                            };
+                            continueToCheckNextInputs = false;
+                        }
+
+                    }
+                }
+
+                if (continueToCheckNextInputs) {
+                    validationStatus = {
+                        "error": false,
+                        "okFeature": operation
+                    };
+                }
+
+                // Updating validationStatusArray with validationStatus
+                validationStatusArray.push(validationStatus);
+
+            }
         }
-    }
-    if (policy["platform"] == platformTypeConstants["WINDOWS"]) {
+    }if (policy["platform"] == platformTypeConstants["WINDOWS"]) {
         if (configuredOperations.length == 0) {
             // updating validationStatus
             validationStatus = {
@@ -968,6 +1166,70 @@ validateStep["policy-profile"] = function () {
                 // updating validationStatusArray with validationStatus
                 validationStatusArray.push(validationStatus);
             }
+
+            if ($.inArray(iosOperationConstants["VPN_OPERATION_CODE"], configuredOperations) != -1) {
+                // if WIFI is configured
+                operation = iosOperationConstants["VPN_OPERATION"];
+                // initializing continueToCheckNextInputs to true
+                continueToCheckNextInputs = true;
+
+                var connectionName = $("input#vpn-connection-name").val();
+                if (!connectionName) {
+                    validationStatus = {
+                        "error": true,
+                        "subErrorMsg": "Connection Name is required. You cannot proceed.",
+                        "erroneousFeature": operation
+                    };
+                    continueToCheckNextInputs = false;
+                }
+                // at-last, if the value of continueToCheckNextInputs is still true
+                // this means that no error is found
+                if (continueToCheckNextInputs) {
+                    validationStatus = {
+                        "error": false,
+                        "okFeature": operation
+                    };
+                }
+
+                // updating validationStatusArray with validationStatus
+                validationStatusArray.push(validationStatus);
+            }
+
+            if ($.inArray(iosOperationConstants["PER_APP_VPN_OPERATION_CODE"], configuredOperations) != -1) {
+                operation = iosOperationConstants["PER_APP_VPN_OPERATION"];
+                continueToCheckNextInputs = true;
+
+                var uuid = $("input#per-app-vpn-uuid").val();
+                if (!uuid) {
+                    validationStatus = {
+                        "error": true,
+                        "subErrorMsg": "VPN UUID is required. You cannot proceed.",
+                        "erroneousFeature": operation
+                    };
+                    continueToCheckNextInputs = false;
+                }
+                // at-last, if the value of continueToCheckNextInputs is still true
+                // this means that no error is found
+                if (continueToCheckNextInputs) {
+                    validationStatus = {
+                        "error": false,
+                        "okFeature": operation
+                    };
+                }
+                validationStatusArray.push(validationStatus);
+            }
+
+            if ($.inArray(iosOperationConstants["APP_TO_PER_APP_VPN_MAPPING_OPERATION_CODE"], configuredOperations) != -1) {
+                operation = iosOperationConstants["APP_TO_PER_APP_VPN_MAPPING_OPERATION"];
+                continueToCheckNextInputs = true;
+                if (continueToCheckNextInputs) {
+                    validationStatus = {
+                        "error": false,
+                        "okFeature": operation
+                    };
+                }
+                validationStatusArray.push(validationStatus);
+            }
             // Validating EMAIL
             if ($.inArray(iosOperationConstants["EMAIL_OPERATION_CODE"], configuredOperations) != -1) {
                 // if EMAIL is configured
@@ -1033,7 +1295,7 @@ validateStep["policy-profile"] = function () {
 
                 if (continueToCheckNextInputs) {
                     var emailOutgoingMailServerPort = $("input#email-outgoing-mail-server-port").val();
-                    if (emailOutgoingMailServerPort && emailOutgoingMailServerPort != '') {
+                    if (emailOutgoingMailServerPort) {
                         if (!$.isNumeric(emailOutgoingMailServerPort)) {
                             validationStatus = {
                                 "error": true,
@@ -1221,6 +1483,154 @@ validateStep["policy-profile"] = function () {
                 // updating validationStatusArray with validationStatus
                 validationStatusArray.push(validationStatus);
             }
+
+            // Validating Domains
+            if ($.inArray(iosOperationConstants["DOMAIN"], configuredOperations) != -1) {
+                // if DOMAIN is configured
+                operation = iosOperationConstants["DOMAIN"];
+
+                continueToCheckNextInputs = true;
+
+                var airplayCredentialsGridChildInputs = "div#unmarked-email-domains .child-input";
+                var airplayDestinationsGridChildInputs = "div#safari-web-domains .child-input";
+                if ($(airplayCredentialsGridChildInputs).length == 0 &&
+                    $(airplayDestinationsGridChildInputs).length == 0) {
+                    validationStatus = {
+                        "error": true,
+                        "subErrorMsg": "Manage Domains have zero configurations attached.",
+                        "erroneousFeature": operation
+                    };
+                    continueToCheckNextInputs = false;
+                }
+
+                if (continueToCheckNextInputs) {
+                    if ($(airplayCredentialsGridChildInputs).length > 0) {
+                        childInputCount = 0;
+                        childInputArray = [];
+                        emptyChildInputCount = 0;
+                        duplicatesExist = false;
+                        // looping through each child input
+                        $(airplayCredentialsGridChildInputs).each(function () {
+                            childInputCount++;
+                            if (childInputCount % 2 == 1) {
+                                // if child input is of first column
+                                childInput = $(this).val();
+                                childInputArray.push(childInput);
+                                // updating emptyChildInputCount
+                                if (!childInput) {
+                                    // if child input field is empty
+                                    emptyChildInputCount++;
+                                }
+                            }
+                        });
+                        // checking for duplicates
+                        initialChildInputArrayLength = childInputArray.length;
+                        if (emptyChildInputCount == 0 && initialChildInputArrayLength > 1) {
+                            for (m = 0; m < (initialChildInputArrayLength - 1); m++) {
+                                poppedChildInput = childInputArray.pop();
+                                for (n = 0; n < childInputArray.length; n++) {
+                                    if (poppedChildInput == childInputArray[n]) {
+                                        duplicatesExist = true;
+                                        break;
+                                    }
+                                }
+                                if (duplicatesExist) {
+                                    break;
+                                }
+                            }
+                        }
+                        // updating validationStatus
+                        if (emptyChildInputCount > 0) {
+                            // if empty child inputs are present
+                            validationStatus = {
+                                "error": true,
+                                "subErrorMsg": "One or more email domains of " +
+                                    "unmarked email domains are empty.",
+                                "erroneousFeature": operation
+                            };
+                            continueToCheckNextInputs = false;
+                        } else if (duplicatesExist) {
+                            // if duplicate input is present
+                            validationStatus = {
+                                "error": true,
+                                "subErrorMsg": "Duplicate values exist with " +
+                                    "email domains of unmarked email domains.",
+                                "erroneousFeature": operation
+                            };
+                            continueToCheckNextInputs = false;
+                        }
+                    }
+                }
+
+                if (continueToCheckNextInputs) {
+                    if ($(airplayDestinationsGridChildInputs).length > 0) {
+                        childInputCount = 0;
+                        childInputArray = [];
+                        emptyChildInputCount = 0;
+                        duplicatesExist = false;
+                        // looping through each child input
+                        $(airplayDestinationsGridChildInputs).each(function () {
+                            childInputCount++;
+                            if (childInputCount % 2 == 1) {
+                                // if child input is of first column
+                                childInput = $(this).val();
+                                childInputArray.push(childInput);
+                                // updating emptyChildInputCount
+                                if (!childInput) {
+                                    // if child input field is empty
+                                    emptyChildInputCount++;
+                                }
+                            }
+                        });
+                        // checking for duplicates
+                        initialChildInputArrayLength = childInputArray.length;
+                        if (emptyChildInputCount == 0 && initialChildInputArrayLength > 1) {
+                            for (m = 0; m < (initialChildInputArrayLength - 1); m++) {
+                                poppedChildInput = childInputArray.pop();
+                                for (n = 0; n < childInputArray.length; n++) {
+                                    if (poppedChildInput == childInputArray[n]) {
+                                        duplicatesExist = true;
+                                        break;
+                                    }
+                                }
+                                if (duplicatesExist) {
+                                    break;
+                                }
+                            }
+                        }
+                        // updating validationStatus
+                        if (emptyChildInputCount > 0) {
+                            // if empty child inputs are present
+                            validationStatus = {
+                                "error": true,
+                                "subErrorMsg": "One or more managed safari web domains of " +
+                                    "unmarked email domains are empty.",
+                                "erroneousFeature": operation
+                            };
+                            continueToCheckNextInputs = false;
+                        } else if (duplicatesExist) {
+                            // if duplicate input is present
+                            validationStatus = {
+                                "error": true,
+                                "subErrorMsg": "Duplicate values exist with " +
+                                    "managed safari web domains of unmarked email domains.",
+                                "erroneousFeature": operation
+                            };
+                            continueToCheckNextInputs = false;
+                        }
+                    }
+                }
+
+                if (continueToCheckNextInputs) {
+                    validationStatus = {
+                        "error": false,
+                        "okFeature": operation
+                    };
+                }
+
+                validationStatusArray.push(validationStatus);
+            }
+
             // Validating LDAP
             if ($.inArray(iosOperationConstants["LDAP_OPERATION_CODE"], configuredOperations) != -1) {
                 // if LDAP is configured
@@ -1424,16 +1834,16 @@ validateStep["policy-profile"] = function () {
                     // looping through each child input
                     $(apnConfigurationsGridChildInputs).each(function () {
                         childInputCount++;
-                        if (childInputCount % 5 == 1) {
-                            // if child input is of first column
-                            childInput = $(this).val();
-                            childInputArray.push(childInput);
-                            // updating emptyChildInputCount
-                            if (!childInput) {
-                                // if child input field is empty
-                                emptyChildInputCount++;
-                            }
+                        //if (childInputCount % 5 == 1) {
+                        // if child input is of first column
+                        childInput = $(this).val();
+                        childInputArray.push(childInput);
+                        // updating emptyChildInputCount
+                        if (!childInput) {
+                            // if child input field is empty
+                            emptyChildInputCount++;
                         }
+                        //}
                     });
                     // checking for duplicates
                     initialChildInputArrayLength = childInputArray.length;
@@ -1645,7 +2055,7 @@ validateStep["policy-profile"] = function () {
 stepForwardFrom["policy-profile"] = function () {
     policy["profile"] = operationModule.generateProfile(policy["platform"], configuredOperations);
     // updating next-page wizard title with selected platform
-    $("#policy-criteria-page-wizard-title").text("EDIT " + policy["platform"] + " POLICY - " + policy["name"]);
+    $("#policy-criteria-page-wizard-title").text("ADD " + policy["platform"] + " POLICY");
     // updating ownership type options according to platform
     if (policy["platform"] == platformTypeConstants["IOS"] ||
         policy["platform"] == platformTypeConstants["WINDOWS"]) {
@@ -1657,13 +2067,32 @@ stepForwardFrom["policy-profile"] = function () {
     }
 };
 
+stepBackFrom["policy-profile"] = function () {
+    // reinitialize configuredOperations
+    configuredOperations = [];
+    // clearing already-loaded platform specific hidden-operations html content from the relevant div
+    // so that, the wrong content would not be shown at the first glance, in case
+    // the user selects a different platform
+    $(".wr-advance-operations").html(
+            "<div class='wr-advance-operations-init'>" +
+            "<br>" +
+            "<i class='fw fw-settings fw-spin fw-2x'></i>" +
+            "Loading Platform Features . . ." +
+            "<br>" +
+            "<br>" +
+            "</div>"
+    );
+};
+
 stepForwardFrom["policy-criteria"] = function () {
     $("input[type='radio'].select-users-radio").each(function () {
         if ($(this).is(':radio')) {
             if ($(this).is(":checked")) {
                 if ($(this).attr("id") == "users-radio-btn") {
                     policy["selectedUsers"] = $("#users-input").val();
+                    policy["selectedUserRoles"] = null;
                 } else if ($(this).attr("id") == "user-roles-radio-btn") {
+                    policy["selectedUsers"] = null;
                     policy["selectedUserRoles"] = $("#user-roles-input").val();
                 }
             }
@@ -1671,8 +2100,8 @@ stepForwardFrom["policy-criteria"] = function () {
     });
     policy["selectedNonCompliantAction"] = $("#action-input").find(":selected").data("action");
     policy["selectedOwnership"] = $("#ownership-input").val();
-    // updating next-page wizard title with selected platform
-    $("#policy-naming-page-wizard-title").text("EDIT " + policy["platform"] + " POLICY - " + policy["name"]);
+    //updating next-page wizard title with selected platform
+    $("#policy-naming-page-wizard-title").text("ADD " + policy["platform"] + " POLICY");
 };
 
 /**
@@ -1759,6 +2188,10 @@ validateStep["policy-naming"] = function () {
     return wizardIsToBeContinued;
 };
 
+validateStep["policy-platform"] = function () {
+    return false;
+};
+
 validateStep["policy-naming-publish"] = function () {
     var validationStatus = {};
 
@@ -1796,28 +2229,29 @@ stepForwardFrom["policy-naming-publish"] = function () {
     policy["policyName"] = $("#policy-name-input").val();
     policy["description"] = $("#policy-description-input").val();
     //All data is collected. Policy can now be updated.
-    updatePolicy(policy, "publish");
+    savePolicy(policy, true, "/api/device-mgt/v1.0/policies/");
 };
+
 stepForwardFrom["policy-naming"] = function () {
     policy["policyName"] = $("#policy-name-input").val();
     policy["description"] = $("#policy-description-input").val();
     //All data is collected. Policy can now be updated.
-    updatePolicy(policy, "save");
+    savePolicy(policy, false, "/api/device-mgt/v1.0/policies/");
 };
 
-var updatePolicy = function (policy, state) {
+var savePolicy = function (policy, isActive, serviceURL) {
     var profilePayloads = [];
     // traverses key by key in policy["profile"]
     var key;
     for (key in policy["profile"]) {
-        if (policy["platformId"] == platformTypeIds["WINDOWS"] && key == windowsOperationConstants["PASSCODE_POLICY_OPERATION_CODE"]) {
+        if (policy["platformId"] == platformIds["WINDOWS"] &&
+            key == windowsOperationConstants["PASSCODE_POLICY_OPERATION_CODE"]) {
             policy["profile"][key].enablePassword = true;
         }
-
         if (policy["profile"].hasOwnProperty(key)) {
             profilePayloads.push({
                 "featureCode": key,
-                "deviceTypeId": policy["platformId"],
+                "deviceType": policy["platform"],
                 "content": policy["profile"][key]
             });
         }
@@ -1825,7 +2259,8 @@ var updatePolicy = function (policy, state) {
 
     $.each(profilePayloads, function (i, item) {
         $.each(item.content, function (key, value) {
-            if (value === "" || value === undefined) {
+            //cannot add a true check since it will catch value = false as well
+            if (value === null || value === undefined || value === "") {
                 item.content[key] = null;
             }
         });
@@ -1836,11 +2271,10 @@ var updatePolicy = function (policy, state) {
         "description": policy["description"],
         "compliance": policy["selectedNonCompliantAction"],
         "ownershipType": policy["selectedOwnership"],
+        "active": isActive,
         "profile": {
             "profileName": policy["policyName"],
-            "deviceType": {
-                "id": policy["platformId"]
-            },
+            "deviceType": policy["platform"],
             "profileFeaturesList": profilePayloads
         }
     };
@@ -1854,52 +2288,17 @@ var updatePolicy = function (policy, state) {
         payload["roles"] = [];
     }
 
-    var serviceURL = "/devicemgt_admin/policies/" + getParameterByName("id");
-    invokerUtil.put(
+    console.log(JSON.stringify(payload));
+
+    invokerUtil.post(
         serviceURL,
         payload,
-        // on success
         function () {
-            if (state == "save") {
-                var policyList = [];
-                policyList.push(getParameterByName("id"));
-                serviceURL = "/devicemgt_admin/policies/inactivate";
-                invokerUtil.put(
-                    serviceURL,
-                    policyList,
-                    // on success
-                    function () {
-                        $(".add-policy").addClass("hidden");
-                        $(".policy-message").removeClass("hidden");
-                    },
-                    // on error
-                    function (daa) {
-                        console.log(data);
-                    }
-                );
-            } else if (state == "publish") {
-                var policyList = [];
-                policyList.push(getParameterByName("id"));
-                serviceURL = "/devicemgt_admin/policies/activate";
-                invokerUtil.put(
-                    serviceURL,
-                    policyList,
-                    // on success
-                    function () {
-                        $(".add-policy").addClass("hidden");
-                        $(".policy-naming").addClass("hidden");
-                        $(".policy-message").removeClass("hidden");
-                    },
-                    // on error
-                    function (data) {
-                        console.log(data);
-                    }
-                );
-            }
+            $(".add-policy").addClass("hidden");
+            $(".policy-naming").addClass("hidden");
+            $(".policy-message").removeClass("hidden");
         },
-        // on error
-        function () {
-
+        function (data) {
         }
     );
 };
@@ -1913,6 +2312,56 @@ var showAdvanceOperation = function (operation, button) {
     $(hiddenOperation + '[data-operation="' + operation + '"]').siblings().hide();
 };
 
+
+/**
+ * This method will display appropriate fields based on wifi type
+ * @param select
+ */
+var changeAndroidWifiPolicy = function (select) {
+    slideDownPaneAgainstValueSet(select, 'control-wifi-password', ['wep', 'wpa', '802eap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-eap', ['802eap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-phase2', ['802eap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-identity', ['802eap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-anoidentity', ['802eap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-cacert', ['802eap']);
+};
+
+/**
+ * This method will display appropriate fields based on wifi EAP type
+ * @param select
+ * @param superSelect
+ */
+var changeAndroidWifiPolicyEAP = function (select, superSelect) {
+    slideDownPaneAgainstValueSet(select, 'control-wifi-password', ['peap', 'ttls', 'pwd' ,'fast', 'leap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-phase2', ['peap', 'ttls', 'fast']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-provisioning', ['fast']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-identity', ['peap', 'tls', 'ttls', 'pwd', 'fast', 'leap']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-anoidentity', ['peap', 'ttls']);
+    slideDownPaneAgainstValueSet(select, 'control-wifi-cacert', ['peap', 'tls', 'ttls']);
+    if (superSelect.value != '802eap') {
+        changeAndroidWifiPolicy(superSelect);
+    }
+};
+
+/**
+ * This method will encode the file-input and enter the values to given input files
+ * @param fileInput
+ * @param fileHiddenInput
+ * @param fileNameHiddenInput
+ */
+var base64EncodeFile = function (fileInput, fileHiddenInput, fileNameHiddenInput) {
+    var file = fileInput.files[0];
+    if (file) {
+        var reader = new FileReader();
+        reader.onload = function(readerEvt) {
+            var binaryString = readerEvt.target.result;
+            fileHiddenInput.value = (btoa(binaryString));
+            fileNameHiddenInput.value =  file.name.substr(0,file.name.lastIndexOf("."));
+        };
+        reader.readAsBinaryString(file);
+    }
+};
+
 /**
  * Method to slide down a provided pane upon provided value set.
  *
@@ -1922,6 +2371,10 @@ var showAdvanceOperation = function (operation, button) {
  */
 var slideDownPaneAgainstValueSet = function (selectElement, paneID, valueSet) {
     var selectedValueOnChange = $(selectElement).find("option:selected").val();
+    if ($(selectElement).is("input:checkbox")) {
+        selectedValueOnChange = $(selectElement).is(":checked").toString();
+    }
+
     var i, slideDownVotes = 0;
     for (i = 0; i < valueSet.length; i++) {
         if (selectedValueOnChange == valueSet[i]) {
@@ -2019,23 +2472,9 @@ var showHideHelpText = function (addFormContainer) {
     }
 };
 
-// End of functions related to grid-input-view
-
-/**
- * This method will return query parameter value given its name.
- * @param name Query parameter name
- * @returns {string} Query parameter value
- */
-var getParameterByName = function (name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-};
-
 function formatRepo(user) {
     if (user.loading) {
-        return user.text
+        return user.text;
     }
     if (!user.username) {
         return;
@@ -2058,25 +2497,63 @@ function formatRepoSelection(user) {
     return user.username || user.text;
 }
 
+function promptErrorPolicyPlatform(errorMsg) {
+    var mainErrorMsgWrapper = "#policy-platform-main-error-msg";
+    var mainErrorMsg = mainErrorMsgWrapper + " span";
+    $(mainErrorMsg).text(errorMsg);
+    $(mainErrorMsgWrapper).removeClass("hidden");
+}
+
+// End of functions related to grid-input-view
+
+
 $(document).ready(function () {
-
-    // Adding initial state of wizard-steps.
-
-    var policyPayloadObj;
-    invokerUtil.get(
-            "/devicemgt_admin/policies/" + getParameterByName("id"),
-        // on success
-        function (data) {
-            data = JSON.parse(data);
-            policyPayloadObj = data["responseContent"];
-            skipStep["policy-platform"](policyPayloadObj);
+    $("#users-input").select2({
+        multiple: true,
+        tags: false,
+        ajax: {
+            url: "/emm/api/invoker/execute/",
+            method: "POST",
+            dataType: 'json',
+            delay: 250,
+            id: function (user) {
+                return user.username;
+            },
+            data: function (params) {
+                var postData = {};
+                postData.requestMethod = "GET";
+                postData.requestURL = "/api/device-mgt/v1.0/users/search/usernames?filter=" + params.term;
+                postData.requestPayload = null;
+                return JSON.stringify(postData);
+            },
+            processResults: function (data) {
+                var newData = [];
+                $.each(data, function (index, value) {
+                    value.id = value.username;
+                    newData.push(value);
+                });
+                return {
+                    results: newData
+                };
+            },
+            cache: true
         },
-        // on error
-        function (data) {
-            console.log(data);
-            // should be redirected to an error page
-        }
-    );
+        escapeMarkup: function (markup) {
+            return markup;
+        }, // let our custom formatter work
+        minimumInputLength: 1,
+        templateResult: formatRepo, // omitted for brevity, see the source of this page
+        templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+    });
+
+    $("#loading-content").remove();
+    $(".policy-platform").removeClass("hidden");
+    // Adding initial state of wizard-steps.
+    $("#policy-platform-wizard-steps").html($(".wr-steps").html());
+
+    $("select.select2[multiple=multiple]").select2({
+        "tags": false
+    });
 
     $("#users-select-field").hide();
     $("#user-roles-select-field").show();
@@ -2093,7 +2570,7 @@ $(document).ready(function () {
     });
 
     // Support for special input type "ANY" on user(s) & user-role(s) selection
-    $("#user-roles-input,#user-input").select2({
+    $("#user-roles-input").select2({
         "tags": false
     }).on("select2:select", function (e) {
         if (e.params.data.id == "ANY") {
@@ -2101,11 +2578,6 @@ $(document).ready(function () {
         } else {
             $("option[value=ANY]", this).prop("selected", false).parent().trigger("change");
         }
-    });
-    $("#policy-profile-wizard-steps").html($(".wr-steps").html());
-
-    $("select.select2[multiple=multiple]").select2({
-        "tags": false
     });
 
     // Maintains an array of configured features of the profile

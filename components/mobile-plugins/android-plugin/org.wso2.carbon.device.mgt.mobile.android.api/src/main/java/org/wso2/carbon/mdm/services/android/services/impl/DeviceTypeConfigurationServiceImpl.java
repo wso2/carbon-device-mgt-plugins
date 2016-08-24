@@ -91,6 +91,12 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
         Message responseMsg = new Message();
         ConfigurationEntry licenseEntry = null;
         PlatformConfiguration configuration = new PlatformConfiguration();
+        if (androidPlatformConfiguration == null) {
+            String errorMessage = "The payload of the android platform configuration is incorrect.";
+            log.error(errorMessage);
+            throw new org.wso2.carbon.mdm.services.android.exception.BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        }
         configuration.setConfiguration(androidPlatformConfiguration.getConfiguration());
         try {
             configuration.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);

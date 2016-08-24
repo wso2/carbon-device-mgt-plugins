@@ -93,7 +93,7 @@ public class WindowsAPIUtils {
         WindowsDeviceUtils deviceUtils = new WindowsDeviceUtils();
         DeviceIDHolder deviceIDHolder = deviceUtils.validateDeviceIdentifiers(deviceIDs,
                 message, responseMediaType);
-//        getDeviceManagementService().addOperation(operation, deviceIDHolder.getValidDeviceIDList());
+//      getDeviceManagementService().addOperation(operation, deviceIDHolder.getValidDeviceIDList());
         if (!deviceIDHolder.getInvalidDeviceIdList().isEmpty()) {
             return Response.status(PluginConstants.StatusCodes.
                     MULTI_STATUS_HTTP_CODE).type(

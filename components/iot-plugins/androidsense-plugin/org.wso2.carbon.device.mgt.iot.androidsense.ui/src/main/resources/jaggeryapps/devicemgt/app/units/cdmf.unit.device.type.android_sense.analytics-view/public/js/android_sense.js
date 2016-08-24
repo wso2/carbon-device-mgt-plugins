@@ -200,7 +200,6 @@ function drawGraph_android_sense(from, to) {
                 populateGraph();
             };
             invokerUtil.get(backendApiUrl, successCallback, function (message) {
-                console.log(message);
                 populateGraph();
             });
         }
@@ -219,7 +218,6 @@ function drawGraph_android_sense(from, to) {
                 getData();
             };
             invokerUtil.get(backendApiUrl, successCallback, function (message) {
-                console.log(message);
                 deviceIndex++;
                 getData();
             });
@@ -265,7 +263,6 @@ function drawGraph_android_sense(from, to) {
                 populateGraph();
             };
             invokerUtil.get(backendApiUrl, successCallback, function (message) {
-                console.log(message);
                 populateGraph();
             });
         }
@@ -285,7 +282,6 @@ function drawGraph_android_sense(from, to) {
                 getData();
             };
             invokerUtil.get(backendApiUrl, successCallback, function (message) {
-                console.log(message);
                 deviceIndex++;
                 getData();
             });

@@ -137,7 +137,6 @@ function drawGraph_raspberrypi(from, to) {
             }
         };
         invokerUtil.get(backendApiUrl, successCallback, function (message) {
-            console.log(message);
         });
     }
 
@@ -155,7 +154,6 @@ function drawGraph_raspberrypi(from, to) {
             getData();
         };
         invokerUtil.get(backendApiUrl, successCallback, function (message) {
-            console.log(message);
             deviceIndex++;
             getData();
         });
