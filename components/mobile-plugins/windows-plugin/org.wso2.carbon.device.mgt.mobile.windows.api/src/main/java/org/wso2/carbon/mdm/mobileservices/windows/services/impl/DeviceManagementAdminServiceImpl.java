@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
- * You may obtain a copy of the License at
+ * you may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.mobileservices.windows.services.adminoperations.impl;
+package org.wso2.carbon.mdm.mobileservices.windows.services.impl;
 
 import com.ibm.wsdl.OperationImpl;
 import org.apache.commons.logging.Log;
@@ -30,7 +30,7 @@ import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.WindowsDevic
 import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.WindowsOperationsException;
 import org.wso2.carbon.mdm.mobileservices.windows.common.util.Message;
 import org.wso2.carbon.mdm.mobileservices.windows.common.util.WindowsAPIUtils;
-import org.wso2.carbon.mdm.mobileservices.windows.services.adminoperations.Operations;
+import org.wso2.carbon.mdm.mobileservices.windows.services.DeviceManagementAdminService;
 
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -43,7 +43,7 @@ import java.util.List;
  * Implementation class of operations interface. Each method in this class receives the operations comes via UI
  * and persists those in the correct format.
  */
-public class OperationsImpl implements Operations {
+public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminService {
 
     private static Log log = LogFactory.getLog(OperationImpl.class);
 
@@ -56,7 +56,7 @@ public class OperationsImpl implements Operations {
      * @throws WindowsDeviceEnrolmentException
      */
     @POST
-    @Path("/lock")
+    @Path("/lock-devices")
     public Response lock(@HeaderParam("Accept") String acceptHeader, List<String> deviceIDs)
             throws WindowsDeviceEnrolmentException {
         if (log.isDebugEnabled()) {

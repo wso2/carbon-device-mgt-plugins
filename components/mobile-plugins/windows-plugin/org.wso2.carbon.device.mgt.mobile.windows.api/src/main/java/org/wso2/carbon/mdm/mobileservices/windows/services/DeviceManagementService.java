@@ -4,7 +4,7 @@
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
- * You may obtain a copy of the License at
+ * you may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.mobileservices.windows.services.devicemgtservice;
+package org.wso2.carbon.mdm.mobileservices.windows.services;
 
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
@@ -50,25 +50,25 @@ public interface DeviceManagementService {
     /**
      * Fetch Windows device details of a given device Id.
      *
-     * @param id Device Id
+     * @param deviceId Device Id
      * @return Returns retrieved device.
      * @throws WindowsConfigurationException occurred while getting device from DB.
      */
     @GET
     @Path("{id}")
-    Device getDevice(@PathParam("id") String id) throws WindowsConfigurationException;
+    Device getDevice(@PathParam("id") String deviceId) throws WindowsConfigurationException;
 
     /**
      * Update Windows device details of given device id.
      *
-     * @param id     Device Id.
+     * @param deviceId     Device Id.
      * @param device Device details to be updated.
      * @return Returns the message whether device update or not.
      * @throws WindowsConfigurationException occurred while updating the Device Info.
      */
     @PUT
     @Path("{id}")
-    Message updateDevice(@PathParam("id") String id, Device device) throws WindowsConfigurationException;
+    Message updateDevice(@PathParam("id") String deviceId, Device device) throws WindowsConfigurationException;
     /**
      * Fetch the Licence agreement for specific windows platform.
      *

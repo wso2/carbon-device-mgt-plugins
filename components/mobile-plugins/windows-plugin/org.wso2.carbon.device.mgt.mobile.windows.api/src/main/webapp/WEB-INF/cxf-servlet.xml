@@ -32,7 +32,7 @@
     <!--Discovery Service GET Endpoint-->
     <jaxrs:server id="DiscoveryService_rest" address="/discovery/get">
         <jaxrs:serviceBeans>
-            <ref bean="DiscoveryService_rest_bean"/>
+            <ref bean="discoveryService"/>
         </jaxrs:serviceBeans>
     </jaxrs:server>
 
@@ -114,14 +114,14 @@
     <!--BST provider Endpoint for returning binary security token after authentication-->
     <jaxrs:server id="bstprovider" address="/federated">
         <jaxrs:serviceBeans>
-            <ref bean="bstprovider_bean"/>
+            <ref bean="bstProviderService"/>
         </jaxrs:serviceBeans>
     </jaxrs:server>
 
     <!--Endpoint for UI admin operations-->
     <jaxrs:server id="adminoperations" address="/windows">
         <jaxrs:serviceBeans>
-            <ref bean="adminoperations_bean"/>
+            <ref bean="deviceMgtAdminService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jsonProvider"/>
@@ -131,7 +131,7 @@
     <!-- Endpoint for Configurations -->
     <jaxrs:server id="configurationService" address="/configuration">
         <jaxrs:serviceBeans>
-            <ref bean="configurationServiceBean"/>
+            <ref bean="configurationMgtService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jsonProvider"/>
@@ -142,7 +142,7 @@
     <!--Endpoint for Policy -->
     <jaxrs:server id="policyService" address="/policy">
         <jaxrs:serviceBeans>
-            <ref bean="policyServiceBean"/>
+            <ref bean="policyManagementService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jsonProvider"/>
@@ -153,7 +153,7 @@
     <!--Endpoint for Devicemanager -->
     <jaxrs:server id="deviceManagementService" address="/device">
         <jaxrs:serviceBeans>
-            <ref bean="deviceMgtServiceBean"/>
+            <ref bean="deviceMgtService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jsonProvider"/>
@@ -161,11 +161,11 @@
         </jaxrs:providers>
     </jaxrs:server>
 
-    <bean id="bstprovider_bean"
+    <bean id="bstProviderService"
           class="org.wso2.carbon.mdm.mobileservices.windows.services.authbst.impl.BSTProviderImpl"/>
-    <bean id="adminoperations_bean"
-          class="org.wso2.carbon.mdm.mobileservices.windows.services.adminoperations.impl.OperationsImpl"/>
-    <bean id="DiscoveryService_rest_bean"
+    <bean id="deviceMgtAdminService"
+          class="org.wso2.carbon.mdm.mobileservices.windows.services.impl.DeviceManagementAdminServiceImpl"/>
+    <bean id="discoveryService"
           class="org.wso2.carbon.mdm.mobileservices.windows.services.discovery.impl.DiscoveryServiceImpl"/>
     <bean id="wss4jInInterceptor" class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
         <property name="properties">
@@ -196,12 +196,12 @@
     <bean id="serviceOptionsHandler"
           class="org.wso2.carbon.mdm.mobileservices.windows.services.wstep.util.MessageHandler"/>
     <bean id="jsonProvider" class="org.wso2.carbon.mdm.mobileservices.windows.common.util.GsonMessageBodyHandler"/>
-    <bean id="configurationServiceBean"
-          class="org.wso2.carbon.mdm.mobileservices.windows.services.configurationmgtservice.ConfigurationMgtServiceImpl"/>
-    <bean id="policyServiceBean"
-          class="org.wso2.carbon.mdm.mobileservices.windows.services.policymgtservice.PolicyMgtService"/>
+    <bean id="configurationMgtService"
+          class="org.wso2.carbon.mdm.mobileservices.windows.services.impl.ConfigurationMgtServiceImpl"/>
+    <bean id="policyManagementService"
+          class="org.wso2.carbon.mdm.mobileservices.windows.services.impl.PolicyManagementServiceImpl"/>
     <bean id="errorHandler" class="org.wso2.carbon.mdm.mobileservices.windows.common.util.ErrorHandler"/>
-    <bean id="deviceMgtServiceBean"
-          class="org.wso2.carbon.mdm.mobileservices.windows.services.devicemgtservice.impl.DeviceManagementServiceImpl"/>
+    <bean id="deviceMgtService"
+          class="org.wso2.carbon.mdm.mobileservices.windows.services.impl.DeviceManagementServiceImpl"/>
 </beans>
 

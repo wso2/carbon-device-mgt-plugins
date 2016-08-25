@@ -4,7 +4,7 @@
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
- * You may obtain a copy of the License at
+ * you may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.mobileservices.windows.services.devicemgtservice.impl;
+package org.wso2.carbon.mdm.mobileservices.windows.services.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,7 +28,7 @@ import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.mdm.mobileservices.windows.common.util.Message;
 import org.wso2.carbon.mdm.mobileservices.windows.common.util.WindowsAPIUtils;
-import org.wso2.carbon.mdm.mobileservices.windows.services.devicemgtservice.DeviceManagementService;
+import org.wso2.carbon.mdm.mobileservices.windows.services.DeviceManagementService;
 
 import javax.jws.WebService;
 import javax.ws.rs.*;
@@ -72,17 +72,17 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     /**
      * Fetch Windows device details of a given device Id.
      *
-     * @param id Device Id
+     * @param deviceId Device Id
      * @return Returns retrieved device.
      * @throws WindowsConfigurationException occurred while getting device from DB.
      */
     @GET
     @Path("{id}")
-    public Device getDevice(@PathParam("id") String id) throws WindowsConfigurationException {
+    public Device getDevice(@PathParam("id") String deviceId) throws WindowsConfigurationException {
         String msg;
         Device device;
         try {
-            DeviceIdentifier deviceIdentifier = WindowsAPIUtils.convertToDeviceIdentifierObject(id);
+            DeviceIdentifier deviceIdentifier = WindowsAPIUtils.convertToDeviceIdentifierObject(deviceId);
             device = WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
             if (device == null) {
                 Response.status(Response.Status.NOT_FOUND);
@@ -98,18 +98,18 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     /**
      * Update Windows device details of given device id.
      *
-     * @param id     Device Id.
+     * @param deviceId     Device Id.
      * @param device Device details to be updated.
      * @return Returns the message whether device update or not.
      * @throws WindowsConfigurationException occurred while updating the Device Info.
      */
     @PUT
     @Path("{id}")
-    public Message updateDevice(@PathParam("id") String id, Device device) throws WindowsConfigurationException {
+    public Message updateDevice(@PathParam("id") String deviceId, Device device) throws WindowsConfigurationException {
         String msg;
         Message responseMessage = new Message();
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(id);
+        deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
         boolean isUpdated;
         try {

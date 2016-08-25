@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
- * You may obtain a copy of the License at
+ * you may obtain a copy of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mdm.mobileservices.windows.services.policymgtservice;
+package org.wso2.carbon.mdm.mobileservices.windows.services.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,29 +24,28 @@ import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.mdm.mobileservices.windows.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.mdm.mobileservices.windows.common.util.Message;
 import org.wso2.carbon.mdm.mobileservices.windows.common.util.WindowsAPIUtils;
+import org.wso2.carbon.mdm.mobileservices.windows.services.PolicyManagementService;
 import org.wso2.carbon.policy.mgt.common.Policy;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
 import javax.jws.WebService;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-/**
- * Endpoint for Enforce Effective Policy.
- */
 @WebService
-@Produces({"application/json", "application/xml"})
-@Consumes({"application/json", "application/xml"})
-public class PolicyMgtService {
-    private static Log log = LogFactory.getLog(PolicyMgtService.class);
+@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+public class PolicyManagementServiceImpl implements PolicyManagementService {
+    private static Log log = LogFactory.getLog(PolicyManagementServiceImpl.class);
 
     @GET
-    @Path("{id}")
+    @Path("{deviceId}")
     public Message getEffectivePolicy(@HeaderParam("Accept") String acceptHeader,
-                                      @PathParam("id") String id) throws WindowsConfigurationException {
+                                      @PathParam("deviceId") String deviceId) throws WindowsConfigurationException {
 
-        DeviceIdentifier deviceIdentifier = WindowsAPIUtils.convertToDeviceIdentifierObject(id);
+        DeviceIdentifier deviceIdentifier = WindowsAPIUtils.convertToDeviceIdentifierObject(deviceId);
         Message responseMessage = new Message();
         Policy policy;
         try {

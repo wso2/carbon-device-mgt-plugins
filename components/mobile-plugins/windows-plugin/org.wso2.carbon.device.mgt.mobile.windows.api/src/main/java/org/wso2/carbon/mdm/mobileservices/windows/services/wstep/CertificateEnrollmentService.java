@@ -44,7 +44,7 @@ public interface CertificateEnrollmentService {
     @WebMethod(operationName = "RequestSecurityToken")
     @ResponseWrapper(localName = "RequestSecurityTokenResponseCollection", targetNamespace =
             PluginConstants.WS_TRUST_TARGET_NAMESPACE)
-    public void requestSecurityToken(
+    void requestSecurityToken(
             @WebParam(name = "TokenType", targetNamespace = PluginConstants.WS_TRUST_TARGET_NAMESPACE)
             String tokenType,
             @WebParam(name = "RequestType", targetNamespace = PluginConstants.WS_TRUST_TARGET_NAMESPACE)
