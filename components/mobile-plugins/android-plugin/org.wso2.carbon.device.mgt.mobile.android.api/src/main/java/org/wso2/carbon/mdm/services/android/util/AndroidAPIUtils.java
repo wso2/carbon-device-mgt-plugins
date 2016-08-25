@@ -122,9 +122,10 @@ public class AndroidAPIUtils {
             throw new BadRequestException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+        DeviceIdentifier deviceIdentifier;
         List<DeviceIdentifier> deviceids = new ArrayList<>();
         for (String deviceId : deviceIDs) {
+            deviceIdentifier = new DeviceIdentifier();
             deviceIdentifier.setId(deviceId);
             deviceIdentifier.setType(AndroidConstants.DEVICE_TYPE_ANDROID);
             deviceids.add(deviceIdentifier);
