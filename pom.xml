@@ -1077,6 +1077,11 @@
                 <artifactId>hibernate-validator</artifactId>
                 <version>${hibernate-validator.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.apimgt</groupId>
+                <artifactId>org.wso2.carbon.apimgt.keymgt.client</artifactId>
+                <version>${carbon.api.mgt.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1146,7 +1151,7 @@
         <carbon.governance.version>4.5.8</carbon.governance.version>
 
         <!-- Carbon API Management -->
-        <carbon.api.mgt.version>5.0.3</carbon.api.mgt.version>
+        <carbon.api.mgt.version>5.0.5</carbon.api.mgt.version>
 
         <!-- XMPP/MQTT Version -->
         <smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>
