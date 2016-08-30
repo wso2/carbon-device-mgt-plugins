@@ -452,6 +452,8 @@ function initPage() {
                     $("#loading-content").remove();
                     $("#device-table").remove();
                     $("#no-device-view").removeClass(' hidden');
+                    $("#advanced-search-btn").addClass(' hidden');
+                    $("#enroll-btn").addClass(' hidden');
                 }
             }
         }, function (message) {

@@ -36,7 +36,7 @@
 
 {{#zone "navbarActions"}}
 {{!-- #if permissions.enroll --}}
-    <li>
+    <li id = "enroll-btn">
         <a href="javascript:toggleEnrollment()">
                                 <span class="fw-stack">
                                    <i class="fw fw-ring fw-stack-2x"></i>
@@ -51,7 +51,7 @@
         </a>
     </li>
     {{!-- /if --}}
-    <li>
+    <li id = "advanced-search-btn">
         <a href="{{appContext}}devices/search">
                                 <span class="fw-stack">
                                    <i class="fw fw-ring fw-stack-2x"></i>
