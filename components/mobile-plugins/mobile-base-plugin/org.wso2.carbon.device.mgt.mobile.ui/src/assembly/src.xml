@@ -29,7 +29,12 @@
     <fileSets>
         <fileSet>
             <directory>${basedir}/src/main/resources/jaggeryapps/devicemgt</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/devicemgt</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/main/resources/jaggeryapps/emm-web-agent</directory>
+            <outputDirectory>/emm-web-agent</outputDirectory>
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
     </fileSets>
