@@ -1,6 +1,6 @@
 {
     "appName": "WSO2 Enterprise Mobility Manager",
-    "cachingEnabled": false,
+    "cachingEnabled": true,
     "debuggingEnabled": false,
     "permissionRoot": "/",
     "loginPage": "cdmf.page.sign-in",
