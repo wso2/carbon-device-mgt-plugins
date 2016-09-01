@@ -1,0 +1,6 @@
+{
+    "version": "1.0.0",
+    "uri": "/enrollments/error/ios/certificate-download-failure",
+    "layout": "mdm.layout.enrollment",
+    "isAnonymous": true
+}
