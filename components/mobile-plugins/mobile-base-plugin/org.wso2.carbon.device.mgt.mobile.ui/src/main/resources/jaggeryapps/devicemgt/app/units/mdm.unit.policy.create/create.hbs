@@ -42,6 +42,7 @@
             <button class="wr-btn wizard-stepper" data-current="policy-message" data-direct="/emm/policies/">
                 View policy list
             </button>
+            <!--suppress HtmlUnknownTarget -->
             <a href="/emm/policy/add" class="cu-btn-inner">
                         <span class="fw-stack">
                             <i class="fw fw-ring fw-stack-2x"></i>
@@ -60,7 +61,7 @@
             <hr>
             <div class="row">
                 <div class="col-lg-12">
-                    <h4 class="visible-xs">Step 4: Publish to devices</h4>
+                    <h4 class="hidden-xs">Step 4: Publish to devices</h4>
                     <br>
                     <div id="policy-naming-main-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
@@ -73,6 +74,7 @@
                         </label>
                         <div id="policyNameField" class="wr-input-control">
                             <div class="cus-col-50 form-group wr-input-control">
+                                <!--suppress HtmlFormInputWithoutLabel -->
                                 <input id="policy-name-input" class="form-control" type="text" value="" />
                                 <label class="error nameEmpty hidden" for="summary">Policy name is required &
                                     Should be be 1-to-30
@@ -114,7 +116,7 @@
             <hr>
             <div class="row">
                 <div class="col-lg-12">
-                    <h4 class="visible-xs">Step 3: Assign to groups</h4>
+                    <h4 class="hidden-xs">Step 3: Assign to groups</h4>
                     <br>
                     <div id="policy-criteria-main-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
@@ -125,6 +127,7 @@
                         </label>
                         <div class="wr-input-control">
                             <div class="cus-col-50">
+                                <!--suppress HtmlFormInputWithoutLabel -->
                                 <select id="ownership-input" class="form-control">
                                     <option value="ANY" selected>ANY</option>
                                     <option value="BYOD">BYOD (Bring Your Own Device)</option>
@@ -148,6 +151,7 @@
                         <div id="user-roles-select-field" class="select-users">
                             <div class="wr-input-control">
                                 <div class="cus-col-50">
+                                    <!--suppress HtmlFormInputWithoutLabel -->
                                     <select id="user-roles-input" class="form-control select2"
                                             multiple="multiple">
                                         <option value="ANY" selected>ANY</option>
@@ -162,6 +166,7 @@
                         <div id="users-select-field" class="select-users">
                             <div class="wr-input-control">
                                 <div class="cus-col-50">
+                                    <!--suppress HtmlFormInputWithoutLabel -->
                                     <select id="users-input" class="form-control select2" multiple="multiple">
                                     </select>
                                 </div>
@@ -174,6 +179,7 @@
                         </label>
                         <div class="wr-input-control">
                             <div class="cus-col-50">
+                                <!--suppress HtmlFormInputWithoutLabel -->
                                 <select id="action-input" class="form-control">
                                     <option data-action="enforce" selected>Enforce</option>
                                     <option data-action="warn">Warn</option>
@@ -202,7 +208,7 @@
             <hr>
             <div class="row">
                 <div class="col-lg-12">
-                    <h4 class="visible-xs">Step 2: Configure profile</h4>
+                    <h4 class="hidden-xs">Step 2: Configure profile</h4>
                     <br>
                     <div id="policy-profile-main-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
@@ -242,7 +248,7 @@
             <!--</div>-->
             <div class="row">
                 <div class="col-lg-12">
-                    <h4 class="visible-xs"> Step 1: Select a platform</h4>
+                    <h4 class="hidden-xs"> Step 1: Select a platform</h4>
                     <br>
                     <div id="policy-platform-main-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
@@ -251,12 +257,13 @@
                         <div class="wr-input-control">
                             <ul class="tile-buttons row">
                                 {{#each types}}
-                                    <li class="col-xs-12 col-sm-12 col-md- 4 col-lg-4"
-                                        style="margin-top: 5px;margin-bottom: 5px;">
+                                    <li class="col-xs-12 col-sm-12 col-md-4 col-lg-4"
+                                        style="margin-top: 5px; margin-bottom: 5px;">
                                         <a href="javascript:void(0)"
-                                           class="wizard-stepper {{name}}-platform"
+                                           class="{{name}}-platform wizard-stepper"
                                            data-current="policy-platform"
-                                           data-next="policy-profile" data-platform="{{name}}"
+                                           data-next="policy-profile"
+                                           data-platform="{{name}}"
                                            data-validate="false">
                                             <img src="{{icon}}" width="50px" height="50px" />
                                             <br><br>
@@ -277,10 +284,13 @@
     </div>
 {{/zone}}
 {{#zone "bottomJs"}}
+    <!--suppress HtmlUnknownTarget -->
     <script id="hidden-operations-ios" src="{{@unit.publicUri}}/templates/hidden-operations-ios.hbs"
             type="text/x-handlebars-template"></script>
+    <!--suppress HtmlUnknownTarget -->
     <script id="hidden-operations-android" src="{{@unit.publicUri}}/templates/hidden-operations-android.hbs"
             type="text/x-handlebars-template"></script>
+    <!--suppress HtmlUnknownTarget -->
     <script id="hidden-operations-windows" src="{{@unit.publicUri}}/templates/hidden-operations-windows.hbs"
             type="text/x-handlebars-template"></script>
     {{js "/js/policy-create.js"}}
