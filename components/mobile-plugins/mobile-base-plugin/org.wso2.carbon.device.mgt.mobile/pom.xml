@@ -58,7 +58,7 @@
                             javax.xml.bind.*,
                             javax.naming,
                             javax.sql,
-                            javax.xml.parsers,
+                            javax.xml.parsers; version=0.0.0,
                             org.w3c.dom,
                             org.wso2.carbon.context,
                             org.wso2.carbon.utils.*,
