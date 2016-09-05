@@ -123,17 +123,15 @@ public class AndroidAPIUtils {
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
         DeviceIdentifier deviceIdentifier;
-        List<DeviceIdentifier> deviceids = new ArrayList<>();
+        List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
         for (String deviceId : deviceIDs) {
             deviceIdentifier = new DeviceIdentifier();
             deviceIdentifier.setId(deviceId);
             deviceIdentifier.setType(AndroidConstants.DEVICE_TYPE_ANDROID);
-            deviceids.add(deviceIdentifier);
+            deviceIdentifiers.add(deviceIdentifier);
         }
-        Activity activity = null;
-            activity = getDeviceManagementService().addOperation(
-                    DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, deviceids);
-
+        Activity activity = getDeviceManagementService().addOperation(
+                    DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, deviceIdentifiers);
 //        if (activity != null) {
 //            GCMService gcmService = getGCMService();
 //            if (gcmService.isGCMEnabled()) {
@@ -145,7 +143,6 @@ public class AndroidAPIUtils {
 //                getGCMService().sendNotification(operation.getCode(), devices);
 //            }
 //        }
-
         return Response.status(Response.Status.CREATED).entity(activity).build();
     }
 

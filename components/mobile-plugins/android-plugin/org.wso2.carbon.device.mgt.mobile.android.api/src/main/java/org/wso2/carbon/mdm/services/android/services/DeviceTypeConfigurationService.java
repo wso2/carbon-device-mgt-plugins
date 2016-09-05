@@ -152,7 +152,7 @@ public interface DeviceTypeConfigurationService {
             @ApiResponse(
                     code = 200,
                     message = "OK. \n Successfully fetched Android license configuration.",
-                    response = PlatformConfiguration.class,
+                    response = String.class,
                     responseHeaders = {
                             @ResponseHeader(
                                     name = "Content-Type",
