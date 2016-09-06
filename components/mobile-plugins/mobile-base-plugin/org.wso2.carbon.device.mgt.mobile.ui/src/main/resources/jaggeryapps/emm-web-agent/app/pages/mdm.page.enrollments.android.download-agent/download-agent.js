@@ -25,7 +25,7 @@ function onRequest(context) {
     // setting android agent download URL
     // Needs host=>http:9763 since self-signed certificates won't allow downloads in android
     //TODO: try to retrieve page name from UUF
-    viewModel.agentDownloadURL = mdmProps["generalConfig"]["host"] + mdmProps["appContext"] + "public/mdm.page.enrollments.android.agent.download/asset/" + mdmProps["androidAgentApp"];
+    viewModel.agentDownloadURL = mdmProps["generalConfig"]["host"] + mdmProps["appContext"] + "public/mdm.page.enrollments.android.download-agent/asset/" + mdmProps["androidAgentApp"];
     var companyProps = session.get("COMPANY_DETAILS");
     if (!companyProps) {
         viewModel.companyName = mdmProps.generalConfig.companyName;
