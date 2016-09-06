@@ -21,9 +21,11 @@ function onRequest(context) {
 
     var mdmProps = require("/app/modules/conf-reader/main.js")["conf"];
     var viewModel = {};
-    
+
     // setting android agent download URL
-    viewModel.agentDownloadURL = context.page.publicUri + "/asset/" + mdmProps["androidAgentApp"];
+    // Needs host=>http:9763 since self-signed certificates won't allow downloads in android
+    //TODO: try to retrieve page name from UUF
+    viewModel.agentDownloadURL = mdmProps["generalConfig"]["host"] + mdmProps["appContext"] + "public/mdm.page.enrollments.android.agent.download/asset/" + mdmProps["androidAgentApp"];
     var companyProps = session.get("COMPANY_DETAILS");
     if (!companyProps) {
         viewModel.companyName = mdmProps.generalConfig.companyName;
