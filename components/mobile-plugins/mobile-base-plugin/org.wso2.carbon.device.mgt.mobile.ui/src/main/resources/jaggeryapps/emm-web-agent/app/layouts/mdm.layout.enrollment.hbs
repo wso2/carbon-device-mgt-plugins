@@ -43,25 +43,34 @@ under the License. --}}
     {{defineZone "topJs"}}
 </head>
 <body>
-<div class="container col-lg-12 col-md-12 col-sm-12">
-    <header>
-        <div class="row wr-global-header">
-            <div class="col-sm-8 app-logo">
-                {{defineZone "brand"}}
+<header class="header header-default">
+        <div class="container-fluid ">
+        <div class="col-sm-8 app-logo">
+            {{defineZone "brand"}}
+        </div>
+        </div>
+</header>
+
+<div class="page-content-wrapper">
+    <div class="container-fluid ">
+        <div class="body-wrapper">
+            <div class="wr-head">
+                <h2>{{defineZone "headerTitle" }}</h2>
+                <hr>
             </div>
+            <!-- start: zone-content-->
+            {{defineZone "content"}}
+            <!-- end: zone-content-->
+            {{!-- {{ defineZone "footer"}} --}}
         </div>
-    </header>
-    <div class="container c-both">
-        <div class="wr-head">
-            <h2>{{defineZone "headerTitle"}}</h2>
-            <hr>
-        </div>
-        <!-- start: zone-content-->
-        {{defineZone "content"}}
-        <!-- end: zone-content-->
     </div>
-    {{!-- {{ defineZone "footer"}} --}}
 </div>
+<footer class="footer">
+    <div class="container-fluid">
+        {{defineZone "footer"}}
+    </div>
+</footer>
+
 {{defineZone "bottomJs" }}
 </body>
 </html>
