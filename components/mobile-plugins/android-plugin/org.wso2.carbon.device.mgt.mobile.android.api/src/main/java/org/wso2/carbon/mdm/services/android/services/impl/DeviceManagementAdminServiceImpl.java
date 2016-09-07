@@ -558,6 +558,22 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     throw new BadRequestException(
                             new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
                 }
+                if (payload.has("type")) {
+                    String type = payload.getString("type");
+                    if (!"enterprise".equalsIgnoreCase(type)
+                        && !"public".equalsIgnoreCase(type)
+                        && !"webapp".equalsIgnoreCase(type)) {
+                        String errorMessage = "Invalid application type.";
+                        log.error(errorMessage);
+                        throw new BadRequestException(
+                                new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+                    }
+                } else {
+                    String errorMessage = "Application type is missing.";
+                    log.error(errorMessage);
+                    throw new BadRequestException(
+                            new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+                }
             } catch (MalformedURLException e) {
                 String errorMessage = "Malformed application url.";
                 log.error(errorMessage);
