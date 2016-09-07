@@ -22,6 +22,9 @@ var log = new Log("/modules/enrollments/ios/agent-check.jag");
 var mdmProps = require("/app/modules/conf-reader/main.js")["conf"];
 var UAParser = require("/app/modules/ua-parser.min.js")["UAParser"];
 
+var tokenUtil = require("/app/modules/oauth/token-handlers.js")["handlers"];
+var serviceInvokers = require("/app/modules/oauth/token-protected-service-invokers.js")["invokers"];
+
 var parser = new UAParser();
 var userAgent = request.getHeader("User-Agent");
 parser.setUA(userAgent);
@@ -39,25 +42,25 @@ if (platform != "iOS") {
         response["status"] = 200;
         response["content"] = {"deviceID" : null};
     } else {
-        var deviceCheckURL = mdmProps["iOSAPIRoot"] + "device/deviceid";
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", deviceCheckURL);
+        var deviceCheckURL = mdmProps["iOSAPIRoot"] + "devices/udid";
         var challengeToken = session.get("iOSChallengeToken");
-        var inputs = {"challengeToken" : challengeToken};
-        xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.setRequestHeader("Accept", "application/json");
-        xhr.send(stringify(inputs));
+        var payload = {"challengeToken" : challengeToken};
 
-        if (xhr.status == 200) {
-            var responseObject = parse(xhr["responseText"]);
-            response["status"] = 200;
-            response["content"] = responseObject;
-        } else {
-            // server only returns 400 in case of bad request
-            response["status"] = 200;
-            response["content"] = {"deviceID" : null};
-        }
+        serviceInvokers.XMLHttp.post(
+            deviceCheckURL,
+            stringify(payload),
+            function (restAPIResponse) {
+                var status = restAPIResponse["status"];
+                if (status == 200) {
+                    var responseContent = parse(restAPIResponse.responseText);
+                    response["status"] = 200;
+                    response["content"] = responseContent;
+                } else {
+                    response["status"] = 200;
+                    response["content"] = {"deviceID" : null};
+                }
+            }
+        );
     }
 }
 %>
