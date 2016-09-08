@@ -5,7 +5,7 @@
     "httpURL" : "%http.ip%",
     "enrollmentDir": "/emm-web-agent/enrollment",
     "iOSConfigRoot" : "%https.ip%/ios-enrollment/",
-    "iOSAPIRoot" : "%https.ip%/ios/",
+    "iOSAPIRoot" : "%https.ip%/api/device-mgt/ios/v1.0/",
     "dynamicClientRegistrationEndPoint" : "%https.ip%/dynamic-client-web/register/",
     "adminService":"%https.ip%",
     "idPServer":"%https.ip%",
