@@ -215,7 +215,7 @@ $(document).ready(function () {
 
             // on-click function for policy un-publishing "yes" button
             $("a#unpublish-policy-yes-link").click(function () {
-                invokerUtil.put(
+                invokerUtil.post(
                     serviceURL,
                     policyList,
                     // on success
@@ -268,7 +268,7 @@ $(document).ready(function () {
 
             // on-click function for policy removing "yes" button
             $("a#publish-policy-yes-link").click(function () {
-                invokerUtil.put(
+                invokerUtil.post(
                     serviceURL,
                     policyList,
                     // on success
