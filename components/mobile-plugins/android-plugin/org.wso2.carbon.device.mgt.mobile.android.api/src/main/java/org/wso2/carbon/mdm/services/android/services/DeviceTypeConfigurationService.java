@@ -20,6 +20,7 @@ package org.wso2.carbon.mdm.services.android.services;
 
 import io.swagger.annotations.*;
 import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.bean.AndroidPlatformConfiguration;
@@ -81,7 +82,7 @@ public interface DeviceTypeConfigurationService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching Android platform configuration.")
     })
-    @Scope(key = "configuration:view", name = "View configurations", description = "")
+    @Permission(name = "View Configurations", permission = "/device-mgt/configurations/view")
     Response getConfiguration(
             @ApiParam(
                     name = "If-Modified-Since",
@@ -131,7 +132,7 @@ public interface DeviceTypeConfigurationService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while modifying Android platform configuration.")
     })
-    @Scope(key = "configuration:manage", name = "Add configurations", description = "")
+    @Permission(name = "Manage Configurations", permission = "/device-mgt/configurations/manage")
     Response updateConfiguration(
             @ApiParam(name = "configuration",
                     value = "AndroidPlatformConfiguration")
@@ -179,7 +180,7 @@ public interface DeviceTypeConfigurationService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching Android license configuration.")
     })
-    @Scope(key = "device:android:enroll", name = "Enroll Android device", description = "")
+    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/android/enroll")
     Response getLicense(
             @ApiParam(
                     name = "If-Modified-Since",

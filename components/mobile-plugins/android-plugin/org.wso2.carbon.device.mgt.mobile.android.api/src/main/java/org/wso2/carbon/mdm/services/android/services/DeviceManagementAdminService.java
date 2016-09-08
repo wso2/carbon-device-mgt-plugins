@@ -20,6 +20,7 @@ package org.wso2.carbon.mdm.services.android.services;
 
 import io.swagger.annotations.*;
 import org.wso2.carbon.apimgt.annotations.api.API;
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.*;
@@ -92,7 +93,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new lock operation.")
     })
-    @Scope(key = "device:android:operation:lock", name = "Lock device", description = "")
+    @Permission(name = "Lock Device", permission = "/device-mgt/devices/android/operations/lock")
     Response configureDeviceLock(
             @ApiParam(name = "deviceLockBeanWrapper",
                     value = "Device lock configurations with device IDs") DeviceLockBeanWrapper deviceLockBeanWrapper);
@@ -146,7 +147,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new un-lock operation.")
     })
-    @Scope(key = "device:android:operation:unlock", name = "Unlock device", description = "")
+    @Permission(name = "Unlock Device", permission = "/device-mgt/devices/android/operations/unlock")
     Response configureDeviceUnlock(
             @ApiParam(name = "deviceIDs", value = "DeviceIds to be enable device unlock operation")
             List<String> deviceIDs);
@@ -199,7 +200,7 @@ public interface DeviceManagementAdminService {
                     code = 500,
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new get-location operation.")})
-    @Scope(key = "device:android:operation:location", name = "Get device location", description = "")
+    @Permission(name = "Get Device Location", permission = "/device-mgt/devices/android/operations/location")
     Response getDeviceLocation(
             @ApiParam(name = "deviceIDs", value = "DeviceIDs to be requested to get device location")
             List<String> deviceIDs);
@@ -252,7 +253,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new clear password operation.")
     })
-    @Scope(key = "device:android:operation:clear-password", name = "Clear password of device", description = "")
+    @Permission(name = "Clear Password of Device", permission = "/device-mgt/devices/android/operations/clear-password")
     Response removePassword(
             @ApiParam(name = "deviceIDs",
                     value = "DeviceIds to be requested to remove password")  List<String> deviceIDs);
@@ -305,7 +306,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new control camera operation.")
     })
-    @Scope(key = "device:android:operation:camera", name = "Enable/Disable camera", description = "")
+    @Permission(name = "Manage Camera", permission = "/device-mgt/devices/android/operations/camera")
     Response configureCamera(
             @ApiParam(name = "cameraBeanWrapper", value = "Camera enable/disable configurations with device IDs")
             CameraBeanWrapper cameraBeanWrapper);
@@ -361,19 +362,19 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new device info operation.")
     })
-    @Scope(key = "device:android:operation:info", name = "Get device information", description = "")
+    @Permission(name = "Get Device Information", permission = "/device-mgt/devices/android/operations/info")
     Response getDeviceInformation(
             @ApiParam(name = "deviceIds", value = "Device IDs to be requested to get device information")
             List<String> deviceIDs);
 
     @POST
-    @Path("/info")
+    @Path("/logcat")
     @ApiOperation(
             consumes = MediaType.APPLICATION_JSON,
             produces = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
-            value = "Requesting Information from Android Devices",
-            notes = "Using this REST API you are able to request for Android device details. Once this REST API is" +
+            value = "Requesting logcat from Android Devices",
+            notes = "Using this REST API you are able to request for Android device log details. Once this REST API is" +
                     " executed it will be in the Android operation queue until the device calls the server to retrieve " +
                     "the list of operations that needs to be executed on the device",
             response = Activity.class,
@@ -417,6 +418,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                               "Server error occurred while adding a new device logcat operation.")
     })
+    @Permission(name = "Get Logs", permission = "/device-mgt/devices/android/operations/logcat")
     Response getDeviceLogcat(
             @ApiParam(name = "deviceIds", value = "Device IDs to be requested to get device logcat")
                     List<String> deviceIDs);
@@ -470,7 +472,7 @@ public interface DeviceManagementAdminService {
                     code = 500,
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a enterprise wipe operation.")})
-    @Scope(key = "device:android:operation:enterprise-wipe", name = "Enterprise wipe", description = "")
+    @Permission(name = "Enterprise Wipe", permission = "/device-mgt/devices/android/operations/enterprise-wipe")
     Response wipeDevice(@ApiParam(name = "deviceIDs", value = "Device IDs to be requested to do enterprise-wipe")
                         List<String> deviceIDs);
 
@@ -522,7 +524,7 @@ public interface DeviceManagementAdminService {
                     code = 500,
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a device wipe operation.")})
-    @Scope(key = "device:android:operation:wipe", name = "Factory reset device", description = "")
+    @Permission(name = "Factory Reset", permission = "/device-mgt/devices/android/operations/wipe")
     Response wipeData(
             @ApiParam(name = "wipeDataBeanWrapper", value = "Configurations and DeviceIds needed to do wipe-data")
             WipeDataBeanWrapper wipeDataBeanWrapper);
@@ -579,7 +581,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new get-applications operation.")
     })
-    @Scope(key = "device:android:operation:applications", name = "Get installed applications", description = "")
+    @Permission(name = "Get Installed Application", permission = "/device-mgt/devices/android/operations/applications")
     Response getApplications(
             @ApiParam(name = "deviceIDs", value = "Device Ids needed to get applications that are already installed")
             List<String> deviceIDs);
@@ -632,7 +634,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new device ring operation.")
     })
-    @Scope(key = "device:android:operation:ring", name = "Ring device", description = "")
+    @Permission(name = "Ring Device", permission = "/device-mgt/devices/android/operations/ring")
     Response ringDevice(
             @ApiParam(name = "deviceIDs", value = "Device Ids needed for ring")
             List<String> deviceIDs);
@@ -685,7 +687,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new device reboot operation.")
     })
-    @Scope(key = "device:android:operation:reboot", name = "Reboot device", description = "")
+    @Permission(name = "Reboot Device", permission = "/device-mgt/devices/android/operations/reboot")
     Response rebootDevice(
             @ApiParam(name = "deviceIDs", value = "Device Ids needed for reboot.")
             List<String> deviceIDs);
@@ -738,7 +740,7 @@ public interface DeviceManagementAdminService {
                             "Server error occurred while adding a new device mute operation.")
     })
     @Path("/mute")
-    @Scope(key = "device:android:operation:mute", name = "Mute device", description = "")
+    @Permission(name = "Mute Device", permission = "/device-mgt/devices/android/operations/mute")
     Response muteDevice(
             @ApiParam(name = "deviceIDs", value = "DeviceIDs need to be muted")
             List<String> deviceIDs);
@@ -794,7 +796,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new install-application operation.")
     })
-    @Scope(key = "device:android:operation:install-app", name = "Install applications", description = "")
+    @Permission(name = "Install Applications", permission = "/device-mgt/devices/android/operations/install-app")
     Response installApplication(
             @ApiParam(name = "applicationInstallationBeanWrapper", value = "Properties of installed apps and device IDs")
             ApplicationInstallationBeanWrapper applicationInstallationBeanWrapper);
@@ -850,7 +852,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new update-application operation.")
     })
-    @Scope(key = "device:android:operation:update-app", name = "Update installed applications", description = "")
+    @Permission(name = "Update installed applications", permission = "/device-mgt/devices/android/operations/update-app")
     Response updateApplication(
             @ApiParam(name = "applicationUpdateBeanWrapper", value = "Properties of updated apps and device IDs")
             ApplicationUpdateBeanWrapper applicationUpdateBeanWrapper);
@@ -903,7 +905,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new uninstall-application operation.")
     })
-    @Scope(key = "device:android:operation:uninstall-app", name = "Uninstall applications", description = "")
+    @Permission(name = "Uninstall Applications", permission = "/device-mgt/devices/android/operations/uninstall-app")
     Response uninstallApplication(
             @ApiParam(name = "applicationUninstallationBeanWrapper",
                     value = "applicationUninstallationConfigs and Device Ids")
@@ -958,7 +960,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new blacklist-applications operation.")
     })
-    @Scope(key = "device:android:operation:blacklist-app", name = "Blacklist applications", description = "")
+    @Permission(name = "Blacklist Applications", permission = "/device-mgt/devices/android/operations/blacklist-app")
     Response blacklistApplications(
             @ApiParam(name = "blacklistApplicationsBeanWrapper", value = "BlacklistApplications " +
                     "Configuration and DeviceIds")
@@ -1013,7 +1015,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new upgrade firmware operation.")
     })
-    @Scope(key = "device:android:operation:upgrade", name = "Upgrade firmware", description = "")
+    @Permission(name = "Upgrade Firmware", permission = "/device-mgt/devices/android/operations/upgrade")
     Response upgradeFirmware(
             @ApiParam(name = "upgradeFirmwareBeanWrapper",
                     value = "Firmware upgrade configuration and DeviceIds")
@@ -1068,7 +1070,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new configure VPN operation.")
     })
-    @Scope(key = "device:android:operation:vpn", name = "Add VPN profiles", description = "")
+    @Permission(name = "Add VPN", permission = "/device-mgt/devices/android/operations/vpn")
     Response configureVPN(
             @ApiParam(name = "vpnBeanWrapper",
                     value = "VPN configuration and DeviceIds")
@@ -1122,7 +1124,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new send notification operation.")
     })
-    @Scope(key = "device:android:operation:notification", name = "Send notifications", description = "")
+    @Permission(name = "Send Notifications", permission = "/device-mgt/devices/android/operations/notification")
     Response sendNotification(
             @ApiParam(name = "notificationBeanWrapper",
                     value = "Notification Configurations and device Ids")
@@ -1176,7 +1178,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new configure wifi operation.")
     })
-    @Scope(key = "device:android:operation:wifi", name = "Add WiFi configurations", description = "")
+    @Permission(name = "Add Wifi Configuration", permission = "/device-mgt/devices/android/operations/wifi")
     Response configureWifi(
             @ApiParam(name = "wifiBeanWrapper",
                     value = "WifiConfigurations and Device Ids") WifiBeanWrapper wifiBeanWrapper);
@@ -1229,7 +1231,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new encrypt storage operation.")
     })
-    @Scope(key = "device:android:operation:encrypt", name = "Encrypt device", description = "")
+    @Permission(name = "Encrypt Device", permission = "/device-mgt/devices/android/operations/encrypt")
     Response encryptStorage(
             @ApiParam(name = "encryptionBeanWrapper",
                     value = "Configurations and deviceIds need to be done data encryption")
@@ -1283,7 +1285,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new change lock code operation.")
     })
-    @Scope(key = "device:android:operation:change-lock", name = "Change password of device", description = "")
+    @Permission(name = "Change Password of Device", permission = "/device-mgt/devices/android/operations/change-lock")
     Response changeLockCode(
             @ApiParam(name = "lockCodeBeanWrapper",
                     value = "Configurations and device Ids need to be done change lock code")
@@ -1337,7 +1339,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new set password policy operation.")
     })
-    @Scope(key = "device:android:operation:password-policy", name = "Set password policy", description = "")
+    @Permission(name = "Set Password Policy", permission = "/device-mgt/devices/android/operations/password-policy")
     Response setPasswordPolicy(
             @ApiParam(name = "passwordPolicyBeanWrapper",
                     value = "Password Policy Configurations and Device Ids")
@@ -1391,7 +1393,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new set webclip operation.")
     })
-    @Scope(key = "device:android:operation:webclip", name = "Add webclips", description = "")
+    @Permission(name = "Add Webclips", permission = "/device-mgt/devices/android/operations/webclip")
     Response setWebClip(
             @ApiParam(name = "webClipBeanWrapper",
                     value = "Configurations to need set web clip on device and device Ids")
