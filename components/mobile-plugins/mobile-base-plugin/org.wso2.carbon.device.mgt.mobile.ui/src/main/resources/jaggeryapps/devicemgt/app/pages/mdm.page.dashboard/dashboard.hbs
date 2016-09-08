@@ -19,7 +19,6 @@
 {{unit "cdmf.unit.lib.qrcode"}}
 {{unit "mdm.unit.device.qr-modal"}}
 {{#zone "content"}}
-    {{#if permissions.VIEW_DASHBOARD}}
         {{#if permissions.LIST_DEVICES}}
             <div class="row ">
                 <div class="col-md-3 wr-stats-board">
@@ -151,9 +150,6 @@
                 </div>
             </div>
         {{/if}}
-    {{else}}
-        Permission denied
-    {{/if}}
 {{/zone}}
 {{#zone "bottomJs"}}
     {{js "js/dashboard.js"}}

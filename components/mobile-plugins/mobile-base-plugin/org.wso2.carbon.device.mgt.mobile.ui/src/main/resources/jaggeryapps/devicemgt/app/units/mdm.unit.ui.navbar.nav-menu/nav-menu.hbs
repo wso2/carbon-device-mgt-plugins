@@ -22,30 +22,20 @@
 {{/zone}}
 
 {{#zone "navMenu-items"}}
-    {{#if permissions.VIEW_DASHBOARD}}
         <li>
             <a href="{{@app.context}}">
                 <i class="fw fw-dashboard"></i>
                 Admin Dashboard
             </a>
         </li>
-    {{/if}}
-    {{#if permissions.LIST_DEVICES_ADMIN}}
+
+    {{#if permissions.LIST_DEVICES}}
         <li>
             <a href="{{@app.context}}/devices">
                 <i class="fw fw-mobile"></i>
                 Device Management
             </a>
         </li>
-    {{else}}
-        {{#if permissions.LIST_OWN_DEVICES}}
-            <li>
-                <a href="{{@app.context}}/devices">
-                    <i class="fw fw-mobile"></i>
-                    Device Management
-                </a>
-            </li>
-        {{/if}}
     {{/if}}
 
     <li><a><i class="fw fw-user"></i>User Management</a>
@@ -64,12 +54,12 @@
     {{/if}}
     <li><a><i class="fw fw-settings"></i>Configuration Management</a>
         <ul>
-            {{#if permissions.TENANT_CONFIGURATION}}
+            {{#if permissions.LIST_CONFIGURATION}}
                 <li><a href="{{@app.context}}/platform-configuration"><i class="fw fw-service"></i>Platform Configurations</a>
                 </li>
             {{/if}}
             <!-- todo change the permission and get the related permission -->
-            {{#if permissions.TENANT_CONFIGURATION}}
+            {{#if permissions.LIST_CONFIGURATION}}
                 <li><a href="{{@app.context}}/certificates"><i class="fw fw-security-policy"></i>Certificate Configurations</a>
                 </li>
             {{/if}}
@@ -93,7 +83,7 @@
     </ul>
 {{/zone}}
 {{#zone "sidePanes"}}
-    <div class="sidebar-wrapper" id="right-sidebar" is-authorized="{{isAuthorizedForNotifications}}"
+    <div class="sidebar-wrapper" id="right-sidebar" is-authorized="{{permissions.LIST_NOTIFICATIONS}}"
          data-side="right" data-width="320" data-sidebar-fixed="true" data-fixed-offset="50" data-spy="affix"
          data-offset-top="80">
         <ul class="sidebar-messages">

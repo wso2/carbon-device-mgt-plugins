@@ -30,27 +30,30 @@ function onRequest(context) {
     var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
     var mdmProps = require("/app/modules/conf-reader/main.js")["conf"];
     var constants = require("/app/modules/constants.js");
-    var uiPermissions = userModule.getUIPermissions();
-    context["permissions"] = uiPermissions;
-
     var links = {
         "user-mgt": [],
         "role-mgt": [],
         "policy-mgt": [],
         "device-mgt": []
     };
+    var viewModel = {};
 
-    // following context.link value comes here based on the value passed at the point
+    // following viewModel.link value comes here based on the value passed at the point
     // where units are attached to a page zone.
     // eg: {{unit "appbar" pageLink="users" title="User Management"}}
-    context["currentActions"] = links[context["pageLink"]];
-    context["enrollmentURL"] = mdmProps["generalConfig"]["host"] + mdmProps["enrollmentDir"];
-    var  isAuthorizedForNotifications =
-        userModule.isAuthorized("/permission/admin/device-mgt/emm-admin/notifications/view");
+    viewModel["currentActions"] = links[viewModel["pageLink"]];
+    viewModel["enrollmentURL"] = mdmProps["generalConfig"]["host"] + mdmProps["enrollmentDir"];
     var currentUser = session.get(constants["USER_SESSION_KEY"]);
-    context["isAuthorizedForNotifications"] = isAuthorizedForNotifications;
-    context["currentUser"] = currentUser;
-    context["appContext"] = mdmProps["appContext"];
+    var permissions = {};
+    permissions.LIST_DEVICES = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/view");
+    permissions.LIST_POLICIES = userModule.isAuthorized("/permission/admin/device-mgt/policies/view");
+    permissions.LIST_ROLES = userModule.isAuthorized("/permission/admin/device-mgt/roles/view");
+    permissions.LIST_USERS = userModule.isAuthorized("/permission/admin/device-mgt/users/view");
+    permissions.LIST_NOTIFICATIONS = userModule.isAuthorized("/permission/admin/device-mgt/notifications/view");
+    permissions.LIST_CONFIGURATION = userModule.isAuthorized("/permission/admin/device-mgt/configurations/view");
+    viewModel.permissions = permissions;
+    viewModel["currentUser"] = currentUser;
+    viewModel["appContext"] = mdmProps["appContext"];
 
-    return context;
+    return viewModel;
 }
