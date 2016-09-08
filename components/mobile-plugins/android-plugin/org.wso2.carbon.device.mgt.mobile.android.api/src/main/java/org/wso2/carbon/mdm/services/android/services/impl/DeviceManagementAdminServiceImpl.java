@@ -558,22 +558,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                     throw new BadRequestException(
                             new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
                 }
-                if (payload.has("type")) {
-                    String type = payload.getString("type");
-                    if (!"enterprise".equalsIgnoreCase(type)
-                        && !"public".equalsIgnoreCase(type)
-                        && !"webapp".equalsIgnoreCase(type)) {
-                        String errorMessage = "Invalid application type.";
-                        log.error(errorMessage);
-                        throw new BadRequestException(
-                                new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
-                    }
-                } else {
-                    String errorMessage = "Application type is missing.";
-                    log.error(errorMessage);
-                    throw new BadRequestException(
-                            new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
-                }
+                validateType(payload);
             } catch (MalformedURLException e) {
                 String errorMessage = "Malformed application url.";
                 log.error(errorMessage);
@@ -673,6 +658,9 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                         new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             ApplicationUninstallation applicationUninstallation = applicationUninstallationBeanWrapper.getOperation();
+            JSONObject payload = new JSONObject(applicationUninstallation.toJSON());
+            validateType(payload);
+
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.UNINSTALL_APPLICATION);
             operation.setType(Operation.Type.PROFILE);
@@ -695,6 +683,25 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+        }
+    }
+
+    private void validateType(JSONObject payload) {
+        if (payload.has("type")) {
+            String type = payload.getString("type");
+            if (!"enterprise".equalsIgnoreCase(type)
+                && !"public".equalsIgnoreCase(type)
+                && !"webapp".equalsIgnoreCase(type)) {
+                String errorMessage = "Invalid application type.";
+                log.error(errorMessage);
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            }
+        } else {
+            String errorMessage = "Application type is missing.";
+            log.error(errorMessage);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
     }
 
