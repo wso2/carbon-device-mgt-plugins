@@ -26,6 +26,7 @@
         </a>
     </li>
     <li>
+        <!--suppress HtmlUnknownTarget -->
         <a href="{{@app.context}}/devices">
             Devices
         </a>
@@ -38,7 +39,15 @@
 {{/zone}}
 
 {{#zone "content"}}
-    {{unit "cdmf.unit.lib.data-table"}}
-    {{unit "cdmf.unit.device.operation-mod"}}
-    {{unit "cdmf.unit.device.view"}}
+    {{#if isAuthorized}}
+        {{unit "cdmf.unit.lib.data-table"}}
+        {{unit "cdmf.unit.device.operation-mod"}}
+        {{unit "cdmf.unit.device.view"}}
+    {{else}}
+        <h1 class="page-sub-title">
+            Permission Denied
+        </h1>
+        <br>
+        You are not authorized to view any enrolled device in the system.
+    {{/if}}
 {{/zone}}
