@@ -50,49 +50,61 @@ var InitiateViewOption = null;
         );
     }
 
+
     $(".media.tab-responsive [data-toggle=tab]").on("shown.bs.tab", function (e) {
-        var activeTabPane = $(e.target).attr("href"),
-            activeCollapsePane = $(activeTabPane).find("[data-toggle=collapse]").data("target"),
-            activeCollapsePaneSiblings = $(activeTabPane).siblings().find("[data-toggle=collapse]").data("target"),
-            activeListGroupItem = $(".media .list-group-item.active");
+        var activeTabPane = $(e.target).attr("href");
+        var activeListGroupItem = $(".media .list-group-item.active");
 
-        $(activeCollapsePaneSiblings).collapse("hide");
-        $(activeCollapsePane).collapse("show");
+        $(activeTabPane).removeClass("visible-xs-block");
+        $(activeTabPane).siblings().not(".arrow-left").addClass("visible-xs-block");
         positionArrow(activeListGroupItem);
-
-        $(".panel-heading .caret-updown").removeClass("fw-sort-down");
-        $(".panel-heading.collapsed .caret-updown").addClass("fw-sort-up");
     });
 
     $(".media.tab-responsive .tab-content").on("shown.bs.collapse", function (e) {
-        var activeTabPane = $(e.target).parent().attr("id");
-        $(".media.tab-responsive [data-toggle=tab][href=#" + activeTabPane + "]").tab("show");
-        $(".panel-heading .caret-updown").removeClass("fw-sort-up");
-        $(".panel-heading.collapsed .caret-updown").addClass("fw-sort-down");
+        var thisParent = $(e.target).parent();
+        var activeTabPaneCaret = thisParent.find('.caret-updown');
+        var activeTabPaneCaretSiblings = thisParent.siblings().find('.caret-updown');
+
+        activeTabPaneCaret.removeClass("fw-up").addClass("fw-down");
+        activeTabPaneCaretSiblings.removeClass("fw-down").addClass("fw-up");
     });
 
+
+    $('.media.tab-responsive a[data-toggle="collapse"]').on('click',function(){
+        var clickedPanel = $(this).attr('href');
+
+        if($(clickedPanel).hasClass('in')){
+            $(clickedPanel).collapse('hide');
+        }else{
+            $(clickedPanel).collapse('show');
+        }
+    });
+
+
     function positionArrow(selectedTab) {
-        var selectedTabHeight = $(selectedTab).outerHeight();
+        var selectedTabHeight = $(selectedTab).innerHeight();
         var arrowPosition = 0;
         var totalHeight = 0;
         var arrow = $(".media .panel-group.tab-content .arrow-left");
-        var parentHeight = $(arrow).parent().outerHeight();
+        var parentHeight = $(arrow).parent().innerHeight();
 
-//        if($(selectedTab).prev().length){
-//            $(selectedTab).prevAll().each(function() {
-//                totalHeight += $(this).outerHeight();
-//            });
-//            arrowPosition = totalHeight + (selectedTabHeight / 2);
-//        }else{
-//            arrowPosition = selectedTabHeight / 2;
-//        }
+
+        if($(selectedTab).prev().length){
+            $(selectedTab).prevAll().each(function() {
+                totalHeight += $(this).innerHeight();
+            });
+            arrowPosition = totalHeight + (selectedTabHeight / 2);
+        }else{
+            arrowPosition = selectedTabHeight / 2;
+        }
 
         if(arrowPosition >= parentHeight){
-            parentHeight = arrowPosition + 10;
-            $(arrow).parent().height(parentHeight);
+            parentHeight = arrowPosition + 50;
+            $(arrow).siblings(".panel.active").height(parentHeight);
         }else{
             $(arrow).parent().removeAttr("style");
         }
+
         $(arrow).css("top", arrowPosition - 10);
     }
 
@@ -228,8 +240,8 @@ var InitiateViewOption = null;
                             $("#applications-list-container").html(content);
                         } else {
                             $("#applications-list-container").
-                                html("<div class='panel-body'><br><p class='fw-warning'>&nbsp;No applications found. " +
-                                    "please try refreshing the list in a while.<p></div>");
+                                html("<div class='message message-info'><h4><i class='icon fw fw-info'></i>No applications found.</h4>" +
+                                    "<p>Please try refreshing the list in a while.</p></div>");
                         }
                     }
                 },
@@ -315,4 +327,5 @@ var InitiateViewOption = null;
             }
         );
     }
+
 }());
