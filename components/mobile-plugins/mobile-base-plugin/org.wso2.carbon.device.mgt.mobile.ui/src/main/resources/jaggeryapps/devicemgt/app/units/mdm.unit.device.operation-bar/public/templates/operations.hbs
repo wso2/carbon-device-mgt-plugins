@@ -66,24 +66,22 @@
 </div>
 
 <div id="messageSuccess" class="operation">
-    <div class="content">
-        <div class="row">
-            <div class="col-lg-5 col-md-6 col-centered">
-                <h3>
-                    <span class="fw-stack">
+    <div class="modal-header">
+        <h3 class="pull-left modal-title">
+            <span class="fw-stack">
                         <i class="fw fw-ring fw-stack-2x"></i>
                         <i class="fw fw-check fw-stack-1x"></i>
                     </span>
-                    Message sent successfully !
-                </h3>
-                <h4>
-                    Message has been queued to be sent to the device.
-                </h4>
-
-                <div class="buttons">
-                    <a href="javascript:hidePopup()" class="btn-operations">Ok</a>
-                </div>
-            </div>
+            Message sent successfully !
+        </h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fw fw-cancel"></i></button>
+    </div>
+    <div class="modal-body add-margin-top-2x add-margin-bottom-2x">
+        <h4>Message has been queued to be sent to the device.</h4>
+    </div>
+    <div class="modal-footer">
+        <div class="buttons">
+            <a href="javascript:hidePopup()" class="btn-operations">Ok</a>
         </div>
     </div>
 </div>
