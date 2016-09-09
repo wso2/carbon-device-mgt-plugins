@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services;
 
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
 
 import javax.ws.rs.*;
@@ -35,26 +36,31 @@ public interface DeviceManagementAdminService {
 
     @POST
     @Path("/lock-devices")
+    @Permission(name = "Lock Device", permission = "/device-mgt/devices/owning/operations/windows/lock")
     Response lock(@HeaderParam("Accept") String headerParam, List<String> deviceIds) throws
                                                                                      WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/disenroll-devices")
+    @Permission(name = "Disenroll Device", permission = "/device-mgt/devices/disenroll/windows")
     Response disenroll(@HeaderParam("Accept") String headerParam, List<String> deviceIds) throws
                                                                                           WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/wipe-devices")
+    @Permission(name = "Wipe Device", permission = "/device-mgt/devices/owning/operations/windows/wipe")
     Response wipe(@HeaderParam("Accept") String headerParam, List<String> deviceIds) throws
                                                                                      WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/ring-devices")
+    @Permission(name = "Ring Device", permission = "/device-mgt/devices/owning/operations/windows/ring")
     Response ring(@HeaderParam("Accept") String headerParam, List<String> deviceIds) throws
                                                                                      WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/lockreset-devices")
+    @Permission(name = "Lock-Reset Device", permission = "/device-mgt/devices/owning/operations/windows/lockreset")
     Response lockReset(@HeaderParam("Accept") String acceptHeader, List<String> deviceIds)
             throws WindowsDeviceEnrolmentException;
 }
