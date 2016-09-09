@@ -47,7 +47,6 @@ function setPopupMaxHeight() {
  */
 function showPopup() {
     $(modalPopup).modal('show');
-    //setPopupMaxHeight();
 }
 
 /*
@@ -74,8 +73,8 @@ function generateQRCode(qrCodeClass) {
 }
 
 function toggleEnrollment() {
-    $(".modal-body").html($("#qr-code-modal").html());
-    generateQRCode(".modal-body .qr-code");
+    $(".modal-content").html($("#qr-code-modal").html());
+    generateQRCode(".modal-content .qr-code");
     showPopup();
 }
 
