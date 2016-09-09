@@ -1,0 +1,6 @@
+{
+    "version": "1.0.0",
+    "uri": "/enrollments/android/download-agent",
+    "layout": "mdm.layout.enrollment",
+    "isAnonymous": true
+}

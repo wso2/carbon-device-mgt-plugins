@@ -20,14 +20,45 @@ package org.wso2.carbon.mdm.services.android.services.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
 import org.wso2.carbon.device.mgt.core.operation.mgt.ProfileOperation;
-import org.wso2.carbon.mdm.services.android.bean.*;
-import org.wso2.carbon.mdm.services.android.bean.wrapper.*;
+import org.wso2.carbon.mdm.services.android.bean.ApplicationInstallation;
+import org.wso2.carbon.mdm.services.android.bean.ApplicationUninstallation;
+import org.wso2.carbon.mdm.services.android.bean.ApplicationUpdate;
+import org.wso2.carbon.mdm.services.android.bean.BlacklistApplications;
+import org.wso2.carbon.mdm.services.android.bean.Camera;
+import org.wso2.carbon.mdm.services.android.bean.DeviceEncryption;
+import org.wso2.carbon.mdm.services.android.bean.DeviceLock;
+import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
+import org.wso2.carbon.mdm.services.android.bean.LockCode;
+import org.wso2.carbon.mdm.services.android.bean.Notification;
+import org.wso2.carbon.mdm.services.android.bean.PasscodePolicy;
+import org.wso2.carbon.mdm.services.android.bean.UpgradeFirmware;
+import org.wso2.carbon.mdm.services.android.bean.Vpn;
+import org.wso2.carbon.mdm.services.android.bean.WebClip;
+import org.wso2.carbon.mdm.services.android.bean.Wifi;
+import org.wso2.carbon.mdm.services.android.bean.WipeData;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.ApplicationInstallationBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.ApplicationUninstallationBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.ApplicationUpdateBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.BlacklistApplicationsBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.CameraBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.DeviceLockBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.EncryptionBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.LockCodeBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.NotificationBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.PasswordPolicyBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.UpgradeFirmwareBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.VpnBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.WebClipBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.WifiBeanWrapper;
+import org.wso2.carbon.mdm.services.android.bean.wrapper.WipeDataBeanWrapper;
 import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
 import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.DeviceManagementAdminService;
@@ -41,10 +72,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Path("/admin/devices")
 @Produces(MediaType.APPLICATION_JSON)
@@ -492,19 +528,60 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
 
         try {
             if (applicationInstallationBeanWrapper == null || applicationInstallationBeanWrapper.getOperation() ==
-                    null) {
+                                                              null) {
                 String errorMessage = "The payload of the application installing operation is incorrect";
                 log.error(errorMessage);
                 throw new BadRequestException(
                         new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
+
             ApplicationInstallation applicationInstallation = applicationInstallationBeanWrapper.getOperation();
+            JSONObject payload = new JSONObject(applicationInstallation.toJSON());
+
+            try {
+                URL url = new URL(payload.getString("url"));
+                URLConnection conn = url.openConnection();
+
+                //get all headers
+                Map<String, List<String>> headerFields = conn.getHeaderFields();
+                boolean isFile = false;
+                for (Map.Entry<String, List<String>> entry : headerFields.entrySet()) {
+                    if ("Content-Type".equals(entry.getKey()) && entry.getValue() != null
+                        && entry.getValue().size() > 0 && "application/octet-stream".equals(entry.getValue().get(0))) {
+                        isFile = true;
+                        break;
+                    }
+                }
+                if (!isFile) {
+                    String errorMessage = "URL is not pointed to a downloadable file.";
+                    log.error(errorMessage);
+                    throw new BadRequestException(
+                            new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+                }
+                validateType(payload);
+            } catch (MalformedURLException e) {
+                String errorMessage = "Malformed application url.";
+                log.error(errorMessage);
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            } catch (IOException e) {
+                String errorMessage = "Invalid application url.";
+                log.error(errorMessage);
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            }
+
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.INSTALL_APPLICATION);
             operation.setType(Operation.Type.PROFILE);
-            operation.setPayLoad(applicationInstallation.toJSON());
+            operation.setPayLoad(payload.toString());
             return AndroidAPIUtils.getOperationResponse(applicationInstallationBeanWrapper.getDeviceIDs(),
-                    operation);
+                                                        operation);
+        } catch (JSONException e) {
+            String errorMessage = "Invalid payload for the operation.";
+            log.error(errorMessage);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         } catch (InvalidDeviceException e) {
             String errorMessage = "Invalid Device Identifiers found.";
             log.error(errorMessage, e);
@@ -581,6 +658,9 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                         new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             ApplicationUninstallation applicationUninstallation = applicationUninstallationBeanWrapper.getOperation();
+            JSONObject payload = new JSONObject(applicationUninstallation.toJSON());
+            validateType(payload);
+
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.UNINSTALL_APPLICATION);
             operation.setType(Operation.Type.PROFILE);
@@ -603,6 +683,25 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+        }
+    }
+
+    private void validateType(JSONObject payload) {
+        if (payload.has("type")) {
+            String type = payload.getString("type");
+            if (!"enterprise".equalsIgnoreCase(type)
+                && !"public".equalsIgnoreCase(type)
+                && !"webapp".equalsIgnoreCase(type)) {
+                String errorMessage = "Invalid application type.";
+                log.error(errorMessage);
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            }
+        } else {
+            String errorMessage = "Application type is missing.";
+            log.error(errorMessage);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
     }
 
