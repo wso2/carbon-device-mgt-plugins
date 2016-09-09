@@ -59,6 +59,9 @@ function onRequest() {
     if (result["status"] == "success") {
         viewModelData["roles"] = result["content"];
     }
+    viewModelData.isAuthorized = userModule.isAuthorized("/permission/admin/device-mgt/policies/manage");
+    viewModelData.isAuthorizedViewUsers = userModule.isAuthorized("/permission/admin/device-mgt/roles/view");
+    viewModelData.isAuthorizedViewRoles = userModule.isAuthorized("/permission/admin/device-mgt/users/view");
 
     return viewModelData;
 }

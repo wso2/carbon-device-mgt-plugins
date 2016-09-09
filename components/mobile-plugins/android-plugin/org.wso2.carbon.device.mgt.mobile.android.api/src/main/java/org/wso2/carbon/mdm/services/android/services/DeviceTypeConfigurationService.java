@@ -180,7 +180,7 @@ public interface DeviceTypeConfigurationService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching Android license configuration.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/android/enroll")
+    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response getLicense(
             @ApiParam(
                     name = "If-Modified-Since",

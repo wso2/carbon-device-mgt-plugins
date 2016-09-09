@@ -88,7 +88,7 @@ public interface DeviceManagementService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while updating the application list.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/android/enroll")
+    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response updateApplicationList(
             @ApiParam(
                     name = "id",
@@ -142,7 +142,7 @@ public interface DeviceManagementService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching policies.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/android/enroll")
+    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response getPendingOperations(
             @ApiParam(
                     name = "id",
@@ -207,7 +207,7 @@ public interface DeviceManagementService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new policy.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/android/enroll")
+    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response enrollDevice(@ApiParam(name = "device", value = "Device Information to be enroll")
                           @Valid AndroidDevice device);
 
@@ -246,7 +246,7 @@ public interface DeviceManagementService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching the enrollment status of the Android device.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/android/enroll")
+    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response isEnrolled(
             @ApiParam(
                     name = "id",
@@ -300,7 +300,7 @@ public interface DeviceManagementService {
                             message = "Internal Server Error. \n " +
                                     "Server error occurred while updating the device enrollment.")
             })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/android/enroll")
+    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response modifyEnrollment(
             @ApiParam(
                     name = "id",
@@ -330,7 +330,7 @@ public interface DeviceManagementService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while dis-enrolling the device.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/android/enroll")
+    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response disEnrollDevice(
             @ApiParam(
                     name = "id",

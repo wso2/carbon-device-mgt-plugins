@@ -91,7 +91,7 @@ public interface EventReceiverService {
                             message = "Internal Server Error. \n " +
                                     "Server error occurred while publishing events.")
             })
-    @Permission(name = "Publish Events to DAS", permission = "/device-mgt/devices/android/events/manage")
+    @Permission(name = "Publish Events to DAS", permission = "/device-mgt/devices/enroll/android")
     Response publishEvents(
             @ApiParam(
                     name = "eventBeanWrapper",
@@ -141,7 +141,7 @@ public interface EventReceiverService {
                             code = 500,
                             message = "Error occurred while getting published events for specific device.")
             })
-    @Permission(name = "Publish Events to DAS", permission = "/device-mgt/devices/android/events/manage")
+    @Permission(name = "Publish Events to DAS", permission = "/device-mgt/devices/enroll/android")
     Response retrieveAlerts(
             @ApiParam(
                     name = "id",
