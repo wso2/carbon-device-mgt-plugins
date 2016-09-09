@@ -3,22 +3,25 @@
 {{unit "mdm.unit.device.qr-modal"}}
 
 {{#zone "contentTitle"}}
-    <div class="row wr-device-board">
-        <div class="col-lg-12 wr-secondary-bar">
-            <label class="device-id device-select" data-deviceid="{{device.deviceIdentifier}}"
-                   data-type="{{device.type}}">
-                Device {{device.name}}
-                {{#if device.viewModel.model}}
-                    <span class="lbl-device">
-                        ( {{device.viewModel.vendor}} {{device.viewModel.model}} )
-                    </span>
-                {{/if}}
-            </label>
+    {{#if isAuthorized}}
+        <div class="row wr-device-board">
+            <div class="col-lg-12 wr-secondary-bar">
+                <label class="device-id device-select" data-deviceid="{{device.deviceIdentifier}}"
+                       data-type="{{device.type}}">
+                    Device {{device.name}}
+                    {{#if device.viewModel.model}}
+                        <span class="lbl-device">
+                            ( {{device.viewModel.vendor}} {{device.viewModel.model}} )
+                        </span>
+                    {{/if}}
+                </label>
+            </div>
         </div>
-    </div>
+    {{/if}}
 {{/zone}}
 
 {{#zone "content"}}
+    {{#if isAuthorized}}
     <div class="row no-gutter add-padding-5x add-margin-top-5x" style="border: 1px solid #e4e4e4;">
         <div class="media">
             <div class="media-left media-middle asset-image col-xs-2 col-sm-2 col-md-2 col-lg-2">
@@ -366,8 +369,16 @@
                 {{/defineZone}}
             </div>
     </div>
+    {{else}}
+        <h1 class="page-sub-title">
+            Permission Denied
+        </h1>
+        <br>
+        You are not authorized to view specified device in the system.
+    {{/if}}
 {{/zone}}
 {{#zone "bottomJs"}}
+    {{#if isAuthorized}}
     <script id="policy-view" src="{{@unit.publicUri}}/templates/policy-compliance.hbs"
             data-device-id="{{device.deviceIdentifier}}" data-device-type="{{device.type}}"
             type="text/x-handlebars-template"></script>
@@ -380,4 +391,5 @@
     {{js "js/device-detail.js"}}
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
     {{js "js/load-map.js"}}
+    {{/if}}
 {{/zone}}

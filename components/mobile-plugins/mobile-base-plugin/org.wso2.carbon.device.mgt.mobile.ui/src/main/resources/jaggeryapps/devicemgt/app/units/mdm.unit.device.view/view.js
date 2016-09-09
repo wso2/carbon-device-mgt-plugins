@@ -17,7 +17,7 @@
  */
 
 function onRequest(context) {
-    var log = new Log("view.js");
+    // var log = new Log("view.js");
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("id");
     var deviceData = {};
@@ -26,6 +26,8 @@ function onRequest(context) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
         var response = deviceModule.viewDevice(deviceType, deviceId);
         if (response["status"] == "success") {
+            deviceData["isAuthorized"] = true;
+
             var device = response["content"];
             var viewModel = {};
             var deviceInfo = device["properties"]["DEVICE_INFO"];
@@ -54,8 +56,7 @@ function onRequest(context) {
                     viewModel["vendor"] = device["properties"]["VENDOR"];
                     var osBuildDate = device["properties"]["OS_BUILD_DATE"];
                     if (osBuildDate != null && osBuildDate != "0") {
-                        var formattedDate = new Date(osBuildDate * 1000);
-                        viewModel["os_build_date"] = formattedDate;
+                        viewModel["os_build_date"] = new Date(osBuildDate * 1000);
                     }
                     viewModel["internal_memory"] = {};
                     viewModel["external_memory"] = {};
@@ -96,6 +97,8 @@ function onRequest(context) {
                 device["viewModel"] = viewModel;
             }
             deviceData["device"] = device;
+        } else if (response["status"] == "unauthorized") {
+            deviceData["isAuthorized"] = false;
         }
         return deviceData;
     }
