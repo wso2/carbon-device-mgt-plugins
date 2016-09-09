@@ -16,9 +16,9 @@
  * under the License.
  */
 
-var modalPopup = ".wr-modalpopup",
-    modalPopupContainer = modalPopup + " .modalpopup-container",
-    modalPopupContent = modalPopup + " .modalpopup-content";
+var modalPopup = ".modal",
+    modalPopupContainer = modalPopup + " .modal-content",
+    modalPopupContent = modalPopup + " .modal-content";
 
 var emmAdminBasePath = "/api/device-mgt/v1.0";
 
@@ -46,8 +46,8 @@ function setPopupMaxHeight() {
  * show popup function.
  */
 function showPopup() {
-    $(modalPopup).show();
-    setPopupMaxHeight();
+    $(modalPopup).modal('show');
+    //setPopupMaxHeight();
 }
 
 /*
@@ -56,7 +56,9 @@ function showPopup() {
 function hidePopup() {
     $(modalPopupContent).html("");
     $(modalPopupContent).removeClass("operation-data");
-    $(modalPopup).hide();
+    $(modalPopup).modal('hide');
+    $('body').removeClass('modal-open').css('padding-right','0px');
+    $('.modal-backdrop').remove();
 }
 
 /*
@@ -72,8 +74,8 @@ function generateQRCode(qrCodeClass) {
 }
 
 function toggleEnrollment() {
-    $(".modalpopup-content").html($("#qr-code-modal").html());
-    generateQRCode(".modalpopup-content .qr-code");
+    $(".modal-body").html($("#qr-code-modal").html());
+    generateQRCode(".modal-body .qr-code");
     showPopup();
 }
 

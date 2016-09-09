@@ -21,8 +21,8 @@
  */
 
 var operations = '.wr-operations',
-    modalPopup = '.wr-modalpopup',
-    modalPopupContent = modalPopup + ' .modalpopup-content',
+    modalPopup = '.modal',
+    modalPopupContent = modalPopup + ' .modal-content',
     navHeight = $('#nav').height(),
     headerHeight = $('header').height(),
     offset = (headerHeight + navHeight),
