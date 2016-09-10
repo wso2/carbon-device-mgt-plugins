@@ -21,8 +21,8 @@
  */
 
 var operations = '.wr-operations',
-    modalPopup = '.modal',
-    modalPopupContent = modalPopup + ' .modal-content',
+    modalPopup = '.wr-modalpopup',
+    modalPopupContent = modalPopup + ' .modalpopup-content',
     navHeight = $('#nav').height(),
     headerHeight = $('header').height(),
     offset = (headerHeight + navHeight),
@@ -108,8 +108,21 @@ function loadOperationBar(deviceType) {
         //var serviceURL = "/mdm-admin/features/" + platformType;
         var serviceURL = "/api/device-mgt/v1.0/devices/" + platformType + "/*/features";
         var successCallback = function (data) {
+            var permittedOpps = [];
+            var i;
+            var permissionList = $("#operations-mod").data("permissions");
+            var totalFeatures = JSON.parse(data);
+            for (i = 0; i < permissionList.length; i++) {
+                var j;
+                for (j = 0; j < totalFeatures.length; j++) {
+                    if (permissionList[i] == totalFeatures[j]["code"]) {
+                        permittedOpps.push(totalFeatures[j]);
+                    }
+                }
+            }
+
             var viewModel = {};
-            data = JSON.parse(data).filter(function (current) {
+            permittedOpps = permittedOpps.filter(function (current) {
                 var iconName;
                 switch (deviceType) {
                     case platformTypeConstants.ANDROID:
@@ -129,7 +142,8 @@ function loadOperationBar(deviceType) {
                     return current;
                 }
             });
-            viewModel.features = data;
+
+            viewModel.features = permittedOpps;
             var content = template(viewModel);
             $(".wr-operations").html(content);
         };
