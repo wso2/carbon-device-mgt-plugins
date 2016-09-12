@@ -29,6 +29,9 @@ function onRequest(context) {
     permissions.ADD_POLICY = userModule.isAuthorized("/permission/admin/device-mgt/policies/manage");
     permissions.ADD_ROLE = userModule.isAuthorized("/permission/admin/device-mgt/roles/manage");
     permissions.ADD_USER = userModule.isAuthorized("/permission/admin/device-mgt/users/manage");
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/enroll/ios") | userModule.isAuthorized("/permission/admin/devices/enroll/android") | userModule.isAuthorized("/permission/admin/device-mgt/devices/enroll/windows") ){
+        permissions.ENROLL_DEVICE = true;
+    }
     viewModel.permissions = permissions;
     //TODO: Move enrollment URL into app-conf.json
     viewModel.enrollmentURL = mdmProps.generalConfig.host +  mdmProps.enrollmentDir;
