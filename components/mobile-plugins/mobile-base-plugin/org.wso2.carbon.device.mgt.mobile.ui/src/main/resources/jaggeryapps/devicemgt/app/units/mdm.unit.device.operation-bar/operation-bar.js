@@ -17,55 +17,53 @@
  */
 
 function onRequest(context) {
-    var log = new Log("mdm.unit.device.operation-bar");
+    // var log = new Log("mdm.unit.device.operation-bar");
     var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
-    var deviceType = context.uriParams.deviceType;
     var viewModel = {};
-    var permissions = [];
+    var permissions = {};
 
-    // permission checks
-    if (deviceType == "android") {
-        if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/ring")) {
-            permissions.push("DEVICE_RING");
-        }
-        if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/lock-devices")) {
-            permissions.push("DEVICE_LOCK");
-        }
-        if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/unlock-devices")) {
-            permissions.push("DEVICE_UNLOCK");
-        }
-        if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/location")) {
-            permissions.push("DEVICE_LOCATION");
-        }
-        if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/clear-password")) {
-            permissions.push("CLEAR_PASSWORD");
-        }
-        if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/reboot")) {
-            permissions.push("DEVICE_REBOOT");
-        }
-        if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/upgrade-firmware")) {
-            permissions.push("UPGRADE_FIRMWARE");
-        }
-        if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/mute")) {
-            permissions.push("DEVICE_MUTE");
-        }
-        if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/send-notification")) {
-            permissions.push("NOTIFICATION");
-        }
-        if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/change-lock-code")) {
-            permissions.push("CHANGE_LOCK_CODE");
-        }
-        if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/enterprise-wipe")) {
-            permissions.push("ENTERPRISE_WIPE");
-        }
-        if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/wipe")) {
-            permissions.push("WIPE_DATA");
-        }
-    } else if (deviceType == "ios") {
-
-    } else if (deviceType == "windows") {
-
+    // adding android operations related permission checks
+    permissions["android"] = [];
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/ring")) {
+        permissions["android"].push("DEVICE_RING");
     }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/lock-devices")) {
+        permissions["android"].push("DEVICE_LOCK");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/unlock-devices")) {
+        permissions["android"].push("DEVICE_UNLOCK");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/location")) {
+        permissions["android"].push("DEVICE_LOCATION");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/clear-password")) {
+        permissions["android"].push("CLEAR_PASSWORD");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/reboot")) {
+        permissions["android"].push("DEVICE_REBOOT");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/upgrade-firmware")) {
+        permissions["android"].push("UPGRADE_FIRMWARE");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/mute")) {
+        permissions["android"].push("DEVICE_MUTE");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/send-notification")) {
+        permissions["android"].push("NOTIFICATION");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/change-lock-code")) {
+        permissions["android"].push("CHANGE_LOCK_CODE");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/enterprise-wipe")) {
+        permissions["android"].push("ENTERPRISE_WIPE");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/android/wipe")) {
+        permissions["android"].push("WIPE_DATA");
+    }
+
+    // adding ios operations related permission checks
+
+    // adding windows operations related permission checks
 
     viewModel["permissions"] = stringify(permissions);
 
