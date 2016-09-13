@@ -130,7 +130,7 @@ function loadNewNotifications() {
                                 viewModel["notifications"] = responsePayload["notifications"];
                                 $(messageSideBar).html(template(viewModel));
                             } else {
-                                $(messageSideBar).html('<div class="message message-info message-no-new"><h4><i class="icon fw fw-info"></i>No new notifications found...</h4></div>');
+                                $(messageSideBar).html('<div class="alert alert-info" role="alert"><i class="icon fw fw-info"></i>No new notifications found...</div>');
                             }
                         } else {
                             $(messageSideBar).html("<h4 class ='message-danger'>Unexpected error " +
