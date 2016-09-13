@@ -110,7 +110,7 @@ function loadOperationBar(deviceType) {
         var successCallback = function (data) {
             var permittedOperations = [];
             var i;
-            var permissionList = JSON.parse($("#operations-mod").data("permissions"));
+            var permissionList = $("#operations-mod").data("permissions");
             var totalFeatures = JSON.parse(data);
             for (i = 0; i < permissionList[deviceType].length; i++) {
                 var j;
