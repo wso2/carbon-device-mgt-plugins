@@ -17,17 +17,24 @@
  */
 
 function onRequest(context){
-    var utility = require("/app/modules/utility.js").utility;
-    context.handlebars.registerHelper('equal', function (lvalue, rvalue, options) {
-        if (arguments.length < 3)
-            throw new Error("Handlebars Helper equal needs 2 parameters");
-        if( lvalue!=rvalue ) {
-            return options.inverse(this);
-        } else {
-            return options.fn(this);
-        }
-    });
+    var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
+    var viewModel = {};
 
-    var deviceType = context.uriParams.deviceType;
-    return {"deviceViewUnitName": utility.getTenantedDeviceUnitName(deviceType, "device-view")};
+    // permission checks
+    // [1] checking viewing devices permission
+    viewModel["isAuthorized"] = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/view");
+
+    if (viewModel["isAuthorized"]) {
+        context.handlebars.registerHelper('equal', function (lvalue, rvalue, options) {
+            if (arguments.length < 3)
+                throw new Error("Handlebars Helper equal needs 2 parameters");
+            if( lvalue!=rvalue ) {
+                return options.inverse(this);
+            } else {
+                return options.fn(this);
+            }
+        });
+    }
+
+    return viewModel;
 }

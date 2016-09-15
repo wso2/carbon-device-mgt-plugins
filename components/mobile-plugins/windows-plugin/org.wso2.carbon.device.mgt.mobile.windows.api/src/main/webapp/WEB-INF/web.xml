@@ -28,7 +28,7 @@
     </context-param>
 
     <listener>
-        <listener-class>org.wso2.carbon.mdm.mobileservices.windows.common.util.ContextInitializer
+        <listener-class>org.wso2.carbon.device.mgt.mobile.windows.api.common.util.ContextInitializer
         </listener-class>
     </listener>
 

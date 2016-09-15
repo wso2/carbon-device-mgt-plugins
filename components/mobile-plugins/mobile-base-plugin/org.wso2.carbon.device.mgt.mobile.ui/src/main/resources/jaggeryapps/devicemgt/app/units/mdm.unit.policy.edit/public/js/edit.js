@@ -2038,7 +2038,7 @@ var updatePolicy = function (policy, state) {
                 policyList.push(getParameterByName("id"));
                 if (state == "save") {
                     serviceURL = "/api/device-mgt/v1.0/policies/deactivate-policy";
-                    invokerUtil.put(
+                    invokerUtil.post(
                         serviceURL,
                         policyList,
                         // on success
@@ -2055,7 +2055,7 @@ var updatePolicy = function (policy, state) {
                     );
                 } else if (state == "publish") {
                     serviceURL = "/api/device-mgt/v1.0/policies/activate-policy";
-                    invokerUtil.put(
+                    invokerUtil.post(
                         serviceURL,
                         policyList,
                         // on success

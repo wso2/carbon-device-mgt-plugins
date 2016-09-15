@@ -108,8 +108,21 @@ function loadOperationBar(deviceType) {
         //var serviceURL = "/mdm-admin/features/" + platformType;
         var serviceURL = "/api/device-mgt/v1.0/devices/" + platformType + "/*/features";
         var successCallback = function (data) {
+            var permittedOperations = [];
+            var i;
+            var permissionList = $("#operations-mod").data("permissions");
+            var totalFeatures = JSON.parse(data);
+            for (i = 0; i < permissionList[deviceType].length; i++) {
+                var j;
+                for (j = 0; j < totalFeatures.length; j++) {
+                    if (permissionList[deviceType][i] == totalFeatures[j]["code"]) {
+                        permittedOperations.push(totalFeatures[j]);
+                    }
+                }
+            }
+
             var viewModel = {};
-            data = JSON.parse(data).filter(function (current) {
+            permittedOperations = permittedOperations.filter(function (current) {
                 var iconName;
                 switch (deviceType) {
                     case platformTypeConstants.ANDROID:
@@ -129,7 +142,8 @@ function loadOperationBar(deviceType) {
                     return current;
                 }
             });
-            viewModel.features = data;
+
+            viewModel.features = permittedOperations;
             var content = template(viewModel);
             $(".wr-operations").html(content);
         };

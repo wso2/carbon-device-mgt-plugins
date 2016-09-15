@@ -32,5 +32,9 @@ function onRequest(context) {
         context.users = usersResult.content;
     }
 
+    context.isAuthorized = userModule.isAuthorized("/permission/admin/device-mgt/policies/manage");
+    context.isAuthorizedViewUsers = userModule.isAuthorized("/permission/admin/device-mgt/roles/view");
+    context.isAuthorizedViewRoles = userModule.isAuthorized("/permission/admin/device-mgt/users/view");
+
     return context;
 }
