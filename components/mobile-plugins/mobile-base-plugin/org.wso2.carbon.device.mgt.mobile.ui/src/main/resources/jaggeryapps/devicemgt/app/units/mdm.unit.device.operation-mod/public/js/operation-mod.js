@@ -851,6 +851,18 @@ var operationModule = function () {
                     "restrictedApplications": operationPayload["restricted-applications"]
                 };
                 break;
+            case androidOperationConstants["SYSTEM_UPDATE_POLICY_CODE"]:
+                payload = {
+                    "cosuSystemUpdateType": operationPayload["type"],
+                    "cosuWindowStartTime": operationPayload["startTime"],
+                    "cosuWindowEndTime": operationPayload["endTime"]
+                };
+                break;
+            case androidOperationConstants["KIOSK_APPS_CODE"]:
+                payload = {
+                    "cosuWhitelistedApplications": operationPayload["whitelistedApplications"]
+                };
+                break;
         }
         return payload;
     };
@@ -1290,6 +1302,7 @@ var operationModule = function () {
             function () {
                 var operationDataObj = $(this);
                 var key = operationDataObj.data("key");
+                var validValue = true;
                 var value;
                 if (operationDataObj.is(":text") || operationDataObj.is("textarea") ||
                     operationDataObj.is(":password") || operationDataObj.is(":hidden")) {
@@ -1297,7 +1310,9 @@ var operationModule = function () {
                 } else if (operationDataObj.is(":checkbox")) {
                     value = operationDataObj.is(":checked");
                 } else if (operationDataObj.is(":radio") && operationDataObj.is(":checked")) {
-                        value = operationDataObj.val();
+                    value = operationDataObj.val();
+                } else if (operationDataObj.is(":radio") && !(operationDataObj.is(":checked"))) {
+                    validValue = false;
                 } else if (operationDataObj.is("select")) {
                     value = operationDataObj.find("option:selected").attr("value");
                 } else if (operationDataObj.hasClass("grouped-array-input")) {
@@ -1392,7 +1407,9 @@ var operationModule = function () {
                         });
                     }
                 }
-                operationData[key] = value;
+                if (validValue) {
+                    operationData[key] = value;
+                }
             }
         );
 
@@ -1447,6 +1464,10 @@ var operationModule = function () {
                     operationDataObj.val(value);
                 } else if (operationDataObj.is(":checkbox")) {
                     operationDataObj.prop("checked", value);
+                } else if (operationDataObj.is(":radio")) {
+                    if (operationDataObj.val() == uiPayload[key]) {
+                        operationDataObj.attr("checked", true);
+                    }
                 } else if (operationDataObj.is("select")) {
                     operationDataObj.val(value);
                     /* trigger a change of value, so that if slidable panes exist,
