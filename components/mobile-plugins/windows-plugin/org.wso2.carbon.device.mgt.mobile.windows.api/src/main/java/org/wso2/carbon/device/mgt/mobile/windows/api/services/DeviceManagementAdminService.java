@@ -18,10 +18,17 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services;
 
+import io.swagger.annotations.Api;
+import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
 
-import javax.ws.rs.*;
+import javax.jws.WebService;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -29,6 +36,12 @@ import java.util.List;
 /**
  * Interface for Admin operations persisting. This interface accepts operations added via UI.
  */
+@Api(value = "Windows Device Management Administrative Service",
+     description = "Device management related admin APIs.")
+@API(name = "Windows Device Management Administrative Service", version = "1.0.0",
+     context = "api/device-mgt/windows/v1.0/admin/devices",
+     tags = {"devicemgt_windows"})
+@WebService
 @Path("/admin/devices")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

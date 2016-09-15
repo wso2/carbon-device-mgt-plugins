@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services;
 
+import io.swagger.annotations.Api;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.apimgt.annotations.api.Scope;
@@ -35,11 +36,12 @@ import javax.ws.rs.*;
 @API(name = "Windows Configuration Management", version = "1.0.0",
      context = "api/device-mgt/windows/v1.0/services/configuration",
      tags = {"windows"})
-
+@Api(value = "Windows Configuration Management",
+     description = "This carries all the resources related to Windows configurations management functionalities")
 @WebService
+@Path("services/configuration")
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
-@Path("services/configuration")
 public interface ConfigurationMgtService {
 
     /**
