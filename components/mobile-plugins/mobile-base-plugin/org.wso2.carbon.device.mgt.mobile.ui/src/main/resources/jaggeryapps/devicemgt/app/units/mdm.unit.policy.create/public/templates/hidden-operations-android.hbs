@@ -3,8 +3,10 @@
         <a href="javascript:void(0)" onclick="showAdvanceOperation('passcode-policy', this)" class="selected">
                 <span class="wr-hidden-operations-icon fw-stack">
                     <i class="fw fw-key fw-stack-2x"></i>
-                </span>Passcode Policy
-            <span id="passcode-policy-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
+                </span>
+            Passcode Policy
+            <span id="passcode-policy-configured" class="has-configured status-icon hidden"><i
+                    class="fw fw-ok"></i></span>
             <span id="passcode-policy-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
             <span id="passcode-policy-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
@@ -22,9 +24,11 @@
                     <i class="fw fw-security fw-stack-2x"></i>
                 </span>
             Encryption Settings
-            <span id="encrypt-storage-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="encrypt-storage-configured" class="has-configured status-icon hidden"><i
+                    class="fw fw-ok"></i></span>
             <span id="encrypt-storage-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
-            <span id="encrypt-storage-error" class="encryption-error status-icon hidden"><i class="fw fw-error"></i></span>
+            <span id="encrypt-storage-error" class="encryption-error status-icon hidden"><i
+                    class="fw fw-error"></i></span>
         </a>
         <a href="javascript:void(0)" onclick="showAdvanceOperation('wifi', this)">
                 <span class="wr-hidden-operations-icon fw-stack">
@@ -70,7 +74,8 @@
                     <i class="fw fw-block fw-stack-2x"></i>
                 </span>
             Applications Restrictions
-            <span id="app-restriction-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="app-restriction-configured" class="has-configured status-icon hidden"><i
+                    class="fw fw-ok"></i></span>
             <span id="app-restriction-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
             <span id="app-restriction-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
@@ -90,17 +95,18 @@
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
+                        <hr>
+                        <div class="panel-title-description">
+                            This configuration can be used to set a passcode policy to an Android Device.
+                            Once this configuration profile is installed on a device, corresponding users will not be
+                            able
+                            to modify these settings on their devices.
+                        </div>
                     </h2>
-                    <div class="panel-title-description">
-                        This configuration can be used to set a passcode policy to an Android Device.
-                        Once this configuration profile is installed on a device, corresponding users will not be
-                        able
-                        to modify these settings on their devices.
-                    </div>
                 </div>
                 <div id="passcode-policy-body" class="panel-collapse panel-body collapse" role="tabpanel"
                      aria-labelledby="passcode-policy-body">
-                    <hr/>
+
                     <div id="passcode-policy-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
@@ -244,17 +250,17 @@
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
+                        <hr>
+                        <div class="panel-title-description">
+                            This configurations can be used to restrict certain settings on an Android device.
+                            Once this configuration profile is installed on a device, corresponding users will not be
+                            able
+                            to modify these settings on their devices.
+                        </div>
                     </h2>
-                    <div class="panel-title-description">
-                        This configurations can be used to restrict certain settings on an Android device.
-                        Once this configuration profile is installed on a device, corresponding users will not be
-                        able
-                        to modify these settings on their devices.
-                    </div>
                 </div>
                 <div id="camera-body" class="panel-collapse panel-body collapse" role="tabpanel"
                      aria-labelledby="camera-body">
-                    <hr/>
                     <div id="camera-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
@@ -651,7 +657,7 @@
                         <ul class="message message-info">
                             <i class="icon fw fw-info"></i>
                             <a id="policy-listing-status-msg">Below restrictions will be applied on devices with Android
-                                version 6.0 Marshmallow onwards only.</a>
+                                                              version 6.0 Marshmallow onwards only.</a>
                         </ul>
                     </div>
                     <div class="wr-input-control">
@@ -683,18 +689,18 @@
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
+                        <hr>
+                        <div class="panel-title-description">
+                            This configuration can be used to encrypt data on an Android device, when the device is
+                            locked and
+                            make it readable when the passcode is entered. Once this configuration profile is installed
+                            on a device,
+                            corresponding users will not be able to modify these settings on their devices.
+                        </div>
                     </h2>
-                    <div class="panel-title-description">
-                        This configuration can be used to encrypt data on an Android device, when the device is
-                        locked and
-                        make it readable when the passcode is entered. Once this configuration profile is installed
-                        on a device,
-                        corresponding users will not be able to modify these settings on their devices.
-                    </div>
                 </div>
                 <div id="encrypt-storage-body" class="panel-collapse panel-body collapse" role="tabpanel"
                      aria-labelledby="encrypt-storage-body">
-                    <hr/>
                     <div id="encrypt-storage-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
@@ -729,17 +735,17 @@
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
+                        <hr>
+                        <div class="panel-title-description">
+                            This configurations can be used to configure Wi-Fi access on an Android device.
+                            Once this configuration profile is installed on a device, corresponding users will not be
+                            able
+                            to modify these settings on their devices.
+                        </div>
                     </h2>
-                    <div class="panel-title-description">
-                        This configurations can be used to configure Wi-Fi access on an Android device.
-                        Once this configuration profile is installed on a device, corresponding users will not be
-                        able
-                        to modify these settings on their devices.
-                    </div>
                 </div>
                 <div id="wifi-body" class="panel-collapse panel-body collapse" role="tabpanel"
                      aria-labelledby="wifi-body">
-                    <hr/>
                     Please note that * sign represents required fields of data.
                     <br>
                     <br>
@@ -859,7 +865,7 @@
                                 </span>
                         </label>
                         <input id="wifi-cacert-upload" type="file" class="form-control"
-                                onchange="base64EncodeFile(this, document.getElementById('wifi-cacert'), document.getElementById('wifi-cacert-name'))"/>
+                               onchange="base64EncodeFile(this, document.getElementById('wifi-cacert'), document.getElementById('wifi-cacert-name'))"/>
                         <input id="wifi-cacert" type="hidden" class="form-control operationDataKeys"
                                data-key="wifiCaCert" />
                         <input id="wifi-cacert-name" type="hidden" class="form-control operationDataKeys"
@@ -893,13 +899,14 @@
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
+                        <hr>
+                        <div class="panel-title-description">
+                            This configuration can be used to create a black list or white list of applications.
+                        </div>
                     </h2>
-                    <div class="panel-title-description">
-                        This configuration can be used to create a black list or white list of applications.
-                    </div>
                 </div>
                 <div id="app-restriction-body" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="app-restriction-body">
-                    <hr/>
+
                     <div id="app-restriction-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
@@ -999,17 +1006,17 @@
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
+                        <hr>
+                        <div class="panel-title-description">
+                            This configurations can be used to configure VPN settings on an Android device.
+                            Once this configuration profile is installed on a device, corresponding users will not be
+                            able
+                            to modify these settings on their devices.
+                        </div>
                     </h2>
-                    <div class="panel-title-description">
-                        This configurations can be used to configure VPN settings on an Android device.
-                        Once this configuration profile is installed on a device, corresponding users will not be
-                        able
-                        to modify these settings on their devices.
-                    </div>
                 </div>
                 <div id="vpn-body" class="panel-collapse panel-body collapse" role="tabpanel"
                      aria-labelledby="vpn-body">
-                    <hr/>
                     Please note that * sign represents required fields of data.
                     <br>
                     <br>
@@ -1181,15 +1188,16 @@
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
+                        <hr>
+                        <div class="panel-title-description">
+                            The configurations below can be applied to the devices where the agent is running in Android
+                            Work-Profile.
+                        </div>
                     </h2>
-                    <div class="panel-title-description">
-                        The configurations below can be applied to the devices where the agent is running in Android
-                        Work-Profile.
-                    </div>
                 </div>
                 <div id="work-profile-policy-body" class="panel-collapse panel-body collapse" role="tabpanel"
                      aria-labelledby="work-profile-policy-body">
-                    <hr/>
+
                     <div id="work-profile-policy-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
@@ -1274,7 +1282,7 @@
         <!--android-for-work-cosu-->
         <div class="wr-hidden-operation" data-operation="android-for-work-cosu">
             <!--system-update-policy-->
-            <div class="panel panel-default operation-data" data-operation="system-update-policy"
+            <div class="panel panel-default operation-data" data-operation="android-for-work-cosu"
                  data-operation-code="SYSTEM_UPDATE_POLICY">
                 <div id="system-update-policy-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
@@ -1331,8 +1339,6 @@
                             </label>
                         </div>
                     </div>
-
-
                     <div id="android-for-work-cosu-window-select" class="hidden">
                         <div>
                             <ul class="message message-info">
@@ -1440,9 +1446,8 @@
                     <div id="whitelisted-applications-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
-
                     <div class="wr-input-control">
-                        <label class="wr-input-label" for="whitelisted-application">
+                        <label class="wr-input-label" for="whitelisted-applications">
                             <br><br>Whitelisted Application List to enter Lock Task Mode
                             <span class="helper" title="Add an application to whitelist.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -1479,20 +1484,20 @@
                             </table>
                             <table class="template hidden">
                                 <tbody data-add-form="#whitelisted-applications-grid">
-                                <tr data-add-form-element="clone">
-                                    <td data-title="No:">
-                                        <span class="index"></span>
-                                    </td>
-                                    <td data-title="App Name">
-                                        <input type="text" class="form-control grid-input-text" data-child-key="appName"
-                                               maxlength="100" data-default="" placeholder="[ Gmail ]"/>
-                                    </td>
-                                    <td data-title="Package Name">
-                                        <input type="text" class="form-control grid-input-text"
-                                               data-child-key="packageName" maxlength="100" data-default=""
-                                               placeholder="[ com.google.android.gm ]"/>
-                                    </td>
-                                    <td>
+                                    <tr data-add-form-element="clone">
+                                        <td data-title="No:">
+                                            <span class="index"></span>
+                                        </td>
+                                        <td data-title="App Name">
+                                            <input type="text" class="form-control grid-input-text" data-child-key="appName"
+                                                   maxlength="100" data-default="" placeholder="[ Gmail ]"/>
+                                        </td>
+                                        <td data-title="Package Name">
+                                            <input type="text" class="form-control grid-input-text"
+                                                   data-child-key="packageName" maxlength="100" data-default=""
+                                                   placeholder="[ com.google.android.gm ]"/>
+                                        </td>
+                                        <td>
                                             <span class="list-group-item-actions">
                                                 <a href="#whitelisted-applications-grid" class="grid-input-remove"
                                                    data-click-event="remove-form">
@@ -1502,8 +1507,8 @@
                                                     </span>
                                                 </a>
                                             </span>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1514,6 +1519,5 @@
             <!--/whitelisted-applications-->
         </div>
         <!--/android-for-work-cosu-->
-
     </div>
 </div>
