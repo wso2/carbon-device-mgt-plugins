@@ -1186,7 +1186,7 @@
 
         <javaee-web-api.version>6.0</javaee-web-api.version>
 
-        <axiom-api.version>1.2.14</axiom-api.version>
+        <axiom-api.version>1.2.11.wso2v10</axiom-api.version>
         <log4j.version>1.2.17</log4j.version>
         <spring-web.version>3.0.5.RELEASE</spring-web.version>
         <spring-ws-security.version>2.1.0.RELEASE</spring-ws-security.version>
