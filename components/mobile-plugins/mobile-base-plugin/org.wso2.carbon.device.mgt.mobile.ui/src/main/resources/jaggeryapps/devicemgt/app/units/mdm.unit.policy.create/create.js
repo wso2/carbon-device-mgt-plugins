@@ -17,7 +17,7 @@
  */
 
 function onRequest() {
-    var log = new Log("/app/units/mdm.unit.policy.create");
+    // var log = new Log("/app/units/mdm.unit.policy.create");
 
     var CONF_DEVICE_TYPE_KEY = "deviceType";
     var CONF_DEVICE_TYPE_LABEL_KEY = "label";
@@ -35,6 +35,11 @@ function onRequest() {
             var content = {};
             var deviceType = deviceTypes[i];
             content["name"] = deviceType;
+            if (deviceType == "ios") {
+                content["deviceTypeIcon"] = "apple";
+            } else {
+                content["deviceTypeIcon"] = deviceType;
+            }
             var configs = utility.getDeviceTypeConfig(deviceType);
             var deviceTypeLabel = deviceType;
             if (configs && configs[CONF_DEVICE_TYPE_KEY][CONF_DEVICE_TYPE_LABEL_KEY]) {
@@ -43,7 +48,7 @@ function onRequest() {
             var policyWizard = new File("/app/units/" + utility.getTenantedDeviceUnitName(deviceType, "policy-wizard"));
 
             if (policyWizard.isExists()) {
-                content["icon"] = utility.getDeviceThumb(deviceType);
+                // content["icon"] = utility.getDeviceThumb(deviceType);
                 content["label"] = deviceTypeLabel;
                 viewModelData["types"].push(content);
             }
@@ -54,6 +59,9 @@ function onRequest() {
     if (result["status"] == "success") {
         viewModelData["roles"] = result["content"];
     }
+    viewModelData.isAuthorized = userModule.isAuthorized("/permission/admin/device-mgt/policies/manage");
+    viewModelData.isAuthorizedViewUsers = userModule.isAuthorized("/permission/admin/device-mgt/roles/view");
+    viewModelData.isAuthorizedViewRoles = userModule.isAuthorized("/permission/admin/device-mgt/users/view");
 
     return viewModelData;
 }

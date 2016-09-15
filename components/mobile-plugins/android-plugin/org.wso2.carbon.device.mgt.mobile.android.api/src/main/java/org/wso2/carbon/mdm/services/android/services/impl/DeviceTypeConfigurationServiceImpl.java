@@ -52,15 +52,15 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
     public Response getConfiguration(
             @HeaderParam("If-Modified-Since") String ifModifiedSince) {
         String msg;
-        PlatformConfiguration PlatformConfiguration;
+        PlatformConfiguration platformConfiguration;
         List<ConfigurationEntry> configs;
         try {
-            PlatformConfiguration = AndroidAPIUtils.getDeviceManagementService().
+            platformConfiguration = AndroidAPIUtils.getDeviceManagementService().
                     getConfiguration(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
-            if (PlatformConfiguration != null) {
-                configs = PlatformConfiguration.getConfiguration();
+            if (platformConfiguration != null) {
+                configs = platformConfiguration.getConfiguration();
             } else {
-                PlatformConfiguration = new PlatformConfiguration();
+                platformConfiguration = new PlatformConfiguration();
                 configs = new ArrayList<>();
             }
             ConfigurationEntry entry = new ConfigurationEntry();
@@ -73,7 +73,7 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
                 entry.setName(AndroidConstants.TenantConfigProperties.LICENSE_KEY);
                 entry.setValue(license.getText());
                 configs.add(entry);
-                PlatformConfiguration.setConfiguration(configs);
+                platformConfiguration.setConfiguration(configs);
             }
         } catch (DeviceManagementException e) {
             msg = "Error occurred while retrieving the Android tenant configuration";
@@ -81,14 +81,13 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
-        return Response.status(Response.Status.OK).entity(PlatformConfiguration).build();
+        return Response.status(Response.Status.OK).entity(platformConfiguration).build();
     }
 
     @PUT
     @Override
     public Response updateConfiguration(@Valid AndroidPlatformConfiguration androidPlatformConfiguration) {
         String msg;
-        Message responseMsg = new Message();
         ConfigurationEntry licenseEntry = null;
         PlatformConfiguration configuration = new PlatformConfiguration();
         if (androidPlatformConfiguration == null) {
@@ -120,16 +119,13 @@ public class DeviceTypeConfigurationServiceImpl implements DeviceTypeConfigurati
             configuration.setConfiguration(configs);
             AndroidAPIUtils.getDeviceManagementService().saveConfiguration(configuration);
             //AndroidAPIUtils.getGCMService().resetTenantConfigCache();
-            Response.status(Response.Status.ACCEPTED);
-            responseMsg.setResponseMessage("Android platform configuration has been updated successfully.");
-            responseMsg.setResponseCode(Response.Status.ACCEPTED.toString());
         } catch (DeviceManagementException e) {
             msg = "Error occurred while modifying configuration settings of Android platform";
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
-        return Response.status(Response.Status.CREATED).entity(responseMsg).build();
+        return Response.status(Response.Status.OK).entity("Android platform configuration has been updated successfully.").build();
     }
 
 

@@ -21,7 +21,7 @@ package org.wso2.carbon.device.mgt.mobile.android.impl.util;
 /**
  * Defines constants used by android plugin.
  */
-public class AndroidPluginConstants {
+public final class AndroidPluginConstants {
 
 	//Properties related to AD_DEVICE table
 	public static final String DEVICE_ID = "DEVICE_ID";
@@ -45,4 +45,12 @@ public class AndroidPluginConstants {
 	public static final String ANDROID_FEATURE_NAME = "NAME";
 	public static final String ANDROID_FEATURE_DESCRIPTION = "DESCRIPTION";
 
+	public static final class NotifierType {
+		private NotifierType() {
+			throw new AssertionError();
+		}
+
+		public static final String GCM = "GCM";
+		public static final String LOCAL = "LOCAL";
+	}
 }

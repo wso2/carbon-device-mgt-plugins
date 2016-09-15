@@ -18,17 +18,20 @@
 
 package org.wso2.carbon.device.mgt.mobile.android.impl;
 
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.DeviceManager;
 import org.wso2.carbon.device.mgt.common.ProvisioningConfig;
-import org.wso2.carbon.device.mgt.common.app.mgt.Application;
-import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
-import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
+import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.push.notification.PushNotificationConfig;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
+import org.wso2.carbon.device.mgt.mobile.android.impl.util.AndroidPluginConstants;
+import org.wso2.carbon.device.mgt.mobile.android.internal.AndroidDeviceManagementDataHolder;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -36,9 +39,13 @@ import java.util.List;
  */
 public class AndroidDeviceManagementService implements DeviceManagementService {
 
+    private static final Log log = LogFactory.getLog(AndroidDeviceManagementService.class);
     private DeviceManager deviceManager;
     public static final String DEVICE_TYPE_ANDROID = "android";
     private static final String SUPER_TENANT_DOMAIN = "carbon.super";
+    private static final String NOTIFIER_PROPERTY = "notifierType";
+    private static final String GCM_API_KEY = "gcmAPIKey";
+    private static final String GCM_SENDER_ID = "gcmSenderId";
 
     @Override
     public String getType() {
@@ -67,7 +74,37 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
 
     @Override
     public PushNotificationConfig getPushNotificationConfig() {
+        try {
+            DeviceManagementService deviceManagementService = AndroidDeviceManagementDataHolder.getInstance().
+                    getAndroidDeviceManagementService();
+            if (deviceManagementService != null && deviceManagementService.getDeviceManager() != null) {
+                PlatformConfiguration androidConfig = deviceManagementService.getDeviceManager().getConfiguration();
+                if (androidConfig != null) {
+                    List<ConfigurationEntry> configuration = androidConfig.getConfiguration();
+                    String notifierValue = this.getConfigProperty(configuration, NOTIFIER_PROPERTY);
+                    if (notifierValue != null && !notifierValue.isEmpty()) {
+                        int notifierType = Integer.parseInt(notifierValue);
+                        if (notifierType == 2) {
+                            HashMap<String, String> config = new HashMap<>();
+                            config.put(GCM_API_KEY, this.getConfigProperty(configuration, GCM_API_KEY));
+                            config.put(GCM_SENDER_ID, this.getConfigProperty(configuration, GCM_SENDER_ID));
+                            return new PushNotificationConfig(AndroidPluginConstants.NotifierType.GCM, config);
+                        }
+                    }
+                }
+            }
+        } catch (DeviceManagementException e) {
+            log.error("Unable to get the Android platform configuration from registry.");
+        }
         return null;
     }
 
+    private String getConfigProperty(List<ConfigurationEntry> configs, String propertyName) {
+        for (ConfigurationEntry entry : configs) {
+            if (propertyName.equals(entry.getName())) {
+                return entry.getValue().toString();
+            }
+        }
+        return null;
+    }
 }

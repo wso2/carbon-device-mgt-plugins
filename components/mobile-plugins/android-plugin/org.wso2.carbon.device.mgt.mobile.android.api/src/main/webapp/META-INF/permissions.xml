@@ -55,7 +55,7 @@
 
     <Permission>
         <name>Enroll</name>
-        <path>/device-mgt/user/device/android/enroll</path>
+        <path>/device-mgt/user/device/enroll/android</path>
         <url>/configuration/license</url>
         <method>GET</method>
     </Permission>
@@ -66,42 +66,42 @@
 
     <Permission>
         <name>Enroll</name>
-        <path>/device-mgt/user/device/android/enroll</path>
+        <path>/device-mgt/user/device/enroll/android</path>
         <url>/devices</url>
         <method>POST</method>
     </Permission>
 
     <Permission>
         <name>Enroll</name>
-        <path>/device-mgt/user/device/android/enroll</path>
+        <path>/device-mgt/user/device/enroll/android</path>
         <url>/devices/*</url>
         <method>DELETE</method>
     </Permission>
 
     <Permission>
         <name>Enroll</name>
-        <path>/device-mgt/user/device/android/enroll</path>
+        <path>/device-mgt/user/device/enroll/android</path>
         <url>/devices/*</url>
         <method>PUT</method>
     </Permission>
 
     <Permission>
         <name>Enroll</name>
-        <path>/device-mgt/user/device/android/enroll</path>
+        <path>/device-mgt/user/device/enroll/android</path>
         <url>/devices/*/applications</url>
         <method>PUT</method>
     </Permission>
 
     <Permission>
         <name>Enroll</name>
-        <path>/device-mgt/user/device/android/enroll</path>
+        <path>/device-mgt/user/device/enroll/android</path>
         <url>/devices/*/pending-operations</url>
         <method>PUT</method>
     </Permission>
 
     <Permission>
         <name>Enroll</name>
-        <path>/device-mgt/user/device/android/enroll</path>
+        <path>/device-mgt/user/device/enroll/android</path>
         <url>/devices/*/status</url>
         <method>GET</method>
     </Permission>
@@ -112,7 +112,7 @@
 
     <Permission>
         <name>Enroll</name>
-        <path>/device-mgt/user/device/android/enroll</path>
+        <path>/device-mgt/user/device/enroll/android</path>
         <url>/events/publish</url>
         <method>POST</method>
     </Permission>
