@@ -2,11 +2,11 @@
     <li class="message message-info" data-type="selectable" >
         <h4>
             <i class="icon fw fw-info"></i>
-            <a href="device/{{deviceType}}?id={{deviceIdentifier}}#event_log_tab"
+            <a href="{{../appContext}}/device/{{deviceType}}?id={{deviceIdentifier}}#event_log_tab"
                data-id="{{operationId}}"
                data-url="device/{{deviceType}}?id={{deviceIdentifier}}#event_log_tab"
                class="new-notification" data-click-event="remove-form">
-                Device Type : {{deviceType}}
+               {{deviceType}}
             </a>
         </h4>
         <p>{{description}}</p>
