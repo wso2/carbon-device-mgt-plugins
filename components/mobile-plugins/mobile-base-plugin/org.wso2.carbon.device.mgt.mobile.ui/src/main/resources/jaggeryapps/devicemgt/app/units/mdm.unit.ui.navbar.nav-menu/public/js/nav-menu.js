@@ -117,7 +117,7 @@ function loadNewNotifications() {
         var currentUser = notifications.data("currentUser");
 
         $.template("notification-listing", notifications.attr("src"), function (template) {
-            var serviceURL = emmAdminBasePath + "/notifications?status=NEW";
+            var serviceURL = emmAdminBasePath + "/notifications?offset=0&limit=5&status=NEW";
             invokerUtil.get(
                 serviceURL,
                 // on success
@@ -128,6 +128,7 @@ function loadNewNotifications() {
                         if (responsePayload["notifications"]) {
                             if (responsePayload.count > 0) {
                                 viewModel["notifications"] = responsePayload["notifications"];
+                                viewModel["appContext"] = context;
                                 $(messageSideBar).html(template(viewModel));
                             } else {
                                 $(messageSideBar).html('<div class="alert alert-info" role="alert"><i class="icon fw fw-info"></i>No new notifications found...</div>');
