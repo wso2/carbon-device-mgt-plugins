@@ -53,7 +53,7 @@ $(document).ready(function () {
         updateStats("/api/device-mgt/v1.0/policies?offset=0&limit=1", "#policy-count");
     }
     if ($("#user-count").data("user-count")) {
-        updateStats("/api/device-mgt/v1.0/users?offset=0&limit=1", "#user-count");
+        updateStats("/api/device-mgt/v1.0/users/count", "#user-count");
     }
     if ($("#role-count").data("role-count")) {
         updateStats("/api/device-mgt/v1.0/roles?offset=0&limit=1", "#role-count");
