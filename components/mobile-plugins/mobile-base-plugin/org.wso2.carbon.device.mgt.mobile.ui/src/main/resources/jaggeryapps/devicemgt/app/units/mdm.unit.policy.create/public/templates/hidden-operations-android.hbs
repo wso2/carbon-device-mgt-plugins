@@ -57,27 +57,34 @@
             <span id="work-profile-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
             <span id="work-profile-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
-        <!--COSU-->
-        <a href="javascript:void(0)" onclick="showAdvanceOperation('android-for-work-cosu', this)">
-            <span class="wr-hidden-operation-icon fw-stack">
-                <i class="fw fw-service fw-stack-2x"></i>
-            </span>
-            &nbsp;&nbsp;COSU Configuration
-            <span id="android-for-work-cosu-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
-            <span id="android-for-work-cosu-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
-            <span id="android-for-work-cosu-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
-        </a>
-        <!--/COSU-->
         <a href="javascript:void(0)" onclick="showAdvanceOperation('app-restriction', this)">
-                <span class="fw-stack fw-lg">
-                    <i class="fw fw-application fw-stack-1x"></i>
-                    <i class="fw fw-block fw-stack-2x"></i>
-                </span>
+            <span class="fw-stack fw-lg">
+                <i class="fw fw-application fw-stack-1x"></i>
+                <i class="fw fw-block fw-stack-2x"></i>
+            </span>
             Applications Restrictions
             <span id="app-restriction-configured" class="has-configured status-icon hidden"><i
                     class="fw fw-ok"></i></span>
             <span id="app-restriction-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
             <span id="app-restriction-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
+        </a>
+        <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-system-update-policy', this)">
+            <span class="wr-hidden-operation-icon fw-stack">
+                <i class="fw fw-import fw-stack-2x"></i>
+            </span>
+            &nbsp;&nbsp;System Update Policy (COSU)
+            <span id="cosu-system-update-policy-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="cosu-system-update-policy-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="cosu-system-update-policy-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
+        </a>
+        <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-whitelist-applications', this)">
+            <span class="wr-hidden-operations-icon fw-stack">
+                <i class="fw fw-register fw-stack-2x"></i>
+            </span>
+            Whitelist Apps (COSU)
+            <span id="cosu-whitelist-applications-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="cosu-whitelist-applications-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="cosu-whitelist-applications-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
     </div>
 
@@ -657,7 +664,7 @@
                         <ul class="message message-info">
                             <i class="icon fw fw-info"></i>
                             <a id="policy-listing-status-msg">Below restrictions will be applied on devices with Android
-                                                              version 6.0 Marshmallow onwards only.</a>
+                                version 6.0 Marshmallow onwards only.</a>
                         </ul>
                     </div>
                     <div class="wr-input-control">
@@ -886,6 +893,7 @@
             </div>
         </div>
         <!-- /wi-fi -->
+
         <!--app-restriction-->
         <div class="wr-hidden-operation" data-operation="app-restriction">
             <div class="panel panel-default operation-data" data-operation="app-restriction"
@@ -1068,113 +1076,6 @@
         </div>
         <!-- /VPN -->
 
-        <!-- install-applications -->
-        <!--<div class="wr-hidden-operation" data-operation="install-apps">-->
-        <!--<div class="panel panel-default operation-data" data-operation="INSTALL_APPLICATION">-->
-        <!--<div class="panel-heading" role="tab">-->
-        <!--<h2 class="sub-title panel-title">-->
-        <!--<br>-->
-        <!--&nbsp;&nbsp;&nbsp;App Installations-->
-        <!--<label class="wr-input-control switch" data-toggle="collapse" data-target="#installApp">-->
-        <!--<input type="checkbox" />-->
-        <!--<span class="helper"></span>-->
-        <!--<span class="text"></span>-->
-        <!--</label>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--</h2>-->
-        <!--</div>-->
-        <!--<div id="installApp" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="installApp">-->
-        <!--<div id="install-app-feature-error-msg" class="alert alert-danger hidden" role="alert">-->
-        <!--<i class="icon fw fw-error"></i><span></span>-->
-        <!--</div>-->
-        <!--<label class="wr-input-label" title="Application Identifier">App Identifier<span class="wr-help-tip glyphicon glyphicon-question-sign"></span></label>-->
-
-        <!--<div class="wr-input-control">-->
-        <!--<input type="text" class="form-control operationDataKeys" id="package-name" data-key="packageName" placeholder="Enter App Identifier"/>-->
-        <!--</div>-->
-        <!--<div class="wr-input-control">-->
-        <!--<label class="wr-input-control dropdown">-->
-        <!--<span class="helper" title="App Type">App Type<span class="wr-help-tip glyphicon glyphicon-question-sign"></span></span>-->
-        <!--<select class="form-control col-sm-8 operationDataKeys appTypesInput" id="type" data-key="type">-->
-        <!--<option>Public</option>-->
-        <!--<option>Enterprise</option>-->
-        <!--</select>-->
-        <!--</label>-->
-        <!--</div>-->
-        <!--<label class="wr-input-label" title="URL">URL<span class="wr-help-tip glyphicon glyphicon-question-sign"></span></label>-->
-
-        <!--<div class="wr-input-control">-->
-        <!--<input type="text" class="form-control operationDataKeys" id="url" data-key="url" placeholder="Enter URL"/>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!-- /install-applications -->
-
-        <!-- /uninstall-applications -->
-        <!--<div class="wr-hidden-operation" data-operation="uninstall-apps">-->
-        <!--<div class="panel panel-default operation-data" data-operation="UNINSTALL_APPLICATION">-->
-        <!--<div class="panel-heading" role="tab">-->
-        <!--<h2 class="sub-title panel-title">-->
-        <!--<br>-->
-        <!--&nbsp;&nbsp;&nbsp;App Uninstallations-->
-        <!--<label class="wr-input-control switch" data-toggle="collapse" data-target="#uninstallApp">-->
-        <!--<input type="checkbox" />-->
-        <!--<span class="helper"></span>-->
-        <!--<span class="text"></span>-->
-        <!--</label>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--</h2>-->
-        <!--</div>-->
-        <!--<div id="uninstallApp" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="uninstallApp">-->
-        <!--<div id="uninstall-app-feature-error-msg" class="alert alert-danger hidden" role="alert">-->
-        <!--<i class="icon fw fw-error"></i><span></span>-->
-        <!--</div>-->
-        <!--<label class="wr-input-label" title="Application Identifier">App Identifier<span class="wr-help-tip glyphicon glyphicon-question-sign"></span></label>-->
-        <!--<!--span>Identification of the wireless network to connect to</span-->
-        <!--<div class="wr-input-control">-->
-        <!--<input type="text" class="form-control operationDataKeys" id="package-name" data-key="packageName" placeholder="Enter App Identifier"/>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!-- /uninstall-applications -->
-
-        <!-- /web-clips -->
-        <!--<div class="wr-hidden-operation" data-operation="web-clips">-->
-        <!--<div class="panel panel-default operation-data" data-operation="WEBCLIP">-->
-        <!--<div class="panel-heading" role="tab">-->
-        <!--<h2 class="sub-title panel-title">-->
-        <!--<br>-->
-        <!--&nbsp;&nbsp;&nbsp;Web clips-->
-        <!--<label class="wr-input-control switch" data-toggle="collapse" data-target="#installWebClip">-->
-        <!--<input type="checkbox" />-->
-        <!--<span class="helper"></span>-->
-        <!--<span class="text"></span>-->
-        <!--</label>-->
-        <!--<br>-->
-        <!--<br>-->
-        <!--</h2>-->
-        <!--</div>-->
-        <!--<div id="installWebClip" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="installWebClip">-->
-        <!--<div id="install-webclip-feature-error-msg" class="alert alert-danger hidden" role="alert">-->
-        <!--<i class="icon fw fw-error"></i><span></span>-->
-        <!--</div>-->
-        <!--<label class="wr-input-label" title="Title of the web clip">Title<span class="wr-help-tip glyphicon glyphicon-question-sign"></span></label>-->
-        <!--<div class="wr-input-control">-->
-        <!--<input type="text" class="form-control operationDataKeys" id="title" data-key="title" placeholder="Enter Title"/>-->
-        <!--</div>-->
-        <!--<label class="wr-input-label" title="URL">URL<span class="wr-help-tip glyphicon glyphicon-question-sign"></span></label>-->
-        <!--<div class="wr-input-control">-->
-        <!--<input type="text" class="form-control operationDataKeys" id="url" data-key="url" placeholder="Enter URL"/>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!-- /web-clips -->
-
         <!--Work-profile-->
         <div class="wr-hidden-operation" data-operation="work-profile">
             <div class="panel panel-default operation-data" data-operation="work-profile"
@@ -1262,7 +1163,7 @@
                                   rows="4" data-key="workProfilePolicyUnhideSystemApps" placeholder=""></textarea>
                     </div>
                     <div class="wr-input-control">
-                        <label class="wr-input-label" for="passcode-policy-max-passcode-age-in-days">
+                        <label class="wr-input-label" for="work-profile-policy-install-playstore-apps">
                             Enable Google Play Store Apps
                             <span class="helper"
                                   title="The set of apps needed to be installed from Google Playstore to work-profile">
@@ -1279,86 +1180,91 @@
             </div>
         </div>
 
-        <!--android-for-work-cosu-->
-        <div class="wr-hidden-operation" data-operation="android-for-work-cosu">
-            <!--system-update-policy-->
-            <div class="panel panel-default operation-data" data-operation="android-for-work-cosu"
-                 data-operation-code="SYSTEM_UPDATE_POLICY">
-                <div id="system-update-policy-heading" class="panel-heading" role="tab">
+        <!-- cosu-system-update-policy -->
+        <div class="wr-hidden-operation" data-operation="cosu-system-update-policy">
+            <div class="panel panel-default operation-data" data-operation="cosu-system-update-policy"
+                data-operation-code="SYSTEM_UPDATE_POLICY">
+                <div id="cosu-system-update-policy-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
-                        System Update Policy
-                        <label id="system-update-policy-lbl" class="wr-input-control switch" data-toggle="collapse"
-                               data-target="#system-update-policy-body">
+                        System Update Policy (COSU)
+                        <label id="cosu-system-update-policy-lbl" class="wr-input-control switch" data-toggle="collapse"
+                               data-target="#cosu-system-update-policy-body">
                             <input type="checkbox"/>
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
+                        <hr>
+                        <div class="panel-title-description">
+                            This configuration can be used to set a passcode policy to an Android Device.
+                            Once this configuration profile is installed on a device, corresponding users will not be
+                            able
+                            to modify these settings on their devices.
+                        </div>
                     </h2>
                 </div>
-                <div id="system-update-policy-body" class="panel-collapse panel-body collapse" role="tabpanel"
-                     aria-labelledby="android-for-work-cosu-policy-body">
 
-                    <div id="system-update-policy-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                <div id="cosu-system-update-policy-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                    aria-labelledby="cosu-system-update-policy-body">
+
+                    <div id="cosu-system-update-policy-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
 
                     <div class="wr-input-control">
-                        <label class="wr-input-label" for="android-for-work-cosu-policy-system-update">
+                        <label class="wr-input-label">
                             System Update
                             <span class="helper" title="Type of the System Update to be set by the Device Owner">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            <br>
                         </label>
-                        <br>
-                        <div class="wr-input-control">
-                            <label class="wr-input-control radio light">
-                                <input id="automatic-system-update-radio-btn" type="radio" name="android-for-work-cosu-policy-system-update"
-                                       class="form-control operationDataKeys" data-key="cosuSystemUpdateType"
-                                       value="automatic" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'android-for-work-cosu-window-select', ['window'])" checked/>
-                                <span class="helper" title="Installs system update automatically as soon as one is available">
-                                    &nbsp;Automatic
-                                </span>
-                                </span>
-                            </label>
-                            <label class="wr-input-control radio light">
-                                <input id="postpone-system-update-radio-btn" type="radio" name="android-for-work-cosu-policy-system-update"
-                                       class="form-control operationDataKeys" data-key="cosuSystemUpdateType"
-                                       value="postpone" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'android-for-work-cosu-window-select', ['window'])"/>
-                                <span class="helper" title="Incoming system update will be blocked for a maximum of 30 days">
-                                    &nbsp;Postpone
-                                </span>
-                            </label>
-                            <label class="wr-input-control radio light">
-                                <input id="window-system-update-radio-btn" type="radio" name="android-for-work-cosu-policy-system-update"
-                                       class="form-control operationDataKeys" data-key="cosuSystemUpdateType"
-                                       value="window" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'android-for-work-cosu-window-select', ['window'])"/>
-                                <span class="helper" title="Install system update automatically within a daily maintenance window, for a maximum of 30 days">
-                                    &nbsp;Window
-                                </span>
-                            </label>
-                        </div>
+                        <br><br>
+                        <label class="wr-input-control radio light">
+                            <input id="automatic-system-update-radio-btn" type="radio" name="cosu-system-update-type"
+                                class="form-control operationDataKeys" data-key="cosuSystemUpdatePolicyType"
+                                value="automatic" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])" checked/>
+                            <span class="helper" title="Installs system update automatically as soon as one is available">
+                                &nbsp;Automatic
+                            </span>
+                        </label>
+                        <label class="wr-input-control radio light">
+                            <input id="postpone-system-update-radio-btn" type="radio" name="cosu-system-update-type"
+                                class="form-control operationDataKeys" data-key="cosuSystemUpdatePolicyType"
+                                value="postpone" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])"/>
+                            <span class="helper" title="Incoming system update will be blocked for a maximum of 30 days">
+                                &nbsp;Postpone
+                            </span>
+                        </label>
+                        <label class="wr-input-control radio light">
+                            <input id="window-system-update-radio-btn" type="radio" name="cosu-system-update-type"
+                                class="form-control operationDataKeys" data-key="cosuSystemUpdatePolicyType"
+                                value="window" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])"/>
+                            <span class="helper" title="Install system update automatically within a daily maintenance window, for a maximum of 30 days">
+                                &nbsp;Window
+                            </span>
+                        </label>
                     </div>
-                    <div id="android-for-work-cosu-window-select" class="hidden">
+
+                    <div id="cosu-system-update-policy-window-select" class="hidden">
                         <div>
                             <ul class="message message-info">
                                 <i class="icon fw fw-info"></i>
-                                <a id="android-for-work-cosu-window-select-msg"> Below configuration of start time and end time are valid only when
-                                    <b>window</b> option is selected.</a>
+                                <a id="cosu-system-update-policy-window-select-msg">
+                                    Below configuration of start time and end time are valid only when
+                                    <b>window</b> option is selected.
+                                </a>
                             </ul>
                         </div>
                         <div class="wr-input-control">
-                            <label class="wr-input-label" for="android-for-work-cosu-window-start-time">
+                            <label class="wr-input-label" for="cosu-system-update-policy-window-start-time">
                                 Start Time
                                 <span class="helper" title="Window start time for system update">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                             </label>
-                            <select id="android-for-work-cosu-start-time" class="form-control operationDataKeys"
-                                    data-key="cosuWindowStartTime" data-default="0">
-                                <option value="1440" selected="selected">
-                                    12 AM
-                                </option>
+                            <select id="cosu-system-update-policy-window-start-time"
+                                class="form-control operationDataKeys"
+                                data-key="cosuSystemUpdatePolicyWindowStartTime" data-default="0">
+                                <option value="1440" selected="selected">12 AM</option>
                                 <option value="60">1 AM</option>
                                 <option value="120">2 AM</option>
                                 <option value="180">3 AM</option>
@@ -1385,17 +1291,16 @@
                             </select>
                         </div>
                         <div class="wr-input-control">
-                            <label class="wr-input-label" for="android-for-work-cosu-window-end-time">
-                                Start Time
+                            <label class="wr-input-label" for="cosu-system-update-policy-window-end-time">
+                                End Time
                                 <span class="helper" title="Window end time for system update">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                             </label>
-                            <select id="android-for-work-cosu-end-time" class="form-control operationDataKeys"
-                                    data-key="cosuWindowEndTime" data-default="0">
-                                <option value="1440" selected="selected">
-                                    12 AM
-                                </option>
+                            <select id="cosu-system-update-policy-window-end-time"
+                                class="form-control operationDataKeys"
+                                data-key="cosuSystemUpdatePolicyWindowEndTime" data-default="0">
+                                <option value="1440" selected="selected">12 AM</option>
                                 <option value="60">1 AM</option>
                                 <option value="120">2 AM</option>
                                 <option value="180">3 AM</option>
@@ -1407,7 +1312,7 @@
                                 <option value="540">9 AM</option>
                                 <option value="600">10 AM</option>
                                 <option value="660">11 AM</option>
-                                <option value="720">12 noon</option>
+                                <option value="720">12 Noon</option>
                                 <option value="780">1 PM</option>
                                 <option value="840">2 PM</option>
                                 <option value="900">3 PM</option>
@@ -1422,38 +1327,49 @@
                             </select>
                         </div>
                     </div>
+
                 </div>
             </div>
-            <!--system-update-policy-->
+        </div>
 
-            <!--whitelisted-applications-->
-            <div class="panel panel-default operation-data" data-operation="whitelisted-applications"
-                 data-operation-code="KIOSK_APPS">
-                <div id="whitelisted-applications-heading" class="panel-heading" role="tab">
+        <!-- cosu-whitelist-applications -->
+        <div class="wr-hidden-operation" data-operation="cosu-whitelist-applications">
+            <div class="panel panel-default operation-data" data-operation="cosu-whitelist-applications"
+                data-operation-code="KIOSK_APPS">
+                <div id="cosu-whitelist-applications-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
-                        Whitelisted Applications
-                        <label id="whitelisted-applications-lbl" class="wr-input-control switch" data-toggle="collapse"
-                               data-target="#whitelisted-applications-body">
+                        Whitelist Applications (COSU)
+                        <label id="cosu-whitelist-applications-lbl" class="wr-input-control switch" data-toggle="collapse"
+                            data-target="#cosu-whitelist-applications-body">
                             <input type="checkbox"/>
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
+                        <hr>
+                        <div class="panel-title-description">
+                            This configuration can be used to set a passcode policy to an Android Device.
+                            Once this configuration profile is installed on a device, corresponding users will not be
+                            able
+                            to modify these settings on their devices.
+                        </div>
                     </h2>
                 </div>
-                <div id="whitelisted-applications-body" class="panel-collapse panel-body collapse" role="tabpanel"
-                     aria-labelledby="whitelisted-applications-body">
 
-                    <div id="whitelisted-applications-error-msg" class="alert alert-danger hidden" role="alert">
+                <div id="cosu-whitelist-applications-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                    aria-labelledby="cosu-whitelist-applications-body">
+
+                    <div id="cosu-whitelist-applications-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
+
                     <div class="wr-input-control">
-                        <label class="wr-input-label" for="whitelisted-applications">
-                            <br><br>Whitelisted Application List to enter Lock Task Mode
-                            <span class="helper" title="Add an application to whitelist.">
+                        <label class="wr-input-label" for="cosu-whitelisted-applications">
+                            Whitelisted Applications to enter Lock Task Mode
+                            <span class="helper" title="Configuration information specific to a given third-party VPN solution. This has to be input as key/value pairs.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            <a href="#whitelisted-applications-grid" class="grid-input-add" data-click-event="add-form">
+                            <a href="#cosu-whitelisted-applications-grid" class="grid-input-add" data-click-event="add-form">
                                 <span class="icon fw-stack">
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
@@ -1462,44 +1378,43 @@
                                 Add Application
                             </a>
                         </label>
-                        <div id="whitelisted-applications"
-                             class="operationDataKeys grouped-array-input multi-column-key-value-pair-array"
-                             data-key="cosuWhitelistedApplications" data-column-count="2">
+                        <div id="cosu-whitelisted-applications"
+                            class="operationDataKeys grouped-array-input multi-column-key-value-pair-array"
+                            data-key="cosuWhitelistedApplications" data-column-count="2">
                             <table class="table table-responsive table-striped">
                                 <thead>
-                                <tr>
-                                    <th>No:</th>
-                                    <th>Application Name/Description</th>
-                                    <th>Package Name</th>
-                                    <th></th>
-                                </tr>
+                                    <tr>
+                                        <th>No:</th>
+                                        <th>Application Name / Description</th>
+                                        <th>Package Name</th>
+                                        <th></th>
+                                    </tr>
                                 </thead>
-                                <tbody data-add-form-container="#whitelisted-applications-grid">
-                                <tr data-help-text="add-form">
-                                    <td colspan="4">
-                                        No entries added yet.
-                                    </td>
-                                </tr>
+                                <tbody data-add-form-container="#cosu-whitelisted-applications-grid">
+                                    <tr data-help-text="add-form">
+                                        <td colspan="4">
+                                            No entries added yet .
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                             <table class="template hidden">
-                                <tbody data-add-form="#whitelisted-applications-grid">
+                                <tbody data-add-form="#cosu-whitelisted-applications-grid">
                                     <tr data-add-form-element="clone">
                                         <td data-title="No:">
                                             <span class="index"></span>
                                         </td>
-                                        <td data-title="App Name">
+                                        <td data-title="Application Name / Description">
                                             <input type="text" class="form-control grid-input-text" data-child-key="appName"
-                                                   maxlength="100" data-default="" placeholder="[ Gmail ]"/>
+                                                   maxlength="100" data-default="" placeholder="[ Application Name / Description ]"/>
                                         </td>
                                         <td data-title="Package Name">
-                                            <input type="text" class="form-control grid-input-text"
-                                                   data-child-key="packageName" maxlength="100" data-default=""
-                                                   placeholder="[ com.google.android.gm ]"/>
+                                            <input type="text" class="form-control grid-input-text" data-child-key="packageName"
+                                                   maxlength="100" data-default="" placeholder="[ Package Name ]"/>
                                         </td>
                                         <td>
                                             <span class="list-group-item-actions">
-                                                <a href="#whitelisted-applications-grid" class="grid-input-remove"
+                                                <a href="#cosu-whitelisted-applications-grid" class="grid-input-remove"
                                                    data-click-event="remove-form">
                                                     <span class="fw-stack helper" title="Remove Entry">
                                                         <i class="fw fw-ring fw-stack-2x"></i>
@@ -1513,11 +1428,8 @@
                             </table>
                         </div>
                     </div>
-
                 </div>
             </div>
-            <!--/whitelisted-applications-->
         </div>
-        <!--/android-for-work-cosu-->
     </div>
 </div>

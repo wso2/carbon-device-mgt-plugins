@@ -851,18 +851,6 @@ var operationModule = function () {
                     "restrictedApplications": operationPayload["restricted-applications"]
                 };
                 break;
-            case androidOperationConstants["SYSTEM_UPDATE_POLICY_CODE"]:
-                payload = {
-                    "cosuSystemUpdateType": operationPayload["type"],
-                    "cosuWindowStartTime": operationPayload["startTime"],
-                    "cosuWindowEndTime": operationPayload["endTime"]
-                };
-                break;
-            case androidOperationConstants["KIOSK_APPS_CODE"]:
-                payload = {
-                    "cosuWhitelistedApplications": operationPayload["whitelistedApplications"]
-                };
-                break;
         }
         return payload;
     };
@@ -1028,13 +1016,21 @@ var operationModule = function () {
                 break;
             case androidOperationConstants["SYSTEM_UPDATE_POLICY_CODE"]:
                 operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "type": operationData["cosuSystemUpdateType"],
-                        "startTime": operationData["cosuWindowStartTime"],
-                        "endTime": operationData["cosuWindowEndTime"]
-                    }
-                };
+                if (operationData["cosuSystemUpdatePolicyType"] != "window") {
+                    payload = {
+                        "operation": {
+                            "type": operationData["cosuSystemUpdatePolicyType"]
+                        }
+                    };
+                } else {
+                    payload = {
+                        "operation": {
+                            "type": operationData["cosuSystemUpdatePolicyType"],
+                            "startTime": operationData["cosuSystemUpdatePolicyWindowStartTime"],
+                            "endTime": operationData["cosuSystemUpdatePolicyWindowEndTime"]
+                        }
+                    };
+                }
                 break;
             case androidOperationConstants["KIOSK_APPS_CODE"]:
                 operationType = operationTypeConstants["PROFILE"];
@@ -1302,19 +1298,20 @@ var operationModule = function () {
             function () {
                 var operationDataObj = $(this);
                 var key = operationDataObj.data("key");
-                var validValue = true;
                 var value;
                 if (operationDataObj.is(":text") || operationDataObj.is("textarea") ||
-                    operationDataObj.is(":password") || operationDataObj.is(":hidden")) {
+                    operationDataObj.is(":password") || operationDataObj.is("input[type=hidden]")) {
                     value = operationDataObj.val();
+                    operationData[key] = value;
                 } else if (operationDataObj.is(":checkbox")) {
                     value = operationDataObj.is(":checked");
+                    operationData[key] = value;
                 } else if (operationDataObj.is(":radio") && operationDataObj.is(":checked")) {
                     value = operationDataObj.val();
-                } else if (operationDataObj.is(":radio") && !(operationDataObj.is(":checked"))) {
-                    validValue = false;
+                    operationData[key] = value;
                 } else if (operationDataObj.is("select")) {
                     value = operationDataObj.find("option:selected").attr("value");
+                    operationData[key] = value;
                 } else if (operationDataObj.hasClass("grouped-array-input")) {
                     value = [];
                     var childInput;
@@ -1323,7 +1320,7 @@ var operationModule = function () {
                         $(".child-input", this).each(function () {
                             childInput = $(this);
                             if (childInput.is(":text") || childInput.is("textarea") || childInput.is(":password")
-                                || childInput.is(":hidden")) {
+                                || childInput.is("input[type=hidden]")) {
                                 childInputValue = childInput.val();
                             } else if (childInput.is(":checkbox")) {
                                 childInputValue = childInput.is(":checked");
@@ -1350,7 +1347,7 @@ var operationModule = function () {
                         $(".child-input", this).each(function () {
                             childInput = $(this);
                             if (childInput.is(":text") || childInput.is("textarea") || childInput.is(":password")
-                                || childInput.is(":hidden")) {
+                                || childInput.is("input[type=hidden]")) {
                                 childInputValue = childInput.val();
                             } else if (childInput.is(":checkbox")) {
                                 childInputValue = childInput.is(":checked");
@@ -1382,7 +1379,7 @@ var operationModule = function () {
                             childInput = $(this);
                             childInputKey = childInput.data("child-key");
                             if (childInput.is(":text") || childInput.is("textarea") || childInput.is(":password")
-                                || childInput.is(":hidden")) {
+                                || childInput.is("input[type=hidden]")) {
                                 childInputValue = childInput.val();
                             } else if (childInput.is(":checkbox")) {
                                 childInputValue = childInput.is(":checked");
@@ -1406,8 +1403,6 @@ var operationModule = function () {
                             }
                         });
                     }
-                }
-                if (validValue) {
                     operationData[key] = value;
                 }
             }
@@ -1460,7 +1455,8 @@ var operationModule = function () {
                 // populating input value according to the type of input
                 if (operationDataObj.is(":text") ||
                     operationDataObj.is("textarea") ||
-                    operationDataObj.is(":password")) {
+                    operationDataObj.is(":password") ||
+                    operationDataObj.is("input[type=hidden]")) {
                     operationDataObj.val(value);
                 } else if (operationDataObj.is(":checkbox")) {
                     operationDataObj.prop("checked", value);
@@ -1490,9 +1486,9 @@ var operationModule = function () {
                                 var childInputValue = value[childInputIndex];
                                 // populating extracted value in the UI according to the input type
                                 if (childInput.is(":text") ||
-                                    childInput.is(":hidden") ||
                                     childInput.is("textarea") ||
                                     childInput.is(":password") ||
+                                    childInput.is("input[type=hidden]") ||
                                     childInput.is("select")) {
                                     childInput.val(childInputValue);
                                 } else if (childInput.is(":checkbox")) {
@@ -1538,9 +1534,9 @@ var operationModule = function () {
                                     }
                                     // populating extracted value in the UI according to the input type
                                     if (childInput.is(":text") ||
-                                        childInput.is(":hidden") ||
                                         childInput.is("textarea") ||
                                         childInput.is(":password") ||
+                                        childInput.is("input[type=hidden]") ||
                                         childInput.is("select")) {
                                         childInput.val(childInputValue);
                                     } else if (childInput.is(":checkbox")) {
@@ -1567,9 +1563,9 @@ var operationModule = function () {
                                 var childInputValue = multiColumnKeyValuePair[childInputKey];
                                 // populating extracted value in the UI according to the input type
                                 if (childInput.is(":text") ||
-                                    childInput.is(":hidden") ||
                                     childInput.is("textarea") ||
                                     childInput.is(":password") ||
+                                    childInput.is("input[type=hidden]") ||
                                     childInput.is("select")) {
                                     childInput.val(childInputValue);
                                 } else if (childInput.is(":checkbox")) {
