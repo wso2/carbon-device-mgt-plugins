@@ -22,7 +22,7 @@ function onRequest(context) {
     var mdmProps = require("/app/modules/conf-reader/main.js")["conf"];
     var viewModel = {};
     var permissions = {};
-    permissions.LIST_DEVICES = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/view");
+    permissions.LIST_DEVICES = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning-device/view");
     permissions.LIST_POLICIES = userModule.isAuthorized("/permission/admin/device-mgt/policies/view");
     permissions.LIST_ROLES = userModule.isAuthorized("/permission/admin/device-mgt/roles/view");
     permissions.LIST_USERS = userModule.isAuthorized("/permission/admin/device-mgt/users/view");

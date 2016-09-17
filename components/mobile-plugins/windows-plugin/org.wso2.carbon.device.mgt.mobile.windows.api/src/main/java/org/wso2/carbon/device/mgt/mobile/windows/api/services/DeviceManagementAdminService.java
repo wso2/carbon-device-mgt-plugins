@@ -49,7 +49,7 @@ public interface DeviceManagementAdminService {
 
     @POST
     @Path("/lock-devices")
-    @Permission(name = "Lock Device", permission = "/device-mgt/devices/owning/operations/windows/lock")
+    @Permission(name = "Lock Device", permission = "/device-mgt/devices/owning-device/operations/windows/lock")
     Response lock(@HeaderParam("Accept") String headerParam, List<String> deviceIds) throws
                                                                                      WindowsDeviceEnrolmentException;
 
@@ -61,19 +61,19 @@ public interface DeviceManagementAdminService {
 
     @POST
     @Path("/wipe-devices")
-    @Permission(name = "Wipe Device", permission = "/device-mgt/devices/owning/operations/windows/wipe")
+    @Permission(name = "Wipe Device", permission = "/device-mgt/devices/owning-device/operations/windows/wipe")
     Response wipe(@HeaderParam("Accept") String headerParam, List<String> deviceIds) throws
                                                                                      WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/ring-devices")
-    @Permission(name = "Ring Device", permission = "/device-mgt/devices/owning/operations/windows/ring")
+    @Permission(name = "Ring Device", permission = "/device-mgt/devices/owning-device/operations/windows/ring")
     Response ring(@HeaderParam("Accept") String headerParam, List<String> deviceIds) throws
                                                                                      WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/lockreset-devices")
-    @Permission(name = "Lock-Reset Device", permission = "/device-mgt/devices/owning/operations/windows/lockreset")
+    @Permission(name = "Lock-Reset Device", permission = "/device-mgt/devices/owning-device/operations/windows/lock-reset")
     Response lockReset(@HeaderParam("Accept") String acceptHeader, List<String> deviceIds)
             throws WindowsDeviceEnrolmentException;
 }

@@ -29,10 +29,10 @@ function onRequest() {
         userModule.isAuthorized("/permission/admin/device-mgt/devices/enroll/windows");
 
     // [2] checking advanced device search permissions
-    permissions["ADVANCED_SEARCH"] = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/view");
+    permissions["ADVANCED_SEARCH"] = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning-device/view");
 
     // [3] checking device viewing permission
-    permissions["VIEW_DEVICES"] = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/view");
+    permissions["VIEW_DEVICES"] = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning-device/view");
 
     var currentUser = session.get(constants["USER_SESSION_KEY"]);
 
