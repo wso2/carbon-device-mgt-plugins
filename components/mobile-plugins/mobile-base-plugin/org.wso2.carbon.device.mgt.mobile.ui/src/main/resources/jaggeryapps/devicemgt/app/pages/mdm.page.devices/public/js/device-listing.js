@@ -228,7 +228,7 @@ function initPage() {
         function (data) {
             if (data) {
                 data = JSON.parse(data);
-                if (data.devices.length > 0) {
+                if (data["count"] > 0) {
                     $(".bulk-action-row").removeClass('hidden');
                     loadDevices();
                 } else {
