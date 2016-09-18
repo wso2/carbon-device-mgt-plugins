@@ -72,7 +72,7 @@ public interface DeviceManagementAdminService {
                                                                                      WindowsDeviceEnrolmentException;
 
     @POST
-    @Path("/lockreset-devices")
+    @Path("/lock-reset-devices")
     @Permission(name = "Lock-Reset Device", permission = "/device-mgt/devices/owning-device/operations/windows/lock-reset")
     Response lockReset(@HeaderParam("Accept") String acceptHeader, List<String> deviceIds)
             throws WindowsDeviceEnrolmentException;
