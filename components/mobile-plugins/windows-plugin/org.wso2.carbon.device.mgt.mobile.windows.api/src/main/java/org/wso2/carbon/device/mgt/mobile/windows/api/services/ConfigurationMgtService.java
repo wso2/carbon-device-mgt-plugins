@@ -21,7 +21,6 @@ package org.wso2.carbon.device.mgt.mobile.windows.api.services;
 import io.swagger.annotations.Api;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.api.Permission;
-import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
@@ -52,7 +51,7 @@ public interface ConfigurationMgtService {
      * @throws WindowsConfigurationException
      */
     @POST
-    @Permission(name = "Manage Configurations", permission = "/device-mgt/configurations/manage")
+    @Permission(name = "Manage Configurations", permission = "/device-mgt/platform-configurations/manage")
     Message ConfigureSettings(PlatformConfiguration configuration) throws WindowsConfigurationException;
 
     /**
@@ -62,7 +61,7 @@ public interface ConfigurationMgtService {
      * @throws WindowsConfigurationException
      */
     @GET
-    @Permission(name = "View Configurations", permission = "/device-mgt/configurations/view")
+    @Permission(name = "View Configurations", permission = "/device-mgt/platform-configurations/view")
     PlatformConfiguration getConfiguration() throws WindowsConfigurationException;
 
     /**
@@ -73,6 +72,6 @@ public interface ConfigurationMgtService {
      * @throws WindowsConfigurationException
      */
     @PUT
-    @Permission(name = "Manage Configurations", permission = "/device-mgt/configurations/manage")
+    @Permission(name = "Manage Configurations", permission = "/device-mgt/platform-configurations/manage")
     Message updateConfiguration(PlatformConfiguration configuration) throws WindowsConfigurationException;
 }

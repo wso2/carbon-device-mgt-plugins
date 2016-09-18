@@ -50,7 +50,7 @@ function onRequest(context) {
     permissions.LIST_ROLES = userModule.isAuthorized("/permission/admin/device-mgt/roles/view");
     permissions.LIST_USERS = userModule.isAuthorized("/permission/admin/device-mgt/users/view");
     permissions.LIST_NOTIFICATIONS = userModule.isAuthorized("/permission/admin/device-mgt/notifications/view");
-    permissions.LIST_CONFIGURATION = userModule.isAuthorized("/permission/admin/device-mgt/configurations/view");
+    permissions.LIST_CONFIGURATION = userModule.isAuthorized("/permission/admin/device-mgt/platform-configurations/view");
     viewModel.permissions = permissions;
     viewModel["currentUser"] = currentUser;
     viewModel["appContext"] = mdmProps["appContext"];
