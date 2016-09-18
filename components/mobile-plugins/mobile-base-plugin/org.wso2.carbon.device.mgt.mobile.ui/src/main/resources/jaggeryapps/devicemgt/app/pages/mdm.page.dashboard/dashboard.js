@@ -32,6 +32,8 @@ function onRequest() {
     permissions["ADD_USER"] = userModule.isAuthorized("/permission/admin/device-mgt/users/manage");
     permissions["LIST_ROLES"] = userModule.isAuthorized("/permission/admin/device-mgt/roles/view");
     permissions["ADD_ROLE"] = userModule.isAuthorized("/permission/admin/device-mgt/roles/manage");
+    permissions["PERMITTED_NONE"] = !(permissions["LIST_DEVICES"] || permissions["LIST_POLICIES"] ||
+        permissions["LIST_USERS"] || permissions["LIST_ROLES"]);
 
     viewModel["permissions"] = permissions;
     //TODO: Move enrollment URL into app-conf.json
