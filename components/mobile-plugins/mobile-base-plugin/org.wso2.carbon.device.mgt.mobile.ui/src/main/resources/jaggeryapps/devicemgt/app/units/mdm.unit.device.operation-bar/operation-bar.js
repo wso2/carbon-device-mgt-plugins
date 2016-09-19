@@ -62,10 +62,41 @@ function onRequest(context) {
     }
 
     // adding ios operations related permission checks
+    permissions["ios"] = [];
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/ios/lock")) {
+        permissions["ios"].push("DEVICE_LOCK");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/ios/location")) {
+        permissions["ios"].push("LOCATION");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/ios/enterprise-wipe")) {
+        permissions["ios"].push("ENTERPRISE_WIPE");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/ios/notification")) {
+        permissions["ios"].push("NOTIFICATION");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/ios/ring")) {
+        permissions["ios"].push("RING");
+    }
 
     // adding windows operations related permission checks
+    permissions["windows"] = [];
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/windows/lock")) {
+        permissions["windows"].push("DEVICE_LOCK");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/disenroll/windows")) {
+        permissions["windows"].push("DISENROLL");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/windows/wipe")) {
+        permissions["windows"].push("WIPE_DATA");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/windows/ring")) {
+        permissions["windows"].push("DEVICE_RING");
+    }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/windows/lockreset")) {
+        permissions["windows"].push("LOCK_RESET");
+    }
 
     viewModel["permissions"] = stringify(permissions);
-
     return viewModel;
 }

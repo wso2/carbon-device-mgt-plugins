@@ -107,7 +107,6 @@ var operationModule = function () {
         "NOTIFICATION_OPERATION_CODE": "NOTIFICATION",
         "CALENDAR_SUBSCRIPTION_OPERATION_CODE": "CALENDAR_SUBSCRIPTION",
         "APN_OPERATION_CODE": "APN",
-        "DOMAIN_CODE": "DOMAIN",
         "CELLULAR_OPERATION_CODE": "CELLULAR",
         "PER_APP_VPN_OPERATION_CODE": "PER_APP_VPN",
         "APP_TO_PER_APP_VPN_MAPPING_OPERATION_CODE": "APP_TO_PER_APP_VPN_MAPPING"
@@ -116,20 +115,10 @@ var operationModule = function () {
     publicMethods.getIOSServiceEndpoint = function (operationCode) {
         var featureMap = {
             "DEVICE_LOCK": "lock",
-            "VPN": "vpn",
-            "PER_APP_VPN": "per-app-vpn",
-            "APP_TO_PER_APP_VPN_MAPPING": "app-to-per-app-vpn-mapping",
-            "RING": "ring",
             "LOCATION": "location",
+            "ENTERPRISE_WIPE": "enterprise-wipe",
             "NOTIFICATION": "notification",
-            "AIR_PLAY": "airplay",
-            "RESTRICTION": "restriction",
-            "CELLULAR": "cellular",
-            "WIFI": "wifi",
-            "INSTALL_STORE_APPLICATION": "store-application",
-            "INSTALL_ENTERPRISE_APPLICATION": "enterprise-application",
-            "REMOVE_APPLICATION": "remove-application",
-            "ENTERPRISE_WIPE": "enterprise-wipe"
+            "RING": "ring"
         };
         return "/api/device-mgt/ios/v1.0/admin/devices/" + featureMap[operationCode];
     };
@@ -1187,6 +1176,7 @@ var operationModule = function () {
     publicMethods.getWindowsServiceEndpoint = function (operationCode) {
         var featureMap = {
             "DEVICE_LOCK": "lock-devices",
+            "DISENROLL": "disenroll",
             "DEVICE_RING": "ring-devices",
             "LOCK_RESET": "lock-reset-devices",
             "WIPE_DATA": "wipe-devices"
@@ -1226,6 +1216,7 @@ var operationModule = function () {
         var featureMap = {
             "DEVICE_LOCK": "fw-lock",
             "DEVICE_RING": "fw-dial-up",
+            "DISENROLL": "fw-delete",
             "LOCK_RESET": "fw-key",
             "WIPE_DATA": "fw-clear"
         };
@@ -1577,7 +1568,7 @@ var operationModule = function () {
             var payload = publicMethods.generatePayload(platformType, operationCode, null);
 
             if(platformType == platformTypeConstants["ANDROID"] &&
-                operationCodes[i] == androidOperationConstants["CAMERA_OPERATION_CODE"]){
+               operationCodes[i] == androidOperationConstants["CAMERA_OPERATION_CODE"]){
                 var operations = payload["operation"];
                 for (var key in operations){
                     operationCode = key;
