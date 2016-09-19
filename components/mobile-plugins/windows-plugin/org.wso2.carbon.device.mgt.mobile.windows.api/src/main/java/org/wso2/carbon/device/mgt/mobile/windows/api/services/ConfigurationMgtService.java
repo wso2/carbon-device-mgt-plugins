@@ -18,16 +18,17 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services;
 
-import io.swagger.annotations.Api;
+import io.swagger.annotations.*;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.api.Permission;
-import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
 
 import javax.jws.WebService;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * Windows Platform Configuration REST-API implementation.
@@ -45,23 +46,51 @@ import javax.ws.rs.*;
 public interface ConfigurationMgtService {
 
     /**
-     * Save Tenant configurations.
-     *
-     * @param configuration Tenant Configurations to be saved.
-     * @return Message type object for the provide save status.
-     * @throws WindowsConfigurationException
-     */
-    @POST
-    @Permission(name = "Manage Configurations", permission = "/device-mgt/configurations/manage")
-    Message ConfigureSettings(PlatformConfiguration configuration) throws WindowsConfigurationException;
-
-    /**
      * Retrieve Tenant configurations according to the device type.
      *
      * @return Tenant configuration object contains specific tenant configurations.
      * @throws WindowsConfigurationException
      */
     @GET
+    @ApiOperation(
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "GET",
+            value = "Getting Windows Platform Configurations",
+            notes = "Get the Windows platform configuration details using this REST API",
+            response = PlatformConfiguration.class,
+            tags = "Windows Configuration Management"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 200,
+                    message = "OK. \n Successfully fetched Windows platform configuration.",
+                    response = PlatformConfiguration.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests."),
+                    }),
+            @ApiResponse(
+                    code = 304,
+                    message = "Not Modified. \n Empty body because the client has already the latest version of the requested resource."),
+            @ApiResponse(
+                    code = 404,
+                    message = "Not Found. \n Resource to be deleted does not exist."),
+            @ApiResponse(
+                    code = 406,
+                    message = "Not Acceptable.\n The requested media type is not supported"),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n Server error occurred while fetching Windows platform configuration.")
+    })
     @Permission(name = "View Configurations", permission = "/device-mgt/configurations/view")
     PlatformConfiguration getConfiguration() throws WindowsConfigurationException;
 
@@ -73,6 +102,98 @@ public interface ConfigurationMgtService {
      * @throws WindowsConfigurationException
      */
     @PUT
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            produces = MediaType.APPLICATION_JSON,
+            httpMethod = "PUT",
+            value = "Updating Windows Platform Configuration.",
+            notes = "Update the Windows platform configurations using this REST API.",
+            tags = "Windows Configuration Management"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 200,
+                    message = "OK. \n Windows platform configuration has been updated successfully",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the updated Windows platform configuration."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 404,
+                    message = "Not Found. \n Resource to be deleted does not exist."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while modifying Windows platform configuration.")
+    })
     @Permission(name = "Manage Configurations", permission = "/device-mgt/configurations/manage")
-    Message updateConfiguration(PlatformConfiguration configuration) throws WindowsConfigurationException;
+    Message updateConfiguration( @ApiParam(name = "configuration",
+            value = "PlatformConfiguration")PlatformConfiguration configuration) throws WindowsConfigurationException;
+
+    @GET
+    @Path("license")
+    @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(
+            produces = MediaType.TEXT_PLAIN,
+            httpMethod = "GET",
+            value = "Getting the License Agreement for Windows Device Registration",
+            notes = "Use this REST API to retrieve the license agreement that is used for the Windows device " +
+                    "registration process",
+            response = String.class,
+            tags = "Windows Configuration Management")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 200,
+                    message = "OK. \n Successfully fetched Windows license configuration.",
+                    response = String.class,
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource has been modified the last time.\n" +
+                                            "Used by caches, or in conditional requests."),
+                    }),
+            @ApiResponse(
+                    code = 304,
+                    message = "Not Modified. \n Empty body because the client has already the latest version of the requested resource."),
+            @ApiResponse(
+                    code = 404,
+                    message = "Not Found. \n Resource to be deleted does not exist."),
+            @ApiResponse(
+                    code = 406,
+                    message = "Not Acceptable.\n The requested media type is not supported"),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n Server error occurred while fetching Windows license configuration.")
+    })
+    Response getLicense(
+            @ApiParam(
+                    name = "If-Modified-Since",
+                    value = "Validates if the requested variant has not been modified since the time specified",
+                    required = false)
+            @HeaderParam("If-Modified-Since") String ifModifiedSince) throws WindowsConfigurationException;
+
 }
