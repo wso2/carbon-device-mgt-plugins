@@ -16,7 +16,7 @@
  * under the License.
  */
 
-function onRequest(context) {
+function onRequest() {
     // var log = new Log("mdm.unit.device.operation-bar");
     var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
     var viewModel = {};
@@ -27,10 +27,10 @@ function onRequest(context) {
     if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning-device/operations/android/ring")) {
         permissions["android"].push("DEVICE_RING");
     }
-    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning-device/operations/android/lock-devices")) {
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning-device/operations/android/lock")) {
         permissions["android"].push("DEVICE_LOCK");
     }
-    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning-device/operations/android/unlock-devices")) {
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning-device/operations/android/unlock")) {
         permissions["android"].push("DEVICE_UNLOCK");
     }
     if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning-device/operations/android/location")) {
