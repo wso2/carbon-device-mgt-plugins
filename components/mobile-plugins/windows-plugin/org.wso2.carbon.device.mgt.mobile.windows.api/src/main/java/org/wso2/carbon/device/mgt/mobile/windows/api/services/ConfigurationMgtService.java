@@ -44,13 +44,7 @@ import javax.ws.rs.core.Response;
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
 public interface ConfigurationMgtService {
-
-    /**
-     * Retrieve Tenant configurations according to the device type.
-     *
-     * @return Tenant configuration object contains specific tenant configurations.
-     * @throws WindowsConfigurationException
-     */
+    
     @GET
     @ApiOperation(
             produces = MediaType.APPLICATION_JSON,
@@ -91,7 +85,7 @@ public interface ConfigurationMgtService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching Windows platform configuration.")
     })
-    @Permission(name = "View Configurations", permission = "/device-mgt/configurations/view")
+    @Permission(name = "View Configurations", permission = "/device-mgt/platform-configurations/view")
     PlatformConfiguration getConfiguration() throws WindowsConfigurationException;
 
     /**
