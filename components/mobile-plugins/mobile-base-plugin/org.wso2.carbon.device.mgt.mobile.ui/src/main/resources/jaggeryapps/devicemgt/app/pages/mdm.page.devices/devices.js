@@ -15,26 +15,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-function onRequest(context){
-    var userModule = require("/app/modules/business-controllers/user.js").userModule;
+
+function onRequest() {
+    var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
     var constants = require("/app/modules/constants.js");
     var viewModel = {};
-    var permissions = [];
-    if(userModule.isAuthorized("/permission/admin/device-mgt/emm-admin/devices/list")){
-        permissions.push("LIST_DEVICES");
-        if (userModule.isAuthorized("/permission/admin/device-mgt/emm-admin/devices/view")) {
-            permissions.push("VIEW_DEVICES");
-        }
-    }else if(userModule.isAuthorized("/permission/admin/device-mgt/user/devices/list")){
-        permissions.push("LIST_OWN_DEVICES");
-        if (userModule.isAuthorized("/permission/admin/device-mgt/user/devices/view")) {
-            permissions.push("VIEW_OWN_DEVICES");
-        }
-    }else if(userModule.isAuthorized("/permission/admin/device-mgt/emm-admin/policies/list")){
-        permissions.push("LIST_POLICIES");
-    }
-    var currentUser = session.get(constants.USER_SESSION_KEY);
-    viewModel.permissions = stringify(permissions);
-    viewModel.currentUser = currentUser;
+    var permissions = {};
+
+    // permission checks
+    // [1] checking enrollment permissions
+    permissions["ENROLL_DEVICE"] = userModule.isAuthorized("/permission/admin/device-mgt/devices/enroll/android") ||
+        userModule.isAuthorized("/permission/admin/device-mgt/devices/enroll/ios") ||
+        userModule.isAuthorized("/permission/admin/device-mgt/devices/enroll/windows");
+
+    // [2] checking advanced device search permissions
+    permissions["ADVANCED_SEARCH"] = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/view");
+
+    // [3] checking device viewing permission
+    permissions["VIEW_DEVICES"] = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/view");
+
+    var currentUser = session.get(constants["USER_SESSION_KEY"]);
+
+    viewModel["permissions"] = permissions;
+    viewModel["currentUser"] = currentUser;
+
     return viewModel;
 }

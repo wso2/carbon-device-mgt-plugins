@@ -80,7 +80,9 @@ var operationModule = function () {
         "AUTO_TIME" : "AUTO_TIME",
         "SET_SCREEN_CAPTURE_DISABLED" : "SET_SCREEN_CAPTURE_DISABLED",
         "SET_STATUS_BAR_DISABLED" : "SET_STATUS_BAR_DISABLED",
-        "APPLICATION_OPERATION_CODE":"APP-RESTRICTION"
+        "APPLICATION_OPERATION_CODE":"APP-RESTRICTION",
+        "SYSTEM_UPDATE_POLICY_CODE": "SYSTEM_UPDATE_POLICY",
+        "KIOSK_APPS_CODE": "KIOSK_APPS"
     };
 
     // Constants to define Windows Operation Constants
@@ -115,8 +117,8 @@ var operationModule = function () {
         var featureMap = {
             "DEVICE_LOCK": "lock",
             "VPN": "vpn",
-            "PER_APP_VPN": "perappvpn",
-            "APP_TO_PER_APP_VPN_MAPPING": "apptoperappvpnmapping",
+            "PER_APP_VPN": "per-app-vpn",
+            "APP_TO_PER_APP_VPN_MAPPING": "app-to-per-app-vpn-mapping",
             "RING": "ring",
             "LOCATION": "location",
             "NOTIFICATION": "notification",
@@ -124,12 +126,12 @@ var operationModule = function () {
             "RESTRICTION": "restriction",
             "CELLULAR": "cellular",
             "WIFI": "wifi",
-            "INSTALL_STORE_APPLICATION": "storeapplication",
-            "INSTALL_ENTERPRISE_APPLICATION": "enterpriseapplication",
-            "REMOVE_APPLICATION": "removeapplication",
-            "ENTERPRISE_WIPE": "enterprisewipe"
+            "INSTALL_STORE_APPLICATION": "store-application",
+            "INSTALL_ENTERPRISE_APPLICATION": "enterprise-application",
+            "REMOVE_APPLICATION": "remove-application",
+            "ENTERPRISE_WIPE": "enterprise-wipe"
         };
-        return "/ios/operation/" + featureMap[operationCode];
+        return "/api/device-mgt/ios/v1.0/admin/devices/" + featureMap[operationCode];
     };
 
     /**
@@ -1012,6 +1014,24 @@ var operationModule = function () {
                     }
                 };
                 break;
+            case androidOperationConstants["SYSTEM_UPDATE_POLICY_CODE"]:
+                operationType = operationTypeConstants["PROFILE"];
+                payload = {
+                    "operation": {
+                        "type": operationData["cosuSystemUpdateType"],
+                        "startTime": operationData["cosuWindowStartTime"],
+                        "endTime": operationData["cosuWindowEndTime"]
+                    }
+                };
+                break;
+            case androidOperationConstants["KIOSK_APPS_CODE"]:
+                operationType = operationTypeConstants["PROFILE"];
+                payload = {
+                    "operation": {
+                        "whitelistedApplications": operationData["cosuWhitelistedApplications"]
+                    }
+                };
+                break;
             default:
                 // If the operation is neither of above, it is a command operation
                 operationType = operationTypeConstants["COMMAND"];
@@ -1276,6 +1296,8 @@ var operationModule = function () {
                     value = operationDataObj.val();
                 } else if (operationDataObj.is(":checkbox")) {
                     value = operationDataObj.is(":checked");
+                } else if (operationDataObj.is(":radio") && operationDataObj.is(":checked")) {
+                        value = operationDataObj.val();
                 } else if (operationDataObj.is("select")) {
                     value = operationDataObj.find("option:selected").attr("value");
                 } else if (operationDataObj.hasClass("grouped-array-input")) {

@@ -15,13 +15,15 @@
   specific language governing permissions and limitations
   under the License.
 }}
+
 {{#zone "content"}}
-    <div id = "operations-mod">
+    <div id = "operations-mod" data-permissions="{{permissions}}">
         {{unit "mdm.unit.device.operation-mod"}}
     </div>
 {{/zone}}
 
 {{#zone "bottomJs"}}
+    <!--suppress HtmlUnknownTarget -->
     <script id="operations-bar" src="{{@unit.publicUri}}/templates/operations.hbs"
             type="text/x-handlebars-template"></script>
     {{js "js/operation-bar.js"}}

@@ -1824,7 +1824,7 @@ var updatePolicy = function (policy, state) {
                 var policyList = [];
                 policyList.push(getParameterByName("id"));
                 serviceURL = base_api_url + "/policies/deactivate-policy";
-                invokerUtil.put(
+                invokerUtil.post(
                     serviceURL,
                     policyList,
                     // on success
@@ -1841,7 +1841,7 @@ var updatePolicy = function (policy, state) {
                 var policyList = [];
                 policyList.push(getParameterByName("id"));
                 serviceURL = base_api_url + "/policies/activate-policy";
-                invokerUtil.put(
+                invokerUtil.post(
                     serviceURL,
                     policyList,
                     // on success
