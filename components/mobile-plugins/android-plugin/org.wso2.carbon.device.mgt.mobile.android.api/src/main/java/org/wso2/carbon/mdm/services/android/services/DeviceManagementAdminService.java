@@ -1123,7 +1123,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new send notification operation.")
     })
-    @Permission(name = "Send Notifications", permission = "/device-mgt/devices/owning-device/operations/android/notification")
+    @Permission(name = "Send Notifications", permission = "/device-mgt/devices/owning-device/operations/android/send-notification")
     Response sendNotification(
             @ApiParam(name = "notificationBeanWrapper",
                     value = "Notification Configurations and device Ids")
@@ -1284,7 +1284,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new change lock code operation.")
     })
-    @Permission(name = "Change Password of Device", permission = "/device-mgt/devices/owning-device/operations/android/change-lock")
+    @Permission(name = "Change Password of Device", permission = "/device-mgt/devices/owning-device/operations/android/change-lock-code")
     Response changeLockCode(
             @ApiParam(name = "lockCodeBeanWrapper",
                     value = "Configurations and device Ids need to be done change lock code")

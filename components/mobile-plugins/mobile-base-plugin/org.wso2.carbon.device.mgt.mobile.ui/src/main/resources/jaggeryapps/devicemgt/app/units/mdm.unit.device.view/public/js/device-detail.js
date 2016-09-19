@@ -44,7 +44,7 @@ var InitiateViewOption = null;
             // error-callback
             function () {
                 var defaultInnerHTML =
-                    "<br><p class='fw-warning'>Device data may not have been updated. Please refresh to try again.<p>";
+                    "<br><p class='small'><i class='fw-warning'></i>&nbsp;Device data may not have been updated. Please refresh to try again.<p>";
                 $(".panel-body").append(defaultInnerHTML);
             }
         );

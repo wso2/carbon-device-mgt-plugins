@@ -18,10 +18,9 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions;
 
-import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.ErrorResponse;
 
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -29,8 +28,7 @@ import javax.ws.rs.core.Response;
  */
 public class BadRequestException extends WebApplicationException {
 
-    public BadRequestException(Message message, MediaType mediaType) {
-        super(Response.status(Response.Status.BAD_REQUEST).entity(message).
-                type(mediaType).build());
+    public BadRequestException(ErrorResponse error) {
+        super(Response.status(Response.Status.BAD_REQUEST).entity(error).build());
     }
 }

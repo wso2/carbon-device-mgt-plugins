@@ -63,7 +63,7 @@ if (platform != "Windows Phone") {
                 var status = restAPIResponse["status"];
                 if (status == 200) {
                     session.put("authenticatedUser", username);
-                    session.put("windowsBinaryToken", parse(xmlHttpRequest["responseText"]).UserToken);
+                    session.put("windowsBinaryToken", parse(restAPIResponse["responseText"]).UserToken);
                     response.sendRedirect(mdmProps["appContext"] + "enrollments/windows/license-agent");
                 } else if (status == 403) {
                     response.sendRedirect(mdmProps["appContext"] + "enrollments/windows/login-agent?error=auth-failed");

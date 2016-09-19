@@ -1182,7 +1182,7 @@ var operationModule = function () {
             "WIPE_DATA": "wipe-devices"
         };
         //return "/mdm-windows-agent/services/windows/operation/" + featureMap[operationCode];
-        return "/api/device-mgt/windows/v1.0/admin/devices/" + featureMap[operationCode];
+        return "/api/device-mgt/windows/v1.0/services/windows/admin/devices/" + featureMap[operationCode];
     };
     /**
      * Get the icon for the featureCode
