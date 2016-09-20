@@ -32,7 +32,7 @@ import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementExcept
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidApplication;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidDevice;
-import org.wso2.carbon.mdm.services.android.exception.*;
+import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorException;
 import org.wso2.carbon.mdm.services.android.services.DeviceManagementService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
@@ -180,7 +180,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                 notification.setStatus(org.wso2.carbon.device.mgt.common.notification.mgt.Notification.
                         Status.NEW.toString());
                 notification.setDescription("Operation " + operation.getCode() + " failed to execute on device " +
-                        deviceName + ". Device ID : " + deviceId);
+                        deviceName + " with identifier : " + deviceId);
                 AndroidAPIUtils.getNotificationManagementService().addNotification(id, notification);
             }
             if (log.isDebugEnabled()) {
