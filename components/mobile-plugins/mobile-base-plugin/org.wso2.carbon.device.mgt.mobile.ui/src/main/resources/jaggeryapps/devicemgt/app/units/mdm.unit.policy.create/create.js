@@ -60,8 +60,8 @@ function onRequest() {
         viewModelData["roles"] = result["content"];
     }
     viewModelData.isAuthorized = userModule.isAuthorized("/permission/admin/device-mgt/policies/manage");
-    viewModelData.isAuthorizedViewUsers = userModule.isAuthorized("/permission/admin/device-mgt/roles/view");
-    viewModelData.isAuthorizedViewRoles = userModule.isAuthorized("/permission/admin/device-mgt/users/view");
+    viewModelData.isAuthorizedViewUsers = userModule.isAuthorized("/permission/admin/device-mgt/users/view");
+    viewModelData.isAuthorizedViewRoles = userModule.isAuthorized("/permission/admin/device-mgt/roles/view");
 
     return viewModelData;
 }

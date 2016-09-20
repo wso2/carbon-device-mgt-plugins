@@ -76,8 +76,10 @@ function loadDevices() {
         return {};
     }
 
-    var fnCreatedRow = function (nRow) {
+    var fnCreatedRow = function (nRow, aData, dataIndex) {
         $(nRow).attr('data-type', 'selectable');
+        $(nRow).attr('data-deviceid', aData.deviceIdentifier);
+        $(nRow).attr('data-devicetype', aData.deviceType);
     };
 
 
@@ -226,7 +228,7 @@ function initPage() {
         function (data) {
             if (data) {
                 data = JSON.parse(data);
-                if (data.devices.length > 0) {
+                if (data["count"] > 0) {
                     $(".bulk-action-row").removeClass('hidden');
                     loadDevices();
                 } else {

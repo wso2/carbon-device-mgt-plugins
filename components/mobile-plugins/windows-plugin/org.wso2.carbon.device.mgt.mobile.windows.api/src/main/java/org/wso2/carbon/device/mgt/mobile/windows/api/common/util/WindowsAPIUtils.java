@@ -18,18 +18,24 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.common.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementService;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.ErrorResponse;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.BadRequestException;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth2.OAuth2TokenValidationService;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
@@ -42,12 +48,15 @@ import org.wso2.carbon.webapp.authenticator.framework.config.AuthenticatorConfig
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Class for get Windows API utilities.
  */
 public class WindowsAPIUtils {
+
+    private static Log log = LogFactory.getLog(WindowsAPIUtils.class);
 
     public static DeviceIdentifier convertToDeviceIdentifierObject(String deviceId) {
         DeviceIdentifier identifier = new DeviceIdentifier();
@@ -87,21 +96,25 @@ public class WindowsAPIUtils {
         return responseMediaType;
     }
 
-    public static Response getOperationResponse(List<String> deviceIDs, Operation operation,
-                                                Message message, MediaType responseMediaType)
-            throws DeviceManagementException, OperationManagementException {
-        WindowsDeviceUtils deviceUtils = new WindowsDeviceUtils();
-        DeviceIDHolder deviceIDHolder = deviceUtils.validateDeviceIdentifiers(deviceIDs,
-                message, responseMediaType);
-//      getDeviceManagementService().addOperation(operation, deviceIDHolder.getValidDeviceIDList());
-        if (!deviceIDHolder.getInvalidDeviceIdList().isEmpty()) {
-            return Response.status(PluginConstants.StatusCodes.
-                    MULTI_STATUS_HTTP_CODE).type(
-                    responseMediaType).entity(deviceUtils.
-                    convertErrorMapIntoErrorMessage(deviceIDHolder.getInvalidDeviceIdList())).build();
+    public static Response getOperationResponse(List<String> deviceIDs, Operation operation)
+            throws DeviceManagementException, OperationManagementException, InvalidDeviceException {
+        if (deviceIDs == null || deviceIDs.size() == 0) {
+            String errorMessage = "Device identifier list is empty";
+            log.error(errorMessage);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
-        return Response.status(Response.Status.CREATED).
-                type(responseMediaType).build();
+        DeviceIdentifier deviceIdentifier;
+        List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+        for (String deviceId : deviceIDs) {
+            deviceIdentifier = new DeviceIdentifier();
+            deviceIdentifier.setId(deviceId);
+            deviceIdentifier.setType(PluginConstants.WindowsConstant.DEVICE_TYPE_WINDOWS);
+            deviceIdentifiers.add(deviceIdentifier);
+        }
+        Activity activity = getDeviceManagementService().addOperation(
+                DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS, operation, deviceIdentifiers);
+        return Response.status(Response.Status.CREATED).entity(activity).build();
     }
 
     public static PolicyManagerService getPolicyManagerService() {
@@ -126,8 +139,8 @@ public class WindowsAPIUtils {
             throws OperationManagementException, DeviceManagementException {
         List<? extends Operation> pendingDataOperations;
         pendingDataOperations = org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils.
-                                            getDeviceManagementService().getOperationsByDeviceAndStatus(
-                                                     deviceIdentifier, Operation.Status.PENDING);
+                getDeviceManagementService().getOperationsByDeviceAndStatus(
+                deviceIdentifier, Operation.Status.PENDING);
         return pendingDataOperations;
     }
 

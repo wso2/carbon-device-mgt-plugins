@@ -22,10 +22,13 @@ import com.ibm.wsdl.OperationImpl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.ErrorResponse;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.BadRequestException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsOperationsException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
@@ -69,7 +72,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             operation.setCode(PluginConstants.OperationCodes.DEVICE_LOCK);
             operation.setType(Operation.Type.COMMAND);
             operation.setEnabled(true);
-            return WindowsAPIUtils.getOperationResponse(deviceIDs, operation, message, responseMediaType);
+            return WindowsAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
             message.setResponseMessage(errorMessage);
@@ -82,6 +85,11 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             message.setResponseCode(Response.Status.INTERNAL_SERVER_ERROR.toString());
             log.error(errorMessage, e);
             throw new WindowsOperationsException(message, responseMediaType);
+        } catch (InvalidDeviceException e) {
+            String errorMessage = "Invalid Device Identifiers found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
     }
 
@@ -105,7 +113,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         operation.setType(Operation.Type.COMMAND);
         operation.setEnabled(true);
         try {
-            return WindowsAPIUtils.getOperationResponse(deviceIDs, operation, message, responseMediaType);
+            return WindowsAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
             message.setResponseMessage(errorMessage);
@@ -118,7 +126,12 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             message.setResponseCode(Response.Status.INTERNAL_SERVER_ERROR.toString());
             log.error(errorMessage, e);
             throw new WindowsOperationsException(message, responseMediaType);
-        }
+        } catch (InvalidDeviceException e) {
+        String errorMessage = "Invalid Device Identifiers found.";
+        log.error(errorMessage, e);
+        throw new BadRequestException(
+                new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+    }
     }
 
     /**
@@ -143,7 +156,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         operation.setCode(PluginConstants.OperationCodes.WIPE_DATA);
         operation.setType(Operation.Type.COMMAND);
         try {
-            return WindowsAPIUtils.getOperationResponse(deviceids, operation, message, responseMediaType);
+            return WindowsAPIUtils.getOperationResponse(deviceids, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
             message.setResponseMessage(errorMessage);
@@ -156,6 +169,11 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             message.setResponseCode(Response.Status.INTERNAL_SERVER_ERROR.toString());
             log.error(errorMessage, e);
             throw new WindowsOperationsException(message, responseMediaType);
+        } catch (InvalidDeviceException e) {
+            String errorMessage = "Invalid Device Identifiers found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
     }
 
@@ -181,7 +199,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             CommandOperation operation = new CommandOperation();
             operation.setCode(PluginConstants.OperationCodes.DEVICE_RING);
             operation.setType(Operation.Type.COMMAND);
-            return WindowsAPIUtils.getOperationResponse(deviceIDs, operation, message, responseMediaType);
+            return WindowsAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
             message.setResponseMessage(errorMessage);
@@ -194,6 +212,11 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             message.setResponseCode(Response.Status.INTERNAL_SERVER_ERROR.toString());
             log.error(errorMessage, e);
             throw new WindowsOperationsException(message, responseMediaType);
+        } catch (InvalidDeviceException e) {
+            String errorMessage = "Invalid Device Identifiers found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
     }
 
@@ -224,7 +247,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             CommandOperation operation = new CommandOperation();
             operation.setCode(PluginConstants.OperationCodes.LOCK_RESET);
             operation.setType(Operation.Type.COMMAND);
-            return WindowsAPIUtils.getOperationResponse(deviceIDs, operation, message, responseMediaType);
+            return WindowsAPIUtils.getOperationResponse(deviceIDs, operation);
         } catch (OperationManagementException e) {
             String errorMessage = "Issue in retrieving operation management service instance";
             message.setResponseMessage(errorMessage);
@@ -237,6 +260,11 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             message.setResponseCode(Response.Status.INTERNAL_SERVER_ERROR.toString());
             log.error(errorMessage, e);
             throw new WindowsOperationsException(message, responseMediaType);
+        } catch (InvalidDeviceException e) {
+            String errorMessage = "Invalid Device Identifiers found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
     }
 }

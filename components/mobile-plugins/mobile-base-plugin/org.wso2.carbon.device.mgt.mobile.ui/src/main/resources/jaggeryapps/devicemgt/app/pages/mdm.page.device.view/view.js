@@ -22,7 +22,7 @@ function onRequest(context){
 
     // permission checks
     // [1] checking viewing devices permission
-    viewModel["isAuthorized"] = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/view");
+    viewModel["isAuthorized"] = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning-device/view");
 
     if (viewModel["isAuthorized"]) {
         context.handlebars.registerHelper('equal', function (lvalue, rvalue, options) {

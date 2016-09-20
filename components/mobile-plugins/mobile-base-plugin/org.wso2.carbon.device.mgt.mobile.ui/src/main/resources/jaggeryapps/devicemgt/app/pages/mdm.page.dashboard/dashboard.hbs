@@ -19,8 +19,8 @@
 {{unit "cdmf.unit.lib.qrcode"}}
 {{unit "mdm.unit.device.qr-modal"}}
 {{#zone "content"}}
+    <div class="row ">
     {{#if permissions.LIST_DEVICES}}
-        <div class="row ">
             <div class="col-md-3 wr-stats-board">
                 <div class="wr-stats-board-tile">
                     <div class="tile-name">Devices</div>
@@ -150,8 +150,15 @@
                     </div>
                 </div>
             </div>
-        </div>
     {{/if}}
+    {{# if permissions.PERMITTED_NONE}}
+        <h1 class="page-sub-title">
+            Permitted None
+        </h1>
+        <br>
+        You are not authorized to view any of the dashboard listed resources.
+    {{/if}}
+    </div>
 {{/zone}}
 {{#zone "bottomJs"}}
     {{js "js/dashboard.js"}}

@@ -26,6 +26,8 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.ErrorResponse;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.UnexpectedServerErrorException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils;
@@ -45,58 +47,6 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
 
     private static Log log = LogFactory.getLog(
             org.wso2.carbon.device.mgt.mobile.windows.api.services.impl.ConfigurationMgtServiceImpl.class);
-
-    /**
-     * Save Tenant configurations.
-     *
-     * @param configuration Tenant Configurations to be saved.
-     * @return Message type object for the provide save status.
-     * @throws WindowsConfigurationException
-     */
-    @POST
-    public Message ConfigureSettings(PlatformConfiguration configuration) throws WindowsConfigurationException {
-        Message responseMsg = new Message();
-        ConfigurationEntry licenseEntry = null;
-        String message;
-
-        try {
-            configuration.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
-            if (!configuration.getConfiguration().isEmpty()) {
-                List<ConfigurationEntry> configs = configuration.getConfiguration();
-                for (ConfigurationEntry entry : configs) {
-                    if (PluginConstants.TenantConfigProperties.LICENSE_KEY.equals(entry.getName())) {
-                        License license = new License();
-                        license.setName(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
-                        license.setLanguage(PluginConstants.TenantConfigProperties.LANGUAGE_US);
-                        license.setVersion("1.0.0");
-                        license.setText(entry.getValue().toString());
-                        WindowsAPIUtils.getDeviceManagementService().addLicense(DeviceManagementConstants.
-                                MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS, license);
-                        licenseEntry = entry;
-                    }
-                }
-
-                if (licenseEntry != null) {
-                    configs.remove(licenseEntry);
-                }
-                configuration.setConfiguration(configs);
-                WindowsAPIUtils.getDeviceManagementService().saveConfiguration(configuration);
-                Response.status(Response.Status.CREATED);
-                responseMsg.setResponseMessage("Windows platform configuration saved successfully.");
-                responseMsg.setResponseCode(Response.Status.CREATED.toString());
-                return responseMsg;
-            } else {
-                Response.status(Response.Status.BAD_REQUEST);
-                responseMsg.setResponseMessage("Windows platform configuration can not be saved.");
-                responseMsg.setResponseCode(Response.Status.CREATED.toString());
-            }
-        } catch (DeviceManagementException e) {
-            message = "Error Occurred while configuring Windows Platform.";
-            log.error(message, e);
-            throw new WindowsConfigurationException(message, e);
-        }
-        return responseMsg;
-    }
 
     /**
      * Retrieve Tenant configurations according to the device type.
@@ -182,4 +132,24 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
         }
         return responseMsg;
     }
+
+    @GET
+    @Path("/license")
+    public Response getLicense(
+            @HeaderParam("If-Modified-Since") String ifModifiedSince) {
+        License license;
+        try {
+            license =
+                    WindowsAPIUtils.getDeviceManagementService().getLicense(
+                            DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS,
+                            DeviceManagementConstants.LanguageCodes.LANGUAGE_CODE_ENGLISH_US);
+        } catch (DeviceManagementException e) {
+            String msg = "Error occurred while retrieving the license configured for Windows device enrolment";
+            log.error(msg, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
+        }
+        return Response.status(Response.Status.OK).entity(license).build();
+    }
 }
+

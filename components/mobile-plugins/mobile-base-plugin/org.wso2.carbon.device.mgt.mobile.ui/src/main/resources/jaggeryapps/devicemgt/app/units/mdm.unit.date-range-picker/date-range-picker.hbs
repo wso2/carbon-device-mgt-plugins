@@ -15,18 +15,11 @@
   specific language governing permissions and limitations
   under the License.
 }}
-
-{{unit "mdm.unit.date-range-picker"}}
-
-{{#zone "content"}}
-    <div id = "operations-mod" data-permissions="{{permissions}}">
-        {{unit "mdm.unit.device.operation-mod"}}
-    </div>
+{{#zone "topCss"}}
+    {{css "css/daterangepicker.css"}}
 {{/zone}}
 
 {{#zone "bottomJs"}}
-    <!--suppress HtmlUnknownTarget -->
-    <script id="operations-bar" src="{{@unit.publicUri}}/templates/operations.hbs"
-            type="text/x-handlebars-template"></script>
-    {{js "js/operation-bar.js"}}
+    {{js "js/moment.min.js"}}
+    {{js "js/daterangepicker.js"}}
 {{/zone}}

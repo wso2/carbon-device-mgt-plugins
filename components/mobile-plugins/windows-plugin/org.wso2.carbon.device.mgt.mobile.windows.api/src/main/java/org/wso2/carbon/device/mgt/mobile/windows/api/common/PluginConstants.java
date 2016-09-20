@@ -263,6 +263,13 @@ public final class PluginConstants {
         }
 
         public static final int MULTI_STATUS_HTTP_CODE = 207;
+
+    }
+
+    public final class WindowsConstant {
+        public static final String DEVICE_TYPE_WINDOWS = "windows";
+        public static final String HEADER_CONTENT_TYPE = "Content-Type";
+        public static final String APPLICATION_JSON = "application/json";
     }
 
     /**
@@ -281,6 +288,7 @@ public final class PluginConstants {
         public static final String AUTH_POLICY = "authPolicy";
         public static final String DEFAULT_AUTH_POLICY = "Federated";
     }
+
 
     /**
      * Policy Configuration related constants.

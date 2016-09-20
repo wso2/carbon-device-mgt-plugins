@@ -16,24 +16,27 @@
  * under the License.
  */
 
-function onRequest(context) {
+function onRequest() {
     var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
-    var generalConfig = context.app.conf["generalConfig"];
     var mdmProps = require("/app/modules/conf-reader/main.js")["conf"];
+
     var viewModel = {};
     var permissions = {};
-    permissions.LIST_DEVICES = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/view");
-    permissions.LIST_POLICIES = userModule.isAuthorized("/permission/admin/device-mgt/policies/view");
-    permissions.LIST_ROLES = userModule.isAuthorized("/permission/admin/device-mgt/roles/view");
-    permissions.LIST_USERS = userModule.isAuthorized("/permission/admin/device-mgt/users/view");
-    permissions.ADD_POLICY = userModule.isAuthorized("/permission/admin/device-mgt/policies/manage");
-    permissions.ADD_ROLE = userModule.isAuthorized("/permission/admin/device-mgt/roles/manage");
-    permissions.ADD_USER = userModule.isAuthorized("/permission/admin/device-mgt/users/manage");
-    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/enroll/ios") | userModule.isAuthorized("/permission/admin/devices/enroll/android") | userModule.isAuthorized("/permission/admin/device-mgt/devices/enroll/windows") ){
-        permissions.ENROLL_DEVICE = true;
-    }
-    viewModel.permissions = permissions;
+    permissions["LIST_DEVICES"] = userModule.isAuthorized("/permission/admin/device-mgt/devices/owning-device/view");
+    permissions["ENROLL_DEVICE"] = userModule.isAuthorized("/permission/admin/device-mgt/devices/enroll/ios") ||
+        userModule.isAuthorized("/permission/admin/devices/enroll/android") ||
+        userModule.isAuthorized("/permission/admin/device-mgt/devices/enroll/windows");
+    permissions["LIST_POLICIES"] = userModule.isAuthorized("/permission/admin/device-mgt/policies/view");
+    permissions["ADD_POLICY"] = userModule.isAuthorized("/permission/admin/device-mgt/policies/manage");
+    permissions["LIST_USERS"] = userModule.isAuthorized("/permission/admin/device-mgt/users/view");
+    permissions["ADD_USER"] = userModule.isAuthorized("/permission/admin/device-mgt/users/manage");
+    permissions["LIST_ROLES"] = userModule.isAuthorized("/permission/admin/device-mgt/roles/view");
+    permissions["ADD_ROLE"] = userModule.isAuthorized("/permission/admin/device-mgt/roles/manage");
+    permissions["PERMITTED_NONE"] = !(permissions["LIST_DEVICES"] || permissions["LIST_POLICIES"] ||
+        permissions["LIST_USERS"] || permissions["LIST_ROLES"]);
+
+    viewModel["permissions"] = permissions;
     //TODO: Move enrollment URL into app-conf.json
-    viewModel.enrollmentURL = mdmProps.generalConfig.host +  mdmProps.enrollmentDir;
+    viewModel["enrollmentURL"] = mdmProps["generalConfig"]["host"] +  mdmProps["enrollmentDir"];
     return viewModel;
 }
