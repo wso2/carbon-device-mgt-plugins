@@ -128,22 +128,22 @@ function loadNewNotifications() {
                         if (responsePayload["notifications"]) {
                             if (responsePayload.count > 0) {
                                 viewModel["notifications"] = responsePayload["notifications"];
-                                viewModel["appContext"] = context;
+                                // viewModel["appContext"] = context;
                                 $(messageSideBar).html(template(viewModel));
                             } else {
-                                $(messageSideBar).html('<div class="alert alert-info" role="alert"><i class="icon fw fw-info"></i>No new notifications found...</div>');
+                                $(messageSideBar).html("<h4 class='text-center'>No new notifications found</h4>");
                             }
                         } else {
-                            $(messageSideBar).html("<h4 class ='message-danger'>Unexpected error " +
-                                "occurred while loading new notifications.</h4>");
+                            $(messageSideBar).html("<h4 class ='message-danger text-center'>Unexpected error " +
+                                "occurred while loading new notifications</h4>");
                         }
                     }
                 },
                 // on error
                 function (jqXHR) {
                     if (jqXHR.status = 500) {
-                        $(messageSideBar).html("<h4 class ='message-danger'>Unexpected error occurred while trying " +
-                            "to retrieve any new notifications.</h4>");
+                        $(messageSideBar).html("<h4 class ='message-danger text-center'>Unexpected error occurred while trying " +
+                            "to retrieve any new notifications</h4>");
                     }
                 }
             );
