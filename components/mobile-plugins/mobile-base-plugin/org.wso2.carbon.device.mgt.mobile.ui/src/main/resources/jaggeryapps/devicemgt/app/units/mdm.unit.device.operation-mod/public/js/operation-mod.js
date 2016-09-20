@@ -840,6 +840,24 @@ var operationModule = function () {
                     "restrictedApplications": operationPayload["restricted-applications"]
                 };
                 break;
+            case androidOperationConstants["SYSTEM_UPDATE_POLICY_CODE"]:
+                if (operationPayload["type"] != "window") {
+                    payload = {
+                        "cosuSystemUpdatePolicyType": operationPayload["type"]
+                    };
+                } else {
+                    payload = {
+                        "cosuSystemUpdatePolicyType": operationPayload["type"],
+                        "cosuSystemUpdatePolicyWindowStartTime": operationPayload["startTime"],
+                        "cosuSystemUpdatePolicyWindowEndTime": operationPayload["endTime"]
+                    };
+                }
+                break;
+            case androidOperationConstants["KIOSK_APPS_CODE"]:
+                payload = {
+                    "cosuWhitelistedApplications": operationPayload["whitelistedApplications"]
+                };
+                break;
         }
         return payload;
     };

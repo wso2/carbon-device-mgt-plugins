@@ -94,11 +94,12 @@
 {{#zone "sidePanes"}}
     <!--suppress HtmlUnknownAttribute -->
     <div class="sidebar-wrapper" id="right-sidebar" is-authorized="{{permissions.LIST_NOTIFICATIONS}}"
-         data-side="right" data-width="320" data-sidebar-fixed="true" data-fixed-offset="50" data-spy="affix"
-         data-offset-top="80">
-        <ul class="sidebar-messages">
-        </ul>
-        <div class="text-center"><a href="{{appContext}}notification-listing" class="btn btn-primary">Show all notifications</a></div>
+        data-side="right" data-width="320" data-sidebar-fixed="true" data-fixed-offset="60" data-spy="affix"
+        data-offset-top="80">
+        <br>
+        <ul class="sidebar-messages"></ul>
+        <br>
+        <div class="text-center"><a href="{{appContext}}notification-listing" class="btn btn-primary">Show All Notifications</a></div>
     </div>
 {{/zone}}
 {{#zone "bottomJs"}}
