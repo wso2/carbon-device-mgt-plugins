@@ -83,8 +83,11 @@ var updateNotificationCountOnSuccess = function (data, textStatus, jqXHR) {
     if (jqXHR.status == 200 && data) {
         var responsePayload = JSON.parse(data);
         var newNotificationsCount = responsePayload["count"];
-        if (newNotificationsCount > 0) {
-            $(notificationBubble).html(newNotificationsCount);
+        if (newNotificationsCount > 5) {
+            $(notificationBubble).html("5 <sup>+</sup> &nbsp;NEW");
+            $(notificationBubble).show();
+        } else if (newNotificationsCount <= 5 && newNotificationsCount > 0) {
+            $(notificationBubble).html(newNotificationsCount + " NEW");
             $(notificationBubble).show();
         } else {
             $(notificationBubble).hide();
@@ -102,7 +105,7 @@ function loadNewNotificationsOnSideViewPanel() {
     if ($("#right-sidebar").attr("is-authorized") == "false") {
         $("#notification-bubble-wrapper").remove();
     } else {
-        var serviceURL = emmAdminBasePath + "/notifications?status=NEW";
+        var serviceURL = emmAdminBasePath + "/notifications?offset=0&limit=5&status=NEW";
         invokerUtil.get(serviceURL, updateNotificationCountOnSuccess, updateNotificationCountOnError);
         loadNewNotifications();
     }
@@ -128,7 +131,6 @@ function loadNewNotifications() {
                         if (responsePayload["notifications"]) {
                             if (responsePayload.count > 0) {
                                 viewModel["notifications"] = responsePayload["notifications"];
-                                // viewModel["appContext"] = context;
                                 $(messageSideBar).html(template(viewModel));
                             } else {
                                 $(messageSideBar).html(

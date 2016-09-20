@@ -82,11 +82,11 @@
             <!--<a href="{{appContext}}notification-listing" title="Failures of operations on the device side will be listed here">-->
             <a data-toggle="sidebar" data-target="#right-sidebar" data-container=".page-content"
                aria-expanded="false" rel="notifications-sidebar">
-                                <span class="icon fw-stack">
-                                    <i class="fw fw-notification fw-stack-1x"></i>
-                                </span>
-                <span class="hidden-xs">Notifications</span>
-                <span class="badge notifications" id="notification-bubble"></span>
+               <span class="icon fw-stack">
+                    <i class="fw fw-notification fw-stack-1x"></i>
+               </span>
+               <span class="hidden-xs">Notifications&nbsp;&nbsp;</span>
+               <span class="badge notifications" id="notification-bubble"></span>
             </a>
         </li>
     </ul>
@@ -96,9 +96,7 @@
     <div class="sidebar-wrapper" id="right-sidebar" is-authorized="{{permissions.LIST_NOTIFICATIONS}}"
         data-side="right" data-width="320" data-sidebar-fixed="true" data-fixed-offset="60" data-spy="affix"
         data-offset-top="80">
-        <br>
         <ul class="sidebar-messages"></ul>
-        <br>
         <div class="text-center"><a href="{{appContext}}notification-listing" class="btn btn-primary">Show All Notifications</a></div>
     </div>
 {{/zone}}
