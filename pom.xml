@@ -955,7 +955,7 @@
             <dependency>
                 <groupId>org.wso2.orbit.org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk15on</artifactId>
-                <version>1.52.0.wso2v1</version>
+                <version>${bcpkix-jdk15on.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.plexus</groupId>
