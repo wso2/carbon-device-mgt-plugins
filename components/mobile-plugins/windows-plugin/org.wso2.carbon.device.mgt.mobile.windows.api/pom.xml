@@ -208,7 +208,7 @@
             <artifactId>saaj-impl</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.bouncycastle.wso2</groupId>
+            <groupId>org.wso2.orbit.org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
             <scope>provided</scope>
         </dependency>

@@ -948,7 +948,7 @@
                 <version>${saaj-impl.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.bouncycastle.wso2</groupId>
+                <groupId>org.wso2.orbit.org.bouncycastle</groupId>
                 <artifactId>bcpkix-jdk15on</artifactId>
                 <version>${bcpkix-jdk15on.version}</version>
             </dependency>
@@ -1149,7 +1149,7 @@
         <carbon.governance.version>4.6.4</carbon.governance.version>
 
         <!-- Carbon API Management -->
-        <carbon.api.mgt.version>6.0.4</carbon.api.mgt.version>
+        <carbon.api.mgt.version>6.0.5-SNAPSHOT</carbon.api.mgt.version>
 
         <!-- XMPP/MQTT Version -->
         <smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>
