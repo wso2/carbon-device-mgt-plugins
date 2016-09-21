@@ -72,23 +72,7 @@
 
 {{#zone "content"}}
     {{#if permissions.VIEW_DEVICES}}
-        <div id="loading-content" class="col-centered">
-            <i class="fw fw-settings fw-spin fw-2x"></i>
-            &nbsp;&nbsp;&nbsp;
-            Loading devices . . .
-            <br>
-        </div>
-        <div id="device-listing-status" class="raw hidden">
-            <ul style="list-style-type: none;">
-                <li class="message message-info">
-                    <h4>
-                        <i class="icon fw fw-info"></i>
-                        <a id="device-listing-status-msg"></a>
-                    </h4>
-                </li>
-            </ul>
-        </div>
-        <div id="device-table">
+        <div id="device-table" class="hidden">
             <table class="table table-striped table-hover list-table display responsive nowrap data-table grid-view"
                    id="device-grid">
                 <thead>
@@ -138,21 +122,12 @@
         </div>
         <div id="no-device-view" class="ast-container list-view hidden">
             <div class="ctrl-info-panel col-centered text-center wr-login">
-                <h2>You do not have any device enrolled at the moment.</h2>
-                <p class="text-center">
-                    <a href="javascript:toggleEnrollment()" class="wr-btn">
-                                    <span class="fw-stack">
-                                       <i class="fw fw-ring fw-stack-2x"></i>
-                                       <i class="fw fw-mobile fw-stack-1x"></i>
-                                       <span class="fw-stack fw-move-right fw-move-bottom">
-                                          <i class="fw fw-ring fw-stack-2x"></i>
-                                          <i class="fw fw-circle fw-stack-2x fw-stroke text-info"></i>
-                                          <i class="fw fw-add fw-stack-1x fw-inverse"></i>
-                                       </span>
-                                    </span>
-                        &nbsp;&nbsp;Enroll New Device
+                <h3 class="text-muted">You do not have any enrolled device at the moment</h3>
+                <h3 class="text-center">
+                    <a href="javascript:toggleEnrollment()" class="btn btn-primary">
+                        Add New Device
                     </a>
-                </p>
+                </h3>
             </div>
         </div>
     {{else}}

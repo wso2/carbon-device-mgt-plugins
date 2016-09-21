@@ -210,14 +210,14 @@ function loadDevices() {
  */
 //var assetContainer = "#ast-container";
 
-function openCollapsedNav(){
-    $('.wr-hidden-nav-toggle-btn').addClass('active');
-    $('#hiddenNav').slideToggle('slideDown', function(){
-        if($(this).css('display') == 'none'){
-            $('.wr-hidden-nav-toggle-btn').removeClass('active');
-        }
-    });
-}
+//function openCollapsedNav(){
+//    $('.wr-hidden-nav-toggle-btn').addClass('active');
+//    $('#hiddenNav').slideToggle('slideDown', function(){
+//        if($(this).css('display') == 'none'){
+//            $('.wr-hidden-nav-toggle-btn').removeClass('active');
+//        }
+//    });
+//}
 
 function initPage() {
     var currentUser = $("#device-listing").data("currentUser");
@@ -230,13 +230,13 @@ function initPage() {
                 data = JSON.parse(data);
                 if (data["count"] > 0) {
                     $(".bulk-action-row").removeClass('hidden');
+                    $("#device-table").removeClass('hidden');
                     loadDevices();
                 } else {
-                    $("#loading-content").remove();
-                    $("#device-table").remove();
-                    $("#no-device-view").removeClass('hidden');
-                    $("#advanced-search-btn").addClass('hidden');
                     $("#enroll-btn").addClass('hidden');
+                    $("#advanced-search-btn").addClass('hidden');
+                    $("#device-table").addClass('hidden');
+                    $("#no-device-view").removeClass('hidden');
                 }
             }
         }, function () {
