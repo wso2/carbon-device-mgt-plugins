@@ -124,6 +124,15 @@
         <method>POST</method>
     </Permission>
 
+    <Permission>
+        <name>GET Events</name>
+        <path>/device-mgt/admin/events/get</path>
+        <url>/events</url>
+        <method>GET</method>
+    </Permission>
+
+
+
     <!-- End of event related permissions -->
 
     <!-- Operations related permissions -->
@@ -153,6 +162,13 @@
         <name>Clear password</name>
         <path>/device-mgt/admin/device/android/operation/clear-password</path>
         <url>/admin/devices/clear-password</url>
+        <method>POST</method>
+    </Permission>
+
+    <Permission>
+        <name>Logcat</name>
+        <path>/device-mgt/admin/device/android/operation/logcat</path>
+        <url>/admin/devices/logcat</url>
         <method>POST</method>
     </Permission>
 
