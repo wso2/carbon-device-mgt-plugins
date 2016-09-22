@@ -80,17 +80,23 @@ function toggleEnrollment() {
 
 var updateNotificationCountOnSuccess = function (data, textStatus, jqXHR) {
     var notificationBubble = "#notification-bubble";
+    var notificationIcon = "#notifications-icon";
+    var notificationSpacer = "#notifications-spacer";
     if (jqXHR.status == 200 && data) {
         var responsePayload = JSON.parse(data);
         var newNotificationsCount = responsePayload["count"];
         if (newNotificationsCount > 5) {
             $(notificationBubble).html("5 <sup>+</sup> &nbsp;NEW");
-            $(notificationBubble).show();
+            $(notificationBubble).removeClass("hidden");
+            $(notificationSpacer).removeClass("hidden");
         } else if (newNotificationsCount <= 5 && newNotificationsCount > 0) {
             $(notificationBubble).html(newNotificationsCount + " NEW");
-            $(notificationBubble).show();
+            $(notificationBubble).removeClass("hidden");
+            $(notificationSpacer).removeClass("hidden");
         } else {
-            $(notificationBubble).hide();
+            $(notificationBubble).addClass("hidden");
+            $(notificationSpacer).addClass("hidden");
+            $(notificationIcon).removeClass("hidden");
         }
     }
 };
