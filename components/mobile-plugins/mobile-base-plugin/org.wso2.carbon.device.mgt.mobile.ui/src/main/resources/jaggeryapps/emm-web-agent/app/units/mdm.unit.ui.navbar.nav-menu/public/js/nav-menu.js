@@ -37,7 +37,7 @@ function setPopupMaxHeight() {
  * show popup function.
  */
 function showPopup() {
-    $(modalPopup).show();
+    $(modalPopup).modal('show');
     setPopupMaxHeight();
 }
 
@@ -47,7 +47,7 @@ function showPopup() {
 function hidePopup() {
     $(modalPopupContent).html("");
     $(modalPopupContent).removeClass("operation-data");
-    $(modalPopup).hide();
+    $(modalPopup).modal('hide');
 }
 
 var updateNotificationCount = function (data, textStatus, jqXHR) {
