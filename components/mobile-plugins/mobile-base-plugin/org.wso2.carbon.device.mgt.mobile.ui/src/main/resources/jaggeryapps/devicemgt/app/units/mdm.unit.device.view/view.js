@@ -53,8 +53,8 @@ function onRequest(context) {
                     };
                 } else if (device["type"] == "android") {
                     viewModel["imei"] = device["properties"]["IMEI"];
-                    viewModel["model"] = device["properties"]["DEVICE_MODEL"];
-                    viewModel["vendor"] = device["properties"]["VENDOR"];
+                    viewModel["model"] = device["deviceInfo"]["deviceModel"];
+                    viewModel["vendor"] = device["deviceInfo"]["vendor"];
                     var osBuildDate = device["properties"]["OS_BUILD_DATE"];
                     if (osBuildDate != null && osBuildDate != "0") {
                         viewModel["os_build_date"] = new Date(osBuildDate * 1000);
@@ -73,17 +73,17 @@ function onRequest(context) {
                         }
                     }
                     deviceInfo = info;
-                    viewModel["BatteryLevel"] = deviceInfo["BATTERY_LEVEL"];
+                    viewModel["BatteryLevel"] = device["deviceInfo"]["batteryLevel"];
                     viewModel["internal_memory"]["FreeCapacity"] = Math.
-                        round(deviceInfo["INTERNAL_AVAILABLE_MEMORY"] * 100)/100;
+                        round(device["deviceInfo"]["internalAvailableMemory"] * 100)/100;
                     viewModel["internal_memory"]["DeviceCapacityPercentage"] = Math.
-                        round(deviceInfo["INTERNAL_AVAILABLE_MEMORY"]
-                            / deviceInfo["INTERNAL_TOTAL_MEMORY"] * 10000) / 100;
+                        round(device["deviceInfo"]["internalAvailableMemory"]
+                            / device["deviceInfo"]["internalTotalMemory"] * 10000) / 100;
                     viewModel["external_memory"]["FreeCapacity"] = Math.
                         round(deviceInfo["EXTERNAL_AVAILABLE_MEMORY"] * 100) / 100;
                     viewModel["external_memory"]["DeviceCapacityPercentage"] = Math.
-                        round(deviceInfo["EXTERNAL_AVAILABLE_MEMORY"]
-                            / deviceInfo["EXTERNAL_TOTAL_MEMORY"] * 10000) / 100;
+                        round(device["deviceInfo"]["externalAvailableMemory"]
+                            / device["deviceInfo"]["externalTotalMemory"] * 10000) / 100;
                 } else if (device["type"] == "windows") {
                     viewModel["imei"] = device["properties"]["IMEI"];
                     viewModel["model"] = device["properties"]["DEVICE_MODEL"];
