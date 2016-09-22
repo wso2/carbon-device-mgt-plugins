@@ -95,8 +95,6 @@ function loadDevices() {
                 "data": []
             };
 
-            return JSON.stringify(json);
-
         } else if (data["count"] > 0) {
             $(noDeviceView).remove();
             $("#enroll-btn").removeClass('hidden');
@@ -127,8 +125,9 @@ function loadDevices() {
                 "data": objects
             };
 
-            return JSON.stringify(json);
         }
+
+        return JSON.stringify(json);
     };
 
     // possible params - nRow, aData, dataIndex
@@ -146,7 +145,7 @@ function loadDevices() {
                 var deviceType = row.deviceType;
                 var deviceIdentifier = row.deviceIdentifier;
                 var url = "#";
-                if (status != 'REMOVED') {
+                if (row.status != 'REMOVED') {
                     url = "device/" + deviceType + "?id=" + deviceIdentifier;
                 }
                 return '<div onclick="javascript:InitiateViewOption(\'' + url + '\')" class="thumbnail icon">' +
