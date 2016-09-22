@@ -149,7 +149,8 @@ function loadDevices() {
                     url = "device/" + deviceType + "?id=" + deviceIdentifier;
                 }
                 return '<div onclick="javascript:InitiateViewOption(\'' + url + '\')" class="thumbnail icon">' +
-                    '<i class="square-element text fw fw-mobile"></i></div>'
+                        '<i class="square-element text fw fw-mobile"></i>' +
+                    '</div>'
             }
         },
         {
@@ -219,7 +220,6 @@ function loadDevices() {
         function () {
             $(".icon .text").res_text(0.2);
             $('#device-grid').removeClass('hidden');
-            $("#loading-content").remove();
         }, {
             "placeholder" : "Search By Device Name",
             "searchKey" : "name"
@@ -244,38 +244,11 @@ function loadDevices() {
 //    });
 //}
 
-function initPage() {
-//    var currentUser = $("#device-listing").data("currentUser");
-//    var serviceURL = "/api/device-mgt/v1.0/devices";
-//
-//    invokerUtil.get(
-//        serviceURL,
-//        function (data) {
-//            if (data) {
-//                data = JSON.parse(data);
-//                if (data["count"] > 0) {
-//                    $(".bulk-action-row").removeClass('hidden');
-//                    $("#device-table").removeClass('hidden');
-//                    loadDevices();
-//                } else {
-//                    $("#enroll-btn").addClass('hidden');
-//                    $("#advanced-search-btn").addClass('hidden');
-//                    $("#device-table").addClass('hidden');
-//                    $("#no-device-view").removeClass('hidden');
-//                }
-//            }
-//        }, function () {
-//            initPage();
-//        }
-//    );
-    loadDevices();
-}
-
 /*
  * DOM ready functions.
  */
 $(document).ready(function () {
-    initPage();
+    loadDevices();
 
     /* Adding selected class for selected devices */
     $(deviceCheckbox).each(function () {
