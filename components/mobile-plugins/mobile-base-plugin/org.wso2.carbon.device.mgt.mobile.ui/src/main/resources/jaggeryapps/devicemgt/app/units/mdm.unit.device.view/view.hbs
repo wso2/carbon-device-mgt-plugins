@@ -23,15 +23,19 @@
                     {{#defineZone "device-detail-properties"}}
                         <table class="table table-responsive table-striped" id="members">
                             <tbody>
-                            <tr role="row" class="even">
-                                <td class="sorting_1" style="padding:10px 15px; width: 1%;">Device</td>
-                                <td style="padding:10px 15px;">{{device.viewModel.vendor}} {{device.properties.model}}</td>
-                            </tr>
-                            {{#if device.viewModel.model}}
-                                <tr role="row" class="odd">
-                                    <td class="sorting_1" style="padding:10px 15px;">Model</td>
-                                    <td style="padding:10px 15px;">{{device.viewModel.model}}</td>
+                            {{#if device.viewModel.vendor}}
+                                <tr role="row" class="even">
+                                    <td class="sorting_1" style="padding:10px 15px; width: 1%;">Device</td>
+                                    <td style="padding:10px 15px;">{{device.viewModel.deviceName}}</td>
                                 </tr>
+                            {{/if}}
+                            {{#if device.viewModel.vendor}}
+                                {{#if device.viewModel.model}}
+                                    <tr role="row" class="odd">
+                                        <td class="sorting_1" style="padding:10px 15px;">Model</td>
+                                        <td style="padding:10px 15px;">{{device.viewModel.vendor}} {{device.viewModel.model}}</td>
+                                    </tr>
+                                {{/if}}
                             {{/if}}
                             <tr role="row" class="even">
                                 <td class="sorting_1" style="padding:10px 15px;">IMEI</td>

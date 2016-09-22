@@ -52,6 +52,8 @@ function onRequest(context) {
                         longitude: device["properties"]["LONGITUDE"]
                     };
                 } else if (device["type"] == "android") {
+                    viewModel["deviceName"] = device["name"];
+                    viewModel["deviceIdentifier"] = device["deviceIdentifier"];
                     viewModel["imei"] = device["properties"]["IMEI"];
                     viewModel["model"] = device["deviceInfo"]["deviceModel"];
                     viewModel["vendor"] = device["deviceInfo"]["vendor"];
