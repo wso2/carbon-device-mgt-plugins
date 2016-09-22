@@ -16,9 +16,9 @@
  * under the License.
  */
 
-var modalPopup = '.modal',
-    modalPopupContainer = modalPopup + ' .modal-content',
-    modalPopupContent = modalPopup + ' .modal-content';
+var modalPopup = ".wr-modalpopup";
+var modalPopupContainer = modalPopup + " .modalpopup-container";
+var modalPopupContent = modalPopup + " .modalpopup-content";
 var body = "body";
 
 /*
