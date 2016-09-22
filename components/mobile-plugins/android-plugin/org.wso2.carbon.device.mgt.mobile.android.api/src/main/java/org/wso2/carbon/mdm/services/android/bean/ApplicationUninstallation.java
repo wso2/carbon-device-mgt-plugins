@@ -43,10 +43,6 @@ public class ApplicationUninstallation extends AndroidOperation implements Seria
     @Pattern(regexp = "^[A-Za-z]*$")
     private String type;
 
-    @ApiModelProperty(name = "name", value = "The name of the application.", required = true)
-    @Size(min = 2, max = 45)
-    private String name;
-
     public String getAppIdentifier() {
         return appIdentifier;
     }
@@ -63,11 +59,4 @@ public class ApplicationUninstallation extends AndroidOperation implements Seria
         this.type = type;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
