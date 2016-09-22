@@ -80,14 +80,19 @@ function toggleEnrollment() {
 
 var updateNotificationCountOnSuccess = function (data, textStatus, jqXHR) {
     var notificationBubble = "#notification-bubble";
+    var notificationIcon = "#notifications-icon";
+    var notificationSpacer = "#notifications-spacer";
     if (jqXHR.status == 200 && data) {
         var responsePayload = JSON.parse(data);
         var newNotificationsCount = responsePayload["count"];
         if (newNotificationsCount > 0) {
-            $(notificationBubble).html(newNotificationsCount);
-            $(notificationBubble).show();
+            $(notificationBubble).html(newNotificationsCount + " NEW");
+            $(notificationBubble).removeClass("hidden");
+            $(notificationSpacer).removeClass("hidden");
         } else {
-            $(notificationBubble).hide();
+            $(notificationBubble).addClass("hidden");
+            $(notificationSpacer).addClass("hidden");
+            $(notificationIcon).removeClass("hidden");
         }
     }
 };
@@ -102,7 +107,7 @@ function loadNewNotificationsOnSideViewPanel() {
     if ($("#right-sidebar").attr("is-authorized") == "false") {
         $("#notification-bubble-wrapper").remove();
     } else {
-        var serviceURL = emmAdminBasePath + "/notifications?status=NEW";
+        var serviceURL = emmAdminBasePath + "/notifications?offset=0&limit=6&status=NEW";
         invokerUtil.get(serviceURL, updateNotificationCountOnSuccess, updateNotificationCountOnError);
         loadNewNotifications();
     }
@@ -117,7 +122,7 @@ function loadNewNotifications() {
         var currentUser = notifications.data("currentUser");
 
         $.template("notification-listing", notifications.attr("src"), function (template) {
-            var serviceURL = emmAdminBasePath + "/notifications?offset=0&limit=5&status=NEW";
+            var serviceURL = emmAdminBasePath + "/notifications?offset=0&limit=6&status=NEW";
             invokerUtil.get(
                 serviceURL,
                 // on success
@@ -128,7 +133,6 @@ function loadNewNotifications() {
                         if (responsePayload["notifications"]) {
                             if (responsePayload.count > 0) {
                                 viewModel["notifications"] = responsePayload["notifications"];
-                                // viewModel["appContext"] = context;
                                 $(messageSideBar).html(template(viewModel));
                             } else {
                                 $(messageSideBar).html(
