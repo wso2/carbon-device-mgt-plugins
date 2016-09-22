@@ -16,9 +16,9 @@
  * under the License.
  */
 
-var modalPopup = ".wr-modalpopup";
-var modalPopupContainer = modalPopup + " .modalpopup-container";
-var modalPopupContent = modalPopup + " .modalpopup-content";
+var modalPopup = '.modal',
+    modalPopupContainer = modalPopup + ' .modal-content',
+    modalPopupContent = modalPopup + ' .modal-content';
 var body = "body";
 
 /*
@@ -33,7 +33,7 @@ function setPopupMaxHeight() {
  * Shows agent download popup.
  */
 function showAgentDownloadPopup() {
-    $(modalPopup).show();
+    $(modalPopup).modal('show');
     setPopupMaxHeight();
     var deviceType = "";
     $('.deviceType').each(function () {
@@ -50,7 +50,7 @@ function hideAgentDownloadPopup() {
     $('label[for=deviceName]').remove();
     $('.control-group').removeClass('success').removeClass('error');
     $(modalPopupContent).html('');
-    $(modalPopup).hide();
+    $(modalPopup).modal('hide');
 }
 
 /*
