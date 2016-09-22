@@ -26,6 +26,7 @@ function onRequest(context) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
         var response = deviceModule.viewDevice(deviceType, deviceId);
         if (response["status"] == "success") {
+            deviceData["deviceFound"] = true;
             deviceData["isAuthorized"] = true;
 
             var device = response["content"];
@@ -98,7 +99,10 @@ function onRequest(context) {
             }
             deviceData["device"] = device;
         } else if (response["status"] == "unauthorized") {
+            deviceData["deviceFound"] = true;
             deviceData["isAuthorized"] = false;
+        } else if (response["status"] == "notFound") {
+            deviceData["deviceFound"] = false;
         }
         return deviceData;
     }
