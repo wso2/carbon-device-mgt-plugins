@@ -1211,16 +1211,16 @@ var operationModule = function () {
         var featureMap = {
             "DEVICE_LOCK": "fw-lock",
             "DEVICE_LOCATION": "fw-map-location",
-            "CLEAR_PASSWORD": "fw-key",
-            "ENTERPRISE_WIPE": "fw-clear",
-            "WIPE_DATA": "fw-database",
+            "CLEAR_PASSWORD": "fw-clear",
+            "ENTERPRISE_WIPE": "fw-block",
+            "WIPE_DATA": "fw-delete",
             "DEVICE_RING": "fw-dial-up",
             "DEVICE_REBOOT": "fw-refresh",
-            "UPGRADE_FIRMWARE": "fw-up-arrow",
+            "UPGRADE_FIRMWARE": "fw-hardware",
             "DEVICE_MUTE": "fw-mute",
             "NOTIFICATION": "fw-message",
             "CHANGE_LOCK_CODE": "fw-security",
-            "DEVICE_UNLOCK": "fw-lock"
+            "DEVICE_UNLOCK": "fw-key"
         };
         return featureMap[operationCode];
     };
@@ -1234,9 +1234,9 @@ var operationModule = function () {
         var featureMap = {
             "DEVICE_LOCK": "fw-lock",
             "DEVICE_RING": "fw-dial-up",
-            "DISENROLL": "fw-delete",
+            "DISENROLL": "fw-export",
             "LOCK_RESET": "fw-key",
-            "WIPE_DATA": "fw-clear"
+            "WIPE_DATA": "fw-delete"
         };
         return featureMap[operationCode];
     };
@@ -1250,7 +1250,7 @@ var operationModule = function () {
         var featureMap = {
             "DEVICE_LOCK": "fw-lock",
             "LOCATION": "fw-map-location",
-            "ENTERPRISE_WIPE": "fw-clear",
+            "ENTERPRISE_WIPE": "fw-block",
             "NOTIFICATION": "fw-message",
             "RING": "fw-dial-up"
         };
