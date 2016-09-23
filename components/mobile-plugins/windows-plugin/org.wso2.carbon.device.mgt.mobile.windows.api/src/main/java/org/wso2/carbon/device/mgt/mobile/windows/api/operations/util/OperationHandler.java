@@ -353,7 +353,7 @@ public class OperationHandler {
             for (ItemTag item : results) {
                 for (OperationCode.Info info : OperationCode.Info.values()) {
                     if (item.getSource().getLocURI().equals(info.getCode()) &&
-                        PluginConstants.OperationCodes.CAMERA_STATUS.equals(info.name())) {
+                            PluginConstants.OperationCodes.CAMERA_STATUS.equals(info.name())) {
                         Profile cameraProfile = new Profile();
                         cameraProfile.setFeatureCode(PluginConstants.OperationCodes.CAMERA);
                         cameraProfile.setData(item.getData());
@@ -365,7 +365,7 @@ public class OperationHandler {
                         profiles.add(cameraProfile);
                     }
                     if (item.getSource().getLocURI().equals(info.getCode()) &&
-                        PluginConstants.OperationCodes.ENCRYPT_STORAGE_STATUS.equals(info.name())) {
+                            PluginConstants.OperationCodes.ENCRYPT_STORAGE_STATUS.equals(info.name())) {
                         Profile encryptStorage = new Profile();
                         encryptStorage.setFeatureCode(PluginConstants.OperationCodes.ENCRYPT_STORAGE);
                         encryptStorage.setData(item.getData());
@@ -377,7 +377,7 @@ public class OperationHandler {
                         profiles.add(encryptStorage);
                     }
                     if (item.getSource().getLocURI().equals(info.getCode()) &&
-                        PluginConstants.OperationCodes.DEVICE_PASSWORD_STATUS.equals(info.name())) {
+                            PluginConstants.OperationCodes.DEVICE_PASSWORD_STATUS.equals(info.name())) {
                         Profile encryptStorage = new Profile();
                         encryptStorage.setFeatureCode(PluginConstants.OperationCodes.PASSCODE_POLICY);
                         encryptStorage.setData(item.getData());
@@ -394,7 +394,6 @@ public class OperationHandler {
                         Notification notification = new Notification();
                         notification.setDescription("Auto generated DevicePin : " + pinValue);
                         notification.setOperationId(result.getCommandReference());
-//                        notification.setDeviceIdentifier(deviceIdentifier);
                         notification.setStatus(String.valueOf(Notification.Status.NEW));
                         try {
                             nmService.addNotification(deviceIdentifier, notification);
@@ -476,7 +475,7 @@ public class OperationHandler {
                         }
                     }
                     WindowsAPIUtils.getPolicyManagerService().checkPolicyCompliance(deviceIdentifier,
-                                                                                    complianceFeatures);
+                            complianceFeatures);
                 }
             } catch (JSONException e) {
                 throw new WindowsOperationException("Error occurred while parsing json object.", e);
@@ -486,6 +485,5 @@ public class OperationHandler {
                 throw new WindowsOperationException("Error occurred while getting effective policy.", e);
             }
         }
-
     }
 }

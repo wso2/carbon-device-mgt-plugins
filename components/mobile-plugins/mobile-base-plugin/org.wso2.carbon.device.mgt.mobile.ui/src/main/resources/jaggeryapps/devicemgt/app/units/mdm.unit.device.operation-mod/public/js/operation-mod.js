@@ -1195,9 +1195,9 @@ var operationModule = function () {
         var featureMap = {
             "DEVICE_LOCK": "lock-devices",
             "DISENROLL": "disenroll",
-            "DEVICE_RING": "ring-devices",
-            "LOCK_RESET": "lock-reset-devices",
-            "WIPE_DATA": "wipe-devices"
+            "DEVICE_RING": "ring-device",
+            "LOCK_RESET": "lock-reset",
+            "WIPE_DATA": "wipe-data"
         };
         //return "/mdm-windows-agent/services/windows/operation/" + featureMap[operationCode];
         return "/api/device-mgt/windows/v1.0/services/windows/admin/devices/" + featureMap[operationCode];

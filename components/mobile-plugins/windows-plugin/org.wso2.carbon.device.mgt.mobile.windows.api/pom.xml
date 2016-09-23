@@ -236,7 +236,6 @@
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
@@ -254,12 +253,10 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.logging</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <!--CDM dependancies-->
@@ -345,13 +342,11 @@
             <groupId>org.codehaus.jettison.wso2</groupId>
             <artifactId>jettison</artifactId>
             <version>1.1.wso2v1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.json.wso2</groupId>
             <artifactId>json</artifactId>
             <version>2.0.0.wso2v1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.swagger</groupId>
