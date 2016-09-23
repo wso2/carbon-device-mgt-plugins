@@ -23,9 +23,15 @@
                     {{#defineZone "device-detail-properties"}}
                         <table class="table table-responsive table-striped" id="members">
                             <tbody>
-                            {{#if device.viewModel.vendor}}
+                            {{#if device.viewModel.deviceIdentifier}}
+                                <tr role="row" class="odd">
+                                    <td class="sorting_1" style="padding:10px 15px;">ID</td>
+                                    <td style="padding:10px 15px;">{{device.viewModel.deviceIdentifier}}</td>
+                                </tr>
+                            {{/if}}
+                            {{#if device.viewModel.deviceName}}
                                 <tr role="row" class="even">
-                                    <td class="sorting_1" style="padding:10px 15px; width: 1%;">Device</td>
+                                    <td class="sorting_1" style="padding:10px 15px; width: 1%;">Name</td>
                                     <td style="padding:10px 15px;">{{device.viewModel.deviceName}}</td>
                                 </tr>
                             {{/if}}
@@ -37,12 +43,31 @@
                                     </tr>
                                 {{/if}}
                             {{/if}}
-                            <tr role="row" class="even">
-                                <td class="sorting_1" style="padding:10px 15px;">IMEI</td>
-                                <td style="padding:10px 15px;">{{device.viewModel.imei}}</td>
-                            </tr>
-                            {{#if device.viewModel.udid}}
+                            {{#if device.status}}
                                 <tr role="row" class="even">
+                                    <td class="sorting_1" style="padding:10px 15px;">Status</td>
+                                    <td style="padding:10px 15px;">
+                                        {{#equal device.status "ACTIVE"}}<span><i class="fw fw-ok icon-success"></i>&nbsp;&nbsp;Active</span>{{/equal}}
+                                        {{#equal device.status "INACTIVE"}}<span><i class="fw fw-warning icon-warning"></i>&nbsp;&nbsp;Inactive</span>{{/equal}}
+                                        {{#equal device.status "BLOCKED"}}<span><i class="fw fw-remove icon-danger"></i>&nbsp;&nbsp;Blocked</span>{{/equal}}
+                                        {{#equal device.status "REMOVED"}}<span><i class="fw fw-delete icon-danger"></i>&nbsp;&nbsp;Removed</span>{{/equal}}
+                                    </td>
+                                </tr>
+                            {{/if}}
+                            {{#if device.viewModel.owner}}
+                                <tr role="row" class="odd">
+                                    <td class="sorting_1" style="padding:10px 15px; width: 1%;">Owner</td>
+                                    <td style="padding:10px 15px;">{{device.viewModel.owner}}</td>
+                                </tr>
+                            {{/if}}
+                            {{#if device.viewModel.imei}}
+                                <tr role="row" class="even">
+                                    <td class="sorting_1" style="padding:10px 15px;">IMEI</td>
+                                    <td style="padding:10px 15px;">{{device.viewModel.imei}}</td>
+                                </tr>
+                            {{/if}}
+                            {{#if device.viewModel.udid}}
+                                <tr role="row" class="odd">
                                     <td class="sorting_1" style="padding:10px 15px;">UDID</td>
                                     <td style="padding:10px 15px;">{{device.viewModel.udid}}</td>
                                 </tr>
@@ -54,20 +79,11 @@
                                 </tr>
                             {{/if}}
                             {{#if device.viewModel.phoneNumber}}
-                                <tr role="row" class="even">
+                                <tr role="row" class="odd">
                                     <td class="sorting_1" style="padding:10px 15px;">Phone Number</td>
                                     <td style="padding:10px 15px;">{{device.viewModel.phoneNumber}}</td>
                                 </tr>
                             {{/if}}
-                            <tr role="row" class="even">
-                                <td class="sorting_1" style="padding:10px 15px;">Status</td>
-                                <td style="padding:10px 15px;">
-                                    {{#equal device.status "ACTIVE"}}<span><i class="fw fw-ok icon-success"></i>&nbsp;&nbsp;Active</span>{{/equal}}
-                                    {{#equal device.status "INACTIVE"}}<span><i class="fw fw-warning icon-warning"></i>&nbsp;&nbsp;Inactive</span>{{/equal}}
-                                    {{#equal device.status "BLOCKED"}}<span><i class="fw fw-remove icon-danger"></i>&nbsp;&nbsp;Blocked</span>{{/equal}}
-                                    {{#equal device.status "REMOVED"}}<span><i class="fw fw-delete icon-danger"></i>&nbsp;&nbsp;Removed</span>{{/equal}}
-                                </td>
-                            </tr>
                             </tbody>
                         </table>
                     {{/defineZone}}
@@ -126,9 +142,6 @@
                         </h4>
                     </div>
                     <div class="panel-heading display-none-xs">Device Details</div>
-                    <div id="loading-content" class="col-centered">
-                        <i class="fw fw-settings fw-spin fw-2x"></i> Loading Device Details...
-                    </div>
                     <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="device_details">
                         <div class="panel-body ">
                             <div class="device-detail-body">
@@ -146,61 +159,73 @@
                                                 <div>
                                                     <div class="tile-icon"><i class="fw fw-battery"></i></div>
                                                     <div class="tile-stats">
-                                                        {{device.viewModel.BatteryLevel}} %
+                                                        {{device.viewModel.BatteryLevel.value}} %
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 {{/if}}
-                                {{#if device.viewModel.DeviceCapacity}}
+                                {{#if device.viewModel.cpuUsage}}
                                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                         <div class="col-md-12">
                                             <div class="wr-stats-board-tile">
-                                                <div class="tile-name">STORAGE</div>
+                                                <div class="tile-name">CPU Usage</div>
+                                                <div>
+                                                    <div class="tile-icon"><i class="fw fw-dashboard"></i></div>
+                                                    <div class="tile-stats">
+                                                        {{device.viewModel.cpuUsage.value}} %
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                                {{#if device.viewModel.ramUsage}}
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="col-md-12">
+                                            <div class="wr-stats-board-tile">
+                                                <div class="tile-name">RAM Usage</div>
+                                                <div>
+                                                    <div class="tile-icon"><i class="fw fw-hardware"></i></div>
+                                                    <div class="tile-stats">
+                                                        {{device.viewModel.ramUsage.value}} %
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                                {{#if device.viewModel.internalMemory}}
+                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                        <div class="col-md-12">
+                                            <div class="wr-stats-board-tile">
+                                                <div class="tile-name">Local Storage</div>
                                                 <div>
                                                     <div class="tile-icon"><i class="fw fw-hdd"></i></div>
                                                     <div class="tile-stats">
-                                                        {{device.viewModel.DeviceCapacityPercentage}} %
-                                                                        <span class="tile-stats-free">
-                                                                            {{device.viewModel.AvailableDeviceCapacity}} GB Free
-                                                                        </span>
+                                                        {{device.viewModel.internalMemory.usage}} %
+                                                        <span class="tile-stats-free">
+                                                            TOTAL OF {{device.viewModel.internalMemory.total}} GB
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 {{/if}}
-                                {{#if device.viewModel.internal_memory.FreeCapacity}}
+                                {{#if device.viewModel.externalMemory}}
                                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                         <div class="col-md-12">
                                             <div class="wr-stats-board-tile">
-                                                <div class="tile-name">LOCAL STORAGE</div>
-                                                <div>
-                                                    <div class="tile-icon"><i class="fw fw-hdd"></i></div>
-                                                    <div class="tile-stats">
-                                                        {{device.viewModel.internal_memory.DeviceCapacityPercentage}} %
-                                                                        <span class="tile-stats-free">
-                                                                            {{device.viewModel.internal_memory.FreeCapacity}} GB Free
-                                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{/if}}
-                                {{#if device.viewModel.external_memory.FreeCapacity}}
-                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                        <div class="col-md-12">
-                                            <div class="wr-stats-board-tile">
-                                                <div class="tile-name">EXTERNAL STORAGE</div>
+                                                <div class="tile-name">External Storage</div>
                                                 <div>
                                                     <div class="tile-icon"><i class="fw fw-usb-drive"></i></div>
                                                     <div class="tile-stats">
-                                                        {{device.viewModel.external_memory.DeviceCapacityPercentage}} %
-                                                                        <span class="tile-stats-free">
-                                                                            {{device.viewModel.external_memory.FreeCapacity}} GB Free
-                                                                        </span>
+                                                        {{device.viewModel.externalMemory.usage}} %
+                                                        <span class="tile-stats-free">
+                                                            TOTAL OF {{device.viewModel.externalMemory.total}} GB
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
