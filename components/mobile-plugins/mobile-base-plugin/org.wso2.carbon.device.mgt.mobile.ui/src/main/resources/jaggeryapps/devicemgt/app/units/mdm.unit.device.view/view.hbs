@@ -312,7 +312,10 @@
                     <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="device_location">
                         <div class="panel-body">
                             <div id="map-error" class="message message-danger">
-                                <h4 class="remove-margin"><i class="icon fw fw-error"></i>Device location cannot be retrieved.</h4>
+                                <h4 class="remove-margin">
+                                    <i class="icon fw fw-error"></i>
+                                    &nbsp;Device location cannot be retrieved.
+                                </h4>
                             </div>
                             <div id="device-location"
                                  data-lat="{{device.viewModel.location.latitude}}"
@@ -341,7 +344,7 @@
                         </span>
                     </div>
                     <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="installed_applications">
-                        <div class="panel-body ">
+                        <div class="panel-body">
                             <span class="visible-xs add-padding-2x text-right">
                                 <a href="javascript:void(0);" id="refresh-apps">
                                     <i class="fw fw-refresh"></i>
@@ -352,8 +355,11 @@
                             </div>
                             <div id="applications-list-container">
                                 <div class="message message-info">
-                                    <h4><i class="icon fw fw-info"></i>No applications found.</h4>
-                                    <p>Please try refreshing the list in a while.</p>
+                                    <h4>
+                                        <i class="icon fw fw-info"></i>
+                                        No applications found.
+                                    </h4>
+                                    <p>Please try refreshing in a while.</p>
                                 </div>
                             </div>
                         </div>
@@ -390,7 +396,10 @@
                             </div>
                             <div id="operations-log-container">
                                 <div class="message message-info">
-                                    <h4 class="remove-margin"><i class="icon fw fw-info"></i>There are no operations, performed yet on this device.</h4>
+                                    <h4 class="remove-margin">
+                                        <i class="icon fw fw-info"></i>
+                                        There are no operations, performed yet on this device.
+                                    </h4>
                                 </div>
                             </div>
                             <table class="table table-striped table-hover table-bordered display data-table" id="operations-log-table">

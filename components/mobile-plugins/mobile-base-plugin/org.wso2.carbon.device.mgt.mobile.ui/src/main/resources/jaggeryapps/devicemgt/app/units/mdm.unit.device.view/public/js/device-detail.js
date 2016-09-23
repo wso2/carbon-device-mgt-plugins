@@ -23,32 +23,6 @@ var InitiateViewOption = null;
     var deviceIdentifier = deviceId.data("deviceid");
     var deviceType = deviceId.data("type");
     var operationTable;
-    // var payload = [deviceIdentifier];
-    // var serviceUrl;
-
-//    if (deviceType == "ios") {
-//        serviceUrl = "/ios/operation/deviceinfo";
-//    } else if (deviceType == "android") {
-//        //var serviceUrl = "/mdm-android-agent/operation/device-info";
-//        serviceUrl = "/api/device-mgt/android/v1.0/admin/devices/info";
-//    }
-//
-//    if (serviceUrl) {
-//        invokerUtil.post(
-//            serviceUrl,
-//            payload,
-//            // success-callback
-//            function () {
-//                $(".panel-body").show();
-//            },
-//            // error-callback
-//            function () {
-//                var defaultInnerHTML =
-//                    "<br><p class='small'><i class='fw-warning'></i>&nbsp;Device data may not have been updated. Please refresh to try again.<p>";
-//                $(".panel-body").append(defaultInnerHTML);
-//            }
-//        );
-//    }
 
     $(".media.tab-responsive [data-toggle=tab]").on("shown.bs.tab", function (e) {
         var activeTabPane = $(e.target).attr("href");
@@ -260,12 +234,12 @@ var InitiateViewOption = null;
                                             if (data["complianceData"]) {
                                                 if (data["complianceData"]["complianceFeatures"] &&
                                                     data["complianceData"]["complianceFeatures"].length > 0) {
-                                                    viewModel["compliance"] = "NON-COMPLIANT";
+                                                    viewModel["complianceStatus"] = "NON-COMPLIANT";
                                                     viewModel["complianceFeatures"] = data["complianceData"]["complianceFeatures"];
                                                     content = template(viewModel);
                                                     $("#policy-list-container").html(content);
                                                 } else {
-                                                    viewModel["compliance"] = "COMPLIANT";
+                                                    viewModel["complianceStatus"] = "COMPLIANT";
                                                     content = template(viewModel);
                                                     $("#policy-list-container").html(content);
                                                     $("#policy-compliance-table").addClass("hidden");
@@ -287,7 +261,7 @@ var InitiateViewOption = null;
                                 );
                             }
                         } else if ((jqXHR.status == 200 && !data)) {
-                            //$("#policy-spinner").addClass("hidden");
+                            $("#policy-spinner").addClass("hidden");
                             $("#policy-list-container").
                                 html("<div class='message message-info'>" +
                                     "<h4 class='remove-margin'>" +
