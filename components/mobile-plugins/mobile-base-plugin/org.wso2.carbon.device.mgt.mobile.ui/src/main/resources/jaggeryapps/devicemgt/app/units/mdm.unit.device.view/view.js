@@ -76,6 +76,8 @@ function onRequest(context) {
                     deviceInfo = info;
 
                     if (device["deviceInfo"]) {
+                        viewModel["deviceInfo"] = true;
+
                         viewModel["model"] = device["deviceInfo"]["deviceModel"];
                         viewModel["vendor"] = device["deviceInfo"]["vendor"];
                         viewModel["lastUpdatedTime"] = device["deviceInfo"]["updatedTime"].
@@ -117,6 +119,8 @@ function onRequest(context) {
                         } else {
                             viewModel["externalMemory"]["usage"] = 0;
                         }
+                    } else {
+                        viewModel["deviceInfo"] = false;
                     }
                 } else if (device["type"] == "windows") {
                     viewModel["imei"] = device["properties"]["IMEI"];

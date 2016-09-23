@@ -163,85 +163,94 @@
                                         <h4 class="remove-margin"><i class="icon fw fw-info"></i>Not available yet</h4>
                                     </div>
                                 {{/equal}}
-                                {{#if device.viewModel.BatteryLevel}}
-                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                        <div class="col-md-12">
-                                            <div class="wr-stats-board-tile">
-                                                <div class="tile-name">BATTERY</div>
-                                                <div>
-                                                    <div class="tile-icon"><i class="fw fw-battery"></i></div>
-                                                    <div class="tile-stats">
-                                                        {{device.viewModel.BatteryLevel.value}} %
+                                {{#if device.viewModel.deviceInfo}}
+                                    {{#if device.viewModel.BatteryLevel}}
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                            <div class="col-md-12">
+                                                <div class="wr-stats-board-tile">
+                                                    <div class="tile-name">BATTERY</div>
+                                                    <div>
+                                                        <div class="tile-icon"><i class="fw fw-battery"></i></div>
+                                                        <div class="tile-stats">
+                                                            {{device.viewModel.BatteryLevel.value}} %
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                {{/if}}
-                                {{#if device.viewModel.cpuUsage}}
-                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                        <div class="col-md-12">
-                                            <div class="wr-stats-board-tile">
-                                                <div class="tile-name">CPU Usage</div>
-                                                <div>
-                                                    <div class="tile-icon"><i class="fw fw-dashboard"></i></div>
-                                                    <div class="tile-stats">
-                                                        {{device.viewModel.cpuUsage.value}} %
+                                    {{/if}}
+                                    <!--{{#if device.viewModel.cpuUsage}}-->
+                                        <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">-->
+                                            <!--<div class="col-md-12">-->
+                                                <!--<div class="wr-stats-board-tile">-->
+                                                    <!--<div class="tile-name">CPU Usage</div>-->
+                                                    <!--<div>-->
+                                                        <!--<div class="tile-icon"><i class="fw fw-dashboard"></i></div>-->
+                                                        <!--<div class="tile-stats">-->
+                                                            <!--{{device.viewModel.cpuUsage.value}} %-->
+                                                        <!--</div>-->
+                                                    <!--</div>-->
+                                                <!--</div>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--{{/if}}-->
+                                    {{#if device.viewModel.ramUsage}}
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                            <div class="col-md-12">
+                                                <div class="wr-stats-board-tile">
+                                                    <div class="tile-name">RAM Usage</div>
+                                                    <div>
+                                                        <div class="tile-icon"><i class="fw fw-hardware"></i></div>
+                                                        <div class="tile-stats">
+                                                            {{device.viewModel.ramUsage.value}} %
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                {{/if}}
-                                {{#if device.viewModel.ramUsage}}
-                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                        <div class="col-md-12">
-                                            <div class="wr-stats-board-tile">
-                                                <div class="tile-name">RAM Usage</div>
-                                                <div>
-                                                    <div class="tile-icon"><i class="fw fw-hardware"></i></div>
-                                                    <div class="tile-stats">
-                                                        {{device.viewModel.ramUsage.value}} %
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{/if}}
-                                {{#if device.viewModel.internalMemory}}
-                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                        <div class="col-md-12">
-                                            <div class="wr-stats-board-tile">
-                                                <div class="tile-name">Local Storage</div>
-                                                <div>
-                                                    <div class="tile-icon"><i class="fw fw-hdd"></i></div>
-                                                    <div class="tile-stats">
-                                                        {{device.viewModel.internalMemory.usage}} %
+                                    {{/if}}
+                                    {{#if device.viewModel.internalMemory}}
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                            <div class="col-md-12">
+                                                <div class="wr-stats-board-tile">
+                                                    <div class="tile-name">Local Storage</div>
+                                                    <div>
+                                                        <div class="tile-icon"><i class="fw fw-hdd"></i></div>
+                                                        <div class="tile-stats">
+                                                            {{device.viewModel.internalMemory.usage}} %
                                                         <span class="tile-stats-free">
                                                             TOTAL OF {{device.viewModel.internalMemory.total}} GB
                                                         </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                {{/if}}
-                                {{#if device.viewModel.externalMemory}}
-                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                        <div class="col-md-12">
-                                            <div class="wr-stats-board-tile">
-                                                <div class="tile-name">External Storage</div>
-                                                <div>
-                                                    <div class="tile-icon"><i class="fw fw-usb-drive"></i></div>
-                                                    <div class="tile-stats">
-                                                        {{device.viewModel.externalMemory.usage}} %
+                                    {{/if}}
+                                    {{#if device.viewModel.externalMemory}}
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                            <div class="col-md-12">
+                                                <div class="wr-stats-board-tile">
+                                                    <div class="tile-name">External Storage</div>
+                                                    <div>
+                                                        <div class="tile-icon"><i class="fw fw-usb-drive"></i></div>
+                                                        <div class="tile-stats">
+                                                            {{device.viewModel.externalMemory.usage}} %
                                                         <span class="tile-stats-free">
                                                             TOTAL OF {{device.viewModel.externalMemory.total}} GB
                                                         </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    {{/if}}
+                                {{else}}
+                                    <div class="message message-info">
+                                        <h4 class="remove-margin">
+                                            <i class="icon fw fw-info"></i>
+                                            Battery, RAM and Storage related information is not available yet.
+                                        </h4>
                                     </div>
                                 {{/if}}
                             </div>
