@@ -955,7 +955,7 @@
             <dependency>
                 <groupId>org.wso2.orbit.org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk15on</artifactId>
-                <version>${bcpkix-jdk15on.version}</version>
+                <version>${bcprov-jdk15on.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.plexus</groupId>
@@ -1149,7 +1149,7 @@
         <carbon.governance.version>4.6.4</carbon.governance.version>
 
         <!-- Carbon API Management -->
-        <carbon.api.mgt.version>6.0.5-SNAPSHOT</carbon.api.mgt.version>
+        <carbon.api.mgt.version>6.0.5</carbon.api.mgt.version>
 
         <!-- XMPP/MQTT Version -->
         <smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>
@@ -1188,7 +1188,8 @@
         <spring-ws-security.version>2.1.0.RELEASE</spring-ws-security.version>
         <jaxws-rt.version>2.2.8</jaxws-rt.version>
         <saaj-impl.version>1.3.18</saaj-impl.version>
-        <bcpkix-jdk15on.version>1.52.0.wso2v1</bcpkix-jdk15on.version>
+        <bcpkix-jdk15on.version>1.52.0.wso2v2</bcpkix-jdk15on.version>
+	    <bcprov-jdk15on.version>1.52.0.wso2v1</bcprov-jdk15on.version>
         <plexus-utils.version>3.0.21</plexus-utils.version>
         <joda-time.version>2.2</joda-time.version>
         <wss4j.security.version>1.6.17</wss4j.security.version>
