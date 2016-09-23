@@ -77,8 +77,8 @@ public class OperationHandler {
                 }
             } else if (Constants.SyncMLResponseCodes.PIN_NOTFOUND.equals(status.getData())) {
                 for (Operation operation : pendingDataOperations) {
-                    if (operation.getId() == status.getCommandReference() && (OperationCode.Command.DEVICE_LOCK.equals(
-                            operation.getCode()))) {
+                    if (operation.getId() == status.getCommandReference() &&
+                            (PluginConstants.OperationCodes.DEVICE_LOCK.equals(operation.getCode()))) {
                         operation.setStatus(Operation.Status.ERROR);
                         if (syncmlDocument.getHeader().getSource().getLocURI() != null) {
                             updateStatus(syncmlDocument.getHeader().getSource().getLocURI(), pendingDataOperations);
@@ -485,5 +485,6 @@ public class OperationHandler {
                 throw new WindowsOperationException("Error occurred while getting effective policy.", e);
             }
         }
+
     }
 }
