@@ -58,6 +58,10 @@ function onRequest(context) {
                     viewModel["model"] = device["deviceInfo"]["deviceModel"];
                     viewModel["vendor"] = device["deviceInfo"]["vendor"];
                     viewModel["owner"] = device["owner"];
+                    viewModel["ownership"] = device["ownership"];
+                    viewModel["lastUpdatedTime"] = device["deviceInfo"]["updatedTime"].
+                        substr(0, device["deviceInfo"]["updatedTime"].indexOf("+"));
+
                     var osBuildDate = device["properties"]["OS_BUILD_DATE"];
                     if (osBuildDate != null && osBuildDate != "0") {
                         viewModel["os_build_date"] = new Date(osBuildDate * 1000);

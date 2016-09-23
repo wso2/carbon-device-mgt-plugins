@@ -25,27 +25,27 @@
                             <tbody>
                             {{#if device.viewModel.deviceIdentifier}}
                                 <tr role="row" class="odd">
-                                    <td class="sorting_1" style="padding:10px 15px;">ID</td>
+                                    <td class="sorting_1" style="padding:10px 15px; width: 10%;">Device ID</td>
                                     <td style="padding:10px 15px;">{{device.viewModel.deviceIdentifier}}</td>
                                 </tr>
                             {{/if}}
                             {{#if device.viewModel.deviceName}}
                                 <tr role="row" class="even">
-                                    <td class="sorting_1" style="padding:10px 15px; width: 1%;">Name</td>
+                                    <td class="sorting_1" style="padding:10px 15px; width: 10%;">Name</td>
                                     <td style="padding:10px 15px;">{{device.viewModel.deviceName}}</td>
                                 </tr>
                             {{/if}}
                             {{#if device.viewModel.vendor}}
                                 {{#if device.viewModel.model}}
                                     <tr role="row" class="odd">
-                                        <td class="sorting_1" style="padding:10px 15px;">Model</td>
+                                        <td class="sorting_1" style="padding:10px 15px; width: 10%;">Model</td>
                                         <td style="padding:10px 15px;">{{device.viewModel.vendor}} {{device.viewModel.model}}</td>
                                     </tr>
                                 {{/if}}
                             {{/if}}
                             {{#if device.status}}
                                 <tr role="row" class="even">
-                                    <td class="sorting_1" style="padding:10px 15px;">Status</td>
+                                    <td class="sorting_1" style="padding:10px 15px; width: 10%;">Status</td>
                                     <td style="padding:10px 15px;">
                                         {{#equal device.status "ACTIVE"}}<span><i class="fw fw-ok icon-success"></i>&nbsp;&nbsp;Active</span>{{/equal}}
                                         {{#equal device.status "INACTIVE"}}<span><i class="fw fw-warning icon-warning"></i>&nbsp;&nbsp;Inactive</span>{{/equal}}
@@ -56,32 +56,44 @@
                             {{/if}}
                             {{#if device.viewModel.owner}}
                                 <tr role="row" class="odd">
-                                    <td class="sorting_1" style="padding:10px 15px; width: 1%;">Owner</td>
+                                    <td class="sorting_1" style="padding:10px 15px; width: 10%;">Owner</td>
                                     <td style="padding:10px 15px;">{{device.viewModel.owner}}</td>
+                                </tr>
+                            {{/if}}
+                            {{#if device.viewModel.ownership}}
+                                <tr role="row" class="even">
+                                    <td class="sorting_1" style="padding:10px 15px; width: 10%;">Ownership</td>
+                                    <td style="padding:10px 15px;">{{device.viewModel.ownership}}</td>
                                 </tr>
                             {{/if}}
                             {{#if device.viewModel.imei}}
                                 <tr role="row" class="even">
-                                    <td class="sorting_1" style="padding:10px 15px;">IMEI</td>
+                                    <td class="sorting_1" style="padding:10px 15px; width: 10%;">IMEI</td>
                                     <td style="padding:10px 15px;">{{device.viewModel.imei}}</td>
                                 </tr>
                             {{/if}}
                             {{#if device.viewModel.udid}}
                                 <tr role="row" class="odd">
-                                    <td class="sorting_1" style="padding:10px 15px;">UDID</td>
+                                    <td class="sorting_1" style="padding:10px 15px; width: 10%;">UDID</td>
                                     <td style="padding:10px 15px;">{{device.viewModel.udid}}</td>
                                 </tr>
                             {{/if}}
                             {{#if device.viewModel.os_build_date}}
                                 <tr role="row" class="even">
-                                    <td class="sorting_1" style="padding:10px 15px;">Firmware Build Date</td>
+                                    <td class="sorting_1" style="padding:10px 15px; width: 10%;">Firmware Build Date</td>
                                     <td style="padding:10px 15px;">{{device.viewModel.os_build_date}}</td>
                                 </tr>
                             {{/if}}
                             {{#if device.viewModel.phoneNumber}}
                                 <tr role="row" class="odd">
-                                    <td class="sorting_1" style="padding:10px 15px;">Phone Number</td>
+                                    <td class="sorting_1" style="padding:10px 15px; width: 10%;">Phone Number</td>
                                     <td style="padding:10px 15px;">{{device.viewModel.phoneNumber}}</td>
+                                </tr>
+                            {{/if}}
+                            {{#if device.viewModel.lastUpdatedTime}}
+                                <tr role="row" class="even">
+                                    <td class="sorting_1" style="padding:10px 15px; width: 10%;">Last Update</td>
+                                    <td style="padding:10px 15px;">{{device.viewModel.lastUpdatedTime}}</td>
                                 </tr>
                             {{/if}}
                             </tbody>
