@@ -76,26 +76,81 @@ function loadDevices() {
         return {};
     }
 
-    var fnCreatedRow = function (nRow, aData, dataIndex) {
-        $(nRow).attr('data-type', 'selectable');
-        $(nRow).attr('data-deviceid', aData.deviceIdentifier);
-        $(nRow).attr('data-devicetype', aData.deviceType);
+    var dataFilter = function (data) {
+        var noDeviceView = "#no-device-view";
+
+        data = JSON.parse(data);
+        var json;
+
+        if (data["count"] == 0) {
+            if ($(noDeviceView).length) {
+                $(noDeviceView).removeClass('hidden');
+            }
+
+            $(".bulk-action-row").addClass('hidden');
+
+            json = {
+                "recordsTotal": 0,
+                "recordsFiltered": 0,
+                "data": []
+            };
+
+        } else if (data["count"] > 0) {
+            $(noDeviceView).remove();
+            $("#enroll-btn").removeClass('hidden');
+            $("#advanced-search-btn").removeClass('hidden');
+            $(".bulk-action-row").removeClass('hidden');
+            $("#device-table").removeClass('hidden');
+
+            var objects = [];
+
+            $(data.devices).each(function (index) {
+                objects.push(
+                    {
+                        model: getPropertyValue(data.devices[index].properties, "DEVICE_MODEL"),
+                        vendor: getPropertyValue(data.devices[index].properties, "VENDOR"),
+                        user: data.devices[index].enrolmentInfo.owner,
+                        status: data.devices[index].enrolmentInfo.status,
+                        ownership: data.devices[index].enrolmentInfo.ownership,
+                        deviceType: data.devices[index].type,
+                        deviceIdentifier: data.devices[index].deviceIdentifier,
+                        name : data.devices[index].name
+                    }
+                );
+            });
+
+            json = {
+                "recordsTotal": data["count"],
+                "recordsFiltered": data["count"],
+                "data": objects
+            };
+
+        }
+
+        return JSON.stringify(json);
     };
 
+    // possible params - nRow, aData, dataIndex
+    var fnCreatedRow = function (nRow, aData) {
+        $(nRow).attr('data-type', 'selectable');
+        $(nRow).attr('data-devicetype', aData["deviceType"]);
+        $(nRow).attr('data-deviceid', aData["deviceIdentifier"]);
+    };
 
     var columns = [
         {
             class : 'remove-padding icon-only content-fill viewEnabledIcon',
-            data : 'icon',
+            data : null,
             render: function (data, type, row) {
                 var deviceType = row.deviceType;
                 var deviceIdentifier = row.deviceIdentifier;
                 var url = "#";
-                if (status != 'REMOVED') {
+                if (row.status != 'REMOVED') {
                     url = "device/" + deviceType + "?id=" + deviceIdentifier;
                 }
                 return '<div onclick="javascript:InitiateViewOption(\'' + url + '\')" class="thumbnail icon">' +
-                    '<i class="square-element text fw fw-mobile"></i></div>'
+                        '<i class="square-element text fw fw-mobile"></i>' +
+                    '</div>'
             }
         },
         {
@@ -156,35 +211,6 @@ function loadDevices() {
         }
     ];
 
-
-    var dataFilter = function (data) {
-        data = JSON.parse(data);
-
-        var objects = [];
-
-        $(data.devices).each(function (index) {
-            objects.push(
-                {
-                    model: getPropertyValue(data.devices[index].properties, "DEVICE_MODEL"),
-                    vendor: getPropertyValue(data.devices[index].properties, "VENDOR"),
-                    user: data.devices[index].enrolmentInfo.owner,
-                    status: data.devices[index].enrolmentInfo.status,
-                    ownership: data.devices[index].enrolmentInfo.ownership,
-                    deviceType: data.devices[index].type,
-                    deviceIdentifier: data.devices[index].deviceIdentifier,
-                    name : data.devices[index].name
-                }
-            );
-        });
-
-        var json = {
-            "recordsTotal": data.count,
-            "recordsFiltered": data.count,
-            "data": objects
-        };
-        return JSON.stringify(json);
-    };
-
     $('#device-grid').datatables_extended_serverside_paging(
         null,
         "/api/device-mgt/v1.0/devices",
@@ -194,7 +220,6 @@ function loadDevices() {
         function () {
             $(".icon .text").res_text(0.2);
             $('#device-grid').removeClass('hidden');
-            $("#loading-content").remove();
         }, {
             "placeholder" : "Search By Device Name",
             "searchKey" : "name"
@@ -210,46 +235,20 @@ function loadDevices() {
  */
 //var assetContainer = "#ast-container";
 
-function openCollapsedNav(){
-    $('.wr-hidden-nav-toggle-btn').addClass('active');
-    $('#hiddenNav').slideToggle('slideDown', function(){
-        if($(this).css('display') == 'none'){
-            $('.wr-hidden-nav-toggle-btn').removeClass('active');
-        }
-    });
-}
-
-function initPage() {
-    var currentUser = $("#device-listing").data("currentUser");
-    var serviceURL = "/api/device-mgt/v1.0/devices";
-
-    invokerUtil.get(
-        serviceURL,
-        function (data) {
-            if (data) {
-                data = JSON.parse(data);
-                if (data["count"] > 0) {
-                    $(".bulk-action-row").removeClass('hidden');
-                    loadDevices();
-                } else {
-                    $("#loading-content").remove();
-                    $("#device-table").remove();
-                    $("#no-device-view").removeClass('hidden');
-                    $("#advanced-search-btn").addClass('hidden');
-                    $("#enroll-btn").addClass('hidden');
-                }
-            }
-        }, function () {
-            initPage();
-        }
-    );
-}
+//function openCollapsedNav(){
+//    $('.wr-hidden-nav-toggle-btn').addClass('active');
+//    $('#hiddenNav').slideToggle('slideDown', function(){
+//        if($(this).css('display') == 'none'){
+//            $('.wr-hidden-nav-toggle-btn').removeClass('active');
+//        }
+//    });
+//}
 
 /*
  * DOM ready functions.
  */
 $(document).ready(function () {
-    initPage();
+    loadDevices();
 
     /* Adding selected class for selected devices */
     $(deviceCheckbox).each(function () {

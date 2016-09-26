@@ -26,6 +26,7 @@ function onRequest(context) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
         var response = deviceModule.viewDevice(deviceType, deviceId);
         if (response["status"] == "success") {
+            deviceData["deviceFound"] = true;
             deviceData["isAuthorized"] = true;
 
             var device = response["content"];
@@ -50,16 +51,18 @@ function onRequest(context) {
                         latitude: device["properties"]["LATITUDE"],
                         longitude: device["properties"]["LONGITUDE"]
                     };
+                    viewModel["ownership"] = device["ownership"];
                 } else if (device["type"] == "android") {
+                    viewModel["deviceIdentifier"] = device["deviceIdentifier"];
+                    viewModel["deviceName"] = device["name"];
+                    viewModel["owner"] = device["owner"];
+                    viewModel["ownership"] = device["ownership"];
                     viewModel["imei"] = device["properties"]["IMEI"];
-                    viewModel["model"] = device["properties"]["DEVICE_MODEL"];
-                    viewModel["vendor"] = device["properties"]["VENDOR"];
                     var osBuildDate = device["properties"]["OS_BUILD_DATE"];
                     if (osBuildDate != null && osBuildDate != "0") {
                         viewModel["os_build_date"] = new Date(osBuildDate * 1000);
                     }
-                    viewModel["internal_memory"] = {};
-                    viewModel["external_memory"] = {};
+
                     viewModel["location"] = {
                         latitude: device["properties"]["LATITUDE"],
                         longitude: device["properties"]["LONGITUDE"]
@@ -72,33 +75,74 @@ function onRequest(context) {
                         }
                     }
                     deviceInfo = info;
-                    viewModel["BatteryLevel"] = deviceInfo["BATTERY_LEVEL"];
-                    viewModel["internal_memory"]["FreeCapacity"] = Math.
-                        round(deviceInfo["INTERNAL_AVAILABLE_MEMORY"] * 100)/100;
-                    viewModel["internal_memory"]["DeviceCapacityPercentage"] = Math.
-                        round(deviceInfo["INTERNAL_AVAILABLE_MEMORY"]
-                            / deviceInfo["INTERNAL_TOTAL_MEMORY"] * 10000) / 100;
-                    viewModel["external_memory"]["FreeCapacity"] = Math.
-                        round(deviceInfo["EXTERNAL_AVAILABLE_MEMORY"] * 100) / 100;
-                    viewModel["external_memory"]["DeviceCapacityPercentage"] = Math.
-                        round(deviceInfo["EXTERNAL_AVAILABLE_MEMORY"]
-                            / deviceInfo["EXTERNAL_TOTAL_MEMORY"] * 10000) / 100;
+
+                    if (device["deviceInfo"]) {
+                        viewModel["deviceInfo"] = true;
+
+                        viewModel["model"] = device["deviceInfo"]["deviceModel"];
+                        viewModel["vendor"] = device["deviceInfo"]["vendor"];
+                        viewModel["lastUpdatedTime"] = device["deviceInfo"]["updatedTime"].
+                            substr(0, device["deviceInfo"]["updatedTime"].indexOf("+"));
+
+                        viewModel["BatteryLevel"] = {};
+                        viewModel["BatteryLevel"]["value"] = device["deviceInfo"]["batteryLevel"];
+
+                        viewModel["cpuUsage"] = {};
+                        viewModel["cpuUsage"]["value"] = device["deviceInfo"]["cpuUsage"];
+
+                        viewModel["ramUsage"] = {};
+                        if (device["deviceInfo"]["totalRAMMemory"] != 0) {
+                            viewModel["ramUsage"]["value"] = Math.
+                                round((device["deviceInfo"]["totalRAMMemory"] - device["deviceInfo"]["availableRAMMemory"])
+                                    / device["deviceInfo"]["totalRAMMemory"] * 10000) / 100;
+                        } else {
+                            viewModel["ramUsage"]["value"] = 0;
+                        }
+
+                        viewModel["internalMemory"] = {};
+                        viewModel["externalMemory"] = {};
+                        viewModel["internalMemory"]["total"] = Math.
+                            round(device["deviceInfo"]["internalTotalMemory"] * 100) / 100;
+                        if (device["deviceInfo"]["internalTotalMemory"] != 0) {
+                            viewModel["internalMemory"]["usage"] = Math.
+                                round((device["deviceInfo"]["internalTotalMemory"] - device["deviceInfo"]["internalAvailableMemory"])
+                                    / device["deviceInfo"]["internalTotalMemory"] * 10000) / 100;
+                        } else {
+                            viewModel["internalMemory"]["usage"] = 0;
+                        }
+
+                        viewModel["externalMemory"]["total"] = Math.
+                            round(device["deviceInfo"]["externalTotalMemory"] * 100) / 100;
+                        if (device["deviceInfo"]["externalTotalMemory"] != 0) {
+                            viewModel["externalMemory"]["usage"] = Math.
+                                round((device["deviceInfo"]["externalTotalMemory"] - device["deviceInfo"]["externalAvailableMemory"])
+                                    / device["deviceInfo"]["externalTotalMemory"] * 10000) / 100;
+                        } else {
+                            viewModel["externalMemory"]["usage"] = 0;
+                        }
+                    } else {
+                        viewModel["deviceInfo"] = false;
+                    }
                 } else if (device["type"] == "windows") {
                     viewModel["imei"] = device["properties"]["IMEI"];
                     viewModel["model"] = device["properties"]["DEVICE_MODEL"];
                     viewModel["vendor"] = device["properties"]["VENDOR"];
-                    viewModel["internal_memory"] = {};
-                    viewModel["external_memory"] = {};
+                    viewModel["internalMemory"] = {};
+                    viewModel["externalMemory"] = {};
                     viewModel["location"] = {
                         latitude: device["properties"]["LATITUDE"],
                         longitude: device["properties"]["LONGITUDE"]
                     };
+                    viewModel["ownership"] = device["ownership"];
                 }
                 device["viewModel"] = viewModel;
             }
             deviceData["device"] = device;
         } else if (response["status"] == "unauthorized") {
+            deviceData["deviceFound"] = true;
             deviceData["isAuthorized"] = false;
+        } else if (response["status"] == "notFound") {
+            deviceData["deviceFound"] = false;
         }
         return deviceData;
     }

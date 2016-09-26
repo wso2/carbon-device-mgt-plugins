@@ -534,6 +534,18 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                 throw new BadRequestException(
                         new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
+            String scheduledTime = applicationInstallationBeanWrapper.getOperation().getSchedule();
+            if (scheduledTime != null && !scheduledTime.isEmpty()) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                try {
+                    String formattedScheduledDate = format.format(format.parse(scheduledTime));
+                    applicationInstallationBeanWrapper.getOperation().setSchedule(formattedScheduledDate);
+                } catch (ParseException e) {
+                    String errorMessage = "Invalid date string is provided in for schedule parameter";
+                    throw new BadRequestException(
+                            new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+                }
+            }
 
             ApplicationInstallation applicationInstallation = applicationInstallationBeanWrapper.getOperation();
             JSONObject payload = new JSONObject(applicationInstallation.toJSON());
@@ -614,6 +626,18 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                 log.error(errorMessage);
                 throw new BadRequestException(
                         new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            }
+            String scheduledTime = applicationUpdateBeanWrapper.getOperation().getSchedule();
+            if (scheduledTime != null && !scheduledTime.isEmpty()) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                try {
+                    String formattedScheduledDate = format.format(format.parse(scheduledTime));
+                    applicationUpdateBeanWrapper.getOperation().setSchedule(formattedScheduledDate);
+                } catch (ParseException e) {
+                    String errorMessage = "Invalid date string is provided in for schedule parameter";
+                    throw new BadRequestException(
+                            new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+                }
             }
             ApplicationUpdate applicationUpdate = applicationUpdateBeanWrapper.getOperation();
             ProfileOperation operation = new ProfileOperation();

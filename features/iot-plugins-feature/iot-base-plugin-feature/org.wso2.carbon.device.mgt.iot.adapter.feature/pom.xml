@@ -23,14 +23,14 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>iot-base-plugin-feature</artifactId>
-        <version>2.2.1-SNAPSHOT</version>
+        <version>2.2.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.iot.adapter.feature</artifactId>
     <packaging>pom</packaging>
-    <version>2.2.1-SNAPSHOT</version>
+    <version>2.2.2-SNAPSHOT</version>
     <name>WSO2 Carbon - IoT Device Management Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the adapter bundles required for IoT Server</description>
@@ -172,7 +172,7 @@
                                     org.igniterealtime.smack.wso2:smackx:${smackx.wso2.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.carbon.identity:org.wso2.carbon.identity.oauth.stub:${carbon.identity.version}
+                                    org.wso2.carbon.identity:org.wso2.carbon.identity.oauth.stub:${identity.inbound.auth.oauth.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>
