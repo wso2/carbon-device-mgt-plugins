@@ -18,7 +18,7 @@
 
 $(document).ready(function () {
     invokerUtil.get(
-        "/devicemgt_admin/configuration",
+        "/api/device-mgt/android_sense/v1.0/configuration",
         function (data) {
             data = JSON.parse(data);
             if (data && data.configuration) {
@@ -52,7 +52,7 @@ var addConfiguration = function () {
     var errorMsgWrapper = "#android_sense-config-error-msg";
     var errorMsg = "#android_sense-config-error-msg span";
     var addConfigFormData = {};
-    var configList = new Array();
+    var configList = [];
     var mqttEp = $("input#mqtt-endpoint").val();
     var mqttConfig = {
         "name": "ANDROID_SENSE_MQTT_EP",
@@ -61,10 +61,10 @@ var addConfiguration = function () {
     };
 
     configList.push(mqttConfig);
-    addConfigFormData.type = "android_sense"
+    addConfigFormData.type = "android_sense";
     addConfigFormData.configuration = configList;
 
-    var addConfigAPI = "/devicemgt_admin/configuration";
+    var addConfigAPI = "/api/device-mgt/android_sense/v1.0/configuration";
     invokerUtil.post(
         addConfigAPI,
         addConfigFormData,
