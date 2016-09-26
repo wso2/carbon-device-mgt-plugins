@@ -35,6 +35,10 @@ var operations = '.wr-operations',
     ownershipTypeConstants = {
         "BYOD": "BYOD",
         "COPE": "COPE"
+    },
+    operationBarModeConstants = {
+        "BULK": "BULK_OPERATION_MODE",
+        "SINGLE": "SINGLE_OPERATION_MODE"
     };
 
 /*
@@ -103,7 +107,7 @@ function getDevicesByTypes(deviceList) {
 //    $(".wr-operations").html("");
 //}
 
-function loadOperationBar(deviceType, ownership) {
+function loadOperationBar(deviceType, ownership, mode) {
     var operationBar = $("#operations-bar");
     var operationBarSrc = operationBar.attr("src");
 
@@ -121,9 +125,20 @@ function loadOperationBar(deviceType, ownership) {
                     var j;
                     for (j = 0; j < totalFeatures.length; j++) {
                         if (permissionList[deviceType][i] == totalFeatures[j]["code"]) {
-                            if (deviceType == platformTypeConstants.ANDROID &&
-                                totalFeatures[j]["code"] == "DEVICE_UNLOCK") {
-                                if (ownership == ownershipTypeConstants.COPE) {
+                            if (deviceType == platformTypeConstants.ANDROID) {
+                                if (totalFeatures[j]["code"] == "DEVICE_UNLOCK") {
+                                    if (ownership == ownershipTypeConstants.COPE) {
+                                        permittedOperations.push(totalFeatures[j]);
+                                    }
+                                } else if (totalFeatures[j]["code"] == "WIPE_DATA") {
+                                    if (mode == operationBarModeConstants.BULK) {
+                                        if (ownership == ownershipTypeConstants.COPE) {
+                                            permittedOperations.push(totalFeatures[j]);
+                                        }
+                                    } else {
+                                        permittedOperations.push(totalFeatures[j]);
+                                    }
+                                } else {
                                     permittedOperations.push(totalFeatures[j]);
                                 }
                             } else {
