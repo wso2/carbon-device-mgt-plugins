@@ -5,7 +5,7 @@
 {{#zone "content"}}
     {{#if deviceFound}}
         {{#if isAuthorized}}
-            <h1 class="page-sub-title device-id device-select" data-deviceid="{{device.deviceIdentifier}}" data-type="{{device.type}}">
+            <h1 class="page-sub-title device-id device-select" data-deviceid="{{device.deviceIdentifier}}" data-type="{{device.type}}" data-ownership="{{device.viewModel.ownership}}">
                 Device {{device.name}}
                 {{#if device.viewModel.model}}
                     <span class="lbl-device">
@@ -101,7 +101,7 @@
                     {{/defineZone}}
                     <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">Operations</div>
                     <div class="add-margin-top-4x">
-                        {{unit "mdm.unit.device.operation-bar" deviceType=device.type}}
+                        {{unit "mdm.unit.device.operation-bar" deviceType=device.type ownership=device.viewModel.ownership}}
                     </div>
                 </div>
             </div>

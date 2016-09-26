@@ -22,6 +22,7 @@ var InitiateViewOption = null;
     var deviceId = $(".device-id");
     var deviceIdentifier = deviceId.data("deviceid");
     var deviceType = deviceId.data("type");
+    var ownership = deviceId.data("ownership");
     var operationTable;
 
     $(".media.tab-responsive [data-toggle=tab]").on("shown.bs.tab", function (e) {
@@ -291,7 +292,7 @@ var InitiateViewOption = null;
     $(document).ready(function () {
         $(".device-detail-body").removeClass("hidden");
         $("#loading-content").remove();
-        loadOperationBar(deviceType);
+        loadOperationBar(deviceType, ownership);
         loadOperationsLog(false);
         loadApplicationsList();
         loadPolicyCompliance();

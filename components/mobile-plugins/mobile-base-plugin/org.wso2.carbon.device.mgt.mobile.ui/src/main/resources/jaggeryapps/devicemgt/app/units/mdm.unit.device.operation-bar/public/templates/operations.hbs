@@ -107,14 +107,16 @@
             <div class="modal-body add-margin-top-2x add-margin-bottom-2x">
                 <h4>
                     {{#equal code "WIPE_DATA"}}
-                        {{#equal type "android"}}
-                            Enter PIN code (Optional - This is required only if the device type is BYOD).
-                            <br><br>
-                            <div>
-                                <input type="password" class="form-control modal-input operationDataKeys" id="pin"
-                                       data-key="pin">
-                            </div>
-                            <br>
+                        {{#equal deviceType "android"}}
+                            {{#equal ownership "BYOD"}}
+                                Enter PIN code* of the device
+                                <br><br>
+                                <div>
+                                    <input id="pin" type="password"
+                                        class="form-control modal-input operationDataKeys"
+                                            placeholder="[ Required for a BYOD device ]" data-key="pin" />
+                                </div>
+                            {{/equal}}
                         {{/equal}}
                     {{/equal}}
                     {{#equal code "NOTIFICATION"}}
@@ -141,26 +143,28 @@
                         <br>
                     {{/equal}}
                     {{#equal code "DEVICE_LOCK"}}
-                        {{#equal type "android"}}
-                            Type your message to be shown in the lock screen (Optional).
-                            <br><br>
-                            <div>
-                                    <textarea class="form-control modal-input operationDataKeys" id="lock-message"
-                                              data-key="lock-message"></textarea>
-                            </div>
-                            <br>
-                            <label class="wr-input-control checkbox">
-                                <input id="hard-lock" type="checkbox" class="form-control operationDataKeys"
-                                       data-key="hard-lock"/>
+                        {{#equal deviceType "android"}}
+                            {{#equal ownership "COPE"}}
+                                <label class="wr-input-control checkbox">
+                                    <input id="hard-lock" type="checkbox" class="form-control operationDataKeys"
+                                           data-key="hard-lock"/>
                                     <span class="helper" title="Once it enables, device will be blocked permanently.">
                                             &nbsp;&nbsp;&nbsp;Enable Permanent Lock
                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
-                            </label>
+                                </label>
+                                <br><br>
+                            {{/equal}}
+                            Type your message to be shown in the lock screen
+                            <br><br>
+                            <div>
+                                <textarea id="lock-message" class="form-control modal-input operationDataKeys"
+                                    data-key="lock-message" placeholder="[ Message content is optional ]"></textarea>
+                            </div>
                         {{/equal}}
                     {{/equal}}
                     {{#equal code "UPGRADE_FIRMWARE"}}
-                        {{#equal type "android"}}
+                        {{#equal deviceType "android"}}
                             Enter firmware upgrade scheduling information.
                             <br><br>
                             <label class="wr-input-control checkbox">

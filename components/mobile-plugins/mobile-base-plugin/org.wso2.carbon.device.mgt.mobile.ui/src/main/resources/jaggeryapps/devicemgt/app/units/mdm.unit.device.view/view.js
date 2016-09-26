@@ -51,6 +51,7 @@ function onRequest(context) {
                         latitude: device["properties"]["LATITUDE"],
                         longitude: device["properties"]["LONGITUDE"]
                     };
+                    viewModel["ownership"] = device["ownership"];
                 } else if (device["type"] == "android") {
                     viewModel["deviceIdentifier"] = device["deviceIdentifier"];
                     viewModel["deviceName"] = device["name"];
@@ -132,6 +133,7 @@ function onRequest(context) {
                         latitude: device["properties"]["LATITUDE"],
                         longitude: device["properties"]["LONGITUDE"]
                     };
+                    viewModel["ownership"] = device["ownership"];
                 }
                 device["viewModel"] = viewModel;
             }
