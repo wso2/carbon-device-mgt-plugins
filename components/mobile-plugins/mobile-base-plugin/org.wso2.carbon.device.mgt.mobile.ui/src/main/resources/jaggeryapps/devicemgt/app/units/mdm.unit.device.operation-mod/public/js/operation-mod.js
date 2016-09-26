@@ -1450,6 +1450,7 @@ var operationModule = function () {
                 } else if (operationDataObj.is(":radio")) {
                     if (operationDataObj.val() == uiPayload[key]) {
                         operationDataObj.attr("checked", true);
+                        operationDataObj.trigger("click");
                     }
                 } else if (operationDataObj.is("select")) {
                     operationDataObj.val(value);
