@@ -170,7 +170,7 @@ function loadDevices() {
             class: 'fade-edge remove-padding-top',
             data: 'user',
             render: function (user) {
-                return '<div><label class="label-bold">Owner&nbsp;:&nbsp;</label>' + user + '</div>';
+                return '<div><label class="label-bold">Owner&nbsp;:&nbsp;&nbsp;</label>' + user + '</div>';
             }
         },
         {
@@ -180,33 +180,33 @@ function loadDevices() {
                 var html;
                 switch (status) {
                     case 'ACTIVE' :
-                        html = '<span><i class="fw fw-ok icon-success"></i> Active</span>';
+                        html = '<span><i class="fw fw-ok icon-success"></i>&nbsp;&nbsp;Active</span>';
+                        break;
+                    case 'UNREACHABLE' :
+                        html = '<span><i class="fw fw-question-mark icon-warning"></i>&nbsp;&nbsp;Unreachable</span>';
                         break;
                     case 'INACTIVE' :
-                        html = '<span><i class="fw fw-warning icon-warning"></i> Inactive</span>';
-                        break;
-                    case 'BLOCKED' :
-                        html = '<span><i class="fw fw-remove icon-danger"></i> Blocked</span>';
+                        html = '<span><i class="fw fw-warning icon-error"></i>&nbsp;&nbsp;Inactive</span>';
                         break;
                     case 'REMOVED' :
-                        html = '<span><i class="fw fw-delete icon-danger"></i> Removed</span>';
+                        html = '<span><i class="fw fw-delete icon-danger"></i>&nbsp;&nbsp;Removed</span>';
                         break;
                 }
-                return '<div><label class="label-bold">Status&nbsp;:&nbsp;</label>' + html + '</div>';
+                return '<div><label class="label-bold">Status&nbsp;:&nbsp;&nbsp;</label>' + html + '</div>';
             }
         },
         {
             className: 'fade-edge remove-padding-top',
             data: 'deviceType',
             render: function (deviceType) {
-                return '<div><label class="label-bold">Type&nbsp;:&nbsp;</label>' + deviceType + '</div>';
+                return '<div><label class="label-bold">Type&nbsp;:&nbsp;&nbsp;</label>' + deviceType + '</div>';
             }
         },
         {
             className: 'fade-edge remove-padding-top',
             data: 'ownership',
             render: function (ownership) {
-                return '<div><label class="label-bold">Ownership&nbsp;:&nbsp;</label>' + ownership + '</div>';
+                return '<div><label class="label-bold">Ownership&nbsp;:&nbsp;&nbsp;</label>' + ownership + '</div>';
             }
         }
     ];
