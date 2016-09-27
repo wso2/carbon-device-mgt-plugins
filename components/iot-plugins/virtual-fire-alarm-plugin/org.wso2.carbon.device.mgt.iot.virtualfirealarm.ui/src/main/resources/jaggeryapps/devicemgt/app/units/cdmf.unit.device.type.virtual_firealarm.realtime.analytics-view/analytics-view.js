@@ -31,7 +31,6 @@ function onRequest(context) {
     if (encodedClientKeys) {
         var tokenUtil = require("/app/modules/oauth/token-handler-utils.js")["utils"];
         var resp = tokenUtil.decode(encodedClientKeys).split(":");
-        log.error(resp);
         var deviceParam = "{\"scope\":\"stats\",\"deviceIdentifiers\":[{\"id\":\"" + device.deviceIdentifier
                           + " \", \"type\":\"" + device.type + "\"}]}";
         var encodedScope = tokenUtil.encode(deviceParam);
