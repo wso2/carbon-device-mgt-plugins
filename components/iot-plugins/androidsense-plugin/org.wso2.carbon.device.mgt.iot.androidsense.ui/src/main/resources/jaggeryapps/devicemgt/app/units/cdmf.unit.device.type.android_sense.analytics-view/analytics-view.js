@@ -24,7 +24,7 @@ function onRequest(context) {
     if (devices) {
         return {
             "devices": stringify(devices),
-            "backendApiUri": devicemgtProps["httpsURL"] + "/android_sense/stats/"
+            "backendApiUri":  "/android_sense/stats/"
         };
     } else if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
@@ -32,7 +32,7 @@ function onRequest(context) {
         if (device && device.status != "error") {
             return {
                 "device": device.content,
-                "backendApiUrl": devicemgtProps["httpsURL"] + "/android_sense/stats/" + deviceId + "/sensors/"
+                "backendApiUrl":  "/android_sense/stats/" + deviceId + "/sensors/"
             };
         } else {
             response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
