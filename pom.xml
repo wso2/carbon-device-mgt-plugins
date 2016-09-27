@@ -37,8 +37,10 @@
     <modules>
         <module>components/mobile-plugins</module>
         <module>components/iot-plugins</module>
+        <module>components/extensions</module>
         <module>features/mobile-plugins-feature</module>
         <module>features/iot-plugins-feature</module>
+        <module>features/extensions-feature</module>
     </modules>
 
     <dependencyManagement>
@@ -527,6 +529,13 @@
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
 
+            <!--- AppM dependencies -->
+            <dependency>
+                 <groupId>org.wso2.carbon.appmgt</groupId>
+                 <artifactId>org.wso2.carbon.appmgt.mobile</artifactId>
+                 <version>${carbon.appmgt.version}</version>
+            </dependency>
+
             <!--Osgi dependencies-->
             <dependency>
                 <groupId>org.eclipse.osgi</groupId>
@@ -712,6 +721,63 @@
                 <artifactId>org.wso2.carbon.registry.api</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.wso2.carbon.governance</groupId>
+                <artifactId>org.wso2.carbon.governance.api</artifactId>
+                <version>${carbon.governance.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.juddi.wso2</groupId>
+                        <artifactId>juddi</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon.registry</groupId>
+                        <artifactId>org.wso2.carbon.registry.common</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon</groupId>
+                        <artifactId>org.wso2.carbon.registry.core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon.registry</groupId>
+                        <artifactId>org.wso2.carbon.registry.admin.api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon.registry</groupId>
+                        <artifactId>org.wso2.carbon.registry.indexing</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.ibm.icu</groupId>
+                        <artifactId>icu4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.eclipse.equinox</groupId>
+                        <artifactId>org.eclipse.equinox.registry</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>eclipse</groupId>
+                        <artifactId>validateutility</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.ws.commons.axiom</groupId>
+                        <artifactId>axiom-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.ws.commons.axiom</groupId>
+                        <artifactId>axiom-impl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon.registry</groupId>
+                        <artifactId>org.wso2.carbon.registry.extensions</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.servlet</groupId>
+                        <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.registry.core</artifactId>
@@ -918,6 +984,16 @@
                 <version>${axiom-api.version}</version>
             </dependency-->
             <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+             <dependency>
+                <groupId>commons-io.wso2</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io-wso2.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
                 <version>${log4j.version}</version>
@@ -984,14 +1060,19 @@
             </dependency>
 
             <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons-io.version}</version>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.scr</artifactId>
+                <version>${apache-felix.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.googlecode.json-simple.wso2</groupId>
                 <artifactId>json-simple</artifactId>
                 <version>${json-simple.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.plist</groupId>
+                <artifactId>dd-plist</artifactId>
+                <version>${googlecode.plist.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity</groupId>
@@ -1124,6 +1205,10 @@
         <carbon.devicemgt.version>1.2.2-SNAPSHOT</carbon.devicemgt.version>
         <carbon.devicemgt.version.range>[1.1.1, 2.0.0)</carbon.devicemgt.version.range>
 
+        
+        <!-- Carbon App Management -->
+        <carbon.appmgt.version>1.2.3-SNAPSHOT</carbon.appmgt.version>
+
         <!-- Carbon Device Management Plugins -->
         <carbon.devicemgt.plugins.version>2.2.2-SNAPSHOT</carbon.devicemgt.plugins.version>
 
@@ -1175,6 +1260,11 @@
         <codehaus.plexus.version>3.0.21</codehaus.plexus.version>
         <google.gson.version>2.2.4</google.gson.version>
         <gcm.server.version>1.0.2</gcm.server.version>
+        <commons-io-wso2.version>2.4.0.wso2v1</commons-io-wso2.version>
+        <commons-io.version>2.4</commons-io.version>
+        <apache-felix.version>1.0.8</apache-felix.version>
+        <googlecode.plist.version>1.8</googlecode.plist.version>
+        
 
         <orbit.version.commons-httpclient>3.1.0.wso2v2</orbit.version.commons-httpclient>
         <!--<commons-codec.wso2.version>1.4.0.wso2v1</commons-codec.wso2.version>-->
@@ -1195,7 +1285,6 @@
         <wss4j.security.version>1.6.17</wss4j.security.version>
         <wss4j.security.common.version>2.0.0</wss4j.security.common.version>
 
-        <commons-io.version>2.4</commons-io.version>
         <commons-json.version>3.0.0.wso2v1</commons-json.version>
         <commons-json.version.range>(3.0.0, 4.0.0]</commons-json.version.range>
         <json.path.version>0.9.1</json.path.version>
