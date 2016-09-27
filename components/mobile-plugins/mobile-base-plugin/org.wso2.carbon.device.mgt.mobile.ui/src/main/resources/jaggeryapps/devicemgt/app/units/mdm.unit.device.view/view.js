@@ -77,6 +77,10 @@ function onRequest(context) {
                     deviceInfo = info;
 
                     if (device["deviceInfo"]) {
+                        viewModel["location"] = {
+                            latitude: device["deviceInfo"]["location"]["latitude"],
+                            longitude: device["deviceInfo"]["location"]["longitude"]
+                        };
                         viewModel["deviceInfo"] = true;
 
                         viewModel["model"] = device["deviceInfo"]["deviceModel"];
