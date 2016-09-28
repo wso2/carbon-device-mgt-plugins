@@ -5,11 +5,12 @@
 {{#zone "content"}}
     {{#if deviceFound}}
         {{#if isAuthorized}}
-            <h1 class="page-sub-title device-id device-select" data-deviceid="{{device.deviceIdentifier}}" data-type="{{device.type}}" data-ownership="{{device.viewModel.ownership}}">
-                Device {{device.name}}
-                {{#if device.viewModel.model}}
+            <h1 class="page-sub-title device-id device-select"
+                data-deviceid="{{deviceView.deviceIdentifier}}" data-type="{{deviceView.deviceType}}" data-ownership="{{deviceView.ownership}}">
+                Device {{deviceView.name}}
+                {{#if deviceView.model}}
                     <span class="lbl-device">
-                    ( {{device.viewModel.vendor}} {{device.viewModel.model}} )
+                    ( {{deviceView.vendor}} {{deviceView.model}} )
                 </span>
                 {{/if}}
             </h1>
@@ -23,77 +24,77 @@
                     {{#defineZone "device-detail-properties"}}
                         <table class="table table-responsive table-striped" id="members">
                             <tbody>
-                            {{#if device.viewModel.deviceIdentifier}}
+                            {{#if deviceView.deviceIdentifier}}
                                 <tr role="row" class="odd">
                                     <td class="sorting_1" style="padding:10px 15px; width: 15%;">Device ID</td>
-                                    <td style="padding:10px 15px;">{{device.viewModel.deviceIdentifier}}</td>
+                                    <td style="padding:10px 15px;">{{deviceView.deviceIdentifier}}</td>
                                 </tr>
                             {{/if}}
-                            {{#if device.viewModel.deviceName}}
+                            {{#if deviceView.name}}
                                 <tr role="row" class="even">
                                     <td class="sorting_1" style="padding:10px 15px; width: 15%;">Name</td>
-                                    <td style="padding:10px 15px;">{{device.viewModel.deviceName}}</td>
+                                    <td style="padding:10px 15px;">{{deviceView.name}}</td>
                                 </tr>
                             {{/if}}
-                            {{#if device.viewModel.vendor}}
-                                {{#if device.viewModel.model}}
+                            {{#if deviceView.vendor}}
+                                {{#if deviceView.model}}
                                     <tr role="row" class="odd">
                                         <td class="sorting_1" style="padding:10px 15px; width: 15%;">Model</td>
-                                        <td style="padding:10px 15px;">{{device.viewModel.vendor}} {{device.viewModel.model}}</td>
+                                        <td style="padding:10px 15px;">{{deviceView.vendor}} {{deviceView.model}}</td>
                                     </tr>
                                 {{/if}}
                             {{/if}}
-                            {{#if device.status}}
+                            {{#if deviceView.status}}
                                 <tr role="row" class="even">
                                     <td class="sorting_1" style="padding:10px 15px; width: 15%;">Status</td>
                                     <td style="padding:10px 15px;">
-                                        {{#equal device.status "ACTIVE"}}<span><i class="fw fw-ok icon-success"></i>&nbsp;&nbsp;Active</span>{{/equal}}
-                                        {{#equal device.status "INACTIVE"}}<span><i class="fw fw-warning icon-warning"></i>&nbsp;&nbsp;Inactive</span>{{/equal}}
-                                        {{#equal device.status "BLOCKED"}}<span><i class="fw fw-remove icon-danger"></i>&nbsp;&nbsp;Blocked</span>{{/equal}}
-                                        {{#equal device.status "REMOVED"}}<span><i class="fw fw-delete icon-danger"></i>&nbsp;&nbsp;Removed</span>{{/equal}}
+                                        {{#equal deviceView.status "ACTIVE"}}<span><i class="fw fw-ok icon-success"></i>&nbsp;&nbsp;Active</span>{{/equal}}
+                                        {{#equal deviceView.status "INACTIVE"}}<span><i class="fw fw-warning icon-warning"></i>&nbsp;&nbsp;Inactive</span>{{/equal}}
+                                        {{#equal deviceView.status "BLOCKED"}}<span><i class="fw fw-remove icon-danger"></i>&nbsp;&nbsp;Blocked</span>{{/equal}}
+                                        {{#equal deviceView.status "REMOVED"}}<span><i class="fw fw-delete icon-danger"></i>&nbsp;&nbsp;Removed</span>{{/equal}}
                                     </td>
                                 </tr>
                             {{/if}}
-                            {{#if device.viewModel.owner}}
+                            {{#if deviceView.owner}}
                                 <tr role="row" class="odd">
                                     <td class="sorting_1" style="padding:10px 15px; width: 15%;">Owner</td>
-                                    <td style="padding:10px 15px;">{{device.viewModel.owner}}</td>
+                                    <td style="padding:10px 15px;">{{deviceView.owner}}</td>
                                 </tr>
                             {{/if}}
-                            {{#if device.viewModel.ownership}}
+                            {{#if deviceView.ownership}}
                                 <tr role="row" class="even">
                                     <td class="sorting_1" style="padding:10px 15px; width: 15%;">Ownership</td>
-                                    <td style="padding:10px 15px;">{{device.viewModel.ownership}}</td>
+                                    <td style="padding:10px 15px;">{{deviceView.ownership}}</td>
                                 </tr>
                             {{/if}}
-                            {{#if device.viewModel.imei}}
+                            {{#if deviceView.imei}}
                                 <tr role="row" class="even">
                                     <td class="sorting_1" style="padding:10px 15px; width: 15%;">IMEI</td>
-                                    <td style="padding:10px 15px;">{{device.viewModel.imei}}</td>
+                                    <td style="padding:10px 15px;">{{deviceView.imei}}</td>
                                 </tr>
                             {{/if}}
-                            {{#if device.viewModel.udid}}
+                            {{#if deviceView.udid}}
                                 <tr role="row" class="odd">
                                     <td class="sorting_1" style="padding:10px 15px; width: 15%;">UDID</td>
-                                    <td style="padding:10px 15px;">{{device.viewModel.udid}}</td>
+                                    <td style="padding:10px 15px;">{{deviceView.udid}}</td>
                                 </tr>
                             {{/if}}
-                            {{#if device.viewModel.os_build_date}}
+                            {{#if deviceView.osBuildDate}}
                                 <tr role="row" class="even">
                                     <td class="sorting_1" style="padding:10px 15px; width: 15%;">Firmware Build Date</td>
-                                    <td style="padding:10px 15px;">{{device.viewModel.os_build_date}}</td>
+                                    <td style="padding:10px 15px;">{{deviceView.osBuildDate}}</td>
                                 </tr>
                             {{/if}}
-                            {{#if device.viewModel.phoneNumber}}
+                            {{#if deviceView.phoneNumber}}
                                 <tr role="row" class="odd">
                                     <td class="sorting_1" style="padding:10px 15px; width: 15%;">Phone Number</td>
-                                    <td style="padding:10px 15px;">{{device.viewModel.phoneNumber}}</td>
+                                    <td style="padding:10px 15px;">{{deviceView.phoneNumber}}</td>
                                 </tr>
                             {{/if}}
-                            {{#if device.viewModel.lastUpdatedTime}}
+                            {{#if deviceView.lastUpdatedTime}}
                                 <tr role="row" class="even">
                                     <td class="sorting_1" style="padding:10px 15px; width: 15%;">Last Update</td>
-                                    <td style="padding:10px 15px;">{{device.viewModel.lastUpdatedTime}}</td>
+                                    <td style="padding:10px 15px;">{{deviceView.lastUpdatedTime}}</td>
                                 </tr>
                             {{/if}}
                             </tbody>
@@ -101,7 +102,7 @@
                     {{/defineZone}}
                     <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">Operations</div>
                     <div class="add-margin-top-4x">
-                        {{unit "mdm.unit.device.operation-bar" deviceType=device.type ownership=device.viewModel.ownership}}
+                        {{unit "mdm.unit.device.operation-bar" deviceType=deviceView.deviceType ownership=deviceView.ownership}}
                     </div>
                 </div>
             </div>
@@ -120,8 +121,8 @@
                     </li>
                     <li role="presentation" class="list-group-item">
                         <a href="#device_location_tab" role="tab" data-toggle="tab"
-                           data-lat="{{device.viewModel.location.latitude}}"
-                           data-long="{{device.viewModel.location.longitude}}"
+                           data-lat="{{deviceView.location.latitude}}"
+                           data-long="{{deviceView.location.longitude}}"
                            aria-controls="device_location_tab">
                             <i class="icon fw fw-map-location"></i><span class="hidden-sm">Device Location</span>
                         </a>
@@ -158,13 +159,13 @@
                         <div class="panel-body ">
                             <div class="device-detail-body">
                                 <!-- device summary -->
-                                {{#equal device.type "windows"}}
+                                {{#equal deviceView.deviceType "windows"}}
                                     <div class="message message-info">
                                         <h4 class="remove-margin"><i class="icon fw fw-info"></i>Not available yet</h4>
                                     </div>
                                 {{/equal}}
-                                {{#if device.viewModel.deviceInfo}}
-                                    {{#if device.viewModel.BatteryLevel}}
+                                {{#if deviceView.deviceInfoAvailable}}
+                                    {{#if deviceView.BatteryLevel}}
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                             <div class="col-md-12">
                                                 <div class="wr-stats-board-tile">
@@ -172,14 +173,14 @@
                                                     <div>
                                                         <div class="tile-icon"><i class="fw fw-battery"></i></div>
                                                         <div class="tile-stats">
-                                                            {{device.viewModel.BatteryLevel.value}} %
+                                                            {{deviceView.BatteryLevel.value}} %
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     {{/if}}
-                                    <!--{{#if device.viewModel.cpuUsage}}-->
+                                    <!--{{#if deviceView.cpuUsage}}-->
                                         <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">-->
                                             <!--<div class="col-md-12">-->
                                                 <!--<div class="wr-stats-board-tile">-->
@@ -187,14 +188,14 @@
                                                     <!--<div>-->
                                                         <!--<div class="tile-icon"><i class="fw fw-dashboard"></i></div>-->
                                                         <!--<div class="tile-stats">-->
-                                                            <!--{{device.viewModel.cpuUsage.value}} %-->
+                                                            <!--{{deviceView.cpuUsage.value}} %-->
                                                         <!--</div>-->
                                                     <!--</div>-->
                                                 <!--</div>-->
                                             <!--</div>-->
                                         <!--</div>-->
                                     <!--{{/if}}-->
-                                    {{#if device.viewModel.ramUsage}}
+                                    {{#if deviceView.ramUsage}}
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                             <div class="col-md-12">
                                                 <div class="wr-stats-board-tile">
@@ -202,14 +203,14 @@
                                                     <div>
                                                         <div class="tile-icon"><i class="fw fw-hardware"></i></div>
                                                         <div class="tile-stats">
-                                                            {{device.viewModel.ramUsage.value}} %
+                                                            {{deviceView.ramUsage.value}} %
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     {{/if}}
-                                    {{#if device.viewModel.internalMemory}}
+                                    {{#if deviceView.internalMemory}}
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                             <div class="col-md-12">
                                                 <div class="wr-stats-board-tile">
@@ -217,9 +218,9 @@
                                                     <div>
                                                         <div class="tile-icon"><i class="fw fw-hdd"></i></div>
                                                         <div class="tile-stats">
-                                                            {{device.viewModel.internalMemory.usage}} %
+                                                            {{deviceView.internalMemory.usage}} %
                                                         <span class="tile-stats-free">
-                                                            TOTAL OF {{device.viewModel.internalMemory.total}} GB
+                                                            TOTAL OF {{deviceView.internalMemory.total}} GB
                                                         </span>
                                                         </div>
                                                     </div>
@@ -227,7 +228,7 @@
                                             </div>
                                         </div>
                                     {{/if}}
-                                    {{#if device.viewModel.externalMemory}}
+                                    {{#if deviceView.externalMemory}}
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                             <div class="col-md-12">
                                                 <div class="wr-stats-board-tile">
@@ -235,9 +236,9 @@
                                                     <div>
                                                         <div class="tile-icon"><i class="fw fw-usb-drive"></i></div>
                                                         <div class="tile-stats">
-                                                            {{device.viewModel.externalMemory.usage}} %
+                                                            {{deviceView.externalMemory.usage}} %
                                                         <span class="tile-stats-free">
-                                                            TOTAL OF {{device.viewModel.externalMemory.total}} GB
+                                                            TOTAL OF {{deviceView.externalMemory.total}} GB
                                                         </span>
                                                         </div>
                                                     </div>
@@ -284,16 +285,11 @@
                                     <i class="fw fw-refresh"></i>
                                 </a>
                             </span>
-                            <div id="policy-spinner" class="wr-advance-operations-init hidden">
-                                <i class="fw fw-settings fw-spin fw-2x"></i> Loading Policy Compliance...
+                            <div id="policy-spinner"
+                                class="wr-advance-operations-init add-padding-bottom-2x add-padding-bottom-4x hidden">
+                                <i class="fw fw-settings fw-spin fw-2x"></i>&nbsp;&nbsp;Loading Policy Compliance...
                             </div>
                             <div id="policy-list-container">
-                                <div class="message message-info">
-                                    <h4 class="remove-margin">
-                                        <i class="icon fw fw-info"></i>
-                                        There is currently no effective policy applied for this device.
-                                    </h4>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -311,16 +307,22 @@
                     <div class="panel-heading display-none-xs">Device Location</div>
                     <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="device_location">
                         <div class="panel-body">
-                            <div id="map-error" class="message message-danger">
-                                <h4 class="remove-margin">
-                                    <i class="icon fw fw-error"></i>
-                                    &nbsp;Device location cannot be retrieved.
-                                </h4>
-                            </div>
-                            <div id="device-location"
-                                 data-lat="{{device.viewModel.location.latitude}}"
-                                 data-long="{{device.viewModel.location.longitude}}">
-                            </div>
+                            {{#if deviceView.location}}
+                                <div id="device-location"
+                                     data-lat="{{deviceView.location.latitude}}"
+                                     data-long="{{deviceView.location.longitude}}">
+                                </div>
+                            {{else}}
+                                <div id="map-error" class="message message-warning">
+                                    <h4 class="remove-margin">
+                                        <i class="icon fw fw-warning"></i>
+                                        &nbsp;Device location information is not available.
+                                    </h4>
+                                </div>
+                                <p class="add-padding-5x"></p>
+                                <p class="add-padding-5x"></p>
+                                <p class="add-padding-5x"></p>
+                            {{/if}}
                         </div>
                     </div>
                 </div>
@@ -438,20 +440,20 @@
 {{/zone}}
 {{#zone "bottomJs"}}
     {{#if isAuthorized}}
-    <!--suppress HtmlUnknownTarget -->
-    <script id="policy-view" src="{{@unit.publicUri}}/templates/policy-compliance.hbs"
-            data-device-id="{{device.deviceIdentifier}}" data-device-type="{{device.type}}"
-            type="text/x-handlebars-template"></script>
-    <!--suppress HtmlUnknownTarget -->
-    <script id="applications-list" src="{{@unit.publicUri}}/templates/applications-list.hbs"
-            data-device-id="{{device.deviceIdentifier}}" data-device-type="{{device.type}}"
-            type="text/x-handlebars-template"></script>
-    <!--suppress HtmlUnknownTarget -->
-    <script id="operations-log" src="{{@unit.publicUri}}/templates/operations-log.hbs"
-            data-device-id="{{device.deviceIdentifier}}" data-device-type="{{device.type}}"
-            type="text/x-handlebars-template"></script>
-    {{js "js/device-detail.js"}}
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
-    {{js "js/load-map.js"}}
+        <!--suppress HtmlUnknownTarget -->
+        <script id="policy-view" src="{{@unit.publicUri}}/templates/policy-compliance.hbs"
+                data-device-id="{{deviceView.deviceIdentifier}}" data-device-type="{{deviceView.deviceType}}"
+                type="text/x-handlebars-template"></script>
+        <!--suppress HtmlUnknownTarget -->
+        <script id="applications-list" src="{{@unit.publicUri}}/templates/applications-list.hbs"
+                data-device-id="{{deviceView.deviceIdentifier}}" data-device-type="{{deviceView.deviceType}}"
+                type="text/x-handlebars-template"></script>
+        <!--suppress HtmlUnknownTarget -->
+        <script id="operations-log" src="{{@unit.publicUri}}/templates/operations-log.hbs"
+                data-device-id="{{deviceView.deviceIdentifier}}" data-device-type="{{deviceView.deviceType}}"
+                type="text/x-handlebars-template"></script>
+        {{js "js/device-detail.js"}}
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+        {{js "js/load-map.js"}}
     {{/if}}
 {{/zone}}
