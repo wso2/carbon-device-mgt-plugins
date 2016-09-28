@@ -74,31 +74,48 @@ function onRequest(context) {
                         viewModel["model"] = filteredDeviceData["initialDeviceInfo"]["DEVICE_MODEL"];
                     }
                     if (filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]) {
-                        viewModel["BatteryLevel"] = {};
-                        viewModel["BatteryLevel"]["value"] = filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["BATTERY_LEVEL"];
+                        if (deviceType == "android") {
+                            viewModel["BatteryLevel"] = {};
+                            viewModel["BatteryLevel"]["value"] = filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["BATTERY_LEVEL"];
 
-                        viewModel["internalMemory"] = {};
-                        viewModel["internalMemory"]["total"] = Math.
-                            round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] * 100) / 100;
-                        if (filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] != 0) {
-                            viewModel["internalMemory"]["usage"] = Math.
-                                round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] -
-                                    filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_AVAILABLE_MEMORY"])
-                                    / filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] * 10000) / 100;
-                        } else {
-                            viewModel["internalMemory"]["usage"] = 0;
-                        }
+                            viewModel["internalMemory"] = {};
+                            viewModel["internalMemory"]["total"] = Math.
+                                round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] * 100) / 100;
+                            if (filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] != 0) {
+                                viewModel["internalMemory"]["usage"] = Math.
+                                    round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] -
+                                        filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_AVAILABLE_MEMORY"])
+                                        / filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] * 10000) / 100;
+                            } else {
+                                viewModel["internalMemory"]["usage"] = 0;
+                            }
 
-                        viewModel["externalMemory"] = {};
-                        viewModel["externalMemory"]["total"] = Math.
-                            round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] * 100) / 100;
-                        if (filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] != 0) {
-                            viewModel["externalMemory"]["usage"] = Math.
-                                round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] -
-                                    filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_AVAILABLE_MEMORY"])
-                                    / filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] * 10000) / 100;
-                        } else {
-                            viewModel["externalMemory"]["usage"] = 0;
+                            viewModel["externalMemory"] = {};
+                            viewModel["externalMemory"]["total"] = Math.
+                                round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] * 100) / 100;
+                            if (filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] != 0) {
+                                viewModel["externalMemory"]["usage"] = Math.
+                                    round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] -
+                                        filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_AVAILABLE_MEMORY"])
+                                        / filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] * 10000) / 100;
+                            } else {
+                                viewModel["externalMemory"]["usage"] = 0;
+                            }
+                        } else if (deviceType == "ios") {
+                            viewModel["BatteryLevel"] = {};
+                            viewModel["BatteryLevel"]["value"] = filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["BatteryLevel"];
+
+                            viewModel["internalMemory"] = {};
+                            viewModel["internalMemory"]["total"] = Math.
+                                round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["DeviceCapacity"] * 100) / 100;
+                            if (filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["DeviceCapacity"] != 0) {
+                                viewModel["internalMemory"]["usage"] = Math.
+                                    round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["DeviceCapacity"] -
+                                        filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["AvailableDeviceCapacity"])
+                                        / filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["DeviceCapacity"] * 10000) / 100;
+                            } else {
+                                viewModel["internalMemory"]["usage"] = 0;
+                            }
                         }
                     }
                 }
