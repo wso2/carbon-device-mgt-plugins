@@ -257,7 +257,11 @@ var InitiateViewOption = null;
                                                         "Loading policy compliance related data " +
                                                         "was not successful. please try refreshing in a while." +
                                                     "</h4>" +
-                                                "</div>");
+                                                "</div>" +
+                                                "<p class='add-padding-5x'></p>" +
+                                                "<p class='add-padding-5x'></p>" +
+                                                "<p class='add-padding-5x'></p>"
+                                            );
                                     }
                                 );
                             }
@@ -265,11 +269,15 @@ var InitiateViewOption = null;
                             $("#policy-spinner").addClass("hidden");
                             $("#policy-list-container").
                                 html("<div class='message message-info'>" +
-                                    "<h4 class='remove-margin'>" +
-                                        "<i class='icon fw fw-info'></i>" +
-                                            "There is currently no effective policy applied for this device." +
-                                    "</h4>" +
-                                "</div>");
+                                        "<h4 class='remove-margin'>" +
+                                            "<i class='icon fw fw-info'></i>" +
+                                                "There is currently no effective policy applied for this device." +
+                                        "</h4>" +
+                                    "</div>" +
+                                    "<p class='add-padding-5x'></p>" +
+                                    "<p class='add-padding-5x'></p>" +
+                                    "<p class='add-padding-5x'></p>"
+                                );
                         }
                     },
                     // error-callback
@@ -282,7 +290,11 @@ var InitiateViewOption = null;
                                         "Loading policy compliance related data " +
                                         "was not successful. please try refreshing in a while." +
                                     "</h4>" +
-                                "</div>");
+                                "</div>" +
+                                "<p class='add-padding-5x'></p>" +
+                                "<p class='add-padding-5x'></p>" +
+                                "<p class='add-padding-5x'></p>"
+                            );
                     }
                 );
             }
