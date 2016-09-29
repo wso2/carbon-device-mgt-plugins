@@ -36,7 +36,7 @@
         <module>androidsense-plugin</module>
         <module>arduino-plugin</module>
         <module>raspberrypi-plugin</module>
-        <!--module>virtual-fire-alarm-plugin</module-->
+        <module>virtual-fire-alarm-plugin</module>
         <module>iot-base-plugin</module>
         <module>iot-analytics</module>
     </modules>
