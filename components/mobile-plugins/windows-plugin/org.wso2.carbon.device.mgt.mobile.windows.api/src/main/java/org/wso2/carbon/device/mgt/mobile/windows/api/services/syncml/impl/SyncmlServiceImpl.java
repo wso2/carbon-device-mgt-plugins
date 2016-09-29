@@ -322,7 +322,7 @@ public class SyncmlServiceImpl implements SyncmlService {
 
                     Device.Property resolutionProperty = new Device.Property();
                     resolutionProperty.setName(PluginConstants.SyncML.DEVICE_INFO);
-                    resolutionProperty.setValue(resolution);
+                    resolutionProperty.setValue("null");
                     existingProperties.add(resolutionProperty);
 
                     Device.Property deviceNameProperty = new Device.Property();
