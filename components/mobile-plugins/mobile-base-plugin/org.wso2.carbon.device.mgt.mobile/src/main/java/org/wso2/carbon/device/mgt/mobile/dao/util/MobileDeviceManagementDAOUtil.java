@@ -93,9 +93,22 @@ public class MobileDeviceManagementDAOUtil {
     public static void setupMobileDeviceManagementSchema(DataSource dataSource, String pluginType) throws MobileDeviceMgtPluginException {
         MobileDeviceManagementSchemaInitializer initializer =
                 new MobileDeviceManagementSchemaInitializer(dataSource, pluginType);
-        log.info("Initializing mobile device management repository database schema for : " + pluginType);
+        String checkSql = "select * from ";
+        if (pluginType.equalsIgnoreCase("android")) {
+            checkSql += "AD_DEVICE";
+        } else if (pluginType.equalsIgnoreCase("windows")) {
+            checkSql += "WIN_DEVICE";
+        } else {
+            checkSql += "IOS_DEVICE";
+        }
         try {
-            initializer.createRegistryDatabase();
+            if (!initializer.isDatabaseStructureCreated(checkSql)) {
+                log.info("Initializing mobile device management repository database schema for : " + pluginType);
+                initializer.createRegistryDatabase();
+            } else {
+                log.info("Mobile device management repository database for " + pluginType
+                        + " already exists. Not creating a new database.");
+            }
         } catch (Exception e) {
             throw new MobileDeviceMgtPluginException("Error occurred while initializing Mobile Device " +
                                                 "Management database schema", e);

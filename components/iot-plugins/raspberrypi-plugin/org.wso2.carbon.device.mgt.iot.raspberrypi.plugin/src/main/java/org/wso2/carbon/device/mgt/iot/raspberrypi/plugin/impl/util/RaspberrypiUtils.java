@@ -94,8 +94,13 @@ public class RaspberrypiUtils {
             Context ctx = new InitialContext();
             DataSource dataSource = (DataSource) ctx.lookup(datasource);
             DeviceSchemaInitializer initializer = new DeviceSchemaInitializer(dataSource);
-            log.info("Initializing device management repository database schema");
-            initializer.createRegistryDatabase();
+            String checkSql = "select * from RASPBERRYPI_DEVICE";
+            if (!initializer.isDatabaseStructureCreated(checkSql)) {
+                log.info("Initializing device management repository database schema");
+                initializer.createRegistryDatabase();
+            } else {
+                log.info("Device management repository database already exists. Not creating a new database.");
+            }
         } catch (NamingException e) {
             log.error("Error while looking up the data source: " + datasource, e);
         } catch (Exception e) {
