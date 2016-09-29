@@ -112,7 +112,7 @@ function loadDevices() {
                         user: data.devices[index].enrolmentInfo.owner,
                         status: data.devices[index].enrolmentInfo.status,
                         ownership: data.devices[index].enrolmentInfo.ownership,
-                        deviceType: data.devices[index].type,
+                        type: data.devices[index].type,
                         deviceIdentifier: data.devices[index].deviceIdentifier,
                         name : data.devices[index].name
                     }
@@ -133,7 +133,7 @@ function loadDevices() {
     // possible params - nRow, aData, dataIndex
     var fnCreatedRow = function (nRow, aData) {
         $(nRow).attr('data-type', 'selectable');
-        $(nRow).attr('data-devicetype', aData["deviceType"]);
+        $(nRow).attr('data-devicetype', aData["type"]);
         $(nRow).attr('data-deviceid', aData["deviceIdentifier"]);
     };
 
@@ -142,7 +142,7 @@ function loadDevices() {
             class : 'remove-padding icon-only content-fill viewEnabledIcon',
             data : null,
             render: function (data, type, row) {
-                var deviceType = row.deviceType;
+                var deviceType = row.type;
                 var deviceIdentifier = row.deviceIdentifier;
                 var url = "#";
                 if (row.status != 'REMOVED') {
@@ -197,9 +197,9 @@ function loadDevices() {
         },
         {
             className: 'fade-edge remove-padding-top',
-            data: 'deviceType',
-            render: function (deviceType) {
-                return '<div><label class="label-bold">Type&nbsp;:&nbsp;&nbsp;</label>' + deviceType + '</div>';
+            data: 'type',
+            render: function (type) {
+                return '<div><label class="label-bold">Type&nbsp;:&nbsp;&nbsp;</label>' + type + '</div>';
             }
         },
         {
