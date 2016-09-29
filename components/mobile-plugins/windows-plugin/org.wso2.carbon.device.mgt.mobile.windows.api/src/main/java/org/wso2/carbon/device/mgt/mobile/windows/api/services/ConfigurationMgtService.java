@@ -183,6 +183,7 @@ public interface ConfigurationMgtService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching Windows license configuration.")
     })
+    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/windows")
     Response getLicense(
             @ApiParam(
                     name = "If-Modified-Since",

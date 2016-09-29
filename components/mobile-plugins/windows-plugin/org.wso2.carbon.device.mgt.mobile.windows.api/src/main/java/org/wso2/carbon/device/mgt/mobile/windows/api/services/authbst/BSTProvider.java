@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services.authbst;
 
+import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.authbst.beans.Credentials;
 
@@ -36,5 +37,6 @@ public interface BSTProvider {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/authentication")
+    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/windows")
     Response getBST(Credentials credentials) throws WindowsDeviceEnrolmentException;
 }

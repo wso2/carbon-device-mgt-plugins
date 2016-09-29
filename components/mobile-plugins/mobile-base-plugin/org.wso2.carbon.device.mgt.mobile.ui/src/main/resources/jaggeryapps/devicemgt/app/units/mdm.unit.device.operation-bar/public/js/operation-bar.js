@@ -31,6 +31,14 @@ var operations = '.wr-operations',
         "ANDROID": "android",
         "IOS": "ios",
         "WINDOWS": "windows"
+    },
+    ownershipTypeConstants = {
+        "BYOD": "BYOD",
+        "COPE": "COPE"
+    },
+    operationBarModeConstants = {
+        "BULK": "BULK_OPERATION_MODE",
+        "SINGLE": "SINGLE_OPERATION_MODE"
     };
 
 /*
@@ -94,62 +102,90 @@ function getDevicesByTypes(deviceList) {
     return deviceTypes;
 }
 
-function unloadOperationBar() {
-    $("#showOperationsBtn").addClass("hidden");
-    $(".wr-operations").html("");
-}
+//function unloadOperationBar() {
+//    $("#showOperationsBtn").addClass("hidden");
+//    $(".wr-operations").html("");
+//}
 
-function loadOperationBar(deviceType) {
+function loadOperationBar(deviceType, ownership, mode) {
     var operationBar = $("#operations-bar");
     var operationBarSrc = operationBar.attr("src");
-    var platformType = deviceType;
-    //var selectedDeviceID = deviceId;
+
     $.template("operations-bar", operationBarSrc, function (template) {
-        //var serviceURL = "/mdm-admin/features/" + platformType;
-        var serviceURL = "/api/device-mgt/v1.0/devices/" + platformType + "/*/features";
-        var successCallback = function (data) {
-            var permittedOperations = [];
-            var i;
-            var permissionList = $("#operations-mod").data("permissions");
-            var totalFeatures = JSON.parse(data);
-            for (i = 0; i < permissionList[deviceType].length; i++) {
-                var j;
-                for (j = 0; j < totalFeatures.length; j++) {
-                    if (permissionList[deviceType][i] == totalFeatures[j]["code"]) {
-                        permittedOperations.push(totalFeatures[j]);
+        var serviceURL = "/api/device-mgt/v1.0/devices/" + deviceType + "/*/features";
+        invokerUtil.get(
+            serviceURL,
+            // success callback
+            function (data) {
+                var permittedOperations = [];
+                var i;
+                var permissionList = $("#operations-mod").data("permissions");
+                var totalFeatures = JSON.parse(data);
+                for (i = 0; i < permissionList[deviceType].length; i++) {
+                    var j;
+                    for (j = 0; j < totalFeatures.length; j++) {
+                        if (permissionList[deviceType][i] == totalFeatures[j]["code"]) {
+                            if (deviceType == platformTypeConstants.ANDROID) {
+                                if (totalFeatures[j]["code"] == "DEVICE_UNLOCK") {
+                                    if (ownership == ownershipTypeConstants.COPE) {
+                                        permittedOperations.push(totalFeatures[j]);
+                                    }
+                                } else if (totalFeatures[j]["code"] == "WIPE_DATA") {
+                                    if (mode == operationBarModeConstants.BULK) {
+                                        if (ownership == ownershipTypeConstants.COPE) {
+                                            permittedOperations.push(totalFeatures[j]);
+                                        }
+                                    } else {
+                                        permittedOperations.push(totalFeatures[j]);
+                                    }
+                                } else {
+                                    permittedOperations.push(totalFeatures[j]);
+                                }
+                            } else {
+                                permittedOperations.push(totalFeatures[j]);
+                            }
+                        }
                     }
                 }
-            }
 
-            var viewModel = {};
-            permittedOperations = permittedOperations.filter(function (current) {
-                var iconName;
-                switch (deviceType) {
-                    case platformTypeConstants.ANDROID:
-                        iconName = operationModule.getAndroidIconForFeature(current.code);
-                        current.type = deviceType;
-                        break;
-                    case platformTypeConstants.WINDOWS:
-                        iconName = operationModule.getWindowsIconForFeature(current.code);
-                        break;
-                    case platformTypeConstants.IOS:
-                        iconName = operationModule.getIOSIconForFeature(current.code);
-                        break;
-                }
+                var viewModel = {};
+                permittedOperations = permittedOperations.filter(function (current) {
+                    var iconName;
+                    switch (deviceType) {
+                        case platformTypeConstants.ANDROID:
+                            iconName = operationModule.getAndroidIconForFeature(current.code);
+                            break;
+                        case platformTypeConstants.WINDOWS:
+                            iconName = operationModule.getWindowsIconForFeature(current.code);
+                            break;
+                        case platformTypeConstants.IOS:
+                            iconName = operationModule.getIOSIconForFeature(current.code);
+                            break;
+                    }
 
-                if (iconName) {
-                    current.icon = iconName;
+                    /* adding ownership in addition to device-type
+                     as it's vital in cases where UI for the same feature should change
+                     according to ownership
+                      */
+                    if (ownership) {
+                        current.ownership = ownership;
+                    }
+
+                    if (iconName) {
+                        current.icon = iconName;
+                    }
+
                     return current;
-                }
-            });
+                });
 
-            viewModel.features = permittedOperations;
-            var content = template(viewModel);
-            $(".wr-operations").html(content);
-        };
-        invokerUtil.get(serviceURL, successCallback, function (message) {
-            $(".wr-operations").html(message);
-        });
+                viewModel.features = permittedOperations;
+                var content = template(viewModel);
+                $(".wr-operations").html(content);
+            },
+            // error callback
+            function (message) {
+                $(".wr-operations").html(message);
+            });
     });
 }
 

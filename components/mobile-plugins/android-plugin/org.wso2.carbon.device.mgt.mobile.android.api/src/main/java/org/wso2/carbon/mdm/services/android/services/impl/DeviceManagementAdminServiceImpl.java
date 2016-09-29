@@ -21,7 +21,6 @@ package org.wso2.carbon.mdm.services.android.services.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
@@ -78,9 +77,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Path("/admin/devices")
 @Produces(MediaType.APPLICATION_JSON)
@@ -88,7 +85,7 @@ import java.util.Map;
 public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminService {
 
     private static final Log log = LogFactory.getLog(DeviceManagementAdminServiceImpl.class);
-    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
     @POST
     @Path("/lock-devices")
@@ -536,45 +533,14 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             }
 
             ApplicationInstallation applicationInstallation = applicationInstallationBeanWrapper.getOperation();
-            JSONObject payload = new JSONObject(applicationInstallation.toJSON());
-
-            try {
-                URL url = new URL(payload.getString("url"));
-                URLConnection conn = url.openConnection();
-
-                //get all headers
-                Map<String, List<String>> headerFields = conn.getHeaderFields();
-                boolean isFile = false;
-                for (Map.Entry<String, List<String>> entry : headerFields.entrySet()) {
-                    if ("Content-Type".equals(entry.getKey()) && entry.getValue() != null
-                        && entry.getValue().size() > 0 && "application/octet-stream".equals(entry.getValue().get(0))) {
-                        isFile = true;
-                        break;
-                    }
-                }
-                if (!isFile) {
-                    String errorMessage = "URL is not pointed to a downloadable file.";
-                    log.error(errorMessage);
-                    throw new BadRequestException(
-                            new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
-                }
-                validateType(payload);
-            } catch (MalformedURLException e) {
-                String errorMessage = "Malformed application url.";
-                log.error(errorMessage);
-                throw new BadRequestException(
-                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
-            } catch (IOException e) {
-                String errorMessage = "Invalid application url.";
-                log.error(errorMessage);
-                throw new BadRequestException(
-                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
-            }
+            validateApplicationUrl(applicationInstallation.getUrl());
+            validateApplicationType(applicationInstallation.getType());
+            validateScheduleDate(applicationInstallation.getSchedule());
 
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.INSTALL_APPLICATION);
             operation.setType(Operation.Type.PROFILE);
-            operation.setPayLoad(payload.toString());
+            operation.setPayLoad(applicationInstallation.toJSON());
             return AndroidAPIUtils.getOperationResponse(applicationInstallationBeanWrapper.getDeviceIDs(),
                                                         operation);
         } catch (JSONException e) {
@@ -616,6 +582,10 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                         new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             ApplicationUpdate applicationUpdate = applicationUpdateBeanWrapper.getOperation();
+            validateApplicationUrl(applicationUpdate.getUrl());
+            validateApplicationType(applicationUpdate.getType());
+            validateScheduleDate(applicationUpdate.getSchedule());
+
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.UPDATE_APPLICATION);
             operation.setType(Operation.Type.PROFILE);
@@ -658,8 +628,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                         new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             ApplicationUninstallation applicationUninstallation = applicationUninstallationBeanWrapper.getOperation();
-            JSONObject payload = new JSONObject(applicationUninstallation.toJSON());
-            validateType(payload);
+            validateApplicationType(applicationUninstallation.getType());
 
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.UNINSTALL_APPLICATION);
@@ -683,25 +652,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        }
-    }
-
-    private void validateType(JSONObject payload) {
-        if (payload.has("type")) {
-            String type = payload.getString("type");
-            if (!"enterprise".equalsIgnoreCase(type)
-                && !"public".equalsIgnoreCase(type)
-                && !"webapp".equalsIgnoreCase(type)) {
-                String errorMessage = "Invalid application type.";
-                log.error(errorMessage);
-                throw new BadRequestException(
-                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
-            }
-        } else {
-            String errorMessage = "Application type is missing.";
-            log.error(errorMessage);
-            throw new BadRequestException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
     }
 
@@ -761,13 +711,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
                         new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
             }
             UpgradeFirmware upgradeFirmware = upgradeFirmwareBeanWrapper.getOperation();
-
-            //validate date
-            if(upgradeFirmware != null && upgradeFirmware.getSchedule() != null){
-                SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-                sdf.setLenient(false);
-                Date date = sdf.parse(upgradeFirmware.getSchedule());
-            }
+            validateScheduleDate(upgradeFirmware.getSchedule());
 
             ProfileOperation operation = new ProfileOperation();
             operation.setCode(AndroidConstants.OperationCodes.UPGRADE_FIRMWARE);
@@ -789,11 +733,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (ParseException e) {
-            String errorMessage = "Issue in validating the schedule date";
-            log.error(errorMessage);
-            throw new BadRequestException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
     }
 
@@ -1076,6 +1015,73 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.error(errorMessage, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+        }
+    }
+
+    private static boolean hasValidAPKContentType(String contentType){
+        if (contentType != null){
+            switch (contentType) {
+                case MediaType.APPLICATION_OCTET_STREAM:
+                case "application/android":
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private static void validateApplicationUrl(String apkUrl) {
+        try {
+            URL url = new URL(apkUrl);
+            URLConnection conn = url.openConnection();
+            if (!hasValidAPKContentType(conn.getContentType())) {
+                String errorMessage = "URL is not pointed to a downloadable file.";
+                log.error(errorMessage);
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            }
+        } catch (MalformedURLException e) {
+            String errorMessage = "Malformed application url.";
+            log.error(errorMessage);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        } catch (IOException e) {
+            String errorMessage = "Invalid application url.";
+            log.error(errorMessage);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        }
+    }
+
+    private static void validateApplicationType(String type) {
+        if (type != null) {
+            if (!"enterprise".equalsIgnoreCase(type)
+                && !"public".equalsIgnoreCase(type)
+                && !"webapp".equalsIgnoreCase(type)) {
+                String errorMessage = "Invalid application type.";
+                log.error(errorMessage);
+                throw new BadRequestException(
+                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            }
+        } else {
+            String errorMessage = "Application type is missing.";
+            log.error(errorMessage);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        }
+    }
+
+    private static void validateScheduleDate(String dateString){
+        try {
+            if (dateString != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+                sdf.setLenient(false);
+                sdf.parse(dateString);
+            }
+        } catch (ParseException e) {
+            String errorMessage = "Issue in validating the schedule date";
+            log.error(errorMessage);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
     }
 
