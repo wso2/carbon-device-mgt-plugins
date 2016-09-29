@@ -320,10 +320,10 @@ public class SyncmlServiceImpl implements SyncmlService {
                     macAddressProperty.setValue(macAddress);
                     existingProperties.add(macAddressProperty);
 
-                    Device.Property resolutionProperty = new Device.Property();
-                    resolutionProperty.setName(PluginConstants.SyncML.DEVICE_INFO);
-                    resolutionProperty.setValue("null");
-                    existingProperties.add(resolutionProperty);
+//                    Device.Property resolutionProperty = new Device.Property();
+//                    resolutionProperty.setName(PluginConstants.SyncML.DEVICE_INFO);
+//                    resolutionProperty.setValue("null");
+//                    existingProperties.add(resolutionProperty);
 
                     Device.Property deviceNameProperty = new Device.Property();
                     deviceNameProperty.setName(PluginConstants.SyncML.DEVICE_NAME);
