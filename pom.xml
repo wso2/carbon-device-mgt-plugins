@@ -529,7 +529,7 @@
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
 
-            <!--- AppM dependencies -->
+            <!-- AppM dependencies -->
             <dependency>
                  <groupId>org.wso2.carbon.appmgt</groupId>
                  <artifactId>org.wso2.carbon.appmgt.mobile</artifactId>
