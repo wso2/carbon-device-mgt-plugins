@@ -1822,13 +1822,13 @@ stepForwardFrom["policy-naming-publish"] = function () {
     policy["policyName"] = $("#policy-name-input").val();
     policy["description"] = $("#policy-description-input").val();
     //All data is collected. Policy can now be updated.
-    savePolicy(policy, "/devicemgt_admin/policies/active-policy");
+    savePolicy(policy, "/api/device-mgt/v1.0/policies/active-policy");
 };
 stepForwardFrom["policy-naming"] = function () {
     policy["policyName"] = $("#policy-name-input").val();
     policy["description"] = $("#policy-description-input").val();
     //All data is collected. Policy can now be updated.
-    savePolicy(policy, "/devicemgt_admin/policies/inactive-policy");
+    savePolicy(policy, "/api/device-mgt/v1.0/policies/inactive-policy");
 };
 
 var savePolicy = function (policy, serviceURL) {
@@ -2058,9 +2058,9 @@ $(document).ready(function () {
             data: function (params) {
                 var postData = {};
                 postData.actionMethod = "GET";
-                postData.actionUrl = "/devicemgt_admin/users";
+                postData.actionUrl = "/api/device-mgt/v1.0/users/search/usernames";
                 postData.actionPayload = JSON.stringify({
-                    q: params.term, // search term
+                    filter: params.term, // search term
                     page: params.page
                 });
 

@@ -21,8 +21,8 @@
  */
 
 var operations = '.wr-operations',
-    modalPopup = '.wr-modalpopup',
-    modalPopupContent = modalPopup + ' .modalpopup-content',
+    modalPopup = '.modal',
+    modalPopupContent = modalPopup + ' .modal-content',
     navHeight = $('#nav').height(),
     headerHeight = $('header').height(),
     offset = (headerHeight + navHeight),
@@ -51,9 +51,9 @@ function getSelectedDeviceIds() {
         var deviceId = device.data('deviceid');
         var deviceType = device.data('type');
         deviceIdentifierList.push({
-            "id": deviceId,
-            "type": deviceType
-        });
+                                      "id": deviceId,
+                                      "type": deviceType
+                                  });
     });
     if (deviceIdentifierList.length == 0) {
         var thisTable = $(".DTTT_selected").closest('.dataTables_wrapper').find('.dataTable').dataTable();
@@ -62,9 +62,9 @@ function getSelectedDeviceIds() {
                 var deviceId = $(thisTable.api().row(this).node()).data('deviceid');
                 var deviceType = $(thisTable.api().row(this).node()).data('devicetype');
                 deviceIdentifierList.push({
-                    "id": deviceId,
-                    "type": deviceType
-                });
+                                              "id": deviceId,
+                                              "type": deviceType
+                                          });
             }
         });
     }
@@ -208,14 +208,16 @@ function runOperation(operationName) {
 
     var payload, serviceEndPoint;
     if (list[platformTypeConstants.IOS]) {
-        payload = operationModule.generatePayload(platformTypeConstants.IOS, operationName, list[platformTypeConstants.IOS]);
+        payload =
+            operationModule.generatePayload(platformTypeConstants.IOS, operationName, list[platformTypeConstants.IOS]);
         serviceEndPoint = operationModule.getIOSServiceEndpoint(operationName);
     } else if (list[platformTypeConstants.ANDROID]) {
         payload = operationModule
             .generatePayload(platformTypeConstants.ANDROID, operationName, list[platformTypeConstants.ANDROID]);
         serviceEndPoint = operationModule.getAndroidServiceEndpoint(operationName);
     } else if (list[platformTypeConstants.WINDOWS]) {
-        payload = operationModule.generatePayload(platformTypeConstants.WINDOWS, operationName, list[platformTypeConstants.WINDOWS]);
+        payload = operationModule.generatePayload(platformTypeConstants.WINDOWS, operationName,
+                                                  list[platformTypeConstants.WINDOWS]);
         serviceEndPoint = operationModule.getWindowsServiceEndpoint(operationName);
     }
     if (operationName == "NOTIFICATION") {
