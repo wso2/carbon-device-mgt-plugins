@@ -133,6 +133,7 @@ function loadNewNotifications() {
                         if (responsePayload["notifications"]) {
                             if (responsePayload.count > 0) {
                                 viewModel["notifications"] = responsePayload["notifications"];
+                                viewModel.contextPath = context;
                                 $(messageSideBar).html(template(viewModel));
                             } else {
                                 $(messageSideBar).html(
