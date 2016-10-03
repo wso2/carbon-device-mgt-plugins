@@ -19,6 +19,6 @@
 function onRequest(context){
     var viewModel = {};
     var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
-    viewModel.hostName = devicemgtProps["httpsWebURL"];
+    viewModel.hostName = devicemgtProps["generalConfig"]["host"];
     return viewModel;
 }
