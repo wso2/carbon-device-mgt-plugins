@@ -21,7 +21,6 @@ package org.wso2.carbon.mdm.services.android.services;
 import io.swagger.annotations.*;
 import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.api.Permission;
-import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidApplication;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidDevice;
@@ -330,7 +329,7 @@ public interface DeviceManagementService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while dis-enrolling the device.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
+    @Permission(name = "Disenroll Device", permission = "/device-mgt/devices/disenroll/android")
     Response disEnrollDevice(
             @ApiParam(
                     name = "id",

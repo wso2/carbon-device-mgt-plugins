@@ -57,17 +57,6 @@
             <span id="work-profile-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
             <span id="work-profile-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
-        <!--COSU-->
-        <a href="javascript:void(0)" onclick="showAdvanceOperation('android-for-work-cosu', this)">
-            <span class="wr-hidden-operation-icon fw-stack">
-                <i class="fw fw-service fw-stack-2x"></i>
-            </span>
-            &nbsp;&nbsp;COSU Configuration
-            <span id="android-for-work-cosu-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
-            <span id="android-for-work-cosu-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
-            <span id="android-for-work-cosu-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
-        </a>
-        <!--/COSU-->
         <a href="javascript:void(0)" onclick="showAdvanceOperation('app-restriction', this)">
                 <span class="fw-stack fw-lg">
                     <i class="fw fw-application fw-stack-1x"></i>
@@ -106,14 +95,14 @@
             <span id="cosu-system-update-policy-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
             <span id="cosu-system-update-policy-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
-        <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-whitelist-applications', this)">
+        <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-whitelisted-applications', this)">
             <span class="wr-hidden-operations-icon fw-stack">
                 <i class="fw fw-register fw-stack-2x"></i>
             </span>
             Whitelist Apps (COSU)
-            <span id="cosu-whitelist-applications-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
-            <span id="cosu-whitelist-applications-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
-            <span id="cosu-whitelist-applications-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
+            <span id="cosu-whitelisted-applications-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="cosu-whitelisted-applications-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="cosu-whitelisted-applications-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
     </div>
 
@@ -1469,14 +1458,14 @@
         </div>
 
         <!-- cosu-whitelist-applications -->
-        <div class="wr-hidden-operation" data-operation="cosu-whitelist-applications">
-            <div class="panel panel-default operation-data" data-operation="cosu-whitelist-applications"
+        <div class="wr-hidden-operation" data-operation="cosu-whitelisted-applications">
+            <div class="panel panel-default operation-data" data-operation="cosu-whitelisted-applications"
                  data-operation-code="KIOSK_APPS">
-                <div id="cosu-whitelist-applications-heading" class="panel-heading" role="tab">
+                <div id="cosu-whitelisted-applications-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
                         Whitelist Applications (COSU)
-                        <label id="cosu-whitelist-applications-lbl" class="wr-input-control switch" data-toggle="collapse"
-                               data-target="#cosu-whitelist-applications-body">
+                        <label id="cosu-whitelisted-applications-lbl" class="wr-input-control switch" data-toggle="collapse"
+                               data-target="#cosu-whitelisted-applications-body">
                             <input type="checkbox"/>
                             <span class="helper"></span>
                             <span class="text"></span>
@@ -1491,10 +1480,10 @@
                     </h2>
                 </div>
 
-                <div id="cosu-whitelist-applications-body" class="panel-collapse panel-body collapse" role="tabpanel"
-                     aria-labelledby="cosu-whitelist-applications-body">
+                <div id="cosu-whitelisted-applications-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="cosu-whitelisted-applications-body">
 
-                    <div id="cosu-whitelist-applications-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                    <div id="cosu-whitelisted-applications-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
 
