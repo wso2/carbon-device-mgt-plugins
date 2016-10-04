@@ -18,7 +18,7 @@
 
 $(document).ready(function () {
     invokerUtil.get(
-        "/devicemgt_admin/configuration",
+        "/api/device-mgt/raspberrypi/v1.0/configuration",
         function (data) {
             data = JSON.parse(data);
             if (data && data.configuration) {
@@ -79,10 +79,10 @@ var addConfiguration = function () {
     configList.push(httpConfig);
     configList.push(httpsConfig);
     configList.push(mqttConfig);
-    addConfigFormData.type = "raspberrypi"
+    addConfigFormData.type = "raspberrypi";
     addConfigFormData.configuration = configList;
 
-    var addConfigAPI = "/devicemgt_admin/configuration";
+    var addConfigAPI = "/api/device-mgt/raspberrypi/v1.0/configuration";
     invokerUtil.post(
         addConfigAPI,
         addConfigFormData,

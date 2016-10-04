@@ -16,8 +16,8 @@
  * under the License.
  */
 
-function onRequest() {
-    // var log = new Log("mdm.unit.device.operation-bar");
+function onRequest(context) {
+    var log = new Log("mdm.unit.device.operation-bar");
     var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
     var viewModel = {};
     var permissions = {};
@@ -93,10 +93,14 @@ function onRequest() {
     if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/windows/ring")) {
         permissions["windows"].push("DEVICE_RING");
     }
-    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/windows/lockreset")) {
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/windows/lock-reset")) {
         permissions["windows"].push("LOCK_RESET");
     }
 
     viewModel["permissions"] = stringify(permissions);
+
+    viewModel["deviceType"] = context.unit.params.deviceType;
+    viewModel["ownership"] = context.unit.params.ownership;
+
     return viewModel;
 }

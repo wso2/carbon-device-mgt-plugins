@@ -26,15 +26,15 @@ function onRequest(context) {
     if (devices) {
         return {
             "devices": stringify(devices),
-            "backendApiUri": devicemgtProps["httpsURL"] + "/virtual_firealarm/device/stats/"
+            "backendApiUri":  "/virtual_firealarm/device/stats/"
         };
     } else if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
         var device = deviceModule.viewDevice(deviceType, deviceId);
         if (device && device.status != "error") {
             return {
-                "device": device,
-                "backendApiUri": devicemgtProps["httpsURL"] + "/virtual_firealarm/device/stats/" + deviceId
+                "device": device.content,
+                "backendApiUri":  "/virtual_firealarm/device/stats/" + deviceId
             };
         } else {
             response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");

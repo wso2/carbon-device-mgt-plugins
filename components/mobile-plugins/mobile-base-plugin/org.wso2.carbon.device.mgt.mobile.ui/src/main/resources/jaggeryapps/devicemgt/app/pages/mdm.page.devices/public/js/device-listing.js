@@ -95,8 +95,6 @@ function loadDevices() {
                 "data": []
             };
 
-            return JSON.stringify(json);
-
         } else if (data["count"] > 0) {
             $(noDeviceView).remove();
             $("#enroll-btn").removeClass('hidden');
@@ -114,7 +112,7 @@ function loadDevices() {
                         user: data.devices[index].enrolmentInfo.owner,
                         status: data.devices[index].enrolmentInfo.status,
                         ownership: data.devices[index].enrolmentInfo.ownership,
-                        deviceType: data.devices[index].type,
+                        type: data.devices[index].type,
                         deviceIdentifier: data.devices[index].deviceIdentifier,
                         name : data.devices[index].name
                     }
@@ -127,14 +125,15 @@ function loadDevices() {
                 "data": objects
             };
 
-            return JSON.stringify(json);
         }
+
+        return JSON.stringify(json);
     };
 
     // possible params - nRow, aData, dataIndex
     var fnCreatedRow = function (nRow, aData) {
         $(nRow).attr('data-type', 'selectable');
-        $(nRow).attr('data-devicetype', aData["deviceType"]);
+        $(nRow).attr('data-devicetype', aData["type"]);
         $(nRow).attr('data-deviceid', aData["deviceIdentifier"]);
     };
 
@@ -143,14 +142,15 @@ function loadDevices() {
             class : 'remove-padding icon-only content-fill viewEnabledIcon',
             data : null,
             render: function (data, type, row) {
-                var deviceType = row.deviceType;
+                var deviceType = row.type;
                 var deviceIdentifier = row.deviceIdentifier;
                 var url = "#";
-                if (status != 'REMOVED') {
+                if (row.status != 'REMOVED') {
                     url = "device/" + deviceType + "?id=" + deviceIdentifier;
                 }
                 return '<div onclick="javascript:InitiateViewOption(\'' + url + '\')" class="thumbnail icon">' +
-                    '<i class="square-element text fw fw-mobile"></i></div>'
+                        '<i class="square-element text fw fw-mobile"></i>' +
+                    '</div>'
             }
         },
         {
@@ -170,7 +170,7 @@ function loadDevices() {
             class: 'fade-edge remove-padding-top',
             data: 'user',
             render: function (user) {
-                return '<div><label class="label-bold">Owner&nbsp;:&nbsp;</label>' + user + '</div>';
+                return '<div><label class="label-bold">Owner&nbsp;:&nbsp;&nbsp;</label>' + user + '</div>';
             }
         },
         {
@@ -180,33 +180,33 @@ function loadDevices() {
                 var html;
                 switch (status) {
                     case 'ACTIVE' :
-                        html = '<span><i class="fw fw-ok icon-success"></i> Active</span>';
+                        html = '<span><i class="fw fw-ok icon-success"></i>&nbsp;&nbsp;Active</span>';
+                        break;
+                    case 'UNREACHABLE' :
+                        html = '<span><i class="fw fw-question-mark icon-warning"></i>&nbsp;&nbsp;Unreachable</span>';
                         break;
                     case 'INACTIVE' :
-                        html = '<span><i class="fw fw-warning icon-warning"></i> Inactive</span>';
-                        break;
-                    case 'BLOCKED' :
-                        html = '<span><i class="fw fw-remove icon-danger"></i> Blocked</span>';
+                        html = '<span><i class="fw fw-warning icon-error"></i>&nbsp;&nbsp;Inactive</span>';
                         break;
                     case 'REMOVED' :
-                        html = '<span><i class="fw fw-delete icon-danger"></i> Removed</span>';
+                        html = '<span><i class="fw fw-delete icon-danger"></i>&nbsp;&nbsp;Removed</span>';
                         break;
                 }
-                return '<div><label class="label-bold">Status&nbsp;:&nbsp;</label>' + html + '</div>';
+                return '<div><label class="label-bold">Status&nbsp;:&nbsp;&nbsp;</label>' + html + '</div>';
             }
         },
         {
             className: 'fade-edge remove-padding-top',
-            data: 'deviceType',
-            render: function (deviceType) {
-                return '<div><label class="label-bold">Type&nbsp;:&nbsp;</label>' + deviceType + '</div>';
+            data: 'type',
+            render: function (type) {
+                return '<div><label class="label-bold">Type&nbsp;:&nbsp;&nbsp;</label>' + type + '</div>';
             }
         },
         {
             className: 'fade-edge remove-padding-top',
             data: 'ownership',
             render: function (ownership) {
-                return '<div><label class="label-bold">Ownership&nbsp;:&nbsp;</label>' + ownership + '</div>';
+                return '<div><label class="label-bold">Ownership&nbsp;:&nbsp;&nbsp;</label>' + ownership + '</div>';
             }
         }
     ];
@@ -220,7 +220,6 @@ function loadDevices() {
         function () {
             $(".icon .text").res_text(0.2);
             $('#device-grid').removeClass('hidden');
-            $("#loading-content").remove();
         }, {
             "placeholder" : "Search By Device Name",
             "searchKey" : "name"
@@ -245,38 +244,11 @@ function loadDevices() {
 //    });
 //}
 
-function initPage() {
-//    var currentUser = $("#device-listing").data("currentUser");
-//    var serviceURL = "/api/device-mgt/v1.0/devices";
-//
-//    invokerUtil.get(
-//        serviceURL,
-//        function (data) {
-//            if (data) {
-//                data = JSON.parse(data);
-//                if (data["count"] > 0) {
-//                    $(".bulk-action-row").removeClass('hidden');
-//                    $("#device-table").removeClass('hidden');
-//                    loadDevices();
-//                } else {
-//                    $("#enroll-btn").addClass('hidden');
-//                    $("#advanced-search-btn").addClass('hidden');
-//                    $("#device-table").addClass('hidden');
-//                    $("#no-device-view").removeClass('hidden');
-//                }
-//            }
-//        }, function () {
-//            initPage();
-//        }
-//    );
-    loadDevices();
-}
-
 /*
  * DOM ready functions.
  */
 $(document).ready(function () {
-    initPage();
+    loadDevices();
 
     /* Adding selected class for selected devices */
     $(deviceCheckbox).each(function () {

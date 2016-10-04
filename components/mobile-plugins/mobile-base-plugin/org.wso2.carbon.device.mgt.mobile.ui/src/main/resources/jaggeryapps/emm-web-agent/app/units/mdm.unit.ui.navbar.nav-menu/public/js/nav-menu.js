@@ -16,9 +16,10 @@
  * under the License.
  */
 
-var modalPopup = ".wr-modalpopup",
-    modalPopupContainer = modalPopup + " .modalpopup-container",
-    modalPopupContent = modalPopup + " .modalpopup-content";
+var modalPopup = ".modal";
+var modalPopupContainer = modalPopup + " .modal-content";
+var modalPopupContent = modalPopup + " .modal-content";
+var body = "body";
 
 var emmAdminBasePath = "/api/device-mgt/v1.0";
 
@@ -37,7 +38,7 @@ function setPopupMaxHeight() {
  * show popup function.
  */
 function showPopup() {
-    $(modalPopup).show();
+    $(modalPopup).modal('show');
     setPopupMaxHeight();
 }
 
@@ -47,7 +48,7 @@ function showPopup() {
 function hidePopup() {
     $(modalPopupContent).html("");
     $(modalPopupContent).removeClass("operation-data");
-    $(modalPopup).hide();
+    $(modalPopup).modal('hide');
 }
 
 var updateNotificationCount = function (data, textStatus, jqXHR) {

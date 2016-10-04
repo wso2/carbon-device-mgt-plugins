@@ -79,7 +79,7 @@
 {{#zone "navbarCollapsableRightItems"}}
     <ul id="notification-bubble-wrapper" class="nav navbar-nav navbar-right">
         <li class="visible-inline-block">
-            <!--<a href="{{appContext}}notification-listing" title="Failures of operations on the device side will be listed here">-->
+            <!--<a href="{{@app.context}}notification-listing" title="Failures of operations on the device side will be listed here">-->
             <a data-toggle="sidebar" data-target="#right-sidebar" data-container=".page-content"
                 aria-expanded="false" rel="notifications-sidebar">
                 <span id="notification-bubble" class="badge notifications hidden"></span>
@@ -100,7 +100,7 @@
         <ul class="sidebar-messages"></ul>
         <br>
         <div class="text-center">
-            <a href="{{appContext}}notification-listing" class="btn-operations btn-default">
+            <a href="{{@app.context}}/notification-listing" class="btn-operations btn-default">
                 <span class="fw-stack">
                     <i class="fw fw-ring fw-stroke fw-stack-2x"></i>
                     <i class="fw fw-notification fw-stack-1x"></i>
@@ -112,7 +112,7 @@
 {{/zone}}
 {{#zone "bottomJs"}}
     <!--suppress HtmlUnknownTarget -->
-    <script id="notifications" data-current-user="{{currentUser.username}}"
+    <script id="notifications" data-current-user="{{@user.username}}"
             data-image-resource="{{@unit.publicUri}}/images/" src="{{@unit.publicUri}}/templates/notifications.hbs"
             type="text/x-handlebars-template"></script>
     {{js "js/nav-menu.js"}}

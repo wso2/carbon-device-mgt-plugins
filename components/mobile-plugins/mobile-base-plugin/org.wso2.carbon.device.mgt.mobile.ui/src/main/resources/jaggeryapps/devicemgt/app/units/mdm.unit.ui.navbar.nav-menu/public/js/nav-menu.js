@@ -85,11 +85,7 @@ var updateNotificationCountOnSuccess = function (data, textStatus, jqXHR) {
     if (jqXHR.status == 200 && data) {
         var responsePayload = JSON.parse(data);
         var newNotificationsCount = responsePayload["count"];
-        if (newNotificationsCount > 5) {
-            $(notificationBubble).html("5 <sup>+</sup> &nbsp;NEW");
-            $(notificationBubble).removeClass("hidden");
-            $(notificationSpacer).removeClass("hidden");
-        } else if (newNotificationsCount <= 5 && newNotificationsCount > 0) {
+        if (newNotificationsCount > 0) {
             $(notificationBubble).html(newNotificationsCount + " NEW");
             $(notificationBubble).removeClass("hidden");
             $(notificationSpacer).removeClass("hidden");
@@ -111,7 +107,7 @@ function loadNewNotificationsOnSideViewPanel() {
     if ($("#right-sidebar").attr("is-authorized") == "false") {
         $("#notification-bubble-wrapper").remove();
     } else {
-        var serviceURL = emmAdminBasePath + "/notifications?offset=0&limit=5&status=NEW";
+        var serviceURL = emmAdminBasePath + "/notifications?offset=0&limit=6&status=NEW";
         invokerUtil.get(serviceURL, updateNotificationCountOnSuccess, updateNotificationCountOnError);
         loadNewNotifications();
     }
@@ -126,7 +122,7 @@ function loadNewNotifications() {
         var currentUser = notifications.data("currentUser");
 
         $.template("notification-listing", notifications.attr("src"), function (template) {
-            var serviceURL = emmAdminBasePath + "/notifications?offset=0&limit=5&status=NEW";
+            var serviceURL = emmAdminBasePath + "/notifications?offset=0&limit=6&status=NEW";
             invokerUtil.get(
                 serviceURL,
                 // on success
@@ -137,6 +133,7 @@ function loadNewNotifications() {
                         if (responsePayload["notifications"]) {
                             if (responsePayload.count > 0) {
                                 viewModel["notifications"] = responsePayload["notifications"];
+                                viewModel.contextPath = context;
                                 $(messageSideBar).html(template(viewModel));
                             } else {
                                 $(messageSideBar).html(

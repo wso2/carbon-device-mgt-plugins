@@ -73,14 +73,14 @@
         <span id="cosu-system-update-policy-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
         <span id="cosu-system-update-policy-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
     </a>
-    <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-whitelist-applications', this)">
+    <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-whitelisted-applications', this)">
             <span class="wr-hidden-operations-icon fw-stack">
                 <i class="fw fw-register fw-stack-2x"></i>
             </span>
         Whitelist Apps (COSU)
-        <span id="cosu-whitelist-applications-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
-        <span id="cosu-whitelist-applications-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
-        <span id="cosu-whitelist-applications-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
+        <span id="cosu-whitelisted-applications-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
+        <span id="cosu-whitelisted-applications-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
+        <span id="cosu-whitelisted-applications-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
     </a>
 </div>
 
@@ -230,7 +230,7 @@
 <div id="camera-heading" class="panel-heading" role="tab">
     <h2 class="sub-title panel-title">
         Restrictions
-        <label class="wr-input-control switch" data-toggle="collapse" data-target="#camera-body">
+        <label class="wr-input-control switch hidden" data-toggle="collapse" data-target="#camera-body">
             <input type="checkbox"/>
             <span class="helper"></span>
             <span class="text"></span>
@@ -253,7 +253,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="camera-enabled" type="checkbox" class="operationDataKeys" data-key="cameraEnabled"
-               checked="checked"/>
+               checked="checked" disabled/>
                             <span class="helper"
                                   title="Having this checked would enable Usage of phone camera in the device.">
                                 &nbsp;&nbsp;&nbsp;Allow use of camera
@@ -268,7 +268,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="volume-adjust-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowAdjustVolumeEnabled"/>
+               data-key="disallowAdjustVolumeEnabled" disabled/>
                             <span class="helper" title="Having this checked would disallow volume adjust.">
                                 &nbsp;&nbsp;&nbsp;Disallow volume adjust
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -280,7 +280,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-configuring-bluetooth-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowConfigBluetooth"/>
+               data-key="disallowConfigBluetooth" disabled/>
                             <span class="helper" title="Having this checked would disallow configuring bluetooth.">
                                 &nbsp;&nbsp;&nbsp;Disallow configuring bluetooth.
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -293,7 +293,7 @@
     <label class="wr-input-control checkbox">
         <input id="disallow-configuring-cell-broadcast-enabled" type="checkbox"
                class="operationDataKeys"
-               data-key="disallowConfigCellBroadcasts"/>
+               data-key="disallowConfigCellBroadcasts" disabled/>
                             <span class="helper" title="Having this checked would disallow configuring cell broadcast.">
                                 &nbsp;&nbsp;&nbsp;Disallow cell broadcast
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -306,7 +306,7 @@
     <label class="wr-input-control checkbox">
         <input id="disallow-configuring-credentials-enabled" type="checkbox"
                class="operationDataKeys"
-               data-key="disallowConfigCredentials"/>
+               data-key="disallowConfigCredentials" disabled/>
                             <span class="helper" title="Having this checked would disallow configuring credentials.">
                                 &nbsp;&nbsp;&nbsp;Disallow configuring credentials
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -319,7 +319,7 @@
     <label class="wr-input-control checkbox">
         <input id="disallow-configuring-mobile-networkst-enabled" type="checkbox"
                class="operationDataKeys"
-               data-key="disallowConfigMobileNetworks"/>
+               data-key="disallowConfigMobileNetworks" disabled/>
                             <span class="helper"
                                   title="Having this checked would disallow configuring mobile networks.">
                                 &nbsp;&nbsp;&nbsp;Disallow configuring mobile networks
@@ -333,7 +333,7 @@
     <label class="wr-input-control checkbox">
         <input id="disallow-configuring-tethering-enabled" type="checkbox"
                class="operationDataKeys"
-               data-key="disallowConfigTethering"/>
+               data-key="disallowConfigTethering" disabled/>
                             <span class="helper" title="Having this checked would disallow configuring tethering.">
                                 &nbsp;&nbsp;&nbsp;Disallow configuring tethering
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -345,7 +345,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-configuring-VPN-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowConfigVpn"/>
+               data-key="disallowConfigVpn" disabled/>
                             <span class="helper" title="Having this checked would disallow configuring VPN.">
                                 &nbsp;&nbsp;&nbsp;Disallow configuring VPN
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -357,7 +357,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-configuring-Wifi-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowConfigWifi"/>
+               data-key="disallowConfigWifi" disabled/>
                             <span class="helper" title="Having this checked would disallow configuring Wifi.">
                                 &nbsp;&nbsp;&nbsp;Disallow configuring Wifi
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -370,7 +370,7 @@
     <label class="wr-input-control checkbox">
         <input id="disallow-configuring-app-control-enabled" type="checkbox"
                class="operationDataKeys"
-               data-key="disallowAppControl"/>
+               data-key="disallowAppControl" disabled/>
                             <span class="helper" title="Having this checked would disallow configuring app control.">
                                 &nbsp;&nbsp;&nbsp;Disallow configuring app control
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -382,7 +382,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-create-window-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowCreateWindows"/>
+               data-key="disallowCreateWindows" disabled/>
                             <span class="helper" title="Having this checked would disallow create window.">
                                 &nbsp;&nbsp;&nbsp;Disallow create window
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -395,7 +395,7 @@
     <label class="wr-input-control checkbox">
         <input id="disallow-cross-profile-copy-paste-enabled" type="checkbox"
                class="operationDataKeys"
-               data-key="disallowCrossProfileCopyPaste"/>
+               data-key="disallowCrossProfileCopyPaste" disabled/>
                             <span class="helper" title="Having this checked would disallow cross profile copy paste.">
                                 &nbsp;&nbsp;&nbsp;Disallow cross profile copy paste
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -407,7 +407,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-debugging-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowDebugging"/>
+               data-key="disallowDebugging" disabled/>
                             <span class="helper" title="Having this checked would disallow debugging.">
                                 &nbsp;&nbsp;&nbsp;Disallow debuging
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -419,7 +419,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-factory-reset-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowFactoryReset"/>
+               data-key="disallowFactoryReset" disabled/>
                             <span class="helper" title="Having this checked would disallow factory reset.">
                                 &nbsp;&nbsp;&nbsp;Disallow factory reset
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -431,7 +431,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-add-user-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowAddUser"/>
+               data-key="disallowAddUser" disabled/>
                             <span class="helper" title="Having this checked would disallow add user.">
                                 &nbsp;&nbsp;&nbsp;Disallow add user
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -443,7 +443,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-install-apps-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowInstallApps"/>
+               data-key="disallowInstallApps" disabled/>
                             <span class="helper" title="Having this checked would disallow install apps.">
                                 &nbsp;&nbsp;&nbsp;Disallow install apps
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -456,7 +456,7 @@
     <label class="wr-input-control checkbox">
         <input id="disallow-installing-from-unknown-enabled" type="checkbox"
                class="operationDataKeys"
-               data-key="disallowInstallUnknownSources"/>
+               data-key="disallowInstallUnknownSources" disabled/>
                             <span class="helper" title="Having this checked would disallow installing from unknown
                             sources.">
                                 &nbsp;&nbsp;&nbsp;Disallow install from unknown sources
@@ -469,7 +469,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-modify-accounts-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowModifyAccounts"/>
+               data-key="disallowModifyAccounts" disabled/>
                             <span class="helper" title="Having this checked would disallow modify accounts.">
                                 &nbsp;&nbsp;&nbsp;Disallow modify accounts
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -481,7 +481,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-mount-physical-media-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowMountPhysicalMedia"/>
+               data-key="disallowMountPhysicalMedia" disabled/>
                             <span class="helper" title="Having this checked would disallow mount physical media.">
                                 &nbsp;&nbsp;&nbsp;Disallow mount physical media
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -493,7 +493,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-network-reset-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowNetworkReset"/>
+               data-key="disallowNetworkReset" disabled/>
                             <span class="helper" title="Having this checked would disallow network reset.">
                                 &nbsp;&nbsp;&nbsp;Disallow network reset
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -505,7 +505,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-outgoing-beam-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowOutgoingBeam"/>
+               data-key="disallowOutgoingBeam" disabled/>
                             <span class="helper" title="Having this checked would disallow outgoing beam.">
                                 &nbsp;&nbsp;&nbsp;Disallow outgoing beam
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -517,7 +517,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-outgoing-calls-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowOutgoingCalls"/>
+               data-key="disallowOutgoingCalls" disabled/>
                             <span class="helper" title="Having this checked would disallow outgoing calls.">
                                 &nbsp;&nbsp;&nbsp;Disallow outgoing calls
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -529,7 +529,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-remove-user-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowRemoveUser"/>
+               data-key="disallowRemoveUser" disabled/>
                             <span class="helper" title="Having this checked would disallow remove user.">
                                 &nbsp;&nbsp;&nbsp;Disallow remove user
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -541,7 +541,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-safe-boot-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowSafeBoot"/>
+               data-key="disallowSafeBoot" disabled/>
                             <span class="helper" title="Having this checked would disallow safe boot.">
                                 &nbsp;&nbsp;&nbsp;Disallow safe boot
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -553,7 +553,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-location-sharing-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowLocationSharing"/>
+               data-key="disallowLocationSharing" disabled/>
                             <span class="helper" title="Having this checked would disallow location sharing.">
                                 &nbsp;&nbsp;&nbsp;Disallow location sharing
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -565,7 +565,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-SMS-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowSMS"/>
+               data-key="disallowSMS" disabled/>
                             <span class="helper" title="Having this checked would disallow SMS.">
                                 &nbsp;&nbsp;&nbsp;Disallow SMS
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -577,7 +577,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-uninstall-apps-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowUninstallApps"/>
+               data-key="disallowUninstallApps" disabled/>
                             <span class="helper" title="Having this checked would disallow uninstall apps.">
                                 &nbsp;&nbsp;&nbsp;Disallow uninstall apps
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -589,7 +589,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-unmute-microphone-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowUnmuteMicrophone"/>
+               data-key="disallowUnmuteMicrophone" disabled/>
                             <span class="helper" title="Having this checked would disallow unmute microphone.">
                                 &nbsp;&nbsp;&nbsp;Disallow unmute microphone
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -601,7 +601,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="disallow-USB-transfer-enabled" type="checkbox" class="operationDataKeys"
-               data-key="disallowUSBFileTransfer"/>
+               data-key="disallowUSBFileTransfer" disabled/>
                             <span class="helper" title="Having this checked would disallow USB file transfer.">
                                 &nbsp;&nbsp;&nbsp;Disallow USB file transfer
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -614,7 +614,7 @@
     <label class="wr-input-control checkbox">
         <input id="disallow-parent-profile-app-linking-enabled" type="checkbox"
                class="operationDataKeys"
-               data-key="disallowParentProfileAppLinking"/>
+               data-key="disallowParentProfileAppLinking" disabled/>
                             <span class="helper" title="Having this checked would disallow parent profile app linking.">
                                 &nbsp;&nbsp;&nbsp;Disallow parent profile app linking
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -626,7 +626,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="ensure-verifying-apps-enabled" type="checkbox" class="operationDataKeys"
-               data-key="ensureVerifyApps"/>
+               data-key="ensureVerifyApps" disabled/>
                             <span class="helper" title="Having this checked would ensure verifying apps .">
                                 &nbsp;&nbsp;&nbsp;Ensure verifying apps
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -638,7 +638,7 @@
 <div class="wr-input-control">
     <label class="wr-input-control checkbox">
         <input id="enable-auto-timing-enabled" type="checkbox" class="operationDataKeys"
-               data-key="enableAutoTime"/>
+               data-key="enableAutoTime" disabled/>
                             <span class="helper" title="Having this checked would enable auto timing .">
                                 &nbsp;&nbsp;&nbsp;Enable auto timing
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -647,36 +647,36 @@
 </div>
 <br>
 
-                    <div class="wr-input-control">
-                        <label class="wr-input-control checkbox">
-                            <input id="disable-screen-capture-enabled" type="checkbox" class="operationDataKeys"
-                                   data-key="disableScreenCapture"/>
+<div class="wr-input-control">
+    <label class="wr-input-control checkbox">
+        <input id="disable-screen-capture-enabled" type="checkbox" class="operationDataKeys"
+               data-key="disableScreenCapture disabled"/>
                             <span class="helper" title="Having this checked would disable screen capture .">
                                 &nbsp;&nbsp;&nbsp;Disable screen capture
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                        </label>
-                    </div>
-                    <br>
-                    <br><b>
-                    Bellow restrictions will be applied on devices with Android version 6.0 Marshmallow onwards only.
-                </b>
-                    <br><br>
-                    <div class="wr-input-control">
-                        <label class="wr-input-control checkbox">
-                            <input id="disable-status-bar-enabled" type="checkbox" class="operationDataKeys"
-                                   data-key="disableStatusBar"/>
+    </label>
+</div>
+<br>
+<br><b>
+    Bellow restrictions will be applied on devices with Android version 6.0 Marshmallow onwards only.
+</b>
+<br><br>
+<div class="wr-input-control">
+    <label class="wr-input-control checkbox">
+        <input id="disable-status-bar-enabled" type="checkbox" class="operationDataKeys"
+               data-key="disableStatusBar" disabled/>
                             <span class="helper" title="Having this checked would disable status bar .">
                                 &nbsp;&nbsp;&nbsp;Disable status bar
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                        </label>
-                    </div>
-                    <br>
-                </div>
-            </div>
-        </div>
-        <!-- /camera -->
+    </label>
+</div>
+<br>
+</div>
+</div>
+</div>
+<!-- /camera -->
 
 <!-- encrypt-storage -->
 <div class="wr-hidden-operation" data-operation="encrypt-storage">
@@ -1156,8 +1156,8 @@
         <div id="work-profile-policy-heading" class="panel-heading" role="tab">
             <h2 class="sub-title panel-title">
                 Work-Profile Configurations
-                <label id="work-profile-policy-lbl" class="wr-input-control switch" data-toggle="collapse" data-target="#work-profile-policy-body">
-                    <input type="checkbox"/>
+                <label id="work-profile-policy-lbl" class="wr-input-control switch hidden" data-toggle="collapse" data-target="#work-profile-policy-body">
+                    <input type="checkbox" />
                     <span class="helper"></span>
                     <span class="text"></span>
                 </label>
@@ -1189,7 +1189,7 @@
                             </span>
                     <br>
                 </label>
-                <input id="work-profile-policy-profile-name" type="text" class="form-control operationDataKeys" data-key="workProfilePolicyProfileName" maxlength="20">
+                <input id="work-profile-policy-profile-name" type="text" class="form-control operationDataKeys" data-key="workProfilePolicyProfileName" maxlength="20" disabled>
             </div>
             <div class="wr-input-control">
                 <label class="wr-input-label" for="work-profile-policy-enable-system-apps">
@@ -1200,7 +1200,7 @@
                     <br>
                     ( Should be exact package names seperated by commas. Ex: com.google.android.apps.maps, com.google.android.calculator )
                 </label>
-                <textarea id="workProfilePolicyEnableSystemApps" type ="text" class="form-control operationDataKeys" rows="4" data-key="workProfilePolicyEnableSystemApps"></textarea>
+                <textarea id="workProfilePolicyEnableSystemApps" type ="text" class="form-control operationDataKeys" rows="4" data-key="workProfilePolicyEnableSystemApps" disabled></textarea>
             </div>
             <div class="wr-input-control">
                 <label class="wr-input-label" for="work-profile-policy-hide-system-apps">
@@ -1211,7 +1211,7 @@
                     <br>
                     ( Should be exact package names seperated by commas. Ex: com.google.android.apps.maps, com.google.android.calculator )
                 </label>
-                <textarea id="work-profile-policy-hide-system-apps" class="form-control operationDataKeys" rows="4" data-key="workProfilePolicyHideSystemApps" placeholder=""></textarea>
+                <textarea id="work-profile-policy-hide-system-apps" class="form-control operationDataKeys" rows="4" data-key="workProfilePolicyHideSystemApps" placeholder="" disabled></textarea>
             </div>
             <div class="wr-input-control">
                 <label class="wr-input-label" for="work-profile-policy-unhide-system-apps">
@@ -1222,7 +1222,7 @@
                     <br>
                     ( Should be exact package names seperated by commas. Ex: com.google.android.apps.maps, com.google.android.calculator )
                 </label>
-                <textarea id="work-profile-policy-unhide-system-apps" class="form-control operationDataKeys" rows="4" data-key="workProfilePolicyUnhideSystemApps" placeholder=""></textarea>
+                <textarea id="work-profile-policy-unhide-system-apps" class="form-control operationDataKeys" rows="4" data-key="workProfilePolicyUnhideSystemApps" placeholder="" disabled></textarea>
             </div>
             <div class="wr-input-control">
                 <label class="wr-input-label" for="passcode-policy-max-passcode-age-in-days">
@@ -1233,7 +1233,7 @@
                     <br>
                     ( Should be exact package names seperated by commas. Ex: com.google.android.apps.maps, com.google.android.calculator )
                 </label>
-                <textarea id="work-profile-policy-install-playstore-apps" class="form-control operationDataKeys" rows="4" data-key="workProfilePolicyEnablePlaystoreApps" placeholder=""></textarea>
+                <textarea id="work-profile-policy-install-playstore-apps" class="form-control operationDataKeys" rows="4" data-key="workProfilePolicyEnablePlaystoreApps" placeholder="" disabled></textarea>
             </div>
         </div>
     </div>
@@ -1254,7 +1254,7 @@
                     </label>
                     <hr>
                     <div class="panel-title-description">
-                        This configuration can be used to set a passcode policy to an Android Device.
+                        This configuration can be used to set system update policy to an Android Device in COSU.
                         Once this configuration profile is installed on a device, corresponding users will not be
                         able
                         to modify these settings on their devices.
@@ -1322,7 +1322,7 @@
                         </label>
                         <select id="cosu-system-update-policy-window-start-time"
                                 class="form-control operationDataKeys"
-                                data-key="cosuSystemUpdatePolicyWindowStartTime" data-default="0">
+                                data-key="cosuSystemUpdatePolicyWindowStartTime" data-default="0" disabled>
                             <option value="1440" selected="selected">12 AM</option>
                             <option value="60">1 AM</option>
                             <option value="120">2 AM</option>
@@ -1358,7 +1358,7 @@
                         </label>
                         <select id="cosu-system-update-policy-window-end-time"
                                 class="form-control operationDataKeys"
-                                data-key="cosuSystemUpdatePolicyWindowEndTime" data-default="0">
+                                data-key="cosuSystemUpdatePolicyWindowEndTime" data-default="0" disabled>
                             <option value="1440" selected="selected">12 AM</option>
                             <option value="60">1 AM</option>
                             <option value="120">2 AM</option>
@@ -1392,21 +1392,21 @@
     </div>
 
 <!-- cosu-whitelist-applications -->
-    <div class="wr-hidden-operation" data-operation="cosu-whitelist-applications">
-        <div class="panel panel-default operation-data" data-operation="cosu-whitelist-applications"
+    <div class="wr-hidden-operation" data-operation="cosu-whitelisted-applications">
+        <div class="panel panel-default operation-data" data-operation="cosu-whitelisted-applications"
              data-operation-code="KIOSK_APPS">
-            <div id="cosu-whitelist-applications-heading" class="panel-heading" role="tab">
+            <div id="cosu-whitelisted-applications-heading" class="panel-heading" role="tab">
                 <h2 class="sub-title panel-title">
                     Whitelist Applications (COSU)
-                    <label id="cosu-whitelist-applications-lbl" class="wr-input-control switch hidden" data-toggle="collapse"
-                           data-target="#cosu-whitelist-applications-body">
+                    <label id="cosu-whitelisted-applications-lbl" class="wr-input-control switch hidden" data-toggle="collapse"
+                           data-target="#cosu-whitelisted-applications-body">
                         <input type="checkbox"/>
                         <span class="helper"></span>
                         <span class="text"></span>
                     </label>
                     <hr>
                     <div class="panel-title-description">
-                        This configuration can be used to set a passcode policy to an Android Device.
+                        This configuration can be used to whitelist applications in lock task mode of an Android Device in COSU.
                         Once this configuration profile is installed on a device, corresponding users will not be
                         able
                         to modify these settings on their devices.
@@ -1414,10 +1414,10 @@
                 </h2>
             </div>
 
-            <div id="cosu-whitelist-applications-body" class="panel-collapse panel-body collapse" role="tabpanel"
-                 aria-labelledby="cosu-whitelist-applications-body">
+            <div id="cosu-whitelisted-applications-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                 aria-labelledby="cosu-whitelisted-applications-body">
 
-                <div id="cosu-whitelist-applications-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                <div id="cosu-whitelisted-applications-feature-error-msg" class="alert alert-danger hidden" role="alert">
                     <i class="icon fw fw-error"></i><span></span>
                 </div>
 
@@ -1472,7 +1472,7 @@
                                            maxlength="100" data-default="" placeholder="[ Package Name ]" disabled/>
                                 </td>
                                 <td>
-                                    <span class="list-group-item-actions">
+                                    <span class="list-group-item-actions hidden">
                                         <a href="#cosu-whitelisted-applications-grid" class="grid-input-remove"
                                            data-click-event="remove-form">
                                             <span class="fw-stack helper" title="Remove Entry">

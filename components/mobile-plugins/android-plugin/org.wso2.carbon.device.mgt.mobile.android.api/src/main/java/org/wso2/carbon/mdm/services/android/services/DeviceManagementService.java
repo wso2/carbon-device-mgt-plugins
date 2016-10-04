@@ -204,7 +204,7 @@ public interface DeviceManagementService {
             @ApiResponse(
                     code = 500,
                     message = "Internal Server Error. \n " +
-                            "Server error occurred while adding a new policy.")
+                            "Server error occurred while adding a new device.")
     })
     @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response enrollDevice(@ApiParam(name = "device", value = "Device Information to be enroll")

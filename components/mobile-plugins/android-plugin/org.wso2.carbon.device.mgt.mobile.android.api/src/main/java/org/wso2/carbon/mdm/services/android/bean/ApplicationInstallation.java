@@ -45,6 +45,9 @@ public class ApplicationInstallation extends AndroidOperation implements Seriali
 	@ApiModelProperty(name = "url", value = "Application URL", required = true)
 	private String url;
 
+    @ApiModelProperty(name = "schedule", value = "Schedule of the App installation.")
+    private String schedule;
+
 	public String getAppIdentifier() {
 		return appIdentifier;
 	}
@@ -68,4 +71,14 @@ public class ApplicationInstallation extends AndroidOperation implements Seriali
 	public void setUrl(String url) {
 		this.url = url;
 	}
+
+    @SuppressWarnings("unused")
+    public String getSchedule() {
+        return schedule;
+    }
+
+    @SuppressWarnings("unused")
+    public void setSchedule(String schedule) {
+        this.schedule = schedule;
+    }
 }

@@ -16,9 +16,9 @@
  * under the License.
  */
 
-var modalPopup = ".wr-modalpopup";
-var modalPopupContainer = modalPopup + " .modalpopup-container";
-var modalPopupContent = modalPopup + " .modalpopup-content";
+var modalPopup = ".modal";
+var modalPopupContainer = modalPopup + " .modal-content";
+var modalPopupContent = modalPopup + " .modal-content";
 var body = "body";
 
 /*
@@ -33,7 +33,7 @@ function setPopupMaxHeight() {
  * show popup function.
  */
 function showPopup() {
-    $(modalPopup).show();
+    $(modalPopup).modal('show');
     setPopupMaxHeight();
     $('#downloadForm').validate({
         rules: {
@@ -65,7 +65,7 @@ function hidePopup() {
     $('label[for=deviceName]').remove();
     $('.control-group').removeClass('success').removeClass('error');
     $(modalPopupContent).html('');
-    $(modalPopup).hide();
+    $(modalPopup).modal('hide');
 }
 
 /*
