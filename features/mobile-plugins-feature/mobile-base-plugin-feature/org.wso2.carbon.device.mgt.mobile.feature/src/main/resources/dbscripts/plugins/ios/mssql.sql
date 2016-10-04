@@ -1,6 +1,7 @@
 -- -----------------------------------------------------
 -- Table `IOS_FEATURE`
 -- -----------------------------------------------------
+IF NOT  EXISTS (SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID(N'[DBO].[IOS_FEATURE]') AND TYPE IN (N'U'))
 CREATE TABLE IOS_FEATURE (
   ID INT NOT NULL IDENTITY,
   CODE VARCHAR(45) NOT NULL,
@@ -12,7 +13,8 @@ CREATE TABLE IOS_FEATURE (
 -- -----------------------------------------------------
 -- Table `IOS_DEVICE`
 -- -----------------------------------------------------
-  CREATE  TABLE IOS_DEVICE (
+IF NOT  EXISTS (SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID(N'[DBO].[IOS_DEVICE]') AND TYPE IN (N'U'))
+ CREATE  TABLE IOS_DEVICE (
   MOBILE_DEVICE_ID VARCHAR(45) NOT NULL,
   APNS_PUSH_TOKEN VARCHAR(100) NULL DEFAULT NULL,
   MAGIC_TOKEN VARCHAR(100) NULL DEFAULT NULL,

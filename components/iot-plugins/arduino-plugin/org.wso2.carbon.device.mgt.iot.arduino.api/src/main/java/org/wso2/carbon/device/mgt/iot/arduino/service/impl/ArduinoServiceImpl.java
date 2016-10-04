@@ -21,8 +21,8 @@ package org.wso2.carbon.device.mgt.iot.arduino.service.impl;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.analytics.dataservice.commons.SORT;
 import org.wso2.carbon.analytics.dataservice.commons.SortByField;
+import org.wso2.carbon.analytics.dataservice.commons.SortType;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
@@ -159,7 +159,7 @@ public class ArduinoServiceImpl implements ArduinoService {
             String sensorTableName = ArduinoConstants.TEMPERATURE_EVENT_TABLE;
             try {
                 List<SortByField> sortByFields = new ArrayList<>();
-                SortByField sortByField = new SortByField("time", SORT.ASC, false);
+                SortByField sortByField = new SortByField("time", SortType.ASC);
                 sortByFields.add(sortByField);
                 List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
                 return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();

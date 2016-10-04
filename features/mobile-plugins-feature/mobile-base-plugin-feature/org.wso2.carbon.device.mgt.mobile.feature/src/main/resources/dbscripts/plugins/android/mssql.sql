@@ -1,6 +1,7 @@
 -- -----------------------------------------------------
 -- Table `AD_DEVICE`
 -- -----------------------------------------------------
+IF NOT  EXISTS (SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID(N'[DBO].[AD_DEVICE]') AND TYPE IN (N'U'))
 CREATE  TABLE AD_DEVICE (
   DEVICE_ID VARCHAR(45) NOT NULL,
   GCM_TOKEN VARCHAR(1000) NULL DEFAULT NULL,
@@ -21,6 +22,7 @@ CREATE  TABLE AD_DEVICE (
 -- -----------------------------------------------------
 -- Table `AD_FEATURE`
 -- -----------------------------------------------------
+IF NOT  EXISTS (SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID(N'[DBO].[AD_FEATURE]') AND TYPE IN (N'U'))
 CREATE TABLE AD_FEATURE (
   ID INT NOT NULL IDENTITY,
   CODE VARCHAR(45) NOT NULL,

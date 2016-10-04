@@ -79,7 +79,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.appmgt.mdm.osgiconnector:2.2.2-SNAPSHOT</bundleDef>
+                                <bundleDef>org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.appmgt.mdm.osgiconnector:${carbon.devicemgt.plugins.version}</bundleDef>
                                 <bundleDef>com.googlecode.plist:dd-plist:${googlecode.plist.version}</bundleDef>
                             </bundles>
                             <importFeatures>

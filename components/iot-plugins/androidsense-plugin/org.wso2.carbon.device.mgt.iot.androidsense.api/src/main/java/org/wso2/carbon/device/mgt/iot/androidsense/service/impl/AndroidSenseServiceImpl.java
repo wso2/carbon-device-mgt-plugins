@@ -20,8 +20,8 @@ package org.wso2.carbon.device.mgt.iot.androidsense.service.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.analytics.dataservice.commons.SORT;
 import org.wso2.carbon.analytics.dataservice.commons.SortByField;
+import org.wso2.carbon.analytics.dataservice.commons.SortType;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
@@ -194,7 +194,7 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
             List<SensorRecord> sensorDatas;
             if (!sensor.equals(AndroidSenseConstants.SENSOR_WORDCOUNT)) {
                 List<SortByField> sortByFields = new ArrayList<>();
-                SortByField sortByField = new SortByField("time", SORT.ASC, false);
+                SortByField sortByField = new SortByField("time", SortType.ASC);
                 sortByFields.add(sortByField);
                 sensorDatas = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
             } else {
