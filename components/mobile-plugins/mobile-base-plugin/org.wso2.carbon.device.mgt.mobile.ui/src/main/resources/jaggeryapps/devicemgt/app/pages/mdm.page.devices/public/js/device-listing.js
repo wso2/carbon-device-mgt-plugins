@@ -21,9 +21,9 @@
  * when a user clicks on the list item
  * initial mode and with out select mode.
  */
-function InitiateViewOption(url) {
+function InitiateViewOption() {
     if ($(".select-enable-btn").text() == "Select") {
-        $(location).attr('href', url);
+        $(location).attr('href', $(this).data("url"));
     }
 }
 
@@ -148,8 +148,8 @@ function loadDevices() {
                 if (row.status != 'REMOVED') {
                     url = "device/" + deviceType + "?id=" + deviceIdentifier;
                 }
-                return '<div onclick="javascript:InitiateViewOption(\'' + url + '\')" class="thumbnail icon">' +
-                        '<i class="square-element text fw fw-mobile"></i>' +
+                return '<div class=" viewEnabledIcon thumbnail icon"  data-url="' + url + '">' +
+                    '<i class="square-element text fw fw-mobile"></i>' +
                     '</div>'
             }
         },
