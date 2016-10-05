@@ -50,6 +50,10 @@ function onRequest(context) {
             if (filteredDeviceData["enrolmentInfo"]) {
                 if (filteredDeviceData["enrolmentInfo"]["status"]) {
                     viewModel["status"] = filteredDeviceData["enrolmentInfo"]["status"];
+                    viewModel.isActive = false ;
+                    if (filteredDeviceData["enrolmentInfo"]["status"]== "ACTIVE") {
+                        viewModel.isActive = true ;
+                    }
                 }
                 if (filteredDeviceData["enrolmentInfo"]["owner"]) {
                     viewModel["owner"] = filteredDeviceData["enrolmentInfo"]["owner"];
@@ -200,6 +204,5 @@ function onRequest(context) {
     } else {
         deviceViewData["deviceFound"] = false;
     }
-    log.error(stringify(deviceViewData));
     return deviceViewData;
 }
