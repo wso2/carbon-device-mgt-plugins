@@ -185,17 +185,17 @@ var InitiateViewOption = null;
                             $("#applications-list-container").html(content);
                         } else {
                             $("#applications-list-container").
-                                html("<div class='message message-info'><h4><i class='icon fw fw-info'></i>No applications found.</h4>" +
-                                    "<p>Please try refreshing the list in a while.</p></div>");
+                            html("<div class='message message-info'><h4><i class='icon fw fw-info'></i>No applications found.</h4>" +
+                                "<p>Please try refreshing the list in a while.</p></div>");
                         }
                     }
                 },
                 // error-callback
                 function () {
                     $("#applications-list-container").
-                        html("<div class='panel-body'><br><p class='fw-warning'>&nbsp;Loading application list " +
-                            "was not successful. please try refreshing the list in a while.<p></div>");
-            });
+                    html("<div class='panel-body'><br><p class='fw-warning'>&nbsp;Loading application list " +
+                        "was not successful. please try refreshing the list in a while.<p></div>");
+                });
         });
     }
 
@@ -251,50 +251,50 @@ var InitiateViewOption = null;
                                     // error-callback
                                     function () {
                                         $("#policy-list-container").
-                                            html("<div class='message message-warning'>" +
-                                                    "<h4 class='remove-margin'>" +
-                                                        "<i class='icon fw fw-warning'></i>" +
-                                                        "Loading policy compliance related data " +
-                                                        "was not successful. please try refreshing in a while." +
-                                                    "</h4>" +
-                                                "</div>" +
-                                                "<p class='add-padding-5x'></p>" +
-                                                "<p class='add-padding-5x'></p>" +
-                                                "<p class='add-padding-5x'></p>"
-                                            );
+                                        html("<div class='message message-warning'>" +
+                                            "<h4 class='remove-margin'>" +
+                                            "<i class='icon fw fw-warning'></i>" +
+                                            "Loading policy compliance related data " +
+                                            "was not successful. please try refreshing in a while." +
+                                            "</h4>" +
+                                            "</div>" +
+                                            "<p class='add-padding-5x'></p>" +
+                                            "<p class='add-padding-5x'></p>" +
+                                            "<p class='add-padding-5x'></p>"
+                                        );
                                     }
                                 );
                             }
                         } else if ((jqXHR.status == 200 && !data)) {
                             $("#policy-spinner").addClass("hidden");
                             $("#policy-list-container").
-                                html("<div class='message message-info'>" +
-                                        "<h4 class='remove-margin'>" +
-                                            "<i class='icon fw fw-info'></i>" +
-                                                "There is currently no effective policy applied for this device." +
-                                        "</h4>" +
-                                    "</div>" +
-                                    "<p class='add-padding-5x'></p>" +
-                                    "<p class='add-padding-5x'></p>" +
-                                    "<p class='add-padding-5x'></p>"
-                                );
+                            html("<div class='message message-info'>" +
+                                "<h4 class='remove-margin'>" +
+                                "<i class='icon fw fw-info'></i>" +
+                                "There is currently no effective policy applied for this device." +
+                                "</h4>" +
+                                "</div>" +
+                                "<p class='add-padding-5x'></p>" +
+                                "<p class='add-padding-5x'></p>" +
+                                "<p class='add-padding-5x'></p>"
+                            );
                         }
                     },
                     // error-callback
                     function () {
                         $("#policy-spinner").addClass("hidden");
                         $("#policy-list-container").
-                            html("<div class='message message-warning'>" +
-                                    "<h4 class='remove-margin'>" +
-                                        "<i class='icon fw fw-warning'></i>" +
-                                        "Loading policy compliance related data " +
-                                        "was not successful. please try refreshing in a while." +
-                                    "</h4>" +
-                                "</div>" +
-                                "<p class='add-padding-5x'></p>" +
-                                "<p class='add-padding-5x'></p>" +
-                                "<p class='add-padding-5x'></p>"
-                            );
+                        html("<div class='message message-warning'>" +
+                            "<h4 class='remove-margin'>" +
+                            "<i class='icon fw fw-warning'></i>" +
+                            "Loading policy compliance related data " +
+                            "was not successful. please try refreshing in a while." +
+                            "</h4>" +
+                            "</div>" +
+                            "<p class='add-padding-5x'></p>" +
+                            "<p class='add-padding-5x'></p>" +
+                            "<p class='add-padding-5x'></p>"
+                        );
                     }
                 );
             }
@@ -308,6 +308,10 @@ var InitiateViewOption = null;
         loadOperationsLog(false);
         loadApplicationsList();
         loadPolicyCompliance();
+
+        if ($("#device_details_tab").length == 0) {
+            $(".device-detail-body").addClass("hidden");
+        }
 
         $("#refresh-policy").click(function () {
             $("#policy-spinner").removeClass("hidden");

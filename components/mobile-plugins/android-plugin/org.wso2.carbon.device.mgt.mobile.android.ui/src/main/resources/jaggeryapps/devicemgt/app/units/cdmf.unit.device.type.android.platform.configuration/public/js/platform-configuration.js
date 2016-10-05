@@ -227,11 +227,8 @@ $(document).ready(function () {
                 addConfigAPI,
                 addConfigFormData,
                 function (data, textStatus, jqXHR) {
-                    data = JSON.parse(data);
-                    if (jqXHR.status == 201) {
-                        $("#config-save-form").addClass("hidden");
-                        $("#record-created-msg").removeClass("hidden");
-                    }
+                    $("#config-save-form").addClass("hidden");
+                    $("#record-created-msg").removeClass("hidden");
 
                 }, function (data) {
                     if (data.status == 500) {
