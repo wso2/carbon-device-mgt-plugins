@@ -25,12 +25,13 @@ var InitiateViewOption = null;
     var ownership = deviceId.data("ownership");
     var operationTable;
 
+    positionArrow($(".media .list-group-item.active"),"#device_details_tab");
     $(".media.tab-responsive [data-toggle=tab]").on("shown.bs.tab", function (e) {
         var activeTabPane = $(e.target).attr("href");
         var activeListGroupItem = $(".media .list-group-item.active");
         $(activeTabPane).removeClass("visible-xs-block");
         $(activeTabPane).siblings().not(".arrow-left").addClass("visible-xs-block");
-        positionArrow(activeListGroupItem);
+        positionArrow(activeListGroupItem,activeTabPane);
     });
 
     $(".media.tab-responsive .tab-content").on("shown.bs.collapse", function (e) {
@@ -50,7 +51,7 @@ var InitiateViewOption = null;
         }
     });
 
-    function positionArrow(selectedTab) {
+    function positionArrow(selectedTab,activeTabPane) {
         var selectedTabHeight = $(selectedTab).innerHeight();
         var arrowPosition = 0;
         var totalHeight = 0;
@@ -75,6 +76,12 @@ var InitiateViewOption = null;
         }
 
         $(arrow).css("top", arrowPosition - 10);
+
+        var listHeight = $(".tab-responsive .media-left ul").height();
+        var paneHeight = $(activeTabPane).height();
+        if(listHeight > paneHeight){
+            $(activeTabPane).height(listHeight);
+        }
     }
 
     function loadOperationsLog(update) {
