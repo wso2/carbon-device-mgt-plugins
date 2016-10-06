@@ -392,7 +392,8 @@ validateStep["policy-profile"] = function () {
                     if (!$("#wifi-password").val()) {
                         validationStatus = {
                             "error": true,
-                            "subErrorMsg": "Password is required for the wifi security type " + wifiType + ". Please provide a password to proceed.",
+                            "subErrorMsg": "Password is required for the wifi security type " + wifiType + ". Please " +
+                            "provide a password to proceed.",
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
