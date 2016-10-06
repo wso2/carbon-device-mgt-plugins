@@ -35,6 +35,10 @@ function onRequest(context) {
             var viewModel = {};
             if (filteredDeviceData["type"]) {
                 viewModel["deviceType"] = filteredDeviceData["type"];
+                viewModel.isNotWindows = true;
+                if (viewModel["deviceType"] == "windows") {
+                    viewModel.isNotWindows = false;
+                }
             }
             if (filteredDeviceData["deviceIdentifier"]) {
                 viewModel["deviceIdentifier"] = filteredDeviceData["deviceIdentifier"];
@@ -45,6 +49,10 @@ function onRequest(context) {
             if (filteredDeviceData["enrolmentInfo"]) {
                 if (filteredDeviceData["enrolmentInfo"]["status"]) {
                     viewModel["status"] = filteredDeviceData["enrolmentInfo"]["status"];
+                    viewModel.isActive = false ;
+                    if (filteredDeviceData["enrolmentInfo"]["status"]== "ACTIVE") {
+                        viewModel.isActive = true ;
+                    }
                 }
                 if (filteredDeviceData["enrolmentInfo"]["owner"]) {
                     viewModel["owner"] = filteredDeviceData["enrolmentInfo"]["owner"];
@@ -139,7 +147,7 @@ function onRequest(context) {
                 }
                 if (filteredDeviceData["latestDeviceInfo"]["updatedTime"]) {
                     viewModel["lastUpdatedTime"] = filteredDeviceData["latestDeviceInfo"]["updatedTime"].
-                        substr(0, filteredDeviceData["latestDeviceInfo"]["updatedTime"].indexOf("+"));
+                    substr(0, filteredDeviceData["latestDeviceInfo"]["updatedTime"].indexOf("+"));
                 }
                 viewModel["BatteryLevel"] = {};
                 viewModel["BatteryLevel"]["value"] = filteredDeviceData["latestDeviceInfo"]["batteryLevel"];
@@ -195,6 +203,5 @@ function onRequest(context) {
     } else {
         deviceViewData["deviceFound"] = false;
     }
-
     return deviceViewData;
 }

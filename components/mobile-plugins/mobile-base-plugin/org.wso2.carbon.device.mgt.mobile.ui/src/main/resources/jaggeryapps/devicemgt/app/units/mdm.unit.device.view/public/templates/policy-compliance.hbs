@@ -1,7 +1,7 @@
 <div class="wr-list-group wr-sortable policy-list">
     <span class="list-group-item" id="{{id}}">
         <div class="row">
-            <div class="col-lg-2 clearfix" style="padding-left: 20px; padding-top: 10px;">
+            <div class="col-lg-4 clearfix" style="padding-left: 20px; padding-top: 10px;">
                 <span class="wr-list-icon">
                     {{#equal deviceType "android"}}
                         <i class=" fw fw-android"></i>
@@ -18,7 +18,7 @@
                     <span>{{deviceType}}</span>
                 </span>
             </div>
-            <div class="col-lg-7">
+            <div class="col-lg-6">
                 <div class="row no-gutter">
                     <div class="wr-desc-list-configs col-lg-4">
                         <div>
@@ -48,7 +48,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-1">
                 <span class="list-group-item-actions" style="padding-top: 15px;">
                     <!--suppress HtmlUnknownTarget -->
                     <a href="/emm/policy/view?id={{policy.id}}"
@@ -67,10 +67,10 @@
 </div>
 <table class="table table-striped table-hover table-bordered display data-table" id="policy-compliance-table">
     <thead>
-        <tr class="sort-row">
-            <th>Feature</th>
-            <th>Compliance</th>
-        </tr>
+    <tr class="sort-row">
+        <th>Feature</th>
+        <th>Compliance</th>
+    </tr>
     </thead>
     <tbody>
     {{#each complianceFeatures}}

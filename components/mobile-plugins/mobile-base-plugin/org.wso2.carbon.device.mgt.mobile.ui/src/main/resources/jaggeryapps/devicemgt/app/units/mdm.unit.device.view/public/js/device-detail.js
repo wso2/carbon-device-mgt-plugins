@@ -25,12 +25,13 @@ var InitiateViewOption = null;
     var ownership = deviceId.data("ownership");
     var operationTable;
 
+    positionArrow($(".media .list-group-item.active"),"#device_details_tab");
     $(".media.tab-responsive [data-toggle=tab]").on("shown.bs.tab", function (e) {
         var activeTabPane = $(e.target).attr("href");
         var activeListGroupItem = $(".media .list-group-item.active");
         $(activeTabPane).removeClass("visible-xs-block");
         $(activeTabPane).siblings().not(".arrow-left").addClass("visible-xs-block");
-        positionArrow(activeListGroupItem);
+        positionArrow(activeListGroupItem,activeTabPane);
     });
 
     $(".media.tab-responsive .tab-content").on("shown.bs.collapse", function (e) {
@@ -50,7 +51,7 @@ var InitiateViewOption = null;
         }
     });
 
-    function positionArrow(selectedTab) {
+    function positionArrow(selectedTab,activeTabPane) {
         var selectedTabHeight = $(selectedTab).innerHeight();
         var arrowPosition = 0;
         var totalHeight = 0;
@@ -75,6 +76,12 @@ var InitiateViewOption = null;
         }
 
         $(arrow).css("top", arrowPosition - 10);
+
+        var listHeight = $(".tab-responsive .media-left ul").height();
+        var paneHeight = $(activeTabPane).height();
+        if(listHeight > paneHeight){
+            $(activeTabPane).height(listHeight);
+        }
     }
 
     function loadOperationsLog(update) {
@@ -185,17 +192,17 @@ var InitiateViewOption = null;
                             $("#applications-list-container").html(content);
                         } else {
                             $("#applications-list-container").
-                                html("<div class='message message-info'><h4><i class='icon fw fw-info'></i>No applications found.</h4>" +
-                                    "<p>Please try refreshing the list in a while.</p></div>");
+                            html("<div class='message message-info'><h4><i class='icon fw fw-info'></i>No applications found.</h4>" +
+                                "<p>Please try refreshing the list in a while.</p></div>");
                         }
                     }
                 },
                 // error-callback
                 function () {
                     $("#applications-list-container").
-                        html("<div class='panel-body'><br><p class='fw-warning'>&nbsp;Loading application list " +
-                            "was not successful. please try refreshing the list in a while.<p></div>");
-            });
+                    html("<div class='panel-body'><br><p class='fw-warning'>&nbsp;Loading application list " +
+                        "was not successful. please try refreshing the list in a while.<p></div>");
+                });
         });
     }
 
@@ -251,50 +258,50 @@ var InitiateViewOption = null;
                                     // error-callback
                                     function () {
                                         $("#policy-list-container").
-                                            html("<div class='message message-warning'>" +
-                                                    "<h4 class='remove-margin'>" +
-                                                        "<i class='icon fw fw-warning'></i>" +
-                                                        "Loading policy compliance related data " +
-                                                        "was not successful. please try refreshing in a while." +
-                                                    "</h4>" +
-                                                "</div>" +
-                                                "<p class='add-padding-5x'></p>" +
-                                                "<p class='add-padding-5x'></p>" +
-                                                "<p class='add-padding-5x'></p>"
-                                            );
+                                        html("<div class='message message-warning'>" +
+                                            "<h4 class='remove-margin'>" +
+                                            "<i class='icon fw fw-warning'></i>" +
+                                            "Loading policy compliance related data " +
+                                            "was not successful. please try refreshing in a while." +
+                                            "</h4>" +
+                                            "</div>" +
+                                            "<p class='add-padding-5x'></p>" +
+                                            "<p class='add-padding-5x'></p>" +
+                                            "<p class='add-padding-5x'></p>"
+                                        );
                                     }
                                 );
                             }
                         } else if ((jqXHR.status == 200 && !data)) {
                             $("#policy-spinner").addClass("hidden");
                             $("#policy-list-container").
-                                html("<div class='message message-info'>" +
-                                        "<h4 class='remove-margin'>" +
-                                            "<i class='icon fw fw-info'></i>" +
-                                                "There is currently no effective policy applied for this device." +
-                                        "</h4>" +
-                                    "</div>" +
-                                    "<p class='add-padding-5x'></p>" +
-                                    "<p class='add-padding-5x'></p>" +
-                                    "<p class='add-padding-5x'></p>"
-                                );
+                            html("<div class='message message-info'>" +
+                                "<h4 class='remove-margin'>" +
+                                "<i class='icon fw fw-info'></i>" +
+                                "There is currently no effective policy applied for this device." +
+                                "</h4>" +
+                                "</div>" +
+                                "<p class='add-padding-5x'></p>" +
+                                "<p class='add-padding-5x'></p>" +
+                                "<p class='add-padding-5x'></p>"
+                            );
                         }
                     },
                     // error-callback
                     function () {
                         $("#policy-spinner").addClass("hidden");
                         $("#policy-list-container").
-                            html("<div class='message message-warning'>" +
-                                    "<h4 class='remove-margin'>" +
-                                        "<i class='icon fw fw-warning'></i>" +
-                                        "Loading policy compliance related data " +
-                                        "was not successful. please try refreshing in a while." +
-                                    "</h4>" +
-                                "</div>" +
-                                "<p class='add-padding-5x'></p>" +
-                                "<p class='add-padding-5x'></p>" +
-                                "<p class='add-padding-5x'></p>"
-                            );
+                        html("<div class='message message-warning'>" +
+                            "<h4 class='remove-margin'>" +
+                            "<i class='icon fw fw-warning'></i>" +
+                            "Loading policy compliance related data " +
+                            "was not successful. please try refreshing in a while." +
+                            "</h4>" +
+                            "</div>" +
+                            "<p class='add-padding-5x'></p>" +
+                            "<p class='add-padding-5x'></p>" +
+                            "<p class='add-padding-5x'></p>"
+                        );
                     }
                 );
             }
@@ -308,6 +315,10 @@ var InitiateViewOption = null;
         loadOperationsLog(false);
         loadApplicationsList();
         loadPolicyCompliance();
+
+        if ($("#device_details_tab").length == 0) {
+            $(".device-detail-body").addClass("hidden");
+        }
 
         $("#refresh-policy").click(function () {
             $("#policy-spinner").removeClass("hidden");

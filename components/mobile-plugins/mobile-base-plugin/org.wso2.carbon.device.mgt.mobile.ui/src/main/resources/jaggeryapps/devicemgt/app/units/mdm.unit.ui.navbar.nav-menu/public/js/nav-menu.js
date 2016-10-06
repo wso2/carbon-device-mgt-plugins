@@ -139,7 +139,7 @@ function loadNewNotifications() {
                                 $(messageSideBar).html(
                                     "<h4 class='text-center'>No New Notifications</h4>" +
                                     "<h5 class='text-center text-muted'>" +
-                                        "Check this section for error notifications<br>related to device operations" +
+                                    "Check this section for error notifications<br>related to device operations" +
                                     "</h5>"
                                 );
                             }
@@ -368,16 +368,12 @@ $(document).ready(function () {
         var redirectUrl = $(this).data("url");
         var markAsReadNotificationsEpr = emmAdminBasePath + "/notifications/" + notificationId + "/mark-checked";
         var messageSideBar = ".sidebar-messages";
-
         invokerUtil.put(
             markAsReadNotificationsEpr,
             null,
             // on success
             function (data) {
-                data = JSON.parse(data);
-                if (data.statusCode == responseCodes["ACCEPTED"]) {
-                    location.href = redirectUrl;
-                }
+                window.location.href = redirectUrl;
             },
             // on error
             function () {
