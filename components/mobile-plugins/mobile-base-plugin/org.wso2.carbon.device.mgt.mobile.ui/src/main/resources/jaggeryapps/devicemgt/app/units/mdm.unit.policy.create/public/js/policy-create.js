@@ -361,7 +361,7 @@ validateStep["policy-profile"] = function () {
                 if (wifiTypeUIElement.is("input:checkbox")) {
                     wifiType = wifiTypeUIElement.is(":checked").toString();
                 }
-                if (wifiType !== "none") {
+                if (wifiType != "none") {
                     if (!$("#wifi-password").val()) {
                         validationStatus = {
                             "error": true,
