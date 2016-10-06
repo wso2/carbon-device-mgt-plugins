@@ -21,7 +21,6 @@ function onRequest(context) {
     var deviceType = context["uriParams"]["deviceType"];
     var deviceId = request.getParameter("id");
     var deviceViewData = {};
-    var log = new Log("new log");
 
     if (deviceType && deviceId) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
