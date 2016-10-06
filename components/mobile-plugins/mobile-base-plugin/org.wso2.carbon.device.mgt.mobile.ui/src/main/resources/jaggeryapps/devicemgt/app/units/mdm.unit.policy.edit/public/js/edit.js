@@ -382,7 +382,22 @@ validateStep["policy-profile"] = function () {
                     };
                     continueToCheckNextInputs = false;
                 }
-
+                // For the secure wifi types, it is required to have a password
+                var wifiTypeUIElement = $("#wifi-type");
+                var wifiType = wifiTypeUIElement.find("option:selected").val();
+                if (wifiTypeUIElement.is("input:checkbox")) {
+                    wifiType = wifiTypeUIElement.is(":checked").toString();
+                }
+                if (wifiType !== "none") {
+                    if (!$("#wifi-password").val()) {
+                        validationStatus = {
+                            "error": true,
+                            "subErrorMsg": "Password is required for the wifi security type " + wifiType + ". Please provide a password to proceed.",
+                            "erroneousFeature": operation
+                        };
+                        continueToCheckNextInputs = false;
+                    }
+                }
                 // at-last, if the value of continueToCheckNextInputs is still true
                 // this means that no error is found
                 if (continueToCheckNextInputs) {
