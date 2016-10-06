@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -626,7 +625,8 @@ validateStep["policy-profile"] = function () {
 
             }
         }
-    }if (policy["platform"] == platformTypeConstants["WINDOWS"]) {
+    }
+    if (policy["platform"] == platformTypeConstants["WINDOWS"]) {
         if (configuredOperations.length == 0) {
             // updating validationStatus
             validationStatus = {
@@ -724,7 +724,8 @@ validateStep["policy-profile"] = function () {
             }
 
         }
-    } else if (policy["platform"] == platformTypeConstants["IOS"]) {
+    }
+    else if (policy["platform"] == platformTypeConstants["IOS"]) {
         if (configuredOperations.length == 0) {
             // updating validationStatus
             validationStatus = {
@@ -1273,7 +1274,7 @@ validateStep["policy-profile"] = function () {
             }
 
             if ($.inArray(iosOperationConstants["VPN_OPERATION_CODE"], configuredOperations) != -1) {
-                // if WIFI is configured
+                // if VPN is configured
                 operation = iosOperationConstants["VPN_OPERATION"];
                 // initializing continueToCheckNextInputs to true
                 continueToCheckNextInputs = true;
