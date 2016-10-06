@@ -478,6 +478,8 @@ var operationModule = function () {
                 var ppp = {};
                 var ipSec = {};
                 var ikev2 = {};
+                var pulseSecure = {};
+
                 if (operationData["vpnType"] == "PPTP") {
                     ppp = {
                         "authName": operationData["pptpAuthName"],
@@ -523,6 +525,12 @@ var operationModule = function () {
                         "serverCertificateIssuerCommonName" : operationData["ikev2ServerCertificateIssuerCommonName"],
                         "serverCertificateCommonName" : operationData["ikev2ServerCertificateCommonName"]
                     };
+                } else if (operationData["vpnType"] == "PulseSecure") {
+                    pulseSecure = {
+                        "remoteAddress" : operationData["pulsesecureRemoteAddress"],
+                        "userName" : operationData["pulsesecureName"],
+                        "sharedSecret" : operationData["pulsesecureSharedSecret"]
+                    };
                 }
 
                 var domainsAlways = new Array();
@@ -553,7 +561,8 @@ var operationModule = function () {
                         "vpnType" : operationData["vpnType"],
                         "ppp": ppp,
                         "ipSec": ipSec,
-                        "ikEv2": ikev2
+                        "ikEv2": ikev2,
+                        "pulseSecure" : pulseSecure
                     }
                 };
                 break;
