@@ -156,17 +156,19 @@
                                     </a>
                                 </li>
                             {{/if}}
-                            <li role="presentation" class="list-group-item">
-                                <a href="#event_log_tab" role="tab" data-toggle="tab" aria-controls="event_log_tab">
-                                    <i class="icon fw fw-text"></i><span class="hidden-sm">Operations Log</span>
-                                </a>
-                            </li>
+                            {{#if deviceView.isNotRemoved}}
+                                <li role="presentation" class="list-group-item">
+                                    <a href="#event_log_tab" role="tab" data-toggle="tab" aria-controls="event_log_tab">
+                                        <i class="icon fw fw-text"></i><span class="hidden-sm">Operations Log</span>
+                                    </a>
+                                </li>
+                            {{/if}}
                         </ul>
                     </div>
                     {{#defineZone "device-detail-properties"}}
                         <div class="media-body add-padding-left-5x remove-padding-xs">
                             <div class="panel-group tab-content remove-padding" id="tabs" role="tablist"
-                                 aria-multiselectable="true">
+                                 data-status="{{deviceView.isNotRemoved}}" aria-multiselectable="true">
                                 <div class="arrow-left hidden-xs"></div>
 
                                 {{#if deviceView.isNotWindows}}
@@ -428,7 +430,6 @@
                                     </div>
                                     <div class="panel-heading display-none-xs">
                                         Operations Log
-                                        &nbsp;&nbsp;
                                         <span>
                             <a href="javascript:void(0);" id="refresh-operations">
                                 <i class="fw fw-refresh"></i>
