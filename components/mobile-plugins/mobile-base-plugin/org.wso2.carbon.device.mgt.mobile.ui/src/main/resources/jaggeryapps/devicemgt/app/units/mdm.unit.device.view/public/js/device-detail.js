@@ -311,7 +311,9 @@ var InitiateViewOption = null;
     $(document).ready(function () {
         $(".device-detail-body").removeClass("hidden");
         $("#loading-content").remove();
-        loadOperationBar(deviceType, ownership, operationBarModeConstants.SINGLE);
+        if ($("#tabs").data("status") !=== false) {
+            loadOperationBar(deviceType, ownership, operationBarModeConstants.SINGLE);
+        }
         loadOperationsLog(false);
         loadApplicationsList();
         loadPolicyCompliance();
