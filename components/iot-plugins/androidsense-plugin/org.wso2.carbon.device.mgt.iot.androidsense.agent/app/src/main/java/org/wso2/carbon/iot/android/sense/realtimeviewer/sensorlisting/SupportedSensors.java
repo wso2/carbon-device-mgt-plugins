@@ -60,6 +60,7 @@ public class SupportedSensors {
         sensorList.add("Light");
         sensorList.add("Gyroscope");
         sensorList.add("Proximity");
+        sensorList.add("Pedometer");
     }
 
     /**
@@ -74,6 +75,7 @@ public class SupportedSensors {
         sensorTypeMap.put("gyroscope", Sensor.TYPE_GYROSCOPE);
         sensorTypeMap.put("light", Sensor.TYPE_LIGHT);
         sensorTypeMap.put("proximity", Sensor.TYPE_PROXIMITY);
+        sensorTypeMap.put("pedometer", Sensor.TYPE_STEP_COUNTER);
     }
 
     /**
@@ -88,6 +90,7 @@ public class SupportedSensors {
         typeSensorMap.put(Sensor.TYPE_GYROSCOPE, "gyroscope");
         typeSensorMap.put(Sensor.TYPE_LIGHT, "light");
         typeSensorMap.put(Sensor.TYPE_PROXIMITY, "proximity");
+        typeSensorMap.put(Sensor.TYPE_STEP_COUNTER, "pedometer");
     }
 
     /**
