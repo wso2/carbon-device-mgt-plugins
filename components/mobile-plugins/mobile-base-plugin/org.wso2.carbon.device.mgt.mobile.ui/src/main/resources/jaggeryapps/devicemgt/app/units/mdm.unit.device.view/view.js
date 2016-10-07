@@ -50,8 +50,12 @@ function onRequest(context) {
                 if (filteredDeviceData["enrolmentInfo"]["status"]) {
                     viewModel["status"] = filteredDeviceData["enrolmentInfo"]["status"];
                     viewModel.isActive = false ;
+                    viewModel.isNotRemoved = true;
                     if (filteredDeviceData["enrolmentInfo"]["status"]== "ACTIVE") {
                         viewModel.isActive = true ;
+                    }
+                    if (filteredDeviceData["enrolmentInfo"]["status"]== "REMOVED") {
+                        viewModel.isNotRemoved = false ;
                     }
                 }
                 if (filteredDeviceData["enrolmentInfo"]["owner"]) {
