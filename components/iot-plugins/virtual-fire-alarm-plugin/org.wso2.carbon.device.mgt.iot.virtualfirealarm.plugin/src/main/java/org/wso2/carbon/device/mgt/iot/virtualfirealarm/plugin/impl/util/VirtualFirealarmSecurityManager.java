@@ -21,12 +21,10 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
-import org.wso2.carbon.device.mgt.iot.devicetype.config.CertificateKeystoreConfig;
-import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
+import org.wso2.carbon.certificate.mgt.core.config.CertificateConfigurationManager;
+import org.wso2.carbon.certificate.mgt.core.config.CertificateKeystoreConfig;
+import org.wso2.carbon.certificate.mgt.core.exception.CertificateManagementException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.VirtualFirealarmManagementDataHolder;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -53,21 +51,16 @@ public class VirtualFirealarmSecurityManager {
     private static final Log log = LogFactory.getLog(VirtualFirealarmSecurityManager.class);
 
     private static PrivateKey serverPrivateKey;
-    private static CertificateKeystoreConfig certificateKeystoreConfig;
     private static final String SIGNATURE_ALG = "SHA1withRSA";
     private static final String CIPHER_PADDING = "RSA/ECB/PKCS1Padding";
-
+    private static CertificateKeystoreConfig certificateKeystoreConfig;
     private VirtualFirealarmSecurityManager() {
 
     }
 
-    private static CertificateKeystoreConfig getCertKeyStoreConfig() {
+    private static CertificateKeystoreConfig getCertKeyStoreConfig() throws CertificateManagementException {
         if (certificateKeystoreConfig == null) {
-            DeviceManagementConfiguration deviceManagementConfiguration = VirtualFirealarmManagementDataHolder.getInstance().
-                    getDeviceTypeConfigService().getConfiguration(
-                    VirtualFireAlarmConstants.DEVICE_TYPE,
-                    VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
-            certificateKeystoreConfig = deviceManagementConfiguration.getCertificateKeystoreConfig();
+            certificateKeystoreConfig = CertificateConfigurationManager.getInstance().getCertificateKeyStoreConfig();
         }
         return certificateKeystoreConfig;
     }
@@ -80,8 +73,8 @@ public class VirtualFirealarmSecurityManager {
         PrivateKey privateKey = null;
         InputStream inputStream = null;
         KeyStore keyStore;
-        CertificateKeystoreConfig certificateKeystoreConfig = getCertKeyStoreConfig();
         try {
+            CertificateKeystoreConfig certificateKeystoreConfig = getCertKeyStoreConfig();
             keyStore = KeyStore.getInstance(certificateKeystoreConfig.getCertificateKeystoreType());
             inputStream = new FileInputStream(certificateKeystoreConfig.getCertificateKeystoreLocation());
 
@@ -107,6 +100,9 @@ public class VirtualFirealarmSecurityManager {
             log.error(errorMsg, e);
         } catch (UnrecoverableKeyException e) {
             String errorMsg = "Key is unrecoverable when retrieving CA private key";
+            log.error(errorMsg, e);
+        } catch (CertificateManagementException e) {
+            String errorMsg = "Failed to load the certificate";
             log.error(errorMsg, e);
         } finally {
             try {
