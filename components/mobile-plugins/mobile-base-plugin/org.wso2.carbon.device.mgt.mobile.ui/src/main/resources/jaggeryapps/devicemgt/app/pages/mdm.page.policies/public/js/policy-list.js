@@ -20,7 +20,10 @@
 var sortUpdateBtn = "#sortUpdateBtn";
 // var sortedIDs;
 // var dataTableSelection = ".DTTT_selected";
-$('#policy-grid').datatables_extended();
+var settings = {
+    "sorting": false
+};
+$('#policy-grid').datatables_extended(settings);
 // $(".icon .text").res_text(0.2);
 
 var saveNewPrioritiesButton = "#save-new-priorities-button";
@@ -90,7 +93,7 @@ function showPopup() {
 function hidePopup() {
     $(modalPopupContent).html('');
     $(modalPopup).modal('hide');
-    $('body').removeClass('modal-open').css('padding-right','0px');
+    $('body').removeClass('modal-open').css('padding-right', '0px');
     $('.modal-backdrop').remove();
 }
 
@@ -143,7 +146,7 @@ $(document).ready(function () {
      * ********************************************
      */
 
-    // [1] logic for running apply-changes-for-devices use-case
+        // [1] logic for running apply-changes-for-devices use-case
 
     var applyChangesButtonId = "#appbar-btn-apply-changes";
 

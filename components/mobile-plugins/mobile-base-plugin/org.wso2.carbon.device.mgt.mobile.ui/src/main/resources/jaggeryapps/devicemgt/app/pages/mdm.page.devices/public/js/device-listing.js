@@ -35,7 +35,7 @@ function InitiateViewOption() {
         device.owner = validateAndReturn(device.owner);
         device.ownership = validateAndReturn(device.ownership);
         var arr = device.properties;
-        if (arr){
+        if (arr) {
             device.properties = arr.reduce(function (total, current) {
                 total[current.name] = validateAndReturn(current.value);
                 return total;
@@ -67,7 +67,7 @@ function loadDevices() {
 
     function getPropertyValue(deviceProperties, propertyName) {
         var property;
-        for (var i =0; i < deviceProperties.length; i++) {
+        for (var i = 0; i < deviceProperties.length; i++) {
             property = deviceProperties[i];
             if (property.name == propertyName) {
                 return property.value;
@@ -114,7 +114,7 @@ function loadDevices() {
                         ownership: data.devices[index].enrolmentInfo.ownership,
                         type: data.devices[index].type,
                         deviceIdentifier: data.devices[index].deviceIdentifier,
-                        name : data.devices[index].name
+                        name: data.devices[index].name
                     }
                 );
             });
@@ -139,8 +139,8 @@ function loadDevices() {
 
     var columns = [
         {
-            class : 'remove-padding icon-only content-fill viewEnabledIcon',
-            data : null,
+            class: 'remove-padding icon-only content-fill viewEnabledIcon',
+            data: null,
             render: function (data, type, row) {
                 var deviceType = row.type;
                 var deviceIdentifier = row.deviceIdentifier;
@@ -212,7 +212,7 @@ function loadDevices() {
     ];
 
     $('#device-grid').datatables_extended_serverside_paging(
-        null,
+        {"sorting": false},
         "/api/device-mgt/v1.0/devices",
         dataFilter,
         columns,
@@ -221,8 +221,8 @@ function loadDevices() {
             $(".icon .text").res_text(0.2);
             $('#device-grid').removeClass('hidden');
         }, {
-            "placeholder" : "Search By Device Name",
-            "searchKey" : "name"
+            "placeholder": "Search By Device Name",
+            "searchKey": "name"
         });
 
     $(deviceCheckbox).click(function () {
@@ -257,8 +257,8 @@ $(document).ready(function () {
 
     /* for device list sorting drop down */
     $(".ctrl-filter-type-switcher").popover({
-        html : true,
-        content : function () {
+        html: true,
+        content: function () {
             return $("#content-filter-types").html();
         }
     });
