@@ -109,12 +109,14 @@
                                 </tbody>
                             </table>
                         {{/defineZone}}
+            {{#if deviceView.isNotRemoved}}
                         <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">
                             Operations
                         </div>
                         <div class="add-margin-top-4x">
                             {{unit "mdm.unit.device.operation-bar" deviceType=deviceView.deviceType ownership=deviceView.ownership}}
                         </div>
+            {{/if}}
                     </div>
                 </div>
                 <div class="media tab-responsive">
