@@ -70,7 +70,7 @@ var InitiateViewOption = null;
 
         if(arrowPosition >= parentHeight){
             parentHeight = arrowPosition + 50;
-            $(arrow).siblings(".panel.active").height(parentHeight);
+            $(arrow).siblings(".panel.active").css("min-height",parentHeight);
         }else{
             $(arrow).parent().removeAttr("style");
         }
