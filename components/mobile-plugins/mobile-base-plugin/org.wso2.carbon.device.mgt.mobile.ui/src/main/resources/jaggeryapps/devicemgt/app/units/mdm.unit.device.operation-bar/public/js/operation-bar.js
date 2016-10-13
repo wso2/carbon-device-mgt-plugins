@@ -16,6 +16,8 @@
  * under the License.
  */
 
+
+
 /*
  * Setting-up global variables.
  */
@@ -40,6 +42,8 @@ var operations = '.wr-operations',
         "BULK": "BULK_OPERATION_MODE",
         "SINGLE": "SINGLE_OPERATION_MODE"
     };
+
+var permittedOperations = [];
 
 /*
  * Function to get selected devices ID's
@@ -79,13 +83,64 @@ function getSelectedDeviceIds() {
 function operationSelect(selection) {
     var deviceIdList = getSelectedDeviceIds();
     if (deviceIdList == 0) {
-        $(modalPopupContent).html($("#errorOperations").html());
+        modalDialog.header("Operation cannot be performed !");
+        modalDialog.content("Please select a device or a list of devices to perform an operation.");
+        modalDialog.footer("<div class=\"buttons\"><a href=\"javascript:modalDialog.hide()\" class=\"btn-operations\">Ok</a> </div>");
+        modalDialog.showAsError();
     } else {
-        $(modalPopupContent).addClass("operation-data");
-        $(modalPopupContent).html($(operations + " .operation[data-operation-code=" + selection + "]").html());
-        $(modalPopupContent).data("operation-code", selection);
+
+        var selectedOperation;
+        //Find the operation object
+        for (var i=0; i<permittedOperations.length; i++) {
+            if (permittedOperations[i].code === selection) {
+                selectedOperation = permittedOperations[i];
+                break;
+            }
+        }
+
+        modalDialog.header(selectedOperation.name);
+
+        modalDialog.icon(selectedOperation.icon);
+
+        var commonContent = "<br><br>Do you want to perform this operation on selected device(s) ? <br>";
+
+        //Customize content based on some special operation codes.
+        if ((selectedOperation.code === "WIPE_DATA") &&
+            (selectedOperation.deviceType === "android") &&
+            (selectedOperation.ownership === "BYOD")) {
+
+            modalDialog.content($("#BYODAndroidWipeData").html() + commonContent);
+
+        } else if (selectedOperation.code === "NOTIFICATION" ) {
+            modalDialog.content($("#Notification").html() + commonContent);
+
+        } else if (selectedOperation.code === "CHANGE_LOCK_CODE") {
+            modalDialog.content($("#ChangeLockCode").html() + commonContent);
+
+        } else if ((selectedOperation.code === "DEVICE_LOCK") &&
+            (selectedOperation.deviceType === "android")) {
+
+            if (selectedOperation.ownership === "COPE") {
+                modalDialog.content($("#COPEAndroidDeviceLock").html() + $("#AndroidDeviceLock").html() + commonContent);
+            } else {
+                modalDialog.content($("#AndroidDeviceLock").html() + commonContent);
+            }
+
+        } else if ( (selectedOperation.code === "UPGRADE_FIRMWARE") &&
+            (selectedOperation.deviceType === "android" )) {
+
+            modalDialog.content($("#AndroidUpgradeFirmware").html() + commonContent);
+
+        } else {
+            modalDialog.content(commonContent);
+        }
+
+        modalDialog.footer("<div class=\"buttons\"> <a href=\"javascript:runOperation('" +
+                            selectedOperation.code + "')\" class=\"btn-operations\">Yes</a> " +
+                            "<a href=\"javascript:modalDialog.hide()\" class=\"btn-operations btn-default\">No</a> </div>");
+
     }
-    showPopup();
+    modalDialog.show();
 }
 
 function getDevicesByTypes(deviceList) {
@@ -117,7 +172,7 @@ function loadOperationBar(deviceType, ownership, mode) {
             serviceURL,
             // success callback
             function (data) {
-                var permittedOperations = [];
+                //var permittedOperations = [];
                 var i;
                 var permissionList = $("#operations-mod").data("permissions");
                 var totalFeatures = JSON.parse(data);
@@ -195,15 +250,19 @@ function runOperation(operationName) {
 
     var successCallback = function (data) {
         if (operationName == "NOTIFICATION") {
-            $(modalPopupContent).html($("#messageSuccess").html());
+            modalDialog.header("Message sent successfully !");
+            modalDialog.content("Message has been queued to be sent to the device.");
         } else {
-            $(modalPopupContent).html($("#operationSuccess").html());
+            modalDialog.header("Operation queued successfully !");
+            modalDialog.content("Operation has been queued successfully to be sent to the device.");
         }
-        showPopup();
+        modalDialog.show();
     };
     var errorCallback = function (data) {
-        $(modalPopupContent).html($("#errorOperationUnexpected").html());
-        showPopup();
+
+        modalDialog.header("Operation cannot be performed !");
+        modalDialog.content("Unexpected error occurred. Please Try again later.");
+        modalDialog.showAsError();
     };
 
     var payload, serviceEndPoint;
@@ -230,13 +289,13 @@ function runOperation(operationName) {
             $(errorMsgWrapper).removeClass("hidden");
         } else {
             invokerUtil.post(serviceEndPoint, payload, successCallback, errorCallback);
-            $(modalPopupContent).removeData();
-            hidePopup();
+            //$(modalPopupContent).removeData();
+            modalDialog.hide();
         }
     } else {
         invokerUtil.post(serviceEndPoint, payload, successCallback, errorCallback);
-        $(modalPopupContent).removeData();
-        hidePopup();
+        //$(modalPopupContent).removeData();
+        modalDialog.hide();
     }
 }
 
