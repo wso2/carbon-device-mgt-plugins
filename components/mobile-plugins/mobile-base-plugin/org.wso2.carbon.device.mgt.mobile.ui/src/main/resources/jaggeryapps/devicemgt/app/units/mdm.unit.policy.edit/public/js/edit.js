@@ -2543,6 +2543,28 @@ $(document).ready(function () {
         }
     });
 
+    /**
+     *
+     * Fix for the bug EMM-1719
+     */
+    $(advanceOperations).on('hidden.bs.collapse', function () {
+        if($(this).find('input').prop('checked')){
+            $(this).find('input').prop('checked',false);
+        }
+    });
+
+    /**
+     *
+     * Fix for the bug EMM-1719
+     */
+    $(advanceOperations).on('shown.bs.collapse', function () {
+        if($(this).find('input').prop('checked') == false){
+            $(this).find('input').prop('checked',true);
+        }
+    });
+
+
+
     // adding support for cloning multiple profiles per feature with cloneable class definitions
     $(advanceOperations).on("click", ".multi-view.add.enabled", function () {
         // get a copy of .cloneable and create new .cloned div element
