@@ -2543,20 +2543,14 @@ $(document).ready(function () {
         }
     });
 
-    /**
-     *
-     * Fix for the bug EMM-1719
-     */
+
     $(advanceOperations).on('hidden.bs.collapse', function () {
         if($(this).find('input').prop('checked')){
             $(this).find('input').prop('checked',false);
         }
     });
 
-    /**
-     *
-     * Fix for the bug EMM-1719
-     */
+
     $(advanceOperations).on('shown.bs.collapse', function () {
         if($(this).find('input').prop('checked') == false){
             $(this).find('input').prop('checked',true);
