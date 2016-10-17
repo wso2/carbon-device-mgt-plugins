@@ -291,5 +291,38 @@ var utils = function () {
         }
     };
 
+    publicMethods["getTokenPairAndScopesByPasswordGrantType"] = function (username, password, encodedClientAppCredentials, scopes) {
+        if (!username || !password || !encodedClientAppCredentials || !scopes) {
+            log.error("{/app/modules/oauth/token-handler-utils.js} Error in retrieving access token by password " +
+                "grant type. No username, password, encoded client app credentials or scopes are " +
+                    "found - getTokenPairAndScopesByPasswordGrantType(a, b, c, d)");
+            return null;
+        } else {
+            // calling oauth provider token service endpoint
+            var requestURL = deviceMgtProps["oauthProvider"]["tokenServiceURL"];
+            var requestPayload = "grant_type=password&username=" +
+                username + "&password=" + password + "&scope=" + scopes;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", requestURL, false);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.setRequestHeader("Authorization", "Basic " + encodedClientAppCredentials);
+            xhr.send(requestPayload);
+
+            if (xhr["status"] == 200 && xhr["responseText"]) {
+                var responsePayload = parse(xhr["responseText"]);
+                var tokenData = {};
+                tokenData["accessToken"] = responsePayload["access_token"];
+                tokenData["refreshToken"] = responsePayload["refresh_token"];
+                tokenData["scopes"] = responsePayload["scope"];
+                return tokenData;
+            } else {
+                log.error("{/app/modules/oauth/token-handler-utils.js} Error in retrieving access token " +
+                    "by password grant type - getTokenPairAndScopesByPasswordGrantType(a, b, c, d)");
+                return null;
+            }
+        }
+    };
+
     return publicMethods;
 }();
