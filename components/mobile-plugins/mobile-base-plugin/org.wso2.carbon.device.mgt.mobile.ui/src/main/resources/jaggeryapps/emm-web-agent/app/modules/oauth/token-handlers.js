@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -53,7 +53,7 @@ var handlers = function () {
                     stringOfScopes += entry + " ";
                 });
                 tokenData = tokenUtil.
-                    getTokenPairByPasswordGrantType(username,
+                    getTokenPairAndScopesByPasswordGrantType(username,
                         encodeURIComponent(password), encodedClientAppCredentials, stringOfScopes);
                 if (!tokenData) {
                     throw new Error("{/app/modules/oauth/token-handlers.js} Could not set up " +
@@ -90,7 +90,7 @@ var handlers = function () {
                 var tokenData;
                 // accessTokenPair will include current access token as well as current refresh token
                 tokenData = tokenUtil.
-                    getTokenPairBySAMLGrantType(samlToken, encodedClientAppCredentials, "PRODUCTION");
+                    getTokenPairAndScopesBySAMLGrantType(samlToken, encodedClientAppCredentials, "PRODUCTION");
                 if (!tokenData) {
                     throw new Error("{/app/modules/oauth/token-handlers.js} Could not set up token " +
                         "pair by password grant type. Error in token " +
@@ -142,26 +142,35 @@ var handlers = function () {
                     "client credentials to session context as the server is unable to obtain " +
                         "dynamic client credentials - setUpEncodedTenantBasedClientAppCredentials(x)");
             } else {
-                var jwtToken = tokenUtil.getAccessTokenByJWTGrantType(dynamicClientAppCredentials);
-                if (!jwtToken) {
-                    throw new Error("{/app/modules/oauth/token-handlers.js} Could not set up encoded tenant based " +
+                if (devicemgtProps["apimgt-gateway"]) {
+                    var jwtToken = tokenUtil.getAccessTokenByJWTGrantType(dynamicClientAppCredentials);
+                    if (!jwtToken) {
+                        throw new Error("{/app/modules/oauth/token-handlers.js} Could not set up encoded tenant based " +
                         "client credentials to session context as the server is unable to obtain " +
-                            "a jwt token - setUpEncodedTenantBasedClientAppCredentials(x)");
-                } else {
-                    var tenantBasedClientAppCredentials = tokenUtil.
-                        getTenantBasedClientAppCredentials(username, jwtToken);
-                    if (!tenantBasedClientAppCredentials) {
-                        throw new Error("{/app/modules/oauth/token-handlers.js} Could not set up encoded tenant " +
-                            "based client credentials to session context as the server is unable " +
-                                "to obtain such credentials - setUpEncodedTenantBasedClientAppCredentials(x)");
+                        "a jwt token - setUpEncodedTenantBasedClientAppCredentials(x)");
                     } else {
-                        var encodedTenantBasedClientAppCredentials =
-                            tokenUtil.encode(tenantBasedClientAppCredentials["clientId"] + ":" +
+                        var tenantBasedClientAppCredentials = tokenUtil.
+                            getTenantBasedClientAppCredentials(username, jwtToken);
+                        if (!tenantBasedClientAppCredentials) {
+                            throw new Error("{/app/modules/oauth/token-handlers.js} Could not set up encoded tenant " +
+                            "based client credentials to session context as the server is unable " +
+                            "to obtain such credentials - setUpEncodedTenantBasedClientAppCredentials(x)");
+                        } else {
+                            var encodedTenantBasedClientAppCredentials =
+                                tokenUtil.encode(tenantBasedClientAppCredentials["clientId"] + ":" +
                                 tenantBasedClientAppCredentials["clientSecret"]);
-                        // setting up encoded tenant based client credentials to session context.
-                        session.put(constants["ENCODED_TENANT_BASED_CLIENT_APP_CREDENTIALS"],
-                            encodedTenantBasedClientAppCredentials);
+                            // setting up encoded tenant based client credentials to session context.
+                            session.put(constants["ENCODED_TENANT_BASED_CLIENT_APP_CREDENTIALS"],
+                                encodedTenantBasedClientAppCredentials);
+                        }
                     }
+                } else {
+                    var encodedTenantBasedClientAppCredentials =
+                        tokenUtil.encode(dynamicClientAppCredentials["clientId"] + ":" +
+                        dynamicClientAppCredentials["clientSecret"]);
+                    // setting up encoded tenant based client credentials to session context.
+                    session.put(constants["ENCODED_TENANT_BASED_CLIENT_APP_CREDENTIALS"],
+                        encodedTenantBasedClientAppCredentials);
                 }
             }
         }
