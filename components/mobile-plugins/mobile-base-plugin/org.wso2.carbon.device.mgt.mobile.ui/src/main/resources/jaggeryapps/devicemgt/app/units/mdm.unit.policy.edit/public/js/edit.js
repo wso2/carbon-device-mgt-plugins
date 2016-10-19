@@ -2553,21 +2553,25 @@ $(document).ready(function () {
         }
     });
 
-
-    $(advanceOperations).on('hidden.bs.collapse', function () {
-        if($(this).find('input').prop('checked')){
-            $(this).find('input').prop('checked',false);
+    // <start - fixing feature-configuring switch double-click issue>
+    $(advanceOperations).on('hidden.bs.collapse', function (event) {
+        var collapsedFeatureBody = event.target.id;
+        var featureConfiguringSwitch = "#" + collapsedFeatureBody.
+            substr(0, collapsedFeatureBody.lastIndexOf("-")) + "-heading input[type=checkbox]";
+        if ($(featureConfiguringSwitch).prop("checked") == true) {
+            $(featureConfiguringSwitch).prop("checked", false);
         }
     });
 
-
-    $(advanceOperations).on('shown.bs.collapse', function () {
-        if($(this).find('input').prop('checked') == false){
-            $(this).find('input').prop('checked',true);
+    $(advanceOperations).on('shown.bs.collapse', function (event) {
+        var expandedFeatureBody = event.target.id;
+        var featureConfiguringSwitch = "#" + expandedFeatureBody.
+            substr(0, expandedFeatureBody.lastIndexOf("-")) + "-heading input[type=checkbox]";
+        if ($(featureConfiguringSwitch).prop("checked") == false) {
+            $(featureConfiguringSwitch).prop("checked", true);
         }
     });
-
-
+    // <end - fixing feature-configuring switch double-click issue>
 
     // adding support for cloning multiple profiles per feature with cloneable class definitions
     $(advanceOperations).on("click", ".multi-view.add.enabled", function () {
