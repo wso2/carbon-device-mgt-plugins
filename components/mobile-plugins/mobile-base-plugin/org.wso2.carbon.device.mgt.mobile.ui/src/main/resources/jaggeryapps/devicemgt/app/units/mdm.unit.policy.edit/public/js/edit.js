@@ -515,9 +515,7 @@ validateStep["policy-profile"] = function () {
                 operation = androidOperationConstants["KIOSK_APPS"];
                 // Initializing continueToCheckNextInputs to true
                 continueToCheckNextInputs = true;
-
                 var whitelistedApplicationsGridChildInputs = "div#cosu-whitelisted-applications .child-input";
-
                 if (continueToCheckNextInputs) {
                     if ($(whitelistedApplicationsGridChildInputs).length == 0) {
                         validationStatus = {
@@ -582,20 +580,16 @@ validateStep["policy-profile"] = function () {
                             };
                             continueToCheckNextInputs = false;
                         }
-
                     }
                 }
-
                 if (continueToCheckNextInputs) {
                     validationStatus = {
                         "error": false,
                         "okFeature": operation
                     };
                 }
-
                 // Updating validationStatusArray with validationStatus
                 validationStatusArray.push(validationStatus);
-
             }
         }
     } if (policy["platform"] == platformTypeConstants["WINDOWS"]) {
