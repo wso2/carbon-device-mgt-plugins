@@ -56,6 +56,6 @@ $(document).ready(function () {
         updateStats("/api/device-mgt/v1.0/users/count", "#user-count");
     }
     if ($("#role-count").data("role-count")) {
-        updateStats("/api/device-mgt/v1.0/roles?offset=0&limit=1", "#role-count");
+        updateStats("/api/device-mgt/v1.0/roles?offset=0&limit=1&user-store=all", "#role-count");
     }
 });

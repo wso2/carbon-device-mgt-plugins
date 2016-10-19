@@ -103,6 +103,7 @@ var operationModule = function () {
         "EMAIL_OPERATION_CODE": "EMAIL",
         "AIRPLAY_OPERATION_CODE": "AIR_PLAY",
         "LDAP_OPERATION_CODE": "LDAP",
+        "DOMAIN_OPERATION_CODE": "DOMAIN",
         "CALENDAR_OPERATION_CODE": "CALDAV",
         "NOTIFICATION_OPERATION_CODE": "NOTIFICATION",
         "CALENDAR_SUBSCRIPTION_OPERATION_CODE": "CALENDAR_SUBSCRIPTION",
@@ -146,6 +147,12 @@ var operationModule = function () {
                     "passcodePolicyMaxAutoLock": operationPayload["maxInactivity"],
                     "passcodePolicyGracePeriod": operationPayload["maxGracePeriod"],
                     "passcodePolicyMaxFailedAttempts": operationPayload["maxFailedAttempts"]
+                };
+                break;
+            case iosOperationConstants["DOMAIN_OPERATION_CODE"]:
+                payload = {
+                    "emailDomains": operationPayload["emailDomains"],
+                    "webDomains": operationPayload["webDomains"]
                 };
                 break;
             case iosOperationConstants["RESTRICTIONS_OPERATION_CODE"]:
