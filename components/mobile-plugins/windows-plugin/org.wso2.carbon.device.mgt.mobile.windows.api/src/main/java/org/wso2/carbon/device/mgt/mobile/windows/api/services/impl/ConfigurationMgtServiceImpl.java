@@ -35,6 +35,7 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.services.ConfigurationMgtSe
 
 import javax.jws.WebService;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,8 +136,8 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
 
     @GET
     @Path("/license")
-    public Response getLicense(
-            @HeaderParam("If-Modified-Since") String ifModifiedSince) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getLicense(@HeaderParam("If-Modified-Since") String ifModifiedSince) {
         License license;
         try {
             license =
@@ -149,7 +150,7 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
-        return Response.status(Response.Status.OK).entity(license).build();
+        return Response.status(Response.Status.OK).entity((license == null) ? null : license.getText()).build();
     }
 }
 
