@@ -439,6 +439,9 @@ var operationModule = function () {
                 break;
             case iosOperationConstants["WIFI_OPERATION_CODE"]:
                 operationType = operationTypeConstants["PROFILE"];
+                if(operationData["wifiProxyPort"] == ""){
+                    operationData["wifiProxyPort"] = -1;
+                }
                 payload = {
                     "operation": {
                         "SSID": operationData["wifiSSID"],
