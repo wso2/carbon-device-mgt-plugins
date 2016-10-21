@@ -103,6 +103,7 @@ var operationModule = function () {
         "EMAIL_OPERATION_CODE": "EMAIL",
         "AIRPLAY_OPERATION_CODE": "AIR_PLAY",
         "LDAP_OPERATION_CODE": "LDAP",
+        "DOMAIN_OPERATION_CODE": "DOMAIN",
         "CALENDAR_OPERATION_CODE": "CALDAV",
         "NOTIFICATION_OPERATION_CODE": "NOTIFICATION",
         "CALENDAR_SUBSCRIPTION_OPERATION_CODE": "CALENDAR_SUBSCRIPTION",
@@ -146,6 +147,12 @@ var operationModule = function () {
                     "passcodePolicyMaxAutoLock": operationPayload["maxInactivity"],
                     "passcodePolicyGracePeriod": operationPayload["maxGracePeriod"],
                     "passcodePolicyMaxFailedAttempts": operationPayload["maxFailedAttempts"]
+                };
+                break;
+            case iosOperationConstants["DOMAIN_OPERATION_CODE"]:
+                payload = {
+                    "emailDomains": operationPayload["emailDomains"],
+                    "webDomains": operationPayload["webDomains"]
                 };
                 break;
             case iosOperationConstants["RESTRICTIONS_OPERATION_CODE"]:
@@ -291,7 +298,7 @@ var operationModule = function () {
             case iosOperationConstants["WIFI_OPERATION_CODE"]:
                 payload = {
                     "wifiHiddenNetwork": operationPayload["hiddenNetwork"],
-                    "wifiSSID": operationPayload["ssid"],
+                    "wifiSSID": operationPayload["SSID"],
                     "wifiAutoJoin": operationPayload["autoJoin"],
                     "wifiProxyType": operationPayload["proxyType"],
                     "wifiEncryptionType": operationPayload["encryptionType"],
@@ -432,9 +439,12 @@ var operationModule = function () {
                 break;
             case iosOperationConstants["WIFI_OPERATION_CODE"]:
                 operationType = operationTypeConstants["PROFILE"];
+                if(operationData["wifiProxyPort"] == ""){
+                    operationData["wifiProxyPort"] = -1;
+                }
                 payload = {
                     "operation": {
-                        "ssid": operationData["wifiSSID"],
+                        "SSID": operationData["wifiSSID"],
                         "hiddenNetwork": operationData["wifiHiddenNetwork"],
                         "autoJoin": operationData["wifiAutoJoin"],
                         "proxyType": operationData["wifiProxyType"],
@@ -749,13 +759,11 @@ var operationModule = function () {
                     }
                 };
                 break;
-            case iosOperationConstants["DOMAIN_CODE"]:
+            case iosOperationConstants["DOMAIN_OPERATION_CODE"]:
                 operationType = operationTypeConstants["PROFILE"];
                 payload = {
-                    "operation": {
-                        "emailDomains": operationData["emailDomains"],
-                        "webDomains": operationData["webDomains"]
-                    }
+                    "emailDomains": operationData["emailDomains"],
+                    "webDomains": operationData["webDomains"]
                 };
                 break;
             case iosOperationConstants["CELLULAR_OPERATION_CODE"]:
