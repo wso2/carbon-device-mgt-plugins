@@ -18,11 +18,11 @@
      <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>extensions</artifactId>
-        <version>2.2.4-SNAPSHOT</version>
+        <version>2.2.5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <version>2.2.4-SNAPSHOT</version>
+    <version>2.2.5-SNAPSHOT</version>
     <artifactId>org.wso2.carbon.appmgt.mdm.osgiconnector</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - App Manager WSO2 MDM OSGI Connector Component</name>
