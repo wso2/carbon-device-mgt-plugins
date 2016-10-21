@@ -2550,7 +2550,7 @@ var slideDownPaneAgainstValueSetForRadioButtons = function (selectElement, paneI
         }
     }
     var paneSelector = "#" + paneID;
-    if(slideDownVotes > 0) {
+    if (slideDownVotes > 0) {
         $(paneSelector).removeClass("hidden");
     } else {
         $(paneSelector).addClass("hidden");
