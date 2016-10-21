@@ -113,10 +113,10 @@ var androidOperationConstants = {
     "ENCRYPT_STORAGE_OPERATION_CODE": "ENCRYPT_STORAGE",
     "WIFI_OPERATION": "wifi",
     "WIFI_OPERATION_CODE": "WIFI",
-    "APPLICATION_OPERATION":"app-restriction",
-    "APPLICATION_OPERATION_CODE":"APP-RESTRICTION",
-    "KIOSK_APPS_CODE":"KIOSK_APPS",
-    "KIOSK_APPS":"cosu-whitelisted-applications"
+    "APPLICATION_OPERATION": "app-restriction",
+    "APPLICATION_OPERATION_CODE": "APP-RESTRICTION",
+    "KIOSK_APPS_CODE": "KIOSK_APPS",
+    "KIOSK_APPS": "cosu-whitelisted-applications"
 };
 
 // Constants to define Android Operation Constants
@@ -524,8 +524,7 @@ validateStep["policy-profile"] = function () {
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
-                    }
-                    else {
+                    } else {
                         childInputCount = 0;
                         childInputArray = [];
                         emptyChildInputCount = 0;

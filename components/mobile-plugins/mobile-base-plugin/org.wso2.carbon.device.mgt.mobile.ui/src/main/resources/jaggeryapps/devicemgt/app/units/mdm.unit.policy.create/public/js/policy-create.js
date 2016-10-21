@@ -47,10 +47,10 @@ var androidOperationConstants = {
     "WIFI_OPERATION_CODE": "WIFI",
     "VPN_OPERATION": "vpn",
     "VPN_OPERATION_CODE": "VPN",
-    "APPLICATION_OPERATION":"app-restriction",
-    "APPLICATION_OPERATION_CODE":"APP-RESTRICTION",
-    "KIOSK_APPS_CODE":"KIOSK_APPS",
-    "KIOSK_APPS":"cosu-whitelisted-applications"
+    "APPLICATION_OPERATION": "app-restriction",
+    "APPLICATION_OPERATION_CODE": "APP-RESTRICTION",
+    "KIOSK_APPS_CODE": "KIOSK_APPS",
+    "KIOSK_APPS": "cosu-whitelisted-applications"
 };
 
 // Constants to define iOS Operation Constants
