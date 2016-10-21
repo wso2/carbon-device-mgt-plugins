@@ -756,13 +756,11 @@ var operationModule = function () {
                     }
                 };
                 break;
-            case iosOperationConstants["DOMAIN_CODE"]:
+            case iosOperationConstants["DOMAIN_OPERATION_CODE"]:
                 operationType = operationTypeConstants["PROFILE"];
                 payload = {
-                    "operation": {
-                        "emailDomains": operationData["emailDomains"],
-                        "webDomains": operationData["webDomains"]
-                    }
+                    "emailDomains": operationData["emailDomains"],
+                    "webDomains": operationData["webDomains"]
                 };
                 break;
             case iosOperationConstants["CELLULAR_OPERATION_CODE"]:
