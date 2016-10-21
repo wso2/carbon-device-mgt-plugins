@@ -535,16 +535,13 @@ validateStep["policy-profile"] = function () {
 
                 // Updating validationStatusArray with validationStatus
                 validationStatusArray.push(validationStatus);
-
             }
             if ($.inArray(androidOperationConstants["KIOSK_APPS_CODE"], configuredOperations) != -1) {
                 //If COSU whitelisting applications configured
                 operation = androidOperationConstants["KIOSK_APPS"];
                 // Initializing continueToCheckNextInputs to true
                 continueToCheckNextInputs = true;
-
                 var whitelistedApplicationsGridChildInputs = "div#cosu-whitelisted-applications .child-input";
-
                 if (continueToCheckNextInputs) {
                     if ($(whitelistedApplicationsGridChildInputs).length == 0) {
                         validationStatus = {
@@ -609,20 +606,16 @@ validateStep["policy-profile"] = function () {
                             };
                             continueToCheckNextInputs = false;
                         }
-
                     }
                 }
-
                 if (continueToCheckNextInputs) {
                     validationStatus = {
                         "error": false,
                         "okFeature": operation
                     };
                 }
-
                 // Updating validationStatusArray with validationStatus
                 validationStatusArray.push(validationStatus);
-
             }
         }
     }
@@ -2550,14 +2543,12 @@ var slideDownPaneAgainstValueSet = function (selectElement, paneID, valueSet) {
 
 var slideDownPaneAgainstValueSetForRadioButtons = function (selectElement, paneID, valueSet) {
     var selectedValueOnChange = selectElement.value;
-
     var i, slideDownVotes = 0;
     for (i = 0; i < valueSet.length; i++) {
         if (selectedValueOnChange == valueSet[i]) {
             slideDownVotes++;
         }
     }
-
     var paneSelector = "#" + paneID;
     if(slideDownVotes > 0) {
         $(paneSelector).removeClass("hidden");
@@ -2798,6 +2789,26 @@ $(document).ready(function () {
             }
         }
     });
+
+    // <start - fixing feature-configuring switch double-click issue>
+    $(advanceOperations).on('hidden.bs.collapse', function (event) {
+        var collapsedFeatureBody = event.target.id;
+        var featureConfiguringSwitch = "#" + collapsedFeatureBody.
+            substr(0, collapsedFeatureBody.lastIndexOf("-")) + "-heading input[type=checkbox]";
+        if ($(featureConfiguringSwitch).prop("checked") == true) {
+            $(featureConfiguringSwitch).prop("checked", false);
+        }
+    });
+
+    $(advanceOperations).on('shown.bs.collapse', function (event) {
+        var expandedFeatureBody = event.target.id;
+        var featureConfiguringSwitch = "#" + expandedFeatureBody.
+            substr(0, expandedFeatureBody.lastIndexOf("-")) + "-heading input[type=checkbox]";
+        if ($(featureConfiguringSwitch).prop("checked") == false) {
+            $(featureConfiguringSwitch).prop("checked", true);
+        }
+    });
+    // <end - fixing feature-configuring switch double-click issue>
 
     // adding support for cloning multiple profiles per feature with cloneable class definitions
     $(advanceOperations).on("click", ".multi-view.add.enabled", function () {

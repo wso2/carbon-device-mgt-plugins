@@ -298,7 +298,7 @@ var operationModule = function () {
             case iosOperationConstants["WIFI_OPERATION_CODE"]:
                 payload = {
                     "wifiHiddenNetwork": operationPayload["hiddenNetwork"],
-                    "wifiSSID": operationPayload["ssid"],
+                    "wifiSSID": operationPayload["SSID"],
                     "wifiAutoJoin": operationPayload["autoJoin"],
                     "wifiProxyType": operationPayload["proxyType"],
                     "wifiEncryptionType": operationPayload["encryptionType"],
@@ -441,7 +441,7 @@ var operationModule = function () {
                 operationType = operationTypeConstants["PROFILE"];
                 payload = {
                     "operation": {
-                        "ssid": operationData["wifiSSID"],
+                        "SSID": operationData["wifiSSID"],
                         "hiddenNetwork": operationData["wifiHiddenNetwork"],
                         "autoJoin": operationData["wifiAutoJoin"],
                         "proxyType": operationData["wifiProxyType"],
