@@ -17,6 +17,7 @@
 package org.wso2.carbon.device.mgt.iot.androidsense.plugin.impl.feature;
 
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.DeviceTypeIdentifier;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.GenericFeatureManager;
@@ -38,13 +39,13 @@ public class AndroidSenseFeatureManager implements FeatureManager {
 	@Override
 	public Feature getFeature(String name) throws DeviceManagementException {
 		GenericFeatureManager genericFeatureManager = GenericFeatureManager.getInstance();
-		return genericFeatureManager.getFeature(AndroidSenseConstants.DEVICE_TYPE, name);
+		return genericFeatureManager.getFeature(new DeviceTypeIdentifier(AndroidSenseConstants.DEVICE_TYPE), name);
 	}
 
 	@Override
 	public List<Feature> getFeatures() throws DeviceManagementException {
 		GenericFeatureManager genericFeatureManager = GenericFeatureManager.getInstance();
-		return genericFeatureManager.getFeatures(AndroidSenseConstants.DEVICE_TYPE);
+		return genericFeatureManager.getFeatures(new DeviceTypeIdentifier(AndroidSenseConstants.DEVICE_TYPE));
 	}
 
 	@Override

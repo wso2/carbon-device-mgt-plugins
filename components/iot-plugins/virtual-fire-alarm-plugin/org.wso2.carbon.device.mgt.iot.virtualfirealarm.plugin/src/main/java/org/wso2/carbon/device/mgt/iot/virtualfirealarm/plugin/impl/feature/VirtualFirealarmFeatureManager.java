@@ -16,6 +16,7 @@
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.feature;
 
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.DeviceTypeIdentifier;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.GenericFeatureManager;
@@ -37,13 +38,13 @@ public class VirtualFirealarmFeatureManager implements FeatureManager{
 	@Override
 	public Feature getFeature(String name) throws DeviceManagementException {
 		GenericFeatureManager genericFeatureManager = GenericFeatureManager.getInstance();
-		return genericFeatureManager.getFeature(VirtualFireAlarmConstants.DEVICE_TYPE, name);
+		return genericFeatureManager.getFeature(new DeviceTypeIdentifier(VirtualFireAlarmConstants.DEVICE_TYPE), name);
 	}
 
 	@Override
 	public List<Feature> getFeatures() throws DeviceManagementException {
 		GenericFeatureManager genericFeatureManager = GenericFeatureManager.getInstance();
-		return genericFeatureManager.getFeatures(VirtualFireAlarmConstants.DEVICE_TYPE);
+		return genericFeatureManager.getFeatures(new DeviceTypeIdentifier(VirtualFireAlarmConstants.DEVICE_TYPE));
 	}
 
 	@Override

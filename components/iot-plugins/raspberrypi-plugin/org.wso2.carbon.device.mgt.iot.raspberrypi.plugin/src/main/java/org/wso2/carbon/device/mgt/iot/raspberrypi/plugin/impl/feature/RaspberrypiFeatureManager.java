@@ -16,6 +16,7 @@
 package org.wso2.carbon.device.mgt.iot.raspberrypi.plugin.impl.feature;
 
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.DeviceTypeIdentifier;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.GenericFeatureManager;
@@ -37,13 +38,13 @@ public class RaspberrypiFeatureManager implements FeatureManager {
 	@Override
 	public Feature getFeature(String name) throws DeviceManagementException {
 		GenericFeatureManager genericFeatureManager = GenericFeatureManager.getInstance();
-		return  genericFeatureManager.getFeature(RaspberrypiConstants.DEVICE_TYPE, name);
+		return  genericFeatureManager.getFeature(new DeviceTypeIdentifier(RaspberrypiConstants.DEVICE_TYPE), name);
 	}
 
 	@Override
 	public List<Feature> getFeatures() throws DeviceManagementException {
 		GenericFeatureManager genericFeatureManager = GenericFeatureManager.getInstance();
-		return  genericFeatureManager.getFeatures(RaspberrypiConstants.DEVICE_TYPE);
+		return  genericFeatureManager.getFeatures(new DeviceTypeIdentifier(RaspberrypiConstants.DEVICE_TYPE));
 	}
 
 	@Override
