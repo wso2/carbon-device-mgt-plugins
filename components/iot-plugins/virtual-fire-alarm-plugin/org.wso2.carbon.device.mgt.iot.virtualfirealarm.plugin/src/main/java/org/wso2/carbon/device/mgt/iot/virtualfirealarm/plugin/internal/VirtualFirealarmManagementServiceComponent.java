@@ -75,10 +75,10 @@ public class VirtualFirealarmManagementServiceComponent {
         }
         try {
 
-            VirtualFireAlarmManagerService virtualFireAlarmManagerService = new VirtualFireAlarmManagerService();
+ //           VirtualFireAlarmManagerService virtualFireAlarmManagerService = new VirtualFireAlarmManagerService();
             BundleContext bundleContext = ctx.getBundleContext();
-            firealarmServiceRegRef = bundleContext.registerService(DeviceManagementService.class.getName()
-                                                                   ,virtualFireAlarmManagerService, null);
+//            firealarmServiceRegRef = bundleContext.registerService(DeviceManagementService.class.getName()
+//                                                                   ,virtualFireAlarmManagerService, null);
             bundleContext.registerService(ServerStartupObserver.class.getName(), new VirtualFirealarmStartupListener(),
                                           null);
             String setupOption = System.getProperty("setup");
@@ -103,19 +103,19 @@ public class VirtualFirealarmManagementServiceComponent {
     }
 
     protected void deactivate(ComponentContext ctx) {
-        if (log.isDebugEnabled()) {
-            log.debug("De-activating Virtual Firealarm Device Management Service Component");
-        }
-        try {
-            if (firealarmServiceRegRef != null) {
-                firealarmServiceRegRef.unregister();
-            }
-            if (log.isDebugEnabled()) {
-                log.debug("Virtual Firealarm Device Management Service Component has been successfully de-activated");
-            }
-        } catch (Throwable e) {
-            log.error("Error occurred while de-activating Virtual Firealarm Device Management bundle", e);
-        }
+//        if (log.isDebugEnabled()) {
+//            log.debug("De-activating Virtual Firealarm Device Management Service Component");
+//        }
+//        try {
+//            if (firealarmServiceRegRef != null) {
+//                firealarmServiceRegRef.unregister();
+//            }
+//            if (log.isDebugEnabled()) {
+//                log.debug("Virtual Firealarm Device Management Service Component has been successfully de-activated");
+//            }
+//        } catch (Throwable e) {
+//            log.error("Error occurred while de-activating Virtual Firealarm Device Management bundle", e);
+//        }
     }
 
     /**

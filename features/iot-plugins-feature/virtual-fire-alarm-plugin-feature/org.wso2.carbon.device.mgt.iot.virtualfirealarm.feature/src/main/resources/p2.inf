@@ -16,6 +16,9 @@ org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../reso
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.virtualfirealarm_${feature.version}/certs/,target:${installFolder}/../../resources/security/,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/device-types/);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.virtualfirealarm_${feature.version}/conf/virtual-fire-alarm-config.xml,target:${installFolder}/../../conf/etc/device-mgt-plugins/virtual-fire-alarm-config.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/devicetypes/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.virtualfirealarm_${feature.version}/devicetypes/,target:${installFolder}/../../deployment/server/devicetypes/,overwrite:true);\
+
 
 instructions.unconfigure = \
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/virtual_firealarm.war);\
@@ -37,3 +40,4 @@ org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../dep
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.virtual_firealarm.policy-wizard);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../resources/security/wso2certs.jks);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../conf/etc/device-mgt-plugins/virtual-fire-alarm-config.xml);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/devicetypes/virtual_firealarm.xml);\

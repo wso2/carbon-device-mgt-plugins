@@ -25,10 +25,6 @@
         <param-value>true</param-value>
     </context-param>
     <context-param>
-        <param-name>isSharedWithAllTenants</param-name>
-        <param-value>true</param-value>
-    </context-param>
-    <context-param>
         <param-name>providerTenantDomain</param-name>
         <param-value>carbon.super</param-value>
     </context-param>
