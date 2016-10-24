@@ -34,7 +34,7 @@ public class DeviceManagementConfiguration {
     private DeviceManagementConfiguration() {
     }
 
-    @XmlElement(name = "PushNotificationConfiguration", required = false)
+    @XmlElement(name = "EventListenerConfiguration", required = false)
     public EventListenerConfiguration getEventListenerConfiguration() {
         return eventListenerConfiguration;
     }
