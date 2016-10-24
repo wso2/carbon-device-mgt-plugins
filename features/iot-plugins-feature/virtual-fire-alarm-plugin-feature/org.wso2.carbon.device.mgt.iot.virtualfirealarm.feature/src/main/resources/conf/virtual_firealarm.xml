@@ -18,21 +18,9 @@
   ~ under the License.
   -->
 <DeviceManagementConfiguration>
-    <DeviceType>virtual_firealarm</DeviceType>
-    <ManagementRepository>
-        <DataSourceConfiguration>
-            <JndiLookupDefinition>
-                <Name>jdbc/VirtualFireAlarmDM_DB</Name>
-            </JndiLookupDefinition>
-        </DataSourceConfiguration>
-        <ProvisioningConfig>
-            <TenantDomain>carbon.super</TenantDomain>
-            <SharedWithAllTenants>false</SharedWithAllTenants>
-        </ProvisioningConfig>
-    </ManagementRepository>
-    <PushNotificationConfiguration>
+    <EventListenerConfiguration>
         <!--MQTT Config-->
-        <PushNotificationProvider>MQTT</PushNotificationProvider>
+        <EventListenerProvider>MQTT</EventListenerProvider>
         <Properties>
             <Property Name="mqtt.adapter.name">virtualfirealarm.mqtt.adapter</Property>
             <Property Name="url">tcp://localhost:1883</Property>
@@ -53,5 +41,5 @@
             <Property Name="jid">admin@localhost</Property>
             <Property Name="server.name">localhost</Property>
         </Properties-->
-    </PushNotificationConfiguration>
+    </EventListenerConfiguration>
 </DeviceManagementConfiguration>

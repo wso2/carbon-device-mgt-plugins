@@ -18,7 +18,12 @@ public class VirtualFirealarmConfig {
     private static final String DEVICE_TYPE_CONFIG_PATH =
             CarbonUtils.getEtcCarbonConfigDirPath() + File.separator + "device-mgt-plugins" + File.separator
                     + "virtual_firealarm.xml";
+    private static VirtualFirealarmConfig virtualFirealarmConfig = new VirtualFirealarmConfig();
     private static DeviceManagementConfiguration deviceManagementConfiguration;
+
+    public static VirtualFirealarmConfig getInstance() {
+        return virtualFirealarmConfig;
+    }
 
     public static void initialize() throws VirtualFirealarmConfigurationException {
         File configFile = new File(DEVICE_TYPE_CONFIG_PATH);
@@ -37,7 +42,7 @@ public class VirtualFirealarmConfig {
 
     }
 
-    private DeviceManagementConfiguration getDeviceTypeConfiguration(File configurationFile) {
+    public DeviceManagementConfiguration getDeviceTypeConfiguration() {
         return  deviceManagementConfiguration;
     }
 

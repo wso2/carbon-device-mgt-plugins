@@ -20,9 +20,6 @@ package org.wso2.carbon.device.mgt.iot.arduino.service.impl.constants;
 
 public class ArduinoConstants {
     public final static String DEVICE_TYPE = "arduino";
-    public final static String DEVICE_PLUGIN_DEVICE_NAME = "DEVICE_NAME";
-    public final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
-    public final static String DEVICE_PLUGIN_DEVICE_ID = "ARDUINO_DEVICE_ID";
 
     public static final String URL_PREFIX = "http://";
     //sensor events summerized table name

@@ -23,7 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.core.ServerStartupObserver;
-import org.wso2.carbon.device.mgt.iot.URLPrinterStartupHandler;
+import org.wso2.carbon.device.mgt.iot.url.printer.URLPrinterStartupHandler;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**

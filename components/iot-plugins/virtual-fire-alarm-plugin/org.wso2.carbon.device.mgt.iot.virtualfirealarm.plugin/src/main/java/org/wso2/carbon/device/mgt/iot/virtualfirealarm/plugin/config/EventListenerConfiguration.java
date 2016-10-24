@@ -25,10 +25,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 import java.util.List;
 
-@XmlRootElement(name = "PushNotificationConfiguration")
+@XmlRootElement(name = "EventListenerConfiguration")
 public class EventListenerConfiguration {
 
-    private String pushNotificationProvider;
+    private String eventListenerProvider;
     private List<Property> properties;
 
     @XmlElementWrapper(name = "Properties", required = true)
@@ -41,13 +41,13 @@ public class EventListenerConfiguration {
         this.properties = properties;
     }
 
-    @XmlElement(name = "PushNotificationProvider", required = true)
-    public String getPushNotificationProvider() {
-        return pushNotificationProvider;
+    @XmlElement(name = "EventListenerProvider", required = true)
+    public String getEventListenerProvider() {
+        return eventListenerProvider;
     }
 
-    public void setPushNotificationProvider(String pushNotificationProvider) {
-        this.pushNotificationProvider = pushNotificationProvider;
+    public void setEventListenerProvider(String eventListenerProvider) {
+        this.eventListenerProvider = eventListenerProvider;
     }
 
     @XmlRootElement(name = "Property")

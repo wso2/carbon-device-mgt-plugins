@@ -19,8 +19,6 @@ package org.wso2.carbon.device.mgt.iot.androidsense.service.impl.constants;
 public class AndroidSenseConstants {
 
     public final static String DEVICE_TYPE = "android_sense";
-    public final static String DEVICE_PLUGIN_DEVICE_NAME = "DEVICE_NAME";
-    public final static String DEVICE_PLUGIN_DEVICE_ID = "ANDROID_DEVICE_ID";
 
     //Android Sensor names
     public static final String SENSOR_ACCELEROMETER = "accelerometer";
@@ -35,9 +33,13 @@ public class AndroidSenseConstants {
     public static final String SENSOR_ROTATION = "rotation";
     public static final String SENSOR_WORDCOUNT = "wordcounter";
     //MQTT Subscribe topic
-    public final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
 
     //mqtt tranport related constants
     public static final String MQTT_ADAPTER_TOPIC_PROPERTY_NAME = "mqtt.adapter.topic";
+
+    public static final String HOST_NAME = "HostName";
+    public static final String LOCALHOST = "localhost";
+    public static final String CONFIG_TYPE = "general";
+    public static final String DEFAULT_ENDPOINT = "tcp://localhost:1883";
 
 }

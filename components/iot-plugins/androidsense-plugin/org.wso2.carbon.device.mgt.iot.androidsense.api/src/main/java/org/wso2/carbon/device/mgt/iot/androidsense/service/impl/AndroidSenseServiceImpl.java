@@ -30,12 +30,10 @@ import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
-import org.wso2.carbon.device.mgt.iot.androidsense.plugin.constants.AndroidSenseConstants;
+import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.constants.AndroidSenseConstants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.APIUtil;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.AndroidConfiguration;
-import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.Constants;
 import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util.SensorRecord;
-import org.wso2.carbon.device.mgt.iot.util.Utils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -286,8 +284,8 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
                 AndroidConfiguration androidConfiguration = new AndroidConfiguration();
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
                 String mqttEndpoint = DEFAULT_MQTT_ENDPOINT;
-                if (mqttEndpoint.contains(Constants.LOCALHOST)) {
-                    mqttEndpoint = mqttEndpoint.replace(Constants.LOCALHOST, Utils.getServerUrl());
+                if (mqttEndpoint.contains(AndroidSenseConstants.LOCALHOST)) {
+                    mqttEndpoint = mqttEndpoint.replace(AndroidSenseConstants.LOCALHOST, APIUtil.getServerUrl());
                 }
                 androidConfiguration.setMqttEndpoint(mqttEndpoint);
                 return Response.ok(androidConfiguration.toString()).build();

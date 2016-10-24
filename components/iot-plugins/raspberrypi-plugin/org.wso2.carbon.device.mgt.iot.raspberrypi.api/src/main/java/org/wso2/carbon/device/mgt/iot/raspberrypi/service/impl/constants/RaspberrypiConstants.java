@@ -21,15 +21,12 @@ package org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.constants;
 public class RaspberrypiConstants {
 
     public final static String DEVICE_TYPE = "raspberrypi";
-    public final static String DEVICE_PLUGIN_DEVICE_NAME = "DEVICE_NAME";
-    public final static String DEVICE_PLUGIN_DEVICE_ID = "RASPBERRYPI_DEVICE_ID";
     public final static String STATE_ON = "ON";
     public final static String STATE_OFF = "OFF";
 
     public static final String BULB_CONTEXT = "BULB";
     //sensor events summerized table name
     public static final String TEMPERATURE_EVENT_TABLE = "DEVICE_TEMPERATURE_SUMMARY";
-    public final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
 
     //mqtt tranport related constants
     public static final String MQTT_ADAPTER_TOPIC_PROPERTY_NAME = "mqtt.adapter.topic";

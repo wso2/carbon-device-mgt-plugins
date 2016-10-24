@@ -28,7 +28,7 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>org.wso2.carbon.device.mgt.iot.feature</artifactId>
+	<artifactId>org.wso2.carbon.device.mgt.iot.url.printer.feature</artifactId>
 	<packaging>pom</packaging>
 	<version>2.2.5-SNAPSHOT</version>
 	<name>WSO2 Carbon - IoT Device Management Feature</name>
@@ -38,20 +38,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.json.wso2</groupId>
-			<artifactId>json</artifactId>
-		</dependency>
-		<!--Dependencies on XMPP Client Library-->
-		<dependency>
-			<groupId>org.igniterealtime.smack.wso2</groupId>
-			<artifactId>smack</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.igniterealtime.smack.wso2</groupId>
-			<artifactId>smackx</artifactId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.url.printer</artifactId>
 		</dependency>
 	</dependencies>
 
@@ -122,7 +109,7 @@
 							<goal>p2-feature-gen</goal>
 						</goals>
 						<configuration>
-							<id>org.wso2.carbon.device.mgt.iot</id>
+							<id>org.wso2.carbon.device.mgt.iot.url.printer</id>
 							<propertiesFile>../../../features/etc/feature.properties</propertiesFile>
 							<adviceFile>
 								<properties>
@@ -132,10 +119,7 @@
 							</adviceFile>
 							<bundles>
 								<bundleDef>
-									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot:${carbon.devicemgt.plugins.version}
-								</bundleDef>
-								<bundleDef>
-									org.json.wso2:json:${commons-json.version}
+									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.url.printer:${carbon.devicemgt.plugins.version}
 								</bundleDef>
 							</bundles>
 							<importFeatures>

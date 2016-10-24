@@ -107,16 +107,6 @@
 			<version>4.1</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin</artifactId>
-			<scope>provided</scope>
-		</dependency>
 
 		<!--JAX-RS -->
 		<dependency>
@@ -206,18 +196,15 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt</groupId>
 			<artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.igniterealtime.smack.wso2</groupId>
 			<artifactId>smack</artifactId>
@@ -226,11 +213,6 @@
 		<dependency>
 			<groupId>org.igniterealtime.smack.wso2</groupId>
 			<artifactId>smackx</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt</groupId>
-			<artifactId>org.wso2.carbon.apimgt.webapp.publisher</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -248,9 +230,17 @@
 			<artifactId>org.wso2.carbon.analytics.api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.extensions</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
-
-
 	<build>
 		<plugins>
 			<plugin>

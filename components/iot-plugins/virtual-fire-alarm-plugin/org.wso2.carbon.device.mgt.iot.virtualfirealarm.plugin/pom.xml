@@ -83,7 +83,10 @@
 							org.wso2.carbon.event.input.adapter.core,
 							org.wso2.carbon.event.input.adapter.core.exception,
 							org.jivesoftware.smack.*,
-							org.wso2.carbon.device.mgt.iot.devicetype.*
+							javax.xml.bind,
+							javax.xml.bind.annotation,
+							javax.xml.parsers; version="${javax.xml.parsers.import.pkg.version}",
+							org.w3c.dom
 						</Import-Package>
 						<Export-Package>
 							!org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal,
@@ -159,10 +162,6 @@
 		<dependency>
 			<groupId>org.igniterealtime.smack.wso2</groupId>
 			<artifactId>smackx</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot</artifactId>
 		</dependency>
 	</dependencies>
 </project>

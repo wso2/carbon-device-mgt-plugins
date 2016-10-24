@@ -18,7 +18,7 @@
   ~ under the License.
   -->
 <DeviceManagementConfiguration>
-    <DeviceType>virtual_firealarm</DeviceType>
+    <DeviceType>raspberrypi</DeviceType>
 
     <ManagementRepository>
         <DeviceDefinition>
@@ -41,7 +41,7 @@
         <!--MQTT Config-->
         <PushNotificationProvider>MQTT</PushNotificationProvider>
         <Properties>
-            <Property Name="mqtt.adapter.name">virtualfirealarm.mqtt.adapter</Property>
+            <Property Name="mqtt.adapter.name">raspberrypi.mqtt.adapter</Property>
             <Property Name="url">tcp://localhost:1883</Property>
             <Property Name="username">admin</Property>
             <Property Name="dcrUrl">https://localhost:9443/dynamic-client-web/register</Property>
@@ -49,16 +49,5 @@
             <Property Name="scopes"/>
             <Property Name="clearSession">true</Property>
         </Properties>
-        <!--XMPP Config-->
-        <!--PushNotificationProvider>XMPP</PushNotificationProvider>
-        <Properties>
-            <Property Name="xmpp.adapter.name">virtualfirealarm.xmpp.adapter</Property>
-            <Property Name="host">localhost</Property>
-            <Property Name="port">5222</Property>
-            <Property Name="username">admin</Property>
-            <Property Name="password">admin</Property>
-            <Property Name="jid">admin@localhost</Property>
-            <Property Name="server.name">localhost</Property>
-        </Properties-->
     </PushNotificationConfiguration>
 </DeviceManagementConfiguration>

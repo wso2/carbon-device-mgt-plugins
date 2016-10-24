@@ -27,39 +27,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "DeviceManagementConfiguration")
 public class DeviceManagementConfiguration {
 
-    private DeviceManagementConfigRepository deviceManagementConfigRepository;
-    private PushNotificationConfig pushNotificationConfig;
-    private String deviceType;
+    private EventListenerConfiguration eventListenerConfiguration;
 
     private static final Log log = LogFactory.getLog(DeviceManagementConfiguration.class);
 
     private DeviceManagementConfiguration() {
     }
 
-    @XmlElement(name = "DeviceType", required = false)
-    public String getDeviceType() {
-        return deviceType;
-    }
-
-    public void setDeviceType(String deviceType) {
-        this.deviceType = deviceType;
-    }
-
-    @XmlElement(name = "ManagementRepository", required = true)
-    public DeviceManagementConfigRepository getDeviceManagementConfigRepository() {
-        return deviceManagementConfigRepository;
-    }
-
-    public void setDeviceManagementConfigRepository(DeviceManagementConfigRepository deviceManagementConfigRepository) {
-        this.deviceManagementConfigRepository = deviceManagementConfigRepository;
-    }
-
     @XmlElement(name = "PushNotificationConfiguration", required = false)
-    public PushNotificationConfig getPushNotificationConfig() {
-        return pushNotificationConfig;
+    public EventListenerConfiguration getEventListenerConfiguration() {
+        return eventListenerConfiguration;
     }
 
-    public void setPushNotificationConfig(PushNotificationConfig pushNotificationConfig) {
-        this.pushNotificationConfig = pushNotificationConfig;
+    public void setEventListenerConfiguration(EventListenerConfiguration eventListenerConfiguration) {
+        this.eventListenerConfiguration = eventListenerConfiguration;
     }
 }

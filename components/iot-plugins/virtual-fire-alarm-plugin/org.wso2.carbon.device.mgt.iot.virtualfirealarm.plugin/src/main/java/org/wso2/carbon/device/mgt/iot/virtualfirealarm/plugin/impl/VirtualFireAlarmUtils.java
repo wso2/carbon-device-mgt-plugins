@@ -26,7 +26,6 @@ import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
-import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.VirtualFirealarmManagementDataHolder;
@@ -37,17 +36,9 @@ import org.wso2.carbon.event.input.adapter.core.MessageType;
 import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterException;
 import org.json.JSONObject;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,62 +48,6 @@ import java.util.Map;
 public class VirtualFireAlarmUtils {
 
     private static Log log = LogFactory.getLog(VirtualFireAlarmUtils.class);
-
-    public static void cleanupResources(Connection conn, PreparedStatement stmt, ResultSet rs) {
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (SQLException e) {
-                log.warn("Error occurred while closing result set", e);
-            }
-        }
-        if (stmt != null) {
-            try {
-                stmt.close();
-            } catch (SQLException e) {
-                log.warn("Error occurred while closing prepared statement", e);
-            }
-        }
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                log.warn("Error occurred while closing database connection", e);
-            }
-        }
-    }
-
-    public static void cleanupResources(PreparedStatement stmt, ResultSet rs) {
-        cleanupResources(null, stmt, rs);
-    }
-
-    /**
-     * Creates the device management schema.
-     */
-    public static void setupDeviceManagementSchema() throws VirtualFirealarmDeviceMgtPluginException {
-        DeviceManagementConfiguration deviceManagementConfiguration = VirtualFirealarmManagementDataHolder.getInstance()
-                .getDeviceTypeConfigService().getConfiguration(VirtualFireAlarmConstants.DEVICE_TYPE,
-                                                               VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
-        String datasourceName = deviceManagementConfiguration.getDeviceManagementConfigRepository()
-                .getDataSourceConfig().getJndiLookupDefinition().getJndiName();
-        try {
-            Context ctx = new InitialContext();
-            DataSource dataSource = (DataSource) ctx.lookup(datasourceName);
-            DeviceSchemaInitializer initializer = new DeviceSchemaInitializer(dataSource);
-            String checkSql = "select * from VIRTUAL_FIREALARM_DEVICE";
-            if (!initializer.isDatabaseStructureCreated(checkSql)) {
-                log.info("Initializing device management repository database schema");
-                initializer.createRegistryDatabase();
-            } else {
-                log.info("Device management repository database already exists. Not creating a new database.");
-            }
-        } catch (NamingException e) {
-            log.error("Error while looking up the data source: " + datasourceName, e);
-        } catch (Exception e) {
-            throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while initializing Iot Device " +
-                                                                       "Management database schema", e);
-        }
-    }
 
     public static void setupMqttInputAdapter() throws IOException {
         if (!MqttConfig.getInstance().isEnabled()) {
