@@ -2553,19 +2553,27 @@ $(document).ready(function () {
     // <start - fixing feature-configuring switch double-click issue>
     $(advanceOperations).on('hidden.bs.collapse', function (event) {
         var collapsedFeatureBody = event.target.id;
-        var featureConfiguringSwitch = "#" + collapsedFeatureBody.
-            substr(0, collapsedFeatureBody.lastIndexOf("-")) + "-heading input[type=checkbox]";
+        var operation = collapsedFeatureBody.substr(0, collapsedFeatureBody.lastIndexOf("-"));
+        var featureConfiguringSwitch = "#" + operation + "-heading input[type=checkbox]";
+        var featureConfiguredIcon = "#" + operation + "-configured";
         if ($(featureConfiguringSwitch).prop("checked") == true) {
             $(featureConfiguringSwitch).prop("checked", false);
+        }
+        if (!$(featureConfiguredIcon).hasClass("hidden")) {
+            $(featureConfiguredIcon).addClass("hidden");
         }
     });
 
     $(advanceOperations).on('shown.bs.collapse', function (event) {
         var expandedFeatureBody = event.target.id;
-        var featureConfiguringSwitch = "#" + expandedFeatureBody.
-            substr(0, expandedFeatureBody.lastIndexOf("-")) + "-heading input[type=checkbox]";
+        var operation = expandedFeatureBody.substr(0, expandedFeatureBody.lastIndexOf("-"));
+        var featureConfiguringSwitch = "#" + operation + "-heading input[type=checkbox]";
+        var featureConfiguredIcon = "#" + operation + "-configured";
         if ($(featureConfiguringSwitch).prop("checked") == false) {
             $(featureConfiguringSwitch).prop("checked", true);
+        }
+        if ($(featureConfiguredIcon).hasClass("hidden")) {
+            $(featureConfiguredIcon).removeClass("hidden");
         }
     });
     // <end - fixing feature-configuring switch double-click issue>

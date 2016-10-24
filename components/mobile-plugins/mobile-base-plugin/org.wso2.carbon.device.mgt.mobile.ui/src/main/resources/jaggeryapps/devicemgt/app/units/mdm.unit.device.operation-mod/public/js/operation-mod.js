@@ -354,7 +354,7 @@ var operationModule = function () {
                     "emailOutgoingMailServerUsername":  operationPayload["outgoingMailServerUsername"],
                     "emailPreventMove":  operationPayload["preventMove"],
                     "emailPreventAppSheet":  operationPayload["preventAppSheet"],
-                    "emailDisableMailRecentSyncing":  operationPayload["disableMailRecentSyncing"],
+                    "emailDisableMailRecentsSyncing":  operationPayload["disableMailRecentsSyncing"],
                     "emailIncomingMailServerIMAPPathPrefix":  operationPayload["incomingMailServerIMAPPathPrefix"],
                     "emailSMIMEEnabled":  operationPayload["smimeenabled"],
                     "emailSMIMESigningCertificateUUID":  operationPayload["smimesigningCertificateUUID"],
@@ -439,6 +439,9 @@ var operationModule = function () {
                 break;
             case iosOperationConstants["WIFI_OPERATION_CODE"]:
                 operationType = operationTypeConstants["PROFILE"];
+                if(operationData["wifiProxyPort"] == ""){
+                    operationData["wifiProxyPort"] = -1;
+                }
                 payload = {
                     "operation": {
                         "SSID": operationData["wifiSSID"],
@@ -691,7 +694,7 @@ var operationModule = function () {
                         "outgoingMailServerUsername": operationData["emailOutgoingMailServerUsername"],
                         "preventMove": operationData["emailPreventMove"],
                         "preventAppSheet": operationData["emailPreventAppSheet"],
-                        "disableMailRecentSyncing": operationData["emailDisableMailRecentSyncing"],
+                        "disableMailRecentsSyncing": operationData["emailDisableMailRecentsSyncing"],
                         "incomingMailServerIMAPPathPrefix": operationData["emailIncomingMailServerIMAPPathPrefix"],
                         "smimeenabled": operationData["emailSMIMEEnabled"],
                         "smimesigningCertificateUUID": operationData["emailSMIMESigningCertificateUUID"],
@@ -756,13 +759,11 @@ var operationModule = function () {
                     }
                 };
                 break;
-            case iosOperationConstants["DOMAIN_CODE"]:
+            case iosOperationConstants["DOMAIN_OPERATION_CODE"]:
                 operationType = operationTypeConstants["PROFILE"];
                 payload = {
-                    "operation": {
-                        "emailDomains": operationData["emailDomains"],
-                        "webDomains": operationData["webDomains"]
-                    }
+                    "emailDomains": operationData["emailDomains"],
+                    "webDomains": operationData["webDomains"]
                 };
                 break;
             case iosOperationConstants["CELLULAR_OPERATION_CODE"]:
