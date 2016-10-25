@@ -86,8 +86,7 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         } catch (OperationManagementException e) {
-            String msg = "Error occurred while executing command operation to send keywords";
-            log.error(msg, e);
+            log.error("Error occurred while executing command operation to send keywords", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -125,8 +124,7 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
         } catch (DeviceAccessAuthorizationException e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         } catch (OperationManagementException e) {
-            String msg = "Error occurred while executing command operation to set threashold";
-            log.error(msg, e);
+            log.error("Error occurred while executing command operation to set threashold", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -165,8 +163,7 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         } catch (OperationManagementException e) {
-            String msg = "Error occurred while executing command operation to remove words";
-            log.error(msg, e);
+            log.error("Error occurred while executing command operation to remove words", e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }

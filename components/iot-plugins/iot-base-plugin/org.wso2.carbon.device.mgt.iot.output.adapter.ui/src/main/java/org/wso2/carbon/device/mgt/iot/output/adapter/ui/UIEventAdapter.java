@@ -360,7 +360,7 @@ public class UIEventAdapter implements OutputEventAdapter {
 
         // fetch the queryString Key:Value pair map of the given session.
         Map<String, String> queryParamValuePairs = webSocketSessionUtil.getQueryParamValuePairs();
-        if (queryParamValuePairs != null) {
+        if (queryParamValuePairs != null && !queryParamValuePairs.isEmpty()) {
             // fetch the different attribute values received as part of the current event.
             Object[] eventMetaData = event.getMetaData();
             Object[] eventCorrelationData = event.getCorrelationData();
