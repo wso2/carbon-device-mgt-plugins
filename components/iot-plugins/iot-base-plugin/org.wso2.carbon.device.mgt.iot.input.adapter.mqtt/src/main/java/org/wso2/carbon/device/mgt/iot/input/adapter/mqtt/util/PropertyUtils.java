@@ -18,37 +18,22 @@
 
 package org.wso2.carbon.device.mgt.iot.input.adapter.mqtt.util;
 
-import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.util.Utils;
 
 public class PropertyUtils {
     private static final String MQTT_PORT = "\\$\\{mqtt.broker.port\\}";
     private static final String MQTT_BROKER_HOST = "\\$\\{mqtt.broker.host\\}";
-    private static final String CARBON_CONFIG_PORT_OFFSET = "Ports.Offset";
     private static final String DEFAULT_CARBON_LOCAL_IP_PROPERTY = "carbon.local.ip";
-    private static final int CARBON_DEFAULT_PORT_OFFSET = 0;
     private static final int DEFAULT_MQTT_PORT = 1883;
 
     //This method is only used if the mb features are within DAS.
     public static String replaceMqttProperty (String urlWithPlaceholders) {
         urlWithPlaceholders = Utils.replaceSystemProperty(urlWithPlaceholders);
-        urlWithPlaceholders = urlWithPlaceholders.replaceAll(MQTT_PORT, "" + (DEFAULT_MQTT_PORT + getPortOffset()));
+        String portOffset = System.getProperty("portOffset");
+        urlWithPlaceholders = urlWithPlaceholders.replaceAll(MQTT_PORT, ""
+                + (DEFAULT_MQTT_PORT + Integer.parseInt(portOffset.trim())));
         urlWithPlaceholders = urlWithPlaceholders.replaceAll(MQTT_BROKER_HOST, System.getProperty(
                 DEFAULT_CARBON_LOCAL_IP_PROPERTY, "localhost"));
         return urlWithPlaceholders;
-    }
-
-    private static int getPortOffset() {
-        ServerConfiguration carbonConfig = ServerConfiguration.getInstance();
-        String portOffset = System.getProperty("portOffset", carbonConfig.getFirstProperty(CARBON_CONFIG_PORT_OFFSET));
-        try {
-            if (portOffset != null) {
-                return Integer.parseInt(portOffset.trim());
-            } else {
-                return CARBON_DEFAULT_PORT_OFFSET;
-            }
-        } catch (NumberFormatException e) {
-            return CARBON_DEFAULT_PORT_OFFSET;
-        }
     }
 }
