@@ -55,10 +55,10 @@
             <span id="work-profile-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
         <a href="javascript:void(0)" onclick="showAdvanceOperation('app-restriction', this)">
-                <span class="fw-stack fw-lg">
-                    <i class="fw fw-application fw-stack-1x"></i>
-                    <i class="fw fw-block fw-stack-2x"></i>
-                </span>
+            <span class="fw-stack fw-lg">
+                <i class="fw fw-application fw-stack-1x"></i>
+                <i class="fw fw-block fw-stack-2x"></i>
+            </span>
             Applications Restrictions
             <span id="app-restriction-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
             <span id="app-restriction-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
@@ -83,7 +83,6 @@
             <span id="cosu-whitelisted-applications-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
     </div>
-
     <div class="wr-hidden-operations-content col-lg-8">
         <!-- passcode-policy -->
         <div class="wr-hidden-operation" data-operation="passcode-policy" style="display: block">
@@ -1238,7 +1237,6 @@
                 </div>
             </div>
         </div>
-
         <!-- cosu-system-update-policy -->
         <div class="wr-hidden-operation hide" data-operation="cosu-system-update-policy">
             <div class="panel panel-default operation-data" data-operation="cosu-system-update-policy"
@@ -1385,7 +1383,6 @@
                 </div>
             </div>
         </div>
-
         <!-- cosu-whitelist-applications -->
         <div class="wr-hidden-operation hide" data-operation="cosu-whitelisted-applications">
             <div class="panel panel-default operation-data" data-operation="cosu-whitelisted-applications"
@@ -1452,30 +1449,30 @@
                             </table>
                             <table class="template hidden">
                                 <tbody data-add-form="#cosu-whitelisted-applications-grid">
-                                <tr data-add-form-element="clone">
-                                    <td data-title="No:">
-                                        <span class="index"></span>
-                                    </td>
-                                    <td data-title="Application Name / Description">
-                                        <input type="text" class="form-control grid-input-text" data-child-key="appName"
-                                               maxlength="100" data-default="" placeholder="[ Application Name / Description ]" disabled/>
-                                    </td>
-                                    <td data-title="Package Name">
-                                        <input type="text" class="form-control grid-input-text" data-child-key="packageName"
-                                               maxlength="100" data-default="" placeholder="[ Package Name ]" disabled/>
-                                    </td>
-                                    <td>
-                                        <span class="list-group-item-actions hidden">
-                                            <a href="#cosu-whitelisted-applications-grid" class="grid-input-remove"
-                                               data-click-event="remove-form">
-                                                <span class="fw-stack helper" title="Remove Entry">
-                                                    <i class="fw fw-ring fw-stack-2x"></i>
-                                                    <i class="fw fw-delete fw-stack-1x"></i>
-                                                </span>
-                                            </a>
-                                        </span>
-                                    </td>
-                                </tr>
+                                    <tr data-add-form-element="clone">
+                                        <td data-title="No:">
+                                            <span class="index"></span>
+                                        </td>
+                                        <td data-title="Application Name / Description">
+                                            <input type="text" class="form-control grid-input-text" data-child-key="appName"
+                                                   maxlength="100" data-default="" placeholder="[ Application Name / Description ]" disabled/>
+                                        </td>
+                                        <td data-title="Package Name">
+                                            <input type="text" class="form-control grid-input-text" data-child-key="packageName"
+                                                   maxlength="100" data-default="" placeholder="[ Package Name ]" disabled/>
+                                        </td>
+                                        <td>
+                                            <span class="list-group-item-actions hidden">
+                                                <a href="#cosu-whitelisted-applications-grid" class="grid-input-remove"
+                                                   data-click-event="remove-form">
+                                                    <span class="fw-stack helper" title="Remove Entry">
+                                                        <i class="fw fw-ring fw-stack-2x"></i>
+                                                        <i class="fw fw-delete fw-stack-1x"></i>
+                                                    </span>
+                                                </a>
+                                            </span>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
