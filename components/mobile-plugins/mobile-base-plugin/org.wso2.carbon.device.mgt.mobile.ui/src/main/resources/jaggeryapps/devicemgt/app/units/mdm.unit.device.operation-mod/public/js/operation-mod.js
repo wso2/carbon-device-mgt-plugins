@@ -152,11 +152,8 @@ var operationModule = function () {
             case iosOperationConstants["DOMAIN_OPERATION_CODE"]:
                 payload = {
                     "operation": {
-                        "accountDescription": operationData["calendarSubscriptionDescription"],
-                        "hostName": operationData["calendarSubscriptionHostname"],
-                        "username": operationData["calendarSubscriptionUsername"],
-                        "password": operationData["calendarSubscriptionPassword"],
-                        "useSSL": operationData["calendarSubscriptionUseSSL"]
+                        "emailDomains": operationData["emailDomains"],
+                        "webDomains": operationData["webDomains"]
                     }
                 };
                 break;
