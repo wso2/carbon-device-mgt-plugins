@@ -564,8 +564,8 @@ validateStep["policy-profile"] = function () {
                             // If empty child inputs are present
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "One or more package names of " +
-                                               "applications are empty.",
+                                "subErrorMsg": "One or more package names of applications are" +
+                                               " empty.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -573,8 +573,7 @@ validateStep["policy-profile"] = function () {
                             // If duplicate input is present
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "Duplicate values exist with " +
-                                               "for package names.",
+                                "subErrorMsg": "Duplicate values exist with for package names.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
