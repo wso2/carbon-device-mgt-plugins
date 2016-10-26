@@ -113,10 +113,10 @@ var androidOperationConstants = {
     "ENCRYPT_STORAGE_OPERATION_CODE": "ENCRYPT_STORAGE",
     "WIFI_OPERATION": "wifi",
     "WIFI_OPERATION_CODE": "WIFI",
-    "APPLICATION_OPERATION":"app-restriction",
-    "APPLICATION_OPERATION_CODE":"APP-RESTRICTION",
-    "KIOSK_APPS_CODE":"KIOSK_APPS",
-    "KIOSK_APPS":"cosu-whitelisted-applications"
+    "APPLICATION_OPERATION": "app-restriction",
+    "APPLICATION_OPERATION_CODE": "APP-RESTRICTION",
+    "KIOSK_APPS_CODE": "KIOSK_APPS",
+    "KIOSK_APPS": "cosu-whitelisted-applications"
 };
 
 // Constants to define Android Operation Constants
@@ -524,8 +524,7 @@ validateStep["policy-profile"] = function () {
                             "erroneousFeature": operation
                         };
                         continueToCheckNextInputs = false;
-                    }
-                    else {
+                    } else {
                         childInputCount = 0;
                         childInputArray = [];
                         emptyChildInputCount = 0;
@@ -565,8 +564,8 @@ validateStep["policy-profile"] = function () {
                             // If empty child inputs are present
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "One or more package names of " +
-                                               "applications are empty.",
+                                "subErrorMsg": "One or more package names of applications are" +
+                                               " empty.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -574,8 +573,7 @@ validateStep["policy-profile"] = function () {
                             // If duplicate input is present
                             validationStatus = {
                                 "error": true,
-                                "subErrorMsg": "Duplicate values exist with " +
-                                               "for package names.",
+                                "subErrorMsg": "Duplicate values exist with for package names.",
                                 "erroneousFeature": operation
                             };
                             continueToCheckNextInputs = false;
@@ -2321,16 +2319,14 @@ var slideDownPaneAgainstValueSet = function (selectElement, paneID, valueSet) {
 
 var slideDownPaneAgainstValueSetForRadioButtons = function (selectElement, paneID, valueSet) {
     var selectedValueOnChange = selectElement.value;
-
     var i, slideDownVotes = 0;
     for (i = 0; i < valueSet.length; i++) {
         if (selectedValueOnChange == valueSet[i]) {
             slideDownVotes++;
         }
     }
-
     var paneSelector = "#" + paneID;
-    if(slideDownVotes > 0) {
+    if (slideDownVotes > 0) {
         $(paneSelector).removeClass("hidden");
     } else {
         $(paneSelector).addClass("hidden");
