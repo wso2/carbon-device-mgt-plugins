@@ -16,7 +16,7 @@
                 {{/if}}
             </h1>
             <div class="row no-gutter add-padding-5x add-margin-top-5x" style="border: 1px solid #e4e4e4;">
-                <div class="media">
+                <div class="media" id="device-owner" data-owner="{{deviceView.owner}}">
                     <div class="media-left media-middle asset-image col-xs-2 col-sm-2 col-md-2 col-lg-2">
                         <div class="thumbnail icon"><i class="square-element text fw fw-mobile"></i></div>
                     </div>
@@ -109,14 +109,14 @@
                                 </tbody>
                             </table>
                         {{/defineZone}}
-            {{#if deviceView.isNotRemoved}}
-                        <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">
-                            Operations
-                        </div>
-                        <div class="add-margin-top-4x">
-                            {{unit "mdm.unit.device.operation-bar" deviceType=deviceView.deviceType ownership=deviceView.ownership}}
-                        </div>
-            {{/if}}
+                        {{#if deviceView.isNotRemoved}}
+                            <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">
+                                Operations
+                            </div>
+                            <div class="add-margin-top-4x">
+                                {{unit "mdm.unit.device.operation-bar" deviceType=deviceView.deviceType ownership=deviceView.ownership}}
+                            </div>
+                        {{/if}}
                     </div>
                 </div>
                 <div class="media tab-responsive">

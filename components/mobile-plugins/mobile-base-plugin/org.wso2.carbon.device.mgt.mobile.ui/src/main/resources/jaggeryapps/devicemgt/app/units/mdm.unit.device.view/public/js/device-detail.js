@@ -85,6 +85,7 @@ var InitiateViewOption = null;
     }
 
     function loadOperationsLog(update) {
+        var owner = $("#device-owner").data("owner");
         var operationsLogTable = "#operations-log-table";
         if (update) {
             operationTable = $(operationsLogTable).DataTable();
@@ -100,7 +101,7 @@ var InitiateViewOption = null;
             order: [],
             ajax: {
                 url: "/emm/api/operation/paginate",
-                data: {deviceId : deviceIdentifier, deviceType: deviceType},
+                data: {deviceId : deviceIdentifier, deviceType: deviceType ,owner:owner },
                 dataSrc: function (json) {
                     $("#operations-spinner").addClass("hidden");
                     $("#operations-log-container").empty();

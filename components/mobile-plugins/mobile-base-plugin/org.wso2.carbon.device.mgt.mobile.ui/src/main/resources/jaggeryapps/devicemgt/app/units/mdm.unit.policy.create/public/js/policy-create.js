@@ -47,10 +47,10 @@ var androidOperationConstants = {
     "WIFI_OPERATION_CODE": "WIFI",
     "VPN_OPERATION": "vpn",
     "VPN_OPERATION_CODE": "VPN",
-    "APPLICATION_OPERATION":"app-restriction",
-    "APPLICATION_OPERATION_CODE":"APP-RESTRICTION",
-    "KIOSK_APPS_CODE":"KIOSK_APPS",
-    "KIOSK_APPS":"cosu-whitelisted-applications"
+    "APPLICATION_OPERATION": "app-restriction",
+    "APPLICATION_OPERATION_CODE": "APP-RESTRICTION",
+    "KIOSK_APPS_CODE": "KIOSK_APPS",
+    "KIOSK_APPS": "cosu-whitelisted-applications"
 };
 
 // Constants to define iOS Operation Constants
@@ -2538,14 +2538,14 @@ var slideDownPaneAgainstValueSet = function (selectElement, paneID, valueSet) {
 
 var slideDownPaneAgainstValueSetForRadioButtons = function (selectElement, paneID, valueSet) {
     var selectedValueOnChange = selectElement.value;
-    var i, slideDownVotes = 0;
-    for (i = 0; i < valueSet.length; i++) {
+    var slideDownVotes = 0;
+    for (var i = 0; i < valueSet.length; i++) {
         if (selectedValueOnChange == valueSet[i]) {
             slideDownVotes++;
         }
     }
     var paneSelector = "#" + paneID;
-    if(slideDownVotes > 0) {
+    if (slideDownVotes > 0) {
         $(paneSelector).removeClass("hidden");
     } else {
         $(paneSelector).addClass("hidden");
