@@ -163,8 +163,10 @@ $(document).ready(function () {
     // click-event function for applyChangesButton
     $(applyChangesButtonId).click(function () {
         var serviceURL = "/api/device-mgt/v1.0/policies/apply-changes";
-        $(modalPopupContent).html($('#change-policy-modal-content').html());
-        showPopup();
+        modalDialog.header('Do you really want to apply changes to all policies?');
+        modalDialog.footer('<div class="buttons"><a href="#" id="change-policy-yes-link" class="btn-operations">Yes' +
+            '</a><a href="#" id="change-policy-cancel-link" class="btn-operations btn-default">No</a></div>');
+        modalDialog.show();
 
         $("a#change-policy-yes-link").click(function () {
             invokerUtil.put(
@@ -173,10 +175,11 @@ $(document).ready(function () {
                 // on success
                 function (data, textStatus, jqXHR) {
                     if (jqXHR.status == 200) {
-                        $(modalPopupContent).html($('#change-policy-success-content').html());
-                        showPopup();
+                        modalDialog.header('Done. Changes applied successfully.');
+                        modalDialog.footer('<div class="buttons"><a href="#" id="change-policy-success-link" ' +
+                            'class="btn-operations">Ok</a></div>');
                         $("a#change-policy-success-link").click(function () {
-                            hidePopup();
+                            modalDialog.hide();
                             location.reload();
                         });
                     }
@@ -184,17 +187,19 @@ $(document).ready(function () {
                 // on error
                 function (jqXHR) {
                     console.log(stringify(jqXHR.data));
-                    $(modalPopupContent).html($("#change-policy-error-content").html());
-                    showPopup();
+                    modalDialog.header('An unexpected error occurred. Please try again later.');
+                    modalDialog.footer('<div class="buttons"><a href="#" id="change-policy-error-link" ' +
+                        'class="btn-operations">Ok</a></div>');
+                    modalDialog.showAsError();
                     $("a#change-policy-error-link").click(function () {
-                        hidePopup();
+                        modalDialog.hide();
                     });
                 }
             );
         });
 
         $("a#change-policy-cancel-link").click(function () {
-            hidePopup();
+            modalDialog.hide();
         });
     });
 
@@ -207,16 +212,27 @@ $(document).ready(function () {
             // if policies found in Inactive or Inactive/Updated states with in the selection,
             // pop-up an error saying
             // "You cannot select already inactive policies. Please deselect inactive policies and try again."
-            $(modalPopupContent).html($("#errorPolicyUnPublishSelection").html());
-            showPopup();
+            modalDialog.header('Action cannot be performed !');
+            modalDialog.content('You cannot select already inactive policies to be unpublished. Please deselect ' +
+                'inactive policies and try again.');
+            modalDialog.footer('<div class="buttons"><a href="javascript:modalDialog.hide()" class="btn-operations">Ok</a>' +
+                '</div>');
+            modalDialog.showAsAWarning();
         } else {
             var serviceURL = "/api/device-mgt/v1.0/policies/deactivate-policy";
             if (policyList.length == 0) {
-                $(modalPopupContent).html($("#errorPolicyUnPublish").html());
+                modalDialog.header('Action cannot be performed !');
+                modalDialog.content('Please select a policy or a list of policies to un-publish.');
+                modalDialog.footer('<div class="buttons"><a href="javascript:modalDialog.hide()" ' +
+                    'class="btn-operations">Ok</a></div>');
+                modalDialog.showAsAWarning();
             } else {
-                $(modalPopupContent).html($("#unpublish-policy-modal-content").html());
+                modalDialog.header('Do you really want to unpublish the selected policy(s)?');
+                modalDialog.footer('<div class="buttons"><a href="#" id="unpublish-policy-yes-link" ' +
+                    'class="btn-operations">Yes</a><a href="#" id="unpublish-policy-cancel-link" ' +
+                    'class="btn-operations btn-default">No</a></div>');
+                modalDialog.show();
             }
-            showPopup();
 
             // on-click function for policy un-publishing "yes" button
             $("a#unpublish-policy-yes-link").click(function () {
@@ -226,9 +242,11 @@ $(document).ready(function () {
                     // on success
                     function (data, textStatus, jqXHR) {
                         if (jqXHR.status == 200 && data) {
-                            $(modalPopupContent).html($("#unpublish-policy-success-content").html());
+                            modalDialog.header('Done. Selected policy was successfully unpublished.');
+                            modalDialog.footer('<div class="buttons"><a href="#" id="unpublish-policy-success-link" ' +
+                                'class="btn-operations">Ok</a></div>');
                             $("a#unpublish-policy-success-link").click(function () {
-                                hidePopup();
+                                modalDialog.hide();
                                 location.reload();
                             });
                         }
@@ -236,9 +254,12 @@ $(document).ready(function () {
                     // on error
                     function (jqXHR) {
                         console.log(stringify(jqXHR.data));
-                        $(modalPopupContent).html($("#unpublish-policy-error-content").html());
+                        modalDialog.header('An unexpected error occurred. Please try again later.');
+                        modalDialog.footer('<div class="buttons"><a href="#" id="unpublish-policy-error-link" ' +
+                            'class="btn-operations">Ok</a></div>');
+                        modalDialog.showAsError();
                         $("a#unpublish-policy-error-link").click(function () {
-                            hidePopup();
+                            modalDialog.hide();
                         });
                     }
                 );
@@ -246,7 +267,7 @@ $(document).ready(function () {
 
             // on-click function for policy un-publishing "cancel" button
             $("a#unpublish-policy-cancel-link").click(function () {
-                hidePopup();
+                modalDialog.hide();
             });
         }
     });
@@ -260,17 +281,27 @@ $(document).ready(function () {
             // if policies found in Active or Active/Updated states with in the selection,
             // pop-up an error saying
             // "You cannot select already active policies. Please deselect active policies and try again."
-            $(modalPopupContent).html($("#active-policy-selection-error").html());
-            showPopup();
+            modalDialog.header('Action cannot be performed !');
+            modalDialog.content('You cannot select already active policies. Please deselect active policies and try ' +
+                'again.');
+            modalDialog.footer('<div class="buttons"><a href="javascript:modalDialog.hide()" class="btn-operations">' +
+                'Ok</a></div>');
+            modalDialog.showAsAWarning();
         } else {
             var serviceURL = "/api/device-mgt/v1.0/policies/activate-policy";
             if (policyList.length == 0) {
-                $(modalPopupContent).html($("#policy-publish-error").html());
+                modalDialog.header('Action cannot be performed !');
+                modalDialog.content('Please select a policy or a list of policies to publish.');
+                modalDialog.footer('<div class="buttons"><a href="javascript:modalDialog.hide()" ' +
+                    'class="btn-operations">Ok</a></div>');
+                modalDialog.showAsAWarning();
             } else {
-                $(modalPopupContent).html($("#publish-policy-modal-content").html());
+                modalDialog.header('Do you really want to publish the selected policy(s)?');
+                modalDialog.footer('<div class="buttons"><a href="#" id="publish-policy-yes-link" ' +
+                    'class="btn-operations">Yes</a><a href="#" id="publish-policy-cancel-link" ' +
+                    'class="btn-operations btn-default">No</a></div>');
+                modalDialog.show();
             }
-            showPopup();
-
             // on-click function for policy removing "yes" button
             $("a#publish-policy-yes-link").click(function () {
                 invokerUtil.post(
@@ -279,9 +310,11 @@ $(document).ready(function () {
                     // on success
                     function (data, textStatus, jqXHR) {
                         if (jqXHR.status == 200 && data) {
-                            $(modalPopupContent).html($("#publish-policy-success-content").html());
+                            modalDialog.header('Done. Selected policy was successfully published.');
+                            modalDialog.footer('<div class="buttons"><a href="#" id="publish-policy-success-link" ' +
+                                'class="btn-operations">Ok</a></div>');
                             $("a#publish-policy-success-link").click(function () {
-                                hidePopup();
+                                modalDialog.hide();
                                 location.reload();
                             });
                         }
@@ -289,9 +322,12 @@ $(document).ready(function () {
                     // on error
                     function (jqXHR) {
                         console.log(stringify(jqXHR.data));
-                        $(modalPopupContent).html($("#publish-policy-error-content").html());
+                        modalDialog.header('An unexpected error occurred. Please try again later.');
+                        modalDialog.footer('<div class="buttons"><a href="#" id="publish-policy-error-link" ' +
+                            'class="btn-operations">Ok</a></div>');
+                        modalDialog.showAsError();
                         $("a#publish-policy-error-link").click(function () {
-                            hidePopup();
+                            modalDialog.hide();
                         });
                     }
                 );
@@ -299,7 +335,7 @@ $(document).ready(function () {
 
             // on-click function for policy removing "cancel" button
             $("a#publish-policy-cancel-link").click(function () {
-                hidePopup();
+                modalDialog.hide();
             });
         }
     });
@@ -313,16 +349,27 @@ $(document).ready(function () {
             // if policies found in Active or Active/Updated states with in the selection,
             // pop-up an error saying
             // "You cannot remove already active policies. Please deselect active policies and try again."
-            $(modalPopupContent).html($("#active-policy-selection-error").html());
-            showPopup();
+            modalDialog.header('Action cannot be performed !');
+            modalDialog.content('You cannot select already active policies. Please deselect active policies and try ' +
+                'again.');
+            modalDialog.footer('<div class="buttons"><a href="javascript:modalDialog.hide()" class="btn-operations">' +
+                'Ok</a></div>');
+            modalDialog.showAsAWarning();
         } else {
             var serviceURL = "/api/device-mgt/v1.0/policies/remove-policy";
             if (policyList.length == 0) {
-                $(modalPopupContent).html($("#policy-remove-error").html());
+                modalDialog.header('Action cannot be performed !');
+                modalDialog.content('Please select a policy or a list of policies to remove.');
+                modalDialog.footer('<div class="buttons"><a href="javascript:modalDialog.hide()" ' +
+                    'class="btn-operations">Ok</a></div>');
+                modalDialog.showAsAWarning();
             } else {
-                $(modalPopupContent).html($("#remove-policy-modal-content").html());
+                modalDialog.header('Do you really want to remove the selected policy(s)?');
+                modalDialog.footer('<div class="buttons"><a href="#" id="remove-policy-yes-link" class=' +
+                    '"btn-operations">Remove</a> <a href="#" id="remove-policy-cancel-link" ' +
+                    'class="btn-operations btn-default">Cancel</a></div>');
+                modalDialog.show();
             }
-            showPopup();
 
             // on-click function for policy removing "yes" button
             $("a#remove-policy-yes-link").click(function () {
@@ -332,9 +379,11 @@ $(document).ready(function () {
                     // on success
                     function (data, textStatus, jqXHR) {
                         if (jqXHR.status == 200 && data) {
-                            $(modalPopupContent).html($("#remove-policy-success-content").html());
+                            modalDialog.header('Done. Selected policy was successfully removed.');
+                            modalDialog.footer('<div class="buttons"><a href="#" id="remove-policy-success-link" ' +
+                                'class="btn-operations">Ok</a></div>');
                             $("a#remove-policy-success-link").click(function () {
-                                hidePopup();
+                                modalDialog.hide();
                                 location.reload();
                             });
                         }
@@ -342,9 +391,12 @@ $(document).ready(function () {
                     // on error
                     function (jqXHR) {
                         console.log(stringify(jqXHR.data));
-                        $(modalPopupContent).html($("#remove-policy-error-content").html());
+                        modalDialog.header('An unexpected error occurred. Please try again later.');
+                        modalDialog.footer('<div class="buttons"><a href="#" id="remove-policy-error-link" ' +
+                            'class="btn-operations">Ok</a></div>');
+                        modalDialog.showAsError();
                         $("a#remove-policy-error-link").click(function () {
-                            hidePopup();
+                            modalDialog.hide();
                         });
                     }
                 );
@@ -352,7 +404,7 @@ $(document).ready(function () {
 
             // on-click function for policy removing "cancel" button
             $("a#remove-policy-cancel-link").click(function () {
-                hidePopup();
+                modalDialog.hide();
             });
         }
     });
