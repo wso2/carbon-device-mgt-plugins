@@ -1601,28 +1601,23 @@ validateStep["policy-profile"] = function () {
 
                 if (continueToCheckNextInputs) {
                     var calendarAccountPort = $("input#calendar-account-port").val();
-                    if (!calendarAccountPort) {
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "Account Port is empty. You cannot proceed.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
-                    } else if (!$.isNumeric(calendarAccountPort)) {
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "Account Port requires a number input.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
-                    } else if (!inputIsValidAgainstRange(calendarAccountPort, 0, 65535)) {
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "Account Port is not within the range " +
-                                           "of valid port numbers.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
+                    if (calendarAccountPort) {
+                        if (!$.isNumeric(calendarAccountPort)) {
+                            validationStatus = {
+                                "error": true,
+                                "subErrorMsg": "Account Port requires a number input.",
+                                "erroneousFeature": operation
+                            };
+                            continueToCheckNextInputs = false;
+                        } else if (!inputIsValidAgainstRange(calendarAccountPort, 0, 65535)) {
+                            validationStatus = {
+                                "error": true,
+                                "subErrorMsg": "Account Port is not within the range " +
+                                "of valid port numbers.",
+                                "erroneousFeature": operation
+                            };
+                            continueToCheckNextInputs = false;
+                        }
                     }
                 }
 
