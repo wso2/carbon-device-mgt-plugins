@@ -837,6 +837,15 @@ var operationModule = function () {
                     "encryptStorageEnabled": operationPayload["encrypted"]
                 };
                 break;
+            case androidOperationConstants["WORK_PROFILE_CODE"]:
+                payload = {
+                    "workProfilePolicyProfileName": operationPayload["profileName"],
+                    "workProfilePolicyEnableSystemApps": operationPayload["enableSystemApps"],
+                    "workProfilePolicyHideSystemApps": operationPayload["hideSystemApps"],
+                    "workProfilePolicyUnhideSystemApps": operationPayload["unhideSystemApps"],
+                    "workProfilePolicyEnablePlaystoreApps": operationPayload["enablePlaystoreApps"]
+                };
+                break;
             case androidOperationConstants["WIFI_OPERATION_CODE"]:
                 payload = {
                     "wifiSSID": operationPayload["ssid"],
