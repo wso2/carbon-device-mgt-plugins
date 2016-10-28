@@ -39,10 +39,10 @@
                             <b>Compliance Status</b>
                             <br>
                             {{#equal complianceStatus "COMPLIANT"}}
-                                <span><i class="fw fw-ok icon-success"></i>&nbsp;&nbsp;Compliant</span>
+                                <span><i class="fw fw-ok icon-success"></i>The maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erasedThe maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erasedCompliant</span>
                             {{/equal}}
                             {{#equal complianceStatus "NON-COMPLIANT"}}
-                                <span><i class="fw fw-warning icon-danger"></i>&nbsp;&nbsp;Not Compliant</span>
+                                <span><i class="fw fw-warning icon-danger"></i>The maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erasedThe maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erasedNot Compliant</span>
                             {{/equal}}
                         </div>
                     </div>
@@ -58,7 +58,7 @@
                             <i class="fw fw-ring fw-stack-2x"></i>
                             <i class="fw fw-view fw-stack-1x"></i>
                        </span>
-                       &nbsp;View
+                       The maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erasedView
                     </a>
                 </span>
             </div>
@@ -77,8 +77,8 @@
         <tr data-type="selectable">
             <td data-display="{{featureCode}}" data-grid-label="Feature Code">{{featureCode}}</td>
             <td data-display="{{complianceStatus}}" data-grid-label="Status">
-                {{#equal complianceStatus true}}<span><i class="fw fw-ok icon-success"></i>&nbsp;&nbsp;Compliant</span>{{/equal}}
-                {{#equal complianceStatus false}}<span><i class="fw fw-warning icon-danger"></i>&nbsp;&nbsp;Not Compliant</span>{{/equal}}
+                {{#equal complianceStatus true}}<span><i class="fw fw-ok icon-success"></i>The maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erasedThe maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erasedCompliant</span>{{/equal}}
+                {{#equal complianceStatus false}}<span><i class="fw fw-warning icon-danger"></i>The maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erasedThe maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erasedNot Compliant</span>{{/equal}}
             </td>
         </tr>
     {{/each}}
