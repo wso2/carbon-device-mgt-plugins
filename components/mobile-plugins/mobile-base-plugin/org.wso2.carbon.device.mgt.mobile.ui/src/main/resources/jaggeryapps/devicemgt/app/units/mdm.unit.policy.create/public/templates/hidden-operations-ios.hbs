@@ -3209,41 +3209,29 @@
                                         <span class="index"></span>
                                     </td>
                                     <td data-title="Description">
-                                        <input type="text" class="form-control grid-input-text"
-                                               data-child-key="searchSettingDescription" maxlength="100"
-                                               data-default="LDAP Search" value="LDAP Search"
-                                               placeholder="[ Optional field ]"/>
+                                        <input type="text" class="form-control grid-input-text" data-child-key="searchSettingDescription" maxlength="100" data-default="LDAP Search" value="LDAP Search" placeholder="[ Optional field ]" />
+                                    </td>
+                                    <td data-title="Scope">
+                                        <input type="text" class="form-control grid-input-text" data-child-key="searchSettingSearchBase" maxlength="100" data-default="ou=department, o=company" value="ou=department, o=company" placeholder="[ Requires path to node where a search should start. ]" />
                                     </td>
                                     <td data-title="Search Base">
-                                        <select class="form-control grid-input-select"
-                                                data-child-key="searchSettingSearchBase" data-default="0">
+                                        <select class="form-control grid-input-select" data-child-key="searchSettingScope" data-default="0">
                                             <option value="LDAPSearchSettingScopeBase" selected="selected">
                                                 Base
                                             </option>
-                                            <option value="LDAPSearchSettingScopeOneLevel">One Level
-                                            </option>
+                                            <option value="LDAPSearchSettingScopeOneLevel">One Level</option>
                                             <option value="LDAPSearchSettingScopeSubtree">Subtree</option>
                                         </select>
                                     </td>
-                                    <td data-title="Scope">
-                                        <input type="text" class="form-control grid-input-text"
-                                               data-child-key="searchSettingScope" maxlength="100"
-                                               data-default="ou=department, o=company"
-                                               value="ou=department, o=company"
-                                               placeholder="[ Requires path to node where a search should start. ]"/>
-                                    </td>
                                     <td>
-                                            <span class="list-group-item-actions">
-                                                <a href="#ldap-search-settings-grid"
-                                                   class="grid-input-remove"
-                                                   data-click-event="remove-form">
-                                                    <span class="fw-stack helper"
-                                                          title="Remove Entry">
-                                                        <i class="fw fw-ring fw-stack-2x"></i>
-                                                        <i class="fw fw-delete fw-stack-1x"></i>
-                                                    </span>
-                                                </a>
-                                            </span>
+                                        <span class="list-group-item-actions">
+                                            <a href="#ldap-search-settings-grid" class="grid-input-remove" data-click-event="remove-form">
+                                                <span class="fw-stack helper" title="Remove Entry">
+                                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                                    <i class="fw fw-delete fw-stack-1x"></i>
+                                                </span>
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
                                 </tbody>
