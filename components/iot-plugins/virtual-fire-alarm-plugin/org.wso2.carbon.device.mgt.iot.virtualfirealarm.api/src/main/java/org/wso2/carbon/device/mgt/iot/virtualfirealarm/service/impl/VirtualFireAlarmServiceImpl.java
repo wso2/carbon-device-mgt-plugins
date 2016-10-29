@@ -22,17 +22,14 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.analytics.dataservice.commons.SORT;
 import org.wso2.carbon.analytics.dataservice.commons.SortByField;
+import org.wso2.carbon.analytics.dataservice.commons.SortType;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
 import org.wso2.carbon.apimgt.application.extension.dto.ApiApplicationKey;
 import org.wso2.carbon.apimgt.application.extension.exception.APIManagerException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.common.Device;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
+import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationException;
 import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
@@ -108,7 +105,7 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             PrivateKey serverPrivateKey = VirtualFirealarmSecurityManager.getServerPrivateKey();
             String actualMessage = resource + ":" + switchToState;
             String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage,
-                                                                                    serverPrivateKey);
+                    serverPrivateKey);
             String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
                     + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
 
@@ -124,14 +121,18 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                     .getInstance().getServerName());
             props.setProperty(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "CONTROL-REQUEST");
             props.setProperty(VirtualFireAlarmConstants.MESSAGE_TYPE_PROPERTY_KEY,
-                              VirtualFireAlarmConstants.CHAT_PROPERTY_KEY);
+                    VirtualFireAlarmConstants.CHAT_PROPERTY_KEY);
             commandOp.setProperties(props);
 
             List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
             deviceIdentifiers.add(new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE));
             APIUtil.getDeviceManagementService().addOperation(VirtualFireAlarmConstants.DEVICE_TYPE, commandOp,
-                                                              deviceIdentifiers);
+                    deviceIdentifiers);
             return Response.ok().build();
+        }  catch (InvalidDeviceException e) {
+            String msg = "Error occurred while executing command operation to send keywords";
+            log.error(msg, e);
+            return Response.status(Response.Status.BAD_REQUEST).build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -213,7 +214,7 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             List<SortByField> sortByFields = new ArrayList<>();
-            SortByField sortByField = new SortByField("time", SORT.ASC, false);
+            SortByField sortByField = new SortByField("time", SortType.ASC);
             sortByFields.add(sortByField);
             List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
             return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();

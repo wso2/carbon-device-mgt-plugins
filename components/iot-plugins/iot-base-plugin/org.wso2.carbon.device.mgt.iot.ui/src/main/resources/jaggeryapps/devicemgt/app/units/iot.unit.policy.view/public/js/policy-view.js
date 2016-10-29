@@ -111,7 +111,7 @@ $(document).ready(function () {
 
     var policyPayloadObj;
     invokerUtil.get(
-        "/devicemgt_admin/policies/" + getParameterByName("id"),
+        "/api/device-mgt/v1.0/policies/" + getParameterByName("id"),
         // on success
         function (data) {
             // console.log("success: " + JSON.stringify(data));

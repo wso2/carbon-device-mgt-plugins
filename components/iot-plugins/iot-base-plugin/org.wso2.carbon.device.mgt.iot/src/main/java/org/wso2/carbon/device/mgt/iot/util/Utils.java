@@ -63,6 +63,7 @@ public class Utils {
             }
         } catch (SocketException e) {
             hostName = "localhost";
+            log.warn("Failed retrieving the hostname, therefore set to localhost", e);
         }
         return hostName;
     }
@@ -90,25 +91,14 @@ public class Utils {
 
             templateFiles.add("sketch.properties");         // ommit copying the props file
             copyFolder(new File(sketchPath), new File(archivesPath), templateFiles);
-
+            createZipArchive(archivesPath);
+            FileUtils.deleteDirectory(new File(archivesPath));
+            File zip = new File(archivesPath + ".zip");
+            return new ZipArchive(zipFileName, zip);
         } catch (IOException ex) {
             throw new DeviceManagementException(
                     "Error occurred when trying to read property " + "file sketch.properties", ex);
         }
-
-        try {
-            createZipArchive(archivesPath);
-        } catch (IOException e) {
-            String message = "Zip file for the specific device agent not found at path: " + archivesPath;
-            log.error(message);
-            log.error(e);
-            throw new DeviceManagementException(message, e);
-        }
-        FileUtils.deleteDirectory(new File(archivesPath));//clear folder
-
-		/* now get the zip file */
-        File zip = new File(archivesPath + ".zip");
-        return new ZipArchive(zipFileName, zip);
     }
 
     private static Map<String, List<String>> getProperties(String propertyFilePath) throws IOException {
@@ -139,7 +129,7 @@ public class Utils {
                 try {
                     input.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error("Failed closing connection", e);
                 }
             }
         }
@@ -147,21 +137,25 @@ public class Utils {
 
     private static void parseTemplate(String srcFile, String dstFile, Map contextParams) throws IOException {
         //read from file
-        FileInputStream inputStream = new FileInputStream(srcFile);
-        String content = IOUtils.toString(inputStream, StandardCharsets.UTF_8.toString());
-        Iterator iterator = contextParams.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry mapEntry = (Map.Entry) iterator.next();
-            content = content.replaceAll("\\$\\{" + mapEntry.getKey() + "\\}", mapEntry.getValue().toString());
-        }
-        if (inputStream != null) {
-            inputStream.close();
-        }
-        //write to file
-        FileOutputStream outputStream = new FileOutputStream(dstFile);
-        IOUtils.write(content, outputStream, StandardCharsets.UTF_8.toString());
-        if (outputStream != null) {
-            outputStream.close();
+        FileInputStream inputStream = null;
+        FileOutputStream outputStream = null;
+        try {
+            inputStream = new FileInputStream(srcFile);
+            outputStream = new FileOutputStream(dstFile);
+            String content = IOUtils.toString(inputStream, StandardCharsets.UTF_8.toString());
+            Iterator iterator = contextParams.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry mapEntry = (Map.Entry) iterator.next();
+                content = content.replaceAll("\\$\\{" + mapEntry.getKey() + "\\}", mapEntry.getValue().toString());
+            }
+            IOUtils.write(content, outputStream, StandardCharsets.UTF_8.toString());
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+            if (outputStream != null) {
+                outputStream.close();
+            }
         }
     }
 
@@ -213,32 +207,13 @@ public class Utils {
                     out.write(buffer, 0, length);
                 }
             } finally {
-                silentClose(in);
-                silentClose(out);
+                if (in != null) {
+                    in.close();
+                }
+                if (out != null) {
+                    out.close();
+                }
             }
-        }
-    }
-
-    private static void silentClose(InputStream is) {
-        if (is == null) {
-            return;
-        }
-        try {
-            is.close();
-        } catch (IOException e) {
-            // do nothing
-        }
-
-    }
-
-    private static void silentClose(OutputStream os) {
-        if (os == null) {
-            return;
-        }
-        try {
-            os.close();
-        } catch (IOException e) {
-            // do nothing
         }
     }
 
@@ -295,8 +270,12 @@ public class Utils {
             }
             out.flush();
         } finally {
-            silentClose(origin);
-            silentClose(out);
+            if (origin != null) {
+                origin.close();
+            }
+            if (out != null) {
+                out.close();
+            }
         }
         return true;
     }

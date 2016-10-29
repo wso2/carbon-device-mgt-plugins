@@ -1,0 +1,6 @@
+{
+    "version": "1.0.0",
+    "uri": "/enrollments/error/unintentional-request",
+    "layout": "mdm.layout.enrollment",
+    "isAnonymous": true
+}

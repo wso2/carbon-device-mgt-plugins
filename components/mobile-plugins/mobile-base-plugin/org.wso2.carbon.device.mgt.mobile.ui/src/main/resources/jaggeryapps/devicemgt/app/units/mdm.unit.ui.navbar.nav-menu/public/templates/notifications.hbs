@@ -1,12 +1,14 @@
+<h4 class="message text-muted">
+    Most Recent
+</h4>
 {{#each notifications}}
-    <li class="message message-info" data-type="selectable" >
+    <li class="message" data-type="selectable" >
         <h4>
-            <i class="icon fw fw-info"></i>
-            <a href="device?type={{deviceIdentifier.type}}&id={{deviceIdentifier.id}}"
-               data-id="{{notificationId}}"
-               data-url="device?type={{deviceIdentifier.type}}&id={{deviceIdentifier.id}}"
-               class="new-notification" data-click-event="remove-form">
-                Device Type : {{deviceIdentifier.type}}
+            <i class="icon fw fw-mobile text-muted"></i>
+            <a  data-id="{{id}}"
+                data-url="{{../contextPath}}/device/{{deviceType}}?id={{deviceIdentifier}}"
+                class="new-notification text-capitalize" data-click-event="remove-form">
+                Failure on {{deviceType}} {{deviceName}}
             </a>
         </h4>
         <p>{{description}}</p>

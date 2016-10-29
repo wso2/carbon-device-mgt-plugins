@@ -16,9 +16,9 @@
  * under the License.
  */
 
-var modalPopup = ".wr-modalpopup";
-var modalPopupContainer = modalPopup + " .modalpopup-container";
-var modalPopupContent = modalPopup + " .modalpopup-content";
+var modalPopup = ".modal";
+var modalPopupContainer = modalPopup + " .modal-content";
+var modalPopupContent = modalPopup + " .modal-content";
 var body = "body";
 
 /*
@@ -33,29 +33,8 @@ function setPopupMaxHeight() {
  * show popup function.
  */
 function showPopup() {
-    $(modalPopup).show();
+    $(modalPopup).modal('show');
     setPopupMaxHeight();
-    $('#downloadForm').validate({
-        rules: {
-            deviceName: {
-                minlength: 4,
-                required: true
-            }
-        },
-        highlight: function (element) {
-            $(element).closest('.control-group').removeClass('success').addClass('error');
-        },
-        success: function (element) {
-            $(element).closest('.control-group').removeClass('error').addClass('success');
-            $('label[for=deviceName]').remove();
-        }
-    });
-    var deviceType = "";
-    $('.deviceType').each(function () {
-        if (this.value != "") {
-            deviceType = this.value;
-        }
-    });
 }
 
 /*
@@ -65,7 +44,7 @@ function hidePopup() {
     $('label[for=deviceName]').remove();
     $('.control-group').removeClass('success').removeClass('error');
     $(modalPopupContent).html('');
-    $(modalPopup).hide();
+    $(modalPopup).modal('hide');
 }
 
 /*
@@ -81,22 +60,13 @@ function attachEvents() {
      * when a user clicks on "Download" link
      * on Device Management page in WSO2 DC Console.
      */
-    $("a.download-link").click(function () {
-        $(modalPopupContent).html($('#download-device-modal-content').html());
-        showPopup();
-        var deviceName;
-        $("a#download-device-download-link").click(function () {
-            $('.new-device-name').each(function () {
-                if (this.value != "") {
-                    deviceName = this.value;
-                }
-            });
-            $('label[for=deviceName]').remove();
-        });
-
-        $("a#download-device-cancel-link").click(function () {
-            hidePopup();
-        });
-
+    $(".download-link").click(function(){
+        toggleEnrollment();
     });
+
+    function toggleEnrollment(){
+        $(modalPopupContent).html($("#qr-code-modal").html());
+        generateQRCode(modalPopupContent + " .qr-code");
+        showPopup();
+    }
 }

@@ -231,7 +231,7 @@ public class LocationDataReader extends DataReader implements LocationListener {
         } catch (InterruptedException e) {
             // Restore the interrupted status
             Thread.currentThread().interrupt();
-            Log.e(TAG, " Location Data Retrieval Failed");
+            Log.e(TAG, " Location Data Retrieval Failed", e);
         }
     }
 

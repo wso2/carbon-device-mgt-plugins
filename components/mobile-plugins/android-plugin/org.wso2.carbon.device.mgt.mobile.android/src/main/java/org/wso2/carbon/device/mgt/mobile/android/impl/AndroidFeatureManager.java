@@ -463,6 +463,12 @@ public class AndroidFeatureManager implements FeatureManager {
         feature.setDescription("Fetch device logcat");
         supportedFeatures.add(feature);
 
+        feature = new Feature();
+        feature.setCode("DEVICE_UNLOCK");
+        feature.setName("Device Unlock");
+        feature.setDescription("Unlock the device");
+        supportedFeatures.add(feature);
+
         return supportedFeatures;
     }
 }

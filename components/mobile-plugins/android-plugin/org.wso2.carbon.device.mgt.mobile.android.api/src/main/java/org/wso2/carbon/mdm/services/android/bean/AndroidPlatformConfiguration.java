@@ -21,8 +21,6 @@ package org.wso2.carbon.mdm.services.android.bean;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
-
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -38,7 +36,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.NONE)
 @ApiModel(
         value = "PlatformConfiguration",
-        description = "This class carries all information related to a Tenant configuration"
+        description = "This class carries all the information related to Android platform configurations."
 )
 public class AndroidPlatformConfiguration implements Serializable {
     public static final int INVALID_NOTIFIER_FREQUENCY = -1;
@@ -50,9 +48,7 @@ public class AndroidPlatformConfiguration implements Serializable {
             value = "type of device",
             required = true
     )
-    @NotNull
     @Size(min = 2, max = 10)
-    @Pattern(regexp = "^[A-Za-z0-9]*$")
     private String type;
     @ApiModelProperty(
             name = "configuration",

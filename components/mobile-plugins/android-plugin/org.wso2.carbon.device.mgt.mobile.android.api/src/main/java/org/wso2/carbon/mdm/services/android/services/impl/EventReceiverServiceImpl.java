@@ -33,7 +33,6 @@ import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.Message;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -78,11 +77,10 @@ public class EventReceiverServiceImpl implements EventReceiverService {
     @Override
     public Response retrieveAlerts(@QueryParam("id")
                                        @Size(min = 2, max = 45)
-                                       @Pattern(regexp = "^[A-Za-z0-9]*$") String deviceId,
+                                       String deviceId,
                                    @QueryParam("from") long from,
                                    @QueryParam("to") long to,
                                        @Size(min = 2, max = 45)
-                                       @Pattern(regexp = "^[A-Za-z0-9]*$")
                                    @QueryParam("type") String type,
                                    @HeaderParam("If-Modified-Since") String ifModifiedSince) {
 

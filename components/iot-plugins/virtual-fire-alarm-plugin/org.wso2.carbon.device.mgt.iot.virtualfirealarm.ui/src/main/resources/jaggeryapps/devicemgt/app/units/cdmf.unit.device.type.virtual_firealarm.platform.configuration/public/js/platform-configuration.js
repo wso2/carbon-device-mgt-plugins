@@ -18,7 +18,7 @@
 
 $(document).ready(function () {
     invokerUtil.get(
-        "/devicemgt_admin/configuration",
+        "/api/device-mgt/virtual_firealarm/v1.0/configuration",
         function (data) {
             data = JSON.parse(data);
             if (data && data.configuration) {
@@ -38,16 +38,6 @@ $(document).ready(function () {
         });
 
 });
-
-
-// Start of HTML embedded invoke methods
-var showAdvanceOperation = function (operation, button) {
-    $(button).addClass('selected');
-    $(button).siblings().removeClass('selected');
-    var hiddenOperation = ".wr-hidden-operations-content > div";
-    $(hiddenOperation + '[data-operation="' + operation + '"]').show();
-    $(hiddenOperation + '[data-operation="' + operation + '"]').siblings().hide();
-};
 
 // Start of HTML embedded invoke methods
 var addConfiguration = function () {
@@ -79,10 +69,10 @@ var addConfiguration = function () {
     configList.push(httpConfig);
     configList.push(httpsConfig);
     configList.push(mqttConfig);
-    addConfigFormData.type = "virtual_firealarm"
+    addConfigFormData.type = "virtual_firealarm";
     addConfigFormData.configuration = configList;
 
-    var addConfigAPI = "/devicemgt_admin/configuration";
+    var addConfigAPI = "/api/device-mgt/virtual_firealarm/v1.0/configuration";
     invokerUtil.post(
         addConfigAPI,
         addConfigFormData,

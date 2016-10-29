@@ -44,7 +44,7 @@ public class ApplicationUpdate extends AndroidOperation implements Serializable 
     private String type;
     @ApiModelProperty(name = "url", value = "The URL of the application.", required = true)
     private String url;
-    @ApiModelProperty(name = "schedule", value = "Application update schedule.", required = true)
+    @ApiModelProperty(name = "schedule", value = "Application update schedule.", required = false)
     private String schedule;
 
     public String getAppIdentifier() {

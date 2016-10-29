@@ -62,5 +62,4 @@ public class DeviceManagementConfiguration {
     public void setPushNotificationConfig(PushNotificationConfig pushNotificationConfig) {
         this.pushNotificationConfig = pushNotificationConfig;
     }
-
 }

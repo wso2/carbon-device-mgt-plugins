@@ -241,9 +241,9 @@ var savePolicy = function (policy, state) {
 
     var serviceURL;
     if (state == "save") {
-        serviceURL = "/devicemgt_admin/policies/inactive-policy"
+        serviceURL = "/api/device-mgt/v1.0/policies/inactive-policy"
     } else if (state == "publish") {
-        serviceURL = "/devicemgt_admin/policies/active-policy"
+        serviceURL = "/api/device-mgt/v1.0/policies/active-policy"
     }
     invokerUtil.post(
             serviceURL,
@@ -414,7 +414,7 @@ $(document).ready(function () {
                                       data: function (params) {
                                           var postData = {};
                                           postData.actionMethod = "GET";
-                                          postData.actionUrl = "/devicemgt_admin/users";
+                                          postData.actionUrl = "/api/device-mgt/v1.0/users";
                                           postData.actionPayload = JSON.stringify({
                                                                                       q: params.term, // search term
                                                                                       page: params.page
@@ -442,7 +442,7 @@ $(document).ready(function () {
                                   templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
                               });
 
-    $("#groups-input").select2({
+                            $("#groups-input").select2({
                                   multiple: true,
                                   tags: true,
                                   ajax: {
@@ -457,7 +457,7 @@ $(document).ready(function () {
                                           var postData = {};
                                           postData.actionMethod = "GET";
                                           var username = $("#platform").data("username");
-                                          postData.actionUrl = "/devicemgt_admin/groups/user/" + username +
+                                          postData.actionUrl = "/api/device-mgt/v1.0/groups/user/" + username +
                                                                "/search?groupName=" + params.term;
                                           return JSON.stringify(postData);
                                       },

@@ -1,6 +1,7 @@
 -- -----------------------------------------------------
 -- Table `WINDOWS_FEATURE`
 -- -----------------------------------------------------
+IF NOT  EXISTS (SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID(N'[DBO].[WIN_FEATURE]') AND TYPE IN (N'U'))
 CREATE TABLE WIN_FEATURE (
   ID INT NOT NULL IDENTITY,
   CODE VARCHAR(45) NOT NULL,
@@ -12,7 +13,8 @@ CREATE TABLE WIN_FEATURE (
 -- -----------------------------------------------------
 -- Table `WINDOWS_DEVICE`
 -- -----------------------------------------------------
-  CREATE  TABLE WIN_DEVICE (
+IF NOT  EXISTS (SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID(N'[DBO].[WIN_DEVICE]') AND TYPE IN (N'U'))
+CREATE  TABLE WIN_DEVICE (
   DEVICE_ID VARCHAR(45) NOT NULL,
   CHANNEL_URI VARCHAR(100) NULL DEFAULT NULL,
   DEVICE_INFO TEXT NULL DEFAULT NULL,

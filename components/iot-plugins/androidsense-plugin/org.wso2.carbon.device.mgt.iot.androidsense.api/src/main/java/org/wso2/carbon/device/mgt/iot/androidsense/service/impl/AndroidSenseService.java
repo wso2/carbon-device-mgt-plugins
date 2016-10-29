@@ -19,17 +19,11 @@
 package org.wso2.carbon.device.mgt.iot.androidsense.service.impl;
 
 import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @DeviceType(value = "android_sense")
@@ -45,7 +39,7 @@ public interface AndroidSenseService {
     @Path("device/{deviceId}/words")
     @POST
     @Feature(code = "keywords", name = "Add Keywords", description = "Send keywords to the device")
-    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/operations"})
+    @Scope(key = "device:android-sense:enroll", name = "", description = "")
     Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords);
 
     /**
@@ -57,13 +51,13 @@ public interface AndroidSenseService {
     @Path("device/{deviceId}/words/threshold")
     @POST
     @Feature(code = "threshold", name = "Add a Threshold", description = "Set a threshold for word in the device")
-    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/operations"})
+    @Scope(key = "device:android-sense:enroll", name = "", description = "")
     Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold);
 
     @Path("device/{deviceId}/words")
     @DELETE
     @Feature(code = "remove", name = "Remove Keywords", description = "Remove the keywords")
-    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/operations"})
+    @Scope(key = "device:android-sense:enroll", name = "", description = "")
     Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words);
 
     /**
@@ -72,7 +66,7 @@ public interface AndroidSenseService {
     @Path("stats/{deviceId}/sensors/{sensorName}")
     @GET
     @Consumes("application/json")
-    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/stats"})
+    @Scope(key = "device:android-sense:enroll", name = "", description = "")
     @Produces("application/json")
     Response getAndroidSenseDeviceStats(@PathParam("deviceId") String deviceId, @PathParam("sensorName") String sensor,
                                         @QueryParam("from") long from, @QueryParam("to") long to);
@@ -82,7 +76,7 @@ public interface AndroidSenseService {
      */
     @Path("device/{device_id}/register")
     @POST
-    @Permission(scope = "android_sense_user", permissions = {"/permission/admin/device-mgt/user/devices"})
+    @Scope(key = "device:android-sense:enroll", name = "", description = "")
     Response register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName);
 
 }
