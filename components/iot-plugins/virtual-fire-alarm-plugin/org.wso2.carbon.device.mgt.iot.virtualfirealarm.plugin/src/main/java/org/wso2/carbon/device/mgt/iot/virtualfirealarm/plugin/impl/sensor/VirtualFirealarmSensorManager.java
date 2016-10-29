@@ -22,7 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.sensor.mgt.DeviceTypeSensor;
-import org.wso2.carbon.device.mgt.common.sensor.mgt.Sensor;
 import org.wso2.carbon.device.mgt.common.sensor.mgt.SensorManager;
 import org.wso2.carbon.device.mgt.common.sensor.mgt.dao.DeviceSensorDAOException;
 import org.wso2.carbon.device.mgt.common.sensor.mgt.dao.SensorTransactionObject;
