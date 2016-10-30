@@ -25,6 +25,7 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
+import org.wso2.carbon.device.mgt.common.sensor.mgt.SensorManager;
 import org.wso2.carbon.device.mgt.extensions.license.mgt.registry.RegistryBasedLicenseManager;
 import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
@@ -76,6 +77,11 @@ public class WindowsDeviceManager implements DeviceManager {
     @Override
     public FeatureManager getFeatureManager() {
         return featureManager;
+    }
+
+    @Override
+    public SensorManager getSensorManager() {
+        return null;
     }
 
     @Override

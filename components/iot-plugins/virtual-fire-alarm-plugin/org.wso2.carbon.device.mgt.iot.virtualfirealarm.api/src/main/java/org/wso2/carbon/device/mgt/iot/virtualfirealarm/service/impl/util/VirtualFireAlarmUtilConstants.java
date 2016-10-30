@@ -23,4 +23,5 @@ public class VirtualFireAlarmUtilConstants {
     public static final String DEVICE_REFRESH_TOKEN = "DEVICE_REFRESH_TOKEN";
     public static final String SERVER_NAME = "SERVER_NAME";
     public static final String SERVER_JID = "SERVER_JID";
+    public static final String SENSOR_LIST = "SENSOR_LIST";
 }

@@ -20,6 +20,7 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.device.mgt.common.IllegalTransactionStateException;
 import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
@@ -66,7 +67,8 @@ public class VirtualFireAlarmDAOUtil {
             conn.setAutoCommit(false);
             currentConnection.set(conn);
         } catch (SQLException e) {
-            throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while retrieving datasource connection", e);
+            throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while retrieving datasource connection",
+                                                               e);
         }
     }
 
@@ -75,7 +77,8 @@ public class VirtualFireAlarmDAOUtil {
             try {
                 currentConnection.set(dataSource.getConnection());
             } catch (SQLException e) {
-                throw new VirtualFirealarmDeviceMgtPluginException("Error occurred while retrieving data source connection", e);
+                throw new VirtualFirealarmDeviceMgtPluginException(
+                        "Error occurred while retrieving data source connection", e);
             }
         }
         return currentConnection.get();
@@ -89,7 +92,7 @@ public class VirtualFireAlarmDAOUtil {
             } else {
                 if (log.isDebugEnabled()) {
                     log.debug("Datasource connection associated with the current thread is null, hence commit "
-                            + "has not been attempted");
+                                      + "has not been attempted");
                 }
             }
         } catch (SQLException e) {
@@ -99,15 +102,17 @@ public class VirtualFireAlarmDAOUtil {
         }
     }
 
-    public static void closeConnection() throws VirtualFirealarmDeviceMgtPluginException {
-
-        Connection con = currentConnection.get();
-        if (con != null) {
-            try {
-                con.close();
-            } catch (SQLException e) {
-                log.error("Error occurred while close the connection");
-            }
+    public static void closeConnection() {
+        Connection conn = currentConnection.get();
+        if (conn == null) {
+            throw new IllegalTransactionStateException(
+                    "No connection is associated with the current transaction. This might have ideally been caused by" +
+                            " not properly initiating the transaction via 'beginTransaction'/'openConnection' methods");
+        }
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            log.warn("Error occurred while close the connection");
         }
         currentConnection.remove();
     }
@@ -120,7 +125,7 @@ public class VirtualFireAlarmDAOUtil {
             } else {
                 if (log.isDebugEnabled()) {
                     log.debug("Datasource connection associated with the current thread is null, hence rollback "
-                            + "has not been attempted");
+                                      + "has not been attempted");
                 }
             }
         } catch (SQLException e) {

@@ -42,6 +42,8 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.security.cert.X509Certificate;
 import java.sql.Connection;
@@ -50,6 +52,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Contains utility methods used by FireAlarm plugin.
@@ -283,6 +286,13 @@ public class VirtualFireAlarmUtils {
         xmppAdapterProperties.put(VirtualFireAlarmConstants.CONTENT_VALIDATION, "default");
         inputEventAdapterConfiguration.setProperties(xmppAdapterProperties);
         return inputEventAdapterConfiguration;
+    }
+
+
+    public static String shortUUID() {
+        UUID uuid = UUID.randomUUID();
+        long l = ByteBuffer.wrap(uuid.toString().getBytes(StandardCharsets.UTF_8)).getLong();
+        return Long.toString(l, Character.MAX_RADIX);
     }
 
 }

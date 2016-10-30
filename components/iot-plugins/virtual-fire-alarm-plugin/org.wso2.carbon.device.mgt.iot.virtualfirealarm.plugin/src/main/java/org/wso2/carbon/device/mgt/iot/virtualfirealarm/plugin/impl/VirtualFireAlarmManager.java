@@ -20,18 +20,17 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.common.Device;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.DeviceManager;
-import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
-import org.wso2.carbon.device.mgt.common.FeatureManager;
+import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
+import org.wso2.carbon.device.mgt.common.sensor.mgt.SensorManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao.VirtualFireAlarmDAOUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.feature.VirtualFirealarmFeatureManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.sensor.VirtualFirealarmSensorManager;
+
 import java.util.List;
 
 
@@ -43,10 +42,26 @@ public class VirtualFireAlarmManager implements DeviceManager {
     private static final VirtualFireAlarmDAOUtil virtualFireAlarmDAO = new VirtualFireAlarmDAOUtil();
     private static final Log log = LogFactory.getLog(VirtualFireAlarmManager.class);
     private FeatureManager virtualFirealarmFeatureManager = new VirtualFirealarmFeatureManager();
+    private SensorManager virtualFirealarmSensorManager = new VirtualFirealarmSensorManager();
+
+    public VirtualFireAlarmManager() {
+        try {
+            ((VirtualFirealarmSensorManager) virtualFirealarmSensorManager).initDeviceTypeSensors();
+        } catch (DeviceManagementException e) {
+            log.error("An error occured whilst trying to to set Sensors for the DeviceType - [" +
+                              VirtualFireAlarmConstants.DEVICE_TYPE + "].");
+        }
+    }
+
 
     @Override
     public FeatureManager getFeatureManager() {
         return virtualFirealarmFeatureManager;
+    }
+
+    @Override
+    public SensorManager getSensorManager() {
+        return virtualFirealarmSensorManager;
     }
 
     @Override
@@ -211,6 +226,7 @@ public class VirtualFireAlarmManager implements DeviceManager {
         return false;
     }
 
+
     @Override
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device) throws DeviceManagementException {
         boolean status;
@@ -252,5 +268,4 @@ public class VirtualFireAlarmManager implements DeviceManager {
         }
         return devices;
     }
-
 }

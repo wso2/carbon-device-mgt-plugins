@@ -53,9 +53,26 @@ public class ZipUtil {
     private static final String CONFIG_TYPE = "general";
     private static final String DEFAULT_MQTT_ENDPOINT = "tcp://localhost:1883";
 
-    public ZipArchive createZipFile(String owner, String deviceType, String deviceId, String deviceName,
-                                    String apiApplicationKey, String token, String refreshToken)
-            throws DeviceManagementException {
+    public ZipArchive createZipFile(Map<String, Object> configFileProperties) throws DeviceManagementException {
+
+        String owner = (String) configFileProperties.get(DeviceConfigConstants.OWNER);
+        String deviceType = (String) configFileProperties.get(DeviceConfigConstants.DEVICE_TYPE);
+        String deviceId = (String) configFileProperties.get(DeviceConfigConstants.DEVICE_ID);
+        String deviceName = (String) configFileProperties.get(DeviceConfigConstants.DEVICE_NAME);
+        String apiApplicationKey = (String) configFileProperties.get(DeviceConfigConstants.API_APPLICATION_KEY);
+        String token = (String) configFileProperties.get(DeviceConfigConstants.ACCESS_TOKEN);
+        String refreshToken = (String) configFileProperties.get(DeviceConfigConstants.REFRESH_TOKEN);
+        Object sensorListObject = configFileProperties.get(DeviceConfigConstants.SENSOR_LIST);
+        String sensorAndSensorId = "";
+        if (sensorListObject instanceof Map) {
+            Map<String, String> deviceSensorList = (Map<String, String>) sensorListObject;
+            sensorAndSensorId += "{";
+            for (String sensorName : deviceSensorList.keySet()) {
+                sensorAndSensorId += sensorName + ":" + deviceSensorList.get(sensorName) + ",";
+            }
+            int lastComma = sensorAndSensorId.lastIndexOf(",");
+            sensorAndSensorId = sensorAndSensorId.substring(0, lastComma) + "}";
+        }
 
         String sketchFolder = "repository" + File.separator + "resources" + File.separator + "sketches";
         String archivesPath =
@@ -90,16 +107,16 @@ public class ZipUtil {
                 for (ConfigurationEntry configurationEntry : configurations) {
                     switch (configurationEntry.getName()) {
                         case VirtualFireAlarmUtilConstants.VIRTUAL_FIREALARM_HTTPS_EP:
-                            httpsServerEP = (String)configurationEntry.getValue();
+                            httpsServerEP = (String) configurationEntry.getValue();
                             break;
                         case VirtualFireAlarmUtilConstants.VIRTUAL_FIREALARM_HTTP_EP:
-                            httpServerEP = (String)configurationEntry.getValue();
+                            httpServerEP = (String) configurationEntry.getValue();
                             break;
                         case VirtualFireAlarmUtilConstants.VIRTUAL_FIREALARM_MQTT_EP:
-                            mqttEndpoint = (String)configurationEntry.getValue();
+                            mqttEndpoint = (String) configurationEntry.getValue();
                             break;
                         case VirtualFireAlarmUtilConstants.VIRTUAL_FIREALARM_XMPP_EP:
-                            xmppEndpoint = (String)configurationEntry.getValue();
+                            xmppEndpoint = (String) configurationEntry.getValue();
                             break;
                     }
                 }
@@ -119,10 +136,12 @@ public class ZipUtil {
             contextParams.put(VirtualFireAlarmUtilConstants.API_APPLICATION_KEY, base64EncodedApplicationKey);
             contextParams.put(VirtualFireAlarmUtilConstants.DEVICE_TOKEN, token);
             contextParams.put(VirtualFireAlarmUtilConstants.DEVICE_REFRESH_TOKEN, refreshToken);
-            contextParams.put(VirtualFireAlarmUtilConstants.SERVER_NAME, XmppConfig.getInstance().getServerName() == null
-                    ? "" : XmppConfig.getInstance().getServerName());
+            contextParams.put(VirtualFireAlarmUtilConstants.SERVER_NAME,
+                              XmppConfig.getInstance().getServerName() == null
+                                      ? "" : XmppConfig.getInstance().getServerName());
             contextParams.put(VirtualFireAlarmUtilConstants.SERVER_JID, XmppConfig.getInstance().getJid() == null
                     ? "" : XmppConfig.getInstance().getJid());
+            contextParams.put(VirtualFireAlarmUtilConstants.SENSOR_LIST, sensorAndSensorId);
 
             ZipArchive zipFile;
             zipFile = Utils.getSketchArchive(archivesPath, templateSketchPath, contextParams, deviceName);
@@ -141,5 +160,16 @@ public class ZipUtil {
         String consumerSecret = jsonObject.get(ApiApplicationConstants.OAUTH_CLIENT_SECRET).toString();
         String stringToEncode = consumerKey + ":" + consumerSecret;
         return Base64.encodeBase64String(stringToEncode.getBytes());
+    }
+
+    public static class DeviceConfigConstants {
+        public static final String OWNER = "OWNER";
+        public static final String DEVICE_TYPE = "DEVICE_TYPE";
+        public static final String DEVICE_ID = "DEVICE_ID";
+        public static final String DEVICE_NAME = "DEVICE_NAME";
+        public static final String API_APPLICATION_KEY = "API_APPLICATION_KEY";
+        public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+        public static final String REFRESH_TOKEN = "REFRESH_TOKEN";
+        public static final String SENSOR_LIST = "SENSOR_LIST";
     }
 }
