@@ -20,23 +20,16 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.common.Device;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.DeviceManager;
-import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
-import org.wso2.carbon.device.mgt.common.FeatureManager;
+import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
-import org.wso2.carbon.device.mgt.common.sensor.mgt.Sensor;
 import org.wso2.carbon.device.mgt.common.sensor.mgt.SensorManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.dao.VirtualFireAlarmDAOUtil;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.feature.VirtualFirealarmFeatureManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.sensor.VirtualFirealarmSensorManager;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFireAlarmUtils;
 
 import java.util.List;
 
