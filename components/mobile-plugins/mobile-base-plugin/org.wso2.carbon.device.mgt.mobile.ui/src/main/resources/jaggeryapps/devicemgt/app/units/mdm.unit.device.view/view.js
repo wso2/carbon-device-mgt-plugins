@@ -115,7 +115,7 @@ function onRequest(context) {
                             }
                         } else if (deviceType == "ios") {
                             viewModel["BatteryLevel"] = {};
-                            viewModel["BatteryLevel"]["value"] = filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["BatteryLevel"];
+                            viewModel["BatteryLevel"]["value"] = Math. round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["BatteryLevel"] * 1000) / 100;
 
                             viewModel["internalMemory"] = {};
                             viewModel["internalMemory"]["total"] = Math.
