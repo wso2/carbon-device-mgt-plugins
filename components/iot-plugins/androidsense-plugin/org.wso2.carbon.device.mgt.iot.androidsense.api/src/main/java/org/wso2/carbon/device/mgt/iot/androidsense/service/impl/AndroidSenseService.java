@@ -79,13 +79,5 @@ public interface AndroidSenseService {
     @Scope(key = "device:android-sense:enroll", name = "", description = "")
     Response register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName);
 
-    /**
-     * Get All Devices.
-     */
-    @Path("devices")
-    @GET
-    @Scope(key = "device:android-sense:enroll", name = "", description = "")
-    Response getAllDevices();
-
 }
 

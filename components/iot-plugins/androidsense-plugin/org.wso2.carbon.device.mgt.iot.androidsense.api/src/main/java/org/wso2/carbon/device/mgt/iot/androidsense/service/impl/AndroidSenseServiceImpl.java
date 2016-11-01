@@ -299,28 +299,4 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).entity(false).build();
         }
     }
-
-    @Path("/devices")
-    @GET
-    @Consumes("application/json")
-    @Produces("application/json")
-    public Response getAllDevices() {
-        try {
-            List<Device> userDevices =
-                    APIUtil.getDeviceManagementService().getDevicesOfUser(APIUtil.getAuthenticatedUser());
-            ArrayList<Device> deviceList = new ArrayList<>();
-            for (Device device : userDevices) {
-                if (device.getType().equals(AndroidSenseConstants.DEVICE_TYPE) &&
-                        device.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.ACTIVE)) {
-                    deviceList.add(device);
-                }
-            }
-            Device[] devices = deviceList.toArray(new Device[]{});
-            return Response.ok().entity(devices).build();
-        } catch (DeviceManagementException e) {
-            log.error(e.getMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
-        }
-    }
-
 }
