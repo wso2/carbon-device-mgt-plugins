@@ -198,7 +198,7 @@
                                    checked="checked" disabled/>
                             <span class="helper"
                                   title="Determines whether the user is forced to set a passcode.">
-                                &nbsp;&nbsp;&nbsp;Force Passcode
+                                Force Passcode
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -211,7 +211,7 @@
                                    data-key="passcodePolicyAllowSimple" checked="checked" disabled/>
                             <span class="helper"
                                   title="Permit the use of repeating, ascending and descending character sequences">
-                                &nbsp;&nbsp;&nbsp;Allow simple value
+                                Allow simple value
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -224,7 +224,7 @@
                                    data-key="passcodePolicyRequireAlphanumeric" checked="checked" disabled/>
                             <span class="helper"
                                   title="Require passcode to contain both letters and numbers">
-                                &nbsp;&nbsp;&nbsp;Require alphanumeric value
+                                Require alphanumeric value
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -361,7 +361,9 @@
                         <label class="wr-input-label" for="passcode-policy-max-failed-attempts">
                             Maximum number of failed attempts
                             <span class="helper"
-                                  title="Maximum number of passcode entry attempts allowed before all data on a device will be erased">
+                                  title="The maximum number of failed password entry attempts. If the correct password 
+                                  is not entered within the defined number of attempts, the data on the device will be 
+                                  erased">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -431,8 +433,9 @@
                             <input id="vpn-override-primary" type="checkbox" class="form-control operationDataKeys"
                                    data-key="overridePrimary" data-default="true" disabled/>
                             <span class="helper"
-                                  title="Specifies whether to send all traffic through the VPN interface. If true, all network traffic is sent over VPN.">
-                                &nbsp;&nbsp;&nbsp;Override Primary
+                                  title="Specifies whether to send all traffic through the VPN interface. If true, all 
+                                  network traffic is sent over VPN.">
+                                Override Primary
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -444,8 +447,9 @@
                                    onchange="slideDownPaneAgainstValueSet(this, 'vpn-ondemand-config', ['true'])"
                                    disabled/>
                             <span class="helper"
-                                  title="Check if the VPN connection should be brought up on demand, else leave un-checked.">
-                                &nbsp;&nbsp;&nbsp;On-demand Enabled
+                                  title="Check if the VPN connection should be brought up on demand, else leave 
+                                  un-checked.">
+                                On-demand Enabled
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -455,7 +459,8 @@
                             <label class="wr-input-label" for="vpn-ondemand-domains-always">
                                 On-demand match domains (Always)
                                 <span class="helper"
-                                      title="A list of domain names. In versions of iOS prior to iOS 7, if the hostname ends with one of these domain names, the VPN is started automatically.">
+                                      title="A list of domain names. In versions of iOS prior to iOS 7, if the hostname 
+                                      ends with one of these domain names, the VPN is started automatically.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                                 <br>
@@ -465,7 +470,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                    &nbsp;
+                                    
                                     Add Domain
                                 </a>
                             </label>
@@ -524,7 +529,9 @@
                             <label class="wr-input-label" for="vpn-ondemand-domains-never">
                                 On-demand match domains (Never)
                                 <span class="helper"
-                                      title="A list of domain names. In versions of iOS prior to iOS 7, if the hostname ends with one of these domain names, the VPN is not started automatically. This might be used to exclude a subdomain within an included domain.">
+                                      title="A list of domain names. In versions of iOS prior to iOS 7, if the hostname 
+                                      ends with one of these domain names, the VPN is not started automatically. This 
+                                      might be used to exclude a subdomain within an included domain.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                                 <br>
@@ -534,7 +541,7 @@
                                         <i class="fw fw-add fw-stack-1x"></i>
                                         <i class="fw fw-ring fw-stack-2x"></i>
                                     </span>
-                                    &nbsp;
+                                    
                                     Add Domain
                                 </a>
                             </label>
@@ -593,7 +600,9 @@
                             <label class="wr-input-label" for="vpn-ondemand-domains-retry">
                                 On-demand match domains (On Retry)
                                 <span class="helper"
-                                      title="A list of domain names. In versions of iOS prior to iOS 7, if the hostname ends with one of these domain names, if a DNS query for that domain name fails, the VPN is started automatically.">
+                                      title="A list of domain names. In versions of iOS prior to iOS 7, if the hostname 
+                                      ends with one of these domain names, if a DNS query for that domain name fails, 
+                                      the VPN is started automatically.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                                 <br>
@@ -603,7 +612,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                    &nbsp;
+                                    
                                     Add Domain
                                 </a>
                             </label>
@@ -665,7 +674,8 @@
                         <label class="wr-input-label" for="vpn-vendor-configs">
                             Vendor Configurations
                             <span class="helper"
-                                  title="Configuration information specific to a given third-party VPN solution. This has to be input as key/value pairs.">
+                                  title="Configuration information specific to a given third-party VPN solution. This 
+                                  has to be input as key/value pairs.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
@@ -675,7 +685,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add Configuration
                             </a>
                         </label>
@@ -770,7 +780,7 @@
                                        disabled/>
                                 <span class="helper"
                                       title="Whether to use a token card such as an RSA SecurID card for connecting.">
-                                &nbsp;&nbsp;&nbsp;Token Card Enabled
+                                Token Card Enabled
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             </label>
@@ -802,7 +812,7 @@
                                 <input id="vpn-pptp-rsa" type="checkbox" class="form-control operationDataKeys"
                                        data-key="pptpRSASecureID" data-default="false" disabled/>
                                 <span class="helper" title="Whether RSA Secure ID is enabled.">
-                                &nbsp;&nbsp;&nbsp;RSA SecureID Enabled
+                                RSA SecureID Enabled
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             </label>
@@ -814,7 +824,7 @@
                                        onchange="slideDownPaneAgainstValueSet(this, 'pptp-encryption-config', ['true'])"
                                        disabled/>
                                 <span class="helper" title="Enables encryption on the connection.">
-                                &nbsp;&nbsp;&nbsp;CCP Encryption Enabled
+                                CCP Encryption Enabled
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             </label>
@@ -827,7 +837,7 @@
                                            data-default="false" disabled/>
                                     <span class="helper"
                                           title="Enables encryption on the connection. Using automatic encryption level.">
-                                    &nbsp;&nbsp;&nbsp;Automatic (CCPMPPE40) Encryption Level Enabled
+                                    Automatic (CCPMPPE40) Encryption Level Enabled
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                                 </label>
@@ -839,7 +849,7 @@
                                            data-default="false" disabled/>
                                     <span class="helper"
                                           title="Enables encryption on the connection. Using maximum encryption level.">
-                                    &nbsp;&nbsp;&nbsp;Maximum (CCPMPPE128) Encryption Level Enabled
+                                    Maximum (CCPMPPE128) Encryption Level Enabled
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                                 </label>
@@ -869,7 +879,7 @@
                                        disabled/>
                                 <span class="helper"
                                       title="Whether to use a token card such as an RSA SecurID card for connecting.">
-                                &nbsp;&nbsp;&nbsp;Token Card Enabled
+                                Token Card Enabled
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             </label>
@@ -901,7 +911,7 @@
                                 <input id="vpn-l2tp-rsa" type="checkbox" class="form-control operationDataKeys"
                                        data-key="l2tpRSASecureID" data-default="false" disabled/>
                                 <span class="helper" title="Whether RSA Secure ID is enabled.">
-                                &nbsp;&nbsp;&nbsp;RSA SecureID Enabled
+                                RSA SecureID Enabled
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             </label>
@@ -981,7 +991,7 @@
                                        data-default="false"
                                        onchange="slideDownPaneAgainstValueSet(this, 'ipsec-xauth', ['true'])" disabled/>
                                 <span class="helper" title="Whether XAuth is enabled.">
-                                &nbsp;&nbsp;&nbsp;XAuth Enabled
+                                XAuth Enabled
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             </label>
@@ -1005,7 +1015,7 @@
                                        data-key="ipsecPromptForVPNPIN" data-default="false" disabled/>
                                 <span class="helper"
                                       title="Tells whether to prompt for a PIN when connecting. Used for Cisco IPSec.">
-                                &nbsp;&nbsp;&nbsp;Prompt for VPN PIN
+                                Prompt for VPN PIN
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             </label>
@@ -1106,7 +1116,7 @@
                                        onchange="slideDownPaneAgainstValueSet(this, 'ikev2-exauth', ['true'])"
                                        disabled/>
                                 <span class="helper" title="Whether XAuth is enabled.">
-                                &nbsp;&nbsp;&nbsp;Extended Authentication Enabled
+                                Extended Authentication Enabled
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             </label>
@@ -1152,7 +1162,8 @@
                             <label class="wr-input-label" for="vpn-ikev2-scicn">
                                 Server Certificate Issuer Common Name
                                 <span class="helper"
-                                      title="Common Name of the server certificate issuer. If set, this will cause IKE to send a certificate request based on this certificate issuer to the server.">
+                                      title="Common Name of the server certificate issuer. If set, this will cause IKE
+                                      to send a certificate request based on this certificate issuer to the server.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                             </label>
@@ -1164,7 +1175,9 @@
                             <label class="wr-input-label" for="vpn-ikev2-sccn">
                                 Server Certificate Common Name
                                 <span class="helper"
-                                      title="Common Name of the server certificate. This name is used to validate the certificate sent by the IKE server. If not set, the Remote Identifier will be used to validate the certificate.">
+                                      title="Common Name of the server certificate. This name is used to validate the
+                                      certificate sent by the IKE server. If not set, the Remote Identifier will be used
+                                       to validate the certificate.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                             </label>
@@ -1214,7 +1227,9 @@
                         <label class="wr-input-label" for="per-app-vpn-uuid">
                             VPNUUID*
                             <span class="helper"
-                                  title="A globally-unique identifier for the VPN configuration. This identifier is used to configure apps so that they use the Per-App VPN service for all of their network communications.">
+                                  title="A globally-unique identifier for the VPN configuration. This identifier is used
+                                   to configure apps so that they use the Per-App VPN service for all of their network
+                                   communications.">
                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                 </span>
                         </label>
@@ -1227,8 +1242,9 @@
                                    class="form-control operationDataKeys" data-key="onDemandMatchAppEnabled"
                                    data-default="true" disabled/>
                             <span class="helper"
-                                  title="The Per-App VPN connection starts automatically when the apps linked to this Per-App VPN service initiate network communication, if the value is set to true.">
-                    &nbsp;&nbsp;&nbsp;On Demand Match App Enabled
+                                  title="The Per-App VPN connection starts automatically when the apps linked to this
+                                  Per-App VPN service initiate network communication, if the value is set to true.">
+                    On Demand Match App Enabled
                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                 </span>
                         </label>
@@ -1237,7 +1253,8 @@
                         <label class="wr-input-label" for="per-app-vpn-safari-domains">
                             Safari Domains
                             <span class="helper"
-                                  title="Sets up the app mapping for the Safari (Webkit) with a specific identifier and a designated requirement.">
+                                  title="Sets up the app mapping for the Safari (Webkit) with a specific identifier and
+                                  a designated requirement.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
@@ -1247,7 +1264,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add Safari Domain
                             </a>
                         </label>
@@ -1339,7 +1356,8 @@
                         <label class="wr-input-label" for="app-to-per-app-vpn-mappings">
                             Mappings
                             <span class="helper"
-                                  title="The App-to-Per-App mapping payload is designated by specifying com.apple.vpn.managed.appmapping as the PayloadType value.">
+                                  title="The App-to-Per-App mapping payload is designated by specifying com.apple.vpn.
+                                  managed.appmapping as the PayloadType value.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
@@ -1349,7 +1367,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add Mapping
                             </a>
                         </label>
@@ -1464,7 +1482,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add Application
                             </a>
                         </label>
@@ -1573,7 +1591,8 @@
                         <label class="wr-input-label" for="wifi-domain-name">
                             Domain Name
                             <span class="helper"
-                                  title="Domain Name used for Wi-Fi Hotspot 2.0 negotiation. This field can be provided instead of SSID. Available in iOS 7.0 and later.">
+                                  title="Domain Name used for Wi-Fi Hotspot 2.0 negotiation. This field can be provided
+                                  instead of SSID. Available in iOS 7.0 and later.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
@@ -1590,7 +1609,7 @@
                                    data-key="wifiHiddenNetwork" data-default="false" disabled/>
                             <span class="helper"
                                   title="Enable this if target network is not open or broadcasting">
-                                &nbsp;&nbsp;&nbsp;Hidden Network
+                                Hidden Network
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -1601,8 +1620,9 @@
                             <input id="wifi-is-hot-spot" type="checkbox" class="form-control operationDataKeys"
                                    data-key="wifiIsHotSpot" data-default="false" disabled/>
                             <span class="helper"
-                                  title="If checked, the network is treated as a hotspot. Available in iOS 7.0 and later.">
-                                &nbsp;&nbsp;&nbsp;Hot Spot
+                                  title="If checked, the network is treated as a hotspot. Available in iOS 7.0 and later
+                                  .">
+                                Hot Spot
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -1614,8 +1634,9 @@
                                    class="form-control operationDataKeys" data-key="wifiServiceProviderRoamingEnabled"
                                    data-default="false" disabled/>
                             <span class="helper"
-                                  title="Indicates if connecting to roaming service providers is allowed. Available in iOS 7.0 and later.">
-                                &nbsp;&nbsp;&nbsp;Enable Service Provider Roaming
+                                  title="Indicates if connecting to roaming service providers is allowed. Available in
+                                  iOS 7.0 and later.">
+                                Enable Service Provider Roaming
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -1627,7 +1648,7 @@
                                    data-key="wifiAutoJoin" data-default="true" checked="checked" disabled/>
                             <span class="helper"
                                   title="If unchecked, user has to tap the network name to join it. Available in iOS 5.0 and later.">
-                                &nbsp;&nbsp;&nbsp;Auto Join
+                                Auto Join
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -1650,7 +1671,8 @@
                         <label class="wr-input-label" for="wifi-proxy-type">
                             Proxy Setup
                             <span class="helper"
-                                  title="Configures type of proxy setup to be used with this network. Available in iOS 5.0 and later.">
+                                  title="Configures type of proxy setup to be used with this network. Available in iOS
+                                  5.0 and later.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -1742,8 +1764,9 @@
                                        class="form-control operationDataKeys" data-key="wifiProxyPACFallbackAllowed"
                                        data-default="true" checked="checked" disabled/>
                                 <span class="helper"
-                                      title="If unchecked, prevents a device from connecting directly to the destination if the PAC file is unreachable. Available in iOS 7 and later.">
-                                    &nbsp;&nbsp;&nbsp;Allow Proxy PAC Fallback
+                                      title="If unchecked, prevents a device from connecting directly to the destination
+                                       if the PAC file is unreachable. Available in iOS 7 and later.">
+                                    Allow Proxy PAC Fallback
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                             </label>
@@ -1755,7 +1778,8 @@
                         <label class="wr-input-label" for="wifi-encryption-type">
                             Encryption Security Type
                             <span class="helper"
-                                  title="Wireless network encryption to use when connecting. Available in iOS 4.0 and later. The None value is available in iOS 5.0 and later.">
+                                  title="Wireless network encryption to use when connecting. Available in iOS 4.0 and
+                                  later. The None value is available in iOS 5.0 and later.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -1780,7 +1804,9 @@
                             <label class="wr-input-label" for="wifi-password">
                                 Wi-Fi Password
                                 <span class="helper"
-                                      title="Password used for encryption security. Absence of a password does not prevent a network from being added to the list of known networks. The user is eventually prompted to provide the password when connecting to that network.">
+                                      title="Password used for encryption security. Absence of a password does not
+                                      prevent a network from being added to the list of known networks. The user is
+                                      eventually prompted to provide the password when connecting to that network.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             </label>
@@ -1812,7 +1838,7 @@
                                         <input type="checkbox" class="form-control child-input" data-default="false"
                                                data-value="13" disabled/>
                                         <span class="helper" title="">
-                                    &nbsp;&nbsp;&nbsp;TLS
+                                    TLS
                                 </span>
                                     </label>
                                     <br/><br/>
@@ -1820,7 +1846,7 @@
                                         <input type="checkbox" class="form-control child-input" data-default="false"
                                                data-value="17" disabled/>
                                         <span class="helper" title="">
-                                    &nbsp;&nbsp;&nbsp;LEAP
+                                    LEAP
                                 </span>
                                     </label>
                                     <br/><br/>
@@ -1828,7 +1854,7 @@
                                         <input type="checkbox" class="form-control child-input" data-default="false"
                                                data-value="18" disabled/>
                                         <span class="helper" title="">
-                                    &nbsp;&nbsp;&nbsp;EAP-SIM
+                                    EAP-SIM
                                 </span>
                                     </label>
                                     <br/><br/>
@@ -1836,7 +1862,7 @@
                                         <input type="checkbox" class="form-control child-input" data-default="false"
                                                data-value="21" disabled/>
                                         <span class="helper" title="">
-                                    &nbsp;&nbsp;&nbsp;TTLS
+                                    TTLS
                                 </span>
                                     </label>
                                     <br/><br/>
@@ -1844,7 +1870,7 @@
                                         <input type="checkbox" class="form-control child-input" data-default="false"
                                                data-value="23" disabled/>
                                         <span class="helper" title="">
-                                    &nbsp;&nbsp;&nbsp;EAP-AKA
+                                    EAP-AKA
                                 </span>
                                     </label>
                                     <br/><br/>
@@ -1852,7 +1878,7 @@
                                         <input type="checkbox" class="form-control child-input" data-default="false"
                                                data-value="25" disabled/>
                                         <span class="helper" title="">
-                                    &nbsp;&nbsp;&nbsp;PEAP
+                                    PEAP
                                 </span>
                                     </label>
                                     <br/><br/>
@@ -1860,7 +1886,7 @@
                                         <input type="checkbox" class="form-control child-input" data-default="false"
                                                data-value="43" disabled/>
                                         <span class="helper" title="">
-                                    &nbsp;&nbsp;&nbsp;EAP-FAST
+                                    EAP-FAST
                                 </span>
                                     </label>
                                 </div>
@@ -1870,7 +1896,9 @@
                                 <label class="wr-input-label" for="wifi-eap-username">
                                     Username
                                     <span class="helper"
-                                          title="Unless you enter a user name, this property won't appear in an imported configuration. Users can enter this information by themselves when they authenticate.">
+                                          title="Unless you enter a user name, this property won't appear in an imported
+                                           configuration. Users can enter this information by themselves when they
+                                           authenticate.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                                 </label>
@@ -1898,8 +1926,9 @@
                                            class="form-control operationDataKeys" data-key="wifiEAPOneTimePassword"
                                            data-default="false" disabled/>
                                     <span class="helper"
-                                          title="If checked, the user will be prompted for a password each time they connect to the network.">
-                                &nbsp;&nbsp;&nbsp;One Time Password
+                                          title="If checked, the user will be prompted for a password each time they
+                                          connect to the network.">
+                                One Time Password
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                                 </label>
@@ -1911,7 +1940,9 @@
                                 <label class="wr-input-label" for="wifi-payload-certificate-anchor-uuids">
                                     Certificate Payload Anchor UUIDs
                                     <span class="helper"
-                                          title="Identifies the certificates to be trusted for this authentication. Each entry must contain the UUID of a certificate payload. Use this key to prevent the device from asking the user if the listed certificates are trusted.">
+                                          title="Identifies the certificates to be trusted for this authentication. Each
+                                           entry must contain the UUID of a certificate payload. Use this key to prevent
+                                            the device from asking the user if the listed certificates are trusted.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                                     <br>
@@ -1921,7 +1952,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                        &nbsp;
+                                        
                                         Add Certificate Payload Anchor UUID
                                     </a>
                                 </label>
@@ -1982,7 +2013,12 @@
                                 <label class="wr-input-label" for="wifi-tls-trusted-server-names">
                                     TLS Trusted Server Certificate Names
                                     <span class="helper"
-                                          title="This is the list of server certificate common names that will be accepted. You can use wildcards to specify the name, such as wpa.*.example.com. If a server presents a certificate that isn't in this list, it won't be trusted. Used alone or in combination with TLSTrustedCertificates, the property allows someone to carefully craft which certificates to trust for the given network, and avoid dynamically trusted certificates.">
+                                          title="This is the list of server certificate common names that will be
+                                          accepted. You can use wildcards to specify the name, such as wpa.*.example.com.
+                                           If a server presents a certificate that isn't in this list, it won't be
+                                           trusted. Used alone or in combination with TLSTrustedCertificates, the
+                                           property allows someone to carefully craft which certificates to trust for
+                                           the given network, and avoid dynamically trusted certificates.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                                     <br>
@@ -1992,7 +2028,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                        &nbsp;
+                                        
                                         Add TLS Trusted Server Certificate Name
                                     </a>
                                 </label>
@@ -2056,8 +2092,11 @@
                                            data-key="wifiEAPTLSAllowTrustExceptions"
                                            data-default="true" checked="checked" disabled/>
                                     <span class="helper"
-                                          title="Allows / disallows a dynamic trust decision by the user. The dynamic trust is the certificate dialogue that appears when a certificate isn't trusted. If this is unchecked, the authentication fails if the certificate isn't already trusted.">
-                                &nbsp;&nbsp;&nbsp;Allow TLS Trust Exceptions
+                                          title="Allows / disallows a dynamic trust decision by the user. The dynamic
+                                          trust is the certificate dialogue that appears when a certificate isn't
+                                          trusted. If this is unchecked, the authentication fails if the certificate i
+                                          sn't already trusted.">
+                                Allow TLS Trust Exceptions
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                                 </label>
@@ -2069,8 +2108,11 @@
                                            class="form-control operationDataKeys" data-key="wifiEAPTLSCertIsRequired"
                                            data-default="true" checked="checked" disabled/>
                                     <span class="helper"
-                                          title="If checked, allows for two-factor authentication for EAP-TTLS, PEAP or EAP-FAST. If unchecked, allows for zero factor authentication for EAP-TLS. By default this is enabled for EAP-TLS and disabled for other EAP types. Available in iOS 7.0 and later.">
-                                &nbsp;&nbsp;&nbsp;Require TLS Certificate
+                                          title="If checked, allows for two-factor authentication for EAP-TTLS, PEAP or
+                                          EAP-FAST. If unchecked, allows for zero factor authentication for EAP-TLS. By
+                                          default this is enabled for EAP-TLS and disabled for other EAP types.
+                                          Available in iOS 7.0 and later.">
+                                Require TLS Certificate
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                                 </label>
@@ -2097,7 +2139,10 @@
                                 <label class="wr-input-label" for="wifi-eap-outer-identity">
                                     Outer Identity
                                     <span class="helper"
-                                          title="This allows the user to hide his or her identity. The user's actual name appears only inside the encrypted tunnel. For example, it could be set to 'anonymous' or 'anon', or 'anon@my-company.net'. It can increase security because an attacker can't see the authenticating user's name in the clear.">
+                                          title="This allows the user to hide his or her identity. The user's actual
+                                          name appears only inside the encrypted tunnel. For example, it could be set to
+                                           'anonymous' or 'anon', or 'anon@my-company.net'. It can increase security
+                                           because an attacker can't see the authenticating user's name in the clear.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                                     <br>
@@ -2120,8 +2165,9 @@
                                                    class="parent-input form-control operationDataKeys"
                                                    data-key="wifiEAPFastUsePAC" data-default="false" disabled/>
                                             <span class="helper"
-                                                  title="If checked, the device will use an existing PAC. Otherwise, the server must present its identity using a certificate.">
-                                        &nbsp;&nbsp;&nbsp;Use existing PAC for EAP-FAST
+                                                  title="If checked, the device will use an existing PAC. Otherwise, the
+                                                   server must present its identity using a certificate.">
+                                        Use existing PAC for EAP-FAST
                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                     </span>
                                         </label>
@@ -2135,8 +2181,11 @@
                                                            data-key="wifiEAPFastProvisionPAC" data-default="false"
                                                            disabled/>
                                                     <span class="helper"
-                                                          title="Used only if above is enabled. If checked, allows PAC provisioning. This particular attribute must be enabled for EAP-FAST PAC usage to succeed, because there is no other way to provision a PAC.">
-                                                &nbsp;&nbsp;&nbsp;Allow PAC Provisioning
+                                                          title="Used only if above is enabled. If checked, allows PAC
+                                                          provisioning. This particular attribute must be enabled for
+                                                          EAP-FAST PAC usage to succeed, because there is no other way
+                                                          to provision a PAC.">
+                                                Allow PAC Provisioning
                                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                             </span>
                                                 </label>
@@ -2151,8 +2200,11 @@
                                                                    data-key="wifiEAPFastProvisionPACAnonymously"
                                                                    data-default="false" disabled/>
                                                             <span class="helper"
-                                                                  title="Used only if above is enabled. If checked, provisions the device anonymously. Note that there are known man-in-the-middle attacks for anonymous provisioning.">
-                                                        &nbsp;&nbsp;&nbsp;Allow Anonymous PAC Provisioning
+                                                                  title="Used only if above is enabled. If checked,
+                                                                  provisions the device anonymously. Note that there are
+                                                                   known man-in-the-middle attacks for anonymous
+                                                                   provisioning.">
+                                                        Allow Anonymous PAC Provisioning
                                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                     </span>
                                                         </label>
@@ -2184,7 +2236,10 @@
                             <label class="wr-input-label" for="wifi-payload-cert-uuid">
                                 Certificate Payload UUID
                                 <span class="helper"
-                                      title="UUID of the certificate payload to use for the identity credential. As with VPN configurations, it is possible to associate a certificate identity configuration with a Wi-Fi configuration. This is useful when defining credentials for a secure enterprise network.">
+                                      title="UUID of the certificate payload to use for the identity credential. As
+                                      with VPN configurations, it is possible to associate a certificate identity
+                                      configuration with a Wi-Fi configuration. This is useful when defining credentials
+                                       for a secure enterprise network.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             </label>
@@ -2199,7 +2254,8 @@
                         <label class="wr-input-label" for="wifi-roaming-consortium-ois">
                             Roaming Consortium OIs
                             <span class="helper"
-                                  title="Roaming Consortium Organization Identifiers used for Wi-Fi Hotspot 2.0 negotiation. Available in iOS 7.0 and later.">
+                                  title="Roaming Consortium Organization Identifiers used for Wi-Fi Hotspot 2.0
+                                  negotiation. Available in iOS 7.0 and later.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
@@ -2209,7 +2265,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add Roaming Consortium OI
                             </a>
                         </label>
@@ -2269,7 +2325,8 @@
                         <label class="wr-input-label" for="wifi-nai-realm-names">
                             Network Access Identifier ( NAI ) Realm Names
                             <span class="helper"
-                                  title="List of Network Access Identifier Realm names used for Wi-Fi Hotspot 2.0 negotiation. Available in iOS 7.0 and later.">
+                                  title="List of Network Access Identifier Realm names used for Wi-Fi Hotspot 2.0
+                                  negotiation. Available in iOS 7.0 and later.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
@@ -2278,7 +2335,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add NAI Realm Name
                             </a>
                         </label>
@@ -2336,7 +2393,9 @@
                         <label class="wr-input-label" for="wifi-mcc-and-mncs">
                             Mobile Country Code ( MCC ) / Mobile Network Code ( MNC ) Configuration
                             <span class="helper"
-                                  title="List of Mobile Country Code (MCC)/Mobile Network Code (MNC) pairs used for Wi-Fi Hotspot 2.0 negotiation. Each string must contain exactly six digits. Available in iOS 7.0 and later. This feature is not supported in OS X.">
+                                  title="List of Mobile Country Code (MCC)/Mobile Network Code (MNC) pairs used for
+                                  Wi-Fi Hotspot 2.0 negotiation. Each string must contain exactly six digits. Available
+                                  in iOS 7.0 and later. This feature is not supported in OS X.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
@@ -2345,7 +2404,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add MCC/MNC Pair
                             </a>
                         </label>
@@ -2495,7 +2554,9 @@
                         <label class="wr-input-label" for="email-address">
                             Email Address
                             <span class="helper"
-                                  title="Address of the account. Designates the full email address for the account. If not present in the payload, the device prompts for this string during profile installation.">
+                                  title="Address of the account. Designates the full email address for the account. If
+                                  not present in the payload, the device prompts for this string during profile
+                                  installation.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2509,8 +2570,10 @@
                             <input id="email-prevent-move" type="checkbox" class="form-control operationDataKeys"
                                    data-key="emailPreventMove" data-default="false" disabled/>
                             <span class="helper"
-                                  title="When checked, messages may not be moved out of this email account into another account. Also prevents forwarding or replying from a different account than the message was originated from. Available only in iOS 5.0 and later.">
-                                &nbsp;&nbsp;&nbsp;Prevent Move
+                                  title="When checked, messages may not be moved out of this email account into another
+                                  account. Also prevents forwarding or replying from a different account than the
+                                  message was originated from. Available only in iOS 5.0 and later.">
+                                Prevent Move
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2521,8 +2584,9 @@
                             <input id="email-prevent-app-sheet" type="checkbox" class="form-control operationDataKeys"
                                    data-key="emailPreventAppSheet" data-default="false" disabled/>
                             <span class="helper"
-                                  title="When checked, this account is not available for sending mail in third-party applications. Available only in iOS 5.0 and later.">
-                                &nbsp;&nbsp;&nbsp;Prevent App Sheet
+                                  title="When checked, this account is not available for sending mail in third-party
+                                  applications. Available only in iOS 5.0 and later.">
+                                Prevent App Sheet
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2534,7 +2598,7 @@
                                    data-key="emailSMIMEEnabled" data-default="false" disabled/>
                             <span class="helper"
                                   title="When checked, this account supports S/MIME. Available only in iOS 5.0 and later.">
-                                &nbsp;&nbsp;&nbsp;Enable S/MIME
+                                Enable S/MIME
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2544,7 +2608,8 @@
                         <label class="wr-input-label" for="email-smime-signing-certificate-uuid">
                             S/MIME Signing Certificate UUID
                             <span class="helper"
-                                  title="Payload UUID of the identity certificate used to sign messages sent from this account. Available only in iOS 5.0 and later.">
+                                  title="Payload UUID of the identity certificate used to sign messages sent from this
+                                  account. Available only in iOS 5.0 and later.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2557,7 +2622,8 @@
                         <label class="wr-input-label" for="email-smime-encryption-certificate-uuid">
                             S/MIME Encryption Certificate UUID
                             <span class="helper"
-                                  title="PayloadUUID of the identity certificate used to decrypt messages coming into this account. Available only in iOS 5.0 and later.">
+                                  title="PayloadUUID of the identity certificate used to decrypt messages coming into
+                                  this account. Available only in iOS 5.0 and later.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2573,7 +2639,7 @@
                                    data-default="false" disabled/>
                             <span class="helper"
                                   title="When checked, enable per-message signing and encryption switch.">
-                                &nbsp;&nbsp;&nbsp;Enable Per-Message Signing and Encryption Switch
+                                Enable Per-Message Signing and Encryption Switch
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2585,8 +2651,9 @@
                                    class="form-control operationDataKeys" data-key="emailDisableMailRecentSyncing"
                                    data-default="false" disabled/>
                             <span class="helper"
-                                  title="When checked, this account is excluded from recent address syncing. Available only in iOS 6.0 and later.">
-                                &nbsp;&nbsp;&nbsp;Allow Recent Address syncing
+                                  title="When checked, this account is excluded from recent address syncing. Available
+                                  only in iOS 6.0 and later.">
+                                Allow Recent Address syncing
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2615,7 +2682,7 @@
                                    data-key="emailIncomingUseSSL" data-default="true" checked="checked" disabled/>
                             <span class="helper"
                                   title="Designates whether the incoming mail server uses SSL for authentication.">
-                                &nbsp;&nbsp;&nbsp;Use Secure Socket Layer ( SSL )
+                                Use Secure Socket Layer ( SSL )
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2625,7 +2692,8 @@
                         <label class="wr-input-label" for="email-incoming-mail-server-port">
                             Mail Server Port
                             <span class="helper"
-                                  title="Designates the incoming mail server port number. If no port number is specified, the default port for a given protocol is used.">
+                                  title="Designates the incoming mail server port number. If no port number is
+                                  specified, the default port for a given protocol is used.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2653,7 +2721,10 @@
                         <label class="wr-input-label" for="email-incoming-mail-server-username">
                             Username
                             <span class="helper"
-                                  title="Designates the user name for the email account, usually the same as the email address up to the @ character. If not present in the payload, and the account is set up to require authentication for incoming email, the device will prompt for this string during profile installation.">
+                                  title="Designates the user name for the email account, usually the same as the email
+                                  address up to the @ character. If not present in the payload, and the account is set
+                                  up to require authentication for incoming email, the device will prompt for this
+                                  string during profile installation.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2698,7 +2769,7 @@
                                    data-key="emailOutgoingUseSSL" data-default="true" checked="checked" disabled/>
                             <span class="helper"
                                   title="Designates whether the outgoing mail server uses SSL for authentication.">
-                                &nbsp;&nbsp;&nbsp;Use Secure Socket Layer ( SSL )
+                                Use Secure Socket Layer ( SSL )
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2736,7 +2807,10 @@
                         <label class="wr-input-label" for="email-outgoing-mail-server-username">
                             Username
                             <span class="helper"
-                                  title="Designates the user name for the email account, usually the same as the email address up to the @ character. If not present in the payload, and the account is set up to require authentication for outgoing email, the device will prompt for this string during profile installation.">
+                                  title="Designates the user name for the email account, usually the same as the email
+                                  address up to the @ character. If not present in the payload, and the account is set
+                                  up to require authentication for outgoing email, the device will prompt for this
+                                  string during profile installation.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2752,8 +2826,9 @@
                                    data-key="emailOutgoingPasswordSameAsIncomingPassword" data-default="false"
                                    disabled/>
                             <span class="helper"
-                                  title="When checked, the user will be prompted for the password only once and it will be used for both outgoing and incoming mail.">
-                                &nbsp;&nbsp;&nbsp;Outgoing password same as incoming password
+                                  title="When checked, the user will be prompted for the password only once and it will
+                                  be used for both outgoing and incoming mail.">
+                                Outgoing password same as incoming password
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -2820,7 +2895,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add Credential
                             </a>
                         </label>
@@ -2887,7 +2962,8 @@
                         <label class="wr-input-label" for="airplay-destinations">
                             AirPlay Destinations Whitelist
                             <span class="helper"
-                                  title="Supervised only (ignored otherwise). If present, only AirPlay destinations present in this list are available to the device.">
+                                  title="Supervised only (ignored otherwise). If present, only AirPlay destinations
+                                  present in this list are available to the device.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
@@ -2897,7 +2973,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add Destination
                             </a>
                         </label>
@@ -2997,7 +3073,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add Unmarked Email Domains
                             </a>
                         </label>
@@ -3061,7 +3137,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add Managed Safari Web Domains
                             </a>
                         </label>
@@ -3181,7 +3257,7 @@
                                    data-key="ldapUseSSL" data-default="true" checked="checked" disabled/>
                             <span class="helper"
                                   title="Having this checked, would enable Secure Socket Layer communication.">
-                                &nbsp;&nbsp;&nbsp;Use Secure Socket Layer ( SSL )
+                                Use Secure Socket Layer ( SSL )
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -3215,7 +3291,8 @@
                         <label class="wr-input-label" for="ldap-search-settings">
                             Search Settings
                             <span class="helper"
-                                  title="Search settings for this LDAP server. Can have many of these for one account. Should have at least one for the account to be useful.">
+                                  title="Search settings for this LDAP server. Can have many of these for one account.
+                                  Should have at least one for the account to be useful.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
@@ -3225,7 +3302,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add Search Setting
                             </a>
                         </label>
@@ -3368,8 +3445,9 @@
                                    class="form-control operationDataKeys" data-key="calendarUseSSL"
                                    checked="checked" disabled/>
                             <span class="helper"
-                                  title="Having this checked, would enable Secure Socket Layer communication with CalDAV server.">
-                                &nbsp;&nbsp;&nbsp;Use Secure Socket Layer ( SSL )
+                                  title="Having this checked, would enable Secure Socket Layer communication with CalDAV
+                                   server.">
+                                Use Secure Socket Layer ( SSL )
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -3493,7 +3571,7 @@
                                    data-key="calendarSubscriptionUseSSL" checked="checked" disabled/>
                             <span class="helper"
                                   title="Having this checked, would enable Secure Socket Layer communication.">
-                                &nbsp;&nbsp;&nbsp;Use Secure Socket Layer ( SSL )
+                                Use Secure Socket Layer ( SSL )
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -3572,7 +3650,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add APN Configuration
                             </a>
                         </label>
@@ -3750,7 +3828,7 @@
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+                                
                                 Add APN Configuration
                             </a>
                         </label>
@@ -3882,7 +3960,7 @@
                                                disabled/>
                                         <span class="helper"
                                               title="Having this checked would enable Usage of phone camera in the device">
-                                            &nbsp;&nbsp;&nbsp;Allow use of camera
+                                            Allow use of camera
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -3895,8 +3973,9 @@
                                                data-key="restrictionsAllowChat" data-default="true" checked="checked"
                                                disabled/>
                                         <span class="helper"
-                                              title="Having this checked would enable use of Messages app with supervised devices. Available in iOS 6.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow Chat
+                                              title="Having this checked would enable use of Messages app with
+                                              supervised devices. Available in iOS 6.0 and later.">
+                                            Allow Chat
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -3912,7 +3991,7 @@
                                                disabled/>
                                         <span class="helper"
                                               title="Having this checked would allow taking screenshots in the device">
-                                            &nbsp;&nbsp;&nbsp;Allow screenshots
+                                            Allow screenshots
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -3926,8 +4005,9 @@
                                                data-key="restrictionsAllowAirDrop" data-default="true" checked="checked"
                                                disabled/>
                                         <span class="helper"
-                                              title="Having this checked would allow AirDrop feature in the device. Available only in iOS 7.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow AirDrop ( Supervised only )
+                                              title="Having this checked would allow AirDrop feature in the device.
+                                              Available only in iOS 7.0 and later.">
+                                            Allow AirDrop ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -3943,7 +4023,7 @@
                                                disabled/>
                                         <span class="helper"
                                               title="Having this checked would allow voice dialing feature in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow voice dialing while device is locked
+                                            Allow voice dialing while device is locked
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -3958,7 +4038,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="Having this checked would enable Siri as assistant in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow Siri
+                                            Allow Siri
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -3973,8 +4053,9 @@
                                                        data-default="true"
                                                        checked="checked" disabled/>
                                                 <span class="helper"
-                                                      title="Having this checked would allow Siri as assistant while device is locked. Available only in iOS 5.1 and later.">
-                                                    &nbsp;&nbsp;&nbsp;Allow Siri while device is locked
+                                                      title="Having this checked would allow Siri as assistant while
+                                                      device is locked. Available only in iOS 5.1 and later.">
+                                                    Allow Siri while device is locked
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
@@ -3991,7 +4072,7 @@
                                                        checked="checked" disabled/>
                                                 <span class="helper"
                                                       title="Having this checked would force use of Siri profanity filter.">
-                                                    &nbsp;&nbsp;&nbsp;Force use of Siri profanity filter
+                                                    Force use of Siri profanity filter
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
@@ -4006,8 +4087,10 @@
                                                        data-key="restrictionsAllowAssistantUserGeneratedContent"
                                                        data-default="true" checked="checked" disabled/>
                                                 <span class="helper"
-                                                      title="Having this checked would allow Siri to query user-generated content from web in the device. Available in iOS 7 and later.">
-                                                    &nbsp;&nbsp;&nbsp;Allow Siri to query user-generated content from web ( Supervised only )
+                                                      title="Having this checked would allow Siri to query
+                                                      user-generated content from web in the device. Available in iOS 7
+                                                      and later.">
+                                                    Allow Siri to query user-generated content from web ( Supervised only )
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
@@ -4022,8 +4105,9 @@
                                                class="operationDataKeys" data-key="restrictionsAllowAccountModification"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this checked would allow modifying account settings in the device. Available only in iOS 7.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow modifying account settings ( Supervised only )
+                                              title="Having this checked would allow modifying account settings in the
+                                              device. Available only in iOS 7.0 and later.">
+                                            Allow modifying account settings ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4037,8 +4121,9 @@
                                                data-key="restrictionsAllowAppCellularDataModification"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this checked would allow changes to cellular data usage for apps in the device. Available only in iOS 7.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow modifying cellular data app settings ( Supervised only )
+                                              title="Having this checked would allow changes to cellular data usage for
+                                              apps in the device. Available only in iOS 7.0 and later.">
+                                            Allow modifying cellular data app settings ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4053,8 +4138,9 @@
                                                checked="checked"
                                                disabled/>
                                         <span class="helper"
-                                              title="Having this checked would enable iBookStore in the device. Available in iOS 6.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Enable iBookStore ( Supervised only )
+                                              title="Having this checked would enable iBookStore in the device.
+                                              Available in iOS 6.0 and later.">
+                                            Enable iBookStore ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4067,8 +4153,9 @@
                                                class="operationDataKeys" data-key="restrictionsAllowBookstoreErotica"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this checked would enable iBookStore tagged as Erotica in the device. Available in iOS 6.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Enable iBookStore Erotica ( Supervised only prior to iOS 6.1 )
+                                              title="Having this checked would enable iBookStore tagged as Erotica in
+                                              the device. Available in iOS 6.0 and later.">
+                                            Enable iBookStore Erotica ( Supervised only prior to iOS 6.1 )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4082,7 +4169,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="Having this checked would allow installing apps in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow installing apps
+                                            Allow installing apps
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4098,7 +4185,7 @@
                                                disabled/>
                                         <span class="helper"
                                               title="Having this checked would allow removal of apps in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow removing apps
+                                            Allow removing apps
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4112,7 +4199,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="Having this checked would allow in-app purchase in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow in-app purchase
+                                            Allow in-app purchase
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4127,7 +4214,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="Having this checked would force iTunes store password in the device.">
-                                            &nbsp;&nbsp;&nbsp;Require iTunes store password for all purchases
+                                            Require iTunes store password for all purchases
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4143,7 +4230,7 @@
                                                disabled/>
                                         <span class="helper"
                                               title="Having this checked would enable iCloud backup in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow iCloud backup
+                                            Allow iCloud backup
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4156,8 +4243,9 @@
                                                class="operationDataKeys" data-key="restrictionsAllowCloudDocumentSync"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this checked would enable syncing iCloud documents and data in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow iCloud documents and data
+                                              title="Having this checked would enable syncing iCloud documents and data
+                                              in the device.">
+                                            Allow iCloud documents and data
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4170,8 +4258,9 @@
                                                class="operationDataKeys" data-key="restrictionsAllowCloudKeychainSync"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this checked would enable syncing iCloud keychain in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow iCloud keychain
+                                              title="Having this checked would enable syncing iCloud keychain in the
+                                              device.">
+                                            Allow iCloud keychain
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4185,8 +4274,9 @@
                                                data-key="restrictionsAllowManagedAppsCloudSync"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this checked would allow managed apps in the device to store data in iCloud.">
-                                            &nbsp;&nbsp;&nbsp;Allow managed apps to store data in iCloud
+                                              title="Having this checked would allow managed apps in the device to store
+                                               data in iCloud.">
+                                            Allow managed apps to store data in iCloud
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4200,8 +4290,9 @@
                                                data-key="restrictionsAllowEnterpriseBookBackup"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this checked would allow backup of enterprise books in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow backup of enterprise books
+                                              title="Having this checked would allow backup of enterprise books in the
+                                              device.">
+                                            Allow backup of enterprise books
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4215,8 +4306,9 @@
                                                data-key="restrictionsAllowEnterpriseBookMetadataSync"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="When unchecked, Enterprise books notes and highlights will not be synced.">
-                                            &nbsp;&nbsp;&nbsp;Allow enterprise books data sync
+                                              title="When unchecked, Enterprise books notes and highlights will not be
+                                              synced.">
+                                            Allow enterprise books data sync
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4230,8 +4322,9 @@
                                                data-key="restrictionsAllowDiagnosticSubmission"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this checked would automatically submit diagnostic reports to Apple.">
-                                            &nbsp;&nbsp;&nbsp;Allow diagnostic submission
+                                              title="Having this checked would automatically submit diagnostic reports
+                                              to Apple.">
+                                            Allow diagnostic submission
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4244,8 +4337,11 @@
                                                class="operationDataKeys" data-key="restrictionsAllowExplicitContent"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this unchecked would hide explicit music or video content purchased from the iTunes Store. Explicit content is marked as such by content providers, such as record labels, when sold through the iTunes Store.">
-                                            &nbsp;&nbsp;&nbsp;Allow explicit content
+                                              title="Having this unchecked would hide explicit music or video content
+                                              purchased from the iTunes Store. Explicit content is marked as such by
+                                              content providers, such as record labels, when sold through the iTunes
+                                              Store.">
+                                            Allow explicit content
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4260,7 +4356,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="When unchecked, changes to Find My Friends are disabled.">
-                                            &nbsp;&nbsp;&nbsp;Allow Find My Friends modification
+                                            Allow Find My Friends modification
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4274,8 +4370,9 @@
                                                data-key="restrictionsAllowFingerprintForUnlock"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this unchecked would prevent Touch ID from unlocking a device.">
-                                            &nbsp;&nbsp;&nbsp;Allow fingerprint for unlock
+                                              title="Having this unchecked would prevent Touch ID from unlocking a
+                                              device.">
+                                            Allow fingerprint for unlock
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4291,8 +4388,9 @@
                                                data-default="true"
                                                checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this unchecked would disable global background fetch activity when an iOS phone is roaming.">
-                                            &nbsp;&nbsp;&nbsp;Allow global background fetch when roaming
+                                              title="Having this unchecked would disable global background fetch
+                                              activity when an iOS phone is roaming.">
+                                            Allow global background fetch when roaming
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4306,8 +4404,9 @@
                                                data-key="restrictionsAllowLockScreenControlCenter"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this unchecked would prevent Control Center from appearing on the Lock screen. Available in iOS 7 and later.">
-                                            &nbsp;&nbsp;&nbsp;Show Control Center in lock screen
+                                              title="Having this unchecked would prevent Control Center from appearing
+                                              on the Lock screen. Available in iOS 7 and later.">
+                                            Show Control Center in lock screen
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4321,8 +4420,10 @@
                                                data-key="restrictionsAllowLockScreenNotificationsView"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this unchecked would disable Notifications view in Notification Center on the lock screen. Available only in iOS 7.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Show Notifications Center in lock screen
+                                              title="Having this unchecked would disable Notifications view in
+                                              Notification Center on the lock screen. Available only in iOS 7.0 and
+                                              later.">
+                                            Show Notifications Center in lock screen
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4335,8 +4436,9 @@
                                                class="operationDataKeys" data-key="restrictionsAllowLockScreenTodayView"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this unchecked would disable Today view in Notification Center on the lock screen. Available only in iOS 7.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Show Today view in lock screen
+                                              title="Having this unchecked would disable Today view in Notification
+                                              Center on the lock screen. Available only in iOS 7.0 and later.">
+                                            Show Today view in lock screen
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4351,8 +4453,12 @@
                                                checked="checked"
                                                disabled/>
                                         <span class="helper"
-                                              title="Having this unchecked would disable host pairing with the exception of the supervision host. If no supervision host certificate has been configured, all pairing is disabled. Host pairing lets the administrator control which devices an iOS 7 device can pair with. Available only in iOS 7.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow Host Pairing ( Supervised only )
+                                              title="Having this unchecked would disable host pairing with the exception
+                                               of the supervision host. If no supervision host certificate has been
+                                               configured, all pairing is disabled. Host pairing lets the administrator
+                                               control which devices an iOS 7 device can pair with. Available only in
+                                               iOS 7.0 and later.">
+                                            Allow Host Pairing ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4366,8 +4472,9 @@
                                                data-key="restrictionsAllowOpenFromManagedToUnmanaged"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="When unchecked, documents in managed apps and accounts only open in other managed apps and accounts. Available only in iOS 7.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow documents from managed sources in unmanaged destinations
+                                              title="When unchecked, documents in managed apps and accounts only open in
+                                               other managed apps and accounts. Available only in iOS 7.0 and later.">
+                                            Allow documents from managed sources in unmanaged destinations
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4381,8 +4488,10 @@
                                                data-key="restrictionsAllowOpenFromUnmanagedToManaged"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="When unchecked, documents in unmanaged apps and accounts will only open in other unmanaged apps and accounts. Available only in iOS 7.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow documents from unmanaged sources in managed destinations
+                                              title="When unchecked, documents in unmanaged apps and accounts will only
+                                              open in other unmanaged apps and accounts. Available only in iOS 7.0 and
+                                              later.">
+                                            Allow documents from unmanaged sources in managed destinations
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4397,8 +4506,10 @@
                                                checked="checked"
                                                disabled/>
                                         <span class="helper"
-                                              title="When unchecked, over-the-air PKI updates are disabled. Setting this restriction to false does not disable CRL and OCSP checks. Available only in iOS 7.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow over-the-air PKI updates
+                                              title="When unchecked, over-the-air PKI updates are disabled. Setting this
+                                               restriction to false does not disable CRL and OCSP checks. Available only
+                                                in iOS 7.0 and later.">
+                                            Allow over-the-air PKI updates
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4411,8 +4522,9 @@
                                                class="operationDataKeys" data-key="restrictionsAllowPassbookWhileLocked"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="When unchecked, Passbook notifications will not be shown on the lock screen. Available only in iOS 6.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Show Passbook notifications in lock screen
+                                              title="When unchecked, Passbook notifications will not be shown on the
+                                              lock screen. Available only in iOS 6.0 and later.">
+                                            Show Passbook notifications in lock screen
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4427,8 +4539,9 @@
                                                checked="checked"
                                                disabled/>
                                         <span class="helper"
-                                              title="When unchecked, Photo Stream is disabled. Available only in iOS 5.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow Photo Stream
+                                              title="When unchecked, Photo Stream is disabled. Available only in iOS 5.0
+                                               and later.">
+                                            Allow Photo Stream
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4443,8 +4556,9 @@
                                                checked="checked"
                                                disabled/>
                                         <span class="helper"
-                                              title="When unchecked, Shared Photo Stream will be disabled. Available only in iOS 6.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow Shared Photo Stream
+                                              title="When unchecked, Shared Photo Stream will be disabled. Available
+                                              only in iOS 6.0 and later.">
+                                            Allow Shared Photo Stream
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4459,8 +4573,10 @@
                                                data-key="restrictionsAllowUIConfigurationProfileInstallation"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="When unchecked, the user is prohibited from installing configuration profiles and certificates interactively. Available only in iOS 6.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow user prompted profile installation
+                                              title="When unchecked, the user is prohibited from installing
+                                              configuration profiles and certificates interactively. Available only in
+                                              iOS 6.0 and later.">
+                                            Allow user prompted profile installation
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4473,8 +4589,9 @@
                                                class="operationDataKeys" data-key="restrictionsAllowUntrustedTLSPrompt"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="When unchecked, automatically rejects untrusted HTTPS certificates without prompting the user. Available only in iOS 5.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow untrusted TLS prompt
+                                              title="When unchecked, automatically rejects untrusted HTTPS certificates
+                                              without prompting the user. Available only in iOS 5.0 and later.">
+                                            Allow untrusted TLS prompt
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4488,7 +4605,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="When unchecked, video conferencing is disabled.">
-                                            &nbsp;&nbsp;&nbsp;Allow video conferencing
+                                            Allow video conferencing
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4504,7 +4621,7 @@
                                                disabled/>
                                         <span class="helper"
                                               title="When unchecked, voice dialing is disabled.">
-                                            &nbsp;&nbsp;&nbsp;Allow voice dialing
+                                            Allow voice dialing
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4518,7 +4635,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="Having this checked would force encrypting all backups.">
-                                            &nbsp;&nbsp;&nbsp;Force encrypting all backups
+                                            Force encrypting all backups
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4531,8 +4648,9 @@
                                                class="operationDataKeys" data-key="restrictionsForceLimitAdTracking"
                                                data-default="false" disabled/>
                                         <span class="helper"
-                                              title="Having this checked would limit ad tracking. Available only in iOS 7.0 and later.">
-                                            &nbsp;&nbsp;&nbsp;Limit ad tracking
+                                              title="Having this checked would limit ad tracking. Available only in iOS
+                                              7.0 and later.">
+                                            Limit ad tracking
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4546,8 +4664,10 @@
                                                data-key="restrictionsForceAirPlayOutgoingRequestsPairingPassword"
                                                data-default="false" disabled/>
                                         <span class="helper"
-                                              title="Having this checked would force all devices receiving AirPlay requests from this device to use a pairing password. Available only in iOS 7.1 and later.">
-                                            &nbsp;&nbsp;&nbsp;Force a pairing password for Airplay outgoing requests
+                                              title="Having this checked would force all devices receiving AirPlay
+                                              requests from this device to use a pairing password. Available only in
+                                              iOS 7.1 and later.">
+                                            Force a pairing password for Airplay outgoing requests
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4561,8 +4681,10 @@
                                                data-key="restrictionsForceAirPlayIncomingRequestsPairingPassword"
                                                data-default="false" disabled/>
                                         <span class="helper"
-                                              title="Having this checked would force all devices sending AirPlay requests to this device to use a pairing password. Available only in Apple TV 6.1 and later.">
-                                            &nbsp;&nbsp;&nbsp;Force a pairing password for Airplay incoming requests
+                                              title="Having this checked would force all devices sending AirPlay
+                                              requests to this device to use a pairing password. Available only in
+                                              Apple TV 6.1 and later.">
+                                            Force a pairing password for Airplay incoming requests
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4576,8 +4698,9 @@
                                                data-key="restrictionsAllowEraseContentAndSettings"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="When unchecked, “Erase All Content And Settings” option in the Reset UI is disabled.">
-                                            &nbsp;&nbsp;&nbsp;Allow Erase All Content And Settings ( Supervised only )
+                                              title="When unchecked, “Erase All Content And Settings” option in the
+                                              Reset UI is disabled.">
+                                            Allow Erase All Content And Settings ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4592,7 +4715,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="When unchecked, Spotlight will not return Internet search results.">
-                                            &nbsp;&nbsp;&nbsp;Allow Spotlight Internet results ( Supervised only )
+                                            Allow Spotlight Internet results ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4606,8 +4729,9 @@
                                                data-key="restrictionsAllowEnablingRestrictions"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="When unchecked, “Enable Restrictions” option in the Restrictions UI in Settings is disabled.">
-                                            &nbsp;&nbsp;&nbsp;Allow Enable Restrictions option ( Supervised only )
+                                              title="When unchecked, “Enable Restrictions” option in the Restrictions
+                                              UI in Settings is disabled.">
+                                            Allow Enable Restrictions option ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4622,7 +4746,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="When unchecked, Activity Continuation will be disabled.">
-                                            &nbsp;&nbsp;&nbsp;Allow Activity Continuation
+                                            Allow Activity Continuation
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4636,7 +4760,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="When unchecked, definition lookup is disabled.">
-                                            &nbsp;&nbsp;&nbsp;Allow definition lookup
+                                            Allow definition lookup
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4649,8 +4773,9 @@
                                                class="operationDataKeys" data-key="restrictionsAllowPredictiveKeyboard"
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
-                                              title="When unchecked, predictive keyboards are disabled. Available in iOS 8.1.3 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow predictive keyboard ( Supervised only )
+                                              title="When unchecked, predictive keyboards are disabled. Available in
+                                              iOS 8.1.3 and later.">
+                                            Allow predictive keyboard ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4665,8 +4790,9 @@
                                                checked="checked"
                                                disabled/>
                                         <span class="helper"
-                                              title="When unchecked, keyboard auto-correction is disabled. Available in iOS 8.1.3 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow keyboard auto-correction ( Supervised only )
+                                              title="When unchecked, keyboard auto-correction is disabled. Available in
+                                              iOS 8.1.3 and later.">
+                                            Allow keyboard auto-correction ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4681,8 +4807,9 @@
                                                checked="checked"
                                                disabled/>
                                         <span class="helper"
-                                              title="When unchecked, keyboard spell-check is disabled. Available in iOS 8.1.3 and later.">
-                                            &nbsp;&nbsp;&nbsp;Allow keyboard spell-check ( Supervised only )
+                                              title="When unchecked, keyboard spell-check is disabled. Available in
+                                              iOS 8.1.3 and later.">
+                                            Allow keyboard spell-check ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4703,7 +4830,7 @@
                                                disabled/>
                                         <span class="helper"
                                               title="Having this checked would allow use of iTunes store in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow use of iTunes Store
+                                            Allow use of iTunes Store
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4717,7 +4844,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="Having this checked would allow use of Podcasts in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow use of Podcasts ( Supervised only )
+                                            Allow use of Podcasts ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4731,7 +4858,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="Having this checked would allow use of Safari in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow Safari
+                                            Allow Safari
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4745,8 +4872,9 @@
                                                        data-key="restrictionsSafariAllowAutoFill" data-default="true"
                                                        checked="checked" disabled/>
                                                 <span class="helper"
-                                                      title="Having this checked would enable Safari AutoFill feature in the device.">
-                                                    &nbsp;&nbsp;&nbsp;Enable AutoFill
+                                                      title="Having this checked would enable Safari AutoFill feature in
+                                                       the device.">
+                                                    Enable AutoFill
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
@@ -4760,8 +4888,9 @@
                                                        data-key="restrictionsSafariForceFraudWarning"
                                                        data-default="false" disabled/>
                                                 <span class="helper"
-                                                      title="Having this checked would force Safari Fraud warning feature in the device.">
-                                                    &nbsp;&nbsp;&nbsp;Force Fraud warning
+                                                      title="Having this checked would force Safari Fraud warning
+                                                      feature in the device.">
+                                                    Force Fraud warning
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
@@ -4775,8 +4904,9 @@
                                                        data-key="restrictionsSafariAllowJavaScript" data-default="true"
                                                        checked="checked" disabled/>
                                                 <span class="helper"
-                                                      title="Having this checked would enable Javascript on Safari in the device.">
-                                                    &nbsp;&nbsp;&nbsp;Enable Javascript
+                                                      title="Having this checked would enable Javascript on Safari in
+                                                      the device.">
+                                                    Enable Javascript
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
@@ -4790,8 +4920,9 @@
                                                        data-key="restrictionsSafariAllowPopups" data-default="true"
                                                        checked="checked" disabled/>
                                                 <span class="helper"
-                                                      title="Having this checked would enable Pop-ups on Safari in the device.">
-                                                    &nbsp;&nbsp;&nbsp;Enable Pop-ups
+                                                      title="Having this checked would enable Pop-ups on Safari in the
+                                                      device.">
+                                                    Enable Pop-ups
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
@@ -4802,7 +4933,8 @@
                                             <label class="wr-input-label" for="restrictions-safari-accept-cookies">
                                                 Accept cookies
                                                 <span class="helper"
-                                                      title="Determines conditions under which the device will accept cookies.">
+                                                      title="Determines conditions under which the device will accept
+                                                      cookies.">
                                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                                 </span>
                                             </label>
@@ -4825,8 +4957,10 @@
                                                data-key="restrictionsAllowYouTube" data-default="true" checked="checked"
                                                disabled/>
                                         <span class="helper"
-                                              title="When unchecked, YouTube application is disabled and its icon is removed from the Home screen. This key is ignored in iOS 6 and later because the YouTube app is not provided.">
-                                            &nbsp;&nbsp;&nbsp;Allow YouTube
+                                              title="When unchecked, YouTube application is disabled and its icon is
+                                              removed from the Home screen. This key is ignored in iOS 6 and later
+                                              because the YouTube app is not provided.">
+                                            Allow YouTube
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4840,7 +4974,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="Having this checked would allow use of Game Center in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow use of Game Center ( Supervised only )
+                                            Allow use of Game Center ( Supervised only )
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4854,7 +4988,7 @@
                                                data-default="true" checked="checked" disabled/>
                                         <span class="helper"
                                               title="Having this checked would allow multiplayer gaming in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow multiplayer gaming
+                                            Allow multiplayer gaming
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4868,8 +5002,9 @@
                                                data-key="restrictionsAllowAddingGameCenterFriends" data-default="true"
                                                checked="checked" disabled/>
                                         <span class="helper"
-                                              title="Having this checked would allow adding Game Center friends in the device.">
-                                            &nbsp;&nbsp;&nbsp;Allow adding Game Center friends
+                                              title="Having this checked would allow adding Game Center friends in the
+                                              device.">
+                                            Allow adding Game Center friends
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                     </label>
@@ -4889,7 +5024,9 @@
                                            for="restrictions-autonomous-single-app-mode-permitted-app-ids">
                                         Permitted Applications in Autonomous Single App Mode
                                         <span class="helper"
-                                              title="Supervised only. If present, allows apps identified by the bundle IDs listed to autonomously enter Single App Mode. Available only in iOS 7.0 and later.">
+                                              title="Supervised only. If present, allows apps identified by the bundle
+                                              IDs listed to autonomously enter Single App Mode. Available only in iOS
+                                              7.0 and later.">
                                             <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                         </span>
                                         <br>
@@ -4899,7 +5036,7 @@
                                                 <i class="fw fw-add fw-stack-1x"></i>
                                                 <i class="fw fw-ring fw-stack-2x"></i>
                                             </span>
-                                            &nbsp;
+                                            
                                             Add Application Bundle ID
                                         </a>
                                     </label>

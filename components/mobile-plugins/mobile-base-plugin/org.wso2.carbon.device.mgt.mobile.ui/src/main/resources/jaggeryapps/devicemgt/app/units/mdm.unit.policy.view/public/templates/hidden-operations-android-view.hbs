@@ -5,7 +5,8 @@
                     <i class="fw fw-key fw-stack-2x"></i>
                 </span>
             Passcode Policy
-            <span id="passcode-policy-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="passcode-policy-configured" class="has-configured status-icon hidden"><i
+                    class="fw fw-ok"></i></span>
             <span id="passcode-policy-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
             <span id="passcode-policy-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
@@ -23,9 +24,11 @@
                     <i class="fw fw-security fw-stack-2x"></i>
                 </span>
             Encryption Settings
-            <span id="encrypt-storage-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="encrypt-storage-configured" class="has-configured status-icon hidden"><i
+                    class="fw fw-ok"></i></span>
             <span id="encrypt-storage-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
-            <span id="encrypt-storage-error" class="encryption-error status-icon hidden"><i class="fw fw-error"></i></span>
+            <span id="encrypt-storage-error" class="encryption-error status-icon hidden"><i
+                    class="fw fw-error"></i></span>
         </a>
         <a href="javascript:void(0)" onclick="showAdvanceOperation('wifi', this)">
                 <span class="wr-hidden-operations-icon fw-stack">
@@ -60,7 +63,8 @@
                 <i class="fw fw-block fw-stack-2x"></i>
             </span>
             Applications Restrictions
-            <span id="app-restriction-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="app-restriction-configured" class="has-configured status-icon hidden"><i
+                    class="fw fw-ok"></i></span>
             <span id="app-restriction-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
             <span id="app-restriction-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
@@ -69,8 +73,10 @@
                 <i class="fw fw-import fw-stack-2x"></i>
             </span>
             System Update Policy (COSU)
-            <span id="cosu-system-update-policy-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
-            <span id="cosu-system-update-policy-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="cosu-system-update-policy-configured" class="has-configured status-icon hidden"><i
+                    class="fw fw-ok"></i></span>
+            <span id="cosu-system-update-policy-ok" class="has-success status-icon hidden"><i
+                    class="fw fw-ok"></i></span>
             <span id="cosu-system-update-policy-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
         <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-whitelisted-applications', this)" class="hide">
@@ -78,20 +84,24 @@
                 <i class="fw fw-register fw-stack-2x"></i>
             </span>
             Whitelist Apps (COSU)
-            <span id="cosu-whitelisted-applications-configured" class="has-configured status-icon hidden"><i class="fw fw-ok"></i></span>
+            <span id="cosu-whitelisted-applications-configured" class="has-configured status-icon hidden"><i
+                    class="fw fw-ok"></i></span>
             <span id="cosu-whitelisted-applications-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
-            <span id="cosu-whitelisted-applications-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
+            <span id="cosu-whitelisted-applications-error" class="has-error status-icon hidden"><i
+                    class="fw fw-error"></i></span>
         </a>
     </div>
     <div class="wr-hidden-operations-content col-lg-8">
         <!-- passcode-policy -->
         <div class="wr-hidden-operation" data-operation="passcode-policy" style="display: block">
-            <div class="panel panel-default operation-data" data-operation="passcode-policy" data-operation-code="PASSCODE_POLICY">
+            <div class="panel panel-default operation-data" data-operation="passcode-policy"
+                 data-operation-code="PASSCODE_POLICY">
                 <div id="passcode-policy-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
                         Passcode Policy
-                        <label id="passcode-policy-lbl" class="wr-input-control switch hidden" data-toggle="collapse" data-target="#passcode-policy-body">
-                            <input type="checkbox" />
+                        <label id="passcode-policy-lbl" class="wr-input-control switch hidden" data-toggle="collapse"
+                               data-target="#passcode-policy-body">
+                            <input type="checkbox"/>
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
@@ -102,7 +112,8 @@
                         to modify these settings on their devices.
                     </div>
                 </div>
-                <div id="passcode-policy-body" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="passcode-policy-body">
+                <div id="passcode-policy-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="passcode-policy-body">
                     <hr/>
                     <div id="passcode-policy-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
@@ -110,8 +121,11 @@
 
                     <div class="wr-input-control">
                         <label class="wr-input-control checkbox">
-                            <input id="passcode-policy-allow-simple" type="checkbox" class="form-control operationDataKeys" data-key="passcodePolicyAllowSimple" checked="checked" disabled/>
-                            <span class="helper" title="Permit the use of repeating, ascending and descending character sequences">
+                            <input id="passcode-policy-allow-simple" type="checkbox"
+                                   class="form-control operationDataKeys" data-key="passcodePolicyAllowSimple"
+                                   checked="checked" disabled/>
+                            <span class="helper"
+                                  title="Permit the use of repeating, ascending and descending character sequences">
                                 Allow simple value
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
@@ -120,7 +134,9 @@
 
                     <div class="wr-input-control">
                         <label class="wr-input-control checkbox">
-                            <input id="passcode-policy-require-alphanumeric" type="checkbox" class="form-control operationDataKeys" data-key="passcodePolicyRequireAlphanumeric" checked="checked" disabled/>
+                            <input id="passcode-policy-require-alphanumeric" type="checkbox"
+                                   class="form-control operationDataKeys" data-key="passcodePolicyRequireAlphanumeric"
+                                   checked="checked" disabled/>
                             <span class="helper" title="Require passcode to contain both letters and numbers">
                                 Require alphanumeric value
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
@@ -135,7 +151,8 @@
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
-                        <select id="passcode-policy-min-length" class="form-control operationDataKeys" data-key="passcodePolicyMinLength" data-default="0" disabled>
+                        <select id="passcode-policy-min-length" class="form-control operationDataKeys"
+                                data-key="passcodePolicyMinLength" data-default="0" disabled>
                             <option value="" selected="selected">
                                 None
                             </option>
@@ -157,11 +174,13 @@
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="passcode-policy-min-complex-chars">
                             Minimum number of complex characters
-                            <span class="helper" title="Minimum number of complex or non-alphanumeric characters allowed in a passcode">
+                            <span class="helper"
+                                  title="Minimum number of complex or non-alphanumeric characters allowed in a passcode">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
-                        <select id="passcode-policy-min-complex-chars" class="form-control operationDataKeys" data-key="passcodePolicyMinComplexChars" data-default="0" disabled>
+                        <select id="passcode-policy-min-complex-chars" class="form-control operationDataKeys"
+                                data-key="passcodePolicyMinComplexChars" data-default="0" disabled>
                             <option value="" selected="selected">
                                 None
                             </option>
@@ -182,7 +201,9 @@
                             <br>
                             ( Should be in between 1-to-730 days or none )
                         </label>
-                        <input id="passcode-policy-max-passcode-age-in-days" type="text" class="form-control operationDataKeys" data-key="passcodePolicyMaxPasscodeAgeInDays" maxlength="3" placeholder="[ Requires Number Input ]" disabled>
+                        <input id="passcode-policy-max-passcode-age-in-days" type="text"
+                               class="form-control operationDataKeys" data-key="passcodePolicyMaxPasscodeAgeInDays"
+                               maxlength="3" placeholder="[ Requires Number Input ]" disabled>
                     </div>
 
                     <div class="wr-input-control">
@@ -194,17 +215,21 @@
                             <br>
                             ( Should be in between 1-to-50 passcodes or none )
                         </label>
-                        <input id="passcode-policy-passcode-history" type="text" class="form-control operationDataKeys" data-key="passcodePolicyPasscodeHistory" maxlength="2" placeholder="[ Requires Number Input ]" disabled>
+                        <input id="passcode-policy-passcode-history" type="text" class="form-control operationDataKeys"
+                               data-key="passcodePolicyPasscodeHistory" maxlength="2"
+                               placeholder="[ Requires Number Input ]" disabled>
                     </div>
 
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="passcodePolicyMaxFailedAttempts">
                             Maximum number of failed attempts
-                            <span class="helper" title="Maximum number of passcode entry attempts allowed before all data on a device will be erased">
+                            <span class="helper"
+                                  title="The maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erased">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
-                        <select id="passcode-policy-max-failed-attempts" class="form-control operationDataKeys" data-key="passcodePolicyMaxFailedAttempts" data-default="0" disabled>
+                        <select id="passcode-policy-max-failed-attempts" class="form-control operationDataKeys"
+                                data-key="passcodePolicyMaxFailedAttempts" data-default="0" disabled>
                             <option value="" selected="selected">
                                 None
                             </option>
@@ -241,7 +266,8 @@
                         to modify these settings on their devices.
                     </div>
                 </div>
-                <div id="camera-body" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="camera-body">
+                <div id="camera-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="camera-body">
                     <hr/>
                     <div id="camera-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
@@ -251,7 +277,8 @@
 
                     <div class="wr-input-control">
                         <label class="wr-input-control checkbox">
-                            <input id="camera-enabled" type="checkbox" class="operationDataKeys" data-key="cameraEnabled"
+                            <input id="camera-enabled" type="checkbox" class="operationDataKeys"
+                                   data-key="cameraEnabled"
                                    checked="checked" disabled/>
                             <span class="helper"
                                   title="Having this checked would enable Usage of phone camera in the device.">
@@ -659,7 +686,8 @@
                     <br>
                     <br>
                     <b>
-                        Bellow restrictions will be applied on devices with Android version 6.0 Marshmallow onwards only.
+                        Bellow restrictions will be applied on devices with Android version 6.0 Marshmallow onwards
+                        only.
                     </b>
                     <br><br>
                     <div class="wr-input-control">
@@ -680,23 +708,28 @@
 
         <!-- encrypt-storage -->
         <div class="wr-hidden-operation" data-operation="encrypt-storage">
-            <div class="panel panel-default operation-data" data-operation="encrypt-storage" data-operation-code="ENCRYPT_STORAGE">
+            <div class="panel panel-default operation-data" data-operation="encrypt-storage"
+                 data-operation-code="ENCRYPT_STORAGE">
                 <div id="encrypt-storage-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
                         Encryption Settings
-                        <label class="wr-input-control switch hidden" data-toggle="collapse" data-target="#encrypt-storage-body">
-                            <input type="checkbox" />
+                        <label class="wr-input-control switch hidden" data-toggle="collapse"
+                               data-target="#encrypt-storage-body">
+                            <input type="checkbox"/>
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
                     </h2>
                     <div class="panel-title-description">
-                        This configuration can be used to encrypt data on an Android device, when the device is locked and
-                        make it readable when the passcode is entered. Once this configuration profile is installed on a device,
+                        This configuration can be used to encrypt data on an Android device, when the device is locked
+                        and
+                        make it readable when the passcode is entered. Once this configuration profile is installed on a
+                        device,
                         corresponding users will not be able to modify these settings on their devices.
                     </div>
                 </div>
-                <div id="encrypt-storage-body" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="encrypt-storage-body">
+                <div id="encrypt-storage-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="encrypt-storage-body">
                     <hr/>
                     <div id="encrypt-storage-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
@@ -706,8 +739,10 @@
                     <br>
                     <div class="wr-input-control">
                         <label class="wr-input-control checkbox">
-                            <input id="encrypt-storage-enabled" type="checkbox" class="operationDataKeys" data-key="encryptStorageEnabled" checked="checked" disabled/>
-                            <span class="helper" title="Having this checked would enable Storage-encryption in the device">
+                            <input id="encrypt-storage-enabled" type="checkbox" class="operationDataKeys"
+                                   data-key="encryptStorageEnabled" checked="checked" disabled/>
+                            <span class="helper"
+                                  title="Having this checked would enable Storage-encryption in the device">
                                 Enable storage-encryption
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
@@ -726,7 +761,7 @@
                     <h2 class="sub-title panel-title">
                         Wi-Fi Settings
                         <label class="wr-input-control switch hidden" data-toggle="collapse" data-target="#wifi-body">
-                            <input type="checkbox" />
+                            <input type="checkbox"/>
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
@@ -737,7 +772,8 @@
                         to modify these settings on their devices.
                     </div>
                 </div>
-                <div id="wifi-body" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="wifi-body">
+                <div id="wifi-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="wifi-body">
                     <hr/>
                     <!--<div class="cloneable">-->
                     <!--<a href="#" class="multi-view add enabled">-->
@@ -770,7 +806,8 @@
                             <br>
                             ( should be 1-to-30 characters long )
                         </label>
-                        <input id="wifi-ssid" type="text" class="form-control operationDataKeys" data-key="wifiSSID" maxlength="100" placeholder="[ Required field ]" disabled/>
+                        <input id="wifi-ssid" type="text" class="form-control operationDataKeys" data-key="wifiSSID"
+                               maxlength="100" placeholder="[ Required field ]" disabled/>
                     </div>
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="wifi-type">
@@ -797,7 +834,8 @@
                                     </span>
                         </label>
                         <select class="form-control operationDataKeys" id="wifi-eap"
-                                onchange="changeAndroidWifiPolicyEAP(this, document.getElementById('wifi-type'))" data-key="wifiEAP" disabled>
+                                onchange="changeAndroidWifiPolicyEAP(this, document.getElementById('wifi-type'))"
+                                data-key="wifiEAP" disabled>
                             <option value="peap">PEAP</option>
                             <option value="tls">TLS</option>
                             <option value="ttls">TTLS</option>
@@ -829,7 +867,8 @@
                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                     </span>
                         </label>
-                        <select class="form-control operationDataKeys" id="wifi-provisioning" data-key="wifiProvisioning" disabled>
+                        <select class="form-control operationDataKeys" id="wifi-provisioning"
+                                data-key="wifiProvisioning" disabled>
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -848,7 +887,7 @@
                         </label>
                         <input id="wifi-identity" type="text" class="form-control operationDataKeys"
                                data-key="wifiIdentity"
-                               maxlength="100" placeholder="[ Should be 1-to-30 characters long ]" disabled />
+                               maxlength="100" placeholder="[ Should be 1-to-30 characters long ]" disabled/>
                     </div>
                     <div class="wr-input-control" id="control-wifi-anoidentity" style="display:none;">
                         <label class="wr-input-label" for="wifi-anoidentity">
@@ -881,12 +920,14 @@
         <!-- /wi-fi -->
         <!--app-restriction-->
         <div class="wr-hidden-operation" data-operation="app-restriction">
-            <div class="panel panel-default operation-data" data-operation="app-restriction" data-operation-code="APP-RESTRICTION">
+            <div class="panel panel-default operation-data" data-operation="app-restriction"
+                 data-operation-code="APP-RESTRICTION">
                 <div id="app-restriction-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
                         Application Restriction Settings
-                        <label class="wr-input-control switch hidden" data-toggle="collapse" data-target="#app-restriction-body">
-                            <input type="checkbox" />
+                        <label class="wr-input-control switch hidden" data-toggle="collapse"
+                               data-target="#app-restriction-body">
+                            <input type="checkbox"/>
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
@@ -895,13 +936,15 @@
                         This configuration can be used to create a black list or white list of applications.
                     </div>
                 </div>
-                <div id="app-restriction-body" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="app-restriction-body">
+                <div id="app-restriction-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="app-restriction-body">
                     <hr/>
                     <div id="app-restriction-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
 
-                    <select id="app-restriction-type" class="form-control operationDataKeys" data-key="restrictionType" disabled>
+                    <select id="app-restriction-type" class="form-control operationDataKeys" data-key="restrictionType"
+                            disabled>
                         <option value="" selected="selected">
                             None
                         </option>
@@ -917,7 +960,8 @@
                             </span>
                         </label>
                         <br/>
-                        <a href="#restricted-applications-grid" class="btn btn-secondary grid-input-add hidden" data-click-event="add-form">
+                        <a href="#restricted-applications-grid" class="btn btn-secondary grid-input-add hidden"
+                           data-click-event="add-form">
                                 <span class="icon fw-stack">
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
@@ -925,7 +969,9 @@
 
                             Add Application
                         </a>
-                        <div id="restricted-applications" class="operationDataKeys grouped-array-input multi-column-key-value-pair-array" data-key="restrictedApplications" data-column-count="2">
+                        <div id="restricted-applications"
+                             class="operationDataKeys grouped-array-input multi-column-key-value-pair-array"
+                             data-key="restrictedApplications" data-column-count="2">
                             <table class="table table-responsive table-striped">
                                 <thead>
                                 <tr>
@@ -950,14 +996,18 @@
                                         <span class="index"></span>
                                     </td>
                                     <td data-title="App Name">
-                                        <input type="text" class="form-control grid-input-text" data-child-key="appName" maxlength="100" data-default="" placeholder="[ Gmail ]" disabled/>
+                                        <input type="text" class="form-control grid-input-text" data-child-key="appName"
+                                               maxlength="100" data-default="" placeholder="[ Gmail ]" disabled/>
                                     </td>
                                     <td data-title="Package Name">
-                                        <input type="text" class="form-control grid-input-text" data-child-key="packageName" maxlength="100" data-default="" placeholder="[ com.google.android.gm ]" disabled/>
+                                        <input type="text" class="form-control grid-input-text"
+                                               data-child-key="packageName" maxlength="100" data-default=""
+                                               placeholder="[ com.google.android.gm ]" disabled/>
                                     </td>
                                     <td>
                                             <span class="list-group-item-actions hidden">
-                                                <a href="#restricted-applications-grid" class="grid-input-remove" data-click-event="remove-form">
+                                                <a href="#restricted-applications-grid" class="grid-input-remove"
+                                                   data-click-event="remove-form">
                                                     <span class="fw-stack helper" title="Remove Entry">
                                                         <i class="fw fw-ring fw-stack-2x"></i>
                                                         <i class="fw fw-delete fw-stack-1x"></i>
@@ -982,7 +1032,7 @@
                     <h2 class="sub-title panel-title">
                         VPN Settings
                         <label class="wr-input-control switch hidden" data-toggle="collapse" data-target="#vpn-body">
-                            <input type="checkbox" />
+                            <input type="checkbox"/>
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
@@ -993,7 +1043,8 @@
                         to modify these settings on their devices.
                     </div>
                 </div>
-                <div id="vpn-body" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="vpn-body">
+                <div id="vpn-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="vpn-body">
                     <hr/>
                     Please note that * sign represents required fields of data.
                     <br>
@@ -1008,7 +1059,9 @@
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
-                        <input id="vpn-server-address" type="text" class="form-control operationDataKeys" data-key="serverAddress" maxlength="200" placeholder="[ Should be a valid hostname ]" disabled/>
+                        <input id="vpn-server-address" type="text" class="form-control operationDataKeys"
+                               data-key="serverAddress" maxlength="200" placeholder="[ Should be a valid hostname ]"
+                               disabled/>
                     </div>
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="vpn-server-port">
@@ -1017,7 +1070,8 @@
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
-                        <input id="vpn-server-port" type="text" class="form-control operationDataKeys" data-key="serverPort" maxlength="100" placeholder="[ Optional field ]" disabled/>
+                        <input id="vpn-server-port" type="text" class="form-control operationDataKeys"
+                               data-key="serverPort" maxlength="100" placeholder="[ Optional field ]" disabled/>
                     </div>
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="vpn-shared-secret">
@@ -1026,7 +1080,8 @@
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
-                        <input id="vpn-shared-secret" type="password" class="form-control operationDataKeys" data-key="sharedSecret" maxlength="100" placeholder="[ Optional field ]" disabled/>
+                        <input id="vpn-shared-secret" type="password" class="form-control operationDataKeys"
+                               data-key="sharedSecret" maxlength="100" placeholder="[ Optional field ]" disabled/>
                     </div>
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="vpn-dns">
@@ -1035,7 +1090,8 @@
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
-                        <input id="vpn-dns" type="text" class="form-control operationDataKeys" data-key="dnsServer" maxlength="100" placeholder="[ Optional field ]" disabled/>
+                        <input id="vpn-dns" type="text" class="form-control operationDataKeys" data-key="dnsServer"
+                               maxlength="100" placeholder="[ Optional field ]" disabled/>
                     </div>
                 </div>
             </div>
@@ -1151,21 +1207,25 @@
 
         <!--Work-profile-->
         <div class="wr-hidden-operation" data-operation="work-profile">
-            <div class="panel panel-default operation-data" data-operation="work-profile" data-operation-code="WORK_PROFILE">
+            <div class="panel panel-default operation-data" data-operation="work-profile"
+                 data-operation-code="WORK_PROFILE">
                 <div id="work-profile-policy-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
                         Work-Profile Configurations
-                        <label id="work-profile-policy-lbl" class="wr-input-control switch hidden" data-toggle="collapse" data-target="#work-profile-policy-body">
-                            <input type="checkbox" />
+                        <label id="work-profile-policy-lbl" class="wr-input-control switch hidden"
+                               data-toggle="collapse" data-target="#work-profile-policy-body">
+                            <input type="checkbox"/>
                             <span class="helper"></span>
                             <span class="text"></span>
                         </label>
                     </h2>
                     <div class="panel-title-description">
-                        The configurations below can be applied to the devices where the agent is running in Android Work-Profile.
+                        The configurations below can be applied to the devices where the agent is running in Android
+                        Work-Profile.
                     </div>
                 </div>
-                <div id="work-profile-policy-body" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="work-profile-policy-body">
+                <div id="work-profile-policy-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="work-profile-policy-body">
                     <hr/>
                     <div id="work-profile-policy-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
@@ -1188,7 +1248,8 @@
                             </span>
                             <br>
                         </label>
-                        <input id="work-profile-policy-profile-name" type="text" class="form-control operationDataKeys" data-key="workProfilePolicyProfileName" maxlength="20" disabled>
+                        <input id="work-profile-policy-profile-name" type="text" class="form-control operationDataKeys"
+                               data-key="workProfilePolicyProfileName" maxlength="20" disabled>
                     </div>
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="work-profile-policy-enable-system-apps">
@@ -1197,9 +1258,12 @@
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            ( Should be exact package names seperated by commas. Ex: com.google.android.apps.maps, com.google.android.calculator )
+                            ( Should be exact package names seperated by commas. Ex: com.google.android.apps.maps,
+                            com.google.android.calculator )
                         </label>
-                        <textarea id="workProfilePolicyEnableSystemApps" type ="text" class="form-control operationDataKeys" rows="4" data-key="workProfilePolicyEnableSystemApps" disabled></textarea>
+                        <textarea id="workProfilePolicyEnableSystemApps" type="text"
+                                  class="form-control operationDataKeys" rows="4"
+                                  data-key="workProfilePolicyEnableSystemApps" disabled></textarea>
                     </div>
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="work-profile-policy-hide-system-apps">
@@ -1208,9 +1272,12 @@
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            ( Should be exact package names seperated by commas. Ex: com.google.android.apps.maps, com.google.android.calculator )
+                            ( Should be exact package names seperated by commas. Ex: com.google.android.apps.maps,
+                            com.google.android.calculator )
                         </label>
-                        <textarea id="work-profile-policy-hide-system-apps" class="form-control operationDataKeys" rows="4" data-key="workProfilePolicyHideSystemApps" placeholder="" disabled></textarea>
+                        <textarea id="work-profile-policy-hide-system-apps" class="form-control operationDataKeys"
+                                  rows="4" data-key="workProfilePolicyHideSystemApps" placeholder=""
+                                  disabled></textarea>
                     </div>
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="work-profile-policy-unhide-system-apps">
@@ -1219,20 +1286,27 @@
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            ( Should be exact package names seperated by commas. Ex: com.google.android.apps.maps, com.google.android.calculator )
+                            ( Should be exact package names seperated by commas. Ex: com.google.android.apps.maps,
+                            com.google.android.calculator )
                         </label>
-                        <textarea id="work-profile-policy-unhide-system-apps" class="form-control operationDataKeys" rows="4" data-key="workProfilePolicyUnhideSystemApps" placeholder="" disabled></textarea>
+                        <textarea id="work-profile-policy-unhide-system-apps" class="form-control operationDataKeys"
+                                  rows="4" data-key="workProfilePolicyUnhideSystemApps" placeholder=""
+                                  disabled></textarea>
                     </div>
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="passcode-policy-max-passcode-age-in-days">
                             Enable Google Play Store Apps
-                            <span class="helper" title="The set of apps needed to be installed from Google Playstore to work-profile">
+                            <span class="helper"
+                                  title="The set of apps needed to be installed from Google Playstore to work-profile">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            ( Should be exact package names seperated by commas. Ex: com.google.android.apps.maps, com.google.android.calculator )
+                            ( Should be exact package names seperated by commas. Ex: com.google.android.apps.maps,
+                            com.google.android.calculator )
                         </label>
-                        <textarea id="work-profile-policy-install-playstore-apps" class="form-control operationDataKeys" rows="4" data-key="workProfilePolicyEnablePlaystoreApps" placeholder="" disabled></textarea>
+                        <textarea id="work-profile-policy-install-playstore-apps" class="form-control operationDataKeys"
+                                  rows="4" data-key="workProfilePolicyEnablePlaystoreApps" placeholder=""
+                                  disabled></textarea>
                     </div>
                 </div>
             </div>
@@ -1244,7 +1318,8 @@
                 <div id="cosu-system-update-policy-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
                         System Update Policy (COSU)
-                        <label id="cosu-system-update-policy-lbl" class="wr-input-control switch hidden" data-toggle="collapse"
+                        <label id="cosu-system-update-policy-lbl" class="wr-input-control switch hidden"
+                               data-toggle="collapse"
                                data-target="#cosu-system-update-policy-body">
                             <input type="checkbox"/>
                             <span class="helper"></span>
@@ -1261,7 +1336,8 @@
                 </div>
                 <div id="cosu-system-update-policy-body" class="panel-collapse panel-body collapse" role="tabpanel"
                      aria-labelledby="cosu-system-update-policy-body">
-                    <div id="cosu-system-update-policy-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                    <div id="cosu-system-update-policy-feature-error-msg" class="alert alert-danger hidden"
+                         role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
                     <div class="wr-input-control">
@@ -1275,24 +1351,33 @@
                         <label class="wr-input-control radio light">
                             <input id="automatic-system-update-radio-btn" type="radio" name="cosu-system-update-type"
                                    class="form-control operationDataKeys" data-key="cosuSystemUpdatePolicyType"
-                                   value="automatic" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])" checked disabled/>
-                            <span class="helper" title="Installs system update automatically as soon as one is available">
+                                   value="automatic"
+                                   onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])"
+                                   checked disabled/>
+                            <span class="helper"
+                                  title="Installs system update automatically as soon as one is available">
                                 Automatic
                             </span>
                         </label>
                         <label class="wr-input-control radio light">
                             <input id="postpone-system-update-radio-btn" type="radio" name="cosu-system-update-type"
                                    class="form-control operationDataKeys" data-key="cosuSystemUpdatePolicyType"
-                                   value="postpone" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])" disabled/>
-                            <span class="helper" title="Incoming system update will be blocked for a maximum of 30 days">
+                                   value="postpone"
+                                   onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])"
+                                   disabled/>
+                            <span class="helper"
+                                  title="Incoming system update will be blocked for a maximum of 30 days">
                                 Postpone
                             </span>
                         </label>
                         <label class="wr-input-control radio light">
                             <input id="window-system-update-radio-btn" type="radio" name="cosu-system-update-type"
                                    class="form-control operationDataKeys" data-key="cosuSystemUpdatePolicyType"
-                                   value="window" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])" disabled/>
-                            <span class="helper" title="Install system update automatically within a daily maintenance window, for a maximum of 30 days">
+                                   value="window"
+                                   onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])"
+                                   disabled/>
+                            <span class="helper"
+                                  title="Install system update automatically within a daily maintenance window, for a maximum of 30 days">
                                 Window
                             </span>
                         </label>
@@ -1390,7 +1475,8 @@
                 <div id="cosu-whitelisted-applications-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
                         Whitelist Applications (COSU)
-                        <label id="cosu-whitelisted-applications-lbl" class="wr-input-control switch hidden" data-toggle="collapse"
+                        <label id="cosu-whitelisted-applications-lbl" class="wr-input-control switch hidden"
+                               data-toggle="collapse"
                                data-target="#cosu-whitelisted-applications-body">
                             <input type="checkbox"/>
                             <span class="helper"></span>
@@ -1398,7 +1484,8 @@
                         </label>
                         <hr>
                         <div class="panel-title-description">
-                            This configuration can be used to whitelist applications in lock task mode of an Android Device in COSU.
+                            This configuration can be used to whitelist applications in lock task mode of an Android
+                            Device in COSU.
                             Once this configuration profile is installed on a device, corresponding users will not be
                             able
                             to modify these settings on their devices.
@@ -1408,17 +1495,20 @@
                 <div id="cosu-whitelisted-applications-body" class="panel-collapse panel-body collapse" role="tabpanel"
                      aria-labelledby="cosu-whitelisted-applications-body">
 
-                    <div id="cosu-whitelisted-applications-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                    <div id="cosu-whitelisted-applications-feature-error-msg" class="alert alert-danger hidden"
+                         role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="cosu-whitelisted-applications">
                             Whitelisted Applications to enter Lock Task Mode
-                            <span class="helper" title="Configuration information specific to a given third-party VPN solution. This has to be input as key/value pairs.">
+                            <span class="helper"
+                                  title="Configuration information specific to a given third-party VPN solution. This has to be input as key/value pairs.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            <a href="#cosu-whitelisted-applications-grid" class="grid-input-add" data-click-event="add-form">
+                            <a href="#cosu-whitelisted-applications-grid" class="grid-input-add"
+                               data-click-event="add-form">
                                 <span class="icon fw-stack">
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
@@ -1449,19 +1539,21 @@
                             </table>
                             <table class="template hidden">
                                 <tbody data-add-form="#cosu-whitelisted-applications-grid">
-                                    <tr data-add-form-element="clone">
-                                        <td data-title="No:">
-                                            <span class="index"></span>
-                                        </td>
-                                        <td data-title="Application Name / Description">
-                                            <input type="text" class="form-control grid-input-text" data-child-key="appName"
-                                                   maxlength="100" data-default="" placeholder="[ Application Name / Description ]" disabled/>
-                                        </td>
-                                        <td data-title="Package Name">
-                                            <input type="text" class="form-control grid-input-text" data-child-key="packageName"
-                                                   maxlength="100" data-default="" placeholder="[ Package Name ]" disabled/>
-                                        </td>
-                                        <td>
+                                <tr data-add-form-element="clone">
+                                    <td data-title="No:">
+                                        <span class="index"></span>
+                                    </td>
+                                    <td data-title="Application Name / Description">
+                                        <input type="text" class="form-control grid-input-text" data-child-key="appName"
+                                               maxlength="100" data-default=""
+                                               placeholder="[ Application Name / Description ]" disabled/>
+                                    </td>
+                                    <td data-title="Package Name">
+                                        <input type="text" class="form-control grid-input-text"
+                                               data-child-key="packageName"
+                                               maxlength="100" data-default="" placeholder="[ Package Name ]" disabled/>
+                                    </td>
+                                    <td>
                                             <span class="list-group-item-actions hidden">
                                                 <a href="#cosu-whitelisted-applications-grid" class="grid-input-remove"
                                                    data-click-event="remove-form">
@@ -1471,8 +1563,8 @@
                                                     </span>
                                                 </a>
                                             </span>
-                                        </td>
-                                    </tr>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>

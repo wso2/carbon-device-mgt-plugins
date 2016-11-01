@@ -68,8 +68,8 @@ public class IOSApplicationOperationUtil {
 				appStoreApplication.setPreventBackupOfAppData((Boolean) application.getProperties().
 						get(MDMAppConstants.IOSConstants.IS_PREVENT_BACKUP));
 				appStoreApplication.setBundleId(application.getId());
-				appStoreApplication.setiTunesStoreID((Integer) application.getProperties().
-						get(MDMAppConstants.IOSConstants.I_TUNES_ID));
+				appStoreApplication.setiTunesStoreID(Integer.parseInt((String)application.getProperties().
+						get(MDMAppConstants.IOSConstants.I_TUNES_ID)));
 				operation.setCode(MDMAppConstants.IOSConstants.OPCODE_INSTALL_STORE_APPLICATION);
 				operation.setType(Operation.Type.COMMAND);
 				operation.setPayLoad(appStoreApplication.toJSON());
@@ -106,7 +106,7 @@ public class IOSApplicationOperationUtil {
 		operation.setCode(MDMAppConstants.IOSConstants.OPCODE_REMOVE_APPLICATION);
 		operation.setType(Operation.Type.PROFILE);
 		RemoveApplication removeApplication = new RemoveApplication();
-		removeApplication.setBundleId(application.getIdentifier());
+		removeApplication.setBundleId(application.getPackageName());
 		operation.setPayLoad(removeApplication.toJSON());
 		return operation;
 	}
