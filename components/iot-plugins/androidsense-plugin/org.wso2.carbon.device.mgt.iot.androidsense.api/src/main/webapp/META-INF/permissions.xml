@@ -63,5 +63,11 @@
         <method>POST</method>
         <scope>android_sense_user</scope>
     </Permission>
-
+	<Permission>
+		<name>Get all devices</name>
+		<path>/device-mgt/user/devices</path>
+		<url>/devices</url>
+		<method>GET</method>
+		<scope>android_sense_device</scope>
+	</Permission>
 </PermissionConfiguration>
