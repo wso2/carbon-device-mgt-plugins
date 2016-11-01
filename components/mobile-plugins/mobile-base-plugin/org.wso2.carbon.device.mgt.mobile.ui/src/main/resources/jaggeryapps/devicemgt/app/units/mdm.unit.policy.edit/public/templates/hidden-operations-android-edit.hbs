@@ -86,7 +86,7 @@
         <!--</span>-->
         <!--Web clips-->
         <!--</a>-->
-        
+
         <!--
         <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-system-update-policy', this)">
             <span class="wr-hidden-operation-icon fw-stack">
@@ -243,7 +243,7 @@
                         <label class="wr-input-label" for="passcodePolicyMaxFailedAttempts">
                             Maximum number of failed attempts
                             <span class="helper"
-                                  title="Maximum number of passcode entry attempts allowed before all data on a device will be erased">
+                                  title="The maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erased">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -787,7 +787,7 @@
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="wifi-ssid">
                             Service Set Identifier (SSID) *
-                                <span class="helper" title="Identification of the wireless network to be configured.">
+                            <span class="helper" title="Identification of the wireless network to be configured.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                             <br>
@@ -799,8 +799,8 @@
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="wifi-type">
                             Security*
-                                    <span class="helper"
-                                          title="Security type of the wireless network to be configured. 802.1x EAP works with Android 4.3 and above devices only.">
+                            <span class="helper"
+                                  title="Security type of the wireless network to be configured. 802.1x EAP works with Android 4.3 and above devices only.">
                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                     </span>
                         </label>
@@ -816,7 +816,7 @@
                     <div class="wr-input-control" id="control-wifi-eap" style="display:none;">
                         <label class="wr-input-label" for="wifi-eap">
                             EAP Method
-                                    <span class="helper" title="EAP Method of the wireless network to be configured.">
+                            <span class="helper" title="EAP Method of the wireless network to be configured.">
                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                     </span>
                         </label>
@@ -834,8 +834,8 @@
                     <div class="wr-input-control" id="control-wifi-phase2" style="display:none;">
                         <label class="wr-input-label" for="wifi-phase2">
                             Phase 2 Authentication
-                                    <span class="helper"
-                                          title="Phase 2 authentication of the wireless network to be configured.">
+                            <span class="helper"
+                                  title="Phase 2 authentication of the wireless network to be configured.">
                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                     </span>
                         </label>
@@ -850,7 +850,7 @@
                     <div class="wr-input-control" id="control-wifi-provisioning" style="display:none;">
                         <label class="wr-input-label" for="wifi-provisioning">
                             Provisioning
-                                    <span class="helper" title="Provisioning of the wireless network to be configured.">
+                            <span class="helper" title="Provisioning of the wireless network to be configured.">
                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                     </span>
                         </label>
@@ -865,7 +865,7 @@
                     <div class="wr-input-control" id="control-wifi-identity" style="display:none;">
                         <label class="wr-input-label" for="wifi-identity">
                             Identity
-                                <span class="helper" title="Identity of the wireless network to be configured.">
+                            <span class="helper" title="Identity of the wireless network to be configured.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
@@ -879,7 +879,7 @@
                     <div class="wr-input-control" id="control-wifi-anoidentity" style="display:none;">
                         <label class="wr-input-label" for="wifi-anoidentity">
                             Anonymous Identity
-                                <span class="helper" title="Identity of the wireless network to be configured.">
+                            <span class="helper" title="Identity of the wireless network to be configured.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
@@ -893,7 +893,7 @@
                     <div class="wr-input-control" id="control-wifi-cacert" style="display:none;">
                         <label class="wr-input-label" for="wifi-password">
                             CA Certificate
-                                <span class="helper" title="CA Certificate for the wireless network.">
+                            <span class="helper" title="CA Certificate for the wireless network.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
@@ -906,10 +906,10 @@
                     </div>
                     <div class="wr-input-control" id="control-wifi-password" style="display:none;">
                         <label class="wr-input-label" for="wifi-password">
-                            Password*
-                                <span class="helper" title="Password for the wireless network.">
-                                    <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
-                                </span>
+                            Password
+                            <span class="helper required" title="Password for the wireless network.">
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
                         </label>
                         <input id="wifi-password" type="password" class="form-control operationDataKeys"
                                data-key="wifiPassword" maxlength="100"/>
@@ -967,12 +967,13 @@
                             </span>
                         </label>
                         <br/>
-                        <a href="#restricted-applications-grid" class="btn btn-secondary grid-input-add " data-click-event="add-form">
+                        <a href="#restricted-applications-grid" class="btn btn-secondary grid-input-add "
+                           data-click-event="add-form">
                                 <span class="icon fw-stack">
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                            
+
                             Add Application
                         </a>
                         <div id="restricted-applications"
@@ -1062,7 +1063,7 @@
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="vpn-server-address">
                             VPN Server Address*
-                                <span class="helper" title="Address of the VPN server to be configured.">
+                            <span class="helper" title="Address of the VPN server to be configured.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
@@ -1072,7 +1073,7 @@
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="vpn-server-port">
                             VPN Server Port
-                                <span class="helper" title="Port of the VPN server to be configured.">
+                            <span class="helper" title="Port of the VPN server to be configured.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
@@ -1082,7 +1083,7 @@
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="vpn-shared-secret">
                             Shared Secret
-                                <span class="helper" title="Shared secret.">
+                            <span class="helper" title="Shared secret.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
@@ -1092,7 +1093,7 @@
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="vpn-dns">
                             DNS Server
-                                <span class="helper" title="DNS Server.">
+                            <span class="helper" title="DNS Server.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
@@ -1330,7 +1331,8 @@
                         <hr>
                         <div class="panel-title-description">
                             This configuration can be used to set system update policy to an Android Device in COSU.
-                            Once this configuration profile is installed on a device, corresponding users will not be able
+                            Once this configuration profile is installed on a device, corresponding users will not be
+                            able
                             to modify these settings on their devices.
                         </div>
                     </h2>
@@ -1338,7 +1340,8 @@
                 <div id="cosu-system-update-policy-body" class="panel-collapse panel-body collapse" role="tabpanel"
                      aria-labelledby="cosu-system-update-policy-body">
 
-                    <div id="cosu-system-update-policy-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                    <div id="cosu-system-update-policy-feature-error-msg" class="alert alert-danger hidden"
+                         role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
                     <div class="wr-input-control">
@@ -1352,24 +1355,31 @@
                         <label class="wr-input-control radio light">
                             <input id="automatic-system-update-radio-btn" type="radio" name="cosu-system-update-type"
                                    class="form-control operationDataKeys" data-key="cosuSystemUpdatePolicyType"
-                                   value="automatic" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])" checked/>
-                            <span class="helper" title="Installs system update automatically as soon as one is available">
+                                   value="automatic"
+                                   onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])"
+                                   checked/>
+                            <span class="helper"
+                                  title="Installs system update automatically as soon as one is available">
                                 Automatic
                             </span>
                         </label>
                         <label class="wr-input-control radio light">
                             <input id="postpone-system-update-radio-btn" type="radio" name="cosu-system-update-type"
                                    class="form-control operationDataKeys" data-key="cosuSystemUpdatePolicyType"
-                                   value="postpone" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])"/>
-                            <span class="helper" title="Incoming system update will be blocked for a maximum of 30 days">
+                                   value="postpone"
+                                   onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])"/>
+                            <span class="helper"
+                                  title="Incoming system update will be blocked for a maximum of 30 days">
                                 Postpone
                             </span>
                         </label>
                         <label class="wr-input-control radio light">
                             <input id="window-system-update-radio-btn" type="radio" name="cosu-system-update-type"
                                    class="form-control operationDataKeys" data-key="cosuSystemUpdatePolicyType"
-                                   value="window" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])"/>
-                            <span class="helper" title="Install system update automatically within a daily maintenance window, for a maximum of 30 days">
+                                   value="window"
+                                   onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])"/>
+                            <span class="helper"
+                                  title="Install system update automatically within a daily maintenance window, for a maximum of 30 days">
                                 Window
                             </span>
                         </label>
@@ -1468,7 +1478,8 @@
                 <div id="cosu-whitelisted-applications-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
                         Whitelist Applications (COSU)
-                        <label id="cosu-whitelisted-applications-lbl" class="wr-input-control switch" data-toggle="collapse"
+                        <label id="cosu-whitelisted-applications-lbl" class="wr-input-control switch"
+                               data-toggle="collapse"
                                data-target="#cosu-whitelisted-applications-body">
                             <input type="checkbox"/>
                             <span class="helper"></span>
@@ -1476,8 +1487,10 @@
                         </label>
                         <hr>
                         <div class="panel-title-description">
-                            This configuration can be used to whitelist applications in lock task mode of an Android Device in COSU.
-                            Once this configuration profile is installed on a device, corresponding users will not be able
+                            This configuration can be used to whitelist applications in lock task mode of an Android
+                            Device in COSU.
+                            Once this configuration profile is installed on a device, corresponding users will not be
+                            able
                             to modify these settings on their devices.
                         </div>
                     </h2>
@@ -1485,22 +1498,25 @@
                 <div id="cosu-whitelisted-applications-body" class="panel-collapse panel-body collapse" role="tabpanel"
                      aria-labelledby="cosu-whitelisted-applications-body">
 
-                    <div id="cosu-whitelisted-applications-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                    <div id="cosu-whitelisted-applications-feature-error-msg" class="alert alert-danger hidden"
+                         role="alert">
                         <i class="icon fw fw-error"></i><span></span>
                     </div>
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="cosu-whitelisted-applications">
                             Whitelisted Applications to enter Lock Task Mode
-                            <span class="helper" title="Configuration information specific to a given third-party VPN solution. This has to be input as key/value pairs.">
+                            <span class="helper"
+                                  title="Configuration information specific to a given third-party VPN solution. This has to be input as key/value pairs.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            <a href="#cosu-whitelisted-applications-grid" class="grid-input-add" data-click-event="add-form">
+                            <a href="#cosu-whitelisted-applications-grid" class="btn btn-secondary grid-input-add"
+                               data-click-event="add-form">
                                 <span class="icon fw-stack">
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                
+
                                 Add Application
                             </a>
                         </label>
@@ -1526,19 +1542,21 @@
                             </table>
                             <table class="template hidden">
                                 <tbody data-add-form="#cosu-whitelisted-applications-grid">
-                                    <tr data-add-form-element="clone">
-                                        <td data-title="No:">
-                                            <span class="index"></span>
-                                        </td>
-                                        <td data-title="Application Name / Description">
-                                            <input type="text" class="form-control grid-input-text" data-child-key="appName"
-                                                   maxlength="100" data-default="" placeholder="[ Application Name / Description ]"/>
-                                        </td>
-                                        <td data-title="Package Name">
-                                            <input type="text" class="form-control grid-input-text" data-child-key="packageName"
-                                                   maxlength="100" data-default="" placeholder="[ Package Name ]"/>
-                                        </td>
-                                        <td>
+                                <tr data-add-form-element="clone">
+                                    <td data-title="No:">
+                                        <span class="index"></span>
+                                    </td>
+                                    <td data-title="Application Name / Description">
+                                        <input type="text" class="form-control grid-input-text" data-child-key="appName"
+                                               maxlength="100" data-default=""
+                                               placeholder="[ Application Name / Description ]"/>
+                                    </td>
+                                    <td data-title="Package Name">
+                                        <input type="text" class="form-control grid-input-text"
+                                               data-child-key="packageName"
+                                               maxlength="100" data-default="" placeholder="[ Package Name ]"/>
+                                    </td>
+                                    <td>
                                             <span class="list-group-item-actions">
                                                 <a href="#cosu-whitelisted-applications-grid" class="grid-input-remove"
                                                    data-click-event="remove-form">
@@ -1548,8 +1566,8 @@
                                                     </span>
                                                 </a>
                                             </span>
-                                        </td>
-                                    </tr>
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
