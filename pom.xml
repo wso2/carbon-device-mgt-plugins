@@ -362,7 +362,7 @@
             <!--IoT Server specific dependencies-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot</artifactId>
+                <artifactId>org.wso2.carbon.device.mgt.iot.url.printer</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
             <dependency>
@@ -415,11 +415,6 @@
             <!--Android sense DeviceType Impl, API and Agent-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.plugin</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.api</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
                 <type>war</type>
@@ -428,22 +423,12 @@
             <!--Arduino DeviceType Impl, API and Agent-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.arduino.plugin</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.iot.arduino.api</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
                 <type>war</type>
             </dependency>
 
             <!--RaspberryPi DeviceType Impl, API and Agent-->
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.plugin</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.api</artifactId>

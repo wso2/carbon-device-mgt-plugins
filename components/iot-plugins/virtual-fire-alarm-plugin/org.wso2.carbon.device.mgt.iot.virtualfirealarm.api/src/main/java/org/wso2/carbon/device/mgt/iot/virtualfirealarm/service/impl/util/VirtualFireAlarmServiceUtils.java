@@ -19,11 +19,9 @@
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFirealarmSecurityManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.VirtualFirealarmSecurityManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
 
 import java.lang.*;

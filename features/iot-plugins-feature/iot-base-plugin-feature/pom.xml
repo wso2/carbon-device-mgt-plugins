@@ -34,7 +34,7 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.device.mgt.iot.feature</module>
+        <module>org.wso2.carbon.device.mgt.iot.url.printer.feature</module>
         <module>org.wso2.carbon.device.mgt.iot.adapter.feature</module>
     </modules>
 

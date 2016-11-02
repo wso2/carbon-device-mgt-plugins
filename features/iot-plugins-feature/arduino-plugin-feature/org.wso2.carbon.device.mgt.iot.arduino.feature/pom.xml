@@ -38,10 +38,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.plugin</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
 			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.api</artifactId>
 			<type>war</type>
 		</dependency>
@@ -140,42 +136,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<!-- Creating Arduino Plugin Management schema -->
-						<id>create-arduino-plugin-mgt-schema</id>
-						<phase>package</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<echo message="########### Create Arduino plugin Management H2 Schema ###########" />
-								<property name="db.dir" value="target/maven-shared-archive-resources/database" />
-								<property name="userid" value="wso2carbon" />
-								<property name="password" value="wso2carbon" />
-								<property name="dbURL" value="jdbc:h2:file:${basedir}/${db.dir}/ArduinoDM_DB;DB_CLOSE_ON_EXIT=FALSE" />
-
-                                <mkdir dir="${basedir}/${db.dir}" />
-
-								<sql driver="org.h2.Driver" url="${dbURL}" userid="${userid}" password="${password}" autocommit="true" onerror="continue">
-									<classpath refid="maven.dependency.classpath" />
-									<classpath refid="maven.compile.classpath" />
-									<classpath refid="maven.runtime.classpath" />
-
-									<fileset file="${basedir}/src/main/resources/dbscripts/h2.sql" />
-								</sql>
-								<echo message="##################### END ####################" />
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
 			<plugin>
 				<groupId>org.wso2.maven</groupId>
 				<artifactId>carbon-p2-plugin</artifactId>
@@ -196,11 +156,6 @@
 									<propertyDef>org.eclipse.equinox.p2.type.group:true</propertyDef>
 								</properties>
 							</adviceFile>
-							<bundles>
-								<bundleDef>
-									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.arduino.plugin:${carbon.devicemgt.plugins.version}
-								</bundleDef>
-							</bundles>
 							<importFeatures>
 								<importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}
 								</importFeatureDef>

@@ -25,11 +25,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
-import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
+import org.wso2.carbon.device.mgt.iot.arduino.service.impl.constants.ArduinoConstants;
+
 import javax.ws.rs.HttpMethod;
 import java.io.BufferedReader;
 import java.io.IOException;
