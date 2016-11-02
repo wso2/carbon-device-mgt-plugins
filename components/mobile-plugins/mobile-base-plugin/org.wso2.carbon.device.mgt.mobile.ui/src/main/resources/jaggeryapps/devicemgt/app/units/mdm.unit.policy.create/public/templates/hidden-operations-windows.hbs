@@ -95,7 +95,7 @@
                         <label class="wr-input-control checkbox">
                             <input id="passcode-policy-allow-simple" type="checkbox" class="form-control operationDataKeys" data-key="passcodePolicyAllowSimple" checked="checked" />
                             <span class="helper" title="Permit the use of repeating, ascending and descending character sequences">
-                                &nbsp;&nbsp;&nbsp;Allow simple value
+                                   Allow simple value
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -105,7 +105,7 @@
                         <label class="wr-input-control checkbox">
                             <input id="passcode-policy-require-alphanumeric" type="checkbox" class="form-control operationDataKeys" data-key="passcodePolicyRequireAlphanumeric" checked="checked" />
                             <span class="helper" title="Require passcode to contain both letters and numbers">
-                                &nbsp;&nbsp;&nbsp;Require alphanumeric value
+                                   Require alphanumeric value
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -168,7 +168,9 @@
                             <br>
                             ( Should be in between 1-to-730 days or none )
                         </label>
-                        <input id="passcode-policy-max-passcode-age-in-days" type="text" class="form-control operationDataKeys" data-key="passcodePolicyMaxPasscodeAgeInDays" maxlength="3" placeholder="[ Requires Number Input ]">
+                        <input id="passcode-policy-max-passcode-age-in-days" type="text"
+                               class="form-control operationDataKeys" data-key="passcodePolicyMaxPasscodeAgeInDays"
+                               maxlength="3" placeholder="[ Requires Number Input ]">
                     </div>
 
                     <div class="wr-input-control">
@@ -180,17 +182,20 @@
                             <br>
                             ( Should be in between 1-to-50 passcodes or none )
                         </label>
-                        <input id="passcode-policy-passcode-history" type="text" class="form-control operationDataKeys" data-key="passcodePolicyPasscodeHistory" maxlength="2" placeholder="[ Requires Number Input ]">
+                        <input id="passcode-policy-passcode-history" type="text" class="form-control operationDataKeys"
+                               data-key="passcodePolicyPasscodeHistory" maxlength="2" placeholder="[ Requires Number Input ]">
                     </div>
 
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="passcodePolicyMaxFailedAttempts">
                             Maximum number of failed attempts
-                            <span class="helper" title="Maximum number of passcode entry attempts allowed before all data on a device will be erased">
+                            <span class="helper" title="Maximum number of passcode entry attempts allowed before all
+                            data on a device will be erased">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
-                        <select id="passcode-policy-max-failed-attempts" class="form-control operationDataKeys" data-key="passcodePolicyMaxFailedAttempts" data-default="0">
+                        <select id="passcode-policy-max-failed-attempts" class="form-control operationDataKeys"
+                                data-key="passcodePolicyMaxFailedAttempts" data-default="0">
                             <option value="" selected="selected">
                                 None
                             </option>
@@ -222,7 +227,8 @@
                         </label>
                     </h2>
                     <div class="panel-title-description">
-                        This configuration can be used to restrict the usage of camera on an Windows device together with all the applications using the camera.
+                        This configuration can be used to restrict the usage of camera on an Windows device together
+                        with all the applications using the camera.
                         Once this configuration profile is installed on a device, corresponding users will not be able
                         to modify these settings on their devices.
                     </div>
@@ -237,9 +243,11 @@
                     <br>
                     <div class="wr-input-control">
                         <label class="wr-input-control checkbox">
-                            <input id="camera-enabled" type="checkbox" class="operationDataKeys" data-key="cameraEnabled" checked="checked" />
-                            <span class="helper" title="Having this checked would enable Usage of phone camera in the device.">
-                                &nbsp;&nbsp;&nbsp;Allow use of camera
+                            <input id="camera-enabled" type="checkbox" class="operationDataKeys"
+                                   data-key="cameraEnabled" checked="checked" />
+                            <span class="helper" title="Having this checked would enable Usage of phone camera in
+                            the device.">
+                                   Allow use of camera
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -252,7 +260,8 @@
 
         <!-- encrypt-storage -->
         <div class="wr-hidden-operation" data-operation="encrypt-storage">
-            <div class="panel panel-default operation-data" data-operation="encrypt-storage" data-operation-code="ENCRYPT_STORAGE">
+            <div class="panel panel-default operation-data" data-operation="encrypt-storage"
+                 data-operation-code="ENCRYPT_STORAGE">
                 <div id="encrypt-storage-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
                         Encryption Settings
@@ -264,11 +273,12 @@
                     </h2>
                     <div class="panel-title-description">
                         This configuration can be used to encrypt data on an Windows device, when the device is locked and
-                        make it readable when the passcode is entered. Once this configuration profile is installed on a device,
-                        corresponding users will not be able to modify these settings on their devices.
+                        make it readable when the passcode is entered. Once this configuration profile is installed on a
+                        device, corresponding users will not be able to modify these settings on their devices.
                     </div>
                 </div>
-                <div id="encrypt-storage-body" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="encrypt-storage-body">
+                <div id="encrypt-storage-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="encrypt-storage-body">
                     <hr/>
                     <div id="encrypt-storage-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
@@ -278,9 +288,10 @@
                     <br>
                     <div class="wr-input-control">
                         <label class="wr-input-control checkbox">
-                            <input id="encrypt-storage-enabled" type="checkbox" class="operationDataKeys" data-key="encryptStorageEnabled" checked="checked" />
+                            <input id="encrypt-storage-enabled" type="checkbox" class="operationDataKeys"
+                                   data-key="encryptStorageEnabled" checked="checked" />
                             <span class="helper" title="Having this checked would enable Storage-encryption in the device">
-                                &nbsp;&nbsp;&nbsp;Enable storage-encryption
+                                   Enable storage-encryption
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -292,7 +303,8 @@
         <!-- /encrypt-storage -->
         <!--app-restriction-->
         <div class="wr-hidden-operation" data-operation="app-restriction">
-            <div class="panel panel-default operation-data" data-operation="app-restriction" data-operation-code="APP-RESTRICTION">
+            <div class="panel panel-default operation-data" data-operation="app-restriction"
+                 data-operation-code="APP-RESTRICTION">
                 <div id="app-restriction-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
                         Application Restriction Settings
@@ -306,7 +318,8 @@
                         This configuration can be used to create a black list or white list of applications.
                     </div>
                 </div>
-                <div id="app-restriction-body" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="app-restriction-body">
+                <div id="app-restriction-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="app-restriction-body">
                     <hr/>
                     <div id="app-restriction-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
@@ -327,16 +340,19 @@
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            <a href="#restricted-applications-grid" class="btn btn-secondary grid-input-add" data-click-event="add-form">
+                            <a href="#restricted-applications-grid" class="btn btn-secondary grid-input-add"
+                               data-click-event="add-form">
                                 <span class="icon fw-stack">
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                 </span>
-                                &nbsp;
+
                                 Add Application
                             </a>
                         </label>
-                        <div id="restricted-applications" class="operationDataKeys grouped-array-input multi-column-key-value-pair-array" data-key="restrictedApplications" data-column-count="2">
+                        <div id="restricted-applications"
+                             class="operationDataKeys grouped-array-input multi-column-key-value-pair-array"
+                             data-key="restrictedApplications" data-column-count="2">
                             <table class="table table-responsive table-striped">
                                 <thead>
                                 <tr>
@@ -361,14 +377,19 @@
                                         <span class="index"></span>
                                     </td>
                                     <td data-title="App Name">
-                                        <input type="text" class="form-control grid-input-text" data-child-key="appName" maxlength="100" data-default="" placeholder="[ Application Name or Description ]" />
+                                        <input type="text" class="form-control grid-input-text"
+                                               data-child-key="appName" maxlength="100" data-default=""
+                                               placeholder="[ Application Name or Description ]" />
                                     </td>
                                     <td data-title="Package Name">
-                                        <input type="text" class="form-control grid-input-text" data-child-key="packageName" maxlength="100" data-default="" placeholder="[ Package Name of Application ]" />
+                                        <input type="text" class="form-control grid-input-text"
+                                               data-child-key="packageName" maxlength="100" data-default=""
+                                               placeholder="[ Package Name of Application ]" />
                                     </td>
                                     <td>
                                             <span class="list-group-item-actions">
-                                                <a href="#restricted-applications-grid" class="grid-input-remove" data-click-event="remove-form">
+                                                <a href="#restricted-applications-grid" class="grid-input-remove"
+                                                   data-click-event="remove-form">
                                                     <span class="fw-stack helper" title="Remove Entry">
                                                         <i class="fw fw-ring fw-stack-2x"></i>
                                                         <i class="fw fw-delete fw-stack-1x"></i>
@@ -460,7 +481,7 @@
                 <!--<div class="panel-heading" role="tab">-->
                     <!--<h2 class="sub-title panel-title">-->
                         <!--<br>-->
-                        <!--&nbsp;&nbsp;&nbsp;App Installations-->
+                        <!--   App Installations-->
                         <!--<label class="wr-input-control switch" data-toggle="collapse" data-target="#installApp">-->
                             <!--<input type="checkbox" />-->
                             <!--<span class="helper"></span>-->
@@ -504,7 +525,7 @@
                 <!--<div class="panel-heading" role="tab">-->
                     <!--<h2 class="sub-title panel-title">-->
                         <!--<br>-->
-                        <!--&nbsp;&nbsp;&nbsp;App Uninstallations-->
+                        <!--   App Uninstallations-->
                         <!--<label class="wr-input-control switch" data-toggle="collapse" data-target="#uninstallApp">-->
                             <!--<input type="checkbox" />-->
                             <!--<span class="helper"></span>-->
@@ -534,7 +555,7 @@
                 <!--<div class="panel-heading" role="tab">-->
                     <!--<h2 class="sub-title panel-title">-->
                         <!--<br>-->
-                        <!--&nbsp;&nbsp;&nbsp;Web clips-->
+                        <!--   Web clips-->
                         <!--<label class="wr-input-control switch" data-toggle="collapse" data-target="#installWebClip">-->
                             <!--<input type="checkbox" />-->
                             <!--<span class="helper"></span>-->

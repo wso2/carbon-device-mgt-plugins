@@ -36,7 +36,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.NONE)
 @ApiModel(
         value = "PlatformConfiguration",
-        description = "This class carries all information related to a Tenant configuration"
+        description = "This class carries all the information related to Android platform configurations."
 )
 public class AndroidPlatformConfiguration implements Serializable {
     public static final int INVALID_NOTIFIER_FREQUENCY = -1;

@@ -16,7 +16,7 @@
                 {{/if}}
             </h1>
             <div class="row no-gutter add-padding-5x add-margin-top-5x" style="border: 1px solid #e4e4e4;">
-                <div class="media">
+                <div class="media" id="device-owner" data-owner="{{deviceView.owner}}">
                     <div class="media-left media-middle asset-image col-xs-2 col-sm-2 col-md-2 col-lg-2">
                         <div class="thumbnail icon"><i class="square-element text fw fw-mobile"></i></div>
                     </div>
@@ -52,13 +52,13 @@
                                         <td class="sorting_1" style="padding:10px 15px; width: 15%;">Status</td>
                                         <td style="padding:10px 15px;">
                                             {{#equal deviceView.status "ACTIVE"}}<span><i
-                                                    class="fw fw-ok icon-success"></i>&nbsp;&nbsp;Active</span>{{/equal}}
+                                                    class="fw fw-ok icon-success"></i>Active</span>{{/equal}}
                                             {{#equal deviceView.status "INACTIVE"}}<span><i
-                                                    class="fw fw-warning icon-warning"></i>&nbsp;&nbsp;Inactive</span>{{/equal}}
+                                                    class="fw fw-warning icon-warning"></i>Inactive</span>{{/equal}}
                                             {{#equal deviceView.status "BLOCKED"}}<span><i
-                                                    class="fw fw-remove icon-danger"></i>&nbsp;&nbsp;Blocked</span>{{/equal}}
+                                                    class="fw fw-remove icon-danger"></i>Blocked</span>{{/equal}}
                                             {{#equal deviceView.status "REMOVED"}}<span><i
-                                                    class="fw fw-delete icon-danger"></i>&nbsp;&nbsp;Removed</span>{{/equal}}
+                                                    class="fw fw-delete icon-danger"></i>Removed</span>{{/equal}}
                                         </td>
                                     </tr>
                                 {{/if}}
@@ -109,14 +109,14 @@
                                 </tbody>
                             </table>
                         {{/defineZone}}
-            {{#if deviceView.isNotRemoved}}
-                        <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">
-                            Operations
-                        </div>
-                        <div class="add-margin-top-4x">
-                            {{unit "mdm.unit.device.operation-bar" deviceType=deviceView.deviceType ownership=deviceView.ownership}}
-                        </div>
-            {{/if}}
+                        {{#if deviceView.isNotRemoved}}
+                            <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">
+                                Operations
+                            </div>
+                            <div class="add-margin-top-4x">
+                                {{unit "mdm.unit.device.operation-bar" deviceType=deviceView.deviceType ownership=deviceView.ownership}}
+                            </div>
+                        {{/if}}
                     </div>
                 </div>
                 <div class="media tab-responsive">
@@ -314,7 +314,7 @@
                                     </div>
                                     <div class="panel-heading display-none-xs">
                                         Policy Compliance
-                                        &nbsp;&nbsp;
+                                        
                                         <span>
                             <a href="javascript:void(0);" id="refresh-policy">
                                 <i class="fw fw-refresh"></i>
@@ -331,7 +331,7 @@
                             </span>
                                             <div id="policy-spinner"
                                                  class="wr-advance-operations-init add-padding-bottom-2x add-padding-bottom-4x hidden">
-                                                <i class="fw fw-settings fw-spin fw-2x"></i>&nbsp;&nbsp;Loading Policy
+                                                <i class="fw fw-settings fw-spin fw-2x"></i>Loading Policy
                                                 Compliance...
                                             </div>
                                             <div id="policy-list-container">
@@ -364,7 +364,7 @@
                                                 <div id="map-error" class="message message-warning">
                                                     <h4 class="remove-margin">
                                                         <i class="icon fw fw-warning"></i>
-                                                        &nbsp;Device location information is not available.
+                                                        Device location information is not available.
                                                     </h4>
                                                 </div>
                                                 <p class="add-padding-5x"></p>
@@ -388,7 +388,7 @@
                                     </div>
                                     <div class="panel-heading display-none-xs">
                                         Installed Applications
-                                        &nbsp;&nbsp;
+                                        
                                         <span>
                             <a href="javascript:void(0);" id="refresh-apps">
                                 <i class="fw fw-refresh"></i>

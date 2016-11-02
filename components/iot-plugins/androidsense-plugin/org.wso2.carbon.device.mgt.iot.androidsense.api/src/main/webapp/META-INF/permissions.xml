@@ -63,5 +63,4 @@
         <method>POST</method>
         <scope>android_sense_user</scope>
     </Permission>
-
 </PermissionConfiguration>
