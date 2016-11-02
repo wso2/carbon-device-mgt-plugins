@@ -99,9 +99,6 @@ public class AndroidSenseUtils {
 			} else {
 				log.info("Device management repository database already exists. Not creating a new database.");
 			}
-
-		} catch (NamingException e) {
-			log.error("Error while looking up the data source: " + datasource, e);
 		} catch (Exception e) {
 				throw new AndroidSenseDeviceMgtPluginException("Error occurred while initializing Iot Device " +
 																	   "Management database schema", e);
