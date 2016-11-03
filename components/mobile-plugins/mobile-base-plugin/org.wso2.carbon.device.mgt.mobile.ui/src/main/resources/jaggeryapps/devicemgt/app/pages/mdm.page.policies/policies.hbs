@@ -42,7 +42,7 @@
 {{/zone}}
 
 {{#zone "navbarActions"}}
-    {{#if permissions.ADD_ADMIN_POLICY}}
+    {{#if managePermitted}}
         {{#equal noPolicy false}}
             <li>
                 <!--suppress HtmlUnknownTarget -->
@@ -51,12 +51,12 @@
                         <i class="fw fw-add fw-stack-1x"></i>
                         <i class="fw fw-ring fw-stack-2x"></i>
                     </span>
-                     Add New Policy
+                    Add New Policy
                 </a>
             </li>
         {{/equal}}
     {{/if}}
-    {{#if permissions.CHANGE_POLICY_PRIORITY}}
+    {{#if managePermitted}}
         {{#equal noPolicy false}}
             <li>
                 <!--suppress HtmlUnknownTarget -->
@@ -65,7 +65,7 @@
                         <i class="fw fw-throttling-policy fw-stack-1x"></i>
                         <i class="fw fw-ring fw-stack-2x"></i>
                     </span>
-                     Policy Priority
+                    Policy Priority
                 </a>
             </li>
         {{/equal}}
@@ -76,7 +76,7 @@
                 <i class="fw fw-check fw-stack-1x"></i>
                 <i class="fw fw-ring fw-stack-2x"></i>
             </span>
-             Apply Changes To Devices
+            Apply Changes To Devices
         </a>
     </li>
 {{/zone}}
@@ -100,7 +100,7 @@
                                 <i class="fw fw-ring fw-stack-2x"></i>
                                 <i class="fw fw-add fw-stack-1x"></i>
                             </span>
-                              Add New Policy
+                            Add New Policy
                         </a>
                     </h3>
                 {{/if}}
@@ -141,7 +141,7 @@
             <tr class="bulk-action-row">
                 <th colspan="9">
                     <ul class="tiles">
-                        {{#if removePermitted}}
+                        {{#if managePermitted}}
                             <li class="square">
                                 <a href="#" data-click-event="remove-form" class="btn square-element policy-remove-link"
                                    data-toggle="modal" data-target="#modalDemo">
@@ -152,27 +152,30 @@
                                     Remove
                                 </a>
                             </li>
-                        {{/if}}
-                        <li class="square">
-                            <a href="#" data-click-event="remove-form" class="btn square-element policy-publish-link"
-                               data-toggle="modal" data-target="#modalDemo">
+
+                            <li class="square">
+                                <a href="#" data-click-event="remove-form"
+                                   class="btn square-element policy-publish-link"
+                                   data-toggle="modal" data-target="#modalDemo">
                                         <span class="icon fw-stack">
                                             <i class="fw fw-ring fw-stack-2x"></i>
                                             <i class="glyphicon glyphicon-floppy-saved"></i>
                                         </span>
-                                Publish
-                            </a>
-                        </li>
-                        <li class="square">
-                            <a href="#" data-click-event="remove-form" class="btn square-element policy-unpublish-link"
-                               data-toggle="modal" data-target="#modalDemo">
+                                    Publish
+                                </a>
+                            </li>
+                            <li class="square">
+                                <a href="#" data-click-event="remove-form"
+                                   class="btn square-element policy-unpublish-link"
+                                   data-toggle="modal" data-target="#modalDemo">
                                         <span class="icon fw-stack">
                                             <i class="fw fw-ring fw-stack-2x"></i>
                                             <i class="glyphicon glyphicon-floppy-remove"></i>
                                         </span>
-                                Unpublish
-                            </a>
-                        </li>
+                                    Unpublish
+                                </a>
+                            </li>
+                        {{/if}}
                     </ul>
                 </th>
             </tr>
@@ -239,16 +242,18 @@
                     </td>
                     <td class="text-right content-fill text-left-on-grid-view no-wrap">
                         <!--suppress HtmlUnknownTarget -->
-                        <a href="{{@app.context}}/policy/edit?id={{id}}"
-                           data-id="{{id}}"
-                           data-click-event="remove-form"
-                           class="btn padding-reduce-on-grid-view policy-update-link">
+                        {{#if managePermitted}}
+                            <a href="{{@app.context}}/policy/edit?id={{id}}"
+                               data-id="{{id}}"
+                               data-click-event="remove-form"
+                               class="btn padding-reduce-on-grid-view policy-update-link">
                                 <span class="fw-stack">
                                     <i class="fw fw-ring fw-stack-2x"></i>
                                     <i class="fw fw-edit fw-stack-1x"></i>
                                 </span>
-                            <span class="hidden-xs hidden-on-grid-view">Re-Configure</span>
-                        </a>
+                                <span class="hidden-xs hidden-on-grid-view">Re-Configure</span>
+                            </a>
+                        {{/if}}
                     </td>
                 </tr>
             {{/each}}
