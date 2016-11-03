@@ -10,6 +10,7 @@
     "adminService":"%https.ip%",
     "idPServer":"%https.ip%",
     "callBackUrl":"%https.ip%/mdm-admin",
+    "enableEval":true,
     "oauthProvider": {
         "appRegistration": {
             "appType": "webapp",

@@ -26,13 +26,9 @@ import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementService;
 import org.wso2.carbon.core.ServerStartupObserver;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
-import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
-import org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.VirtualFireAlarmManagerService;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFireAlarmUtils;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFirealarmSecurityManager;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.util.VirtualFirealarmStartupListener;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.config.VirtualFirealarmConfig;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.VirtualFirealarmSecurityManager;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.VirtualFirealarmStartupListener;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterService;
 
 /**
@@ -57,12 +53,6 @@ import org.wso2.carbon.event.input.adapter.core.InputEventAdapterService;
  * policy="dynamic"
  * bind="setEventsPublisherService"
  * unbind="unsetEventsPublisherService"
- * @scr.reference name="devicetype.configuration.service"
- * interface="org.wso2.carbon.device.mgt.iot.devicetype.DeviceTypeConfigService"
- * cardinality="1..1"
- * policy="dynamic"
- * bind="setDeviceTypeConfigService"
- * unbind="unsetDeviceTypeConfigService"
  */
 public class VirtualFirealarmManagementServiceComponent {
 
@@ -74,25 +64,10 @@ public class VirtualFirealarmManagementServiceComponent {
             log.debug("Activating Virtual Firealarm Device Management Service Component");
         }
         try {
-
-            VirtualFireAlarmManagerService virtualFireAlarmManagerService = new VirtualFireAlarmManagerService();
+            VirtualFirealarmConfig.initialize();
             BundleContext bundleContext = ctx.getBundleContext();
-            firealarmServiceRegRef = bundleContext.registerService(DeviceManagementService.class.getName()
-                                                                   ,virtualFireAlarmManagerService, null);
             bundleContext.registerService(ServerStartupObserver.class.getName(), new VirtualFirealarmStartupListener(),
                                           null);
-            String setupOption = System.getProperty("setup");
-            if (setupOption != null) {
-                if (log.isDebugEnabled()) {
-                    log.debug("-Dsetup is enabled. Iot Device management repository schema initialization is about " +
-                                      "to begin");
-                }
-                try {
-                    VirtualFireAlarmUtils.setupDeviceManagementSchema();
-                } catch (VirtualFirealarmDeviceMgtPluginException e) {
-                    log.error("Exception occurred while initializing device management database schema", e);
-                }
-            }
             if (log.isDebugEnabled()) {
                 log.debug("Virtual Firealarm Device Management Service Component has been successfully activated");
             }
@@ -105,16 +80,6 @@ public class VirtualFirealarmManagementServiceComponent {
     protected void deactivate(ComponentContext ctx) {
         if (log.isDebugEnabled()) {
             log.debug("De-activating Virtual Firealarm Device Management Service Component");
-        }
-        try {
-            if (firealarmServiceRegRef != null) {
-                firealarmServiceRegRef.unregister();
-            }
-            if (log.isDebugEnabled()) {
-                log.debug("Virtual Firealarm Device Management Service Component has been successfully de-activated");
-            }
-        } catch (Throwable e) {
-            log.error("Error occurred while de-activating Virtual Firealarm Device Management bundle", e);
         }
     }
 
@@ -148,13 +113,5 @@ public class VirtualFirealarmManagementServiceComponent {
 
     protected void unsetEventsPublisherService(EventsPublisherService eventsPublisherService) {
         VirtualFirealarmManagementDataHolder.getInstance().setEventsPublisherService(null);
-    }
-
-    protected void setDeviceTypeConfigService(DeviceTypeConfigService deviceTypeConfigService) {
-        VirtualFirealarmManagementDataHolder.getInstance().setDeviceTypeConfigService(deviceTypeConfigService);
-    }
-
-    protected void unsetDeviceTypeConfigService(DeviceTypeConfigService deviceTypeConfigService) {
-        VirtualFirealarmManagementDataHolder.getInstance().setDeviceTypeConfigService(null);
     }
 }

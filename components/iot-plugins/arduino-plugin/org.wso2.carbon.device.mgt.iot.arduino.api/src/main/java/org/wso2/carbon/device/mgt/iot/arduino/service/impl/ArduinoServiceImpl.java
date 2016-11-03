@@ -34,11 +34,11 @@ import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
-import org.wso2.carbon.device.mgt.iot.arduino.plugin.constants.ArduinoConstants;
+import org.wso2.carbon.device.mgt.iot.arduino.service.impl.constants.ArduinoConstants;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.APIUtil;
+import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.util.ZipUtil;
-import org.wso2.carbon.device.mgt.iot.util.ZipArchive;
 import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
@@ -54,7 +54,6 @@ import java.util.*;
 public class ArduinoServiceImpl implements ArduinoService {
 
     private static Log log = LogFactory.getLog(ArduinoServiceImpl.class);
-    private static Map<String, LinkedList<String>> internalControlsQueue = new HashMap<>();
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
 

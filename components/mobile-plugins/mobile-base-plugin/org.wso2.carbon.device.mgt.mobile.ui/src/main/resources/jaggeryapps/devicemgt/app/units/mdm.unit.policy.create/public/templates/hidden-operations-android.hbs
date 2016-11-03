@@ -217,7 +217,7 @@
                         <label class="wr-input-label" for="passcodePolicyMaxFailedAttempts">
                             Maximum number of failed attempts
                             <span class="helper"
-                                  title="Maximum number of passcode entry attempts allowed before all data on a device will be erased">
+                                  title="The maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erased">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
@@ -657,7 +657,8 @@
                     <div>
                         <ul class="message message-info">
                             <i class="icon fw fw-info"></i>
-                            <a id="policy-listing-status-msg">Below restrictions will be applied on devices with Android version 6.0 Marshmallow onwards only.</a>
+                            <a id="policy-listing-status-msg">Below restrictions will be applied on devices with Android
+                                version 6.0 Marshmallow onwards only.</a>
                         </ul>
                     </div>
                     <div class="wr-input-control">
@@ -691,9 +692,9 @@
                         </label>
                     </h2>
                     <div class="panel-title-description">
-                        This configuration can be used to encrypt data on an Android device, when the device is locked and
-                        make it readable when the passcode is entered. Once this configuration profile is installed on a device,
-                        corresponding users will not be able to modify these settings on their devices.
+                        This configuration can be used to encrypt data on an Android device, when the device is locked
+                        and make it readable when the passcode is entered. Once this configuration profile is installed
+                        on a device, corresponding users will not be able to modify these settings on their devices.
                     </div>
                 </div>
                 <div id="encrypt-storage-body" class="panel-collapse panel-body collapse" role="tabpanel"
@@ -766,7 +767,8 @@
                         <label class="wr-input-label" for="wifi-type">
                             Security*
                             <span class="helper"
-                                  title="Security type of the wireless network to be configured. 802.1x EAP works with Android 4.3 and above devices only.">
+                                  title="Security type of the wireless network to be configured. 802.1x EAP works with
+                                  Android 4.3 and above devices only.">
                                         <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                     </span>
                         </label>
@@ -787,7 +789,8 @@
                                     </span>
                         </label>
                         <select class="form-control operationDataKeys" id="wifi-eap"
-                                onchange="changeAndroidWifiPolicyEAP(this, document.getElementById('wifi-type'))" data-key="wifiEAP">
+                                onchange="changeAndroidWifiPolicyEAP(this, document.getElementById('wifi-type'))"
+                                data-key="wifiEAP">
                             <option value="peap">PEAP</option>
                             <option value="tls">TLS</option>
                             <option value="ttls">TTLS</option>
@@ -862,7 +865,8 @@
                                 </span>
                         </label>
                         <input id="wifi-cacert-upload" type="file" class="form-control"
-                               onchange="base64EncodeFile(this, document.getElementById('wifi-cacert'), document.getElementById('wifi-cacert-name'))"/>
+                               onchange="base64EncodeFile(this, document.getElementById('wifi-cacert'),
+                               document.getElementById('wifi-cacert-name'))"/>
                         <input id="wifi-cacert" type="hidden" class="form-control operationDataKeys"
                                data-key="wifiCaCert" />
                         <input id="wifi-cacert-name" type="hidden" class="form-control operationDataKeys"
@@ -870,8 +874,8 @@
                     </div>
                     <div class="wr-input-control" id="control-wifi-password" style="display:none;">
                         <label class="wr-input-label" for="wifi-password">
-                            Password*
-                            <span class="helper" title="Password for the wireless network.">
+                            Password
+                            <span class="helper required" title="Password for the wireless network.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
@@ -902,7 +906,8 @@
                         This configuration can be used to create a black list or white list of applications.
                     </div>
                 </div>
-                <div id="app-restriction-body" class="panel-collapse panel-body collapse" role="tabpanel" aria-labelledby="app-restriction-body">
+                <div id="app-restriction-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="app-restriction-body">
                     <hr/>
                     <div id="app-restriction-feature-error-msg" class="alert alert-danger hidden" role="alert">
                         <i class="icon fw fw-error"></i><span></span>
@@ -931,7 +936,8 @@
                             </span>
                         </label>
                         <br/>
-                        <a href="#restricted-applications-grid" class="btn btn-secondary grid-input-add " data-click-event="add-form">
+                        <a href="#restricted-applications-grid" class="btn btn-secondary grid-input-add "
+                           data-click-event="add-form">
                                 <span class="icon fw-stack">
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>
@@ -1094,8 +1100,10 @@
                     </div>
                     <!--<div class="wr-input-control">
                         <label class="wr-input-control checkbox">
-                            <input id="work-profile-policy-allow-cross-profile" type="checkbox" class="form-control operationDataKeys" data-key="workProfilePolicyAllowCopyPaste" checked="checked" />
-                                <span class="helper" title="Permit the use of repeating, ascending and descending character sequences">
+                            <input id="work-profile-policy-allow-cross-profile" type="checkbox" class="form-control
+                            operationDataKeys" data-key="workProfilePolicyAllowCopyPaste" checked="checked" />
+                                <span class="helper" title="Permit the use of repeating, ascending and descending
+                                character sequences">
                                     Allow cross profile copy-paste
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
@@ -1206,24 +1214,34 @@
                         <label class="wr-input-control radio light">
                             <input id="automatic-system-update-radio-btn" type="radio" name="cosu-system-update-type"
                                    class="form-control operationDataKeys" data-key="cosuSystemUpdatePolicyType"
-                                   value="automatic" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])" checked/>
-                            <span class="helper" title="Installs system update automatically as soon as one is available">
+                                   value="automatic"
+                                   onclick="slideDownPaneAgainstValueSetForRadioButtons(this,
+                                   'cosu-system-update-policy-window-select', ['window'])" checked/>
+                            <span class="helper"
+                                  title="Installs system update automatically as soon as one is available">
                                 Automatic
                             </span>
                         </label>
                         <label class="wr-input-control radio light">
                             <input id="postpone-system-update-radio-btn" type="radio" name="cosu-system-update-type"
                                    class="form-control operationDataKeys" data-key="cosuSystemUpdatePolicyType"
-                                   value="postpone" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])"/>
-                            <span class="helper" title="Incoming system update will be blocked for a maximum of 30 days">
+                                   value="postpone"
+                                   onclick="slideDownPaneAgainstValueSetForRadioButtons(this,
+                                   'cosu-system-update-policy-window-select', ['window'])"/>
+                            <span class="helper"
+                                  title="Incoming system update will be blocked for a maximum of 30 days">
                                 Postpone
                             </span>
                         </label>
                         <label class="wr-input-control radio light">
                             <input id="window-system-update-radio-btn" type="radio" name="cosu-system-update-type"
                                    class="form-control operationDataKeys" data-key="cosuSystemUpdatePolicyType"
-                                   value="window" onclick="slideDownPaneAgainstValueSetForRadioButtons(this, 'cosu-system-update-policy-window-select', ['window'])"/>
-                            <span class="helper" title="Install system update automatically within a daily maintenance window, for a maximum of 30 days">
+                                   value="window"
+                                   onclick="slideDownPaneAgainstValueSetForRadioButtons(this,
+                                    'cosu-system-update-policy-window-select', ['window'])"/>
+                            <span class="helper"
+                                  title="Install system update automatically within a daily maintenance window, for a
+                                  maximum of 30 days">
                                 Window
                             </span>
                         </label>
@@ -1344,11 +1362,13 @@
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="cosu-whitelisted-applications">
                             Whitelisted Applications to enter Lock Task Mode
-                            <span class="helper" title="Configuration information specific to a given third-party VPN solution. This has to be input as key/value pairs.">
+                            <span class="helper" title="Configuration information specific to a given third-party VPN
+                            solution. This has to be input as key/value pairs.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            <a href="#cosu-whitelisted-applications-grid" class="btn btn-secondary grid-input-add" data-click-event="add-form">
+                            <a href="#cosu-whitelisted-applications-grid" class="btn btn-secondary grid-input-add"
+                               data-click-event="add-form">
                                 <span class="icon fw-stack">
                                     <i class="fw fw-add fw-stack-1x"></i>
                                     <i class="fw fw-ring fw-stack-2x"></i>

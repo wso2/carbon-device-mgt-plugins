@@ -20,10 +20,10 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
-import org.wso2.carbon.device.mgt.iot.devicetype.config.PushNotificationConfig;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.VirtualFirealarmManagementDataHolder;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.config.DeviceManagementConfiguration;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.config.EventListenerConfiguration;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.config.VirtualFirealarmConfig;
+
 import java.util.List;
 
 public class XmppConfig {
@@ -39,17 +39,16 @@ public class XmppConfig {
     private static final Log log = LogFactory.getLog(XmppConfig.class);
 
     private XmppConfig() {
-        DeviceManagementConfiguration deviceManagementConfiguration = VirtualFirealarmManagementDataHolder.getInstance()
-                .getDeviceTypeConfigService().getConfiguration(VirtualFireAlarmConstants.DEVICE_TYPE,
-                                                               VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
-        List<PushNotificationConfig.Property> properties = deviceManagementConfiguration.getPushNotificationConfig()
+        DeviceManagementConfiguration deviceManagementConfiguration = VirtualFirealarmConfig.getInstance()
+                .getDeviceTypeConfiguration();
+        List<EventListenerConfiguration.Property> properties = deviceManagementConfiguration.getEventListenerConfiguration()
                 .getProperties();
-        String provider = deviceManagementConfiguration.getPushNotificationConfig().getPushNotificationProvider();
+        String provider = deviceManagementConfiguration.getEventListenerConfiguration().getEventListenerProvider();
         if ("XMPP".equals(provider)) {
             enabled = true;
         }
         if (enabled) {
-            for (PushNotificationConfig.Property property : properties) {
+            for (EventListenerConfiguration.Property property : properties) {
                 switch (property.getName()) {
                     case "host":
                         host = property.getValue();

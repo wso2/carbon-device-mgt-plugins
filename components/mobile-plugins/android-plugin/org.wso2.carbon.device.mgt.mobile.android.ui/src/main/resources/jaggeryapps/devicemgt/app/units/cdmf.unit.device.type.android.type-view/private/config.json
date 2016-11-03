@@ -1,6 +1,8 @@
 {
-  "deviceType": {
-    "label": "Android",
-    "category" : "mobile"
-  }
+    "deviceType": {
+        "label": "Android",
+        "category": "mobile",
+        "analyticsEnabled": "false",
+        "groupingEnabled": "false"
+    }
 }

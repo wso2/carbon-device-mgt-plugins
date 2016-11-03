@@ -3,13 +3,14 @@ package org.wso2.carbon.device.mgt.iot.androidsense.service.impl.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.api.AnalyticsDataAPI;
+import org.wso2.carbon.analytics.api.AnalyticsDataAPIUtil;
 import org.wso2.carbon.analytics.dataservice.commons.AnalyticsDataResponse;
 import org.wso2.carbon.analytics.dataservice.commons.SearchResultEntry;
 import org.wso2.carbon.analytics.dataservice.commons.SortByField;
-import org.wso2.carbon.analytics.dataservice.core.AnalyticsDataServiceUtils;
 import org.wso2.carbon.analytics.datasource.commons.Record;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
+import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationService;
@@ -18,13 +19,13 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManageme
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfigurationManagementService;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
-import org.wso2.carbon.device.mgt.iot.util.Utils;
+import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.constants.AndroidSenseConstants;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.NetworkUtils;
 
+import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +88,7 @@ public class APIUtil {
 																		sortByFields);
 		List<String> recordIds = getRecordIds(resultEntries);
 		AnalyticsDataResponse response = analyticsDataAPI.get(tenantId, tableName, 1, null, recordIds);
-		Map<String, SensorRecord> sensorDatas = createSensorData(AnalyticsDataServiceUtils.listRecords(
+		Map<String, SensorRecord> sensorDatas = createSensorData(AnalyticsDataAPIUtil.listRecords(
 				analyticsDataAPI, response));
 		List<SensorRecord> sortedSensorData = getSortedSensorData(sensorDatas, resultEntries);
 		return sortedSensorData;
@@ -204,10 +205,10 @@ public class APIUtil {
 	}
 
 	public static String getMqttEndpoint() throws ConfigurationManagementException {
-		String iotServerIP = Constants.DEFAULT_ENDPOINT;
-		iotServerIP = iotServerIP.replace(Constants.LOCALHOST, Utils.getServerUrl());;
+		String iotServerIP = AndroidSenseConstants.DEFAULT_ENDPOINT;
+		iotServerIP = iotServerIP.replace(AndroidSenseConstants.LOCALHOST, getServerUrl());;
 		PlatformConfiguration configuration = APIUtil.getTenantConfigurationManagementService().getConfiguration(
-				Constants.CONFIG_TYPE);
+				AndroidSenseConstants.CONFIG_TYPE);
 		if (configuration != null && configuration.getConfiguration() != null && configuration
 				.getConfiguration().size() > 0) {
 			List<ConfigurationEntry> configurations = configuration.getConfiguration();
@@ -220,5 +221,18 @@ public class APIUtil {
 			}
 		}
 		return iotServerIP;
+	}
+
+	public static String getServerUrl() {
+		String hostName = ServerConfiguration.getInstance().getFirstProperty(AndroidSenseConstants.HOST_NAME);
+		try {
+			if (hostName == null) {
+				hostName = NetworkUtils.getLocalHostname();
+			}
+		} catch (SocketException e) {
+			hostName = "localhost";
+			log.warn("Failed retrieving the hostname, therefore set to localhost", e);
+		}
+		return hostName;
 	}
 }

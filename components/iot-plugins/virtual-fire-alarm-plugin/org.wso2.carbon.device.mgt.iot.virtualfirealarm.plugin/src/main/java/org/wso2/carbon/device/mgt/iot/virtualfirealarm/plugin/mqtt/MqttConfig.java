@@ -20,10 +20,9 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.mqtt;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
-import org.wso2.carbon.device.mgt.iot.devicetype.config.PushNotificationConfig;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.internal.VirtualFirealarmManagementDataHolder;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.config.DeviceManagementConfiguration;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.config.EventListenerConfiguration;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.config.VirtualFirealarmConfig;
 
 import java.util.List;
 
@@ -41,17 +40,16 @@ public class MqttConfig {
     private String clearSession;
 
     private MqttConfig() {
-        DeviceManagementConfiguration deviceManagementConfiguration = VirtualFirealarmManagementDataHolder.getInstance()
-                .getDeviceTypeConfigService().getConfiguration(VirtualFireAlarmConstants.DEVICE_TYPE,
-                                                               VirtualFireAlarmConstants.DEVICE_TYPE_PROVIDER_DOMAIN);
-        List<PushNotificationConfig.Property> properties = deviceManagementConfiguration
-                .getPushNotificationConfig().getProperties();
-        String provider = deviceManagementConfiguration.getPushNotificationConfig().getPushNotificationProvider();
+        DeviceManagementConfiguration deviceManagementConfiguration = VirtualFirealarmConfig.getInstance()
+                .getDeviceTypeConfiguration();
+        List<EventListenerConfiguration.Property> properties = deviceManagementConfiguration
+                .getEventListenerConfiguration().getProperties();
+        String provider = deviceManagementConfiguration.getEventListenerConfiguration().getEventListenerProvider();
         if (provider.equals("MQTT")) {
             enabled = true;
         }
         if (enabled) {
-            for (PushNotificationConfig.Property property : properties) {
+            for (EventListenerConfiguration.Property property : properties) {
                 switch (property.getName()) {
                     case "url":
                         url = property.getValue();
@@ -71,8 +69,6 @@ public class MqttConfig {
                     case "clearSession":
                         clearSession = property.getValue();
                         break;
-
-
                 }
             }
         }

@@ -33,5 +33,6 @@ function onRequest(context) {
     } else {
         viewModel.companyName = companyProps.companyName;
     }
+    viewModel.enableEval = mdmProps.enableEval;
     return viewModel;
 }

@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>iot-plugins</artifactId>
-        <version>2.2.5-SNAPSHOT</version>
+        <version>2.2.6-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -35,7 +35,6 @@
     <modules>
         <module>org.wso2.carbon.device.mgt.iot.androidsense.analytics</module>
         <module>org.wso2.carbon.device.mgt.iot.androidsense.api</module>
-        <module>org.wso2.carbon.device.mgt.iot.androidsense.plugin</module>
         <module>org.wso2.carbon.device.mgt.iot.androidsense.ui</module>
     </modules>
 
