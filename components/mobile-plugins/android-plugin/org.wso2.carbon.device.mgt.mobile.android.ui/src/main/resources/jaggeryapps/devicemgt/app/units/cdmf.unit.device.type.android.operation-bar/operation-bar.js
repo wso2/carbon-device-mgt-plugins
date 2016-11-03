@@ -17,7 +17,7 @@
  */
 
 function onRequest(context) {
-    var log = new Log("mdm.unit.device.operation-bar");
+    var log = new Log("cdmf.unit.device.type.android.operation-bar");
     var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
     var viewModel = {};
     var permissions = {};
