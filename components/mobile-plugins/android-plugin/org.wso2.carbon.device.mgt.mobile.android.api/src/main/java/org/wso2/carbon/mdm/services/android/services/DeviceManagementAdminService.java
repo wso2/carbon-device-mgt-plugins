@@ -34,7 +34,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @API(name = "Android Device Management Administrative Service", version = "1.0.0",
-        context = "api/device-mgt/android/v1.0/admin/devices",
+        context = "/api/device-mgt/android/v1.0/admin/devices",
         tags = {"devicemgt_android"})
 
 @Path("/admin/devices")

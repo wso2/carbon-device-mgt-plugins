@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response;
  * All end points supports JSON, XMl with content negotiation.
  */
 @API(name = "Windows Configuration Management", version = "1.0.0",
-     context = "api/device-mgt/windows/v1.0/services/configuration",
+     context = "/api/device-mgt/windows/v1.0/services/configuration",
      tags = {"windows"})
 @Api(value = "Windows Configuration Management",
      description = "This carries all the resources related to Windows configurations management functionalities")
