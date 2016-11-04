@@ -41,7 +41,7 @@ import java.util.List;
 @Api(value = "Windows Device Management",
      description = "This carries all the resources related to Windows device management functionalities")
 @API(name = "Windows Device Management", version = "1.0.0",
-     context = "api/device-mgt/windows/v1.0/devices",
+     context = "/api/device-mgt/windows/v1.0/devices",
      tags = {"devicemgt_windows"})
 @WebService
 @Path("/devices")

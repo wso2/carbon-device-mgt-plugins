@@ -34,7 +34,6 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>mobile-base-plugin-feature</module>
         <module>android-plugin-feature</module>
         <module>windows-plugin-feature</module>
     </modules>

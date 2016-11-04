@@ -31,7 +31,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @API(name = "Android Configuration Management", version = "1.0.0",
-        context = "api/device-mgt/android/v1.0/configuration",
+        context = "/api/device-mgt/android/v1.0/configuration",
         tags = {"devicemgt_android"})
 
 @Api(value = "Android Configuration Management", description = "This API carries all the resource used to mange the Android platform configurations.")

@@ -35,7 +35,6 @@
     <modules>
         <module>android-plugin</module>
         <module>windows-plugin</module>
-        <module>mobile-base-plugin</module>
     </modules>
 
     <build>

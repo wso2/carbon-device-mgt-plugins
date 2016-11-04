@@ -44,5 +44,13 @@ public class WindowsPluginConstants {
     public static final String WINDOWS_FEATURE_NAME = "NAME";
     public static final String WINDOWS_FEATURE_DESCRIPTION = "DESCRIPTION";
 
+    public static final String MOBILE_DB_SCRIPTS_FOLDER = "cdm";
+    public static final String MOBILE_CONFIG_REGISTRY_ROOT = "/_system/config";
+
+    public static final String MEDIA_TYPE_XML = "application/xml";
+    public static final String CHARSET_UTF8 = "UTF8";
+    public static final String LANGUAGE_CODE_ENGLISH_US = "en_US";
+    public static final String LANGUAGE_CODE_ENGLISH_UK = "en_UK";
+
 
 }

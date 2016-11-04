@@ -18,8 +18,6 @@
  */
 package org.wso2.carbon.device.mgt.mobile.android.impl.dao;
 
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-
 public class AndroidFeatureManagementDAOException extends MobileDeviceManagementDAOException {
 
     private String message;

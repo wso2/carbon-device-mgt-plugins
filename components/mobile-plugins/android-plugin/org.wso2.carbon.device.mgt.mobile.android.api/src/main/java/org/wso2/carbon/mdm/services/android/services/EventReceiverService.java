@@ -32,7 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @API(name = "Android Event Receiver", version = "1.0.0",
-        context = "api/device-mgt/android/v1.0/events",
+        context = "/api/device-mgt/android/v1.0/events",
         tags = {"devicemgt_android"})
 
 @Api(value = "Event Receiver", description = "Event publishing/retrieving related APIs. To enable event publishing/retrieving you need to" +

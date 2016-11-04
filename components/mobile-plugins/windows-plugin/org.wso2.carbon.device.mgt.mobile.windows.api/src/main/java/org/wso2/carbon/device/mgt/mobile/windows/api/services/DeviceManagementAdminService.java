@@ -39,7 +39,7 @@ import java.util.List;
 @Api(value = "Windows Device Management Administrative Service",
      description = "Device management related admin APIs.")
 @API(name = "Windows Device Management Administrative Service", version = "1.0.0",
-     context = "api/device-mgt/windows/v1.0/admin/devices",
+     context = "/api/device-mgt/windows/v1.0/admin/devices",
      tags = {"devicemgt_windows"})
 @WebService
 @Path("/admin/devices")

@@ -19,11 +19,11 @@ package org.wso2.carbon.device.mgt.mobile.windows.impl.dao.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceDAO;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.dao.util.MobileDeviceManagementDAOUtil;
-import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.MobileDeviceDAO;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.WindowsDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.util.MobileDeviceManagementDAOUtil;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dto.MobileDevice;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.util.WindowsPluginConstants;
 
 import java.sql.Connection;
