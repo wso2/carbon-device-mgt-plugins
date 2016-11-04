@@ -39,7 +39,7 @@ import java.util.List;
         tags = {"devicemgt_android"})
 
 @Api(value = "Android Device Management",
-        description = "This carries all the resources related to Android device management functionalities")
+        description = "This carries all the resources related to the Android device management functionalities.")
 @Path("/devices")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -51,13 +51,14 @@ public interface DeviceManagementService {
             produces = MediaType.APPLICATION_JSON,
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "PUT",
-            value = "Update the application list of a device",
+            value = "Updating the Application Details on Android Devices",
+            notes = "Update the details of the applications that are installed on Android devices.",
             tags = "Android Device Management"
     )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
-                    message = "OK. \n Application list has been updated successfully",
+                    message = "OK. \n Successfully updated the application details.",
                     responseHeaders = {
                             @ResponseHeader(
                                     name = "Content-Location",
@@ -71,17 +72,17 @@ public interface DeviceManagementService {
                                             "Used by caches, or in conditional requests."),
                             @ResponseHeader(
                                     name = "Last-Modified",
-                                    description = "Date and time the resource has been modified the last time.\n" +
+                                    description = "Date and time the resource was last modified.\n" +
                                             "Used by caches, or in conditional requests.")}),
             @ApiResponse(
                     code = 400,
                     message = "Bad Request. \n Invalid request or validation error."),
             @ApiResponse(
                     code = 404,
-                    message = "Not Found. \n Resource to be deleted does not exist."),
+                    message = "Not Found. \n The specified resource does not exist."),
             @ApiResponse(
                     code = 415,
-                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+                    message = "Unsupported media type. \n The format of the requested entity was not supported."),
             @ApiResponse(
                     code = 500,
                     message = "Internal Server Error. \n " +
@@ -91,14 +92,14 @@ public interface DeviceManagementService {
     Response updateApplicationList(
             @ApiParam(
                     name = "id",
-                    value = "Device Identifier")
+                    value = "The unique device identifier.")
             @NotNull
             @Size(min = 2 , max = 45)
             @Pattern(regexp = "^[A-Za-z0-9]*$")
             @PathParam("id") String id,
             @ApiParam(
                     name = "applications",
-                    value = "List of applications that need to be persisted against the device")
+                    value = "The properties to update application details. Multiple applications can be updated using comma separated values.")
             List<AndroidApplication> androidApplications);
 
     @PUT
@@ -106,16 +107,18 @@ public interface DeviceManagementService {
     @ApiOperation(
             produces = MediaType.APPLICATION_JSON,
             httpMethod = "PUT",
-            value = "Get the operation list pending for the device",
+            value = "Getting the Pending Operation List",
             responseContainer = "List",
             notes = "The Android agent communicates with the server to get the operations that are queued up " +
-                    "at the server end for a given device using via this particular resource",
+                    "at the server end via this REST API." +
+                    " While getting the pending operations the details of the operations executed at the device end is shared with the server. " +
+                    "The server then updates the status of the operations that were carried out on the device.",
             response = Operation.class,
             tags = "Android Device Management")
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
-                    message = "OK. \n Successfully fetched the pending application list of the Android device.",
+                    message = "OK. \n Successfully fetched the pending operations of the Android device.",
                     response = Operation.class,
                     responseContainer = "List",
                     responseHeaders = {
@@ -128,33 +131,36 @@ public interface DeviceManagementService {
                                             "Used by caches, or in conditional requests."),
                             @ResponseHeader(
                                     name = "Last-Modified",
-                                    description = "Date and time the resource has been modified the last time.\n" +
+                                    description = "Date and time the resource was last modified.\n" +
                                             "Used by caches, or in conditional requests.")
                     }),
             @ApiResponse(
                     code = 304,
-                    message = "Not Modified. \n Empty body because the client has already the latest version of the requested resource."),
+                    message = "Not Modified. \n Empty body because the client already has the latest version of the requested resource."),
             @ApiResponse(
                     code = 406,
                     message = "Not Acceptable.\n The requested media type is not supported"),
             @ApiResponse(
                     code = 500,
-                    message = "Internal Server Error. \n Server error occurred while fetching policies.")
+                    message = "Internal Server Error. \n Server error occurred while fetching the list of pending operations.")
     })
     @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response getPendingOperations(
             @ApiParam(
                     name = "id",
-                    value = "Device Identifier")
+                    value = "The unique device identifier.",
+                    required = true)
             @PathParam("id") String id,
             @ApiParam(
                     name = "If-Modified-Since",
-                    value = "Validates if the requested variant has not been modified since the time specified",
+                    value = "Checks if the requested variant was modified, since the specified date-time.\n" +
+                            "Provide the value in the following format: EEE, d MMM yyyy HH:mm:ss Z.\n" +
+                            "Example: Mon, 05 Jan 2014 15:10:00 +0200.",
                     required = false)
             @HeaderParam("If-Modified-Since") String ifModifiedSince,
             @ApiParam(
                     name = "resultOperations",
-                    value = "Device Operation Status")
+                    value = "Properties to update the device operations and their status.")
             List<? extends Operation> resultOperations);
 
     @POST
@@ -162,17 +168,17 @@ public interface DeviceManagementService {
             produces = MediaType.APPLICATION_JSON,
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
-            value = "Register an Android Device",
-            notes = "When carrying out device registration via an Android device, you need to initially install" +
-                    " an Android Agent on the device, before being able to register the device with WSO2 EMM. Instead," +
+            value = "Registering an Android Device",
+            notes = "When registering an Android device, you need to install" +
+                    " the Android Agent on the device, before being able to register the device with WSO2 EMM. Instead," +
                     " you can use this REST API to register an Android device with WSO2 EMM, without having to install" +
-                    " an Android Agent on the respective device",
+                    " an Android Agent. This API can be mainly used to test the device enrollment process.",
             tags = "Android Device Management"
     )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 201,
-                    message = "Created. \n Device enrollment has successfully been created",
+                    message = "Created. \n Successfully created an instance of the device.",
                     responseHeaders = {
                             @ResponseHeader(
                                     name = "Content-Location",
@@ -186,11 +192,11 @@ public interface DeviceManagementService {
                                             "Used by caches, or in conditional requests."),
                             @ResponseHeader(
                                     name = "Last-Modified",
-                                    description = "Date and time the resource has been modified the last time.\n" +
+                                    description = "Date and time the resource was last modified.\n" +
                                             "Used by caches, or in conditional requests.")}),
             @ApiResponse(
                     code = 303,
-                    message = "See Other. \n Source can be retrieved from the URL specified at the Location header.",
+                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.",
                     responseHeaders = {
                             @ResponseHeader(
                                     name = "Content-Location",
@@ -200,14 +206,16 @@ public interface DeviceManagementService {
                     message = "Bad Request. \n Invalid request or validation error."),
             @ApiResponse(
                     code = 415,
-                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+                    message = "Unsupported media type. \n The format of the requested entity was not supported.\n"),
             @ApiResponse(
                     code = 500,
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new device.")
     })
     @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
-    Response enrollDevice(@ApiParam(name = "device", value = "Device Information to be enroll")
+    Response enrollDevice(@ApiParam(
+            name = "device",
+            value = "The properties required to enroll a device.")
                           @Valid AndroidDevice device);
 
     @GET
@@ -215,7 +223,7 @@ public interface DeviceManagementService {
     @ApiOperation(
             httpMethod = "GET",
             value = "Getting the Registration Status of an Android Device",
-            notes = "Use this REST API to retrieve the registration status of an Android device",
+            notes = "Use this REST API to retrieve the registration status of an Android device.",
             tags = "Android Device Management"
     )
     @ApiResponses(value = {
@@ -232,12 +240,12 @@ public interface DeviceManagementService {
                                             "Used by caches, or in conditional requests."),
                             @ResponseHeader(
                                     name = "Last-Modified",
-                                    description = "Date and time the resource has been modified the last time.\n" +
+                                    description = "Date and time the resource was last modified.\n" +
                                             "Used by caches, or in conditional requests."),
                     }),
             @ApiResponse(
                     code = 304,
-                    message = "Not Modified. \n Empty body because the client has already the latest version of the requested resource."),
+                    message = "Not Modified. \n Empty body because the client already has the latest version of the requested resource."),
             @ApiResponse(
                     code = 406,
                     message = "Not Acceptable.\n The requested media type is not supported"),
@@ -249,11 +257,13 @@ public interface DeviceManagementService {
     Response isEnrolled(
             @ApiParam(
                     name = "id",
-                    value = "Device Identifier")
+                    value = "The unique device identifier")
             @PathParam("id") String id,
             @ApiParam(
                     name = "If-Modified-Since",
-                    value = "Validates if the requested variant has not been modified since the time specified",
+                    value = "Checks if the requested variant was modified, since the specified date-time.\n" +
+                            "Provide the value in the following format: EEE, d MMM yyyy HH:mm:ss Z.\n" +
+                            "Example: Mon, 05 Jan 2014 15:10:00 +0200",
                     required = false)
             @HeaderParam("If-Modified-Since") String ifModifiedSince);
 
@@ -262,14 +272,14 @@ public interface DeviceManagementService {
     @ApiOperation(
             httpMethod = "PUT",
             value = "Updating the Registration Details of an Android Device",
-            notes = "Use this REST API to update the registration details of an Android device",
+            notes = "Use this REST API to update the registration details of an Android device.",
             tags = "Android Device Management"
     )
     @ApiResponses(
             value = {
                     @ApiResponse(
                             code = 200,
-                            message = "OK. \n Device enrollment has been updated successfully",
+                            message = "OK. \n Successfully updated the device enrollment details.",
                             responseHeaders = {
                                     @ResponseHeader(
                                             name = "Content-Location",
@@ -283,17 +293,17 @@ public interface DeviceManagementService {
                                                     "Used by caches, or in conditional requests."),
                                     @ResponseHeader(
                                             name = "Last-Modified",
-                                            description = "Date and time the resource has been modified the last time.\n" +
+                                            description = "Date and time the resource was last modified.\n" +
                                                     "Used by caches, or in conditional requests.")}),
                     @ApiResponse(
                             code = 400,
                             message = "Bad Request. \n Invalid request or validation error."),
                     @ApiResponse(
                             code = 404,
-                            message = "Not Found. \n Resource to be deleted does not exist."),
+                            message = "Not Found. \n The specified resource does not exist."),
                     @ApiResponse(
                             code = 415,
-                            message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+                            message = "Unsupported media type. \n The format of the requested entity was not supported."),
                     @ApiResponse(
                             code = 500,
                             message = "Internal Server Error. \n " +
@@ -303,27 +313,27 @@ public interface DeviceManagementService {
     Response modifyEnrollment(
             @ApiParam(
                     name = "id",
-                    value = "Device Identifier")
+                    value = "The unique device identifier.")
             @PathParam("id") String id,
             @ApiParam(
                     name = "device",
-                    value = "Device information to be modify") @Valid AndroidDevice androidDevice);
+                    value = "The properties of required to update device enrollment details.") @Valid AndroidDevice androidDevice);
 
     @DELETE
     @Path("/{id}")
     @ApiOperation(
             httpMethod = "DELETE",
-            value = "Un-register an Android Device",
-            notes = "Use this REST API to un-register a specific Android device",
+            value = "Unregistering an Android Device",
+            notes = "Use this REST API to unregister an Android device.",
             tags = "Android Device Management"
     )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
-                    message = "OK. \n Device has successfully been dis-enrolled"),
+                    message = "OK. \n Successfully disenrolled the device."),
             @ApiResponse(
                     code = 404,
-                    message = "Not Found. \n Resource to be deleted does not exist."),
+                    message = "Not Found. \n The specified resource does not exist."),
             @ApiResponse(
                     code = 500,
                     message = "Internal Server Error. \n " +
@@ -333,7 +343,7 @@ public interface DeviceManagementService {
     Response disEnrollDevice(
             @ApiParam(
                     name = "id",
-                    value = "Device Identifier")
+                    value = "The unique device identifier.")
             @PathParam("id") String id);
 
 }

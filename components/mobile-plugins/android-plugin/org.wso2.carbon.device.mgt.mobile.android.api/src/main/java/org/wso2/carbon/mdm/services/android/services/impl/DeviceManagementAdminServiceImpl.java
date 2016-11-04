@@ -1072,7 +1072,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
 
     private static void validateScheduleDate(String dateString){
         try {
-            if (dateString != null) {
+            if (dateString != null && !dateString.isEmpty()) {
                 SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
                 sdf.setLenient(false);
                 sdf.parse(dateString);

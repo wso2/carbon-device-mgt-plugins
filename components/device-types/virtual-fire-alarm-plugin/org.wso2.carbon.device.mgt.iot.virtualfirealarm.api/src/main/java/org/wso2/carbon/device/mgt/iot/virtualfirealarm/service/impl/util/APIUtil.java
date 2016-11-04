@@ -3,11 +3,10 @@ package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.api.AnalyticsDataAPI;
+import org.wso2.carbon.analytics.api.AnalyticsDataAPIUtil;
 import org.wso2.carbon.analytics.dataservice.commons.AnalyticsDataResponse;
-import org.wso2.carbon.analytics.dataservice.commons.AnalyticsDrillDownRequest;
 import org.wso2.carbon.analytics.dataservice.commons.SearchResultEntry;
 import org.wso2.carbon.analytics.dataservice.commons.SortByField;
-import org.wso2.carbon.analytics.dataservice.core.AnalyticsDataServiceUtils;
 import org.wso2.carbon.analytics.datasource.commons.Record;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService;
@@ -21,7 +20,6 @@ import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +77,7 @@ public class APIUtil {
 																		sortByFields);
 		List<String> recordIds = getRecordIds(resultEntries);
 		AnalyticsDataResponse response = analyticsDataAPI.get(tenantId, tableName, 1, null, recordIds);
-		Map<String, SensorRecord> sensorDatas = createSensorData(AnalyticsDataServiceUtils.listRecords(
+		Map<String, SensorRecord> sensorDatas = createSensorData(AnalyticsDataAPIUtil.listRecords(
 				analyticsDataAPI, response));
 		List<SensorRecord> sortedSensorData = getSortedSensorData(sensorDatas, resultEntries);
 		return sortedSensorData;

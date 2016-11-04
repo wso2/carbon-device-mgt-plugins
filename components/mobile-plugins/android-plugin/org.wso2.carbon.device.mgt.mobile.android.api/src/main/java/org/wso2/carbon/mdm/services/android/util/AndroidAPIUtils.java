@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.api.AnalyticsDataAPI;
 import org.wso2.carbon.analytics.dataservice.commons.AnalyticsDataResponse;
 import org.wso2.carbon.analytics.dataservice.commons.SearchResultEntry;
-import org.wso2.carbon.analytics.dataservice.core.AnalyticsDataServiceUtils;
+import org.wso2.carbon.analytics.api.AnalyticsDataAPIUtil;
 import org.wso2.carbon.analytics.datasource.commons.Record;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.context.CarbonContext;
@@ -218,7 +218,7 @@ public class AndroidAPIUtils {
         List<SearchResultEntry> resultEntries = analyticsDataAPI.search(tenantId, tableName, query, 0, eventCount);
         List<String> recordIds = getRecordIds(resultEntries);
         AnalyticsDataResponse response = analyticsDataAPI.get(tenantId, tableName, 1, null, recordIds);
-        Map<String, DeviceState> deviceStateses = createDeviceStatusData(AnalyticsDataServiceUtils.listRecords(
+        Map<String, DeviceState> deviceStateses = createDeviceStatusData(AnalyticsDataAPIUtil.listRecords(
                 analyticsDataAPI, response));
         return getSortedDeviceStateData(deviceStateses, resultEntries);
     }

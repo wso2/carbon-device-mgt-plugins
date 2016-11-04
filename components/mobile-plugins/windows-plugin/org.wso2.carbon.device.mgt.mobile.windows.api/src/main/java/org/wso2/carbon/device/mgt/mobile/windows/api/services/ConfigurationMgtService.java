@@ -50,7 +50,7 @@ public interface ConfigurationMgtService {
             produces = MediaType.APPLICATION_JSON,
             httpMethod = "GET",
             value = "Getting Windows Platform Configurations",
-            notes = "Get the Windows platform configuration details using this REST API",
+            notes = "Get the Windows platform configuration details using this REST API.",
             response = PlatformConfiguration.class,
             tags = "Windows Configuration Management"
     )
@@ -74,16 +74,16 @@ public interface ConfigurationMgtService {
                     }),
             @ApiResponse(
                     code = 304,
-                    message = "Not Modified. \n Empty body because the client has already the latest version of the requested resource."),
+                    message = "Not Modified. \n Applications can be blacklisted via the application restriction policy too.."),
             @ApiResponse(
                     code = 404,
-                    message = "Not Found. \n Resource to be deleted does not exist."),
+                    message = "Not Found. \n Th resource to be deleted does not exist."),
             @ApiResponse(
                     code = 406,
-                    message = "Not Acceptable.\n The requested media type is not supported"),
+                    message = "Not Acceptable.\n The requested media type is not supported."),
             @ApiResponse(
                     code = 500,
-                    message = "Internal Server Error. \n Server error occurred while fetching Windows platform configuration.")
+                    message = "Internal Server Error. \n Server error occurred while fetching the Windows platform configuration.")
     })
     @Permission(name = "View Configurations", permission = "/device-mgt/platform-configurations/view")
     PlatformConfiguration getConfiguration() throws WindowsConfigurationException;
@@ -100,14 +100,14 @@ public interface ConfigurationMgtService {
             consumes = MediaType.APPLICATION_JSON,
             produces = MediaType.APPLICATION_JSON,
             httpMethod = "PUT",
-            value = "Updating Windows Platform Configuration.",
+            value = "Updating Windows Platform Configurations",
             notes = "Update the Windows platform configurations using this REST API.",
             tags = "Windows Configuration Management"
     )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
-                    message = "OK. \n Windows platform configuration has been updated successfully",
+                    message = "OK. \n Successfully updated the Windows platform configurations.",
                     responseHeaders = {
                             @ResponseHeader(
                                     name = "Content-Location",
@@ -121,25 +121,28 @@ public interface ConfigurationMgtService {
                                             "Used by caches, or in conditional requests."),
                             @ResponseHeader(
                                     name = "Last-Modified",
-                                    description = "Date and time the resource has been modified the last time.\n" +
+                                    description = "Date and time the resource was last modified.\n" +
                                             "Used by caches, or in conditional requests.")}),
             @ApiResponse(
                     code = 400,
                     message = "Bad Request. \n Invalid request or validation error."),
             @ApiResponse(
                     code = 404,
-                    message = "Not Found. \n Resource to be deleted does not exist."),
+                    message = "Not Found. \n The specified resource does not exist."),
             @ApiResponse(
                     code = 415,
-                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
+                    message = "Unsupported media type. \n The format of the requested entity was not supported."),
             @ApiResponse(
                     code = 500,
                     message = "Internal Server Error. \n " +
-                            "Server error occurred while modifying Windows platform configuration.")
+                            "Server error occurred while modifying the Windows platform configurations.")
     })
     @Permission(name = "Manage Configurations", permission = "/device-mgt/configurations/manage")
-    Message updateConfiguration( @ApiParam(name = "configuration",
-            value = "PlatformConfiguration")PlatformConfiguration configuration) throws WindowsConfigurationException;
+    Message updateConfiguration
+    ( @ApiParam(
+            name = "configuration",
+            value = "The properties to update the Windows platform configurations.")
+      PlatformConfiguration configuration) throws WindowsConfigurationException;
 
     @GET
     @Path("license")
@@ -147,9 +150,9 @@ public interface ConfigurationMgtService {
     @ApiOperation(
             produces = MediaType.TEXT_PLAIN,
             httpMethod = "GET",
-            value = "Getting the License Agreement for Windows Device Registration",
+            value = "Getting the License Agreement to Register a Windows Device",
             notes = "Use this REST API to retrieve the license agreement that is used for the Windows device " +
-                    "registration process",
+                    "registration process.",
             response = String.class,
             tags = "Windows Configuration Management")
     @ApiResponses(value = {
@@ -167,27 +170,29 @@ public interface ConfigurationMgtService {
                                             "Used by caches, or in conditional requests."),
                             @ResponseHeader(
                                     name = "Last-Modified",
-                                    description = "Date and time the resource has been modified the last time.\n" +
+                                    description = "Date and time the resource was last modified.\n" +
                                             "Used by caches, or in conditional requests."),
                     }),
             @ApiResponse(
                     code = 304,
-                    message = "Not Modified. \n Empty body because the client has already the latest version of the requested resource."),
+                    message = "Not Modified. \n Empty body because the client already has the latest version of the requested resource."),
             @ApiResponse(
                     code = 404,
-                    message = "Not Found. \n Resource to be deleted does not exist."),
+                    message = "Not Found. \n The specified resource does not exist."),
             @ApiResponse(
                     code = 406,
-                    message = "Not Acceptable.\n The requested media type is not supported"),
+                    message = "Not Acceptable.\n The requested media type is not supported."),
             @ApiResponse(
                     code = 500,
-                    message = "Internal Server Error. \n Server error occurred while fetching Windows license configuration.")
+                    message = "Internal Server Error. \n Server error occurred while fetching the Windows license configuration.")
     })
     @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/windows")
     Response getLicense(
             @ApiParam(
                     name = "If-Modified-Since",
-                    value = "Validates if the requested variant has not been modified since the time specified",
+                    value = "Checks if the requested variant was modified, since the specified date-time.\n" +
+                            "Provide the value in the following format: EEE, d MMM yyyy HH:mm:ss Z.\n" +
+                            "Example: Mon, 05 Jan 2014 15:10:00 +0200",
                     required = false)
             @HeaderParam("If-Modified-Since") String ifModifiedSince) throws WindowsConfigurationException;
 
