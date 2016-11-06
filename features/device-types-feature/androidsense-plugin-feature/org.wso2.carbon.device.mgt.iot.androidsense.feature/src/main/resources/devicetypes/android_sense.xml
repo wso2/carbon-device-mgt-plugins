@@ -17,37 +17,59 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<DeviceManagementConfiguration>
-    <DeviceType>android_sense</DeviceType>
+<DeviceTypeConfiguration name="android_sense">
+    <Features>
+        <Feature code="keywords">
+            <Name>Add Keywords</Name>
+            <Description>Send keywords to the device</Description>
+            <Operation context="device/{deviceId}/words" method="POST">
+                <QueryParameters>
+                    <Parameter>keywords</Parameter>
+                </QueryParameters>
+            </Operation>
+        </Feature>
+        <Feature code="threshold">
+            <Name>Add Threshold</Name>
+            <Description>Send Threshold to the device</Description>
+            <Operation context="device/{deviceId}/words/threshold" method="POST">
+                <QueryParameters>
+                    <Parameter>threshold</Parameter>
+                </QueryParameters>
+            </Operation>
+        </Feature>
+        <Feature code="remove_words">
+            <Name>Remove words</Name>
+            <Description>Remove Threshold from the device</Description>
+            <Operation context="device/{deviceId}/words" method="DELETE">
+                <QueryParameters>
+                    <Parameter>words</Parameter>
+                </QueryParameters>
+            </Operation>
+        </Feature>
+    </Features>
 
-    <ManagementRepository>
-        <DeviceDefinition>
-            <License>
-                <Language>en_US</Language>
-                <Version>1.0.0</Version>
-                <Text>This is license text</Text>
-            </License>
-            <!--if generate is set to true then the feature information will be picked up from the annotation in the api-->
-            <Features generate="true"/>
-        </DeviceDefinition>
+    <ProvisioningConfig>
+        <SharedWithAllTenants>false</SharedWithAllTenants>
+    </ProvisioningConfig>
 
-        <ProvisioningConfig>
-            <SharedWithAllTenants>false</SharedWithAllTenants>
-        </ProvisioningConfig>
-    </ManagementRepository>
-
-
-    <PushNotificationConfiguration>
-        <!--MQTT Config-->
-        <PushNotificationProvider>MQTT</PushNotificationProvider>
-        <Properties>
-            <Property Name="mqtt.adapter.name">android_sense.mqtt.adapter</Property>
+    <PushNotificationProvider type="MQTT">
+        <FileBasedProperties>true</FileBasedProperties>
+        <!--if file based properties is set to false then the configuration will be picked from platform configuration-->
+        <ConfigProperties>
+            <Property Name="mqtt.adapter.name">androidsense.mqtt.adapter</Property>
             <Property Name="url">tcp://localhost:1883</Property>
             <Property Name="username">admin</Property>
             <Property Name="dcrUrl">https://localhost:9443/dynamic-client-web/register</Property>
             <Property Name="qos">0</Property>
             <Property Name="scopes"/>
             <Property Name="clearSession">true</Property>
-        </Properties>
-    </PushNotificationConfiguration>
-</DeviceManagementConfiguration>
+        </ConfigProperties>
+    </PushNotificationProvider>
+
+    <License>
+        <Language>en_US</Language>
+        <Version>1.0.0</Version>
+        <Text>This is license text</Text>
+    </License>
+
+</DeviceTypeConfiguration>
