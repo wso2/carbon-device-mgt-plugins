@@ -17,30 +17,27 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<DeviceManagementConfiguration>
-    <DeviceType>virtual_firealarm</DeviceType>
+<DeviceTypeConfiguration name="virtual_firealarm">
+    <Features>
+        <Feature code="buzz">
+            <Name>Control buzzer</Name>
+            <Description>Control buzzer on Virtual Firealarm</Description>
+            <Operation context="device/{deviceId}/buzz" method="POST">
+                <FormParameters>
+                    <Parameter>state</Parameter>
+                </FormParameters>
+            </Operation>
+        </Feature>
+    </Features>
 
-    <ManagementRepository>
-        <DeviceDefinition>
-            <License>
-                <Language>en_US</Language>
-                <Version>1.0.0</Version>
-                <Text>This is license text</Text>
-            </License>
-            <!--if generate is set to true then the feature information will be picked up from the annotation in the api-->
-            <Features generate="true"/>
-        </DeviceDefinition>
+    <ProvisioningConfig>
+        <SharedWithAllTenants>false</SharedWithAllTenants>
+    </ProvisioningConfig>
 
-        <ProvisioningConfig>
-            <SharedWithAllTenants>false</SharedWithAllTenants>
-        </ProvisioningConfig>
-    </ManagementRepository>
-
-
-    <PushNotificationConfiguration>
-        <!--MQTT Config-->
-        <PushNotificationProvider>MQTT</PushNotificationProvider>
-        <Properties>
+    <PushNotificationProvider type="MQTT">
+        <FileBasedProperties>true</FileBasedProperties>
+        <!--if file based properties is set to false then the configuration will be picked from platform configuration-->
+        <ConfigProperties>
             <Property Name="mqtt.adapter.name">virtualfirealarm.mqtt.adapter</Property>
             <Property Name="url">tcp://localhost:1883</Property>
             <Property Name="username">admin</Property>
@@ -48,17 +45,27 @@
             <Property Name="qos">0</Property>
             <Property Name="scopes"/>
             <Property Name="clearSession">true</Property>
-        </Properties>
-        <!--XMPP Config-->
-        <!--PushNotificationProvider>XMPP</PushNotificationProvider>
-        <Properties>
-            <Property Name="xmpp.adapter.name">virtualfirealarm.xmpp.adapter</Property>
-            <Property Name="host">localhost</Property>
-            <Property Name="port">5222</Property>
-            <Property Name="username">admin</Property>
-            <Property Name="password">admin</Property>
-            <Property Name="jid">admin@localhost</Property>
-            <Property Name="server.name">localhost</Property>
-        </Properties-->
-    </PushNotificationConfiguration>
-</DeviceManagementConfiguration>
+        </ConfigProperties>
+    </PushNotificationProvider>
+
+    <!--<PushNotificationProvider type="XMPP">-->
+        <!--<FileBasedProperties>true</FileBasedProperties>-->
+        <!--&lt;!&ndash;if file based properties is set to false then the configuration will be picked from platform configuration&ndash;&gt;-->
+        <!--<ConfigProperties>-->
+            <!--<Property Name="xmpp.adapter.name">virtualfirealarm.xmpp.adapter</Property>-->
+            <!--<Property Name="host">localhost</Property>-->
+            <!--<Property Name="port">5222</Property>-->
+            <!--<Property Name="username">admin</Property>-->
+            <!--<Property Name="password">admin</Property>-->
+            <!--<Property Name="jid">admin@localhost</Property>-->
+            <!--<Property Name="server.name">localhost</Property>-->
+        <!--</ConfigProperties>-->
+    <!--</PushNotificationProvider>-->
+
+    <License>
+        <Language>en_US</Language>
+        <Version>1.0.0</Version>
+        <Text>This is license text</Text>
+    </License>
+
+</DeviceTypeConfiguration>

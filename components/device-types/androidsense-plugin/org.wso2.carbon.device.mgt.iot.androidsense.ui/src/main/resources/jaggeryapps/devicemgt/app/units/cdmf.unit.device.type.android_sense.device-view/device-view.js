@@ -30,7 +30,7 @@ function onRequest(context) {
         if (device && device.status != "error") {
             return {
                 "device": device.content,
-                "backendApiUri": devicemgtProps["httpsURL"] + "/android_sense/",
+                "backendApiUri": "/android_sense/",
                 "autoCompleteParams": autoCompleteParams
             };
         } else {
