@@ -23,7 +23,7 @@
         <EventListenerProvider>MQTT</EventListenerProvider>
         <Properties>
             <Property Name="mqtt.adapter.name">virtualfirealarm.mqtt.adapter</Property>
-            <Property Name="url">tcp://localhost:1883</Property>
+            <Property Name="url">tcp://localhost:1886</Property>
             <Property Name="username">admin</Property>
             <Property Name="dcrUrl">https://localhost:9443/dynamic-client-web/register</Property>
             <Property Name="qos">0</Property>

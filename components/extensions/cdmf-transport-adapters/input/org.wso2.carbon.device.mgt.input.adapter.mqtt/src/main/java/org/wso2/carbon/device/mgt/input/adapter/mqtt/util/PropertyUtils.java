@@ -27,7 +27,7 @@ public class PropertyUtils {
     private static final String CARBON_CONFIG_PORT_OFFSET = "Ports.Offset";
     private static final String DEFAULT_CARBON_LOCAL_IP_PROPERTY = "carbon.local.ip";
     private static final int CARBON_DEFAULT_PORT_OFFSET = 0;
-    private static final int DEFAULT_MQTT_PORT = 1883;
+    private static final int DEFAULT_MQTT_PORT = 1886;
 
     //This method is only used if the mb features are within DAS.
     public static String replaceMqttProperty (String urlWithPlaceholders) {
