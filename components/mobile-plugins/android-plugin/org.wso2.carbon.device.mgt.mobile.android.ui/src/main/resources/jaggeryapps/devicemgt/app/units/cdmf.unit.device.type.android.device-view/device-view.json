@@ -1,4 +1,3 @@
 {
-  "version": "1.0.0",
-  "extends": "cdmf.unit.device.view"
+  "version": "1.0.0"
 }
