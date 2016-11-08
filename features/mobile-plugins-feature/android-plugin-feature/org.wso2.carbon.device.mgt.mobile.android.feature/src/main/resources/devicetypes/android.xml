@@ -19,6 +19,8 @@
   -->
 <DeviceTypeConfiguration name="android">
 
+    <DeviceDetails table-id="AD_DEVICE"/>
+
     <License>
         <Language>en_US</Language>
         <Version>1.0.0</Version>
@@ -57,16 +59,10 @@
     </DataSource>
 
     <Features>
-        <Feature code="abc">
-            <Name>abc</Name>
-            <Description>this is a feature</Description>
-            <Operation context="/bulb/{state}" method="PUT">
-                <QueryParameters>
-                    <Parameter>deviceId</Parameter>
-                </QueryParameters>
-                <FormParameters>
-                    <Parameter>test</Parameter>
-                </FormParameters>
+        <Feature code="DEVICE_RING">
+            <Name>Ring</Name>
+            <Description>Ring the device</Description>
+            <Operation context="/ring" method="POST">
             </Operation>
         </Feature>
     </Features>
