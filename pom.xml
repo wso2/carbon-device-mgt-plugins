@@ -1139,6 +1139,22 @@
                 <artifactId>org.wso2.carbon.apimgt.keymgt.client</artifactId>
                 <version>${carbon.api.mgt.version}</version>
             </dependency>
+            <!--MB feature -->
+            <dependency>
+                <groupId>org.wso2.andes.wso2</groupId>
+                <artifactId>andes</artifactId>
+                <version>${carbon.messaging.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization</artifactId>
+                <version>${carbon.devicemgt.plugins.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons.lang.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1245,6 +1261,7 @@
         <apache-felix.version>1.0.8</apache-felix.version>
         <googlecode.plist.version>1.8</googlecode.plist.version>
         <jsonpath.version>0.9.1</jsonpath.version>
+        <commons.lang.version>2.2</commons.lang.version>
 
 
         <orbit.version.commons-httpclient>3.1.0.wso2v2</orbit.version.commons-httpclient>
@@ -1297,6 +1314,9 @@
 
         <hibernate-validator.version>5.0.2.Final</hibernate-validator.version>
         <javax.xml.parsers.import.pkg.version>[0.0.0,1.0.0)</javax.xml.parsers.import.pkg.version>
+
+        <!-- MB Features -->
+        <carbon.messaging.version>3.1.11</carbon.messaging.version>
     </properties>
 
     <scm>

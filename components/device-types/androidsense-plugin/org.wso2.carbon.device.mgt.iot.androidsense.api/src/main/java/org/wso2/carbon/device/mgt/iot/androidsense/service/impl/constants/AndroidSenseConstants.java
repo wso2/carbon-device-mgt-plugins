@@ -40,6 +40,6 @@ public class AndroidSenseConstants {
     public static final String HOST_NAME = "HostName";
     public static final String LOCALHOST = "localhost";
     public static final String CONFIG_TYPE = "general";
-    public static final String DEFAULT_ENDPOINT = "tcp://localhost:1883";
+    public static final String DEFAULT_ENDPOINT = "tcp://localhost:1886";
 
 }

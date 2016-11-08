@@ -48,7 +48,7 @@ import java.util.Properties;
 public class AndroidSenseServiceImpl implements AndroidSenseService {
 
     private static Log log = LogFactory.getLog(AndroidSenseServiceImpl.class);
-    private static String DEFAULT_MQTT_ENDPOINT = "tcp://localhost:1883";
+    private static String DEFAULT_MQTT_ENDPOINT = "tcp://localhost:1886";
 
     @Path("device/{deviceId}/words")
     @POST
