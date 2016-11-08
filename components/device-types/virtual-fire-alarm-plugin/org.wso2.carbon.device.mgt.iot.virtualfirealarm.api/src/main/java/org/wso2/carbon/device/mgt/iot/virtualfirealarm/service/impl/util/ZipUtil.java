@@ -67,7 +67,7 @@ public class ZipUtil {
     private static final String HTTPS_PROTOCOL_APPENDER = "https://";
     private static final String HTTP_PROTOCOL_APPENDER = "http://";
     private static final String CONFIG_TYPE = "general";
-    private static final String DEFAULT_MQTT_ENDPOINT = "tcp://localhost:1883";
+    private static final String DEFAULT_MQTT_ENDPOINT = "tcp://localhost:1886";
     public static final String HOST_NAME = "HostName";
 
     public ZipArchive createZipFile(String owner, String deviceType, String deviceId, String deviceName,
