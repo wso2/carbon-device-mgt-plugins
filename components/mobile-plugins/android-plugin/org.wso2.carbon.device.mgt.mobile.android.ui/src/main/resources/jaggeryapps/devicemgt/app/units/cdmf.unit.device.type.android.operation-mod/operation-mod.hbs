@@ -15,18 +15,6 @@
   specific language governing permissions and limitations
   under the License.
 }}
-
-{{unit "cdmf.unit.device.type.android.date-range-picker"}}
-
-{{#zone "content"}}
-    <div id="operations-mod" data-permissions="{{permissions}}" data-device-type="{{deviceType}}" data-ownership="{{ownership}}">
-        {{unit "cdmf.unit.device.type.android.operation-mod"}}
-    </div>
-{{/zone}}
-
 {{#zone "bottomJs"}}
-    <!--suppress HtmlUnknownTarget -->
-    <script id="operations-bar" src="{{@unit.publicUri}}/templates/operations.hbs"
-            type="text/x-handlebars-template"></script>
-    {{js "js/operation-bar.js"}}
+	{{js "js/operation-mod.js"}}
 {{/zone}}

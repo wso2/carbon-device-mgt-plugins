@@ -89,6 +89,7 @@
         });
 
         function toggleEnrollment(){
+            alert("something happened!");
             $(".modalpopup-content").html($("#qr-code-modal").html());
             generateQRCode(".modalpopup-content .qr-code");
             showPopup();
