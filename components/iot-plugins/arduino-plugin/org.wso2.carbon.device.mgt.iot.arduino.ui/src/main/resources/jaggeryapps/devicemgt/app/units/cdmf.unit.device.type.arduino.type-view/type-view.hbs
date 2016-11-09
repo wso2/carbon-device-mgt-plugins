@@ -41,24 +41,24 @@
     <ul class="list-unstyled">
         <li class="padding-top-double">
             <span class="circle">ITEM 01</span>
-            &nbsp;&nbsp;&nbsp;Arduino UNO Board.
+               Arduino UNO Board.
         </li>
         <li class="padding-top-double">
             <span class="circle">ITEM 02</span>
-            &nbsp;&nbsp;&nbsp;Adafruit Wifi Shield for Arduino.
+               Adafruit Wifi Shield for Arduino.
         </li>
         <li class="padding-top-double">
             <span class="circle">ITEM 03</span>
-            &nbsp;&nbsp;&nbsp;LED bulb connected to Pin 13.
+               LED bulb connected to Pin 13.
             <i>(If not available, will use the one on the board.)</i>
         </li>
         <li class="padding-top-double">
             <span class="circle">ITEM 04</span>
-            &nbsp;&nbsp;&nbsp;Resister( e.g 330 ohms )
+               Resister( e.g 330 ohms )
         </li>
         <li class="padding-top-double">
             <span class="circle">STEP 05</span>
-            &nbsp;&nbsp;&nbsp;Proceed to [Prepare] section.
+               Proceed to [Prepare] section.
     </ul>
     <br>
     <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin"
@@ -90,7 +90,7 @@
                                 <input type="hidden" class="deviceType" name="deviceType"
                                        value="{{@uriParams.deviceType}}"/>
                                 <input type="hidden" class="sketchType" name="sketchType"
-                                       value="{{@uriParams.deviceType}}"/> &nbsp;&nbsp;
+                                       value="{{@uriParams.deviceType}}"/>
                             </div>
                         </div>
                         <div class="buttons" style="padding-bottom: 0px">
@@ -134,7 +134,7 @@
                     <div class="buttons">
                         <a href="#" id="device-401-link" class="blue-button">
                             Goto Login Page
-                        </a>&nbsp;&nbsp;
+                        </a>
                         <a href="#" onclick="hidePopup();" class="btn-operations">
                             Cancel
                         </a>
@@ -196,11 +196,11 @@
     <ul class="list-unstyled">
         <li class="padding-top-double">
             <span class="circle">01</span>
-            &nbsp;&nbsp;&nbsp;Wifi-Shield mounted onto the Arduino-UNO board
+               Wifi-Shield mounted onto the Arduino-UNO board
         </li>
         <li class="padding-top-double">
             <span class="circle">02</span>
-            &nbsp;&nbsp;&nbsp;Connect LED bulb to arduino as follows
+               Connect LED bulb to arduino as follows
             <br/><br/>
             <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
                 <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive">
@@ -210,20 +210,20 @@
 
         <li class="padding-top-double">
             <span class="circle">03</span>
-            &nbsp;&nbsp;&nbsp;Download Arduino-Sketch from [Download Sketch] link above.
+               Download Arduino-Sketch from [Download Sketch] link above.
         </li>
         <li class="padding-top-double">
             <span class="circle">04</span>
-            &nbsp;&nbsp;&nbsp;Unzip the downloaded Arduino Agent
+               Unzip the downloaded Arduino Agent
         </li>
         <li class="padding-top-double">
             <span class="circle">05</span>
-            &nbsp;&nbsp;&nbsp;Create a folder called "ArduinoBoardSketch" and move all source files
+               Create a folder called "ArduinoBoardSketch" and move all source files
             inside
         </li>
         <li class="padding-top-double">
             <span class="circle">06</span>
-            &nbsp;&nbsp;&nbsp;Open ArduinoBoardSketch.h and provide appropriate values for
+               Open ArduinoBoardSketch.h and provide appropriate values for
             <i>[WLAN_SSID]</i>,
             <i>[WLAN_PASS]</i>,
             <i>[SERVICE_PORT]</i>,
@@ -233,22 +233,22 @@
         </li>
         <li class="padding-top-double">
             <span class="circle">07</span>
-            &nbsp;&nbsp;&nbsp;Burn the sketch onto your Arduino board and let the program run.
+               Burn the sketch onto your Arduino board and let the program run.
         </li>
         <li class="padding-top-double">
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
             <span class="fw-stack fw-lg margin-right">
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
-            &nbsp;&nbsp;&nbsp;Arduino will publish it's internal temperature to WSO2-IoT-Server
+               Arduino will publish it's internal temperature to WSO2-IoT-Server
             <br/><br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
             <span class="fw-stack fw-lg margin-right">
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
-            &nbsp;&nbsp;&nbsp;LED on <i>PIN 13</i> can be controlled from Device Management page.
+               LED on <i>PIN 13</i> can be controlled from Device Management page.
         </li>
     </ul>
     <br>
@@ -261,17 +261,17 @@
         <ul class="list-unstyled">
             <li class="padding-top-double">
                 <span class="circle">01</span>
-                &nbsp;&nbsp;&nbsp;You can view all your connected devices at
+                   You can view all your connected devices at
                 <a href="{{@app.context}}/devices">[Device Management]</a> page.
             </li>
             <li class="padding-top-double">
                 <span class="circle">02</span>
-                &nbsp;&nbsp;&nbsp;Select one of connected devices and check for available control
+                   Select one of connected devices and check for available control
                 operations and monitor Real-Time data.
             </li>
             <li class="padding-top-double">
                 <span class="circle">03</span>
-                &nbsp;&nbsp;&nbsp;You can also view analytics of the data published to IoT-Server by
+                   You can also view analytics of the data published to IoT-Server by
                 navigating to Device Analytics page.
             </li>
         </ul>
