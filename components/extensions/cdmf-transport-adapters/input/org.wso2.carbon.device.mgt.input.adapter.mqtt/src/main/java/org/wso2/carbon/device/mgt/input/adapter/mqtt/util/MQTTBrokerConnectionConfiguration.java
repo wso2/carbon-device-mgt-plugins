@@ -17,6 +17,8 @@
 */
 package org.wso2.carbon.device.mgt.input.adapter.mqtt.util;
 
+import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterException;
+
 /**
  * This holds the configurations related to MQTT Broker.
  */
@@ -65,7 +67,7 @@ public class MQTTBrokerConnectionConfiguration {
 
     public MQTTBrokerConnectionConfiguration(String brokerUrl, String brokerUsername, String brokerScopes,
                                              String dcrUrl, String cleanSession, int keepAlive,
-                                             String contentValidatorClassName, String contentTransformerClassName) {
+                                             String contentValidatorClassName, String contentTransformerClassName) throws InputEventAdapterException {
         this.brokerUsername = brokerUsername;
         this.brokerScopes = brokerScopes;
         if (brokerScopes == null) {
