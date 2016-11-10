@@ -1,3 +1,6 @@
+{{unit "cdmf.unit.lib.qrcode"}}
+{{unit "cdmf.unit.device.type.android.qr-modal"}}
+
 <div class="col-lg-12  margin-top-double">
     <h1 class="grey ">Android Mobile</h1>
     <hr>
@@ -22,19 +25,17 @@
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double"><span class="circle">STEP 01</span>   Android
-                                                                          Mobile.
+                                                                             Mobile.
         </li>
         <li class="padding-top-double"><span class="circle">STEP 02</span>   Go ahead
-                                                                          and click [Enroll Device].
+                                                                             and click [Enroll Device].
         </li>
         <li class="padding-top-double"><span class="circle">STEP 03</span>   Proceed
-                                                                          to the [Prepare] section.
+                                                                             to the [Prepare] section.
         </li>
     </ul>
     <br>
-
-    <a href="#" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg"></i> Enroll Device</a>
-
+    <a href="javascript:toggleEnrollment()" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg"></i> Enroll Device</a>
     <br/><br/>
 </div>
 
@@ -60,39 +61,10 @@
 
 <br/>
 
-<div id="qr-code-modal"
-     data-enrollment-url="{{hostName}}{{@unit.publicUri}}/asset/android-agent.apk" class="hidden">
-
-    <div class="content">
-        <div class="row">
-            <div class="col-lg-5 col-md-6 col-centered">
-                <h3>Scan QR code to start enrollment</h3>
-                <p>Please scan the QR code using your mobile device to retrieve enrollment URL.</p>
-                <div class="panel panel-default">
-                    <div class="panel-body col-centered">
-                        <div class="qr-code"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 {{#zone "topCss"}}
     {{css "css/styles.css"}}
 {{/zone}}
 
 {{#zone "bottomJs"}}
-    <script type="text/javascript">
-        $(".download-link").click(function(){
-            toggleEnrollment();
-        });
-
-        function toggleEnrollment(){
-            alert("something happened!");
-            $(".modalpopup-content").html($("#qr-code-modal").html());
-            generateQRCode(".modalpopup-content .qr-code");
-            showPopup();
-        }
-    </script>
+    {{js "js/type-view.js"}}
 {{/zone}}
