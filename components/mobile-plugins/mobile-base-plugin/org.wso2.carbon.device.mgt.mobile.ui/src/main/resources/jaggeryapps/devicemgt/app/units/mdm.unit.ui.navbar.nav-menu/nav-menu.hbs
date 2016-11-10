@@ -74,6 +74,11 @@
             </ul>
         </li>
     {{/if}}
+    {{#if permissions.VIEW_DASHBOARD}}
+        <li><a href="{{serverURL}}/portal/dashboards/emm-analytics-dashboard/">
+            <i class="fw fw-pie-chart"></i>Device Management Dashboard</a>
+        </li>
+    {{/if}}
 {{/zone}}
 
 {{#zone "navbarCollapsableRightItems"}}

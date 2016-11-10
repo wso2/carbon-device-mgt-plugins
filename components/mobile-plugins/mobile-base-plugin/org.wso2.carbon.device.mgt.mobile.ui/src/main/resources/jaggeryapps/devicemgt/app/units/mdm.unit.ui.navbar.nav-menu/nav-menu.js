@@ -55,9 +55,11 @@ function onRequest(context) {
     permissions["LIST_CERTIFICATES"] = userModule.isAuthorized("/permission/admin/device-mgt/certificates/view");
     permissions["CONFIG_MGT_PERMITTED"] = (permissions["LIST_PLATFORM_CONFIGURATIONS"] || permissions["LIST_CERTIFICATES"]);
     permissions["LIST_NOTIFICATIONS"] = userModule.isAuthorized("/permission/admin/device-mgt/notifications/view");
+    permissions["VIEW_DASHBOARD"] = userModule.isAuthorized("/permission/admin/device-mgt/dashboard/view");
 
     viewModel["permissions"] = permissions;
     viewModel["appContext"] = mdmProps["appContext"];
+    viewModel["serverURL"] = mdmProps["httpsWebURL"];
 
     return viewModel;
 }
