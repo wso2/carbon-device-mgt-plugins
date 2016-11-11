@@ -22,6 +22,7 @@ import org.w3c.dom.Document;
 import org.wso2.carbon.device.mgt.iot.devicetype.config.DeviceManagementConfiguration;
 import org.wso2.carbon.device.mgt.iot.devicetype.config.exception.DeviceTypeConfigurationException;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -38,15 +39,14 @@ public class DeviceTypeConfigUtil {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         try {
-            DocumentBuilder docBuilder = factory.newDocumentBuilder();
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            DocumentBuilder docBuilder = dbf.newDocumentBuilder();
             return docBuilder.parse(file);
         } catch (Exception e) {
             throw new DeviceTypeConfigurationException("Error occurred while parsing file, while converting " +
                     "to a org.w3c.dom.Document", e);
         }
     }
-
-
-
 
 }

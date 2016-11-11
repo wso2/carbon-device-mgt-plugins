@@ -21,6 +21,7 @@ package org.wso2.carbon.device.mgt.iot.output.adapter.ui.util;
 import org.w3c.dom.Document;
 import org.wso2.carbon.device.mgt.iot.output.adapter.ui.config.WebsocketValidationConfigurationFailedException;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
@@ -34,7 +35,9 @@ public class WebsocketUtils {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         try {
-            DocumentBuilder docBuilder = factory.newDocumentBuilder();
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            DocumentBuilder docBuilder = dbf.newDocumentBuilder();
             return docBuilder.parse(file);
         } catch (Exception e) {
             throw new WebsocketValidationConfigurationFailedException("Error occurred while parsing file, while converting " +
