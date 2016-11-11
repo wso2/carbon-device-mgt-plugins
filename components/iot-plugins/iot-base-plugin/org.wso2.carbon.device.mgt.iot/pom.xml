@@ -70,9 +70,7 @@
                             org.wso2.carbon.core,
                             org.wso2.carbon.device.mgt.common,
                             org.wso2.carbon.utils,
-                            javax.xml.bind,
-                            javax.xml.bind.annotation,
-                            javax.xml.parsers; version="${javax.xml.parsers.import.pkg.version}",
+                            javax.xml.*,
                             org.w3c.dom
                         </Import-Package>
                         <Export-Package>
