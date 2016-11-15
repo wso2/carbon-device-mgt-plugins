@@ -26,7 +26,7 @@
     <version>2.2.6-SNAPSHOT</version>
     <name>WSO2 Carbon - Device Management Plugins Parent</name>
     <url>http://wso2.org</url>
-    <description>WSO2 Carbon - Device Management Plugins Parent</description>
+    <description>WSO2 Carbon -Device Management Plugins Parent</description>
 
     <parent>
         <groupId>org.wso2</groupId>
