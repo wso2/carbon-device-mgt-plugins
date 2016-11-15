@@ -59,8 +59,7 @@ function onRequest(context) {
     permissions["LIST_NOTIFICATIONS"] = userModule.isAuthorized("/permission/admin/device-mgt/notifications/view");
 
     // Restricting the dashboard menu only for super-tenant users
-    permissions["VIEW_DASHBOARD"] = userModule.isAuthorized("/permission/admin/device-mgt/dashboard/view") &&
-        (viewModel["currentUser"].domain == superTenant.domain);
+    permissions["VIEW_DASHBOARD"] = userModule.isAuthorized("/permission/admin/device-mgt/dashboard/view");
 
     viewModel["permissions"] = permissions;
     viewModel["appContext"] = mdmProps["appContext"];
