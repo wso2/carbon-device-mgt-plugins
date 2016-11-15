@@ -30,8 +30,6 @@ function onRequest(context) {
     var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
     var mdmProps = require("/app/modules/conf-reader/main.js")["conf"];
     var constants = require("/app/modules/constants.js");
-    var carbon = require("carbon");
-    var superTenant = carbon.server.superTenant;
     var links = {
         "user-mgt": [],
         "role-mgt": [],
@@ -57,8 +55,6 @@ function onRequest(context) {
     permissions["LIST_CERTIFICATES"] = userModule.isAuthorized("/permission/admin/device-mgt/certificates/view");
     permissions["CONFIG_MGT_PERMITTED"] = (permissions["LIST_PLATFORM_CONFIGURATIONS"] || permissions["LIST_CERTIFICATES"]);
     permissions["LIST_NOTIFICATIONS"] = userModule.isAuthorized("/permission/admin/device-mgt/notifications/view");
-
-    // Restricting the dashboard menu only for super-tenant users
     permissions["VIEW_DASHBOARD"] = userModule.isAuthorized("/permission/admin/device-mgt/dashboard/view");
 
     viewModel["permissions"] = permissions;
