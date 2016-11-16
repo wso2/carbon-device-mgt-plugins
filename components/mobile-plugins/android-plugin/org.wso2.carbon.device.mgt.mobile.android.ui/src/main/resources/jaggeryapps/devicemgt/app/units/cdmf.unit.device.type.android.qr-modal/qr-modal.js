@@ -18,6 +18,6 @@ function onRequest() {
     var mdmProps = require("/app/modules/conf-reader/main.js")["conf"];
     var viewModel = {};
     //TODO: Move enrollment URL into app-conf.json
-    viewModel["enrollmentURL"] = mdmProps["generalConfig"]["host"] + mdmProps["enrollmentDir"];
+    viewModel["enrollmentURL"] = mdmProps["generalConfig"]["host"] + mdmProps["androidEnrollmentDir"];
     return viewModel;
 }

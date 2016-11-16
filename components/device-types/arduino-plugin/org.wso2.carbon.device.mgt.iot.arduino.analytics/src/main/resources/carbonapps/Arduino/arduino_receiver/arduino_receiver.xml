@@ -24,7 +24,7 @@
         <property name="contentTransformer">default</property>
         <property name="transports">all</property>
         <property name="maximumTotalHttpConnection">100</property>
-        <property name="tokenValidationEndpointUrl">https://localhost:${carbon.https.port}/services/OAuth2TokenValidationService</property>
+        <property name="tokenValidationEndpointUrl">https://localhost:${dcr.endpoint.port}/services/OAuth2TokenValidationService</property>
         <property name="password">admin</property>
     </from>
     <mapping customMapping="disable" type="json"/>
