@@ -111,4 +111,22 @@ public class IOSApplicationOperationUtil {
 		return operation;
 	}
 
+	/**
+	 * Create uninstall operations for webclip.
+	 *
+	 * @param application
+	 * @return Uninstall operation
+	 * @throws DeviceApplicationException
+	 */
+	public static Operation createWebClipUninstallOperation(MobileApp application) throws
+			DeviceApplicationException {
+		ProfileOperation operation = new ProfileOperation();
+		operation.setCode(MDMAppConstants.IOSConstants.OPCODE_REMOVE_APPLICATION);
+		operation.setType(Operation.Type.PROFILE);
+		RemoveApplication removeApplication = new RemoveApplication();
+		removeApplication.setUrl(application.getIdentifier());
+		operation.setPayLoad(removeApplication.toJSON());
+		return operation;
+	}
+
 }
