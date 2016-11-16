@@ -34,7 +34,7 @@ function onRequest(context) {
             // creating deviceView information model from filtered device data
             var viewModel = {};
             if (filteredDeviceData["type"]) {
-                viewModel["deviceType"] = filteredDeviceData["type"];
+                viewModel["type"] = filteredDeviceData["type"];
                 viewModel.isNotWindows = true;
                 if (viewModel["deviceType"] == "windows") {
                     viewModel.isNotWindows = false;
