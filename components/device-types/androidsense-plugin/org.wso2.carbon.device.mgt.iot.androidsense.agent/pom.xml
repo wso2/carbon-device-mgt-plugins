@@ -24,7 +24,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.wso2.iot.agents</groupId>
     <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.agent</artifactId>
-    <version>1.0.0</version>
+    <version>3.0.0</version>
     <name>Android Sense</name>
     <description>Android Sense</description>
     <packaging>pom</packaging>
