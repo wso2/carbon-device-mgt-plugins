@@ -1198,8 +1198,8 @@
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Device Management -->
-        <carbon.devicemgt.version>2.0.0-SNAPSHOT</carbon.devicemgt.version>
-        <carbon.devicemgt.version.range>[1.1.1, 2.0.0)</carbon.devicemgt.version.range>
+        <carbon.devicemgt.version>2.0.0</carbon.devicemgt.version>
+        <carbon.devicemgt.version.range>[2.0.0, 3.0.0)</carbon.devicemgt.version.range>
 
 
         <!-- Carbon App Management -->
