@@ -28,7 +28,7 @@ function onRequest(context) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
         var device = deviceModule.viewDevice(deviceType, deviceId);
         if (device && device.status != "error") {
-            return {"device": device.content, "backendApiUri" : "/raspberrypi/", "autoCompleteParams" : autoCompleteParams};
+            return {"device": device.content, "autoCompleteParams" : autoCompleteParams, "encodedFeaturePayloads": ""};
         } else {
             response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
             exit();
