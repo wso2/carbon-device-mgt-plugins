@@ -22,7 +22,7 @@
         <Feature code="buzz">
             <Name>Control buzzer</Name>
             <Description>Control buzzer on Virtual Firealarm</Description>
-            <Operation context="device/{deviceId}/buzz" method="POST">
+            <Operation context="/virtual_firealarm/device/{deviceId}/buzz" method="POST">
                 <FormParameters>
                     <Parameter>state</Parameter>
                 </FormParameters>
