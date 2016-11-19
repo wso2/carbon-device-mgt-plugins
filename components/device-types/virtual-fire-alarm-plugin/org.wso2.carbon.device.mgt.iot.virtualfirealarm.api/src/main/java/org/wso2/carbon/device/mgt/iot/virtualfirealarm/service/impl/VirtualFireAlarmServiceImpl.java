@@ -312,13 +312,10 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                     VirtualFireAlarmConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
-        String device = "{ \"scope\":\"mqtt-publisher mqtt-subscriber\", \"deviceIdentifiers\":[{\"id\":\""+deviceId+"\", " +
-                "\"type\":\""+VirtualFireAlarmConstants.DEVICE_TYPE+"\"}]}";
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("device", Base64.encodeBase64String(device.getBytes()));
+        String scopes = " device_" + deviceId;
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
                                                                    apiApplicationKey.getConsumerSecret(), owner,
-                                                                   null, params);
+                                                                   scopes);
         String accessToken = accessTokenInfo.getAccessToken();
         String refreshToken = accessTokenInfo.getRefreshToken();
         XmppAccount newXmppAccount = new XmppAccount();

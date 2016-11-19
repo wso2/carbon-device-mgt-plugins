@@ -213,7 +213,7 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
                     RaspberrypiConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
-        String scopes = "cdmf/" + RaspberrypiConstants.DEVICE_TYPE + "/" + deviceId;
+        String scopes = " device_" + deviceId;
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
                                                                    apiApplicationKey.getConsumerSecret(), owner, scopes);
         //create token

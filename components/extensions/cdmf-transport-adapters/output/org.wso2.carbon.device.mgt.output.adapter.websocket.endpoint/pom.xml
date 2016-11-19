@@ -58,6 +58,6 @@
     </dependencies>
 
     <build>
-        <finalName>secured-outputui</finalName>
+        <finalName>secured-websocket</finalName>
     </build>
 </project>

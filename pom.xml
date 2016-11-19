@@ -239,6 +239,11 @@
                 <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>javax.cache.wso2</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
 
             <!-- Device Management Core dependencies -->
             <dependency>
@@ -1155,6 +1160,21 @@
                 <artifactId>commons-lang</artifactId>
                 <version>${commons.lang.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-core</artifactId>
+                <version>${io.github.openfeign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-jaxrs</artifactId>
+                <version>${io.github.openfeign.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-gson</artifactId>
+                <version>${io.github.openfeign.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1317,6 +1337,10 @@
 
         <!-- MB Features -->
         <carbon.messaging.version>3.1.11</carbon.messaging.version>
+
+        <!--Feign Version-->
+        <io.github.openfeign.version>9.3.1</io.github.openfeign.version>
+        <javax.ws.rs.jsr311-api.version>[1.1.0, 2.0.0)</javax.ws.rs.jsr311-api.version>
     </properties>
 
     <scm>

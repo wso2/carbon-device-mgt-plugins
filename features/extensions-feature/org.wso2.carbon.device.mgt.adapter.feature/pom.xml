@@ -68,6 +68,16 @@
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
         </dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-jaxrs</artifactId>
+			<version>${io.github.openfeign.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-gson</artifactId>
+			<version>${io.github.openfeign.version}</version>
+		</dependency>
     </dependencies>
     <build>
         <plugins>
@@ -92,7 +102,7 @@
                                     <outputDirectory>
                                         ${project.build.directory}/maven-shared-archive-resources/webapps/
                                     </outputDirectory>
-                                    <destFileName>secured-outputui.war</destFileName>
+                                    <destFileName>secured-websocket.war</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -180,6 +190,12 @@
                                 <bundleDef>
                                     com.jayway.jsonpath:json-path
                                 </bundleDef>
+								<bundleDef>
+									io.github.openfeign:feign-core:${io.github.openfeign.version}
+								</bundleDef>
+								<bundleDef>
+									io.github.openfeign:feign-gson:${io.github.openfeign.version}
+								</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>

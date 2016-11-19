@@ -58,6 +58,26 @@
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-jaxrs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>jsr311-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>javax.cache.wso2</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -95,9 +115,20 @@
                             org.wso2.carbon.user.core.service,
                             org.wso2.carbon.user.core.tenant,
                             org.wso2.carbon.user.api,
-                            *;resolution:=optional
+                            feign,
+                            feign.auth,
+                            feign.codec,
+                            feign.gson,
+                            javax.cache,
+                            javax.xml.namespace,
+                            javax.xml.stream,
+							org.wso2.carbon.base,
+							org.wso2.carbon.utils
                         </Import-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
+						<Embed-Dependency>
+							jsr311-api,
+							feign-jaxrs
+						</Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>

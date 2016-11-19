@@ -35,5 +35,16 @@
 	</Authenticator>
 
 	<!--Authorizer holds the information of the authorizer that is used authorize a connection.-->
-	<Authorizer class="org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.DeviceAuthorizer"></Authorizer>
+	<Authorizer class="org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.DeviceAuthorizer">
+		<Properties>
+			<!--websocket connection permissions which are validated for grouping (can have multiple permission.)-->
+			<Property name="statsPermission">/permission/device-mgt/user/groups/device_monitor</Property>
+			<Property name="username">admin</Property>
+			<Property name="password">admin</Property>
+			<Property name="tokenEndpoint">https://localhost:9443/oauth2</Property>
+			<!--offset time from expiry time to trigger refresh call (in seconds)-->
+			<Property name="tokenRefreshTimeOffset">100</Property>
+			<Property name="deviceMgtServerUrl">https://localhost:9443</Property>
+		</Properties>
+	</Authorizer>
 </WebsocketValidationConfigs>
