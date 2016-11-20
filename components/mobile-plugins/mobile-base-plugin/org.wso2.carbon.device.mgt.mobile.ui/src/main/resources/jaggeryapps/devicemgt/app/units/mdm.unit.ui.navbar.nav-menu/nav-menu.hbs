@@ -28,10 +28,12 @@
             System Resources
         </a>
     </li>
-    {{#if permissions.VIEW_DASHBOARD}}
-        <li><a href="{{serverURL}}/portal/t/{{currentUser.domain}}/dashboards/emm-analytics-dashboard/">
-            <i class="fw fw-bar-chart"></i>Device Statistics</a>
-        </li>
+    {{#if dashboardAvailable}}
+        {{#if permissions.VIEW_DASHBOARD}}
+            <li><a href="{{serverURL}}/portal/t/{{currentUser.domain}}/dashboards/emm-analytics-dashboard/">
+                <i class="fw fw-bar-chart"></i>Device Statistics</a>
+            </li>
+        {{/if}}
     {{/if}}
     {{#if permissions.LIST_DEVICES}}
         <li>
@@ -104,6 +106,7 @@
         <ul class="sidebar-messages"></ul>
         <br>
         <div class="text-center">
+            <!--suppress HtmlUnknownTarget -->
             <a href="{{@app.context}}/notification-listing" class="btn-operations btn-default">
                 <span class="fw-stack">
                     <i class="fw fw-ring fw-stroke fw-stack-2x"></i>
