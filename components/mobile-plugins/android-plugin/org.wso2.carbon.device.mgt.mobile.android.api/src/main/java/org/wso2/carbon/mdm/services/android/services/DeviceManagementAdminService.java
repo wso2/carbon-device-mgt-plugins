@@ -18,10 +18,19 @@
  */
 package org.wso2.carbon.mdm.services.android.services;
 
-import io.swagger.annotations.*;
-import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
-import org.wso2.carbon.apimgt.annotations.api.Scope;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.ExtensionProperty;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.Tag;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.AuthorizationScope;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ResponseHeader;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.*;
 
@@ -34,10 +43,23 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@API(name = "Android Device Management Administrative Service", version = "1.0.0",
-        context = "/api/device-mgt/android/v1.0/admin/devices",
-        tags = {"devicemgt_android"})
-
+@SwaggerDefinition(
+        info = @Info(
+                version = "1.0.0",
+                title = "",
+                extensions = {
+                        @Extension(properties = {
+                                @ExtensionProperty(name = "name",
+                                        value = "Android Device Management Administrative Service"),
+                                @ExtensionProperty(name = "context",
+                                        value = "/api/device-mgt/android/v1.0/admin/devices"),
+                        })
+                }
+        ),
+        tags = {
+                @Tag(name = "devicemgt_android", description = "")
+        }
+)
 @Path("/admin/devices")
 @Api(value = "Android Device Management Administrative Service", description = "Device management related admin APIs.")
 @Produces(MediaType.APPLICATION_JSON)
@@ -53,7 +75,15 @@ public interface DeviceManagementAdminService {
             notes = "Using this API you have the option of hard locking an Android device, where the Administrator " +
                     "permanently locks the device or screen locking an Android device.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/lock",
+                                    description = "Lock Device") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -93,7 +123,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while locking the device.")
     })
-    @Permission(name = "Lock Device", permission = "/device-mgt/devices/owning-device/operations/android/lock")
     Response configureDeviceLock(
             @ApiParam(
                     name = "deviceLock",
@@ -112,7 +141,16 @@ public interface DeviceManagementAdminService {
             responseContainer = "List",
             notes = "Unlock devices that were locked permanently using the hard lock operation. Devices that are hard locked can only be unlocked by the EMM administrator.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service")
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/unlock",
+                                    description = "Unlock Device") }
+                    )
+            }
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 201,
@@ -151,7 +189,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while unlocking the device.")
     })
-    @Permission(name = "Unlock Device", permission = "/device-mgt/devices/owning-device/operations/android/unlock")
     Response configureDeviceUnlock(
             @ApiParam(
                     name = "deviceIDs",
@@ -170,7 +207,16 @@ public interface DeviceManagementAdminService {
             notes = "Request location coordinates of Android devices. \n" +
                     "Example: In situations where you have lost your device and need to find out where it is, you can use this REST API to get the location of the device.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service")
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/location",
+                                    description = "Get Device Location") }
+                    )
+            }
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 201,
@@ -208,7 +254,6 @@ public interface DeviceManagementAdminService {
                     code = 500,
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new get-location operation.")})
-    @Permission(name = "Get Device Location", permission = "/device-mgt/devices/owning-device/operations/android/location")
     Response getDeviceLocation(
             @ApiParam(
                     name = "deviceIDs",
@@ -224,7 +269,15 @@ public interface DeviceManagementAdminService {
             value = "Clearing the Password on Android Devices",
             notes = "Clear the password on Android devices",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service."
+            tags = "Android Device Management Administrative Service.",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/clear-password",
+                                    description = "Clear Password of Device") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -264,7 +317,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new clear password operation.")
     })
-    @Permission(name = "Clear Password of Device", permission = "/device-mgt/devices/owning-device/operations/android/clear-password")
     Response removePassword(
             @ApiParam(name = "deviceIDs",
                     value = "Provide the ID of the Android device. Multiple device IDs can be added by using comma separated values. ",
@@ -278,7 +330,13 @@ public interface DeviceManagementAdminService {
             value = "Enabling or Disabling the Camera on Android Devices",
             notes = "Enable or disable the camera on Android devices.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(scope = "/device-mgt/devices/owning-device/operations/android/camera", description = "Manage Camera") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -318,7 +376,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding the new camera control operation.")
     })
-    @Permission(name = "Manage Camera", permission = "/device-mgt/devices/owning-device/operations/android/camera")
     Response configureCamera(
             @ApiParam(
                     name = "cameraControl",
@@ -340,7 +397,15 @@ public interface DeviceManagementAdminService {
                     " executed it will be in the Android operation queue until the device calls the server to retrieve " +
                     "the list of operations that needs to be executed on the device",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/info",
+                                    description = "Get Device Information") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -380,7 +445,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new device info operation.")
     })
-    @Permission(name = "Get Device Information", permission = "/device-mgt/devices/owning-device/operations/android/info")
     Response getDeviceInformation(
             @ApiParam(
                     name = "deviceIds",
@@ -399,7 +463,15 @@ public interface DeviceManagementAdminService {
                     " executed it will be in the Android operation queue until the device calls the server to retrieve " +
                     "the list of operations that needs to be executed on the device.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/logcat",
+                                    description = "Get Logs") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -439,7 +511,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                               "Server error occurred while adding a new device logcat operation.")
     })
-    @Permission(name = "Get Logs", permission = "/device-mgt/devices/owning-device/operations/android/logcat")
     Response getDeviceLogcat(
             @ApiParam(
                     name = "deviceIds",
@@ -457,7 +528,15 @@ public interface DeviceManagementAdminService {
             notes = "Enterprise wipe is the process of deleting enterprise related data on a device while keeping the " +
                     "personal data intact. You are able to enterprise wipe Android devices using this REST API.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/enterprise-wipe",
+                                    description = "Enterprise Wipe") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -496,7 +575,6 @@ public interface DeviceManagementAdminService {
                     code = 500,
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding the enterprise wipe operation.")})
-    @Permission(name = "Enterprise Wipe", permission = "/device-mgt/devices/owning-device/operations/android/enterprise-wipe")
     Response wipeDevice(
             @ApiParam(
                     name = "deviceIDs",
@@ -513,7 +591,15 @@ public interface DeviceManagementAdminService {
             notes = "Factory rest or erase all the data stored on the Android devices " +
                     "to restore them back to the original system.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/wipe",
+                                    description = "Factory Reset") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -552,7 +638,6 @@ public interface DeviceManagementAdminService {
                     code = 500,
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding the device wipe operation.")})
-    @Permission(name = "Factory Reset", permission = "/device-mgt/devices/owning-device/operations/android/wipe")
     Response wipeData(
             @ApiParam(
                     name = "wipeData",
@@ -573,7 +658,15 @@ public interface DeviceManagementAdminService {
                     "until the device calls the server to retrieve the list of operations that needs to be executed " +
                     "on the device.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/applications",
+                                    description = "Get Installed Application") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -613,7 +706,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding the new get-applications operation.")
     })
-    @Permission(name = "Get Installed Application", permission = "/device-mgt/devices/owning-device/operations/android/applications")
     Response getApplications(
             @ApiParam(
                     name = "deviceIDs",
@@ -629,7 +721,15 @@ public interface DeviceManagementAdminService {
             value = "Ringing Android Devices",
             notes = "Ring Android devices.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/ring",
+                                    description = "Ring Device") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -669,7 +769,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new device ring operation.")
     })
-    @Permission(name = "Ring Device", permission = "/device-mgt/devices/owning-device/operations/android/ring")
     Response ringDevice(
             @ApiParam(
                     name = "deviceIDs",
@@ -685,7 +784,15 @@ public interface DeviceManagementAdminService {
             value = "Rebooting Android Devices",
             notes = "Reboot or restart your Android devices.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/reboot",
+                                    description = "Reboot Device") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -725,7 +832,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding the new device reboot operation.")
     })
-    @Permission(name = "Reboot Device", permission = "/device-mgt/devices/owning-device/operations/android/reboot")
     Response rebootDevice(
             @ApiParam(
                     name = "deviceIDs",
@@ -740,7 +846,15 @@ public interface DeviceManagementAdminService {
             value = "Muting Android Devices",
             notes = "Mute or enable a silent profile for Android devices.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/mute",
+                                    description = "Mute Device") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -781,7 +895,6 @@ public interface DeviceManagementAdminService {
                             "Server error occurred while adding a new device mute operation.")
     })
     @Path("/mute")
-    @Permission(name = "Mute Device", permission = "/device-mgt/devices/owning-device/operations/android/mute")
     Response muteDevice(
             @ApiParam(
                     name = "deviceIDs",
@@ -799,7 +912,15 @@ public interface DeviceManagementAdminService {
             notes = "Install an application on an Android device. If the device you are installing the application has the WSO2 system service application installed," +
                     " the application installation will happen in silent mode, else the device user's consent will be required.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/install-app",
+                                    description = "Install Applications") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -839,7 +960,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new install-application operation.")
     })
-    @Permission(name = "Install Applications", permission = "/device-mgt/devices/owning-device/operations/android/install-app")
     Response installApplication(
             @ApiParam(
                     name = "applicationInstallation",
@@ -860,7 +980,15 @@ public interface DeviceManagementAdminService {
                     " has the WSO2 system service application installed, the application update will happen in silent " +
                     "mode, else the device user's consent is required.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/update-app",
+                                    description = "Update installed applications") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -900,7 +1028,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding the new update-application operation.")
     })
-    @Permission(name = "Update installed applications", permission = "/device-mgt/devices/owning-device/operations/android/update-app")
     Response updateApplication(
             @ApiParam(
                     name = "applicationUpdate",
@@ -918,7 +1045,15 @@ public interface DeviceManagementAdminService {
             value = "Uninstalling an Application from Android Devices",
             notes = "Uninstall an application from Android devices.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/uninstall-app",
+                                    description = "Uninstall Applications") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -958,7 +1093,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new uninstall-application operation.")
     })
-    @Permission(name = "Uninstall Applications", permission = "/device-mgt/devices/owning-device/operations/android/uninstall-app")
     Response uninstallApplication(
             @ApiParam(
                     name = "applicationUninstallation",
@@ -980,7 +1114,15 @@ public interface DeviceManagementAdminService {
                     " Android operating systems and after, the blacklisted apps will be hidden. Blacklisting can be used on both BYOD and " +
                     "COPE devices. Applications can be blacklisted via the application restriction policy too.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/blacklist-app",
+                                    description = "Blacklist Applications") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -1020,7 +1162,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding the new blacklist-applications operation.")
     })
-    @Permission(name = "Blacklist Applications", permission = "/device-mgt/devices/owning-device/operations/android/blacklist-app")
     Response blacklistApplications(
             @ApiParam(
                     name = "blacklistApplications",
@@ -1038,7 +1179,15 @@ public interface DeviceManagementAdminService {
             value = "UUpgrading Firmware of Android Devices",
             notes = "Upgrade the firmware of Android devices.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/upgrade",
+                                    description = "Upgrade Firmware") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -1078,7 +1227,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new upgrade firmware operation.")
     })
-    @Permission(name = "Upgrade Firmware", permission = "/device-mgt/devices/owning-device/operations/android/upgrade")
     Response upgradeFirmware(
             @ApiParam(
                     name = "upgradeFirmware",
@@ -1098,7 +1246,15 @@ public interface DeviceManagementAdminService {
             value = "Configuring VPN on Android devices",
             notes = "Configure VPN on Android devices.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/vpn",
+                                    description = "Add VPN") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -1138,7 +1294,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while configuring the VPN.")
     })
-    @Permission(name = "Add VPN", permission = "/device-mgt/devices/owning-device/operations/android/vpn")
     Response configureVPN(
             @ApiParam(
                     name = "vpnBean",
@@ -1154,7 +1309,15 @@ public interface DeviceManagementAdminService {
             value = "Sending a Notification to Android Devices",
             notes = "Send a notification or message to Android devices.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/send-notification",
+                                    description = "Send Notifications") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -1194,7 +1357,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new send notification operation.")
     })
-    @Permission(name = "Send Notifications", permission = "/device-mgt/devices/owning-device/operations/android/send-notification")
     Response sendNotification(
             @ApiParam(
                     name = "notification",
@@ -1211,7 +1373,15 @@ public interface DeviceManagementAdminService {
             value = "Configuring Wi-Fi on Android Devices",
             notes = "Configure Wi-Fi on Android devices.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/wifi",
+                                    description = "Add Wifi Configuration") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -1251,7 +1421,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while configuring Wi-Fi.")
     })
-    @Permission(name = "Add Wifi Configuration", permission = "/device-mgt/devices/owning-device/operations/android/wifi")
     Response configureWifi(
             @ApiParam(
                     name = "wifi",
@@ -1269,7 +1438,15 @@ public interface DeviceManagementAdminService {
             value = "Encrypting Storage on Android Devices",
             notes = "Encrypt the data stored on Android devices.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/encrypt",
+                                    description = "Encrypt Device") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -1309,7 +1486,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new encrypt storage operation.")
     })
-    @Permission(name = "Encrypt Device", permission = "/device-mgt/devices/owning-device/operations/android/encrypt")
     Response encryptStorage(
             @ApiParam(
                     name = "encryption",
@@ -1327,7 +1503,15 @@ public interface DeviceManagementAdminService {
             value = "Changing the Lock Code on Android Devices",
             notes = "Change the lock code on Android devices.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/change-lock-code",
+                                    description = "Change Password of Device") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -1367,7 +1551,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new change lock code operation.")
     })
-    @Permission(name = "Change Password of Device", permission = "/device-mgt/devices/owning-device/operations/android/change-lock-code")
     Response changeLockCode(
             @ApiParam(
                     name = "lockCode",
@@ -1385,7 +1568,15 @@ public interface DeviceManagementAdminService {
             value = "Setting a Password Policy on Android Devices",
             notes = "Set a password policy on Android devices.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/password-policy",
+                                    description = "Set Password Policy") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -1425,7 +1616,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new set password policy operation.")
     })
-    @Permission(name = "Set Password Policy", permission = "/device-mgt/devices/owning-device/operations/android/password-policy")
     Response setPasswordPolicy(
             @ApiParam(
                     name = "passwordPolicy",
@@ -1441,7 +1631,15 @@ public interface DeviceManagementAdminService {
             value = "Setting a Web Clip on Android Devices",
             notes = "Set a web clip on Android devices. A web clip is used to add a bookmark to a web application.",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service"
+            tags = "Android Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(
+                                    scope = "/device-mgt/devices/owning-device/operations/android/webclip",
+                                    description = "Add Webclips") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -1481,7 +1679,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding adding a the set web clip operation.")
     })
-    @Permission(name = "Add Webclips", permission = "/device-mgt/devices/owning-device/operations/android/webclip")
     Response setWebClip(
             @ApiParam(
                     name = "webClip",

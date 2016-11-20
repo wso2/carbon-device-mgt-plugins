@@ -18,7 +18,11 @@
 
 package org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl;
 
-import org.wso2.carbon.apimgt.annotations.api.API;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.ExtensionProperty;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.Tag;
 import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
@@ -27,7 +31,21 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@API(name = "raspberrypi", version = "1.0.0", context = "/raspberrypi", tags = {"raspberrypi"})
+@SwaggerDefinition(
+        info = @Info(
+                version = "1.0.0",
+                title = "",
+                extensions = {
+                        @Extension(properties = {
+                                @ExtensionProperty(name = "name", value = "raspberrypi"),
+                                @ExtensionProperty(name = "context", value = "/raspberrypi"),
+                        })
+                }
+        ),
+        tags = {
+                @Tag(name = "raspberrypi", description = "")
+        }
+)
 @DeviceType(value = "raspberrypi")
 public interface RaspberryPiService {
 
