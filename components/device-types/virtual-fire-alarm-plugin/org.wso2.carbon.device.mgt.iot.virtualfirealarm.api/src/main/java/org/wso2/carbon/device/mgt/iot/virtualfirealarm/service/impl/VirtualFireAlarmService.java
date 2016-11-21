@@ -18,7 +18,11 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl;
 
-import org.wso2.carbon.apimgt.annotations.api.API;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.ExtensionProperty;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.Tag;
 import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
@@ -33,7 +37,21 @@ import javax.ws.rs.core.Response;
  * the transport 'Connectors' [XMPP & MQTT] specific to the VirtualFirealarm device-type in order to communicate with
  * such devices and to receive messages form it.
  */
-@API(name = "virtual_firealarm", version = "1.0.0", context = "/virtual_firealarm", tags = {"virtual_firealarm"})
+@SwaggerDefinition(
+        info = @Info(
+                version = "1.0.0",
+                title = "",
+                extensions = {
+                        @Extension(properties = {
+                                @ExtensionProperty(name = "name", value = "virtual_firealarm"),
+                                @ExtensionProperty(name = "context", value = "/virtual_firealarm"),
+                        })
+                }
+        ),
+        tags = {
+                @Tag(name = "virtual_firealarm", description = "")
+        }
+)
 @DeviceType(value = "virtual_firealarm")
 public interface VirtualFireAlarmService {
 

@@ -30,8 +30,8 @@ function onRequest(context) {
         if (device && device.status != "error") {
             return {
                 "device": device.content,
-                "backendApiUri": "/android_sense/",
-                "autoCompleteParams": autoCompleteParams
+                "autoCompleteParams": autoCompleteParams,
+                "encodedFeaturePayloads": ""
             };
         } else {
             response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
