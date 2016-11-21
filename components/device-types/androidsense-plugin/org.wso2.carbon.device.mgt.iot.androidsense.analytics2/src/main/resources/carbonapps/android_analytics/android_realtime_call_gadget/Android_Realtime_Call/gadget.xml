@@ -4,11 +4,11 @@
         <Require feature="dynamic-height"/>
         <Require feature="wso2-gadgets-identity"/>
     </ModulePrefs>
-    
+
     <UserPref name="windowSize"
               display_name="Window Size"
               default_value="10"/>
-    
+
     <Content type="html">
         <![CDATA[
         <head>
@@ -37,13 +37,14 @@
             
             <script src="/portal/libs/analytics-wso2-2.0.0/vega.js"></script>
             
-            <script src="/portal/libs/analytics-wso2-2.0.0/VizGrammar.min.js"></script>
+            <script src="/portal/libs/analytics-wso2-2.0.0/VizGrammar_2.js"></script>
             
             <script src="/portal/libs/analytics-wso2-2.0.0/wso2gadgets.js"></script>
             
+            <script src="/portal/libs/analytics-wso2-2.0.0/iot-gadget-utils.js"></script>
+
             <script src="/portal/libs/analytics-wso2-2.0.0/chart-utils.js"></script>
 
-            <script src="/portal/libs/analytics-wso2-2.0.0/gadget-utils.js"></script>
             
             <!-- chart specific vendor libs -->
             

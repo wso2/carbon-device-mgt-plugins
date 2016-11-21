@@ -50,7 +50,7 @@
                 <script src="../commons/js/d3.min.js"></script>
                 <script src="../commons/js/vega.js"></script>
 <!--
-                <script src="../commons/js/VizGrammar.min.js"></script>
+                <script src="../commons/js/VizGrammar_2.js"></script>
                 <script src="/portal/extensions/themes/analytics/js/colorbrewer.js"></script>
                 <script src="/portal/extensions/themes/analytics/js/VizGrammarSettings.js"></script>
 -->
@@ -58,7 +58,7 @@
                 <!-- JS -->
                 <script src="js/topojson.js"></script>
                 <script src="js/vega.js"></script>
-                <script src="js/VizGrammar.min.js"></script>
+                <script src="js/VizGrammar_2.js"></script>
                 <script src="js/VizGrammarSettings.js"></script>
                 <script src="js/gadgetconf.js"></script>
                 <script src="js/analyticsUtils.js"></script>
