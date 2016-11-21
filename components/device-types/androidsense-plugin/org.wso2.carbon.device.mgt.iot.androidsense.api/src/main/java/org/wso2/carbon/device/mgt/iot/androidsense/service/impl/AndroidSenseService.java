@@ -25,13 +25,10 @@ import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.Extension;
 import io.swagger.annotations.Tag;
 import org.wso2.carbon.apimgt.annotations.api.Scope;
-import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
-import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
-@DeviceType(value = "android_sense")
 @SwaggerDefinition(
         info = @Info(
                 version = "1.0.0",
@@ -57,7 +54,6 @@ public interface AndroidSenseService {
      */
     @Path("device/{deviceId}/words")
     @POST
-    @Feature(code = "keywords", name = "Add Keywords", description = "Send keywords to the device")
     @Scope(key = "device:android-sense:enroll", name = "", description = "")
     Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords);
 
@@ -69,13 +65,11 @@ public interface AndroidSenseService {
      */
     @Path("device/{deviceId}/words/threshold")
     @POST
-    @Feature(code = "threshold", name = "Add a Threshold", description = "Set a threshold for word in the device")
     @Scope(key = "device:android-sense:enroll", name = "", description = "")
     Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold);
 
     @Path("device/{deviceId}/words")
     @DELETE
-    @Feature(code = "remove", name = "Remove Keywords", description = "Remove the keywords")
     @Scope(key = "device:android-sense:enroll", name = "", description = "")
     Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words);
 
