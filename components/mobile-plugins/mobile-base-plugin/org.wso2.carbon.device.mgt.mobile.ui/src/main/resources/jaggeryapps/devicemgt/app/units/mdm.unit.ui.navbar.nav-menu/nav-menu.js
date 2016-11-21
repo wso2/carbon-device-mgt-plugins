@@ -17,6 +17,10 @@
  */
 
 function onRequest(context) {
+    var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
+    var mdmProps = require("/app/modules/conf-reader/main.js")["conf"];
+    var constants = require("/app/modules/constants.js");
+
     context.handlebars.registerHelper('equal', function (lvalue, rvalue, options) {
         if (arguments.length < 3) {
             throw new Error("Handlebars Helper equal needs 2 parameters");
@@ -27,9 +31,7 @@ function onRequest(context) {
             return options.fn(this);
         }
     });
-    var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
-    var mdmProps = require("/app/modules/conf-reader/main.js")["conf"];
-    var constants = require("/app/modules/constants.js");
+
     var links = {
         "user-mgt": [],
         "role-mgt": [],
@@ -40,7 +42,7 @@ function onRequest(context) {
 
     // following viewModel.link value comes here based on the value passed at the point
     // where units are attached to a page zone.
-    // eg: {{unit "appbar" pageLink="users" title="User Management"}}
+    // eg: {{unit "app-bar" pageLink="users" title="User Management"}}
     viewModel["currentActions"] = links[viewModel["pageLink"]];
     viewModel["enrollmentURL"] = mdmProps["generalConfig"]["host"] + mdmProps["enrollmentDir"];
     viewModel["currentUser"] = session.get(constants["USER_SESSION_KEY"]);
@@ -56,6 +58,8 @@ function onRequest(context) {
     permissions["CONFIG_MGT_PERMITTED"] = (permissions["LIST_PLATFORM_CONFIGURATIONS"] || permissions["LIST_CERTIFICATES"]);
     permissions["LIST_NOTIFICATIONS"] = userModule.isAuthorized("/permission/admin/device-mgt/notifications/view");
     permissions["VIEW_DASHBOARD"] = userModule.isAuthorized("/permission/admin/device-mgt/dashboard/view");
+
+    viewModel["dashboardAvailable"] = mdmProps["deviceStatisticsEnabled"];
 
     viewModel["permissions"] = permissions;
     viewModel["appContext"] = mdmProps["appContext"];

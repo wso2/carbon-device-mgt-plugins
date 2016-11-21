@@ -73,7 +73,8 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 									getDevicesOfUser(userName);
 
 					for (org.wso2.carbon.device.mgt.common.Device device : deviceList) {
-						if(applicationOperationAction.getApp().getPlatform().equalsIgnoreCase(device.getType())){
+						if(MDMAppConstants.WEBAPP.equals(applicationOperationAction.getApp().getPlatform()) ||
+								applicationOperationAction.getApp().getPlatform().equalsIgnoreCase(device.getType())){
 							deviceIdentifiers.add(getDeviceIdentifierByDevice(device));
 						}
 					}
@@ -176,8 +177,11 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 						operation =
 								IOSApplicationOperationUtil.createInstallAppOperation(mobileApp);
 					} else {
-						operation =
-								IOSApplicationOperationUtil.createAppUninstallOperation(mobileApp);
+						if (MDMAppConstants.WEBAPP.equals(app.getPlatform())) {
+							operation = IOSApplicationOperationUtil.createWebClipUninstallOperation(mobileApp);
+						} else {
+							operation = IOSApplicationOperationUtil.createAppUninstallOperation(mobileApp);
+						}
 					}
 				}
 				activity = MDMServiceAPIUtils.getAppManagementService(applicationOperationAction.getTenantId())

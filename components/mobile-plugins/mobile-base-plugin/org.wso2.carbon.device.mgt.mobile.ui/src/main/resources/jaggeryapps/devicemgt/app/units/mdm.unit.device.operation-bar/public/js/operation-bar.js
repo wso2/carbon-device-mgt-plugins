@@ -51,9 +51,9 @@ function getSelectedDeviceIds() {
         var deviceId = device.data('deviceid');
         var deviceType = device.data('type');
         deviceIdentifierList.push({
-                                      "id": deviceId,
-                                      "type": deviceType
-                                  });
+            "id": deviceId,
+            "type": deviceType
+        });
     });
     if (deviceIdentifierList.length == 0) {
         var thisTable = $(".DTTT_selected").closest('.dataTables_wrapper').find('.dataTable').dataTable();
@@ -62,9 +62,9 @@ function getSelectedDeviceIds() {
                 var deviceId = $(thisTable.api().row(this).node()).data('deviceid');
                 var deviceType = $(thisTable.api().row(this).node()).data('devicetype');
                 deviceIdentifierList.push({
-                                              "id": deviceId,
-                                              "type": deviceType
-                                          });
+                    "id": deviceId,
+                    "type": deviceType
+                });
             }
         });
     }
@@ -101,11 +101,6 @@ function getDevicesByTypes(deviceList) {
     });
     return deviceTypes;
 }
-
-//function unloadOperationBar() {
-//    $("#showOperationsBtn").addClass("hidden");
-//    $(".wr-operations").html("");
-//}
 
 function loadOperationBar(deviceType, ownership, mode) {
     var operationBar = $("#operations-bar");
@@ -166,7 +161,7 @@ function loadOperationBar(deviceType, ownership, mode) {
                     /* adding ownership in addition to device-type
                      as it's vital in cases where UI for the same feature should change
                      according to ownership
-                      */
+                     */
                     if (ownership) {
                         current.ownership = ownership;
                     }
@@ -190,21 +185,20 @@ function loadOperationBar(deviceType, ownership, mode) {
 }
 
 function runOperation(operationName) {
+    if (operationName == "NOTIFICATION") {
+        var messageTitle = $("#messageTitle").val();
+        var messageText = $("#messageText").val();
+        if (!messageTitle || !messageText) {
+            var errorMsg = "#notification-error-msg span";
+            var errorMsgWrapper = "#notification-error-msg";
+            $(errorMsg).text("Either the message title / message text or both are empty.");
+            $(errorMsgWrapper).removeClass("hidden");
+            return;
+        }
+    }
+
     var deviceIdList = getSelectedDeviceIds();
     var list = getDevicesByTypes(deviceIdList);
-
-    var successCallback = function (data) {
-        if (operationName == "NOTIFICATION") {
-            $(modalPopupContent).html($("#messageSuccess").html());
-        } else {
-            $(modalPopupContent).html($("#operationSuccess").html());
-        }
-        showPopup();
-    };
-    var errorCallback = function (data) {
-        $(modalPopupContent).html($("#errorOperationUnexpected").html());
-        showPopup();
-    };
 
     var payload, serviceEndPoint;
     if (list[platformTypeConstants.IOS]) {
@@ -217,27 +211,22 @@ function runOperation(operationName) {
         serviceEndPoint = operationModule.getAndroidServiceEndpoint(operationName);
     } else if (list[platformTypeConstants.WINDOWS]) {
         payload = operationModule.generatePayload(platformTypeConstants.WINDOWS, operationName,
-                                                  list[platformTypeConstants.WINDOWS]);
+            list[platformTypeConstants.WINDOWS]);
         serviceEndPoint = operationModule.getWindowsServiceEndpoint(operationName);
     }
-    if (operationName == "NOTIFICATION") {
-        var errorMsgWrapper = "#notification-error-msg";
-        var errorMsg = "#notification-error-msg span";
-        var messageTitle = $("#messageTitle").val();
-        var messageText = $("#messageText").val();
-        if (!(messageTitle && messageText)) {
-            $(errorMsg).text("Enter a message. It cannot be empty.");
-            $(errorMsgWrapper).removeClass("hidden");
+
+    var successCallback = function () {
+        if (operationName == "NOTIFICATION") {
+            $(modalPopupContent).html($("#messageSuccess").html());
         } else {
-            invokerUtil.post(serviceEndPoint, payload, successCallback, errorCallback);
-            $(modalPopupContent).removeData();
-            hidePopup();
+            $(modalPopupContent).html($("#operationSuccess").html());
         }
-    } else {
-        invokerUtil.post(serviceEndPoint, payload, successCallback, errorCallback);
-        $(modalPopupContent).removeData();
-        hidePopup();
-    }
+    };
+    var errorCallback = function () {
+        $(modalPopupContent).html($("#errorOperationUnexpected").html());
+    };
+
+    invokerUtil.post(serviceEndPoint, payload, successCallback, errorCallback);
 }
 
 /*

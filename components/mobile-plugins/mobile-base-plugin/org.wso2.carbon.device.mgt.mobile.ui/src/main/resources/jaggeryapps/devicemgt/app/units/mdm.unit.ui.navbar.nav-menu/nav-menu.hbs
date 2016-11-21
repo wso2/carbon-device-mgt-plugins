@@ -25,10 +25,16 @@
     <li>
         <a href="{{@app.context}}">
             <i class="fw fw-dashboard"></i>
-            Resource Dashboard
+            System Resources
         </a>
     </li>
-
+    {{#if dashboardAvailable}}
+        {{#if permissions.VIEW_DASHBOARD}}
+            <li><a href="{{serverURL}}/portal/t/{{currentUser.domain}}/dashboards/device-statistics-dashboard/">
+                <i class="fw fw-bar-chart"></i>Device Statistics</a>
+            </li>
+        {{/if}}
+    {{/if}}
     {{#if permissions.LIST_DEVICES}}
         <li>
             <!--suppress HtmlUnknownTarget -->
@@ -74,11 +80,6 @@
             </ul>
         </li>
     {{/if}}
-    {{#if permissions.VIEW_DASHBOARD}}
-        <li><a href="{{serverURL}}/portal/dashboards/emm-analytics-dashboard/">
-            <i class="fw fw-pie-chart"></i>Device Management Dashboard</a>
-        </li>
-    {{/if}}
 {{/zone}}
 
 {{#zone "navbarCollapsableRightItems"}}
@@ -105,12 +106,13 @@
         <ul class="sidebar-messages"></ul>
         <br>
         <div class="text-center">
+            <!--suppress HtmlUnknownTarget -->
             <a href="{{@app.context}}/notification-listing" class="btn-operations btn-default">
                 <span class="fw-stack">
                     <i class="fw fw-ring fw-stroke fw-stack-2x"></i>
                     <i class="fw fw-notification fw-stack-1x"></i>
                 </span>
-                  View All Notifications
+                View All Notifications
             </a>
         </div>
     </div>
