@@ -16,9 +16,14 @@
  * under the License.
  */
 
+
 package org.wso2.carbon.device.mgt.iot.androidsense.service.impl;
 
-import org.wso2.carbon.apimgt.annotations.api.API;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.ExtensionProperty;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.Tag;
 import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
 import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
@@ -27,7 +32,21 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @DeviceType(value = "android_sense")
-@API(name = "android_sense", version = "1.0.0", context = "/android_sense", tags = {"android_sense"})
+@SwaggerDefinition(
+        info = @Info(
+                version = "1.0.0",
+                title = "",
+                extensions = {
+                        @Extension(properties = {
+                                @ExtensionProperty(name = "name", value = "android_sense"),
+                                @ExtensionProperty(name = "context", value = "/android_sense"),
+                        })
+                }
+        ),
+        tags = {
+                @Tag(name = "android_sense", description = "")
+        }
+)
 public interface AndroidSenseService {
 
     /**
