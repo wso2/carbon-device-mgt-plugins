@@ -113,7 +113,7 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>
-                                        ${project.build.directory}/maven-shared-archive-resources/jaggeryapps/devicemgt
+                                        ${project.build.directory}/maven-shared-archive-resources/jaggeryapps/
                                     </outputDirectory>
                                     <includes>**/*</includes>
                                 </artifactItem>
