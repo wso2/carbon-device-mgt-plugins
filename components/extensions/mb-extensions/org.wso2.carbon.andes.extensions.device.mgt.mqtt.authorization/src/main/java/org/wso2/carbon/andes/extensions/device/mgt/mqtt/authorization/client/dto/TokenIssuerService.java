@@ -14,6 +14,7 @@
 
 package org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.client.dto;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -28,10 +29,12 @@ public interface TokenIssuerService {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     AccessTokenInfo getToken(@QueryParam("grant_type") String grant, @QueryParam("username") String username,
                              @QueryParam("password") String password);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     AccessTokenInfo getToken(@QueryParam("grant_type") String grant, @QueryParam("refresh_token") String refreshToken);
 }

@@ -77,9 +77,11 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(TokenIssuerService.class, AuthorizationConfigurationManager.getInstance().getTokenEndpoint());
             tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password);
+            tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
         }
         if (System.currentTimeMillis() + refreshTimeOffset > tokenInfo.getExpires_in()) {
             tokenInfo = tokenIssuerService.getToken(REFRESH_GRANT_TYPE, tokenInfo.getRefresh_token());
+            tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
         }
         String headerValue = "Bearer " + tokenInfo.getAccess_token();
         template.header("Authorization", headerValue);

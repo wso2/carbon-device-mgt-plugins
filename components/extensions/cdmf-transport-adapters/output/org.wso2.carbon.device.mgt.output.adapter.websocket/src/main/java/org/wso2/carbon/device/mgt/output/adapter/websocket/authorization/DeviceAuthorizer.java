@@ -96,7 +96,7 @@ public class DeviceAuthorizer implements Authorizer {
                     }
                 }
             } catch (FeignException e) {
-                //do nothing
+                logger.error(e.getMessage(), e);
             }
         }
         return false;
@@ -110,7 +110,7 @@ public class DeviceAuthorizer implements Authorizer {
                 break;
             }
         }
-        if (deviceMgtServerUrl == null && deviceMgtServerUrl.isEmpty()) {
+        if (deviceMgtServerUrl == null || deviceMgtServerUrl.isEmpty()) {
             logger.error("deviceMgtServerUrl can't be empty ");
         }
         return deviceMgtServerUrl;

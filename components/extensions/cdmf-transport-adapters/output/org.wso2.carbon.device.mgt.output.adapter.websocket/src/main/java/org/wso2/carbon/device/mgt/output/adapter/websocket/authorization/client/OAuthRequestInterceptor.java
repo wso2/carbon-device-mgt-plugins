@@ -41,7 +41,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private long refreshTimeOffset;
     private static final String API_APPLICATION_REGISTRATION_CONTEXT = "/api-application-registration";
     private static final String DEVICE_MANAGEMENT_SERVICE_TAG[] = {"device_management"};
-    private static final String APPLICATION_NAME = "mqtt_broker";
+    private static final String APPLICATION_NAME = "websocket-app";
     private static final String PASSWORD_GRANT_TYPE = "password";
     private static final String REFRESH_GRANT_TYPE = "refresh_token";
     private ApiApplicationRegistrationService apiApplicationRegistrationService;
@@ -93,9 +93,11 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(TokenIssuerService.class, tokenEndpoint);
             tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password);
+            tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
         }
         if (System.currentTimeMillis() + refreshTimeOffset > tokenInfo.getExpires_in()) {
             tokenInfo = tokenIssuerService.getToken(REFRESH_GRANT_TYPE, tokenInfo.getRefresh_token());
+            tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
         }
         String headerValue = "Bearer " + tokenInfo.getAccess_token();
         template.header("Authorization", headerValue);

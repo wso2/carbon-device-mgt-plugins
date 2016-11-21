@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Authorize the connecting users against Carbon Permission Model. Intended usage is
+ * Authorize the connecting users against CDMF. Intended usage is
  * via providing fully qualified class name in broker.xml
  * <p/>
  * This is just a simple authorization model. For dynamic topics use an implementation based on IAuthorizer
@@ -83,71 +83,79 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
     @Override
     public boolean isAuthorizedForTopic(MQTTAuthorizationSubject authorizationSubject, String topic,
                                         MQTTAuthoriztionPermissionLevel permissionLevel) {
-        String topics[] = topic.split("/");
-        String tenantDomainFromTopic = topics[0];
-        if (!tenantDomainFromTopic.equals(authorizationSubject.getTenantDomain())) {
-            return false;
-        }
-        if (topics.length < 3) {
+        PrivilegedCarbonContext.startTenantFlow();
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
+                MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, true);
+        try {
+            String topics[] = topic.split("/");
+            String tenantDomainFromTopic = topics[0];
+            if (!tenantDomainFromTopic.equals(authorizationSubject.getTenantDomain())) {
+                return false;
+            }
+            if (topics.length < 3) {
+                AuthorizationCacheKey authorizationCacheKey = new AuthorizationCacheKey(tenantDomainFromTopic
+                        , authorizationSubject.getUsername(), "", "");
+                if (cache.get(authorizationCacheKey) != null && cache.get(authorizationCacheKey)) {
+                    return true;
+                }
+                AuthorizationRequest authorizationRequest = new AuthorizationRequest();
+                authorizationRequest.setTenantDomain(tenantDomainFromTopic);
+                try {
+                    DeviceAuthorizationResult deviceAuthorizationResult =
+                            deviceAccessAuthorizationAdminService.isAuthorized(authorizationRequest);
+                    if (deviceAuthorizationResult != null) {
+                        cache.put(authorizationCacheKey, true);
+                        return true;
+                    }
+                    return false;
+                } catch (FeignException e) {
+                    logger.error(e.getMessage(), e);
+                    return false;
+                }
+            }
+            String deviceType = topics[1];
+            String deviceId = topics[2];
             AuthorizationCacheKey authorizationCacheKey = new AuthorizationCacheKey(tenantDomainFromTopic
-                    ,authorizationSubject.getUsername(), "", "");
-            if (cache.get(authorizationCacheKey)) {
+                    , authorizationSubject.getUsername(), deviceId, deviceType);
+            if (cache.get(authorizationCacheKey) != null && cache.get(authorizationCacheKey)) {
                 return true;
             }
+
+            List<String> requiredPermission;
+            if (permissionLevel == MQTTAuthoriztionPermissionLevel.SUBSCRIBE) {
+                requiredPermission = MQTTAuthorizationConfiguration.getSubscriberPermissions();
+            } else {
+                requiredPermission = MQTTAuthorizationConfiguration.getPublisherPermissions();
+            }
+
             AuthorizationRequest authorizationRequest = new AuthorizationRequest();
             authorizationRequest.setTenantDomain(tenantDomainFromTopic);
+            if (requiredPermission != null) {
+                authorizationRequest.setPermissions(requiredPermission);
+            }
+            authorizationRequest.setUsername(authorizationSubject.getUsername());
+            DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+            deviceIdentifier.setId(deviceId);
+            deviceIdentifier.setType(deviceType);
+            List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+            deviceIdentifiers.add(deviceIdentifier);
+            authorizationRequest.setDeviceIdentifiers(deviceIdentifiers);
             try {
                 DeviceAuthorizationResult deviceAuthorizationResult =
                         deviceAccessAuthorizationAdminService.isAuthorized(authorizationRequest);
-                if (deviceAuthorizationResult != null) {
-                    cache.put(authorizationCacheKey, true);
-                    return true;
+                List<DeviceIdentifier> devices = deviceAuthorizationResult.getAuthorizedDevices();
+                if (devices != null && devices.size() > 0) {
+                    DeviceIdentifier authorizedDevice = devices.get(0);
+                    if (authorizedDevice.getId().equals(deviceId) && authorizedDevice.getType().equals(deviceType)) {
+                        cache.put(authorizationCacheKey, true);
+                        return true;
+                    }
                 }
-                return false;
             } catch (FeignException e) {
-                return false;
+                logger.error(e.getMessage(), e);
             }
-        }
-        String deviceType = topics[1];
-        String deviceId = topics[2];
-        AuthorizationCacheKey authorizationCacheKey = new AuthorizationCacheKey(tenantDomainFromTopic
-                ,authorizationSubject.getUsername(), deviceId, deviceType);
-        if (cache.get(authorizationCacheKey)) {
-            return true;
-        }
-
-        List<String> requiredPermission;
-        if (permissionLevel == MQTTAuthoriztionPermissionLevel.SUBSCRIBE) {
-            requiredPermission = MQTTAuthorizationConfiguration.getSubscriberPermissions();
-        } else {
-            requiredPermission = MQTTAuthorizationConfiguration.getPublisherPermissions();
-        }
-
-        AuthorizationRequest authorizationRequest = new AuthorizationRequest();
-        authorizationRequest.setTenantDomain(tenantDomainFromTopic);
-        if (requiredPermission != null) {
-            authorizationRequest.setPermissions(requiredPermission);
-        }
-        authorizationRequest.setUsername(authorizationSubject.getUsername());
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(deviceType);
-        List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
-        deviceIdentifiers.add(deviceIdentifier);
-        authorizationRequest.setDeviceIdentifiers(deviceIdentifiers);
-        try {
-            DeviceAuthorizationResult deviceAuthorizationResult =
-                    deviceAccessAuthorizationAdminService.isAuthorized(authorizationRequest);
-            List<DeviceIdentifier> devices = deviceAuthorizationResult.getAuthorizedDevices();
-            if (devices != null && devices.size() > 0) {
-                DeviceIdentifier authorizedDevice = devices.get(0);
-                if (authorizedDevice.getId().equals(deviceId) && authorizedDevice.getType().equals(deviceType)) {
-                    cache.put(authorizationCacheKey, true);
-                    return true;
-                }
-            }
-        } catch (FeignException e) {
-            // do nothing.
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
 
         return false;
