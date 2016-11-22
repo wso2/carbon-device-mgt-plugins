@@ -52,6 +52,11 @@
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
             <artifactId>org.wso2.carbon.device.mgt.input.adapter.extension</artifactId>
         </dependency>
+        <!--
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.input.adapter.coap</artifactId>
+        </dependency>-->
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
             <artifactId>org.wso2.carbon.device.mgt.input.adapter.http</artifactId>
@@ -153,6 +158,10 @@
                                 <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.extension:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
+                                <!--
+                                <bundleDef>
+                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.coap:${carbon.devicemgt.plugins.version}
+                                </bundleDef>-->
                                 <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.http:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
@@ -180,6 +189,10 @@
                                 <bundleDef>
                                     com.jayway.jsonpath:json-path
                                 </bundleDef>
+                                <!--
+                                <bundleDef>
+                                    org.eclipse.californium:cf-rd:${eclipse.californium.version}
+                                </bundleDef>-->
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>

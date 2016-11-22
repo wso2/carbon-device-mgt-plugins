@@ -394,6 +394,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.input.adapter.coap</artifactId>
+                <version>${carbon.devicemgt.plugins.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.input.adapter.xmpp</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
@@ -1317,6 +1322,9 @@
 
         <!-- MB Features -->
         <carbon.messaging.version>3.1.11</carbon.messaging.version>
+
+        <!-- Coap californium -->
+        <eclipse.californium.version>1.1.0-SNAPSHOT</eclipse.californium.version>
     </properties>
 
     <scm>
@@ -1515,6 +1523,11 @@
             <id>gcm-server-repository</id>
             <name>GCM Server repository - GitHub</name>
             <url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
+        </repository>
+        <repository>
+            <id>eclipse_snapshots</id>
+            <name>Eclipse Snapshots</name>
+            <url>https://repo.eclipse.org/content/repositories/snapshots/</url>
         </repository>
     </repositories>
 </project>

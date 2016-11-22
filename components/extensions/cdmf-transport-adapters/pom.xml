@@ -34,6 +34,7 @@
 
     <modules>
         <module>input/org.wso2.carbon.device.mgt.input.adapter.extension</module>
+        <module>input/org.wso2.carbon.device.mgt.input.adapter.coap</module>
         <module>input/org.wso2.carbon.device.mgt.input.adapter.http</module>
         <module>input/org.wso2.carbon.device.mgt.input.adapter.mqtt</module>
         <module>input/org.wso2.carbon.device.mgt.input.adapter.xmpp</module>
