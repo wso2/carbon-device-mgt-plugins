@@ -22,7 +22,7 @@
         <Feature code="bulb">
             <Name>Control Bulb</Name>
             <Description>Control Bulb on Raspberrypi</Description>
-            <Operation context="device/{deviceId}/bulb" method="POST">
+            <Operation context="/raspberrypi/device/{deviceId}/bulb" method="POST">
                 <QueryParameters>
                     <Parameter>state</Parameter>
                 </QueryParameters>
