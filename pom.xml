@@ -1524,10 +1524,5 @@
             <name>GCM Server repository - GitHub</name>
             <url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
         </repository>
-        <repository>
-            <id>eclipse_snapshots</id>
-            <name>Eclipse Snapshots</name>
-            <url>https://repo.eclipse.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
+        </repositories>
 </project>
