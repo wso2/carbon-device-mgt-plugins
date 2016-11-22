@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.device.mgt.output.adapter.websocket.config;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.util.WebsocketUtils;
 import org.wso2.carbon.utils.CarbonUtils;
@@ -34,6 +36,7 @@ public class WebsocketConfig {
 
     private static WebsocketConfig config = new WebsocketConfig();
     private WebsocketValidationConfigs websocketValidationConfigs;
+    private static final Log log = LogFactory.getLog(WebsocketConfig.class);
 
     private static final String WEBSOCKET_VALIDATION_CONFIG_PATH =
             CarbonUtils.getEtcCarbonConfigDirPath() + File.separator + "websocket-validation.xml";
@@ -62,6 +65,13 @@ public class WebsocketConfig {
     }
 
     public WebsocketValidationConfigs getWebsocketValidationConfigs() {
+        if (websocketValidationConfigs == null) {
+            try {
+                init();
+            } catch (WebsocketValidationConfigurationFailedException e) {
+                log.error("failed to initialize the config", e);
+            }
+        }
         return websocketValidationConfigs;
     }
 

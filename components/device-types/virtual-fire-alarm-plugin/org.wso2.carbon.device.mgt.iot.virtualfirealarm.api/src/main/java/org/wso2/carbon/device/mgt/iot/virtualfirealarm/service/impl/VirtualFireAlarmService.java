@@ -24,8 +24,6 @@ import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.Extension;
 import io.swagger.annotations.Tag;
 import org.wso2.carbon.apimgt.annotations.api.Scope;
-import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.DeviceType;
-import org.wso2.carbon.device.mgt.extensions.feature.mgt.annotations.Feature;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
@@ -52,7 +50,6 @@ import javax.ws.rs.core.Response;
                 @Tag(name = "virtual_firealarm", description = "")
         }
 )
-@DeviceType(value = "virtual_firealarm")
 public interface VirtualFireAlarmService {
 
     /**
@@ -67,7 +64,6 @@ public interface VirtualFireAlarmService {
     @POST
     @Path("device/{deviceId}/buzz")
     @Scope(key = "device:firealarm:enroll", name = "", description = "")
-    @Feature(code = "buzz", name = "Buzzer On / Off", description = "Switch on/off Virtual Fire Alarm Buzzer. (On / Off)")
     Response switchBuzzer(@PathParam("deviceId") String deviceId,
                              @FormParam("state") String state);
 

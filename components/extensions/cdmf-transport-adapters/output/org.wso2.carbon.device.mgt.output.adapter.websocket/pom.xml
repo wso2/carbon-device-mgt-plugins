@@ -79,6 +79,22 @@
             <groupId>commons-pool.wso2</groupId>
             <artifactId>commons-pool</artifactId>
         </dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-jaxrs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-gson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+		</dependency>
     </dependencies>
 
     <build>
@@ -147,9 +163,18 @@
                             org.wso2.carbon.identity.oauth2.stub,
                             org.wso2.carbon.identity.oauth2.stub.dto,
                             org.wso2.carbon.user.api,
-                            org.wso2.carbon.utils.multitenancy
+                            org.wso2.carbon.utils.multitenancy,
+							feign,
+							feign.auth,
+							feign.codec,
+							feign.gson,
+							javax.cache
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
+						<Embed-Dependency>
+							jsr311-api,
+							feign-jaxrs
+						</Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>
