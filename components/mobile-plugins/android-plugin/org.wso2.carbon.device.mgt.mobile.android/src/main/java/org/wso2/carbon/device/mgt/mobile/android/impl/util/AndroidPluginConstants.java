@@ -37,7 +37,7 @@ public final class AndroidPluginConstants {
 	public static final String VENDOR = "VENDOR";
 	public static final String OS_VERSION = "OS_VERSION";
 	public static final String OS_BUILD_DATE = "OS_BUILD_DATE";
-	public static final String MAC_ADDRESS = "MAC_ADDRESS";
+	public static final String MAC_ADDRESS = "MAC";
 
 	//Properties related to AD_FEATURE table
 	public static final String ANDROID_FEATURE_ID = "ID";
