@@ -60,19 +60,20 @@ $(function() {
                 contentType: "application/json",
                 async: false,
                 success: function(data) {
-                    var duration = data[0].duration / 60000; // Convert to minutes
-                    var newData = [{
+                    if(typeof data[0].duration == 'undefined'){
+                        console.log("Currently data can't be retrieved...");
+                        console.log(JSON.stringify(data));
+                    }else{
+                        var duration = data[0].duration / 60000; // Convert to minutes
+                        var newData = [{
                             "duration": duration,
                             "owner": "YES"
                         }, {
                             "duration": (1440 - duration),
                             "owner": "NO"
                         }
-                    ];
-                // data.forEach(function(entry) {
-                //     entry.duration = entry.duration / 60000 % 100; // Convert to minutes
-                // });
-                // providerData = data;
+                        ];
+                    }
                 providerData = newData;
             }
         });
@@ -81,18 +82,15 @@ $(function() {
 
 
 var drawGadget = function() {
-
     draw('#canvas', conf[CHART_CONF], schema, providerData);
     setInterval(function() {
         draw('#canvas', conf[CHART_CONF], schema, getProviderData());
     }, pref.getInt(REFRESH_INTERVAL));
-
 };
 
 getGadgetLocation(function(gadget_Location) {
     gadgetLocation = gadget_Location;
     init();
     drawGadget();
-
 });
 });

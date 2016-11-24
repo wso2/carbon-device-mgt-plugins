@@ -49,5 +49,7 @@
         SELECT owner, deviceId, number, sum(callCount) as callCount, sum(smsCount) as smsCount, sum(total) as total, year
         FROM Android_Frequent_Contacts_Per_Month
         GROUP BY deviceId, owner, number, year
-        ORDER BY total DESC;                            </Script>
+        ORDER BY total DESC;
+    </Script>
+    <CronExpression>0 0/5 * * * ?</CronExpression>
 </Analytics>

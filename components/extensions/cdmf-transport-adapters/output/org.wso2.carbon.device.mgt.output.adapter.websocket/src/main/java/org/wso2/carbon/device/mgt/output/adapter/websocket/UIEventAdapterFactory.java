@@ -51,6 +51,7 @@ public class UIEventAdapterFactory extends OutputEventAdapterFactory {
     public List<String> getSupportedMessageFormats() {
         List<String> supportedMessageFormats = new ArrayList<String>();
         supportedMessageFormats.add(MessageType.WSO2EVENT);
+        supportedMessageFormats.add(MessageType.JSON);
         return supportedMessageFormats;
     }
 

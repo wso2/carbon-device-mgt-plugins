@@ -178,7 +178,6 @@ var getConfig, validate, getMode, getSchema, getData, registerCallBackforPush;
             result = connector.getRecordsByRange(loggedInUser, tableName, from, to, 0, limit, null).getMessage();
 
         }
-        log.info(result);
         result = JSON.parse(result);
         var data = [];
         for (var i = 0; i < result.length; i++) {

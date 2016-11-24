@@ -32,4 +32,5 @@ public class WebsocketConstants {
     public static final String TOKEN_VALIDATION_ENDPOINT_URL = "tokenValidationEndpoint";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
+    public static final String TOKEN_PARAM = "token";
 }
