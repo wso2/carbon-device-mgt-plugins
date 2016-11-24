@@ -74,6 +74,12 @@ public class TenantSubscriptionEndpoint extends SubscriptionEndpoint {
                 } finally {
                     PrivilegedCarbonContext.endTenantFlow();
                 }
+            } else {
+                try {
+                    session.close(new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, "Unauthorized Access"));
+                } catch (IOException e) {
+                    log.error("Failed to disconnect the unauthorized client.", e);
+                }
             }
         } else {
             try {

@@ -75,6 +75,8 @@ public class SuperTenantSubscriptionEndpoint extends SubscriptionEndpoint {
 				} finally {
 					PrivilegedCarbonContext.endTenantFlow();
 				}
+			} else {
+				log.info("Failed to authorize the connection for the stream : "+ streamName+" , version : "+ version);
 			}
 		} else {
 			try {
