@@ -5,3 +5,5 @@
   <mapping customMapping="disable" type="wso2event"/>
   <to eventAdapterType="ui"/>
 </eventPublisher>
+
+
