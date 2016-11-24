@@ -56,13 +56,12 @@ hr {
     background-color: #f6f4f4;
 }
 
-.doc-link {
-    background: #11375B;
-    padding: 20px;
-    color: white;
-    margin-top: 0;
+.doc-link{
+    background: none;
+    color: #000;
+    padding: 10px 0px;
 }
 
 .doc-link a {
-    color: white;
+    color: #006eff;
 }
