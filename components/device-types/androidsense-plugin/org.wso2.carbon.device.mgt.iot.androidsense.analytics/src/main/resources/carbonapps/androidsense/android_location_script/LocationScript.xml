@@ -39,5 +39,7 @@
         INSERT INTO TABLE Android_Location_Stats_Per_Year
         SELECT owner, deviceId, latitude, longitude, streetName, sum(noOfVisits) as noOfVisits, year
         FROM Android_Location_Stats_Per_Month
-        GROUP BY deviceId, owner, year, streetName, latitude, longitude;                            </Script>
+        GROUP BY deviceId, owner, year, streetName, latitude, longitude;
+    </Script>
+    <CronExpression>0 0/5 * * * ?</CronExpression>
 </Analytics>
