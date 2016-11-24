@@ -278,7 +278,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     public Response modifyEnrollment(@PathParam("id") String id, @Valid AndroidDevice androidDevice) {
         Device device;
         DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(androidDevice.getDeviceIdentifier());
+        deviceIdentifier.setId(id);
         deviceIdentifier.setType(AndroidConstants.DEVICE_TYPE_ANDROID);
         try {
             device = AndroidAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
@@ -299,8 +299,8 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
         if (device == null) {
             String errorMessage = "The device to be modified doesn't exist.";
             log.error(errorMessage);
-            throw new org.wso2.carbon.mdm.services.android.exception.BadRequestException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+            throw new org.wso2.carbon.mdm.services.android.exception.NotFoundException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(404l).setMessage(errorMessage).build());
         }
         if(androidDevice.getEnrolmentInfo() != null){
             device.setEnrolmentInfo(device.getEnrolmentInfo());
