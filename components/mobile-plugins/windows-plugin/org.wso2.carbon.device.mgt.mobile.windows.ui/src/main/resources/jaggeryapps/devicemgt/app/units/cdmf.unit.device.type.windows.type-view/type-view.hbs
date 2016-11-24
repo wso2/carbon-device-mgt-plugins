@@ -1,22 +1,8 @@
-{{!
-  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+{{unit "cdmf.unit.lib.qrcode"}}
+{{unit "cdmf.unit.device.type.windows.qr-modal"}}
 
-  WSO2 Inc. licenses this file to you under the Apache License,
-  Version 2.0 (the "License"); you may not use this file except
-  in compliance with the License.
-  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing,
-  software distributed under the License is distributed on an
-  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  KIND, either express or implied. See the License for the
-  specific language governing permissions and limitations
-  under the License.
-}}
 <div class="col-lg-12  margin-top-double">
-    <h1 class="grey">Windows Mobile</h1>
+    <h1 class="grey ">Windows Mobile</h1>
     <hr>
 </div>
 <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
@@ -24,41 +10,41 @@
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-    <h4 class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Windows" target="_blank">[ here ]</a> for
-                         latest instructions and troubleshooting.</h4>
+    <h4 class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Windows"
+                                  target="_blank">[ here ]</a> for latest instructions and troubleshooting.</h4>
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
 
     <h3 class="uppercase">What it Does</h3>
-    <hr />
-    <p class="grey margin-top">Connect and manage your Windows device with WSO2 IoT Server.</p>
+    <hr>
+    <p class="grey margin-top">Connect and manage your Android device with WSO2 IoT Server.</p>
     <br>
 
     <h3 class="uppercase">What You Need</h3>
     <hr>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">STEP 01</span>   Windows Mobile.</li>
-        <li class="padding-top-double"><span class="circle">STEP 02</span>   Go ahead and click [Enroll Device].
+        <li class="padding-top-double"><span class="circle">STEP 01</span>   Windows
+            Mobile.
         </li>
-        <li class="padding-top-double"><span class="circle">STEP 03</span>   Proceed to [Prepare] section.
+        <li class="padding-top-double"><span class="circle">STEP 02</span>   Go ahead
+            and click [Enroll Device].
+        </li>
+        <li class="padding-top-double"><span class="circle">STEP 03</span>   Proceed
+            to the [Prepare] section.
         </li>
     </ul>
     <br>
-
-    <a href="#" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg"></i>
-        Enroll Device</a>
-
-    <br /><br />
+    <a href="javascript:toggleEnrollment()" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg"></i> Enroll Device</a>
+    <br/><br/>
 </div>
 
 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12 padding-double grey-bg">
-    <h3 class="uppercase">Prepare</h3>
-    <hr>
+    <h3 class="uppercase">Prepare</h3><hr>
     <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="circle">01</span> Scan QR code.</li>
-        <li class="padding-top-double"><span class="circle">02</span> Follow instructions in wizard.</li>
-        <li class="padding-top-double"><span class="circle">03</span> Configure your workspace account</li>
+        <li class="padding-top-double"><span class="circle">01</span> Download Device Agent into your Windows Mobile.</li>
+        <li class="padding-top-double"><span class="circle">02</span> Install Agent APK file.</li>
+        <li class="padding-top-double"><span class="circle">03</span> Configure Agent App</li>
     </ul>
     <br>
 
@@ -73,40 +59,12 @@
     </center>
 </div>
 
-<br />
-
-<div id="qr-code-modal"
-     data-enrollment-url="{{@app.context}}/device/windows/enroll" class="hidden">
-
-    <div class="content">
-        <div class="row">
-            <div class="col-lg-5 col-md-6 col-centered">
-                <h3>Scan QR code to start enrollment</h3>
-                <p>Please scan the QR code using your mobile device to retrieve enrollment URL.</p>
-                <div class="panel panel-default">
-                    <div class="panel-body col-centered">
-                        <div class="qr-code"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{#zone "bottomJs"}}
-    <script type="text/javascript">
-        $(".download-link").click(function () {
-            toggleEnrollment();
-        });
-
-        function toggleEnrollment() {
-            $(".modalpopup-content").html($("#qr-code-modal").html());
-            generateQRCode(".modalpopup-content .qr-code");
-            showPopup();
-        }
-    </script>
-{{/zone}}
+<br/>
 
 {{#zone "topCss"}}
     {{css "css/styles.css"}}
+{{/zone}}
+
+{{#zone "bottomJs"}}
+    {{js "js/type-view.js"}}
 {{/zone}}

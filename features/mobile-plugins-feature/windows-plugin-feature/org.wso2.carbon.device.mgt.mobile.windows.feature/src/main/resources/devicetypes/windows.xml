@@ -57,16 +57,52 @@
 </DataSource>
 
 <Features>
-    <Feature code="abc">
-        <Name>abc</Name>
-        <Description>this is a feature</Description>
-        <Operation context="/bulb/{state}" method="PUT">
-            <QueryParameters>
-                <Parameter>deviceId</Parameter>
-            </QueryParameters>
-            <FormParameters>
-                <Parameter>test</Parameter>
-            </FormParameters>
+    <Feature code="DEVICE_LOCK">
+        <Name>Device Lock</Name>
+        <Description>Lock the device</Description>
+        <Operation context="windows/lock-devices" method="POST">
+        </Operation>
+    </Feature>
+    <Feature code="DISENROLL">
+        <Name>Device Lock</Name>
+        <Description>Lock the device</Description>
+        <Operation context="windows/disenroll-devices" method="POST">
+        </Operation>
+    </Feature>
+    <Feature code="WIPE_DATA">
+        <Name>Device Lock</Name>
+        <Description>Lock the device</Description>
+        <Operation context="windows/wipe-devices" method="POST">
+        </Operation>
+    </Feature>
+    <Feature code="DEVICE_RING">
+        <Name>Device Lock</Name>
+        <Description>Lock the device</Description>
+        <Operation context="windows/ring-devices" method="POST">
+        </Operation>
+    </Feature>
+    <Feature code="LOCK_RESET">
+        <Name>Device Lock</Name>
+        <Description>Lock the device</Description>
+        <Operation context="windows/lock-reset-devices" method="POST">
+        </Operation>
+    </Feature>
+    <Feature code="PASSCODE_POLICY">
+        <Name>Password Policy</Name>
+        <Description>Set passcode policy</Description>
+        <Operation context="" method="POST">
+        </Operation>
+    </Feature>
+    <Feature code="CAMERA">
+        <Name>Camera Enable/Disable</Name>
+        <Description>Enable/Disable camera</Description>
+        <Operation context="" method="POST">
+        </Operation>
+    </Feature>
+    <Feature code="ENCRYPT_STORAGE">
+        <Name>Encrypt Storage</Name>
+        <Description>Encrypt the device storage</Description>
+        <Operation context="" method="POST">
         </Operation>
     </Feature>
 </Features>
