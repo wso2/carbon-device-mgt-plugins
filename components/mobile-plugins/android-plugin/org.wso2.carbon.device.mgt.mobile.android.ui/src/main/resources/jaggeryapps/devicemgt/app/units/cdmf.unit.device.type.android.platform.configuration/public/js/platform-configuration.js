@@ -124,8 +124,6 @@ $(document).ready(function () {
                         $("input#android-config-notifier-frequency").val(config.value / 1000);
                     } else if (config.name == configParams["GCM_API_KEY"]) {
                         $("input#android-config-gcm-api-key").val(config.value);
-                    } else if (config.name == configParams["GCM_SENDER_ID"]) {
-                        $("input#android-config-gcm-sender-id").val(config.value);
                     } else if (config.name == configParams["ANDROID_EULA"]) {
                         $("#android-eula").val(config.value);
                     }
@@ -159,7 +157,7 @@ $(document).ready(function () {
         var notifierType = $("#android-config-notifier").find("option:selected").attr("value");
         var notifierFrequency = $("input#android-config-notifier-frequency").val();
         var gcmAPIKey = $("input#android-config-gcm-api-key").val();
-        var gcmSenderId = $("input#android-config-gcm-sender-id").val();
+        var gcmSenderId = "sender_id";
         var androidLicense = tinyMCE.activeEditor.getContent();
         var errorMsgWrapper = "#android-config-error-msg";
         var errorMsg = "#android-config-error-msg span";
@@ -170,10 +168,7 @@ $(document).ready(function () {
             $(errorMsg).text("Provided notifier frequency is invalid. ");
             $(errorMsgWrapper).removeClass("hidden");
         } else if (notifierType == notifierTypeConstants["GCM"] && !gcmAPIKey) {
-            $(errorMsg).text("GCM API Key is a required field. It cannot be empty.");
-            $(errorMsgWrapper).removeClass("hidden");
-        } else if (notifierType == notifierTypeConstants["GCM"] && !gcmSenderId) {
-            $(errorMsg).text("GCM Sender ID is a required field. It cannot be empty.");
+            $(errorMsg).text("FCM API Key is a required field. It cannot be empty.");
             $(errorMsgWrapper).removeClass("hidden");
         } else {
 
