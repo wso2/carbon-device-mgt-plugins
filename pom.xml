@@ -923,6 +923,11 @@
             </dependency>
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-jaxrs</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
@@ -1523,6 +1528,11 @@
             <id>gcm-server-repository</id>
             <name>GCM Server repository - GitHub</name>
             <url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
+        </repository>
+        <repository>
+            <id>repo.eclipse.org</id>
+            <name>Californium Repository</name>
+            <url>https://repo.eclipse.org/content/repositories/californium/</url>
         </repository>
         </repositories>
 </project>

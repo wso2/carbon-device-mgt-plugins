@@ -20,6 +20,8 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.message.BasicRequestLine;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.LinkFormat;
 import org.eclipse.californium.core.coap.Request;
@@ -35,6 +37,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
@@ -131,7 +135,7 @@ public class EndResource extends TagResource {
 			}
 
 			//set other header parameters
-			httpRequest = setHeaders(httpRequest, payload);
+			httpRequest = setPayload(httpRequest, payload);
 		}
 		/*above if condition must be removed when a necessary alternative is found*/
 		else {
@@ -167,6 +171,14 @@ public class EndResource extends TagResource {
 		HttpRequest httpRequest = null;
 		String payload = request.getPayloadString(); //get payload
 
+		ObjectMapper mapper= new ObjectMapper();
+		Map<String,Object> payloadMap= new HashMap<String, Object>();
+		try {
+			payloadMap=mapper.readValue(payload,new TypeReference<Map<String, String>>(){});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		//set http URI by removing 'rd' part in the reousrce path
 		URL proxyUri=getHttpURI(request);
 		if(request.getOptions().getProxyUri()==null)
@@ -183,7 +195,8 @@ public class EndResource extends TagResource {
 		}
 
 		//set other header parameters
-		httpRequest = setHeaders(httpRequest, payload);
+		httpRequest = setPayload(httpRequest, payload);
+		httpRequest.addHeader(setHeader(HttpHeaders.CONTENT_TYPE,"application/json"));
 
 		Response coapResponse = null;
 		try {
@@ -210,23 +223,26 @@ public class EndResource extends TagResource {
 	}
 
 	/**
-	 * add oAuth Header and other Header parameters that coap options don't carry.
+	 * add oAuth Header and other parameters that coap options don't carry.
 	 * @param request
 	 * @param payload - the payload of the coap request
 	 * @return
 	 */
-	public HttpRequest setHeaders(HttpRequest request, String payload) {
+	public HttpRequest setPayload(HttpRequest request, String payload) {
 
 		final Pattern HEADER_PATTERN = Pattern.compile("[H|h]eader\\{(.*?)\\}"); //e.g. Header{Autherization:"Bearer 785ht9t9t"}
 		final String HEADER_TITLE = "Header";
+		final Pattern PARAM_PATTERN=Pattern.compile("[P|p]aram\\{(.*?)\\}");
+		final String PARAM_TITLE="Param";
+
 		Scanner scanner = new Scanner(payload);
-		String headerLine;
-		while (scanner.hasNext())//can be used to set other parameters in payload [only header atm]
+		String line;
+		while (scanner.hasNext())//can be used to set other parameters in payload
 		{
-			if ((headerLine = scanner.findInLine(HEADER_PATTERN)) != null) {
-				headerLine = headerLine
-						.substring(HEADER_TITLE.length() + 1, headerLine.length() - 1); //trim Header{ & }
-				Scanner headerScanner = new Scanner(headerLine);
+			if ((line = scanner.findInLine(HEADER_PATTERN)) != null) {
+				line = line
+						.substring(HEADER_TITLE.length() + 1, line.length() - 1); //trim Header{ & }
+				Scanner headerScanner = new Scanner(line);
 				String attribute = null;
 				while (headerScanner.findWithinHorizon(LinkFormat.DELIMITER, 1) == null
 						&& (attribute = headerScanner.findInLine(LinkFormat.WORD)) != null) {
@@ -243,7 +259,27 @@ public class EndResource extends TagResource {
 
 					}
 				}
-				break; //as no other parameters to set
+			}
+			if((line = scanner.findInLine(PARAM_PATTERN)) != null)
+			{
+				line = line.substring(PARAM_TITLE.length() + 1, line.length() - 1); //trim Param{ & }
+				Scanner paramScanner = new Scanner(line);
+				String attribute = null;
+				while (paramScanner.findWithinHorizon(LinkFormat.DELIMITER, 1) == null
+						&& (attribute = paramScanner.findInLine(LinkFormat.WORD)) != null) {
+					if (paramScanner.findWithinHorizon("=", 0) != null) {
+						String value = null;
+						if ((value = paramScanner.findInLine(LinkFormat.QUOTED_STRING)) != null) {
+							value = value.substring(1, value.length() - 1); // trim " "
+						} else {
+							value = paramScanner.next();
+
+						}
+
+					}
+				}
+
+
 			}
 
 		}
@@ -275,6 +311,9 @@ public class EndResource extends TagResource {
 		return header;
 	}
 
+
+
+
 	/**
 	 * getters & setters
 	 */
@@ -295,7 +334,8 @@ public class EndResource extends TagResource {
 			String path=coapUri.getPath();
 			if (request.getOptions().getProxyUri() == null) {
 				proxyUri = new URL(this.getParentNode().getContext() + path
-						.substring(this.getParentNode().getParent().getName().length() + 1));
+						.substring(this.getParentNode().getParent().getName().length() + 1)+coapUri.getQuery());
+
 			} else
 				proxyUri = new URL(request.getOptions().getProxyUri());
 
