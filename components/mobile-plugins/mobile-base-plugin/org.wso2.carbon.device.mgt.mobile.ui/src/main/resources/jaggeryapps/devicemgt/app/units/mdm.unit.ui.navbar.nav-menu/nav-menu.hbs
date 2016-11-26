@@ -22,19 +22,6 @@
 {{/zone}}
 
 {{#zone "navMenu-items"}}
-    <li>
-        <a href="{{@app.context}}">
-            <i class="fw fw-dashboard"></i>
-            System Resources
-        </a>
-    </li>
-    {{#if dashboardAvailable}}
-        {{#if permissions.VIEW_DASHBOARD}}
-            <li><a href="{{serverURL}}/portal/t/{{currentUser.domain}}/dashboards/device-statistics-dashboard/">
-                <i class="fw fw-bar-chart"></i>Device Statistics</a>
-            </li>
-        {{/if}}
-    {{/if}}
     {{#if permissions.LIST_DEVICES}}
         <li>
             <!--suppress HtmlUnknownTarget -->
@@ -44,7 +31,17 @@
             </a>
         </li>
     {{/if}}
-
+    {{#if permissions.VIEW_DASHBOARD}}
+        <li>
+            <a href="{{serverURL}}/portal/t/{{currentUser.domain}}/dashboards/device-statistics-dashboard/">
+                <i class="fw fw-bar-chart"></i>Device Statistics
+            </a>
+        </li>
+    {{/if}}
+    {{#if permissions.LIST_POLICIES}}
+        <li><!--suppress HtmlUnknownTarget -->
+            <a href="{{@app.context}}/policies"><i class="fw fw-policy"></i>Policy Management</a></li>
+    {{/if}}
     {{#if permissions.USER_MGT_PERMITTED}}
         <li><a><i class="fw fw-user"></i>User Management</a>
             <ul>
@@ -58,10 +55,6 @@
                 {{/if}}
             </ul>
         </li>
-    {{/if}}
-    {{#if permissions.LIST_POLICIES}}
-        <li><!--suppress HtmlUnknownTarget -->
-            <a href="{{@app.context}}/policies"><i class="fw fw-policy"></i>Policy Management</a></li>
     {{/if}}
     {{#if permissions.CONFIG_MGT_PERMITTED}}
         <li><a><i class="fw fw-settings"></i>Configuration Management</a>

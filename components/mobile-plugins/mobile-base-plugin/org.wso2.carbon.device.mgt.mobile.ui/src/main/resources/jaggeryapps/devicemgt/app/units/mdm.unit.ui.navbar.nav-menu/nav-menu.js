@@ -59,8 +59,6 @@ function onRequest(context) {
     permissions["LIST_NOTIFICATIONS"] = userModule.isAuthorized("/permission/admin/device-mgt/notifications/view");
     permissions["VIEW_DASHBOARD"] = userModule.isAuthorized("/permission/admin/device-mgt/dashboard/view");
 
-    viewModel["dashboardAvailable"] = mdmProps["deviceStatisticsEnabled"];
-
     viewModel["permissions"] = permissions;
     viewModel["appContext"] = mdmProps["appContext"];
     viewModel["serverURL"] = mdmProps["httpsWebURL"];
