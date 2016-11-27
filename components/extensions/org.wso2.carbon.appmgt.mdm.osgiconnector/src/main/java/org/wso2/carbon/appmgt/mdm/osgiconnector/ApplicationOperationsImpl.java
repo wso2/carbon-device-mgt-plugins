@@ -233,7 +233,8 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 			List<org.wso2.carbon.device.mgt.common.Device> deviceList = MDMServiceAPIUtils
 					.getDeviceManagementService(applicationOperationDevice.getTenantId()).
 							getDevicesOfUser(
-									applicationOperationDevice.getCurrentUser().getUsername());
+									applicationOperationDevice.getCurrentUser().getUsername(),
+									applicationOperationDevice.getPlatform());
 			devices = new ArrayList<>(deviceList.size());
 			if(log.isDebugEnabled()){
 				log.debug("device list got from mdm "+ deviceList.toString());
