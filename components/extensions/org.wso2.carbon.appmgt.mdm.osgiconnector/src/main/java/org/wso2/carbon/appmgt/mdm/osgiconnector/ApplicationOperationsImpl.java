@@ -234,12 +234,21 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 			throws MobileApplicationException {
 
 		List<Device> devices;
+		List<org.wso2.carbon.device.mgt.common.Device> deviceList = null;
 		try {
-			List<org.wso2.carbon.device.mgt.common.Device> deviceList = MDMServiceAPIUtils
-					.getDeviceManagementService(applicationOperationDevice.getTenantId()).
-							getDevicesOfUser(
-									applicationOperationDevice.getCurrentUser().getUsername(),
-									applicationOperationDevice.getPlatform());
+			if(MDMAppConstants.WEBAPP.equals
+					(applicationOperationDevice.getPlatform())) {
+				deviceList = MDMServiceAPIUtils
+						.getDeviceManagementService(applicationOperationDevice.getTenantId()).
+								getDevicesOfUser(
+										applicationOperationDevice.getCurrentUser().getUsername());
+			} else {
+				deviceList = MDMServiceAPIUtils
+						.getDeviceManagementService(applicationOperationDevice.getTenantId()).
+								getDevicesOfUser(
+										applicationOperationDevice.getCurrentUser().getUsername(),
+										applicationOperationDevice.getPlatform());
+			}
 			devices = new ArrayList<>(deviceList.size());
 			if(log.isDebugEnabled()){
 				log.debug("device list got from mdm "+ deviceList.toString());
