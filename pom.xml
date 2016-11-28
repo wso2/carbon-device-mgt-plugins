@@ -240,11 +240,6 @@
                 <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>javax.cache.wso2</artifactId>
-                <version>${carbon.kernel.version}</version>
-            </dependency>
 
             <!-- Device Management Core dependencies -->
             <dependency>
@@ -315,16 +310,6 @@
                 <version>${carbon.devicemgt.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.event-processing</groupId>
-                <artifactId>org.wso2.carbon.siddhi.geo.event.fuser</artifactId>
-                <version>${carbon.event.processing.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.event-processing</groupId>
-                <artifactId>org.wso2.carbon.siddhi.geo.event.notifier</artifactId>
-                <version>${carbon.event.processing.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.devicemgt</groupId>
                 <artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
                 <version>${carbon.devicemgt.version}</version>
@@ -379,9 +364,9 @@
 
             <!--IoT Server specific dependencies-->
             <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon.devicemgt-plugins</groupId>-->
-            <!--<artifactId>org.wso2.carbon.device.mgt.iot.url.printer</artifactId>-->
-            <!--<version>${carbon.devicemgt.plugins.version}</version>-->
+                <!--<groupId>org.wso2.carbon.devicemgt-plugins</groupId>-->
+                <!--<artifactId>org.wso2.carbon.device.mgt.iot.url.printer</artifactId>-->
+                <!--<version>${carbon.devicemgt.plugins.version}</version>-->
             <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -406,6 +391,11 @@
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.input.adapter.mqtt</artifactId>
+                <version>${carbon.devicemgt.plugins.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.input.adapter.coap</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
             <dependency>
@@ -500,7 +490,7 @@
                 <artifactId>org.wso2.carbon.device.mgt.mobile.url.printer</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
-
+            
             <!--Android dependencies-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -527,9 +517,9 @@
 
             <!-- AppM dependencies -->
             <dependency>
-                <groupId>org.wso2.carbon.appmgt</groupId>
-                <artifactId>org.wso2.carbon.appmgt.mobile</artifactId>
-                <version>${carbon.appmgt.version}</version>
+                 <groupId>org.wso2.carbon.appmgt</groupId>
+                 <artifactId>org.wso2.carbon.appmgt.mobile</artifactId>
+                 <version>${carbon.appmgt.version}</version>
             </dependency>
 
             <!--Osgi dependencies-->
@@ -934,6 +924,11 @@
             </dependency>
             <dependency>
                 <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
                 <artifactId>jackson-jaxrs</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
@@ -984,7 +979,7 @@
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
             </dependency>
-            <dependency>
+             <dependency>
                 <groupId>commons-io.wso2</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io-wso2.version}</version>
@@ -1171,21 +1166,6 @@
                 <artifactId>commons-lang</artifactId>
                 <version>${commons.lang.version}</version>
             </dependency>
-            <dependency>
-                <groupId>io.github.openfeign</groupId>
-                <artifactId>feign-core</artifactId>
-                <version>${io.github.openfeign.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.openfeign</groupId>
-                <artifactId>feign-jaxrs</artifactId>
-                <version>${io.github.openfeign.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.github.openfeign</groupId>
-                <artifactId>feign-gson</artifactId>
-                <version>${io.github.openfeign.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1229,14 +1209,15 @@
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Device Management -->
-        <carbon.devicemgt.version>2.0.2-SNAPSHOT</carbon.devicemgt.version>
+        <carbon.devicemgt.version>2.0.1-SNAPSHOT</carbon.devicemgt.version>
         <carbon.devicemgt.version.range>[2.0.0, 3.0.0)</carbon.devicemgt.version.range>
+
 
         <!-- Carbon App Management -->
         <carbon.appmgt.version>1.2.5</carbon.appmgt.version>
 
         <!-- Carbon Device Management Plugins -->
-        <carbon.devicemgt.plugins.version>3.0.2-SNAPSHOT</carbon.devicemgt.plugins.version>
+        <carbon.devicemgt.plugins.version>3.0.1-SNAPSHOT</carbon.devicemgt.plugins.version>
 
         <!-- Carbon Commons -->
         <carbon.commons.version>4.4.8</carbon.commons.version>
@@ -1278,7 +1259,6 @@
         <carbon.analytics.common.version.range>[5.1.3,6.0.0)</carbon.analytics.common.version.range>
         <carbon.analytics.version>1.3.0</carbon.analytics.version>
         <carbon.analytics.version.range>[1.3.0,2.0.0)</carbon.analytics.version.range>
-        <carbon.event.processing.version>2.1.4</carbon.event.processing.version>
 
         <!-- Third Party Dependencies-->
         <spongycastle.version>1.51.0.0</spongycastle.version>
@@ -1308,7 +1288,7 @@
         <jaxws-rt.version>2.2.8</jaxws-rt.version>
         <saaj-impl.version>1.3.18</saaj-impl.version>
         <bcpkix-jdk15on.version>1.52.0.wso2v2</bcpkix-jdk15on.version>
-        <bcprov-jdk15on.version>1.52.0.wso2v1</bcprov-jdk15on.version>
+	    <bcprov-jdk15on.version>1.52.0.wso2v1</bcprov-jdk15on.version>
         <plexus-utils.version>3.0.21</plexus-utils.version>
         <joda-time.version>2.2</joda-time.version>
         <wss4j.security.version>1.6.17</wss4j.security.version>
@@ -1348,6 +1328,9 @@
 
         <!-- MB Features -->
         <carbon.messaging.version>3.1.11</carbon.messaging.version>
+
+        <!-- Coap californium -->
+        <eclipse.californium.version>1.1.0-SNAPSHOT</eclipse.californium.version>
 
         <!--Feign Version-->
         <io.github.openfeign.version>9.3.1</io.github.openfeign.version>
@@ -1551,6 +1534,11 @@
             <id>gcm-server-repository</id>
             <name>GCM Server repository - GitHub</name>
             <url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
+        </repository>
+        <repository>
+            <id>repo.eclipse.org</id>
+            <name>Californium Repository</name>
+            <url>https://repo.eclipse.org/content/repositories/californium/</url>
         </repository>
     </repositories>
 </project>
