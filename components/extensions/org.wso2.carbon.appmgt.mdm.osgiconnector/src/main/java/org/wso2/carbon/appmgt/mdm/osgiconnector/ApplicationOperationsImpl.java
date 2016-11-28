@@ -75,7 +75,10 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 					for (org.wso2.carbon.device.mgt.common.Device device : deviceList) {
 						if(MDMAppConstants.WEBAPP.equals(applicationOperationAction.getApp().getPlatform()) ||
 								applicationOperationAction.getApp().getPlatform().equalsIgnoreCase(device.getType())){
-							deviceIdentifiers.add(getDeviceIdentifierByDevice(device));
+							if (MDMAppConstants.ACTIVE.equalsIgnoreCase(device.getEnrolmentInfo().
+									getStatus().toString())) {
+								deviceIdentifiers.add(getDeviceIdentifierByDevice(device));
+							}
 						}
 					}
 				}
@@ -96,7 +99,9 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 									getAllDevicesOfRole(userRole);
 
 					for (org.wso2.carbon.device.mgt.common.Device device : deviceList) {
-						deviceIdentifiers.add(getDeviceIdentifierByDevice(device));
+						if (MDMAppConstants.ACTIVE.equalsIgnoreCase(device.getEnrolmentInfo().getStatus().toString())) {
+							deviceIdentifiers.add(getDeviceIdentifierByDevice(device));
+						}
 					}
 				}
 			} catch (DeviceManagementException devMgtEx) {
