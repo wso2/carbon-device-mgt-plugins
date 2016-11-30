@@ -68,7 +68,7 @@
                                     <outputDirectory>
                                         ${project.build.directory}/maven-shared-archive-resources
                                     </outputDirectory>
-                                    <includes>org_wso2_carbon_iot_geo_dashboard-1.0.0.car</includes>
+                                    <includes>**/*</includes>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>

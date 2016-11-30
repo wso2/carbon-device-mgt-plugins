@@ -23,7 +23,7 @@
     <property name="target-dir" value="target/carbonapps"/>
     <property name="src-dir" value="src/main/resources/carbonapps"/>
 
-    <property name="GeoDashboard" value="org_wso2_carbon_iot_geo_dashboard-1.0.0.car"/>
+    <property name="GeoDashboard" value="org_wso2_carbon_iot_geo_dashboard-1.0.0"/>
 
     <target name="clean">
         <delete dir="${target-dir}" />
