@@ -15,12 +15,13 @@
 package org.wso2.carbon.device.mgt.output.adapter.websocket.authentication;
 
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authentication.oauth.OAuthTokenValdiator;
-import javax.websocket.Session;
+
+import java.util.List;
+import java.util.Map;
 
 public class OAuthAuthenticator implements Authenticator {
 
-    @Override
-    public AuthenticationInfo isAutenticated(Session session) {
-        return OAuthTokenValdiator.getInstance().validateToken(session);
+    public AuthenticationInfo isAuthenticated(Map<String, List<String>> webSocketConnectionProperties) {
+        return OAuthTokenValdiator.getInstance().validateToken(webSocketConnectionProperties);
     }
 }

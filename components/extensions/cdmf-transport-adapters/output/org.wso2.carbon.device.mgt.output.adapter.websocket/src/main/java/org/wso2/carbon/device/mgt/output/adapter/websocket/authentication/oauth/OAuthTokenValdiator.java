@@ -31,7 +31,6 @@ import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
-import javax.websocket.Session;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -50,10 +49,11 @@ public class OAuthTokenValdiator {
 	private static Log log = LogFactory.getLog(OAuthTokenValdiator.class);
 	private static final String WEBSOCKET_CONFIG_LOCATION =
 			CarbonUtils.getEtcCarbonConfigDirPath() + File.separator + "websocket-validation.properties";
-	private static final String QUERY_STRING_SEPERATOR = "&";
-	private static final String QUERY_KEY_VALUE_SEPERATOR = "=";
+	private static final String COOKIE_KEY_VALUE_SEPERATOR = "=";
+	private static final String COOKIE_KEYPAIR_SEPERATOR = ";";
+	private static final String COOKIE = "cookie";
 	private static final String TOKEN_TYPE = "bearer";
-	private static final String TOKEN_IDENTIFIER = "token";
+	private static final String TOKEN_IDENTIFIER = "websocket-token";
 	private static OAuthTokenValdiator oAuthTokenValdiator;
 
 	public static OAuthTokenValdiator getInstance() {
@@ -79,12 +79,11 @@ public class OAuthTokenValdiator {
 
 	/**
 	 * This method gets a string accessToken and validates it
-	 *
-	 * @param session which need to be validated.
+	 * @param webSocketConnectionProperties WebSocket connection information including http headers
 	 * @return AuthenticationInfo with the validated results.
 	 */
-	public AuthenticationInfo validateToken(Session session) {
-		String token = getTokenFromSession(session);
+	public AuthenticationInfo validateToken(Map<String, List<String>> webSocketConnectionProperties) {
+		String token = getToken(webSocketConnectionProperties);
 		if (token == null) {
 			AuthenticationInfo authenticationInfo = new AuthenticationInfo();
 			authenticationInfo.setAuthenticated(false);
@@ -189,26 +188,21 @@ public class OAuthTokenValdiator {
 	}
 
 	/**
-	 * @param session of the user.
-	 * @return retreive the token from the query string
+	 * Retrieving the token from the http header
+	 * @param webSocketConnectionProperties WebSocket connection information including http headers
+	 * @return retrieved token
 	 */
-	private String getTokenFromSession(Session session) {
-		String queryString = session.getQueryString();
-		if (queryString != null) {
-			String[] allQueryParamPairs = queryString.split(QUERY_STRING_SEPERATOR);
-
-			for (String keyValuePair : allQueryParamPairs) {
-				String[] queryParamPair = keyValuePair.split(QUERY_KEY_VALUE_SEPERATOR);
-
-				if (queryParamPair.length != 2) {
-					log.warn("Invalid query string [" + queryString + "] passed in.");
-					break;
-				}
-				if (queryParamPair[0].equals(TOKEN_IDENTIFIER)) {
-					return queryParamPair[1];
-				}
-			}
-		}
+	private String getToken(Map<String, List<String>> webSocketConnectionProperties) {
+		String cookieString = webSocketConnectionProperties.get(COOKIE).get(0);
+ 		String[] properties = cookieString.split(COOKIE_KEYPAIR_SEPERATOR);
+ 		String token;
+		for (String keyValuePair: properties) {
+            if(TOKEN_IDENTIFIER.equals((keyValuePair.split(COOKIE_KEY_VALUE_SEPERATOR)[0]).trim())){
+                token = (keyValuePair.split(COOKIE_KEY_VALUE_SEPERATOR)[1]).trim();
+				return token;
+            }
+        }
+		log.error("WebSocket token should be specified in cookie");
 		return null;
 	}
 }
