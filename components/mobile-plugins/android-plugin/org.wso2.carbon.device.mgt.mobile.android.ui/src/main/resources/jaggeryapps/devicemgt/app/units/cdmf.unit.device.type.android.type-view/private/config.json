@@ -3,6 +3,43 @@
         "label": "Android",
         "category": "mobile",
         "analyticsEnabled": "false",
-        "groupingEnabled": "false"
+        "groupingEnabled": "false",
+        "features": {
+            "DEVICE_RING": {
+                "icon" : "fw-dial-up"
+            },
+            "DEVICE_LOCK": {
+                "icon" : "fw-lock"
+            },
+            "DEVICE_LOCATION": {
+                "icon" : "fw-map-location"
+            },
+            "CLEAR_PASSWORD": {
+                "icon" : "fw-clear"
+            },
+            "DEVICE_REBOOT": {
+                "icon" : "fw-refresh"
+            },
+            "UPGRADE_FIRMWARE": {
+                "icon" : "fw-hardware"
+            },
+            "DEVICE_MUTE": {
+                "icon" : "fw-mute"
+            },
+            "NOTIFICATION": {
+                "icon" : "fw-message"
+            },
+            "CHANGE_LOCK_CODE": {
+                "icon" : "fw-security"
+            },
+            "ENTERPRISE_WIPE": {
+                "icon" : "fw-block"
+            },
+            "WIPE_DATA": {
+                "icon" : "fw-delete"
+            }
+        }
     }
 }
+
+
