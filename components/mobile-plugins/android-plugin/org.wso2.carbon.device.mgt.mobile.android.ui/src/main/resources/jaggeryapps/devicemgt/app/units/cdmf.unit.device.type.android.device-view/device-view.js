@@ -36,9 +36,6 @@ function onRequest(context) {
             if (filteredDeviceData["type"]) {
                 viewModel["type"] = filteredDeviceData["type"];
                 viewModel.isNotWindows = true;
-                if (viewModel["deviceType"] == "windows") {
-                    viewModel.isNotWindows = false;
-                }
             }
             if (filteredDeviceData["deviceIdentifier"]) {
                 viewModel["deviceIdentifier"] = filteredDeviceData["deviceIdentifier"];
@@ -197,7 +194,7 @@ function onRequest(context) {
                 viewModel["deviceInfoAvailable"] = false;
             }
 
-            deviceViewData["deviceView"] = viewModel;
+            deviceViewData["device"] = viewModel;
         } else if (response["status"] == "unauthorized") {
             deviceViewData["deviceFound"] = true;
             deviceViewData["isAuthorized"] = false;
@@ -207,5 +204,11 @@ function onRequest(context) {
     } else {
         deviceViewData["deviceFound"] = false;
     }
+
+    var autoCompleteParams = [
+        {"name" : "deviceId", "value" : deviceId}
+    ];
+
+    deviceViewData["autoCompleteParams"] = autoCompleteParams;
     return deviceViewData;
 }

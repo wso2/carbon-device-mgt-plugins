@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -17,232 +17,130 @@
  */
 
 /*
- * Setting-up global variables.
- */
-
-var operations = '.wr-operations',
-    modalPopup = '.modal',
-    modalPopupContent = modalPopup + ' .modal-content',
-    navHeight = $('#nav').height(),
-    headerHeight = $('header').height(),
-    offset = (headerHeight + navHeight),
-    deviceSelection = '.device-select',
-    platformTypeConstants = {
-        "ANDROID": "android",
-        "IOS": "ios",
-        "WINDOWS": "windows"
-    },
-    ownershipTypeConstants = {
-        "BYOD": "BYOD",
-        "COPE": "COPE"
-    },
-    operationBarModeConstants = {
-        "BULK": "BULK_OPERATION_MODE",
-        "SINGLE": "SINGLE_OPERATION_MODE"
-    };
-
-/*
- * Function to get selected devices ID's
- */
-function getSelectedDeviceIds() {
-    var deviceIdentifierList = [];
-    $(deviceSelection).each(function (index) {
-        var device = $(this);
-        var deviceId = device.data('deviceid');
-        var deviceType = device.data('type');
-        deviceIdentifierList.push({
-                                      "id": deviceId,
-                                      "type": deviceType
-                                  });
-    });
-    if (deviceIdentifierList.length == 0) {
-        var thisTable = $(".DTTT_selected").closest('.dataTables_wrapper').find('.dataTable').dataTable();
-        thisTable.api().rows().every(function () {
-            if ($(this.node()).hasClass('DTTT_selected')) {
-                var deviceId = $(thisTable.api().row(this).node()).data('deviceid');
-                var deviceType = $(thisTable.api().row(this).node()).data('devicetype');
-                deviceIdentifierList.push({
-                                              "id": deviceId,
-                                              "type": deviceType
-                                          });
-            }
-        });
-    }
-
-    return deviceIdentifierList;
-}
-
-/*
  * On operation click function.
  * @param selection: Selected operation
  */
 function operationSelect(selection) {
-    var deviceIdList = getSelectedDeviceIds();
-    if (deviceIdList == 0) {
-        $(modalPopupContent).html($("#errorOperations").html());
-    } else {
-        $(modalPopupContent).addClass("operation-data");
-        $(modalPopupContent).html($(operations + " .operation[data-operation-code=" + selection + "]").html());
-        $(modalPopupContent).data("operation-code", selection);
-    }
+    $(modalPopupContent).addClass("operation-data");
+    $(modalPopupContent).html($(" .operation[data-operation-code=" + selection + "]").html());
+    $(modalPopupContent).data("operation-code", selection);
     showPopup();
 }
 
-function getDevicesByTypes(deviceList) {
-    var deviceTypes = {};
-    $.each(deviceList, function (index, item) {
-        if (!deviceTypes[item.type]) {
-            deviceTypes[item.type] = [];
-        }
-        if (item.type == platformTypeConstants.ANDROID ||
-            item.type == platformTypeConstants.IOS || item.type == platformTypeConstants.WINDOWS) {
-            deviceTypes[item.type].push(item.id);
+function submitForm(formId) {
+    var form = $("#" + formId);
+    var uri = form.attr("action");
+    var deviceId = form.data("device-id");
+    var uriencodedQueryStr = "";
+    var uriencodedFormStr = "";
+    var payload = {};
+    form.find("input").each(function () {
+        var input = $(this);
+        if (input.data("param-type") == "path") {
+            uri = uri.replace("{" + input.attr("id") + "}", input.val());
+        } else if (input.data("param-type") == "query") {
+            var prefix = (uriencodedQueryStr == "") ? "?" : "&";
+            uriencodedQueryStr += prefix + input.attr("id") + "=" + input.val();
+        } else if (input.data("param-type") == "form") {
+            var prefix = (uriencodedFormStr == "") ? "" : "&";
+            uriencodedFormStr += prefix + input.attr("id") + "=" + input.val();
+            //payload[input.attr("id")] = input.val();
         }
     });
-    return deviceTypes;
-}
+    uri += uriencodedQueryStr;
+    var httpMethod = form.attr("method").toUpperCase();
+    var contentType = form.attr("enctype");
+    console.log("URL "+uri);
+    console.log("Method "+httpMethod);
+    console.log("Content Type "+contentType);
+    var featurePayload = form.attr("data-payload");
+    if (featurePayload) {
+        contentType = "application/json";
+        payload = JSON.parse(atob(featurePayload));
 
-//function unloadOperationBar() {
-//    $("#showOperationsBtn").addClass("hidden");
-//    $(".wr-operations").html("");
-//}
-
-function loadOperationBar(deviceType, ownership, mode) {
-    var operationBar = $("#operations-bar");
-    var operationBarSrc = operationBar.attr("src");
-
-    $.template("operations-bar", operationBarSrc, function (template) {
-        var serviceURL = "/api/device-mgt/v1.0/devices/" + deviceType + "/*/features";
-        invokerUtil.get(
-            serviceURL,
-            // success callback
-            function (data) {
-                var permittedOperations = [];
-                var i;
-                var permissionList = $("#operations-mod").data("permissions");
-                var totalFeatures = JSON.parse(data);
-                for (i = 0; i < permissionList[deviceType].length; i++) {
-                    var j;
-                    for (j = 0; j < totalFeatures.length; j++) {
-                        if (permissionList[deviceType][i] == totalFeatures[j]["code"]) {
-                            if (deviceType == platformTypeConstants.ANDROID) {
-                                if (totalFeatures[j]["code"] == "DEVICE_UNLOCK") {
-                                    if (ownership == ownershipTypeConstants.COPE) {
-                                        permittedOperations.push(totalFeatures[j]);
-                                    }
-                                } else if (totalFeatures[j]["code"] == "WIPE_DATA") {
-                                    if (mode == operationBarModeConstants.BULK) {
-                                        if (ownership == ownershipTypeConstants.COPE) {
-                                            permittedOperations.push(totalFeatures[j]);
-                                        }
-                                    } else {
-                                        permittedOperations.push(totalFeatures[j]);
-                                    }
-                                } else {
-                                    permittedOperations.push(totalFeatures[j]);
-                                }
-                            } else {
-                                permittedOperations.push(totalFeatures[j]);
-                            }
-                        }
-                    }
-                }
-
-                var viewModel = {};
-                permittedOperations = permittedOperations.filter(function (current) {
-                    var iconName;
-                    switch (deviceType) {
-                        case platformTypeConstants.ANDROID:
-                            iconName = operationModule.getAndroidIconForFeature(current.code);
-                            break;
-                        case platformTypeConstants.WINDOWS:
-                            iconName = operationModule.getWindowsIconForFeature(current.code);
-                            break;
-                        case platformTypeConstants.IOS:
-                            iconName = operationModule.getIOSIconForFeature(current.code);
-                            break;
-                    }
-
-                    /* adding ownership in addition to device-type
-                     as it's vital in cases where UI for the same feature should change
-                     according to ownership
-                      */
-                    if (ownership) {
-                        current.ownership = ownership;
-                    }
-
-                    if (iconName) {
-                        current.icon = iconName;
-                    }
-
-                    return current;
-                });
-
-                viewModel.features = permittedOperations;
-                var content = template(viewModel);
-                $(".wr-operations").html(content);
-            },
-            // error callback
-            function (message) {
-                $(".wr-operations").html(message);
-            });
-    });
-}
-
-function runOperation(operationName) {
-    var deviceIdList = getSelectedDeviceIds();
-    var list = getDevicesByTypes(deviceIdList);
-
-    var successCallback = function (data) {
-        if (operationName == "NOTIFICATION") {
-            $(modalPopupContent).html($("#messageSuccess").html());
-        } else {
-            $(modalPopupContent).html($("#operationSuccess").html());
-        }
-        showPopup();
-    };
-    var errorCallback = function (data) {
-        $(modalPopupContent).html($("#errorOperationUnexpected").html());
-        showPopup();
-    };
-
-    var payload, serviceEndPoint;
-    if (list[platformTypeConstants.IOS]) {
-        payload =
-            operationModule.generatePayload(platformTypeConstants.IOS, operationName, list[platformTypeConstants.IOS]);
-        serviceEndPoint = operationModule.getIOSServiceEndpoint(operationName);
-    } else if (list[platformTypeConstants.ANDROID]) {
-        payload = operationModule
-            .generatePayload(platformTypeConstants.ANDROID, operationName, list[platformTypeConstants.ANDROID]);
-        serviceEndPoint = operationModule.getAndroidServiceEndpoint(operationName);
-    } else if (list[platformTypeConstants.WINDOWS]) {
-        payload = operationModule.generatePayload(platformTypeConstants.WINDOWS, operationName,
-                                                  list[platformTypeConstants.WINDOWS]);
-        serviceEndPoint = operationModule.getWindowsServiceEndpoint(operationName);
+    } else if (contentType == undefined || contentType.isEmpty()) {
+        contentType = "application/x-www-form-urlencoded";
+        payload = uriencodedFormStr;
     }
-    if (operationName == "NOTIFICATION") {
-        var errorMsgWrapper = "#notification-error-msg";
-        var errorMsg = "#notification-error-msg span";
-        var messageTitle = $("#messageTitle").val();
-        var messageText = $("#messageText").val();
-        if (!(messageTitle && messageText)) {
-            $(errorMsg).text("Enter a message. It cannot be empty.");
-            $(errorMsgWrapper).removeClass("hidden");
-        } else {
-            invokerUtil.post(serviceEndPoint, payload, successCallback, errorCallback);
-            $(modalPopupContent).removeData();
-            hidePopup();
+    
+    //setting responses callbacks
+    var defaultStatusClasses = "fw fw-stack-1x";
+    var content = $("#operation-response-template").find(".content");
+    var title = content.find("#title");
+    var statusIcon = content.find("#status-icon");
+    var description = content.find("#description");
+    description.html("");
+    var successCallBack = function (response) {
+        var res = response;
+        try {
+            res = JSON.parse(response).messageFromServer;
+        } catch (err) {
+            //do nothing
         }
+        title.html("Operation Triggered!");
+        statusIcon.attr("class", defaultStatusClasses + " fw-check");
+        description.html(res);
+        console.log("success!");
+        $(modalPopupContent).html(content.html());
+    };
+    var errorCallBack = function (response) {
+        console.log(response);
+        title.html("An Error Occurred!");
+        statusIcon.attr("class", defaultStatusClasses + " fw-error");
+        var reason = (response.responseText == "null")?response.statusText:response.responseText;
+        try {
+            reason = JSON.parse(reason).message;
+        } catch (err) {
+            //do nothing
+        }
+        description.html(reason);
+        console.log("Error!");
+        $(modalPopupContent).html(content.html());
+    };
+    //executing http request
+    if (httpMethod == "GET") {
+        invokerUtil.get(uri, successCallBack, errorCallBack, contentType);
+    } else if (httpMethod == "POST") {
+        console.log("------ cType "+contentType);
+        var payloadTest = [deviceId];
+        invokerUtil.post(uri, payloadTest, successCallBack, errorCallBack, "application/json");
+    } else if (httpMethod == "PUT") {
+        invokerUtil.put(uri, payload, successCallBack, errorCallBack, contentType);
+    } else if (httpMethod == "DELETE") {
+        invokerUtil.delete(uri, successCallBack, errorCallBack, contentType);
     } else {
-        invokerUtil.post(serviceEndPoint, payload, successCallback, errorCallback);
-        $(modalPopupContent).removeData();
-        hidePopup();
+        title.html("An Error Occurred!");
+        statusIcon.attr("class", defaultStatusClasses + " fw-error");
+        description.html("This operation requires http method: " + httpMethod + " which is not supported yet!");
+        $(modalPopupContent).html(content.html());
     }
 }
 
-/*
- * DOM ready functions.
- */
-$(document).ready(function () {
-    $(operations).show();
+$(document).on('submit', 'form', function (e) {
+    cosole.log("darn!!");
+    e.preventDefault();
+    var postOperationRequest = $.ajax({
+                                          url: $(this).attr("action") + '&' + $(this).serialize(),
+                                          method: "post"
+                                      });
+
+    var btnSubmit = $('#btnSend', this);
+    btnSubmit.addClass('hidden');
+
+    var lblSending = $('#lblSending', this);
+    lblSending.removeClass('hidden');
+
+    var lblSent = $('#lblSent', this);
+    postOperationRequest.done(function (data) {
+        lblSending.addClass('hidden');
+        lblSent.removeClass('hidden');
+        setTimeout(function () {
+            hidePopup();
+        }, 3000);
+    });
+
+    postOperationRequest.fail(function (jqXHR, textStatus) {
+        lblSending.addClass('hidden');
+        lblSent.addClass('hidden');
+    });
 });
