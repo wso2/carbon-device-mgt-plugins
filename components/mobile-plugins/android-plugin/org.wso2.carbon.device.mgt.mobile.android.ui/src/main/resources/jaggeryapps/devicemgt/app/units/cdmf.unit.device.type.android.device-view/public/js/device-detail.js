@@ -22,6 +22,7 @@ var InitiateViewOption = null;
     var deviceId = $(".device-id");
     var deviceIdentifier = deviceId.data("deviceid");
     var deviceType = deviceId.data("type");
+    var ownership = deviceId.data("ownership");
     var payload = [deviceIdentifier];
     var operationTable;
     var serviceUrl;
@@ -134,6 +135,7 @@ var InitiateViewOption = null;
     });
 
     function loadOperationsLog(update) {
+        var owner = $("#device-owner").data("owner");
         var operationsLogTable = "#operations-log-table";
         if (update) {
             operationTable = $(operationsLogTable).DataTable();
@@ -148,8 +150,8 @@ var InitiateViewOption = null;
             pageLength : 10,
             order: [],
             ajax: {
-                url: "/emm/api/operation/paginate",
-                data: {deviceId : deviceIdentifier, deviceType: deviceType},
+                url: "/devicemgt/api/operation/paginate",
+                data: {deviceId : deviceIdentifier, deviceType: deviceType, owner:owner},
                 dataSrc: function (json) {
                     $("#operations-spinner").addClass("hidden");
                     $("#operations-log-container").empty();

@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.DeviceManager;
 import org.wso2.carbon.device.mgt.common.ProvisioningConfig;
+import org.wso2.carbon.device.mgt.common.TaskOperation;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
@@ -50,6 +51,25 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
     @Override
     public String getType() {
         return AndroidDeviceManagementService.DEVICE_TYPE_ANDROID;
+    }
+
+//    This method is not in use
+    @Override
+    public List<TaskOperation> getTasksForPlatform() {
+//            List<String> operationsForPlatform = new ArrayList<>();
+//            TaskConfiguration taskConfiguration =
+//                    MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig()
+//                            .getTaskConfiguration();
+//
+//            List<TaskConfiguration.Operation> ops = taskConfiguration.getOperations();
+//            List<TaskOperation> taskOperations = new ArrayList<>();
+//            for (TaskConfiguration.Operation op : ops) {
+//                TaskOperation taskOperation = new TaskOperation();
+//                taskOperation.setTaskName(op.getOperationName());
+//                taskOperation.setRecurrentTimes(op.getRecurrency());
+//                taskOperations.add(taskOperation);
+//            }
+            return null;
     }
 
     @Override

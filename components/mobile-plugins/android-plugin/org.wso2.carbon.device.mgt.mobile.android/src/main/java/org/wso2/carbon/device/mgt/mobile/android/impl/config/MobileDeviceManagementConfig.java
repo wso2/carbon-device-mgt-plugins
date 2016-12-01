@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.device.mgt.mobile.android.impl.config;
 
+
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -28,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public final class MobileDeviceManagementConfig {
 
     private MobileDeviceManagementRepository mobileDeviceMgtRepository;
+//    private TaskConfiguration taskConfiguration;
 
     @XmlElement(name = "ManagementRepository", nillable = false)
     public MobileDeviceManagementRepository getMobileDeviceMgtRepository() {
@@ -38,5 +41,14 @@ public final class MobileDeviceManagementConfig {
             MobileDeviceManagementRepository mobileDeviceMgtRepository) {
         this.mobileDeviceMgtRepository = mobileDeviceMgtRepository;
     }
+
+//    @XmlElement(name = "TaskConfiguration", required = true)
+//    public TaskConfiguration getTaskConfiguration() {
+//        return taskConfiguration;
+//    }
+//
+//    public void setTaskConfiguration(TaskConfiguration taskConfiguration) {
+//        this.taskConfiguration = taskConfiguration;
+//    }
 
 }
