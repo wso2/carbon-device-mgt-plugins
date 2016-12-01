@@ -85,7 +85,7 @@
             <span id="app-restriction-ok" class="has-success status-icon hidden"><i class="fw fw-ok"></i></span>
             <span id="app-restriction-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
-        <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-system-update-policy', this)" class="hide">
+        <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-system-update-policy', this)">
             <span class="wr-hidden-operation-icon fw-stack">
                 <i class="fw fw-import fw-stack-2x"></i>
             </span>
@@ -96,7 +96,7 @@
                     class="fw fw-ok"></i></span>
             <span id="cosu-system-update-policy-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
-        <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-whitelisted-applications', this)" class="hide">
+        <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-whitelisted-applications', this)">
             <span class="wr-hidden-operations-icon fw-stack">
                 <i class="fw fw-register fw-stack-2x"></i>
             </span>
@@ -1203,7 +1203,7 @@
             </div>
         </div>
         <!-- cosu-system-update-policy -->
-        <div class="wr-hidden-operation hidden hide" data-operation="cosu-system-update-policy">
+        <div class="wr-hidden-operation" data-operation="cosu-system-update-policy">
             <div class="panel panel-default operation-data" data-operation="cosu-system-update-policy-body"
                  data-operation-code="SYSTEM_UPDATE_POLICY">
                 <div id="cosu-system-update-policy-heading" class="panel-heading" role="tab">
@@ -1222,7 +1222,7 @@
                         to modify these settings on their devices.
                     </div>
                 </div>
-                <div id="cosu-system-update-policy-body hidden" class="panel-collapse panel-body collapse"
+                <div id="cosu-system-update-policy-body" class="panel-collapse panel-body collapse"
                      role="tabpanel"
                      aria-labelledby="cosu-system-update-policy-body">
                     <hr/>
@@ -1273,7 +1273,7 @@
                             </span>
                         </label>
                     </div>
-                    <div id="cosu-system-update-policy-window-select" class="hidden">
+                    <div id="cosu-system-update-policy-window-select">
                         <div>
                             <ul class="message message-info">
                                 <i class="icon fw fw-info"></i>
@@ -1360,7 +1360,7 @@
             </div>
         </div>
         <!-- cosu-whitelist-applications -->
-        <div class="wr-hidden-operation hidden hide" data-operation="cosu-whitelisted-applications">
+        <div class="wr-hidden-operation" data-operation="cosu-whitelisted-applications">
             <div class="panel panel-default operation-data" data-operation="cosu-whitelisted-applications"
                  data-operation-code="KIOSK_APPS">
                 <div id="cosu-whitelisted-applications-heading" class="panel-heading" role="tab">

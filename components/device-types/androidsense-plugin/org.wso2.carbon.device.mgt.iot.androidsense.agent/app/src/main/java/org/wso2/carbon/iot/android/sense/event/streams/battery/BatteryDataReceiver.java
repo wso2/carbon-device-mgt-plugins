@@ -32,7 +32,13 @@ public class BatteryDataReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        SenseDataHolder.getBatteryDataHolder().add(new BatteryData(intent));
+        if (Intent.ACTION_BATTERY_OKAY.equals(intent.getAction())) {
+            SenseDataHolder.getBatteryDataHolder().add(new BatteryData(BatteryData.State.OK));
+        } else if (Intent.ACTION_BATTERY_LOW.equals(intent.getAction())) {
+            SenseDataHolder.getBatteryDataHolder().add(new BatteryData(BatteryData.State.LOW));
+        } else {
+            SenseDataHolder.getBatteryDataHolder().add(new BatteryData(intent));
+        }
     }
 
 }
