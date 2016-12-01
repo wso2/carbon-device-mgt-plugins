@@ -53,23 +53,9 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
         return AndroidDeviceManagementService.DEVICE_TYPE_ANDROID;
     }
 
-//    This method is not in use
     @Override
     public List<TaskOperation> getTasksForPlatform() {
-//            List<String> operationsForPlatform = new ArrayList<>();
-//            TaskConfiguration taskConfiguration =
-//                    MobileDeviceConfigurationManager.getInstance().getMobileDeviceManagementConfig()
-//                            .getTaskConfiguration();
-//
-//            List<TaskConfiguration.Operation> ops = taskConfiguration.getOperations();
-//            List<TaskOperation> taskOperations = new ArrayList<>();
-//            for (TaskConfiguration.Operation op : ops) {
-//                TaskOperation taskOperation = new TaskOperation();
-//                taskOperation.setTaskName(op.getOperationName());
-//                taskOperation.setRecurrentTimes(op.getRecurrency());
-//                taskOperations.add(taskOperation);
-//            }
-            return null;
+        return null;
     }
 
     @Override
