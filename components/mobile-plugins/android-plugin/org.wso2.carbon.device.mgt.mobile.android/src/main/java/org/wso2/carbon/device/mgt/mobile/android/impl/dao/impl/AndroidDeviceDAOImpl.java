@@ -159,7 +159,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			stmt.setString(2, properties.get(AndroidPluginConstants.DEVICE_INFO));
 			stmt.setString(3, mobileDevice.getSerial());
 			stmt.setString(4, mobileDevice.getVendor());
-			stmt.setString(5, mobileDevice.getMobileDeviceId());
+			stmt.setString(5, properties.get(AndroidPluginConstants.MAC_ADDRESS));
 			stmt.setString(6, properties.get(AndroidPluginConstants.DEVICE_NAME));
 			stmt.setString(7, mobileDevice.getLatitude());
 			stmt.setString(8, mobileDevice.getLongitude());
@@ -167,8 +167,8 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			stmt.setString(10, mobileDevice.getImsi());
 			stmt.setString(11, mobileDevice.getOsVersion());
 			stmt.setString(12, mobileDevice.getModel());
-			stmt.setString(13, mobileDevice.getMobileDeviceId());
-			stmt.setString(14, mobileDevice.getOsBuildDate());
+			stmt.setString(13, mobileDevice.getOsBuildDate());
+			stmt.setString(14, mobileDevice.getMobileDeviceId());
 			int rows = stmt.executeUpdate();
 			if (rows > 0) {
 				status = true;
