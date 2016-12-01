@@ -16,6 +16,12 @@ public class Event {
     private float accelerometer[] = new float[]{0, 0, 0}; //x,y,z
     private float magnetic[] = new float[]{0, 0, 0};; //x,y,z
     private float gyroscope[] = new float[]{0, 0, 0};; //x,y,z
+    private int batteryTemperature;
+    private int batteryStatus;
+    /**
+     * LOW or OK
+     */
+    private String batteryState;
     private float light;
     private float pressure;
     private float proximity;
@@ -32,8 +38,28 @@ public class Event {
     private int beaconMinor;
     private int beaconUuid;
     private String beaconProximity;
+    private String callNumber;
+    private String callType;
+    private long callStartTime;
+    private long callEndTime;
 
+    /**
+     * State of the phone display.
+     * Possible values are:
+     * on
+     * off
+     * unknown
+     */
+    private String screenState;
 
+    private boolean audioPlaying;
+    private boolean headsetOn;
+    private int musicVolume;
+    private int activityType;
+    private int confidence;
+    private String smsNumber;
+    private String packageName;
+    private String action;
 
     private int getBattery() {
         return battery;
@@ -42,6 +68,33 @@ public class Event {
     public void setBattery(int battery) {
         this.type = "battery";
         this.battery = battery;
+    }
+
+    public int getBatteryTemperature() {
+        return batteryTemperature;
+    }
+
+    public void setBatteryTemperature(int batteryTemperature) {
+        this.type = "battery";  // Type is battery
+        this.batteryTemperature = batteryTemperature;
+    }
+
+    public int getBatteryStatus() {
+        return batteryStatus;
+    }
+
+    public void setBatteryStatus(int batteryStatus) {
+        this.type = "battery";  // Type is battery
+        this.batteryStatus = batteryStatus;
+    }
+
+    public String getBatteryState() {
+        return batteryState != null ? batteryState : "";
+    }
+
+    public void setBatteryState(String batteryState) {
+        this.type = "battery";  // Type is battery
+        this.batteryState = batteryState;
     }
 
     private double[] getGps() {
@@ -125,6 +178,15 @@ public class Event {
         this.rotation = rotation;
     }
 
+    public void setSmsNumber(String smsNumber) {
+        this.type = "sms";
+        this.smsNumber = smsNumber;
+    }
+
+    public String getSmsNumber() {
+        return smsNumber;
+    }
+
     private String getWordSessionId() {
         return wordSessionId != null ? wordSessionId : "";
     }
@@ -140,6 +202,24 @@ public class Event {
     public void setWord(String word) {
         this.type = "word";
         this.word = word;
+    }
+
+    public String getPackageName() {
+        return packageName;
+    }
+
+    public void setPackageName(String packageName) {
+        this.type = "application";
+        this.packageName = packageName;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.type = "application";
+        this.action = action;
     }
 
     private long getTimestamp() {
@@ -181,6 +261,9 @@ public class Event {
 
     public float getSpeed() {
         this.type = "speed";
+        if (Float.isInfinite(speed) || Float.isNaN(speed)) {
+            return -1.0f;
+        }
         return speed;
     }
 
@@ -192,7 +275,7 @@ public class Event {
 
     public String getTurns() {
 
-        if (turn == null || turn.isEmpty() || turn.equals("null")){
+        if (turn == null || turn.isEmpty() || turn.equals("null")) {
             turn = "No Turns";
         }
         return turn;
@@ -234,8 +317,98 @@ public class Event {
     }
 
     public String getBeaconProximity() {
-        this.type = "beaconProximity";
-        return beaconProximity;
+        return beaconProximity != null ? beaconProximity : "";
+    }
+
+    public String getCallNumber() {
+        return callNumber != null ? callNumber : "";
+    }
+
+    public void setCallNumber(String callNumber) {
+        this.type = "call";
+        this.callNumber = callNumber;
+    }
+
+    public String getCallType() {
+        return callType != null ? callType : "";
+    }
+
+    public void setCallType(String callType) {
+        this.type = "call";
+        this.callType = callType;
+    }
+
+    public long getCallStartTime() {
+        return callStartTime;
+    }
+
+    public void setCallStartTime(long callStartTime) {
+        this.type = "call";
+        this.callStartTime = callStartTime;
+    }
+
+    public long getCallEndTime() {
+        return callEndTime;
+    }
+
+    public void setCallEndTime(long callEndTime) {
+        this.type = "call";
+        this.callEndTime = callEndTime;
+    }
+
+    public String getScreenState() {
+        return screenState != null ? screenState : "";
+    }
+
+    public void setScreenState(String screenState) {
+        this.type = "screen";
+        this.screenState = screenState;
+    }
+
+    public boolean isAudioPlaying() {
+        return audioPlaying;
+    }
+
+    public void setAudioPlaying(boolean audioPlaying) {
+        this.type = "audio";
+        this.audioPlaying = audioPlaying;
+    }
+
+    public boolean isHeadsetOn() {
+        return headsetOn;
+    }
+
+    public void setHeadsetOn(boolean headsetOn) {
+        this.type = "audio";
+        this.headsetOn = headsetOn;
+    }
+
+    public int getMusicVolume() {
+        return musicVolume;
+    }
+
+    public void setMusicVolume(int musicVolume) {
+        this.type = "audio";
+        this.musicVolume = musicVolume;
+    }
+
+    public int getActivityType() {
+        return activityType;
+    }
+
+    public void setActivityType(int activityType) {
+        this.type = "activity";
+        this.activityType = activityType;
+    }
+
+    public int getConfidence() {
+        return confidence;
+    }
+
+    public void setConfidence(int confidence) {
+        // Do not set type here since it can be used for various types.
+        // However, now it is being used by activity only
+        this.confidence = confidence;
     }
 
     public JSONObject getEvent() throws JSONException {
@@ -248,7 +421,13 @@ public class Event {
         jsonEvent.put("metaData", jsonMetaData);
 
         JSONObject jsonPayloadData = new JSONObject();
+        // battery
         jsonPayloadData.put("battery", getBattery());
+        jsonPayloadData.put("battery_state", getBatteryState());
+        jsonPayloadData.put("battery_status", getBatteryStatus());
+        jsonPayloadData.put("battery_temperature", getBatteryTemperature());
+
+
         //gps
         double gpsEvents[] = getGps();
         jsonPayloadData.put("gps_lat", gpsEvents[0]);
@@ -300,6 +479,29 @@ public class Event {
         jsonPayloadData.put("word", getWord());
         jsonPayloadData.put("word_sessionId", getWordSessionId());
         jsonPayloadData.put("word_status", getWordStatus());
+
+        // call
+        jsonPayloadData.put("call_number", getCallNumber());
+        jsonPayloadData.put("call_type", getCallType());
+        jsonPayloadData.put("call_start_time", getCallStartTime());
+        jsonPayloadData.put("call_end_time", getCallEndTime());
+
+        // screen
+        jsonPayloadData.put("screen_state", getScreenState());
+
+        // headset
+        jsonPayloadData.put("audio_playing", isAudioPlaying());
+        jsonPayloadData.put("headset_on", isHeadsetOn());
+        jsonPayloadData.put("music_volume", getMusicVolume());
+
+        jsonPayloadData.put("activity_type", getActivityType());
+        jsonPayloadData.put("confidence", getConfidence());
+
+        jsonPayloadData.put("sms_number", getSmsNumber());
+
+        jsonPayloadData.put("application_name", getPackageName());
+        jsonPayloadData.put("action", getAction());
+
 
         jsonEvent.put("payloadData", jsonPayloadData);
 

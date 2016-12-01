@@ -112,9 +112,6 @@ var InitiateViewOption = null;
     $(document).ready(function() {
         $(".device-detail-body").removeClass("hidden");
         $("#loading-content").remove();
-        console.log("##### something went wrong here!" + deviceType)
-        loadOperationBar(deviceType);
-        loadOperationsLog(false);
         loadApplicationsList();
         loadPolicyCompliance();
 
@@ -127,13 +124,8 @@ var InitiateViewOption = null;
             $("#apps-spinner").removeClass("hidden");
             loadApplicationsList();
         });
-
-        $("#refresh-operations").click(function () {
-            $("#operations-spinner").removeClass("hidden");
-            loadOperationsLog(true);
-        });
     });
-
+    
     function loadOperationsLog(update) {
         var owner = $("#device-owner").data("owner");
         var operationsLogTable = "#operations-log-table";

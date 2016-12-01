@@ -14,7 +14,8 @@
 
 package org.wso2.carbon.device.mgt.output.adapter.websocket.authentication;
 
-import javax.websocket.Session;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This interface is used to authenticate a websocket session
@@ -24,7 +25,7 @@ public interface Authenticator {
     /**
      * Check whether the client is authenticated to connect.
      * @param session user object.
-     * @return AuthenicationInfo which contains authentication client information.
+     * @return AuthenticationInfo which contains authentication client information.
      */
-    AuthenticationInfo isAutenticated(Session session);
+    AuthenticationInfo isAuthenticated(Map<String, List<String>> webSocketConnectionProperties);
 }

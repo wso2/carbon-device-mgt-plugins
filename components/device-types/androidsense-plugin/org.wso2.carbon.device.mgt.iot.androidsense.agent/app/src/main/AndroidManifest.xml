@@ -11,11 +11,16 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.BATTERY_STATS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-sdk android:minSdkVersion="19" />
-
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS" />
+
+    <uses-sdk android:minSdkVersion="19" />
 
     <application
         android:allowBackup="true"
@@ -45,19 +50,14 @@
             android:label="@string/app_name" >
         </service>
 
+        <service android:name="org.wso2.carbon.iot.android.sense.event.streams.activity.ActivityReceiver"/>
+
         <receiver android:name="org.wso2.carbon.iot.android.sense.event.SenseScheduleReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="org.wso2.carbon.iot.android.sense.event.streams.battery.BatteryDataReceiver"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.BATTERY_CHANGED" />
             </intent-filter>
         </receiver>
 
