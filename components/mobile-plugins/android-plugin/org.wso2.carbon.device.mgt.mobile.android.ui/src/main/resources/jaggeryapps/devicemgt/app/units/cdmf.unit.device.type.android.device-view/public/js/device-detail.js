@@ -22,6 +22,7 @@ var InitiateViewOption = null;
     var deviceId = $(".device-id");
     var deviceIdentifier = deviceId.data("deviceid");
     var deviceType = deviceId.data("type");
+    var ownership = deviceId.data("ownership");
     var payload = [deviceIdentifier];
     var operationTable;
     var serviceUrl;
@@ -124,6 +125,87 @@ var InitiateViewOption = null;
             loadApplicationsList();
         });
     });
+    
+    function loadOperationsLog(update) {
+        var owner = $("#device-owner").data("owner");
+        var operationsLogTable = "#operations-log-table";
+        if (update) {
+            operationTable = $(operationsLogTable).DataTable();
+            operationTable.ajax.reload(false);
+            return;
+        }
+        operationTable = $(operationsLogTable).datatables_extended({
+            serverSide: true,
+            processing: false,
+            searching: false,
+            ordering:  false,
+            pageLength : 10,
+            order: [],
+            ajax: {
+                url: "/devicemgt/api/operation/paginate",
+                data: {deviceId : deviceIdentifier, deviceType: deviceType, owner:owner},
+                dataSrc: function (json) {
+                    $("#operations-spinner").addClass("hidden");
+                    $("#operations-log-container").empty();
+                    return json.data;
+                }
+            },
+            columnDefs: [
+                {targets: 0, data: "code" },
+                {targets: 1, data: "status", render:
+                    function (status) {
+                        var html;
+                        switch (status) {
+                            case "COMPLETED" :
+                                html = "<span><i class='fw fw-ok icon-success'></i> Completed</span>";
+                                break;
+                            case "PENDING" :
+                                html = "<span><i class='fw fw-warning icon-warning'></i> Pending</span>";
+                                break;
+                            case "ERROR" :
+                                html = "<span><i class='fw fw-error icon-danger'></i> Error</span>";
+                                break;
+                            case "IN_PROGRESS" :
+                                html = "<span><i class='fw fw-ok icon-warning'></i> In Progress</span>";
+                                break;
+                            case "REPEATED" :
+                                html = "<span><i class='fw fw-ok icon-warning'></i> Repeated</span>";
+                                break;
+                        }
+                        return html;
+                    }
+                },
+                {targets: 2, data: "createdTimeStamp", render:
+                    function (date) {
+                        var value = String(date);
+                        return value.slice(0, 16);
+                    }
+                }
+            ],
+            "createdRow": function(row, data) {
+                $(row).attr("data-type", "selectable");
+                $(row).attr("data-id", data["id"]);
+                $.each($("td", row),
+                    function(colIndex) {
+                        switch(colIndex) {
+                            case 1:
+                                $(this).attr("data-grid-label", "Code");
+                                $(this).attr("data-display", data["code"]);
+                                break;
+                            case 2:
+                                $(this).attr("data-grid-label", "Status");
+                                $(this).attr("data-display", data["status"]);
+                                break;
+                            case 3:
+                                $(this).attr("data-grid-label", "Created Timestamp");
+                                $(this).attr("data-display", data["createdTimeStamp"]);
+                                break;
+                        }
+                    }
+                );
+            }
+        });
+    }
 
     function loadApplicationsList() {
         var applicationsList = $("#applications-list");
