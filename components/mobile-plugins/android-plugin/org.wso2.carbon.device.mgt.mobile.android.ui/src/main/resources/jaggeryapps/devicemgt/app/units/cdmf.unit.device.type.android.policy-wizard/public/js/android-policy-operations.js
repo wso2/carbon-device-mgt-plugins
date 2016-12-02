@@ -67,6 +67,13 @@ var inputIsValidAgainstRange = function (numberInput, min, max) {
     return (numberInput == min || (numberInput > min && numberInput < max) || numberInput == max);
 };
 
+/**
+ * Validates policy profile operations for the windows platform.
+ *
+ * This function will be invoked from the relevant cdmf unit at the time of policy creation.
+ *
+ * @returns {boolean} whether validation is successful.
+ */
 var validatePolicyProfile = function () {
     var validationStatusArray = [];
     var validationStatus;
@@ -513,6 +520,30 @@ var validatePolicyProfile = function () {
 
     wizardIsToBeContinued = (errorCount == 0);
     return wizardIsToBeContinued;
+};
+
+/**
+ * Generates policy profile object which will be saved with the profile.
+ *
+ * This function will be invoked from the relevant cdmf unit at the time of policy creation.
+ *
+ * @returns {Array} profile payloads
+ */
+var generatePolicyProfile = function () {
+    var profilePayloads = [];
+    // traverses key by key in policy["profile"]
+    var key;
+    for (key in policy["profile"]) {
+        if (policy["profile"].hasOwnProperty(key)) {
+            profilePayloads.push({
+                "featureCode": key,
+                "deviceType": policy["platform"],
+                "content": policy["profile"][key]
+            });
+        }
+    }
+
+    return profilePayloads;
 };
 
 // Start of HTML embedded invoke methods
