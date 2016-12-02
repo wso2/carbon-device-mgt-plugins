@@ -43,9 +43,6 @@ function onRequest(context) {
 }
 
 function processParams(paramsList, autoCompleteParams) {
-    var log = new Log();
-    log.info("-- Params : "+paramsList.length);
-    log.info("-- Auto Params : "+autoCompleteParams);
     for (var i = 0; i < paramsList.length; i++) {
         var paramName = paramsList[i];
         var paramValue = "";
