@@ -706,7 +706,8 @@ intializeWebsocketUrls();
 
 
 SpatialObject.prototype.stateIcon = function () {
-    var iconUrl = "/portal/store/carbon.super/fs/gadget/geo-dashboard/img/markers/object-types/" + this.type.toLowerCase();
+    //TODO : Need to add separate icons for each device type
+    var iconUrl = "/portal/store/carbon.super/fs/gadget/geo-dashboard/img/markers/object-types/default_icons";
     if (0 < this.speed && (-360 <= this.heading && 360 >= this.heading)) {
         iconUrl = iconUrl + "/moving/" + this.state.toLowerCase();
     } else {

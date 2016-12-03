@@ -8,7 +8,7 @@
             "messageType" : "Alert",
             "type": "Feature",
             "id": {{id}},
-            "deviceId": "rkxb293yw2t2",
+            "deviceId": {{id}},
             "deviceType" : "virtual_firealarm",
             "state": {{state}},
             "information": {{information}},
