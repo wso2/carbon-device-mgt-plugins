@@ -61,6 +61,17 @@ public class Event {
     private String packageName;
     private String action;
 
+    /**
+     * Network data
+     * Time stamp
+     * Data type
+     * Data sent
+     * Data received.
+     * */
+    private String dataType;
+    private long dataSent;
+    private long dataReceived;
+
     private int getBattery() {
         return battery;
     }
@@ -411,6 +422,36 @@ public class Event {
         this.confidence = confidence;
     }
 
+    public String getDataType() {
+        this.type = "data";
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.type = "data";
+        this.dataType = dataType;
+    }
+
+    public long getDataSent() {
+        this.type = "data";
+        return dataSent;
+    }
+
+    public void setDataSent(long dataSent) {
+        this.type = "data";
+        this.dataSent = dataSent;
+    }
+
+    public long getDataReceived() {
+        this.type = "data";
+        return dataReceived;
+    }
+
+    public void setDataReceived(long dataReceived) {
+        this.type = "data";
+        this.dataReceived = dataReceived;
+    }
+
     public JSONObject getEvent() throws JSONException {
         JSONObject jsonEvent = new JSONObject();
         JSONObject jsonMetaData = new JSONObject();
@@ -502,6 +543,10 @@ public class Event {
         jsonPayloadData.put("application_name", getPackageName());
         jsonPayloadData.put("action", getAction());
 
+        //Network data
+        jsonPayloadData.put("data_type", getDataType());
+        jsonPayloadData.put("data_received", getDataReceived());
+        jsonPayloadData.put("data_sent", getDataSent());
 
         jsonEvent.put("payloadData", jsonPayloadData);
 

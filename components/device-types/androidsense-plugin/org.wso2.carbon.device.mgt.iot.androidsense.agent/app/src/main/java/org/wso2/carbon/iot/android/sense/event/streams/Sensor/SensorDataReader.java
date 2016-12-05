@@ -26,6 +26,7 @@ import org.wso2.carbon.iot.android.sense.realtimeviewer.sensorlisting.SupportedS
 import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class SensorDataReader extends DataReader implements SensorEventListener 
                     SensorData sensorInfo = senseDataStruct.get(sensor.getName());
                     sensorVector.add(sensorInfo);
                     Log.d(TAG, "Sensor Name " + sensor.getName() + ", Type " + sensor.getType() + " " +
-                            ", sensorValue :" + sensorInfo.getSensorValues());
+                            ", sensorValue :" + Arrays.toString(sensorInfo.getSensorValues()));
                 }
             } catch (Throwable e) {
                 Log.d(TAG, "error on sensors");
