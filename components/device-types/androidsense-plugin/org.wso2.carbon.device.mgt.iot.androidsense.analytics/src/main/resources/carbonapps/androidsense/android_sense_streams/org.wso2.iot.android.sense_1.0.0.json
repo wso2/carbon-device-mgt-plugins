@@ -55,6 +55,9 @@
     {"name": "confidence", "type": "INT"},
     {"name": "sms_number", "type": "STRING"},
     {"name": "application_name", "type": "STRING"},
-    {"name": "action", "type": "STRING"}
+    {"name": "action", "type": "STRING"},
+    {"name": "data_type", "type": "STRING"},
+    {"name": "data_sent", "type": "LONG"},
+    {"name": "data_received", "type": "LONG"}
   ]
 }
