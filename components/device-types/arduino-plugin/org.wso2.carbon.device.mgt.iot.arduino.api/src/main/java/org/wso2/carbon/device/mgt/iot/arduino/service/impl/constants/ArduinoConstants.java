@@ -25,4 +25,6 @@ public class ArduinoConstants {
     //sensor events summerized table name
     public static final String TEMPERATURE_EVENT_TABLE = "DEVICE_TEMPERATURE_SUMMARY";
 
+    public static final String APIM_APPLICATION_TOKEN_VALIDITY_PERIOD = "3600";
+
 }
