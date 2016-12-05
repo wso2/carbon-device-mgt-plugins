@@ -210,7 +210,8 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {RaspberrypiConstants.DEVICE_TYPE};
             apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
-                    RaspberrypiConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
+                    RaspberrypiConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true,
+                    RaspberrypiConstants.APIM_APPLICATION_TOKEN_VALIDITY_PERIOD);
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = " device_" + deviceId;

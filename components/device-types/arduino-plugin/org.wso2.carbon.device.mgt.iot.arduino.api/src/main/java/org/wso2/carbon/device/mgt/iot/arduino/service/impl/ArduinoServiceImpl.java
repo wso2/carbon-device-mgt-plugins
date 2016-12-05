@@ -226,7 +226,8 @@ public class ArduinoServiceImpl implements ArduinoService {
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {ArduinoConstants.DEVICE_TYPE};
             apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
-                    ArduinoConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
+                    ArduinoConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true,
+                    ArduinoConstants.APIM_APPLICATION_TOKEN_VALIDITY_PERIOD);
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = " device_" + deviceId;
