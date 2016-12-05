@@ -16,21 +16,13 @@
  * under the License.
  */
 
-var androidOperationConstants = {
+var windowsOperationConstants = {
     "PASSCODE_POLICY_OPERATION": "passcode-policy",
     "PASSCODE_POLICY_OPERATION_CODE": "PASSCODE_POLICY",
     "CAMERA_OPERATION": "camera",
     "CAMERA_OPERATION_CODE": "CAMERA",
     "ENCRYPT_STORAGE_OPERATION": "encrypt-storage",
-    "ENCRYPT_STORAGE_OPERATION_CODE": "ENCRYPT_STORAGE",
-    "WIFI_OPERATION": "wifi",
-    "WIFI_OPERATION_CODE": "WIFI",
-    "VPN_OPERATION": "vpn",
-    "VPN_OPERATION_CODE": "VPN",
-    "APPLICATION_OPERATION": "app-restriction",
-    "APPLICATION_OPERATION_CODE": "APP-RESTRICTION",
-    "KIOSK_APPS_CODE": "KIOSK_APPS",
-    "KIOSK_APPS": "cosu-whitelisted-applications"
+    "ENCRYPT_STORAGE_OPERATION_CODE": "ENCRYPT_STORAGE"
 };
 
 /**
@@ -91,9 +83,9 @@ var validatePolicyProfile = function () {
     } else {
         // validating each and every configured Operation
         // Validating PASSCODE_POLICY
-        if ($.inArray(androidOperationConstants["PASSCODE_POLICY_OPERATION_CODE"], configuredOperations) != -1) {
+        if ($.inArray(windowsOperationConstants["PASSCODE_POLICY_OPERATION_CODE"], configuredOperations) != -1) {
             // if PASSCODE_POLICY is configured
-            operation = androidOperationConstants["PASSCODE_POLICY_OPERATION"];
+            operation = windowsOperationConstants["PASSCODE_POLICY_OPERATION"];
             // initializing continueToCheckNextInputs to true
             var continueToCheckNextInputs = true;
 
@@ -152,9 +144,9 @@ var validatePolicyProfile = function () {
             validationStatusArray.push(validationStatus);
         }
         // Validating CAMERA
-        if ($.inArray(androidOperationConstants["CAMERA_OPERATION_CODE"], configuredOperations) != -1) {
+        if ($.inArray(windowsOperationConstants["CAMERA_OPERATION_CODE"], configuredOperations) != -1) {
             // if CAMERA is configured
-            operation = androidOperationConstants["CAMERA_OPERATION"];
+            operation = windowsOperationConstants["CAMERA_OPERATION"];
             // updating validationStatus
             validationStatus = {
                 "error": false,
@@ -164,9 +156,9 @@ var validatePolicyProfile = function () {
             validationStatusArray.push(validationStatus);
         }
         // Validating ENCRYPT_STORAGE
-        if ($.inArray(androidOperationConstants["ENCRYPT_STORAGE_OPERATION_CODE"], configuredOperations) != -1) {
+        if ($.inArray(windowsOperationConstants["ENCRYPT_STORAGE_OPERATION_CODE"], configuredOperations) != -1) {
             // if ENCRYPT_STORAGE is configured
-            operation = androidOperationConstants["ENCRYPT_STORAGE_OPERATION"];
+            operation = windowsOperationConstants["ENCRYPT_STORAGE_OPERATION"];
             // updating validationStatus
             validationStatus = {
                 "error": false,
@@ -175,285 +167,7 @@ var validatePolicyProfile = function () {
             // updating validationStatusArray with validationStatus
             validationStatusArray.push(validationStatus);
         }
-        // Validating WIFI
-        if ($.inArray(androidOperationConstants["WIFI_OPERATION_CODE"], configuredOperations) != -1) {
-            // if WIFI is configured
-            operation = androidOperationConstants["WIFI_OPERATION"];
-            // initializing continueToCheckNextInputs to true
-            continueToCheckNextInputs = true;
 
-            var wifiSSID = $("input#wifi-ssid").val();
-            if (!wifiSSID) {
-                validationStatus = {
-                    "error": true,
-                    "subErrorMsg": "WIFI SSID is not given. You cannot proceed.",
-                    "erroneousFeature": operation
-                };
-                continueToCheckNextInputs = false;
-            }
-            // For the secure wifi types, it is required to have a password
-            var wifiTypeUIElement = $("#wifi-type");
-            var wifiType = wifiTypeUIElement.find("option:selected").val();
-            if (wifiTypeUIElement.is("input:checkbox")) {
-                wifiType = wifiTypeUIElement.is(":checked").toString();
-            }
-            if (wifiType != "none") {
-                if (!$("#wifi-password").val()) {
-                    validationStatus = {
-                        "error": true,
-                        "subErrorMsg": "Password is required for the wifi security type " + wifiType + ". " +
-                        "Please provide a password to proceed.",
-                        "erroneousFeature": operation
-                    };
-                    continueToCheckNextInputs = false;
-                }
-            }
-            // at-last, if the value of continueToCheckNextInputs is still true
-            // this means that no error is found
-            if (continueToCheckNextInputs) {
-                validationStatus = {
-                    "error": false,
-                    "okFeature": operation
-                };
-            }
-
-            // updating validationStatusArray with validationStatus
-            validationStatusArray.push(validationStatus);
-        }
-
-        if ($.inArray(androidOperationConstants["VPN_OPERATION_CODE"], configuredOperations) != -1) {
-            // if WIFI is configured
-            operation = androidOperationConstants["VPN_OPERATION"];
-            // initializing continueToCheckNextInputs to true
-            continueToCheckNextInputs = true;
-
-            var serverAddress = $("input#vpn-server-address").val();
-            if (!serverAddress) {
-                validationStatus = {
-                    "error": true,
-                    "subErrorMsg": "Server address is required. You cannot proceed.",
-                    "erroneousFeature": operation
-                };
-                continueToCheckNextInputs = false;
-            }
-
-            if (continueToCheckNextInputs) {
-                var serverPort = $("input#vpn-server-port").val();
-                if (!serverPort) {
-                    validationStatus = {
-                        "error": true,
-                        "subErrorMsg": "VPN server port is required. You cannot proceed.",
-                        "erroneousFeature": operation
-                    };
-                    continueToCheckNextInputs = false;
-                } else if (!$.isNumeric(serverPort)) {
-                    validationStatus = {
-                        "error": true,
-                        "subErrorMsg": "VPN server port requires a number input.",
-                        "erroneousFeature": operation
-                    };
-                    continueToCheckNextInputs = false;
-                } else if (!inputIsValidAgainstRange(serverPort, 0, 65535)) {
-                    validationStatus = {
-                        "error": true,
-                        "subErrorMsg": "VPN server port is not within the range " +
-                        "of valid port numbers.",
-                        "erroneousFeature": operation
-                    };
-                    continueToCheckNextInputs = false;
-                }
-            }
-
-            // at-last, if the value of continueToCheckNextInputs is still true
-            // this means that no error is found
-            if (continueToCheckNextInputs) {
-                validationStatus = {
-                    "error": false,
-                    "okFeature": operation
-                };
-            }
-
-            // updating validationStatusArray with validationStatus
-            validationStatusArray.push(validationStatus);
-        }
-        if ($.inArray(androidOperationConstants["APPLICATION_OPERATION_CODE"], configuredOperations) != -1) {
-            //If application restriction configured
-            operation = androidOperationConstants["APPLICATION_OPERATION"];
-            // Initializing continueToCheckNextInputs to true
-            continueToCheckNextInputs = true;
-
-            var appRestrictionType = $("#app-restriction-type").val();
-
-            var restrictedApplicationsGridChildInputs = "div#restricted-applications .child-input";
-
-            if (!appRestrictionType) {
-                validationStatus = {
-                    "error": true,
-                    "subErrorMsg": "Applications restriction type is not provided.",
-                    "erroneousFeature": operation
-                };
-                continueToCheckNextInputs = false;
-            }
-
-            if (continueToCheckNextInputs) {
-                if ($(restrictedApplicationsGridChildInputs).length == 0) {
-                    validationStatus = {
-                        "error": true,
-                        "subErrorMsg": "Applications are not provided in application restriction list.",
-                        "erroneousFeature": operation
-                    };
-                    continueToCheckNextInputs = false;
-                }
-                else {
-                    childInputCount = 0;
-                    childInputArray = [];
-                    emptyChildInputCount = 0;
-                    duplicatesExist = false;
-                    // Looping through each child input
-                    $(restrictedApplicationsGridChildInputs).each(function () {
-                        childInputCount++;
-                        if (childInputCount % 2 == 0) {
-                            // If child input is of second column
-                            childInput = $(this).val();
-                            childInputArray.push(childInput);
-                            // Updating emptyChildInputCount
-                            if (!childInput) {
-                                // If child input field is empty
-                                emptyChildInputCount++;
-                            }
-                        }
-                    });
-                    // Checking for duplicates
-                    initialChildInputArrayLength = childInputArray.length;
-                    if (emptyChildInputCount == 0 && initialChildInputArrayLength > 1) {
-                        for (m = 0; m < (initialChildInputArrayLength - 1); m++) {
-                            poppedChildInput = childInputArray.pop();
-                            for (n = 0; n < childInputArray.length; n++) {
-                                if (poppedChildInput == childInputArray[n]) {
-                                    duplicatesExist = true;
-                                    break;
-                                }
-                            }
-                            if (duplicatesExist) {
-                                break;
-                            }
-                        }
-                    }
-                    // Updating validationStatus
-                    if (emptyChildInputCount > 0) {
-                        // If empty child inputs are present
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "One or more package names of " +
-                            "applications are empty.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
-                    } else if (duplicatesExist) {
-                        // If duplicate input is present
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "Duplicate values exist with " +
-                            "for package names.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
-                    }
-
-                }
-            }
-
-            if (continueToCheckNextInputs) {
-                validationStatus = {
-                    "error": false,
-                    "okFeature": operation
-                };
-            }
-
-            // Updating validationStatusArray with validationStatus
-            validationStatusArray.push(validationStatus);
-        }
-        if ($.inArray(androidOperationConstants["KIOSK_APPS_CODE"], configuredOperations) != -1) {
-            //If COSU whitelisting applications configured
-            operation = androidOperationConstants["KIOSK_APPS"];
-            // Initializing continueToCheckNextInputs to true
-            continueToCheckNextInputs = true;
-            var whitelistedApplicationsGridChildInputs = "div#cosu-whitelisted-applications .child-input";
-            if (continueToCheckNextInputs) {
-                if ($(whitelistedApplicationsGridChildInputs).length == 0) {
-                    validationStatus = {
-                        "error": true,
-                        "subErrorMsg": "Applications are not provided in application whitelist list.",
-                        "erroneousFeature": operation
-                    };
-                    continueToCheckNextInputs = false;
-                }
-                else {
-                    childInputCount = 0;
-                    childInputArray = [];
-                    emptyChildInputCount = 0;
-                    duplicatesExist = false;
-                    // Looping through each child input
-                    $(whitelistedApplicationsGridChildInputs).each(function () {
-                        childInputCount++;
-                        if (childInputCount % 2 == 0) {
-                            // If child input is of second column
-                            childInput = $(this).val();
-                            childInputArray.push(childInput);
-                            // Updating emptyChildInputCount
-                            if (!childInput) {
-                                // If child input field is empty
-                                emptyChildInputCount++;
-                            }
-                        }
-                    });
-                    // Checking for duplicates
-                    initialChildInputArrayLength = childInputArray.length;
-                    if (emptyChildInputCount == 0 && initialChildInputArrayLength > 1) {
-                        for (m = 0; m < (initialChildInputArrayLength - 1); m++) {
-                            poppedChildInput = childInputArray.pop();
-                            for (n = 0; n < childInputArray.length; n++) {
-                                if (poppedChildInput == childInputArray[n]) {
-                                    duplicatesExist = true;
-                                    break;
-                                }
-                            }
-                            if (duplicatesExist) {
-                                break;
-                            }
-                        }
-                    }
-                    // Updating validationStatus
-                    if (emptyChildInputCount > 0) {
-                        // If empty child inputs are present
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "One or more package names of " +
-                            "applications are empty.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
-                    } else if (duplicatesExist) {
-                        // If duplicate input is present
-                        validationStatus = {
-                            "error": true,
-                            "subErrorMsg": "Duplicate values exist with " +
-                            "for package names.",
-                            "erroneousFeature": operation
-                        };
-                        continueToCheckNextInputs = false;
-                    }
-                }
-            }
-            if (continueToCheckNextInputs) {
-                validationStatus = {
-                    "error": false,
-                    "okFeature": operation
-                };
-            }
-            // Updating validationStatusArray with validationStatus
-            validationStatusArray.push(validationStatus);
-        }
     }
     // ending validation process
 
@@ -534,6 +248,9 @@ var generatePolicyProfile = function () {
     // traverses key by key in policy["profile"]
     var key;
     for (key in policy["profile"]) {
+        if (key == windowsOperationConstants["PASSCODE_POLICY_OPERATION_CODE"]) {
+            policy["profile"][key].enablePassword = true;
+        }
         if (policy["profile"].hasOwnProperty(key)) {
             profilePayloads.push({
                 "featureCode": key,

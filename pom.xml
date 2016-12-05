@@ -1232,7 +1232,7 @@
         <carbon.devicemgt.version.range>[2.0.0, 3.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
-        <carbon.appmgt.version>1.2.7</carbon.appmgt.version>
+        <carbon.appmgt.version>1.2.8-SNAPSHOT</carbon.appmgt.version>
 
         <!-- Carbon Device Management Plugins -->
         <carbon.devicemgt.plugins.version>3.0.3-SNAPSHOT</carbon.devicemgt.plugins.version>
