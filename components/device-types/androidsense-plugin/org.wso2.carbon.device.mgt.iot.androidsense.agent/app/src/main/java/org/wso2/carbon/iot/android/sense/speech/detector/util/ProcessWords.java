@@ -18,9 +18,8 @@ import android.os.AsyncTask;
 import android.widget.EditText;
 
 import org.apache.commons.codec.language.Soundex;
-import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationData;
 import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

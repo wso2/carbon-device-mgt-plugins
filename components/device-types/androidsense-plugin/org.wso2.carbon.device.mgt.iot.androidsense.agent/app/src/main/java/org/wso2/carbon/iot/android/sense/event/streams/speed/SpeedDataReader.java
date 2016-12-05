@@ -12,10 +12,10 @@
  *
  */
 
-package org.wso2.carbon.iot.android.sense.event.streams.Speed;
+package org.wso2.carbon.iot.android.sense.event.streams.speed;
 
 import org.wso2.carbon.iot.android.sense.event.streams.DataReader;
-import org.wso2.carbon.iot.android.sense.event.streams.Sensor.SensorData;
+import org.wso2.carbon.iot.android.sense.event.streams.sensor.SensorData;
 import org.wso2.carbon.iot.android.sense.realtimeviewer.sensorlisting.SupportedSensors;
 import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
 import android.content.Context;
@@ -37,9 +37,6 @@ import java.util.concurrent.TimeUnit;
 import android.content.BroadcastReceiver;
 
 import android.content.Intent;
-import  android.app.Activity;
-import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationDataReader;
-
 
 
 public class SpeedDataReader extends DataReader implements SensorEventListener {

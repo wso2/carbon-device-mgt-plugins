@@ -11,38 +11,39 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-
-
-package org.wso2.carbon.iot.android.sense.event.streams.Speed;
+package org.wso2.carbon.iot.android.sense.event.streams.location;
 
 import java.util.Date;
 
-public class SpeedData {
-    private float speed; // speed
-    private String turnAxis; // turns
+/**
+ * This defines the data structure of the location data that is been collected.
+ */
+public class LocationData {
+    private double latitude; // latitude
+    private double longitude; // longitude
     private long timestamp;
 
-    SpeedData(float speed, String turnAxis) {
-        this.speed = speed;
-        this.turnAxis = turnAxis;
+    LocationData(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
         timestamp = new Date().getTime();
 
     }
 
-    public float getSpeed() {
-        return speed;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setSpeed(float speed) {
-        this.speed = speed;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public String getTurns() {
-        return turnAxis;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setTurns(String turnAxis) {
-        this.turnAxis = turnAxis;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public long getTimeStamp() {
@@ -52,5 +53,4 @@ public class SpeedData {
     public void setTimeStamp(long timeStamp) {
         timestamp = timeStamp;
     }
-
 }
