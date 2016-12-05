@@ -9,7 +9,7 @@
             "type": "Feature",
             "id": {{id}},
             "deviceId": {{id}},
-            "deviceType" : "virtual_firealarm",
+            "deviceType" : "{{type}}",
             "state": {{state}},
             "information": {{information}},
             "longitude" : {{longitude}},
