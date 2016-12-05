@@ -25,6 +25,10 @@ import java.util.Date;
  */
 public class BatteryData {
 
+    public enum State {
+        LOW, OK
+    }
+
     private int health;
     private int level;
     private int plugged;
@@ -34,6 +38,7 @@ public class BatteryData {
     private int temperature;
     private int voltage;
     private long timestamp;
+    private State state;
 
     BatteryData(Intent intent) {
         timestamp = new Date().getTime();
@@ -46,7 +51,12 @@ public class BatteryData {
         String technology = intent.getExtras().getString(BatteryManager.EXTRA_TECHNOLOGY);
         temperature = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0);
         voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE, 0);
+        state = State.OK;
+    }
 
+    BatteryData(State state) {
+        this.timestamp = new Date().getTime();
+        this.state = state;
     }
 
     public int getHealth() {
@@ -120,5 +130,13 @@ public class BatteryData {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
     }
 }

@@ -20,18 +20,17 @@
 <project name="create-geo-fence-capps" default="zip" basedir=".">
 
     <property name="project-name" value="${ant.project.name}"/>
-    <property name="res-dir" value="src/main/resources"/>
-    <property name="target-dir" value="target/"/>
-    <property name="src-dir" value="src/main/capp"/>
+    <property name="target-dir" value="target/carbonapps"/>
+    <property name="src-dir" value="src/main/resources/carbonapps"/>
 
-    <property name="GeoDashboard" value="org_wso2_carbon_iot_geo_dashboard-1.0.0"/>
+    <property name="DeviceStatisticsDashboard" value="org_wso2_carbon_iot_device_statistics_dashboard-1.0.0"/>
 
     <target name="clean">
         <delete dir="${target-dir}" />
     </target>
 
     <target name="zip" depends="clean">
-        <zip destfile="${res-dir}/${GeoDashboard}.car">
+        <zip destfile="${target-dir}/${DeviceStatisticsDashboard}.car">
             <zipfileset dir="${src-dir}"/>
         </zip>
     </target>

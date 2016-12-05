@@ -18,7 +18,12 @@ org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../dep
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.windows.policy-edit);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.windows.policy-view);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.windows.policy-wizard);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.windows.qr-modal);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.windows.type-view);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.windows.leaflet);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.windows.operation-bar);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.windows.operation-mod);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.windows.date-range-picker);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../dbscripts/cdm/plugins/windows);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../database/WSO2MobileWindows_DB.h2.db);\
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../.

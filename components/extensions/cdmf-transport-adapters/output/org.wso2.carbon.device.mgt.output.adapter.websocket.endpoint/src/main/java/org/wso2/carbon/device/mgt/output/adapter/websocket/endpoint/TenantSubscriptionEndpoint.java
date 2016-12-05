@@ -24,23 +24,27 @@ import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authentication.AuthenticationInfo;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authentication.Authenticator;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.Authorizer;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.endpoint.constants.Constants;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.endpoint.util.ServiceHolder;
 
 import javax.websocket.CloseReason;
+import javax.websocket.EndpointConfig;
+import javax.websocket.Session;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
-import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Connect to web socket with a tenant
  */
 
-@ServerEndpoint(value = "/t/{tdomain}/{streamname}/{version}")
+@ServerEndpoint(value = "/t/{tdomain}/{streamname}/{version}", configurator = HttpSessionConfigurator.class)
 public class TenantSubscriptionEndpoint extends SubscriptionEndpoint {
 
     private static final Log log = LogFactory.getLog(TenantSubscriptionEndpoint.class);
@@ -54,13 +58,15 @@ public class TenantSubscriptionEndpoint extends SubscriptionEndpoint {
      * @param tdomain - Tenant domain extracted from ws url.
      */
     @OnOpen
-    public void onOpen (Session session, @PathParam("streamname") String streamName ,
-            @PathParam("version") String version, @PathParam("tdomain") String tdomain) {
+    public void onOpen (Session session, EndpointConfig config, @PathParam("streamname") String streamName ,
+                        @PathParam("version") String version, @PathParam("tdomain") String tdomain) {
         if (log.isDebugEnabled()) {
             log.debug("WebSocket opened, for Session id: "+session.getId()+", for the Stream:"+streamName);
         }
+        Map<String, List<String>> httpHeaders;
+        httpHeaders = (Map<String, List<String>>) config.getUserProperties().get(Constants.HTTP_HEADERS);
         Authenticator authenticator = ServiceHolder.getWebsocketValidationService().getAuthenticator();
-        AuthenticationInfo authenticationInfo = authenticator.isAutenticated(session);
+        AuthenticationInfo authenticationInfo = authenticator.isAuthenticated(httpHeaders);
         if (authenticationInfo != null && authenticationInfo.isAuthenticated()) {
             Authorizer authorizer = ServiceHolder.getWebsocketValidationService().getAuthorizer();
             boolean isAuthorized = authorizer.isAuthorized(authenticationInfo, session, streamName);
@@ -68,9 +74,8 @@ public class TenantSubscriptionEndpoint extends SubscriptionEndpoint {
                 try {
                     PrivilegedCarbonContext.startTenantFlow();
                     PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tdomain, true);
-                    ServiceHolder.getInstance().getUiOutputCallbackControllerService().subscribeWebsocket(streamName,
-                                                                                                          version,
-                                                                                                          session);
+                    ServiceHolder.getInstance().getUiOutputCallbackControllerService().subscribeWebsocket(streamName
+                            , version, session);
                 } finally {
                     PrivilegedCarbonContext.endTenantFlow();
                 }

@@ -16,11 +16,11 @@ package org.wso2.carbon.iot.android.sense.event;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.IBinder;
+
 import org.wso2.carbon.iot.android.sense.event.streams.SenseDataCollector;
-import org.wso2.carbon.iot.android.sense.event.streams.battery.BatteryDataReceiver;
 import org.wso2.carbon.iot.android.sense.util.LocalRegistry;
+import org.wso2.carbon.iot.android.sense.util.SenseDataReceiverManager;
 import org.wso2.carbon.iot.android.sense.util.SenseWakeLock;
 
 /**
@@ -48,10 +48,14 @@ public class SenseService extends Service {
         //Below triggers the data collection for sensors,location and battery.
         SenseDataCollector Sensor = new SenseDataCollector(this, SenseDataCollector.DataType.SENSOR);
         SenseDataCollector Location = new SenseDataCollector(this, SenseDataCollector.DataType.LOCATION);
-        registerReceiver(new BatteryDataReceiver(), new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         SenseDataCollector speed = new SenseDataCollector(this, SenseDataCollector.DataType.SPEED);
-
-
+        SenseDataCollector audio = new SenseDataCollector(this, SenseDataCollector.DataType.AUDIO);
+        SenseDataReceiverManager.registerBatteryDataReceiver(this);
+        SenseDataReceiverManager.registerScreenDataReceiver(this);
+        SenseDataReceiverManager.registerCallDataReceiver(this);
+        SenseDataReceiverManager.registerActivityDataReceiver(this);
+        SenseDataReceiverManager.registerSmsDataReceiver(this);
+        SenseDataReceiverManager.registerAppDataReceiver(this);
         //service will not be stopped until we manually stop the service
         return Service.START_NOT_STICKY;
 
@@ -59,6 +63,13 @@ public class SenseService extends Service {
 
     @Override
     public void onDestroy() {
+        SenseDataReceiverManager.unregisterBatteryDataReceiver(this);
+        SenseDataReceiverManager.unregisterScreenDataReceiver(this);
+        SenseDataReceiverManager.unregisterCallDataReceiver(this);
+        SenseDataReceiverManager.unregisterActivityDataReceiver(this);
+        SenseDataReceiverManager.unregisterSmsDataReceiver(this);
+        SenseDataReceiverManager.unregisterAppDataReceiver(this);
+
         SenseWakeLock.releaseCPUWakeLock();
         super.onDestroy();
     }

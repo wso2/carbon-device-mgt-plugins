@@ -58,348 +58,290 @@
     </DataSource>
 
     <Features>
+        <Feature code="DEVICE_RING">
+            <Name>Ring</Name>
+            <Description>Ring the device</Description>
+            <Operation context="/api/device-mgt/android/v1.0/admin/devices/ring" method="POST">
+            </Operation>
+        </Feature>
         <Feature code="DEVICE_LOCK">
             <Name>Device Lock</Name>
             <Description>Lock the device</Description>
-            <Operation context="android/lock_devices" method="POST">
+            <Operation context="/api/device-mgt/android/v1.0/admin/devices/lock-devices" method="POST" conent-type="application/json">
+                <FormParameters>
+                    <Parameter id="message" optional="true" type="text">Message to be sent to the device</Parameter>
+                </FormParameters>
             </Operation>
         </Feature>
         <Feature code="DEVICE_LOCATION">
             <Name>Location</Name>
             <Description>Request coordinates of device location</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="WIFI">
-            <Name>Wifi</Name>
-            <Description>Setting up wifi configuration</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="CAMERA">
-            <Name>Camera</Name>
-            <Description>Enable or disable camera</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="EMAIL">
-            <Name>Email</Name>
-            <Description>Configure email settings</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="DEVICE_MUTE">
-            <Name>Mute</Name>
-            <Description>Enable mute in the device</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="DEVICE_INFO">
-            <Name>Device info</Name>
-            <Description>Request device information</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="ENTERPRISE_WIPE">
-            <Name>Enterprise Wipe</Name>
-            <Description>Remove enterprise applications</Description>
-            <Operation context="" method="POST">
+            <Operation context="/api/device-mgt/android/v1.0/admin/devices/location" method="POST" conent-type="application/json">
             </Operation>
         </Feature>
         <Feature code="CLEAR_PASSWORD">
             <Name>Clear Password</Name>
             <Description>Clear current password</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="WIPE_DATA">
-            <Name>Wipe Data</Name>
-            <Description>Factory reset the device</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="APPLICATION_LIST">
-            <Name>Application List</Name>
-            <Description>Request list of current installed applications</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="CHANGE_LOCK_CODE">
-            <Name>Change Lock-code</Name>
-            <Description>Change current lock code</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="INSTALL_APPLICATION">
-            <Name>Install App</Name>
-            <Description>Install App</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="UNINSTALL_APPLICATION">
-            <Name>Uninstall App</Name>
-            <Description>Uninstall App</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="BLACKLIST_APPLICATIONS">
-            <Name>Blacklist app</Name>
-            <Description>Blacklist applications</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="ENCRYPT_STORAGE">
-            <Name>Encrypt Storage</Name>
-            <Description>Encrypt storage</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="DEVICE_RING">
-            <Name>Ring</Name>
-            <Description>Ring the device</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="PASSCODE_POLICY">
-            <Name>Password Policy</Name>
-            <Description>Set passcode policy</Description>
-            <Operation context="" method="POST">
-            </Operation>
-        </Feature>
-        <Feature code="NOTIFICATION">
-            <Name>Message</Name>
-            <Description>Send message</Description>
-            <Operation context="" method="POST">
+            <Operation context="/api/device-mgt/android/v1.0/admin/devices/clear-password" method="POST" conent-type="application/json">
             </Operation>
         </Feature>
         <Feature code="DEVICE_REBOOT">
             <Name>Reboot</Name>
             <Description>Reboot the device</Description>
-            <Operation context="" method="POST">
+            <Operation context="/api/device-mgt/android/v1.0/admin/devices/reboot" method="POST" conent-type="application/json">
             </Operation>
         </Feature>
         <Feature code="UPGRADE_FIRMWARE">
             <Name>Upgrade Firmware</Name>
             <Description>Upgrade Firmware</Description>
-            <Operation context="" method="POST">
+            <Operation context="/api/device-mgt/android/v1.0/admin/devices/upgrade-firmware" method="POST" conent-type="application/json">
+                <FormParameters>
+                    <Parameter id="immediate" optional="true" type="check" helper-text="Once enabled, device firmware upgrade process will start instantly.">Instant Upgrade</Parameter>
+                    <Parameter id="schedule" optional="false" type="text">Enter the date and time to schedule firmware upgrade.</Parameter>
+                    <Parameter id="server" optional="true" type="text">Enter firmware upgrade server URL (ie. http://abc.com or http://abc.com/ota) (Optional).</Parameter>
+                </FormParameters>
             </Operation>
+        </Feature>
+        <Feature code="DEVICE_MUTE">
+            <Name>Mute</Name>
+            <Description>Enable mute in the device</Description>
+            <Operation context="/api/device-mgt/android/v1.0/admin/devices/mute" method="POST" conent-type="application/json">
+            </Operation>
+        </Feature>
+        <Feature code="NOTIFICATION">
+            <Name>Message</Name>
+            <Description>Send message</Description>
+            <Operation context="/api/device-mgt/android/v1.0/admin/devices/send-notification" method="POST" conent-type="application/json">
+                <FormParameters>
+                    <Parameter id="messageText" optional="false" type="text">Title Here...</Parameter>
+                    <Parameter id="messageTitle" optional="false" type="text-area">Message Here...</Parameter>
+                </FormParameters>
+            </Operation>
+        </Feature>
+        <Feature code="CHANGE_LOCK_CODE">
+            <Name>Change Lock-code</Name>
+            <Description>Change current lock code</Description>
+            <Operation context="/api/device-mgt/android/v1.0/admin/devices/change-lock-code" method="POST" conent-type="application/json">
+                <FormParameters>
+                    <Parameter id="lockCode" optional="false" type="text">Lock Code</Parameter>
+                </FormParameters>
+            </Operation>
+        </Feature>
+        <Feature code="ENTERPRISE_WIPE">
+            <Name>Enterprise Wipe</Name>
+            <Description>Remove enterprise applications</Description>
+            <Operation context="/api/device-mgt/android/v1.0/admin/devices/enterprise-wipe" method="POST" conent-type="application/json">
+            </Operation>
+        </Feature>
+        <Feature code="WIPE_DATA">
+            <Name>Wipe Data</Name>
+            <Description>Factory reset the device</Description>
+            <Operation context="/api/device-mgt/android/v1.0/admin/devices/wipe" method="POST" conent-type="application/json">
+                <FormParameters>
+                    <!-- Needs to be converted to a unit -->
+                    <Parameter id="pin" optional="false" type="text">Enter PIN code* of the device.</Parameter>
+                </FormParameters>
+            </Operation>
+        </Feature>
+        <Feature code="WIFI">
+            <Name>Wifi</Name>
+            <Description>Setting up wifi configuration</Description>
+        </Feature>
+        <Feature code="CAMERA">
+            <Name>Camera</Name>
+            <Description>Enable or disable camera</Description>
+        </Feature>
+        <Feature code="EMAIL">
+            <Name>Email</Name>
+            <Description>Configure email settings</Description>
+        </Feature>
+        <Feature code="DEVICE_INFO">
+            <Name>Device info</Name>
+            <Description>Request device information</Description>
+        </Feature>
+        <Feature code="APPLICATION_LIST">
+            <Name>Application List</Name>
+            <Description>Request list of current installed applications</Description>
+        </Feature>
+        <Feature code="INSTALL_APPLICATION">
+            <Name>Install App</Name>
+            <Description>Install App</Description>
+        </Feature>
+        <Feature code="UNINSTALL_APPLICATION">
+            <Name>Uninstall App</Name>
+            <Description>Uninstall App</Description>
+        </Feature>
+        <Feature code="BLACKLIST_APPLICATIONS">
+            <Name>Blacklist app</Name>
+            <Description>Blacklist applications</Description>
+        </Feature>
+        <Feature code="ENCRYPT_STORAGE">
+            <Name>Encrypt Storage</Name>
+            <Description>Encrypt storage</Description>
+        </Feature>
+        <Feature code="PASSCODE_POLICY">
+            <Name>Password Policy</Name>
+            <Description>Set passcode policy</Description>
         </Feature>
         <Feature code="VPN">
             <Name>Configure VPN</Name>
             <Description>Configure VPN settings</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_ADJUST_VOLUME">
             <Name>Disallow user to change volume</Name>
             <Description>Allow or disallow user to change volume"</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_CONFIG_BLUETOOTH">
             <Name>Disallow bluetooth configuration</Name>
             <Description>Allow or disallow bluetooth configuration</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_CONFIG_CELL_BROADCASTS">
             <Name>Disallow user to change cell broadcast configurations</Name>
             <Description>Allow or disallow user to change cell broadcast configurations</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_CONFIG_CREDENTIALS">
             <Name>Disallow user to change user credentials</Name>
             <Description>Allow or disallow user to change user credentials</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_CONFIG_MOBILE_NETWORKS">
             <Name>Disallow user to change mobile networks configurations</Name>
             <Description>Allow or disallow user to change mobile networks configurations</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_CONFIG_TETHERING">
             <Name>Disallow user to change tethering configurations</Name>
             <Description>Allow or disallow user to change tethering configurations</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_CONFIG_VPN">
             <Name>Disallow user to change VPN configurations</Name>
             <Description>Allow or disallow user to change VPN configurations</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_CONFIG_WIFI">
             <Name>Disallow user to change WIFI configurations</Name>
             <Description>Allow or disallow user to change WIFI configurations</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_APPS_CONTROL">
             <Name>Disallow user to change app control</Name>
             <Description>Allow or disallow user to change app control</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_CREATE_WINDOWS">
             <Name>Disallow window creation</Name>
             <Description>Allow or disallow window creation</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_APPS_CONTROL">
             <Name>Disallow user to change app control configurations</Name>
             <Description>Allow or disallow user to change app control configurations</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_CROSS_PROFILE_COPY_PASTE">
             <Name>Disallow cross profile copy paste</Name>
             <Description>Allow or disallow cross profile copy paste</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_DEBUGGING_FEATURES">
             <Name>Disallow debugging features</Name>
             <Description>Allow or disallow debugging features</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_FACTORY_RESET">
             <Name>Disallow factory reset</Name>
             <Description>Allow or disallow factory reset</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_ADD_USER">
             <Name>Disallow add user</Name>
             <Description>Allow or disallow add user</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_INSTALL_APPS">
             <Name>Disallow install apps</Name>
             <Description>Allow or disallow install apps</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_INSTALL_UNKNOWN_SOURCES">
             <Name>Disallow install unknown sources</Name>
             <Description>Allow or disallow install unknown sources</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_MODIFY_ACCOUNTS">
             <Name>Disallow modify account</Name>
             <Description>Allow or disallow modify account</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_MOUNT_PHYSICAL_MEDIA">
             <Name>Disallow mount physical media</Name>
             <Description>Allow or disallow mount physical media</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_NETWORK_RESET">
             <Name>Disallow network reset</Name>
             <Description>Allow or disallow network reset</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_OUTGOING_BEAM">
             <Name>Disallow outgoing beam</Name>
             <Description>Allow or disallow outgoing beam</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_OUTGOING_CALLS">
             <Name>Disallow outgoing calls</Name>
             <Description>Allow or disallow outgoing calls</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_REMOVE_USER">
             <Name>Disallow remove users</Name>
             <Description>Allow or disallow remove users</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_SAFE_BOOT">
             <Name>Disallow safe boot</Name>
             <Description>Allow or disallow safe boot</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_SHARE_LOCATION">
             <Name>Disallow share location</Name>
             <Description>Allow or disallow share location</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_SMS">
             <Name>Disallow sms</Name>
             <Description>Allow or disallow sms</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_UNINSTALL_APPS">
             <Name>Disallow uninstall app</Name>
             <Description>Allow or disallow uninstall app</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_UNMUTE_MICROPHONE">
             <Name>Disallow unmute mic</Name>
             <Description>Allow or disallow unmute mic</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DISALLOW_USB_FILE_TRANSFER">
             <Name>Disallow usb file transfer</Name>
             <Description>Allow or disallow usb file transfer</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="ALLOW_PARENT_PROFILE_APP_LINKING">
             <Name>Disallow parent profile app linking</Name>
             <Description>Allow or disallow parent profile app linking</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="ENSURE_VERIFY_APPS">
             <Name>Disallow ensure verify apps</Name>
             <Description>Allow or disallow ensure verify apps</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="AUTO_TIME">
             <Name>Disallow auto timing</Name>
             <Description>Allow or disallow auto timing</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="REMOVE_DEVICE_OWNER">
             <Name>Remove device owner</Name>
             <Description>Remove device owner</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="LOGCAT">
             <Name>Fetch device logcat</Name>
             <Description>Fetch device logcat</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="DEVICE_UNLOCK">
             <Name>Unlock the device</Name>
             <Description>Unlock the device</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
     </Features>
-
+    <TaskConfiguration>
+        <Operations>
+            <Operation>
+                <Name>DEVICE_INFO</Name>
+                <RecurrentTimes>1</RecurrentTimes>
+            </Operation>
+            <Operation>
+                <Name>APPLICATION_LIST</Name>
+                <RecurrentTimes>5</RecurrentTimes>
+            </Operation>
+            <Operation>
+                <Name>DEVICE_LOCATION</Name>
+                <RecurrentTimes>1</RecurrentTimes>
+            </Operation>
+        </Operations>
+    </TaskConfiguration>
 </DeviceTypeConfiguration>
