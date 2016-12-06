@@ -119,7 +119,8 @@ var operationModule = function () {
             "LOCATION": "location",
             "ENTERPRISE_WIPE": "enterprise-wipe",
             "NOTIFICATION": "notification",
-            "RING": "ring"
+            "RING": "ring",
+            "WIPE_DATA": "wipe-data"
         };
         return "/api/device-mgt/ios/v1.0/admin/devices/" + featureMap[operationCode];
     };
@@ -1286,7 +1287,8 @@ var operationModule = function () {
             "LOCATION": "fw-map-location",
             "ENTERPRISE_WIPE": "fw-block",
             "NOTIFICATION": "fw-message",
-            "RING": "fw-dial-up"
+            "RING": "fw-dial-up",
+            "WIPE_DATA": "fw-delete"
         };
         return featureMap[operationCode];
     };

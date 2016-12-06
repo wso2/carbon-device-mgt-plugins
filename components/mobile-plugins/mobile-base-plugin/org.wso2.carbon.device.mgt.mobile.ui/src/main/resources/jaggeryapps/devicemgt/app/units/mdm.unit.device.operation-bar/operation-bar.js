@@ -78,6 +78,9 @@ function onRequest(context) {
     if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning-device/operations/ios/ring")) {
         permissions["ios"].push("RING");
     }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/ios/wipe-data")) {
+        permissions["ios"].push("WIPE_DATA");
+    }
 
     // adding windows operations related permission checks
     permissions["windows"] = [];
