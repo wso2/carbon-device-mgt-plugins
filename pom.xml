@@ -1377,7 +1377,6 @@
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
         <siddhi.version>3.1.2</siddhi.version>
         <maven.scr.version>1.7.2</maven.scr.version>
-        <maven.assembly.plugin.version>2.5.5</maven.assembly.plugin.version>
     </properties>
 
     <scm>
