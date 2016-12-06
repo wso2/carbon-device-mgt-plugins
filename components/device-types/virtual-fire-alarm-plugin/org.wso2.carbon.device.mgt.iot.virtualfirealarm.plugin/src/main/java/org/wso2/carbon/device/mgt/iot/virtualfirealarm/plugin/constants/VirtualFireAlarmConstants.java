@@ -83,4 +83,6 @@ public class VirtualFireAlarmConstants {
     public static final String SERVER_NAME = "serverName";
 
     public static final String MQTT_ADAPTER_TOPIC_PROPERTY_NAME = "mqtt.adapter.topic";
+
+    public static final String APIM_APPLICATION_TOKEN_VALIDITY_PERIOD = "3600";
 }

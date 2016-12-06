@@ -309,7 +309,8 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {VirtualFireAlarmConstants.DEVICE_TYPE};
             apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(
-                    VirtualFireAlarmConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true);
+                    VirtualFireAlarmConstants.DEVICE_TYPE, tags, KEY_TYPE, applicationUsername, true,
+                    VirtualFireAlarmConstants.APIM_APPLICATION_TOKEN_VALIDITY_PERIOD);
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = " device_" + deviceId;
