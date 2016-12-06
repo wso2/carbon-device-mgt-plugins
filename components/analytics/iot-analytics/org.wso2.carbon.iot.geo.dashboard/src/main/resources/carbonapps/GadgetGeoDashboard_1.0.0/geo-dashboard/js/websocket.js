@@ -116,6 +116,10 @@ SpatialObject.prototype.update = function (geoJSON) {
 
     // Update the spatial object leaflet marker
     this.marker.setLatLng([this.latitude, this.longitude]);
+
+    if (this.latitude, this.longitude) {
+        map.setView([this.latitude, this.longitude]);
+    }
     this.marker.setIconAngle(this.heading);
     this.marker.setIcon(this.stateIcon());
 
@@ -707,7 +711,7 @@ intializeWebsocketUrls();
 
 SpatialObject.prototype.stateIcon = function () {
     //TODO : Need to add separate icons for each device type
-    var iconUrl = "/portal/store/carbon.super/fs/gadget/geo-dashboard/img/markers/object-types/default_icons";
+    var iconUrl = "/portal/store/carbon.super/fs/gadget/geo-dashboard/img/markers/object-types/default";
     if (0 < this.speed && (-360 <= this.heading && 360 >= this.heading)) {
         iconUrl = iconUrl + "/moving/" + this.state.toLowerCase();
     } else {
