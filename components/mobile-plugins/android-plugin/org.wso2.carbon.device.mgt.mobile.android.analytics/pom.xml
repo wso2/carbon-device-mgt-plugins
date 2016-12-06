@@ -53,7 +53,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>${maven.assembly.plugin.version}</version>
+                <version>2.5.5</version>
                 <configuration>
                     <finalName>${project.artifactId}-${carbon.devicemgt.plugins.version}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
