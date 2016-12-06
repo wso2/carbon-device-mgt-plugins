@@ -1,0 +1,53 @@
+{
+    "appName": "WSO2 Enterprise Mobility Manager",
+    "cachingEnabled": true,
+    "debuggingEnabled": false,
+    "permissionRoot": "/",
+    "loginPage": "cdmf.page.sign-in",
+    "adminServicesUrl": "https://${server.ip}:${server.https_port}/admin/services/",
+    "authModule": {
+        "enabled": true,
+        "login": {
+            "onSuccess": {
+                "script": "/app/modules/login.js",
+                "page": "mdm.page.dashboard"
+            },
+            "onFail": {
+                "script": "/app/modules/login.js",
+                "page": "cdmf.page.sign-in"
+            }
+        },
+        "logout": {
+            "onSuccess": {
+                "page": "cdmf.page.sign-in"
+            },
+            "onFail": {
+                "page": "mdm.page.dashboard"
+            }
+        },
+        "sso": {
+            "enabled": false,
+            "issuer" : "emm",
+            "appName" : "emm",
+            "identityProviderUrl" : "https://localhost:9443/samlsso",
+            "acs": "https://localhost:9443/emm/uuf/sso/acs",
+            "identityAlias": "wso2carbon",
+            "responseSigningEnabled" : true,
+            "validateAssertionValidityPeriod": true,
+            "validateAudienceRestriction": true,
+            "assertionSigningEnabled": true
+        }
+    },
+    "generalConfig" : {
+        "host" : "https://localhost:9443",
+        "companyName" : "WSO2 Enterprise Mobility Manager",
+        "browserTitle" : "WSO2 EMM",
+        "copyrightPrefix" : "\u00A9 %date-year%, ",
+        "copyrightOwner" : "WSO2 Inc.",
+        "copyrightOwnersSite" : "http://www.wso2.org",
+        "copyrightSuffix" : ""
+    },
+    "errorPages": {
+        "default": "uuf.page.error"
+    }
+}
