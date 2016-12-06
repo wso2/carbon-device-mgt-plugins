@@ -42,7 +42,7 @@ from AndroidSense[meta_type == 'audio']
 select meta_owner, meta_deviceId, meta_timestamp, audio_playing, headset_on, music_volume
 insert into AudioStream;
 
-from AndroidSense[meta_type == 'location']
+from AndroidSense[meta_type == 'gps']
 select meta_owner, meta_deviceId, meta_timestamp, gps_lat as latitude, gps_long as longitude
 insert into LocationStream;
 
