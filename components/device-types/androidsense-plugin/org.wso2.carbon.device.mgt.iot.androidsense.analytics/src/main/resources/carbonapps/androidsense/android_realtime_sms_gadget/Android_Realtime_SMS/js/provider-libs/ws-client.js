@@ -131,16 +131,43 @@ function getWebsocketSubscriptionMessage(streamName, streamVersion, streamProper
 }
 
 /**
+ * Get the parameters as query parameters.
+ * This method parses those parameters and returns.
+ * */
+function getAllQueryParamsFromURL() {
+    var queryParamList = {}, qParam;
+    var urlQueryString = decodeURIComponent(window.top.location.search.substring(1));
+
+    if (urlQueryString) {
+        var queryStringPairs = urlQueryString.split('&');
+        for (var i = 0; i < queryStringPairs.length; i++) {
+            qParam = queryStringPairs[i].split('=');
+            queryParamList[qParam[0]] = qParam[1];
+        }
+        return queryParamList;
+
+    } else {
+        return null;
+    }
+}
+
+/**
  * Web socket On Open
  */
-
 var webSocketOnOpen = function () {
-    var filterPropNames = ["meta_deviceId"];
-    var filterPropVals = ["htc"];
+    var params = getAllQueryParamsFromURL();
+    var deviceId;
+    var owner;
+    if (params != null) {
+        owner = params["owner"];
+        deviceId = params["deviceId"];
+
+    }
+    var filterPropNames = ["meta_owner", "meta_deviceId"];
+    var filterPropVals = [owner, deviceId];
     var data = getWebsocketSubscriptionMessage(stream, streamVersion, filterPropNames, filterPropVals);
     websocket.send(data);
 };
-
 
 /**
  * On server sends a message
