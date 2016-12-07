@@ -41,6 +41,9 @@ public class DiscoveryResponse implements Serializable {
     @XmlElement(name = "AuthenticationServiceUrl")
     private String authenticationServiceUrl;
 
+    @XmlElement(name = "EnrollmentVersion")
+    private String enrollmentVersion;
+
     public void setAuthenticationServiceUrl(String authenticationServiceUrl) {
         this.authenticationServiceUrl = authenticationServiceUrl;
     }
@@ -71,6 +74,14 @@ public class DiscoveryResponse implements Serializable {
 
     public void setEnrollmentServiceUrl(String enrollmentServiceUrl) {
         this.enrollmentServiceUrl = enrollmentServiceUrl;
+    }
+
+    public String getEnrollmentVersion() {
+        return enrollmentVersion;
+    }
+
+    public void setEnrollmentVersion(String enrollmentVersion) {
+        this.enrollmentVersion = enrollmentVersion;
     }
 
 }

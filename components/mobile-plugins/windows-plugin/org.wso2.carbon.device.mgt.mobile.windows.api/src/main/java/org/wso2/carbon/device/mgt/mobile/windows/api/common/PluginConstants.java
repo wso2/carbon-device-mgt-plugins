@@ -31,6 +31,8 @@ public final class PluginConstants {
             "org.wso2.carbon.device.mgt.mobile.windows.api.services.wstep.CertificateEnrollmentService";
     public static final String CERTIFICATE_ENROLLMENT_POLICY_SERVICE_ENDPOINT =
             "org.wso2.carbon.device.mgt.mobile.windows.api.services.xcep.CertificateEnrollmentPolicyService";
+    public static final String ENROLLMENT_SERVICE_ENDPOINT =
+            "org.wso2.carbon.device.mgt.mobile.windows.api.services.enrollment.EnrollmentService";
 
     //Services' target namespaces
     public static final String DISCOVERY_SERVICE_TARGET_NAMESPACE =
@@ -81,10 +83,8 @@ public final class PluginConstants {
                 "/ENROLLMENTSERVER/PolicyEnrollmentWebservice.svc";
         public static final String CERTIFICATE_ENROLLMENT_SERVICE_URL =
                 "/ENROLLMENTSERVER/DeviceEnrollmentWebservice.svc";
-        public static final String ONPREMISE_CERTIFICATE_ENROLLMENT_POLICY =
-                "/ENROLLMENTSERVER/ONPREMISE/PolicyEnrollmentWebservice.svc";
-        public static final String ONPREMISE_CERTIFICATE_ENROLLMENT_SERVICE_URL =
-                "/ENROLLMENTSERVER/ONPREMISE/DeviceEnrollmentWebservice.svc";
+        public static final String ENROLLMENT_SERVICE_URL =
+                "/ENROLLMENTSERVER/Win10DeviceEnrollmentWebservice.svc";
         public static final String WAB_URL = "/windows-web-agent/enrollments/windows/login-agent";
     }
 
@@ -153,6 +153,8 @@ public final class PluginConstants {
         public static final int DOMAIN_POSITION = 7;
         public static final String ENROLL_SUBDOMAIN = "https://EnterpriseEnrollment.";
         public static final String SYNCML_PROVISIONING_SERVICE_URL = "/Syncml/initialquery";
+        public static final String ENROLLMENT_DISPOSITION_MESSAGE = "http://schemas.microsoft.com/windows/pki/" +
+                "2009/01/enrollment";
     }
 
     /**
@@ -189,7 +191,7 @@ public final class PluginConstants {
         public static final int MODEL_POSITION = 5;
         public static final int MAC_ADDRESS_POSITION = 7;
         public static final int RESOLUTION_POSITION = 8;
-        public static final int DEVICE_NAME_POSITION = 9;
+        public static final int DEVICE_NAME_POSITION = 10;
         public static final String SYNCML_DATA_ONE = "1";
         public static final String SYNCML_DATA_ZERO = "0";
         public static final String OS_VERSION = "OS_VERSION";
@@ -289,7 +291,6 @@ public final class PluginConstants {
         public static final String DEFAULT_AUTH_POLICY = "Federated";
     }
 
-
     /**
      * Policy Configuration related constants.
      */
@@ -310,5 +311,33 @@ public final class PluginConstants {
         private AuthenticatorProperties() { throw new AssertionError(); }
         public static final String MAX_CONNECTION_PER_HOST = "MaxConnectionsPerHost";
         public static final String MAX_TOTAL_CONNECTIONS = "MaxTotalConnections";
+    }
+
+    /**
+     * Windows version related constants.
+     */
+    public final class WindowsVersionProperties {
+        private WindowsVersionProperties() {
+            throw new AssertionError();
+        }
+
+        public static final String REQUESTED_WIN10_VERSION = "3.0";
+        public static final String REQUESTED_WIN81_VERSION = "2.0";
+    }
+
+    /**
+     * Windows enrollment property constants.
+     */
+
+    public final class WindowsEnrollmentProperties {
+        private WindowsEnrollmentProperties() {
+            throw new AssertionError();
+        }
+
+        public static final int WIN_DEVICE_ID = 12;
+        public static final int WIN_DEVICE_NAME = 2;
+        public static final int WIN_DEVICE_VERSION = 15;
+        public static final int WIN_DEVICE_IMEI = 3;
+
     }
 }

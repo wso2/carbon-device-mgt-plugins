@@ -67,6 +67,7 @@
     <context-param>
         <param-name>nonSecuredEndPoints</param-name>
         <param-value>/services/discovery/get,/services/discovery/post,/services/certificatepolicy/xcep,
-            ,/services/deviceenrolment/wstep,/services/syncml/devicemanagement/request</param-value>
+            ,/services/deviceenrolment/wstep,/services/syncml/devicemanagement/request,/services/deviceenrolment/enrollment
+        </param-value>
     </context-param>
 </web-app>

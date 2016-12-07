@@ -59,24 +59,27 @@
         </jaxws:handlers>
     </jaxws:endpoint>
 
-    <!--XCEP endpoint for OnPremise Auth-Policy-->
-    <jaxws:endpoint
-            id="EnrollmentPolicyServiceOnPremise"
-            implementor="org.wso2.carbon.device.mgt.mobile.windows.api.services.xcep.impl.CertificateEnrollmentPolicyServiceImpl"
-            address="/certificatepolicy/xcep/onpremise">
-        <jaxws:properties>
-            <entry key="ws-security.ut.validator" value-ref="customvalidatoronpremise"/>
-        </jaxws:properties>
-        <jaxws:inInterceptors>
-            <ref bean="wss4jInInterceptor"/>
-        </jaxws:inInterceptors>
-    </jaxws:endpoint>
-
     <!--WSTEP Endpoint for Federated Auth-Policy-->
     <jaxws:endpoint
             id="CertificateEnrollmentService"
             implementor="org.wso2.carbon.device.mgt.mobile.windows.api.services.wstep.impl.CertificateEnrollmentServiceImpl"
             address="/deviceenrolment/wstep">
+        <jaxws:properties>
+            <entry key="ws-security.bst.validator" value-ref="customvalidator"/>
+        </jaxws:properties>
+        <jaxws:inInterceptors>
+            <ref bean="wss4jInInterceptor_federated"/>
+        </jaxws:inInterceptors>
+        <jaxws:handlers>
+            <ref bean="serviceOptionsHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
+    <!-- Enrollment Endpoint for windows 10 -->
+    <jaxws:endpoint
+            id="EnrollmentService"
+            implementor="org.wso2.carbon.device.mgt.mobile.windows.api.services.enrollment.impl.EnrollmentServiceImpl"
+            address="/deviceenrolment/enrollment">
         <jaxws:properties>
             <entry key="ws-security.bst.validator" value-ref="customvalidator"/>
         </jaxws:properties>
