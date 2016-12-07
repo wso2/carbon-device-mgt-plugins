@@ -120,7 +120,8 @@ var operationModule = function () {
             "ENTERPRISE_WIPE": "enterprise-wipe",
             "NOTIFICATION": "notification",
             "RING": "ring",
-            "WIPE_DATA": "wipe-data"
+            "WIPE_DATA": "wipe-data",
+            "CLEAR_PASSCODE": "clear-passcode"
         };
         return "/api/device-mgt/ios/v1.0/admin/devices/" + featureMap[operationCode];
     };
@@ -1288,7 +1289,8 @@ var operationModule = function () {
             "ENTERPRISE_WIPE": "fw-block",
             "NOTIFICATION": "fw-message",
             "RING": "fw-dial-up",
-            "WIPE_DATA": "fw-delete"
+            "WIPE_DATA": "fw-delete",
+            "CLEAR_PASSCODE": "fw-clear"
         };
         return featureMap[operationCode];
     };
