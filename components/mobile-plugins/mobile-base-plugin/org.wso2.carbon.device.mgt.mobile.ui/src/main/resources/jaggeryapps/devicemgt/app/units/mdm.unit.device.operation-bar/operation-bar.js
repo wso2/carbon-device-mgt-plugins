@@ -81,6 +81,9 @@ function onRequest(context) {
     if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/ios/wipe-data")) {
         permissions["ios"].push("WIPE_DATA");
     }
+    if (userModule.isAuthorized("/permission/admin/device-mgt/devices/owning/operations/ios/clear-passcode")) {
+        permissions["ios"].push("CLEAR_PASSCODE");
+    }
 
     // adding windows operations related permission checks
     permissions["windows"] = [];
