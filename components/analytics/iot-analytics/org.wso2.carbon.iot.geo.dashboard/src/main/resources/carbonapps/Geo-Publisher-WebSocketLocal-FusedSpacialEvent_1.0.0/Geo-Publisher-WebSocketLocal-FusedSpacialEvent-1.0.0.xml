@@ -7,8 +7,8 @@
             "messageType" : "Point",
             "type": "Feature",
             "id": {{id}},
-            "deviceId": "rkxb293yw2t2",
-            "deviceType": "virtual_firealarm",
+            "deviceId": {{id}},
+            "deviceType": {{type}},
             "properties": {
             "speed": {{speed}},
             "heading": {{heading}},

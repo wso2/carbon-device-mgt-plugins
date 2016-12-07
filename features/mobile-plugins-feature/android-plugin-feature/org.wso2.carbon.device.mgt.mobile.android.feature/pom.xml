@@ -117,6 +117,18 @@
                                     </outputDirectory>
                                     <includes>**/*</includes>
                                 </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                                    <artifactId>org.wso2.carbon.device.mgt.mobile.android.analytics
+                                    </artifactId>
+                                    <version>${project.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>
+                                        ${project.build.directory}/maven-shared-archive-resources/carbonapps
+                                    </outputDirectory>
+                                    <includes>**/*</includes>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>

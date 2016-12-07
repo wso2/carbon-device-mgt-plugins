@@ -21,5 +21,5 @@ public interface ApiApplicationRegistrationService {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    String register(ApiRegistrationProfile registrationProfile);
+    ApiApplicationKey register(ApiRegistrationProfile registrationProfile);
 }

@@ -29,6 +29,8 @@ define stream BatteryStream (meta_owner string, meta_deviceId string, meta_times
 @Export('org.wso2.iot.android.sms:1.0.0')
 define stream SmsStream (meta_owner string, meta_deviceId string, meta_timestamp long, number string, type string, body string);
 
+@Export('org.wso2.geo.LocationStream:1.0.0')
+define stream geoLocationStream (id string, timeStamp long, latitude double, longitude double, type string, speed float, heading float);
 
 from AndroidSense[meta_type == 'sms']
 select meta_owner, meta_deviceId, meta_timestamp, sms_number as number, action as type, "" as body
@@ -61,3 +63,7 @@ insert into ActivityStream;
 from AndroidSense[meta_type == 'data']
 select meta_owner, meta_deviceId, meta_timestamp, data_type as type, data_received as received, data_sent as sent
 insert into DataStream;
+
+from AndroidSense[meta_type == 'gps']
+select meta_deviceId as id, meta_timestamp as timeStamp, gps_lat as latitude, gps_long as longitude, "android_sense" as type, speed_limit as speed, 0.0f as heading
+insert into geoLocationStream;
