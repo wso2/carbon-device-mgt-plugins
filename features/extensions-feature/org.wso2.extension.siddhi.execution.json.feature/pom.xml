@@ -65,7 +65,6 @@
                                 <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.extension.siddhi.execution.json:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
-                                <bundleDef>org.json.wso2:json:${commons-json.version}</bundleDef>
                             </bundles>
                         </configuration>
                     </execution>

@@ -18,6 +18,7 @@
 
 package org.wso2.extension.siddhi.execution.json;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.siddhi.core.config.ExecutionPlanContext;
 import org.wso2.siddhi.core.exception.ExecutionPlanRuntimeException;
@@ -68,10 +69,13 @@ public class getPropertyFunctionExtension extends FunctionExecutor {
         }
         String jsonString = (String) data[0];
         String property = (String) data[1];
-
-        JSONObject jsonObject = new JSONObject(jsonString);
-        Object value = jsonObject.get(property).toString();
-        return value;
+        JSONObject jsonObject = null;
+        try {
+            jsonObject = new JSONObject(jsonString);
+            return jsonObject.get(property).toString();
+        } catch (JSONException e) {
+            throw new ExecutionPlanRuntimeException("Cannot parse JSON String in json:getPeroperty() function. " + e);
+        }
     }
 
     @Override
