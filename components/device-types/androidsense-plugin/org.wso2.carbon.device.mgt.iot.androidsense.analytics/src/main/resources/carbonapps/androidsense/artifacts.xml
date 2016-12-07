@@ -38,6 +38,8 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_android_audio_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
+        <dependency artifact="android_android_battery_executionplan" version="1.0.0" include="true"
+                    serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_android_call_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_android_data_executionplan" version="1.0.0" include="true"
