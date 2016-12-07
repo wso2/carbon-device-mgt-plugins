@@ -104,7 +104,7 @@ public class EndResource extends TagResource {
 			request.getOptions().setProxyUri(proxyUri.toString());
 
 		//get hosts
-		HttpHost httpHost = new HttpHost(proxyUri.getHost(), proxyUri.getPort());
+		HttpHost httpHost = new HttpHost(proxyUri.getHost(), proxyUri.getPort(),proxyUri.getProtocol());
 
 		// TODO the post method is used to extrace auth information since GET method restrict payload
 		if (request.getCode().equals(CoAP.Code.POST)) {
@@ -158,7 +158,7 @@ public class EndResource extends TagResource {
 			request.getOptions().setProxyUri(proxyUri.toString());
 
 		//get hosts
-		HttpHost httpHost = new HttpHost(proxyUri.getHost(), proxyUri.getPort());
+		HttpHost httpHost = new HttpHost(proxyUri.getHost(), proxyUri.getPort(),proxyUri.getProtocol());
 
 		RequestLine requestLine = new BasicRequestLine("POST", proxyUri.toString(), HttpVersion.HTTP_1_1);
 		httpRequest = new BasicHttpEntityEnclosingRequest(requestLine);
