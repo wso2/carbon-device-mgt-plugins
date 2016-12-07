@@ -23,6 +23,7 @@ import org.wso2.carbon.iot.android.sense.constants.SenseConstants;
 import org.wso2.carbon.iot.android.sense.util.dto.AccessTokenInfo;
 import org.wso2.carbon.iot.android.sense.util.dto.AndroidConfiguration;
 import org.wso2.carbon.iot.android.sense.util.dto.AndroidSenseManagerService;
+import org.wso2.carbon.iot.android.sense.util.dto.ApiApplicationKey;
 import org.wso2.carbon.iot.android.sense.util.dto.ApiApplicationRegistrationService;
 import org.wso2.carbon.iot.android.sense.util.dto.ApiRegistrationProfile;
 import org.wso2.carbon.iot.android.sense.util.dto.DynamicClientRegistrationService;
@@ -98,41 +99,24 @@ public class SenseClientAsyncExecutor extends AsyncTask<String, Void, Map<String
         responseMap.put(STATUS, "200");
         AccessTokenInfo accessTokenInfo = null;
         try {
-            //DynamicClientRegistraiton.
-            DynamicClientRegistrationService dynamicClientRegistrationService = Feign.builder()
-                    .client(disableHostnameVerification).contract(new
-                    JAXRSContract()).encoder(new JacksonEncoder()).decoder(new JacksonDecoder())
-                    .target(DynamicClientRegistrationService.class, endpoint + SenseConstants.DCR_CONTEXT);
-            RegistrationProfile registrationProfile = new RegistrationProfile();
-            String applicationName = "android-sense:" + deviceId;
-            registrationProfile.setOwner(username);
-            registrationProfile.setClientName(applicationName);
-            registrationProfile.setCallbackUrl("");
-            registrationProfile.setGrantType("password refresh_token client_credentials");
-            registrationProfile.setApplicationType("device");
-            registrationProfile.setTokenScope("production");
-            OAuthApplicationInfo oAuthApplicationInfo = dynamicClientRegistrationService.register(registrationProfile);
-
-            //PasswordGrantType
-            TokenIssuerService tokenIssuerService = Feign.builder().client(disableHostnameVerification).requestInterceptor(
-                    new BasicAuthRequestInterceptor(oAuthApplicationInfo.getClient_id(), oAuthApplicationInfo.getClient_secret()))
-                    .contract(new JAXRSContract()).encoder(new JacksonEncoder()).decoder(new JacksonDecoder())
-                    .target(TokenIssuerService.class, endpoint + SenseConstants.TOKEN_ISSUER_CONTEXT);
-            accessTokenInfo = tokenIssuerService.getToken("password", username, password);
-
             //ApiApplicationRegistration
             ApiApplicationRegistrationService apiApplicationRegistrationService = Feign.builder().client(disableHostnameVerification)
-                    .requestInterceptor(new OAuthRequestInterceptor(accessTokenInfo.getAccess_token()))
+                    .requestInterceptor(new BasicAuthRequestInterceptor(username, password))
                     .contract(new JAXRSContract()).encoder(new JacksonEncoder()).decoder(new JacksonDecoder())
                     .target(ApiApplicationRegistrationService.class, endpoint + SenseConstants.API_APPLICATION_REGISTRATION_CONTEXT);
             ApiRegistrationProfile apiRegistrationProfile = new ApiRegistrationProfile();
-            apiRegistrationProfile.setApplicationName(applicationName);
-            apiRegistrationProfile.setConsumerKey(oAuthApplicationInfo.getClient_id());
-            apiRegistrationProfile.setConsumerSecret(oAuthApplicationInfo.getClient_secret());
+            apiRegistrationProfile.setApplicationName("android_sense_" + deviceId);
             apiRegistrationProfile.setIsAllowedToAllDomains(false);
-            apiRegistrationProfile.setIsMappingAnExistingOAuthApp(true);
+            apiRegistrationProfile.setIsMappingAnExistingOAuthApp(false);
             apiRegistrationProfile.setTags(new String[]{SenseConstants.DEVICE_TYPE});
-            String replyMsg = apiApplicationRegistrationService.register(apiRegistrationProfile);
+            ApiApplicationKey apiApplicationKey = apiApplicationRegistrationService.register(apiRegistrationProfile);
+
+            //PasswordGrantType
+            TokenIssuerService tokenIssuerService = Feign.builder().client(disableHostnameVerification).requestInterceptor(
+                    new BasicAuthRequestInterceptor(apiApplicationKey.getConsumerKey(), apiApplicationKey.getConsumerSecret()))
+                    .contract(new JAXRSContract()).encoder(new JacksonEncoder()).decoder(new JacksonDecoder())
+                    .target(TokenIssuerService.class, endpoint + SenseConstants.TOKEN_ISSUER_CONTEXT);
+            accessTokenInfo = tokenIssuerService.getToken("password", username, password, "device_" + deviceId);
 
             //DeviceRegister
             AndroidSenseManagerService androidSenseManagerService = Feign.builder().client(disableHostnameVerification)

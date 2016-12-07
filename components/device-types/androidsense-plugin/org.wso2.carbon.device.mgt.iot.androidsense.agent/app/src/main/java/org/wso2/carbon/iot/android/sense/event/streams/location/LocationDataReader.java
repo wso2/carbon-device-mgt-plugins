@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  *
  */
-package org.wso2.carbon.iot.android.sense.event.streams.Location;
+package org.wso2.carbon.iot.android.sense.event.streams.location;
 
 import android.content.Context;
 import android.content.Intent;
