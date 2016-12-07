@@ -15,10 +15,9 @@
 package org.wso2.carbon.iot.android.sense.event.streams;
 
 import android.content.Context;
-import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationDataReader;
-import org.wso2.carbon.iot.android.sense.event.streams.Sensor.SensorDataReader;
-import org.wso2.carbon.iot.android.sense.event.streams.Speed.SpeedDataReader;
-import org.wso2.carbon.iot.android.sense.beacon.MonitoringActivity;
+import org.wso2.carbon.iot.android.sense.event.streams.location.LocationDataReader;
+import org.wso2.carbon.iot.android.sense.event.streams.sensor.SensorDataReader;
+import org.wso2.carbon.iot.android.sense.event.streams.speed.SpeedDataReader;
 import org.wso2.carbon.iot.android.sense.event.streams.audio.AudioDataReader;
 
 /**

@@ -384,6 +384,11 @@
             <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.extension.siddhi.execution.json</artifactId>
+                <version>${carbon.devicemgt.plugins.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.output.adapter.mqtt</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
@@ -1185,6 +1190,24 @@
                 <artifactId>feign-gson</artifactId>
                 <version>${io.github.openfeign.version}</version>
             </dependency>
+
+            <!-- dependencies for siddhi extension -->
+            <dependency>
+                <groupId>org.wso2.siddhi</groupId>
+                <artifactId>siddhi-core</artifactId>
+                <version>${siddhi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.siddhi</groupId>
+                <artifactId>siddhi-query-api</artifactId>
+                <version>${siddhi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1352,6 +1375,8 @@
         <io.github.openfeign.version>9.3.1</io.github.openfeign.version>
         <javax.ws.rs.jsr311-api.version>[1.1.0, 2.0.0)</javax.ws.rs.jsr311-api.version>
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
+        <siddhi.version>3.1.2</siddhi.version>
+        <maven.scr.version>1.7.2</maven.scr.version>
     </properties>
 
     <scm>

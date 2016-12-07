@@ -64,12 +64,10 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
     private static final String CACHE_MANAGER_NAME = "mqttAuthorizationCacheManager";
     private static final String CACHE_NAME = "mqttAuthorizationCache";
     private static DeviceAccessAuthorizationAdminService deviceAccessAuthorizationAdminService;
-    private static Cache<AuthorizationCacheKey, Boolean> cache;
 
 
     public DeviceAccessBasedMQTTAuthorizer() {
         this.MQTTAuthorizationConfiguration = AuthorizationConfigurationManager.getInstance();
-        createCache();
         deviceAccessAuthorizationAdminService = Feign.builder()
                 .requestInterceptor(new OAuthRequestInterceptor())
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
@@ -92,6 +90,7 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
             if (!tenantDomainFromTopic.equals(authorizationSubject.getTenantDomain())) {
                 return false;
             }
+            Cache<AuthorizationCacheKey, Boolean> cache = getCache();
             if (topics.length < 3) {
                 AuthorizationCacheKey authorizationCacheKey = new AuthorizationCacheKey(tenantDomainFromTopic
                         , authorizationSubject.getUsername(), "", "");
@@ -207,16 +206,15 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
      * This method is used to create the Caches.
      * @return          Cachemanager
      */
-    private void createCache() {
+    private synchronized Cache<AuthorizationCacheKey, Boolean> getCache() {
         PrivilegedCarbonContext.startTenantFlow();
         PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(
                 MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, true);
         try {
-            CacheManager cacheManager = Caching.getCacheManagerFactory().getCacheManager(CACHE_MANAGER_NAME);
             if (MQTTAuthorizationConfiguration.getCacheDuration() == 0) {
-                cache = cacheManager.getCache(CACHE_NAME);
+                return Caching.getCacheManagerFactory().getCacheManager(CACHE_MANAGER_NAME).getCache(CACHE_NAME);
             } else {
-                cache = cacheManager.<AuthorizationCacheKey, Boolean>createCacheBuilder(CACHE_NAME).
+                return Caching.getCacheManagerFactory().getCacheManager(CACHE_MANAGER_NAME).<AuthorizationCacheKey, Boolean>createCacheBuilder(CACHE_NAME).
                         setExpiry(CacheConfiguration.ExpiryType.MODIFIED, new CacheConfiguration.Duration(
                                 TimeUnit.SECONDS, MQTTAuthorizationConfiguration.getCacheDuration())).
                         setStoreByValue(false).build();
