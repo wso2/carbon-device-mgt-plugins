@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<DeviceTypeConfiguration name="windows">
+
+    <DeviceDetails table-id="WIN_DEVICE"/>
+
+    <License>
+        <Language>en_US</Language>
+        <Version>1.0.0</Version>
+        <Text>This is license text</Text>
+    </License>
+
+    <ProvisioningConfig>
+        <SharedWithAllTenants>false</SharedWithAllTenants>
+    </ProvisioningConfig>
+
+    <DataSource>
+        <jndiConfig>
+            <name>jdbc/MobileWindowsDM_DS</name>
+        </jndiConfig>
+        <tableConfig>
+            <Table name="WIN_DEVICE">
+                <PrimaryKey>DEVICE_ID</PrimaryKey>
+                <Attributes>
+                    <Attribute>CHANNEL_URI</Attribute>
+                    <Attribute>DEVICE_INFO</Attribute>
+                    <Attribute>IMEI</Attribute>
+                    <Attribute>IMSI</Attribute>
+                    <Attribute>OS_VERSION</Attribute>
+                    <Attribute>DEVICE_MODEL</Attribute>
+                    <Attribute>VENDOR</Attribute>
+                    <Attribute>LATITUDE</Attribute>
+                    <Attribute>LONGITUDE</Attribute>
+                    <Attribute>SERIAL</Attribute>
+                    <Attribute>MAC_ADDRESS</Attribute>
+                    <Attribute>DEVICE_NAME</Attribute>
+                </Attributes>
+            </Table>
+        </tableConfig>
+    </DataSource>
+
+    <Features>
+        <Feature code="DEVICE_LOCK">
+            <Name>Device Lock</Name>
+            <Description>Lock the device</Description>
+            <Operation context="windows/lock-devices" method="POST">
+            </Operation>
+        </Feature>
+        <Feature code="DISENROLL">
+            <Name>Device Lock</Name>
+            <Description>Lock the device</Description>
+            <Operation context="windows/disenroll-devices" method="POST">
+            </Operation>
+        </Feature>
+        <Feature code="WIPE_DATA">
+            <Name>Device Lock</Name>
+            <Description>Lock the device</Description>
+            <Operation context="windows/wipe-devices" method="POST">
+            </Operation>
+        </Feature>
+        <Feature code="DEVICE_RING">
+            <Name>Device Lock</Name>
+            <Description>Lock the device</Description>
+            <Operation context="windows/ring-devices" method="POST">
+            </Operation>
+        </Feature>
+        <Feature code="LOCK_RESET">
+            <Name>Device Lock</Name>
+            <Description>Lock the device</Description>
+            <Operation context="windows/lock-reset-devices" method="POST">
+            </Operation>
+        </Feature>
+        <Feature code="PASSCODE_POLICY">
+            <Name>Password Policy</Name>
+            <Description>Set passcode policy</Description>
+            <Operation context="" method="POST">
+            </Operation>
+        </Feature>
+        <Feature code="CAMERA">
+            <Name>Camera Enable/Disable</Name>
+            <Description>Enable/Disable camera</Description>
+            <Operation context="" method="POST">
+            </Operation>
+        </Feature>
+        <Feature code="ENCRYPT_STORAGE">
+            <Name>Encrypt Storage</Name>
+            <Description>Encrypt the device storage</Description>
+            <Operation context="" method="POST">
+            </Operation>
+        </Feature>
+    </Features>
+
+    <DeviceAuthorizationConfig>
+        <authorizationRequired>false</authorizationRequired>
+    </DeviceAuthorizationConfig>
+
+</DeviceTypeConfiguration>

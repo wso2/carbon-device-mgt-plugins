@@ -18,8 +18,12 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services;
 
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.ExtensionProperty;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.Tag;
 import io.swagger.annotations.Api;
-import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
@@ -40,9 +44,22 @@ import java.util.List;
  */
 @Api(value = "Windows Device Management",
      description = "This carries all the resources related to Windows device management functionalities")
-@API(name = "Windows Device Management", version = "1.0.0",
-     context = "api/device-mgt/windows/v1.0/devices",
-     tags = {"devicemgt_windows"})
+
+@SwaggerDefinition(
+        info = @Info(
+                version = "1.0.0",
+                title = "",
+                extensions = {
+                        @Extension(properties = {
+                                @ExtensionProperty(name = "name", value = "Windows Device Management"),
+                                @ExtensionProperty(name = "context", value = "/api/device-mgt/windows/v1.0/devices"),
+                        })
+                }
+        ),
+        tags = {
+                @Tag(name = "devicemgt_windows", description = "")
+        }
+)
 @WebService
 @Path("/devices")
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})

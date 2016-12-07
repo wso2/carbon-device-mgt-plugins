@@ -32,14 +32,14 @@ import org.wso2.carbon.device.mgt.common.license.mgt.License;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManagementException;
 import org.wso2.carbon.device.mgt.common.license.mgt.LicenseManager;
 import org.wso2.carbon.device.mgt.extensions.license.mgt.registry.RegistryBasedLicenseManager;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dao.AbstractMobileDeviceManagementDAOFactory;
 import org.wso2.carbon.device.mgt.mobile.android.impl.dao.AndroidDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dao.impl.AndroidDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dto.MobileDevice;
+import org.wso2.carbon.device.mgt.mobile.android.impl.util.AndroidPluginConstants;
 import org.wso2.carbon.device.mgt.mobile.android.impl.util.AndroidPluginUtils;
-import org.wso2.carbon.device.mgt.mobile.common.MobileDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.mobile.common.MobilePluginConstants;
-import org.wso2.carbon.device.mgt.mobile.dao.AbstractMobileDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.dto.MobileDevice;
-import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
+import org.wso2.carbon.device.mgt.mobile.android.impl.util.MobileDeviceManagementUtil;
 import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
 
@@ -67,7 +67,8 @@ public class AndroidDeviceManager implements DeviceManager {
 
         try {
             if (licenseManager.getLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID,
-                    MobilePluginConstants.LANGUAGE_CODE_ENGLISH_US) == null) {
+                    AndroidPluginConstants.MobilePluginConstants.LANGUAGE_CODE_ENGLISH_US) ==
+                    null) {
                 defaultLicense = AndroidPluginUtils.getDefaultLicense();
                 licenseManager.addLicense(AndroidDeviceManagementService.DEVICE_TYPE_ANDROID, defaultLicense);
             }
@@ -102,10 +103,10 @@ public class AndroidDeviceManager implements DeviceManager {
 
             Resource resource = MobileDeviceManagementUtil.getConfigurationRegistry().newResource();
             resource.setContent(writer.toString());
-            resource.setMediaType(MobilePluginConstants.MEDIA_TYPE_XML);
+            resource.setMediaType(AndroidPluginConstants.MobilePluginConstants.MEDIA_TYPE_XML);
             MobileDeviceManagementUtil.putRegistryResource(resourcePath, resource);
             status = true;
-        } catch (MobileDeviceMgtPluginException e) {
+        } catch (AndroidDeviceMgtPluginException e) {
             throw new DeviceManagementException(
                     "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
         } catch (RegistryException e) {
@@ -131,10 +132,10 @@ public class AndroidDeviceManager implements DeviceManager {
                 Unmarshaller unmarshaller = context.createUnmarshaller();
                 return (PlatformConfiguration) unmarshaller.unmarshal(
                         new StringReader(new String((byte[]) resource.getContent(), Charset.
-                                forName(MobilePluginConstants.CHARSET_UTF8))));
+                                forName(AndroidPluginConstants.MobilePluginConstants.CHARSET_UTF8))));
             }
             return null;
-        } catch (MobileDeviceMgtPluginException e) {
+        } catch (AndroidDeviceMgtPluginException e) {
             throw new DeviceManagementException(
                     "Error occurred while retrieving the Registry instance : " + e.getMessage(), e);
         } catch (JAXBException e) {
