@@ -141,7 +141,7 @@
             <ref bean="swaggerWriter"/>
         </jaxrs:providers>
     </jaxrs:server>
-    
+
     <bean id="bstProviderService"
           class="org.wso2.carbon.device.mgt.mobile.windows.api.services.authbst.impl.BSTProviderImpl"/>
     <bean id="deviceMgtAdminService"
@@ -193,5 +193,6 @@
     <bean id="jsonProvider" class="org.wso2.carbon.device.mgt.mobile.windows.api.common.util.GsonMessageBodyHandler"/>
     <bean id="configurationMgtService"
           class="org.wso2.carbon.device.mgt.mobile.windows.api.services.impl.ConfigurationMgtServiceImpl"/>
+    <bean id="errorHandler" class="org.wso2.carbon.device.mgt.mobile.windows.api.common.util.ErrorHandler"/>
 </beans>
 
