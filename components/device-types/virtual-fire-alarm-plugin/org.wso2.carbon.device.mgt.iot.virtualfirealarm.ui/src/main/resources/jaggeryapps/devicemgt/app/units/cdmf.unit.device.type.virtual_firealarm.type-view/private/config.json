@@ -1,0 +1,12 @@
+{
+  "deviceType": {
+    "label": "Virtual Firealarm",
+    "category": "virtual",
+    "downloadAgentUri": "virtual_firealarm/device/download",
+    "features": {
+      "buzz": {
+        "icon" : "fw-dial-up"
+      }
+    }
+  }
+}

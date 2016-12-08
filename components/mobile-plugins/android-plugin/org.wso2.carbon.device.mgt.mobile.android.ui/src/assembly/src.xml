@@ -29,7 +29,17 @@
     <fileSets>
         <fileSet>
             <directory>${basedir}/src/main/resources/jaggeryapps/devicemgt</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/devicemgt</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/main/resources/jaggeryapps/uuf-template-app</directory>
+            <outputDirectory>/android-web-agent</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/main/resources/jaggeryapps/android-web-agent</directory>
+            <outputDirectory>/android-web-agent</outputDirectory>
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
     </fileSets>

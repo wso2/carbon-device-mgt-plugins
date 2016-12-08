@@ -28,8 +28,18 @@
     <baseDirectory>${basedir}/src</baseDirectory>
     <fileSets>
         <fileSet>
+            <directory>${basedir}/src/main/resources/jaggeryapps/windows-web-agent</directory>
+            <outputDirectory>/windows-web-agent</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/src/main/resources/jaggeryapps/devicemgt</directory>
-            <outputDirectory>/</outputDirectory>
+            <outputDirectory>/devicemgt</outputDirectory>
+            <useDefaultExcludes>true</useDefaultExcludes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/main/resources/jaggeryapps/uuf-template-app</directory>
+            <outputDirectory>/windows-web-agent</outputDirectory>
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
     </fileSets>

@@ -22,14 +22,14 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>android-plugin-feature</artifactId>
-        <version>2.2.8-SNAPSHOT</version>
+        <version>3.0.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.mobile.android.feature</artifactId>
     <packaging>pom</packaging>
-    <version>2.2.8-SNAPSHOT</version>
+    <version>3.0.3-SNAPSHOT</version>
     <name>WSO2 Carbon - Android Device Management Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the core bundles required for Android Device Management
@@ -44,6 +44,24 @@
         <dependency>
             <groupId>com.h2database.wso2</groupId>
             <artifactId>h2-database-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.server.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.extensions.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
         </dependency>
     </dependencies>
 
@@ -95,7 +113,19 @@
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>
-                                        ${project.build.directory}/maven-shared-archive-resources/jaggeryapps/devicemgt
+                                        ${project.build.directory}/maven-shared-archive-resources/jaggeryapps/
+                                    </outputDirectory>
+                                    <includes>**/*</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                                    <artifactId>org.wso2.carbon.device.mgt.mobile.android.analytics
+                                    </artifactId>
+                                    <version>${project.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>
+                                        ${project.build.directory}/maven-shared-archive-resources/carbonapps
                                     </outputDirectory>
                                     <includes>**/*</includes>
                                 </artifactItem>
@@ -125,6 +155,45 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-dependency-plugin</artifactId>-->
+                <!--<version>2.10</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<id>unpack</id>-->
+                        <!--<phase>package</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>unpack</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<artifactItems>-->
+                                <!--<artifactItem>-->
+                                    <!--<groupId>junit</groupId>-->
+                                    <!--<artifactId>junit</artifactId>-->
+                                    <!--<type>jar</type>-->
+                                    <!--<overWrite>false</overWrite>-->
+                                    <!--<outputDirectory>${project.build.directory}/alternateLocation</outputDirectory>-->
+                                    <!--<destFileName>optional-new-name.jar</destFileName>-->
+                                    <!--<includes>**/*.class,**/*.xml</includes>-->
+                                    <!--<excludes>**/*test.class</excludes>-->
+                                <!--</artifactItem>-->
+                            <!--</artifactItems>-->
+                            <!--<includes>**/*.java</includes>-->
+                            <!--<excludes>**/*.properties</excludes>-->
+                            <!--<outputDirectory>${project.build.directory}/wars</outputDirectory>-->
+                            <!--<overWriteReleases>false</overWriteReleases>-->
+                            <!--<overWriteSnapshots>true</overWriteSnapshots>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
+
+            <!--<fileSet>-->
+                <!--<directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps/uuf-template-app/</directory>-->
+                <!--<outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/emm-web-agent</outputDirectory>-->
+            <!--</fileSet>-->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

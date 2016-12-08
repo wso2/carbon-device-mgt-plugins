@@ -1,6 +1,107 @@
 {
-  "deviceType": {
-    "label": "Android",
-    "category" : "mobile"
-  }
+    "deviceType": {
+        "label": "Android",
+        "category": "mobile",
+        "analyticsEnabled": "false",
+        "groupingEnabled": "false",
+        "features": {
+            "DEVICE_RING": {
+                "icon": "fw-dial-up"
+            },
+            "DEVICE_LOCK": {
+                "icon": "fw-lock",
+                "formParams": [
+                    {
+                        "type": "text",
+                        "id": "lock-message",
+                        "optional": true,
+                        "label": "Message to be sent to the device"
+                    },{
+                        "type": "checkbox",
+                        "id": "hard-lock",
+                        "optional": true,
+                        "label": "Hard lock enabled"
+                    }
+                ]
+            },
+            "DEVICE_LOCATION": {
+                "icon": "fw-map-location"
+            },
+            "CLEAR_PASSWORD": {
+                "icon": "fw-clear"
+            },
+            "DEVICE_REBOOT": {
+                "icon": "fw-refresh"
+            },
+            "UPGRADE_FIRMWARE": {
+                "icon": "fw-hardware",
+                "formParams": [
+                    {
+                        "type": "checkbox",
+                        "id": "immediate",
+                        "optional": true,
+                        "label": "Instant Upgrade",
+                        "helper": "Once enabled, device firmware upgrade process will start instantly."
+                    },
+                    {
+                        "type": "text",
+                        "id": "schedule",
+                        "optional": false,
+                        "label": "Enter the date and time to schedule firmware upgrade."
+                    },
+                    {
+                        "type": "text",
+                        "id": "server",
+                        "optional": true,
+                        "label": "Enter firmware upgrade server URL (ie. http://abc.com or http://abc.com/ota)"
+                    }
+                ]
+            },
+            "DEVICE_MUTE": {
+                "icon": "fw-mute"
+            },
+            "NOTIFICATION": {
+                "icon": "fw-message",
+                "formParams": [
+                    {
+                        "type": "text",
+                        "id": "messageText",
+                        "optional": false,
+                        "label": "Title Here..."
+                    },
+                    {
+                        "type": "text",
+                        "id": "messageTitle",
+                        "optional": false,
+                        "label": "Message Here..."
+                    }
+                ]
+            },
+            "CHANGE_LOCK_CODE": {
+                "icon": "fw-security",
+                "formParams": [
+                    {
+                        "type": "text",
+                        "id": "lockCode",
+                        "optional": false,
+                        "label": "Lock Code"
+                    }
+                ]
+            },
+            "ENTERPRISE_WIPE": {
+                "icon": "fw-block"
+            },
+            "WIPE_DATA": {
+                "icon": "fw-delete",
+                "formParams": [
+                    {
+                        "type": "text",
+                        "id": "pin",
+                        "optional": false,
+                        "label": "Enter PIN code* of the device."
+                    }
+                ]
+            }
+        }
+    }
 }

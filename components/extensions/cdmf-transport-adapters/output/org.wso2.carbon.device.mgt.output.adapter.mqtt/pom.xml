@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+        <artifactId>cdmf-transport-adapters</artifactId>
+        <version>3.0.3-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.carbon.device.mgt.output.adapter.mqtt</artifactId>
+
+    <packaging>bundle</packaging>
+    <name>WSO2 Carbon - Device Mgt Output MQTT Adaptor Module</name>
+    <description>org.wso2.carbon.device.mgt.output.adapter.mqtt provides the back-end functionality of mqtt adaptor
+    </description>
+    <url>http://wso2.org</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon.analytics-common</groupId>
+            <artifactId>org.wso2.carbon.event.output.adapter.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.paho</groupId>
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.wso2</groupId>
+            <artifactId>httpcore</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple.wso2</groupId>
+            <artifactId>json-simple</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.identity.jwt.client.extension</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-scr-descriptor</id>
+                        <goals>
+                            <goal>scr</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Private-Package>
+                            org.wso2.carbon.device.mgt.output.adapter.mqtt.internal,
+                            org.wso2.carbon.device.mgt.output.adapter.mqtt.internal.*
+                        </Private-Package>
+                        <Export-Package>
+                            !org.wso2.carbon.device.mgt.output.adapter.mqtt.internal,
+                            !org.wso2.carbon.device.mgt.output.adapter.mqtt.internal.*,
+                            org.wso2.carbon.device.mgt.output.adapter.mqtt.*,
+                        </Export-Package>
+                        <Import-Package>
+                            org.wso2.carbon.event.output.adapter.core,
+                            org.wso2.carbon.event.output.adapter.core.*,
+                            javax.net.ssl,
+                            org.apache.commons.logging,
+                            org.apache.http,
+                            org.apache.http.client,
+                            org.apache.http.client.methods,
+                            org.apache.http.conn.socket,
+                            org.apache.http.conn.ssl,
+                            org.apache.http.entity,
+                            org.apache.http.impl.client,
+                            org.apache.http.util,
+                            org.eclipse.paho.client.mqttv3,
+                            org.eclipse.paho.client.mqttv3.persist,
+                            org.json.simple,
+                            org.json.simple.parser,
+                            org.osgi.framework,
+                            org.osgi.service.component,
+                            org.wso2.carbon.context,
+                            org.wso2.carbon.identity.jwt.client.extension.*
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
