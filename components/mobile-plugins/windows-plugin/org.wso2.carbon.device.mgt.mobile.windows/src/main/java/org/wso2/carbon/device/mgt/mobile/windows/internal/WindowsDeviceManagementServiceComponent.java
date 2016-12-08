@@ -61,9 +61,9 @@ public class WindowsDeviceManagementServiceComponent {
         try {
             BundleContext bundleContext = ctx.getBundleContext();
 
-            androidServiceRegRef =
-                    bundleContext.registerService(DeviceManagementService.class.getName(),
-                            new WindowsDeviceManagementService(), null);
+//            androidServiceRegRef =
+//                    bundleContext.registerService(DeviceManagementService.class.getName(),
+//                            new WindowsDeviceManagementService(), null);
 
             // Policy management service
 
