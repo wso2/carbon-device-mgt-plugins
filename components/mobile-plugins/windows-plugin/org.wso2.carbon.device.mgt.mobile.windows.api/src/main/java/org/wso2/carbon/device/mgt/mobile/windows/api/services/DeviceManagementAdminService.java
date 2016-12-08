@@ -24,7 +24,6 @@ import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.Extension;
 import io.swagger.annotations.Tag;
 import io.swagger.annotations.Api;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
 
 import javax.jws.WebService;
@@ -68,31 +67,32 @@ public interface DeviceManagementAdminService {
 
     @POST
     @Path("/lock-devices")
-    @Permission(name = "Lock Device", permission = "/device-mgt/devices/owning-device/operations/windows/lock")
+    //@Permission(name = "Lock Device", permission = "/device-mgt/devices/owning-device/operations/windows/lock")
     Response lock(@HeaderParam("Accept") String headerParam, List<String> deviceIds) throws
                                                                                      WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/disenroll-devices")
-    @Permission(name = "Disenroll Device", permission = "/device-mgt/devices/disenroll/windows")
+    //@Permission(name = "Disenroll Device", permission = "/device-mgt/devices/disenroll/windows")
     Response disenroll(@HeaderParam("Accept") String headerParam, List<String> deviceIds) throws
                                                                                           WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/wipe-devices")
-    @Permission(name = "Wipe Device", permission = "/device-mgt/devices/owning-device/operations/windows/wipe")
+    //@Permission(name = "Wipe Device", permission = "/device-mgt/devices/owning-device/operations/windows/wipe")
     Response wipe(@HeaderParam("Accept") String headerParam, List<String> deviceIds) throws
                                                                                      WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/ring-devices")
-    @Permission(name = "Ring Device", permission = "/device-mgt/devices/owning-device/operations/windows/ring")
+    //@Permission(name = "Ring Device", permission = "/device-mgt/devices/owning-device/operations/windows/ring")
     Response ring(@HeaderParam("Accept") String headerParam, List<String> deviceIds) throws
                                                                                      WindowsDeviceEnrolmentException;
 
     @POST
     @Path("/lock-reset-devices")
-    @Permission(name = "Lock-Reset Device", permission = "/device-mgt/devices/owning-device/operations/windows/lock-reset")
+    //@Permission(name = "Lock-Reset Device", permission =
+    //        "/device-mgt/devices/owning-device/operations/windows/lock-reset")
     Response lockReset(@HeaderParam("Accept") String acceptHeader, List<String> deviceIds)
             throws WindowsDeviceEnrolmentException;
 }

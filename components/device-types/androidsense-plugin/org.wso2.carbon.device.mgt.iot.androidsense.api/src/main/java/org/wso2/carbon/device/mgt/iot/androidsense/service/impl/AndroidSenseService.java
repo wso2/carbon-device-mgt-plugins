@@ -54,7 +54,7 @@ public interface AndroidSenseService {
      */
     @Path("device/{deviceId}/words")
     @POST
-    @Scope(key = "device:android-sense:enroll", name = "", description = "")
+    //@Scope(key = "device:android-sense:enroll", name = "", description = "")
     Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords);
 
     /**
@@ -65,12 +65,12 @@ public interface AndroidSenseService {
      */
     @Path("device/{deviceId}/words/threshold")
     @POST
-    @Scope(key = "device:android-sense:enroll", name = "", description = "")
+    //@Scope(key = "device:android-sense:enroll", name = "", description = "")
     Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold);
 
     @Path("device/{deviceId}/words")
     @DELETE
-    @Scope(key = "device:android-sense:enroll", name = "", description = "")
+    //@Scope(key = "device:android-sense:enroll", name = "", description = "")
     Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words);
 
     /**
@@ -79,7 +79,7 @@ public interface AndroidSenseService {
     @Path("stats/{deviceId}/sensors/{sensorName}")
     @GET
     @Consumes("application/json")
-    @Scope(key = "device:android-sense:enroll", name = "", description = "")
+    //@Scope(key = "device:android-sense:enroll", name = "", description = "")
     @Produces("application/json")
     Response getAndroidSenseDeviceStats(@PathParam("deviceId") String deviceId, @PathParam("sensorName") String sensor,
                                         @QueryParam("from") long from, @QueryParam("to") long to);
@@ -89,7 +89,7 @@ public interface AndroidSenseService {
      */
     @Path("device/{device_id}/register")
     @POST
-    @Scope(key = "device:android-sense:enroll", name = "", description = "")
+    //@Scope(key = "device:android-sense:enroll", name = "", description = "")
     Response register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName);
 
 }

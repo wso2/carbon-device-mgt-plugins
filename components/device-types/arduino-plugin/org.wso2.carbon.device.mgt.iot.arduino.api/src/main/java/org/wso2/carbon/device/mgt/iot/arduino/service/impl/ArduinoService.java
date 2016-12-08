@@ -48,12 +48,12 @@ public interface ArduinoService {
 
     @Path("device/{deviceId}/bulb")
     @POST
-    @Scope(key = "device:arduino:enroll", name = "", description = "")
+    //@Scope(key = "device:arduino:enroll", name = "", description = "")
     Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
     @Path("device/{deviceId}/controls")
     @GET
-    @Scope(key = "device:arduino:enroll", name = "", description = "")
+    //@Scope(key = "device:arduino:enroll", name = "", description = "")
     Response readControls(@PathParam("deviceId") String deviceId);
 
     /**
@@ -63,7 +63,7 @@ public interface ArduinoService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    @Scope(key = "device:arduino:enroll", name = "", description = "")
+    //@Scope(key = "device:arduino:enroll", name = "", description = "")
     Response getArduinoTemperatureStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
                                                @QueryParam("to") long to);
 
@@ -73,7 +73,7 @@ public interface ArduinoService {
     @Path("device/download")
     @GET
     @Produces("application/octet-stream")
-    @Scope(key = "device:arduino:enroll", name = "", description = "")
+    //@Scope(key = "device:arduino:enroll", name = "", description = "")
     Response downloadSketch(@QueryParam("deviceName") String customDeviceName);
 
 }
