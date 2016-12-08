@@ -75,8 +75,8 @@ public class NetworkDataReader extends AsyncTask<Void, Void, Long> {
      */
     private final Runnable mRunnable = new Runnable() {
         public void run() {
-            long rxBytes = TrafficStats.getTotalRxBytes()- mStartRX;
-            long txBytes = TrafficStats.getTotalTxBytes()- mStartTX;
+            long rxBytes = TrafficStats.getTotalRxBytes() - mStartRX;
+            long txBytes = TrafficStats.getTotalTxBytes() - mStartTX;
             Log.i("Usage: ", String.valueOf(rxBytes) + " " + String.valueOf(txBytes) + " " + System.currentTimeMillis());
             networkData.setType(connectionType);
             networkData.setTimeStamp(new Date().getTime());
@@ -94,3 +94,4 @@ public class NetworkDataReader extends AsyncTask<Void, Void, Long> {
         NetworkInfo networkInfo = manager.getNetworkInfo(type);
         return networkInfo.isConnected();
     }
+}
