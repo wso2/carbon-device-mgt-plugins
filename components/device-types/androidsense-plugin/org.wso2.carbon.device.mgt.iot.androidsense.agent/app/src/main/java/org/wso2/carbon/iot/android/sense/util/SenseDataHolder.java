@@ -14,14 +14,15 @@
 package org.wso2.carbon.iot.android.sense.util;
 
 import org.wso2.carbon.iot.android.sense.beacon.BeaconScanedData;
-import org.wso2.carbon.iot.android.sense.event.streams.Location.LocationData;
-import org.wso2.carbon.iot.android.sense.event.streams.Sensor.SensorData;
-import org.wso2.carbon.iot.android.sense.event.streams.Speed.SpeedData;
+import org.wso2.carbon.iot.android.sense.event.streams.location.LocationData;
+import org.wso2.carbon.iot.android.sense.event.streams.sensor.SensorData;
+import org.wso2.carbon.iot.android.sense.event.streams.speed.SpeedData;
 import org.wso2.carbon.iot.android.sense.event.streams.activity.ActivityData;
 import org.wso2.carbon.iot.android.sense.event.streams.application.ApplicationData;
 import org.wso2.carbon.iot.android.sense.event.streams.audio.AudioData;
 import org.wso2.carbon.iot.android.sense.event.streams.battery.BatteryData;
 import org.wso2.carbon.iot.android.sense.event.streams.call.CallData;
+import org.wso2.carbon.iot.android.sense.event.streams.data.NetworkData;
 import org.wso2.carbon.iot.android.sense.event.streams.screen.ScreenData;
 import org.wso2.carbon.iot.android.sense.event.streams.sms.SmsData;
 import org.wso2.carbon.iot.android.sense.speech.detector.util.WordData;
@@ -47,6 +48,7 @@ public class SenseDataHolder {
     private static List<ActivityData> activityDataHolder;
     private static List<SmsData> smsDataHolder;
     private static List<ApplicationData> applicationDataHolder;
+    private static List<NetworkData> networkDataHolder;
     //LocationData gps;
 
 
@@ -141,6 +143,13 @@ public class SenseDataHolder {
         return applicationDataHolder;
     }
 
+    public static List<NetworkData> getNetworkDataHolder() {
+        if (networkDataHolder == null) {
+            networkDataHolder = new CopyOnWriteArrayList<>();
+        }
+        return networkDataHolder;
+    }
+
     public static void resetSensorDataHolder() {
         sensorDataHolder = null;
     }
@@ -187,5 +196,9 @@ public class SenseDataHolder {
 
     public static void resetApplicationDataHolder() {
         applicationDataHolder = null;
+    }
+
+    public static void resetNetworkDataHolder() {
+        networkDataHolder = null;
     }
 }

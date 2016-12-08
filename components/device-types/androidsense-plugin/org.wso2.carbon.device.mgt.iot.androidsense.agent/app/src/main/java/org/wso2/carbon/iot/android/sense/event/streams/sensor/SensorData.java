@@ -12,7 +12,7 @@
  *
  */
 
-package org.wso2.carbon.iot.android.sense.event.streams.Sensor;
+package org.wso2.carbon.iot.android.sense.event.streams.sensor;
 
 import android.hardware.SensorEvent;
 

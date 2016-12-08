@@ -35,6 +35,7 @@ import org.wso2.carbon.iot.android.sense.event.streams.activity.ActivityReceiver
 import org.wso2.carbon.iot.android.sense.event.streams.application.ApplicationDataReceiver;
 import org.wso2.carbon.iot.android.sense.event.streams.battery.BatteryDataReceiver;
 import org.wso2.carbon.iot.android.sense.event.streams.call.CallDataReceiver;
+import org.wso2.carbon.iot.android.sense.event.streams.data.NetworkDataReceiver;
 import org.wso2.carbon.iot.android.sense.event.streams.screen.ScreenDataReceiver;
 import org.wso2.carbon.iot.android.sense.event.streams.sms.SmsDataReceiver;
 
@@ -50,6 +51,8 @@ public class SenseDataReceiverManager {
     private static SmsDataReceiver smsDataReceiver;
 
     private static ApplicationDataReceiver appDataReceiver;
+
+    private static NetworkDataReceiver networkDataReceiver;
 
     private SenseDataReceiverManager() {
 
@@ -171,5 +174,21 @@ public class SenseDataReceiverManager {
             context.unregisterReceiver(appDataReceiver);
             appDataReceiver = null;
         }
+    }    public static void registerNetworkDataReceiver(Context context) {
+        if (networkDataReceiver == null) {
+            networkDataReceiver = new NetworkDataReceiver();
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(Intent.ACTION_MANAGE_NETWORK_USAGE);
+            context.registerReceiver(networkDataReceiver, intentFilter);
+        }
     }
+
+    public static void unregisterNetworkDataReceiver(Context context) {
+        if (networkDataReceiver != null) {
+            context.unregisterReceiver(networkDataReceiver);
+        }
+        networkDataReceiver = null;
+    }
+
+
 }

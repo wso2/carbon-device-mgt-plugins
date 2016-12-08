@@ -281,7 +281,8 @@ function setWithinAlert(leafletId) {
             'parseData': JSON.stringify({
                 'geoFenceGeoJSON': selectedAreaGeoJson,
                 'executionPlanName': createExecutionPlanName(queryName, "WithIn", deviceId),
-                'areaName': areaName
+                'areaName': areaName,
+                'deviceId' : deviceId
             }),
             'executionPlan': 'Within',
             'customName': areaName, // TODO: fix , When template copies there can be two queryName and areaName id elements in the DOM

@@ -1,0 +1,20 @@
+{
+  "name": "org.wso2.android.agent.Stream",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "Stream that receives various types of events from android agent",
+  "payloadData": [
+    {
+      "name": "deviceId",
+      "type": "STRING"
+    },
+    {
+      "name": "payload",
+      "type": "STRING"
+    },
+    {
+      "name": "type",
+      "type": "STRING"
+    }
+  ]
+}

@@ -27,6 +27,10 @@
     {
       "name": "longitude",
       "type": "DOUBLE"
+    },
+    {
+      "name": "type",
+      "type": "STRING"
     }
   ]
 }
