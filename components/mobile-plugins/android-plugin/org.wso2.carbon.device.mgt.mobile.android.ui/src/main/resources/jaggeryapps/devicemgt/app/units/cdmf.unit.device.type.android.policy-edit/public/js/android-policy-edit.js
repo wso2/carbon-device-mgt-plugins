@@ -699,6 +699,22 @@ var slideDownPaneAgainstValueSet = function (selectElement, paneID, valueSet) {
         );
     }
 };
+
+var slideDownPaneAgainstValueSetForRadioButtons = function (selectElement, paneID, valueSet) {
+    var selectedValueOnChange = selectElement.value;
+    var slideDownVotes = 0;
+    for (var i = 0; i < valueSet.length; i++) {
+        if (selectedValueOnChange == valueSet[i]) {
+            slideDownVotes++;
+        }
+    }
+    var paneSelector = "#" + paneID;
+    if (slideDownVotes > 0) {
+        $(paneSelector).removeClass("hidden");
+    } else {
+        $(paneSelector).addClass("hidden");
+    }
+};
 // End of HTML embedded invoke methods
 
 
