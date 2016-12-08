@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services.authbst.beans;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
