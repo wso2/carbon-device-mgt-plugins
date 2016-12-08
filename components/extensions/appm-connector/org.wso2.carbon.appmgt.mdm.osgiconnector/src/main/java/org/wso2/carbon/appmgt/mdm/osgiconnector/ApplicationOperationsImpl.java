@@ -243,13 +243,12 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 								getDevicesOfUser(
 										applicationOperationDevice.getCurrentUser().getUsername());
 			} else {
-                //TODO: Uncomment below when device-mgt core release-2.0.x is merged with master branch.
-				/*deviceList = MDMServiceAPIUtils
-						.getDeviceManagementService(applicationOperationDevice.getTenantId()).
-								getDevicesOfUser(
-										applicationOperationDevice.getCurrentUser().getUsername(),
-										applicationOperationDevice.getPlatform());*/
-			}
+                deviceList = MDMServiceAPIUtils
+                        .getDeviceManagementService(applicationOperationDevice.getTenantId()).
+                                getDevicesOfUser(
+                                        applicationOperationDevice.getCurrentUser().getUsername(),
+                                        applicationOperationDevice.getPlatform());
+            }
 			devices = new ArrayList<>(deviceList.size());
 			if(log.isDebugEnabled()){
 				log.debug("device list got from mdm "+ deviceList.toString());

@@ -50,7 +50,7 @@ import javax.xml.ws.soap.SOAPBinding;
                         @Extension(properties = {
                                 @ExtensionProperty(name = "name", value = "Windows Discovery service provider"),
                                 @ExtensionProperty(name = "context",
-                                        value = "api/device-mgt/windows/v1.0/discovery/post"),
+                                        value = "/api/device-mgt/windows/v1.0/discovery/post"),
                         })
                 }
         ),
