@@ -50,6 +50,12 @@
             android:label="@string/app_name" >
         </service>
 
+        <service
+            android:name="org.wso2.carbon.iot.android.sense.event.streams.battery.BatteryReaderService"
+            android:enabled="true"
+            android:label="@string/app_name" >
+        </service>
+
         <service android:name="org.wso2.carbon.iot.android.sense.event.streams.activity.ActivityReceiver"/>
 
         <receiver android:name="org.wso2.carbon.iot.android.sense.event.SenseScheduleReceiver" >
