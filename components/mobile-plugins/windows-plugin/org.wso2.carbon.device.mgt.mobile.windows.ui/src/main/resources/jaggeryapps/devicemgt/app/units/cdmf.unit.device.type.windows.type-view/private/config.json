@@ -1,6 +1,8 @@
 {
-  "deviceType": {
-    "label": "Windows",
-    "category" : "mobile"
-  }
+    "deviceType": {
+        "label": "Windows",
+        "category": "mobile",
+        "analyticsEnabled": "false",
+        "groupingEnabled": "false"
+    }
 }

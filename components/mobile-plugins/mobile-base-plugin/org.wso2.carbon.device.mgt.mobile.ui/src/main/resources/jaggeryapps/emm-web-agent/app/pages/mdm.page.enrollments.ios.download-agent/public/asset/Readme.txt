@@ -1,1 +1,0 @@
-Add the iOS-agent with the name "ios-agent.ipa" into this folder.

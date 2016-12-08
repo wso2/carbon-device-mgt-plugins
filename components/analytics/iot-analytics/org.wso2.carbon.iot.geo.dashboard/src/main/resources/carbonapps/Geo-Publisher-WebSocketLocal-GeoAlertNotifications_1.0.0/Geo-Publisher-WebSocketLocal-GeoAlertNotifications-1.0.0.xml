@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eventPublisher
+  name="Geo-Publisher-WebSocketLocal-GeoAlertNotifications"
+  statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventpublisher">
+    <from streamName="org.wso2.geo.AlertsNotifications" version="1.0.0"/>
+    <mapping customMapping="enable" type="json">
+        <inline>{
+            "messageType" : "Alert",
+            "type": "Feature",
+            "id": {{id}},
+            "deviceId": {{id}},
+            "deviceType" : "{{type}}",
+            "state": {{state}},
+            "information": {{information}},
+            "longitude" : {{longitude}},
+            "latitude" : {{latitude}}
+            }
+
+        </inline>
+    </mapping>
+    <to eventAdapterType="secured-websocket"/>
+</eventPublisher>

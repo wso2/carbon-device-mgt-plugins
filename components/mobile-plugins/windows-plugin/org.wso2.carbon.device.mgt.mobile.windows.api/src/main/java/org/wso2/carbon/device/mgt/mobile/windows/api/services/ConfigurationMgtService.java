@@ -18,9 +18,20 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services;
 
-import io.swagger.annotations.*;
-import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.ExtensionProperty;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.Tag;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.AuthorizationScope;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ResponseHeader;
+
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
@@ -34,9 +45,23 @@ import javax.ws.rs.core.Response;
  * Windows Platform Configuration REST-API implementation.
  * All end points supports JSON, XMl with content negotiation.
  */
-@API(name = "Windows Configuration Management", version = "1.0.0",
-     context = "api/device-mgt/windows/v1.0/services/configuration",
-     tags = {"windows"})
+
+@SwaggerDefinition(
+        info = @Info(
+                version = "1.0.0",
+                title = "",
+                extensions = {
+                        @Extension(properties = {
+                                @ExtensionProperty(name = "name", value = "Windows Configuration Management"),
+                                @ExtensionProperty(name = "context",
+                                        value = "/api/device-mgt/windows/v1.0/services/configuration"),
+                        })
+                }
+        ),
+        tags = {
+                @Tag(name = "devicemgt_windows", description = "")
+        }
+)
 @Api(value = "Windows Configuration Management",
      description = "This carries all the resources related to Windows configurations management functionalities")
 @WebService
@@ -52,7 +77,14 @@ public interface ConfigurationMgtService {
             value = "Getting Windows Platform Configurations",
             notes = "Get the Windows platform configuration details using this REST API.",
             response = PlatformConfiguration.class,
-            tags = "Windows Configuration Management"
+            tags = "Windows Configuration Management",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(scope = "/device-mgt/platform-configurations/view",
+                                    description = "View Configurations") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -85,7 +117,6 @@ public interface ConfigurationMgtService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching the Windows platform configuration.")
     })
-    @Permission(name = "View Configurations", permission = "/device-mgt/platform-configurations/view")
     PlatformConfiguration getConfiguration() throws WindowsConfigurationException;
 
     /**
@@ -102,7 +133,14 @@ public interface ConfigurationMgtService {
             httpMethod = "PUT",
             value = "Updating Windows Platform Configurations",
             notes = "Update the Windows platform configurations using this REST API.",
-            tags = "Windows Configuration Management"
+            tags = "Windows Configuration Management",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(scope = "/device-mgt/configurations/manage",
+                                    description = "Manage Configurations") }
+                    )
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -137,7 +175,6 @@ public interface ConfigurationMgtService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while modifying the Windows platform configurations.")
     })
-    @Permission(name = "Manage Configurations", permission = "/device-mgt/configurations/manage")
     Message updateConfiguration
     ( @ApiParam(
             name = "configuration",
@@ -154,7 +191,15 @@ public interface ConfigurationMgtService {
             notes = "Use this REST API to retrieve the license agreement that is used for the Windows device " +
                     "registration process.",
             response = String.class,
-            tags = "Windows Configuration Management")
+            tags = "Windows Configuration Management",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(scope = "/device-mgt/devices/enroll/windows",
+                                    description = "Enroll Device") }
+                    )
+            }
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
@@ -186,7 +231,6 @@ public interface ConfigurationMgtService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching the Windows license configuration.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/windows")
     Response getLicense(
             @ApiParam(
                     name = "If-Modified-Since",

@@ -18,8 +18,12 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services;
 
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.ExtensionProperty;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.Tag;
 import io.swagger.annotations.Api;
-import org.wso2.carbon.apimgt.annotations.api.API;
 import org.wso2.carbon.apimgt.annotations.api.Permission;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
 
@@ -38,9 +42,24 @@ import java.util.List;
  */
 @Api(value = "Windows Device Management Administrative Service",
      description = "Device management related admin APIs.")
-@API(name = "Windows Device Management Administrative Service", version = "1.0.0",
-     context = "api/device-mgt/windows/v1.0/admin/devices",
-     tags = {"devicemgt_windows"})
+
+@SwaggerDefinition(
+        info = @Info(
+                version = "1.0.0",
+                title = "",
+                extensions = {
+                        @Extension(properties = {
+                                @ExtensionProperty(name = "name",
+                                        value = "Windows Device Management Administrative Service"),
+                                @ExtensionProperty(name = "context",
+                                        value = "/api/device-mgt/windows/v1.0/admin/devices"),
+                        })
+                }
+        ),
+        tags = {
+                @Tag(name = "devicemgt_windows", description = "")
+        }
+)
 @WebService
 @Path("/admin/devices")
 @Consumes(MediaType.APPLICATION_JSON)

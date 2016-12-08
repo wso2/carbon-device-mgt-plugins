@@ -24,11 +24,11 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
 import org.wso2.carbon.device.mgt.mobile.android.impl.dao.AndroidDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
-import org.wso2.carbon.device.mgt.mobile.dto.MobileFeature;
-import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dao.MobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dao.MobileFeatureDAO;
+import org.wso2.carbon.device.mgt.mobile.android.impl.dto.MobileFeature;
+import org.wso2.carbon.device.mgt.mobile.android.impl.util.MobileDeviceManagementUtil;
 
 import java.util.ArrayList;
 import java.util.List;
