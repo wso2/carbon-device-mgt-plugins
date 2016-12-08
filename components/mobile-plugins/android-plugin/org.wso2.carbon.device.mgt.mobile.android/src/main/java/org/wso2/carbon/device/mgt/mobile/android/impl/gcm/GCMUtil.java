@@ -51,7 +51,7 @@ public class GCMUtil {
 
     private static final Log log = LogFactory.getLog(GCMService.class);
 
-    private final static String GCM_ENDPOINT = "https://gcm-http.googleapis.com/gcm/send";
+    private final static String GCM_ENDPOINT = "https://fcm.googleapis.com/fcm/send";
     private static final String GCM_API_KEY = "gcmAPIKey";
     private static final int TIME_TO_LIVE = 60;
     private static final int HTTP_STATUS_CODE_OK = 200;
