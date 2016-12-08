@@ -17,7 +17,8 @@
   ~ under the License.
   -->
 
-<artifact name= "android_battery_level_chart_gadget" version="1.0.0" type="dashboards/gadget" serverRole="DataAnalyticsServer">
-	<file>Android_Battery_Level_Chart</file>
+<artifact name= "android_battery_stats_event_sink" version="1.0.0" type="analytics/eventstore"
+		  serverRole="DataAnalyticsServer">
+	<file>org_wso2_iot_android_battery_stats.xml</file>
 </artifact>
 

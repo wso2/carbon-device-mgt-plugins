@@ -158,10 +158,9 @@ var webSocketOnOpen = function () {
     var params = getAllQueryParamsFromURL();
     var deviceId;
     var owner;
-    if (params != null) {
+    if (params) {
         owner = params["owner"];
         deviceId = params["deviceId"];
-
     }
     var filterPropNames = ["meta_owner", "meta_deviceId"];
     var filterPropVals = [owner, deviceId];

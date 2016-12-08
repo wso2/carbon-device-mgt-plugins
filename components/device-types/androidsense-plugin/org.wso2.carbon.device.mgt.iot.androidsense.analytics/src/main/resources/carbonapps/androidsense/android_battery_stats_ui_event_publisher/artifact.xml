@@ -17,8 +17,8 @@
   ~ under the License.
   -->
 
-<artifact name= "android_android_battery_executionplan" version="1.0.0" type="event/execution-plan"
+<artifact name= "android_battery_stats_ui_event_publisher" version="1.0.0" type="event/publisher"
 		  serverRole="DataAnalyticsServer">
-	<file>Android-Battery-ExecutionPlan.siddhiql</file>
+	<file>org.wso2.iot.android.battery.stats.ui.publisher.xml</file>
 </artifact>
 
