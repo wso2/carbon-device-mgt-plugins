@@ -20,15 +20,17 @@
     <hr>
 </div>
 
-<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 padding-top">
+<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
     <img src="{{@unit.publicUri}}/images/ardunio-icon.png" class="img-responsive">
 </div>
 
 <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-
+    <h4 class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Arduino"
+                                  target="_blank">[ here ]</a> for latest instructions and
+                         troubleshooting.</h4>
 </div>
 
-<div class="col-xs-12 col-sm-8 col-md-9 col-lg-9 padding-top">
+<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
     <h3 class="uppercase">What it Does</h3>
     <hr>
     <p class="grey margin-top">Connect Arduino UNO board to WSO2 IoT Server and visualize sensor
@@ -38,37 +40,34 @@
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double">
-            <span class="badge">ITEM 01</span>
+            <span class="circle">ITEM 01</span>
                Arduino UNO Board.
         </li>
-        <li>
-            <span class="badge">ITEM 02</span>
+        <li class="padding-top-double">
+            <span class="circle">ITEM 02</span>
                Adafruit Wifi Shield for Arduino.
         </li>
-        <li>
-            <span class="badge">ITEM 03</span>
+        <li class="padding-top-double">
+            <span class="circle">ITEM 03</span>
                LED bulb connected to Pin 13.
             <i>(If not available, will use the one on the board.)</i>
         </li>
-        <li>
-            <span class="badge">ITEM 04</span>
-               Resister( e.g 330 ohms )
+        <li class="padding-top-double">
+            <span class="circle">ITEM 04</span>
+               Resistor( e.g 330 ohms )
         </li>
-        <li>
-            <span class="badge">STEP 05</span>
+        <li class="padding-top-double">
+            <span class="circle">STEP 05</span>
                Proceed to [Prepare] section.
     </ul>
     <br>
     <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin"
        class="btn-operations" target="_blank">
-        <i class="fw fw-api add-margin-1x"></i> View API
+        <i class="fw fw-api"></i> View API
     </a>
     <a href="#" class="download-link btn-operations">
-        <i class="fw fw-download add-margin-1x"></i>Download Sketch
+        <i class="fw fw-download"></i>Download Sketch
     </a>
-    <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Arduino"
-                                 target="_blank">here</a> for latest instructions and
-        troubleshooting.</p>
     <div id="download-device-modal-content" class="hide">
         <div class="modal-content">
             <div class="row">

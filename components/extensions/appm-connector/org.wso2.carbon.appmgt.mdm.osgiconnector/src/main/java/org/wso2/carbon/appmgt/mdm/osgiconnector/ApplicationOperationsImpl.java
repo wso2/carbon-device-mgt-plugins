@@ -73,8 +73,12 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 									getDevicesOfUser(userName);
 
 					for (org.wso2.carbon.device.mgt.common.Device device : deviceList) {
-						if(applicationOperationAction.getApp().getPlatform().equalsIgnoreCase(device.getType())){
-							deviceIdentifiers.add(getDeviceIdentifierByDevice(device));
+						if(MDMAppConstants.WEBAPP.equals(applicationOperationAction.getApp().getPlatform()) ||
+								applicationOperationAction.getApp().getPlatform().equalsIgnoreCase(device.getType())){
+							if (MDMAppConstants.ACTIVE.equalsIgnoreCase(device.getEnrolmentInfo().
+									getStatus().toString())) {
+								deviceIdentifiers.add(getDeviceIdentifierByDevice(device));
+							}
 						}
 					}
 				}
@@ -95,7 +99,9 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 									getAllDevicesOfRole(userRole);
 
 					for (org.wso2.carbon.device.mgt.common.Device device : deviceList) {
-						deviceIdentifiers.add(getDeviceIdentifierByDevice(device));
+						if (MDMAppConstants.ACTIVE.equalsIgnoreCase(device.getEnrolmentInfo().getStatus().toString())) {
+							deviceIdentifiers.add(getDeviceIdentifierByDevice(device));
+						}
 					}
 				}
 			} catch (DeviceManagementException devMgtEx) {
@@ -176,8 +182,11 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 						operation =
 								IOSApplicationOperationUtil.createInstallAppOperation(mobileApp);
 					} else {
-						operation =
-								IOSApplicationOperationUtil.createAppUninstallOperation(mobileApp);
+						if (MDMAppConstants.WEBAPP.equals(app.getPlatform())) {
+							operation = IOSApplicationOperationUtil.createWebClipUninstallOperation(mobileApp);
+						} else {
+							operation = IOSApplicationOperationUtil.createAppUninstallOperation(mobileApp);
+						}
 					}
 				}
 				activity = MDMServiceAPIUtils.getAppManagementService(applicationOperationAction.getTenantId())
@@ -225,11 +234,22 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 			throws MobileApplicationException {
 
 		List<Device> devices;
+		List<org.wso2.carbon.device.mgt.common.Device> deviceList = null;
 		try {
-			List<org.wso2.carbon.device.mgt.common.Device> deviceList = MDMServiceAPIUtils
-					.getDeviceManagementService(applicationOperationDevice.getTenantId()).
-							getDevicesOfUser(
-									applicationOperationDevice.getCurrentUser().getUsername());
+			if(MDMAppConstants.WEBAPP.equals
+					(applicationOperationDevice.getPlatform())) {
+				deviceList = MDMServiceAPIUtils
+						.getDeviceManagementService(applicationOperationDevice.getTenantId()).
+								getDevicesOfUser(
+										applicationOperationDevice.getCurrentUser().getUsername());
+			} else {
+                //TODO: Uncomment below when device-mgt core release-2.0.x is merged with master branch.
+				/*deviceList = MDMServiceAPIUtils
+						.getDeviceManagementService(applicationOperationDevice.getTenantId()).
+								getDevicesOfUser(
+										applicationOperationDevice.getCurrentUser().getUsername(),
+										applicationOperationDevice.getPlatform());*/
+			}
 			devices = new ArrayList<>(deviceList.size());
 			if(log.isDebugEnabled()){
 				log.debug("device list got from mdm "+ deviceList.toString());
