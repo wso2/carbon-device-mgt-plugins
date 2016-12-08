@@ -19,8 +19,13 @@ $(function () {
     var schema;
     var pref = new gadgets.Prefs();
     
+    var refreshInterval;
+    var providerData;
+    
     var CHART_CONF = 'chart-conf';
     var PROVIDER_CONF = 'provider-conf';
+    
+    var REFRESH_INTERVAL = 'refreshInterval';
     
 var init = function () {
     $.ajax({
@@ -41,17 +46,33 @@ var init = function () {
                 }
             });
             
+            getProviderData();
+            
            }
        });
+};
+
+var getProviderData = function (){
+    $.ajax({
+        url: gadgetLocation + '/gadget-controller.jag?action=getData',
+        method: "POST",
+        data: JSON.stringify(conf),
+        contentType: "application/json",
+        async: false,
+        success: function (data) {
+        providerData = data;
+        }
+    });
+ return providerData;
 };
 
 
 var drawGadget = function (){
     
-        draw('#canvas', conf[CHART_CONF], schema, null);
-        registerCallBackforPush(conf[PROVIDER_CONF], schema, function(providerData) {
-            update(providerData);
-        });
+    draw('#canvas', conf[CHART_CONF], schema, providerData);
+    setInterval(function() {
+        draw('#canvas', conf[CHART_CONF], schema, getProviderData());
+    },pref.getInt(REFRESH_INTERVAL));
     
 };
 
