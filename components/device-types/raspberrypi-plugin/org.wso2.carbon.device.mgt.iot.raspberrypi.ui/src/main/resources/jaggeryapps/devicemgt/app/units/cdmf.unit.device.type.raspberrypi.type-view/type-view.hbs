@@ -1,13 +1,10 @@
 {{!
   Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-
   WSO2 Inc. licenses this file to you under the Apache License,
   Version 2.0 (the "License"); you may not use this file except
   in compliance with the License.
   You may obtain a copy of the License at
-
   http://www.apache.org/licenses/LICENSE-2.0
-
   Unless required by applicable law or agreed to in writing,
   software distributed under the License is distributed on an
   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,17 +17,12 @@
     <hr>
 </div>
 
-<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
+<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 padding-top">
     <img src="{{@unit.publicUri}}/images/respberry-icon.png" class="img-responsive">
 </div>
 
-<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
-    <h4 class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Raspberry+Pi"
-                                  target="_blank">[ here ]</a> for latest instructions and
-                         troubleshooting.</h4>
-</div>
 
-<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
+<div class="col-xs-12 col-sm-8 col-md-9 col-lg-9 padding-top">
     <h3 class="uppercase">What it Does</h3>
     <hr>
     <p class="grey margin-top">Connect a RaspberryPi to WSO2 IoT Server and manage it.</p>
@@ -39,33 +31,36 @@
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double">
-            <span class="circle">ITEM 01</span>
+            <span class="badge">ITEM 01</span>
                Raspberry Pi with SD Card(Internet Enabled [Wifi or Ethernet]).
         </li>
-        <li class="padding-top-double">
-            <span class="circle">ITEM 02</span>
+        <li>
+            <span class="badge">ITEM 02</span>
                Adafruit DHT11 Temperature Sensor.
         </li>
-        <li class="padding-top-double">
-            <span class="circle">ITEM 03</span>
+        <li>
+            <span class="badge">ITEM 03</span>
                LED Bulb.
         </li>
-        <li class="padding-top-double">
-            <span class="circle">ITEM 04</span>
-               Resistor (eg : 470 ohm).
+        <li>
+            <span class="badge">ITEM 04</span>
+               Resister (eg : 470 ohm).
         </li>
-        <li class="padding-top-double">
-            <span class="circle">STEP 05</span>
+        <li>
+            <span class="badge">STEP 05</span>
                Proceed to [Prepare] section.
     </ul>
     <br>
     <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin"
        class="btn-operations"
-       target="_blank"><i class="fw fw-api"></i> View API</i>
+       target="_blank"><i class="fw fw-api add-margin-1x"></i> View API</i>
     </a>
     <a href="#" class="download-link btn-operations">
-        <i class="fw fw-download"></i>Download Agent
+        <i class="fw fw-download add-margin-1x"></i>Download Agent
     </a>
+    <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Raspberry+Pi"
+                                 target="_blank">here</a> for latest instructions and
+        troubleshooting.</p>
     <div id="download-device-modal-content" class="hide">
         <div class="modal-content">
             <div class="row">
