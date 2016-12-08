@@ -81,7 +81,7 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
                 platformConfiguration.setConfiguration(configs);
             }
         } catch (DeviceManagementException e) {
-            msg = "Error occurred while retrieving the Android tenant configuration";
+            msg = "Error occurred while retrieving the Windows tenant configuration";
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
@@ -129,7 +129,8 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(message).build());
         }
-        return Response.status(Response.Status.OK).entity("Android platform configuration has been updated successfully.").build();
+        return Response.status(Response.Status.OK).
+                entity("Windows platform configuration has been updated successfully.").build();
 
     }
 
