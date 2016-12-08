@@ -16,8 +16,6 @@
  * under the License.
  */
 
-var configuredOperations = [];
-
 /**
  * Method to update the visibility (i.e. disabled or enabled view)
  * of grouped input according to the values
@@ -47,9 +45,10 @@ var updateGroupedInputVisibility = function (domElement) {
  *
  * This method will be invoked from the relevant cdmf unit when the edit page gets loaded.
  *
- * @param selectedConfigurations  selected configurations.
+ * @param profileFeatureList  selected configurations.
  */
-var polulateProfileOperations = function (selectedConfigurations) {
+var polulateProfileOperations = function (profileFeatureList) {
+    var selectedConfigurations = androidOperationModule.populateProfile(profileFeatureList);
     $(".wr-advance-operations li.grouped-input").each(function () {
         updateGroupedInputVisibility(this);
     });
@@ -169,35 +168,6 @@ var slideDownPaneAgainstValueSetForRadioButtons = function (selectElement, paneI
 };
 // End of HTML embedded invoke methods
 
-
-// Start of functions related to grid-input-view
-
-/**
- * Method to set count id to cloned elements.
- * @param {object} addFormContainer
- */
-var setId = function (addFormContainer) {
-    $(addFormContainer).find("[data-add-form-clone]").each(function (i) {
-        $(this).attr("id", $(this).attr("data-add-form-clone").slice(1) + "-" + (i + 1));
-        if ($(this).find(".index").length > 0) {
-            $(this).find(".index").html(i + 1);
-        }
-    });
-};
-
-/**
- * Method to set count id to cloned elements.
- * @param {object} addFormContainer
- */
-var showHideHelpText = function (addFormContainer) {
-    var helpText = "[data-help-text=add-form]";
-    if ($(addFormContainer).find("[data-add-form-clone]").length > 0) {
-        $(addFormContainer).find(helpText).hide();
-    } else {
-        $(addFormContainer).find(helpText).show();
-    }
-};
-
 /**
  * This method will display appropriate fields based on wifi type
  * @param {object} wifi type select object
@@ -229,148 +199,19 @@ var changeAndroidWifiPolicyEAP = function (select, superSelect) {
 };
 
 $(document).ready(function () {
-    // Maintains an array of configured features of the profile
     var advanceOperations = ".wr-advance-operations";
     $(advanceOperations).on("click", ".wr-input-control.switch", function (event) {
-        var operationCode = $(this).parents(".operation-data").data("operation-code");
         var operation = $(this).parents(".operation-data").data("operation");
-        var operationDataWrapper = $(this).data("target");
         // prevents event bubbling by figuring out what element it's being called from.
         if (event.target.tagName == "INPUT") {
             var featureConfiguredIcon;
             if ($("input[type='checkbox']", this).is(":checked")) {
-                configuredOperations.push(operationCode);
-                // when a feature is enabled, if "zero-configured-features" msg is available, hide that.
-                var zeroConfiguredOperationsErrorMsg = "#policy-profile-main-error-msg";
-                if (!$(zeroConfiguredOperationsErrorMsg).hasClass("hidden")) {
-                    $(zeroConfiguredOperationsErrorMsg).addClass("hidden");
-                }
                 // add configured-state-icon to the feature
                 featureConfiguredIcon = "#" + operation + "-configured";
                 if ($(featureConfiguredIcon).hasClass("hidden")) {
                     $(featureConfiguredIcon).removeClass("hidden");
                 }
-            } else {
-                //splicing the array if operation is present.
-                var index = $.inArray(operationCode, configuredOperations);
-                if (index != -1) {
-                    configuredOperations.splice(index, 1);
-                }
-                // when a feature is disabled, clearing all its current configured, error or success states
-                var subErrorMsgWrapper = "#" + operation + "-feature-error-msg";
-                var subErrorIcon = "#" + operation + "-error";
-                var subOkIcon = "#" + operation + "-ok";
-                featureConfiguredIcon = "#" + operation + "-configured";
-
-                if (!$(subErrorMsgWrapper).hasClass("hidden")) {
-                    $(subErrorMsgWrapper).addClass("hidden");
-                }
-                if (!$(subErrorIcon).hasClass("hidden")) {
-                    $(subErrorIcon).addClass("hidden");
-                }
-                if (!$(subOkIcon).hasClass("hidden")) {
-                    $(subOkIcon).addClass("hidden");
-                }
-                if (!$(featureConfiguredIcon).hasClass("hidden")) {
-                    $(featureConfiguredIcon).addClass("hidden");
-                }
-                // reinitializing input fields into the defaults
-                $(operationDataWrapper + " input").each(
-                    function () {
-                        if ($(this).is("input:text")) {
-                            $(this).val($(this).data("default"));
-                        } else if ($(this).is("input:password")) {
-                            $(this).val("");
-                        } else if ($(this).is("input:checkbox")) {
-                            $(this).prop("checked", $(this).data("default"));
-                            // if this checkbox is the parent input of a grouped-input
-                            if ($(this).hasClass("parent-input")) {
-                                var groupedInput = $(this).parent().parent().parent();
-                                updateGroupedInputVisibility(groupedInput);
-                            }
-                        }
-                    }
-                );
-                // reinitializing select fields into the defaults
-                $(operationDataWrapper + " select").each(
-                    function () {
-                        var defaultOption = $(this).data("default");
-                        $("option:eq(" + defaultOption + ")", this).prop("selected", "selected");
-                    }
-                );
-                // collapsing expanded-panes (upon the selection of html-select-options) if any
-                $(operationDataWrapper + " .expanded").each(
-                    function () {
-                        if ($(this).hasClass("expanded")) {
-                            $(this).removeClass("expanded");
-                        }
-                        $(this).slideUp();
-                    }
-                );
-                // removing all entries of grid-input elements if exist
-                $(operationDataWrapper + " .grouped-array-input").each(
-                    function () {
-                        var gridInputs = $(this).find("[data-add-form-clone]");
-                        if (gridInputs.length > 0) {
-                            gridInputs.remove();
-                        }
-                        var helpTexts = $(this).find("[data-help-text=add-form]");
-                        if (helpTexts.length > 0) {
-                            helpTexts.show();
-                        }
-                    }
-                );
             }
         }
-    });
-
-    // adding support for cloning multiple profiles per feature with cloneable class definitions
-    $(advanceOperations).on("click", ".multi-view.add.enabled", function () {
-        // get a copy of .cloneable and create new .cloned div element
-        var cloned = "<div class='cloned'><hr>" + $(".cloneable", $(this).parent().parent()).html() + "</div>";
-        // append newly created .cloned div element to panel-body
-        $(this).parent().parent().append(cloned);
-        // enable remove action of newly cloned div element
-        $(".cloned", $(this).parent().parent()).each(
-            function () {
-                if ($(".multi-view.remove", this).hasClass("disabled")) {
-                    $(".multi-view.remove", this).removeClass("disabled");
-                }
-                if (!$(".multi-view.remove", this).hasClass("enabled")) {
-                    $(".multi-view.remove", this).addClass("enabled");
-                }
-            }
-        );
-    });
-
-    $(advanceOperations).on("click", ".multi-view.remove.enabled", function () {
-        $(this).parent().remove();
-    });
-
-    // enabling or disabling grouped-input based on the status of a parent check-box
-    $(advanceOperations).on("click", ".grouped-input", function () {
-        updateGroupedInputVisibility(this);
-    });
-
-    // add form entry click function for grid inputs
-    $(advanceOperations).on("click", "[data-click-event=add-form]", function () {
-        var addFormContainer = $("[data-add-form-container=" + $(this).attr("href") + "]");
-        var clonedForm = $("[data-add-form=" + $(this).attr("href") + "]").clone().find("[data-add-form-element=clone]").attr("data-add-form-clone", $(this).attr("href"));
-
-        // adding class .child-input to capture text-input-array-values
-        $("input, select", clonedForm).addClass("child-input");
-
-        $(addFormContainer).append(clonedForm);
-        setId(addFormContainer);
-        showHideHelpText(addFormContainer);
-    });
-
-    // remove form entry click function for grid inputs
-    $(advanceOperations).on("click", "[data-click-event=remove-form]", function () {
-        var addFormContainer = $("[data-add-form-container=" + $(this).attr("href") + "]");
-
-        $(this).closest("[data-add-form-element=clone]").remove();
-        setId(addFormContainer);
-        showHideHelpText(addFormContainer);
     });
 });
