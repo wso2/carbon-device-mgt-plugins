@@ -1,17 +1,19 @@
 {
   "provider-conf": {
-    "streamName": "org.wso2.iot.android.battery:1.0.0",
-    "provider-name": "realtime"
+    "tableName": "ORG_WSO2_IOT_ANDROID_BATTERY_STATS",
+    "query": "",
+    "limit": "",
+    "provider-name": "batch"
   },
   "chart-conf": {
-    "x": "TIMESTAMP",
+    "x": "meta_timestamp",
     "xType": "time",
     "y": "level",
     "yType": "number",
     "color": "None",
     "mode": "stack",
     "maxLength": "30",
-    "gadget-name": "Android Battery Level Chart",
+    "gadget-name": "Battery History",
     "chart-name": "area-chart"
   }
 }

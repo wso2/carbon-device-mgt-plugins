@@ -280,11 +280,7 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
             if (added) {
                 AndroidConfiguration androidConfiguration = new AndroidConfiguration();
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
-                String mqttEndpoint = DEFAULT_MQTT_ENDPOINT;
-                if (mqttEndpoint.contains(AndroidSenseConstants.LOCALHOST)) {
-                    mqttEndpoint = mqttEndpoint.replace(AndroidSenseConstants.LOCALHOST, APIUtil.getServerUrl());
-                }
-                androidConfiguration.setMqttEndpoint(mqttEndpoint);
+                androidConfiguration.setMqttEndpoint(APIUtil.getMqttEndpoint());
                 return Response.ok(androidConfiguration.toString()).build();
             } else {
                 return Response.status(Response.Status.NOT_ACCEPTABLE.getStatusCode()).entity(false).build();

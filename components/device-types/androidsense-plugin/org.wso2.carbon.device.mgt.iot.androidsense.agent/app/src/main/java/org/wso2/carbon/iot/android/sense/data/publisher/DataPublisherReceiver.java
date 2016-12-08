@@ -18,16 +18,18 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 /**
  * This creates and AlarmManagerService that triggers the data uploader service with a 30 seconds interval.
  */
 public class DataPublisherReceiver extends BroadcastReceiver {
-    private static int ALARM_INTERVAL = 30000;
+    private static int ALARM_INTERVAL = 1000;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         AlarmManager service = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Log.i("Data Publisher", "triggered");
         Intent i = new Intent(context, DataPublisherService.class);
         PendingIntent pending = PendingIntent.getService(context, 0, i, 0);
         service.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), ALARM_INTERVAL, pending);
