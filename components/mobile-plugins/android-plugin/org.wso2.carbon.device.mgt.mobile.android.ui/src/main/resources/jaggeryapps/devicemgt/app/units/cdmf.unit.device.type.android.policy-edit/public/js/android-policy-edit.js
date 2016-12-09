@@ -15,6 +15,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+var configuredOperations = [];
+
 // Constants to define Android Operation Constants
 var androidOperationConstants = {
     "PASSCODE_POLICY_OPERATION": "passcode-policy",
@@ -60,19 +63,54 @@ var updateGroupedInputVisibility = function (domElement) {
  *
  * This method will be invoked from the relevant cdmf unit when the edit page gets loaded.
  *
- * @param configuredOperations  selected configurations.
+ * @param profileFeatureList saved feature list
  */
-var polulateProfileOperations = function (configuredOperations) {
+var polulateProfileOperations = function (profileFeatureList) {
+    var selectedOperations = androidOperationModule.populateProfile(profileFeatureList);
     $(".wr-advance-operations li.grouped-input").each(function () {
         updateGroupedInputVisibility(this);
     });
-    for (var i = 0; i < configuredOperations.length; ++i) {
-        var configuredOperation = configuredOperations[i];
-        $(".operation-data").filterByData("operation-code", configuredOperation)
+    for (var i = 0; i < selectedOperations.length; ++i) {
+        var selectedOperation = selectedOperations[i];
+        $(".operation-data").filterByData("operation-code", selectedOperation)
             .find(".panel-title .wr-input-control.switch input[type=checkbox]").each(function () {
             $(this).click();
         });
     }
+};
+
+/**
+ * Generates policy profile feature list which will be saved with the profile.
+ *
+ * This function will be invoked from the relevant cdmf unit at the time of policy creation.
+ *
+ * @returns {Array} profile payloads
+ */
+var generateProfileFeaturesList = function () {
+    var profilePayloads = [];
+    var key;
+    for (key in policy["profile"]) {
+        if (policy["profile"].hasOwnProperty(key)) {
+            profilePayloads.push({
+                "featureCode": key,
+                "deviceType": policy["platform"],
+                "content": policy["profile"][key]
+            });
+        }
+    }
+
+    return profilePayloads;
+};
+
+/**
+ * Generates policy profile object which will be saved with the profile.
+ *
+ * This function will be invoked from the relevant cdmf unit at the time of policy creation.
+ *
+ * @returns {object} generated profile.
+ */
+var generatePolicyProfile = function () {
+    return androidOperationModule.generateProfile(configuredOperations);
 };
 
 /**
@@ -540,30 +578,6 @@ var validatePolicyProfile = function () {
 
     wizardIsToBeContinued = (errorCount == 0);
     return wizardIsToBeContinued;
-};
-
-/**
- * Generates policy profile object which will be saved with the profile.
- *
- * This function will be invoked from the relevant cdmf unit at the time of policy creation.
- *
- * @returns {Array} profile payloads
- */
-var generatePolicyProfile = function () {
-    var profilePayloads = [];
-    // traverses key by key in policy["profile"]
-    var key;
-    for (key in policy["profile"]) {
-        if (policy["profile"].hasOwnProperty(key)) {
-            profilePayloads.push({
-                "featureCode": key,
-                "deviceType": policy["platform"],
-                "content": policy["profile"][key]
-            });
-        }
-    }
-
-    return profilePayloads;
 };
 
 // Start of HTML embedded invoke methods
