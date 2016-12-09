@@ -100,7 +100,6 @@
             <ref bean="swaggerResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
-            <ref bean="jsonProvider"/>
             <ref bean="swaggerWriter"/>
         </jaxrs:providers>
     </jaxrs:server>
@@ -112,7 +111,6 @@
             <ref bean="swaggerResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
-            <ref bean="jsonProvider"/>
             <ref bean="swaggerWriter"/>
         </jaxrs:providers>
     </jaxrs:server>
