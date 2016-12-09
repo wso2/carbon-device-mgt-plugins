@@ -23,19 +23,16 @@ import java.util.Date;
 public class NetworkData {
 
     //Mobile or Wifi
-    private String DATA_TYPE;
+    private String type;
     private long dataReceived;
     private long dataSent;
     private long timeStamp;
 
-    public NetworkData(long received, long sent) {
-        this.dataReceived = received;
-        this.dataSent = sent;
-        this.timeStamp = new Date().getTime();
+    public NetworkData() {
     }
 
     public String getDataType() {
-        return DATA_TYPE;
+        return type;
     }
 
     public long getDataReceived() {
@@ -56,5 +53,17 @@ public class NetworkData {
 
     public long getTimeStamp() {
         return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

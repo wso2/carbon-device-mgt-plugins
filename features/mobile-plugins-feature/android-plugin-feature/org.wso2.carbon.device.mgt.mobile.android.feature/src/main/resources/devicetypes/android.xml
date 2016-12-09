@@ -315,6 +315,8 @@
         </Feature>
     </Features>
     <TaskConfiguration>
+        <Enable>true</Enable>
+        <Frequency>60000</Frequency>
         <Operations>
             <Operation>
                 <Name>DEVICE_INFO</Name>

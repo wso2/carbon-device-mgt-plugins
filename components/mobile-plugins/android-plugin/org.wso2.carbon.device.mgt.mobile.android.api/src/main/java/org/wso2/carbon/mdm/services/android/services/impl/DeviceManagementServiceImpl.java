@@ -276,25 +276,52 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     @Path("/{id}")
     @Override
     public Response modifyEnrollment(@PathParam("id") String id, @Valid AndroidDevice androidDevice) {
-        Device device = new Device();
-        String msg = "";
-        device.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
-        if(androidDevice.getEnrolmentInfo().getDateOfEnrolment() <= 0){
-            msg = "Invalid Enrollment date.";
-            return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+        Device device;
+        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
+        deviceIdentifier.setId(id);
+        deviceIdentifier.setType(AndroidConstants.DEVICE_TYPE_ANDROID);
+        try {
+            device = AndroidAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
+        } catch (DeviceManagementException e) {
+            String msg = "Error occurred while getting enrollment details of the Android device that carries the id '" +
+                    id + "'";
+            log.error(msg, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
-        if(androidDevice.getEnrolmentInfo().getDateOfLastUpdate() <= 0){
-            msg = "Invalid Last Updated date.";
-            return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
+
+        if (androidDevice == null) {
+            String errorMessage = "The payload of the android device enrollment is incorrect.";
+            log.error(errorMessage);
+            throw new org.wso2.carbon.mdm.services.android.exception.BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
         }
-        device.setEnrolmentInfo(androidDevice.getEnrolmentInfo());
+        if (device == null) {
+            String errorMessage = "The device to be modified doesn't exist.";
+            log.error(errorMessage);
+            throw new org.wso2.carbon.mdm.services.android.exception.NotFoundException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(404l).setMessage(errorMessage).build());
+        }
+        if(androidDevice.getEnrolmentInfo() != null){
+            device.setEnrolmentInfo(device.getEnrolmentInfo());
+        }
         device.getEnrolmentInfo().setOwner(AndroidAPIUtils.getAuthenticatedUser());
-        device.setDeviceInfo(androidDevice.getDeviceInfo());
+        if(androidDevice.getDeviceInfo() != null) {
+            device.setDeviceInfo(androidDevice.getDeviceInfo());
+        }
         device.setDeviceIdentifier(androidDevice.getDeviceIdentifier());
-        device.setDescription(androidDevice.getDescription());
-        device.setName(androidDevice.getName());
-        device.setFeatures(androidDevice.getFeatures());
-        device.setProperties(androidDevice.getProperties());
+        if(androidDevice.getDescription() != null) {
+            device.setDescription(androidDevice.getDescription());
+        }
+        if(androidDevice.getName() != null) {
+            device.setName(androidDevice.getName());
+        }
+        if(androidDevice.getFeatures() != null) {
+            device.setFeatures(androidDevice.getFeatures());
+        }
+        if(androidDevice.getProperties() != null) {
+            device.setProperties(androidDevice.getProperties());
+        }
         boolean result;
         try {
             device.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID);
@@ -313,7 +340,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                 return Response.status(Response.Status.NOT_MODIFIED).entity(responseMessage).build();
             }
         } catch (DeviceManagementException e) {
-            msg = "Error occurred while modifying enrollment of the Android device that carries the id '" +
+            String msg = "Error occurred while modifying enrollment of the Android device that carries the id '" +
                     id + "'";
             log.error(msg, e);
             throw new UnexpectedServerErrorException(
