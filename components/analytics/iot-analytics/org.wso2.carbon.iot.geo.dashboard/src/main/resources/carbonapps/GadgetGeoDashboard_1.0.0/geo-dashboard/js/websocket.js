@@ -269,7 +269,6 @@ function processTrafficMessage(json) {
 }
 
 function processAlertMessage(json) {
-    //console.log(json);
     if (json.state != "NORMAL" && json.state != "MINIMAL") {
         console.log(json);
         notifyAlert("Object ID: <span style='color: blue;cursor: pointer' onclick='focusOnSpatialObject(" + json.id + ")'>" + json.id + "</span> change state to: <span style='color: red'>" + json.state + "</span> Info : " + json.information);
@@ -689,6 +688,7 @@ function intializeWebsocketUrls() {
                             .CEP_ON_ALERT_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
                         + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
                     document.cookie = "websocket-token=f98d6142-e988-3c7f-a8c9-7e6d74da7113; path=/";
+                    $("#proximity_alert").hide();
                     initializeWebSocket();
                     initializeOnAlertWebSocket();
                 });

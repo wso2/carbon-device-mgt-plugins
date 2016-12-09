@@ -9,7 +9,7 @@
             "type": "Feature",
             "id": {{id}},
             "deviceId": {{id}},
-            "deviceType" : "{{type}}",
+            "deviceType" : {{type}},
             "state": {{state}},
             "information": {{information}},
             "longitude" : {{longitude}},
