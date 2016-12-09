@@ -56,6 +56,7 @@ public class SenseClientAsyncExecutor extends AsyncTask<String, Void, Map<String
 
     private final static String TAG = "SenseService Client";
     private static final String STATUS = "status";
+    private final String PASSWORD_GRANT_TYPE = "password";
     private final static String DEVICE_NAME = Build.MANUFACTURER + " " + Build.MODEL;
     private Context context;
 
@@ -116,7 +117,7 @@ public class SenseClientAsyncExecutor extends AsyncTask<String, Void, Map<String
                     new BasicAuthRequestInterceptor(apiApplicationKey.getConsumerKey(), apiApplicationKey.getConsumerSecret()))
                     .contract(new JAXRSContract()).encoder(new JacksonEncoder()).decoder(new JacksonDecoder())
                     .target(TokenIssuerService.class, endpoint + SenseConstants.TOKEN_ISSUER_CONTEXT);
-            accessTokenInfo = tokenIssuerService.getToken("password", username, password, "device_" + deviceId);
+            accessTokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password, "device_" + deviceId);
 
             //DeviceRegister
             AndroidSenseManagerService androidSenseManagerService = Feign.builder().client(disableHostnameVerification)

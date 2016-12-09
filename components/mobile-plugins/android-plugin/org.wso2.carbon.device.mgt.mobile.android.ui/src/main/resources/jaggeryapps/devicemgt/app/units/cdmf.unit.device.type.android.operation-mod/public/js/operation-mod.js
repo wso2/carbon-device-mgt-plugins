@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -16,16 +16,9 @@
  * under the License.
  */
 
-var operationModule = function () {
+var androidOperationModule = function () {
     var publicMethods = {};
     var privateMethods = {};
-
-    // Constants to define platform types available
-    var platformTypeConstants = {
-        "ANDROID": "android",
-        "IOS": "ios",
-        "WINDOWS": "windows"
-    };
 
     // Constants to define operation types available
     var operationTypeConstants = {
@@ -85,731 +78,8 @@ var operationModule = function () {
         "KIOSK_APPS_CODE": "KIOSK_APPS"
     };
 
-    // Constants to define Windows Operation Constants
-    var windowsOperationConstants = {
-        "PASSCODE_POLICY_OPERATION_CODE": "PASSCODE_POLICY",
-        "CAMERA_OPERATION_CODE": "CAMERA",
-        "ENCRYPT_STORAGE_OPERATION_CODE": "ENCRYPT_STORAGE",
-        "NOTIFICATION_OPERATION_CODE": "NOTIFICATION",
-        "CHANGE_LOCK_CODE_OPERATION_CODE": "CHANGE_LOCK_CODE"
-    };
-
-    // Constants to define iOS Operation Constants
-    var iosOperationConstants = {
-        "PASSCODE_POLICY_OPERATION_CODE": "PASSCODE_POLICY",
-        "RESTRICTIONS_OPERATION_CODE": "RESTRICTION",
-        "VPN_OPERATION_CODE": "VPN",
-        "WIFI_OPERATION_CODE": "WIFI",
-        "EMAIL_OPERATION_CODE": "EMAIL",
-        "AIRPLAY_OPERATION_CODE": "AIR_PLAY",
-        "LDAP_OPERATION_CODE": "LDAP",
-        "DOMAIN_OPERATION_CODE": "DOMAIN",
-        "CALENDAR_OPERATION_CODE": "CALDAV",
-        "NOTIFICATION_OPERATION_CODE": "NOTIFICATION",
-        "CALENDAR_SUBSCRIPTION_OPERATION_CODE": "CALENDAR_SUBSCRIPTION",
-        "APN_OPERATION_CODE": "APN",
-        "CELLULAR_OPERATION_CODE": "CELLULAR",
-        "PER_APP_VPN_OPERATION_CODE": "PER_APP_VPN",
-        "APP_TO_PER_APP_VPN_MAPPING_OPERATION_CODE": "APP_TO_PER_APP_VPN_MAPPING"
-    };
-
-    publicMethods.getIOSServiceEndpoint = function (operationCode) {
-        var featureMap = {
-            "DEVICE_LOCK": "lock",
-            "LOCATION": "location",
-            "ENTERPRISE_WIPE": "enterprise-wipe",
-            "NOTIFICATION": "notification",
-            "RING": "ring"
-        };
-        return "/api/device-mgt/ios/v1.0/admin/devices/" + featureMap[operationCode];
-    };
-
-    /**
-     * Convert the ios platform specific code to the generic payload.
-     * TODO: think of the possibility to follow a pattern to the key name (namespace?)
-     * @param operationCode
-     * @param operationPayload
-     * @returns {{}}
-     */
-    privateMethods.generateGenericPayloadFromIOSPayload = function (operationCode, operationPayload) {
-        var payload = {};
-        operationPayload = JSON.parse(operationPayload);
-        switch (operationCode) {
-            case iosOperationConstants["PASSCODE_POLICY_OPERATION_CODE"]:
-                payload = {
-                    "passcodePolicyForcePIN": operationPayload["forcePIN"],
-                    "passcodePolicyAllowSimple": operationPayload["allowSimple"],
-                    "passcodePolicyRequireAlphanumeric": operationPayload["requireAlphanumeric"],
-                    "passcodePolicyMinLength": operationPayload["minLength"],
-                    "passcodePolicyMinComplexChars": operationPayload["minComplexChars"],
-                    "passcodePolicyMaxPasscodeAgeInDays": operationPayload["maxPINAgeInDays"],
-                    "passcodePolicyPasscodeHistory": operationPayload["pinHistory"],
-                    "passcodePolicyMaxAutoLock": operationPayload["maxInactivity"],
-                    "passcodePolicyGracePeriod": operationPayload["maxGracePeriod"],
-                    "passcodePolicyMaxFailedAttempts": operationPayload["maxFailedAttempts"]
-                };
-                break;
-            case iosOperationConstants["DOMAIN_OPERATION_CODE"]:
-                payload = {
-                    "emailDomains": operationPayload["emailDomains"],
-                    "webDomains": operationPayload["webDomains"]
-                };
-                break;
-            case iosOperationConstants["RESTRICTIONS_OPERATION_CODE"]:
-                payload = {
-                    "restrictionsAllowAccountModification": operationPayload["allowAccountModification"],
-                    "restrictionsAllowAddingGameCenterFriends": operationPayload["allowAddingGameCenterFriends"],
-                    "restrictionsAllowAirDrop": operationPayload["allowAirDrop"],
-                    "restrictionsAllowAppCellularDataModification": operationPayload["allowAppCellularDataModification"],
-                    "restrictionsAllowAppInstallation": operationPayload["allowAppInstallation"],
-                    "restrictionsAllowAppRemoval": operationPayload["allowAppRemoval"],
-                    "restrictionsAllowAssistant": operationPayload["allowAssistant"],
-                    "restrictionsAllowAssistantUserGeneratedContent": operationPayload["allowAssistantUserGeneratedContent"],
-                    "restrictionsAllowAssistantWhileLocked": operationPayload["allowAssistantWhileLocked"],
-                    "restrictionsAllowBookstore": operationPayload["allowBookstore"],
-                    "restrictionsAllowBookstoreErotica": operationPayload["allowBookstoreErotica"],
-                    "restrictionsAllowCamera": operationPayload["allowCamera"],
-                    "restrictionsAllowChat": operationPayload["allowChat"],
-                    "restrictionsAllowCloudBackup": operationPayload["allowCloudBackup"],
-                    "restrictionsAllowCloudDocumentSync": operationPayload["allowCloudDocumentSync"],
-                    "restrictionsAllowCloudKeychainSync": operationPayload["allowCloudKeychainSync"],
-                    "restrictionsAllowDiagnosticSubmission": operationPayload["allowDiagnosticSubmission"],
-                    "restrictionsAllowExplicitContent": operationPayload["allowExplicitContent"],
-                    "restrictionsAllowFindMyFriendsModification": operationPayload["allowFindMyFriendsModification"],
-                    "restrictionsAllowFingerprintForUnlock": operationPayload["allowFingerprintForUnlock"],
-                    "restrictionsAllowGameCenter": operationPayload["allowGameCenter"],
-                    "restrictionsAllowGlobalBackgroundFetchWhenRoaming": operationPayload["allowGlobalBackgroundFetchWhenRoaming"],
-                    "restrictionsAllowInAppPurchases": operationPayload["allowInAppPurchases"],
-                    "restrictionsAllowLockScreenControlCenter": operationPayload["allowLockScreenControlCenter"],
-                    "restrictionsAllowHostPairing": operationPayload["allowHostPairing"],
-                    "restrictionsAllowLockScreenNotificationsView": operationPayload["allowLockScreenNotificationsView"],
-                    "restrictionsAllowLockScreenTodayView": operationPayload["allowLockScreenTodayView"],
-                    "restrictionsAllowMultiplayerGaming": operationPayload["allowMultiplayerGaming"],
-                    "restrictionsAllowOpenFromManagedToUnmanaged": operationPayload["allowOpenFromManagedToUnmanaged"],
-                    "restrictionsAllowOpenFromUnmanagedToManaged": operationPayload["allowOpenFromUnmanagedToManaged"],
-                    "restrictionsAllowOTAPKIUpdates": operationPayload["allowOTAPKIUpdates"],
-                    "restrictionsAllowPassbookWhileLocked": operationPayload["allowPassbookWhileLocked"],
-                    "restrictionsAllowPhotoStream": operationPayload["allowPhotoStream"],
-                    "restrictionsAllowSafari": operationPayload["allowSafari"],
-                    "restrictionsSafariAllowAutoFill": operationPayload["safariAllowAutoFill"],
-                    "restrictionsSafariForceFraudWarning": operationPayload["safariForceFraudWarning"],
-                    "restrictionsSafariAllowJavaScript": operationPayload["safariAllowJavaScript"],
-                    "restrictionsSafariAllowPopups": operationPayload["safariAllowPopups"],
-                    "restrictionsAllowScreenShot": operationPayload["allowScreenShot"],
-                    "restrictionsAllowSharedStream": operationPayload["allowSharedStream"],
-                    "restrictionsAllowUIConfigurationProfileInstallation": operationPayload["allowUIConfigurationProfileInstallation"],
-                    "restrictionsAllowUntrustedTLSPrompt": operationPayload["allowUntrustedTLSPrompt"],
-                    "restrictionsAllowVideoConferencing": operationPayload["allowVideoConferencing"],
-                    "restrictionsAllowVoiceDialing": operationPayload["allowVoiceDialing"],
-                    "restrictionsAllowYouTube": operationPayload["allowYouTube"],
-                    "restrictionsAllowITunes": operationPayload["allowiTunes"],
-                    "restrictionsForceAssistantProfanityFilter": operationPayload["forceAssistantProfanityFilter"],
-                    "restrictionsForceEncryptedBackup": operationPayload["forceEncryptedBackup"],
-                    "restrictionsForceITunesStorePasswordEntry": operationPayload["forceITunesStorePasswordEntry"],
-                    "restrictionsForceLimitAdTracking": operationPayload["forceLimitAdTracking"],
-                    "restrictionsForceAirPlayOutgoingRequestsPairingPassword": operationPayload["forceAirPlayOutgoingRequestsPairingPassword"],
-                    "restrictionsForceAirPlayIncomingRequestsPairingPassword": operationPayload["forceAirPlayIncomingRequestsPairingPassword"],
-                    "restrictionsAllowManagedAppsCloudSync": operationPayload["allowManagedAppsCloudSync"],
-                    "restrictionsAllowEraseContentAndSettings": operationPayload["allowEraseContentAndSettings"],
-                    "restrictionsAllowSpotlightInternetResults": operationPayload["allowSpotlightInternetResults"],
-                    "restrictionsAllowEnablingRestrictions": operationPayload["allowEnablingRestrictions"],
-                    "restrictionsAllowActivityContinuation": operationPayload["allowActivityContinuation"],
-                    "restrictionsAllowEnterpriseBookBackup": operationPayload["allowEnterpriseBookBackup"],
-                    "restrictionsAllowEnterpriseBookMetadataSync": operationPayload["allowEnterpriseBookMetadataSync"],
-                    "restrictionsAllowPodcasts": operationPayload["allowPodcasts"],
-                    "restrictionsAllowDefinitionLookup": operationPayload["allowDefinitionLookup"],
-                    "restrictionsAllowPredictiveKeyboard": operationPayload["allowPredictiveKeyboard"],
-                    "restrictionsAllowAutoCorrection": operationPayload["allowAutoCorrection"],
-                    "restrictionsAllowSpellCheck": operationPayload["allowSpellCheck"],
-                    "restrictionsSafariAcceptCookies": operationPayload["safariAcceptCookies"],
-                    "restrictionsAutonomousSingleAppModePermittedAppIDs": operationPayload["autonomousSingleAppModePermittedAppIDs"]
-                };
-                break;
-            case iosOperationConstants["VPN_OPERATION_CODE"]:
-                var pptp = false;
-                var l2tp = false;
-                if (operationPayload["vpnType"] == "PPTP") {
-                    pptp = true;
-                } else if (operationPayload["vpnType"] == "L2TP") {
-                    l2tp = true;
-                }
-
-                payload = {
-                    "userDefinedName": operationPayload["userDefinedName"],
-                    "overridePrimary": operationPayload["overridePrimary"],
-                    "onDemandEnabled": operationPayload["onDemandEnabled"],
-                    "onDemandMatchDomainsAlways": operationPayload["onDemandMatchDomainsAlways"],
-                    "onDemandMatchDomainsNever": operationPayload["onDemandMatchDomainsNever"],
-                    "onDemandMatchDomainsOnRetry": operationPayload["onDemandMatchDomainsOnRetry"],
-                    "onDemandRules": operationPayload["onDemandRules"],
-                    "vendorConfigs": operationPayload["vendorConfigs"],
-                    "vpnType": operationPayload["vpnType"],
-                    "pptpAuthName": pptp ? operationPayload.ppp["authName"] : "",
-                    "pptpTokenCard": pptp ? operationPayload.ppp["tokenCard"] : "",
-                    "pptpAuthPassword": pptp ? operationPayload.ppp["authPassword"] : "",
-                    "pptpCommRemoteAddress": pptp ? operationPayload.ppp["commRemoteAddress"] : "",
-                    "pptpRSASecureID": pptp ? operationPayload.ppp["RSASecureID"] : "",
-                    "pptpCCPEnabled": pptp ? operationPayload.ppp["CCPEnabled"] : "",
-                    "pptpCCPMPPE40Enabled": pptp ? operationPayload.ppp["CCPMPPE40Enabled"] : "",
-                    "pptpCCPMPPE128Enabled": pptp ? operationPayload.ppp["CCPMPPE128Enabled"] : "",
-                    "l2tpAuthName": l2tp ? operationPayload.ppp["authName"] : "",
-                    "l2tpTokenCard": l2tp ? operationPayload.ppp["tokenCard"] : "",
-                    "l2tpAuthPassword": l2tp ? operationPayload.ppp["authPassword"] : "",
-                    "l2tpCommRemoteAddress": l2tp ? operationPayload.ppp["commRemoteAddress"] : "",
-                    "l2tpRSASecureID": l2tp ? operationPayload.ppp["RSASecureID"] : "",
-                    "ipsecRemoteAddress": operationPayload.ipSec["remoteAddress"],
-                    "ipsecAuthenticationMethod": operationPayload.ipSec["authenticationMethod"],
-                    "ipsecLocalIdentifier": operationPayload.ipSec["localIdentifier"],
-                    "ipsecSharedSecret": operationPayload.ipSec["sharedSecret"],
-                    "ipsecPayloadCertificateUUID": operationPayload.ipSec["payloadCertificateUUID"],
-                    "ipsecXAuthEnabled": operationPayload.ipSec["XAuthEnabled"],
-                    "ipsecXAuthName": operationPayload.ipSec["XAuthName"],
-                    "ipsecPromptForVPNPIN": operationPayload.ipSec["promptForVPNPIN"],
-                    "ikev2RemoteAddress": operationPayload.ikEv2["remoteAddress"],
-                    "ikev2LocalIdentifier": operationPayload.ikEv2["localIdentifier"],
-                    "ikev2RemoteIdentifier": operationPayload.ikEv2["remoteIdentifier"],
-                    "ikev2AuthenticationMethod": operationPayload.ikEv2["authenticationMethod"],
-                    "ikev2SharedSecret": operationPayload.ikEv2["sharedSecret"],
-                    "ikev2PayloadCertificateUUID": operationPayload.ikEv2["payloadCertificateUUID"],
-                    "ikev2ExtendedAuthEnabled": operationPayload.ikEv2["extendedAuthEnabled"],
-                    "ikev2AuthName": operationPayload.ikEv2["authName"],
-                    "ikev2AuthPassword": operationPayload.ikEv2["authPassword"],
-                    "ikev2DeadPeerDetectionInterval": operationPayload.ikEv2["deadPeerDetectionInterval"],
-                    "ikev2ServerCertificateIssuerCommonName": operationPayload.ikEv2["serverCertificateIssuerCommonName"],
-                    "ikev2ServerCertificateCommonName": operationPayload.ikEv2["serverCertificateCommonName"]
-                };
-                break;
-            case iosOperationConstants["PER_APP_VPN_OPERATION_CODE"]:
-                payload = {
-                    "operation": {
-                        "VPNUUID": operationPayload["PER-APP-VPNUUID"],
-                        "safariDomains": operationPayload["safariDomains"],
-                        "onDemandMatchAppEnabled": operationPayload["onDemandMatchAppEnabled"]
-                    }
-                };
-                break;
-            case iosOperationConstants["APP_TO_PER_APP_VPN_MAPPING_OPERATION_CODE"]:
-                payload = {
-                    "operation": {
-                        "appLayerVPNMappings": operationPayload["appLayerVPNMappings"]
-                    }
-                };
-                break;
-            case iosOperationConstants["WIFI_OPERATION_CODE"]:
-                payload = {
-                    "wifiHiddenNetwork": operationPayload["hiddenNetwork"],
-                    "wifiSSID": operationPayload["SSID"],
-                    "wifiAutoJoin": operationPayload["autoJoin"],
-                    "wifiProxyType": operationPayload["proxyType"],
-                    "wifiEncryptionType": operationPayload["encryptionType"],
-                    "wifiIsHotSpot": operationPayload["hotspot"],
-                    "wifiDomainName": operationPayload["domainName"],
-                    "wifiServiceProviderRoamingEnabled": operationPayload["serviceProviderRoamingEnabled"],
-                    "wifiDisplayedOperatorName": operationPayload["displayedOperatorName"],
-                    "wifiRoamingConsortiumOIs": operationPayload["roamingConsortiumOIs"],
-                    "wifiPassword": operationPayload["password"],
-                    "wifiPayloadCertUUID": operationPayload["payloadCertificateUUID"],
-                    "wifiProxyServer": operationPayload["proxyServer"],
-                    "wifiProxyPort": operationPayload["proxyPort"],
-                    "wifiProxyUsername": operationPayload["proxyUsername"],
-                    "wifiProxyPassword": operationPayload["proxyPassword"],
-                    "wifiProxyPACURL": operationPayload["proxyPACURL"],
-                    "wifiProxyPACFallbackAllowed": operationPayload["proxyPACFallbackAllowed"],
-                    "wifiNAIRealmNames": operationPayload["nairealmNames"],
-                    "wifiMCCAndMNCs": operationPayload["mccandMNCs"],
-                    "wifiEAPUsername": operationPayload.clientConfiguration["username"],
-                    "wifiAcceptedEAPTypes": operationPayload.clientConfiguration["acceptEAPTypes"],
-                    "wifiEAPPassword": operationPayload.clientConfiguration["userPassword"],
-                    "wifiEAPOneTimePassword": operationPayload.clientConfiguration["oneTimePassword"],
-                    "wifiPayloadCertificateAnchorUUIDs": operationPayload.clientConfiguration["payloadCertificateAnchorUUID"],
-                    "wifiEAPOuterIdentity": operationPayload.clientConfiguration["outerIdentity"],
-                    "wifiTLSTrustedServerNames": operationPayload.clientConfiguration["tlstrustedServerNames"],
-                    "wifiEAPTLSAllowTrustExceptions": operationPayload.clientConfiguration["tlsallowTrustExceptions"],
-                    "wifiEAPTLSCertIsRequired": operationPayload.clientConfiguration["tlscertificateIsRequired"],
-                    "wifiEAPTLSInnerAuthType": operationPayload.clientConfiguration["ttlsinnerAuthentication"],
-                    "wifiEAPFastUsePAC": operationPayload.clientConfiguration["eapfastusePAC"],
-                    "wifiEAPFastProvisionPAC": operationPayload.clientConfiguration["eapfastprovisionPAC"],
-                    "wifiEAPFastProvisionPACAnonymously": operationPayload.clientConfiguration["eapfastprovisionPACAnonymously"],
-                    "wifiEAPSIMNoOfRands": operationPayload.clientConfiguration["eapsimnumberOfRANDs"]
-                };
-                break;
-            case iosOperationConstants["EMAIL_OPERATION_CODE"]:
-                payload = {
-                    "emailAccountDescription": operationPayload["emailAccountDescription"],
-                    "emailAccountName": operationPayload["emailAccountName"],
-                    "emailAccountType": operationPayload["emailAccountType"],
-                    "emailAddress": operationPayload["emailAddress"],
-                    "emailIncomingMailServerAuthentication": operationPayload["incomingMailServerAuthentication"],
-                    "emailIncomingMailServerHostname": operationPayload["incomingMailServerHostName"],
-                    "emailIncomingMailServerPort": operationPayload["incomingMailServerPortNumber"],
-                    "emailIncomingUseSSL": operationPayload["incomingMailServerUseSSL"],
-                    "emailIncomingMailServerUsername": operationPayload["incomingMailServerUsername"],
-                    "emailIncomingMailServerPassword": operationPayload["incomingPassword"],
-                    "emailOutgoingMailServerPassword": operationPayload["outgoingPassword"],
-                    "emailOutgoingPasswordSameAsIncomingPassword": operationPayload["outgoingPasswordSameAsIncomingPassword"],
-                    "emailOutgoingMailServerAuthentication": operationPayload["outgoingMailServerAuthentication"],
-                    "emailOutgoingMailServerHostname": operationPayload["outgoingMailServerHostName"],
-                    "emailOutgoingMailServerPort": operationPayload["outgoingMailServerPortNumber"],
-                    "emailOutgoingUseSSL": operationPayload["outgoingMailServerUseSSL"],
-                    "emailOutgoingMailServerUsername": operationPayload["outgoingMailServerUsername"],
-                    "emailPreventMove": operationPayload["preventMove"],
-                    "emailPreventAppSheet": operationPayload["preventAppSheet"],
-                    "emailDisableMailRecentsSyncing": operationPayload["disableMailRecentsSyncing"],
-                    "emailIncomingMailServerIMAPPathPrefix": operationPayload["incomingMailServerIMAPPathPrefix"],
-                    "emailSMIMEEnabled": operationPayload["smimeenabled"],
-                    "emailSMIMESigningCertificateUUID": operationPayload["smimesigningCertificateUUID"],
-                    "emailSMIMEEncryptionCertificateUUID": operationPayload["smimeencryptionCertificateUUID"],
-                    "emailSMIMEEnablePerMessageSwitch": operationPayload["smimeenablePerMessageSwitch"]
-                };
-                break;
-            case iosOperationConstants["AIRPLAY_OPERATION_CODE"]:
-                payload = {
-                    "airplayDestinations": operationPayload["airPlayDestinations"],
-                    "airplayCredentials": operationPayload["airPlayCredentials"]
-                };
-                break;
-            case iosOperationConstants["LDAP_OPERATION_CODE"]:
-                payload = {
-                    "ldapAccountDescription": operationPayload["accountDescription"],
-                    "ldapAccountHostname": operationPayload["accountHostName"],
-                    "ldapUseSSL": operationPayload["accountUseSSL"],
-                    "ldapAccountUsername": operationPayload["accountUsername"],
-                    "ldapAccountPassword": operationPayload["accountPassword"],
-                    "ldapSearchSettings": operationPayload["ldapSearchSettings"]
-                };
-                break;
-            case iosOperationConstants["CALENDAR_OPERATION_CODE"]:
-                payload = {
-                    "calendarAccountDescription": operationPayload["accountDescription"],
-                    "calendarAccountHostname": operationPayload["hostName"],
-                    "calendarAccountUsername": operationPayload["username"],
-                    "calendarAccountPassword": operationPayload["password"],
-                    "calendarUseSSL": operationPayload["useSSL"],
-                    "calendarAccountPort": operationPayload["port"],
-                    "calendarPrincipalURL": operationPayload["principalURL"]
-                };
-                break;
-            case iosOperationConstants["CALENDAR_SUBSCRIPTION_OPERATION_CODE"]:
-                payload = {
-                    "calendarSubscriptionDescription": operationPayload["accountDescription"],
-                    "calendarSubscriptionHostname": operationPayload["hostName"],
-                    "calendarSubscriptionUsername": operationPayload["username"],
-                    "calendarSubscriptionPassword": operationPayload["password"],
-                    "calendarSubscriptionUseSSL": operationPayload["useSSL"]
-                };
-                break;
-            case iosOperationConstants["APN_OPERATION_CODE"]:
-                payload = {
-                    "apnConfigurations": operationPayload["apnConfigurations"]
-                };
-                break;
-            case iosOperationConstants["CELLULAR_OPERATION_CODE"]:
-                payload = {
-                    "cellularAttachAPNName": operationPayload["attachAPNName"],
-                    "cellularAuthenticationType": operationPayload["authenticationType"],
-                    "cellularUsername": operationPayload["username"],
-                    "cellularPassword": operationPayload["password"],
-                    "cellularAPNConfigurations": operationPayload["apnConfigurations"]
-                };
-                break;
-        }
-        return payload;
-    };
-
-    privateMethods.generateIOSOperationPayload = function (operationCode, operationData, deviceList) {
-        var payload;
-        var operationType;
-        switch (operationCode) {
-            case iosOperationConstants["PASSCODE_POLICY_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "forcePIN": operationData["passcodePolicyForcePIN"],
-                        "allowSimple": operationData["passcodePolicyAllowSimple"],
-                        "requireAlphanumeric": operationData["passcodePolicyRequireAlphanumeric"],
-                        "minLength": operationData["passcodePolicyMinLength"],
-                        "minComplexChars": operationData["passcodePolicyMinComplexChars"],
-                        "maxPINAgeInDays": operationData["passcodePolicyMaxPasscodeAgeInDays"],
-                        "pinHistory": operationData["passcodePolicyPasscodeHistory"],
-                        "maxInactivity": operationData["passcodePolicyMaxAutoLock"],
-                        "maxGracePeriod": operationData["passcodePolicyGracePeriod"],
-                        "maxFailedAttempts": operationData["passcodePolicyMaxFailedAttempts"]
-                    }
-                };
-                break;
-            case iosOperationConstants["WIFI_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                if (operationData["wifiProxyPort"] == "") {
-                    operationData["wifiProxyPort"] = -1;
-                }
-                payload = {
-                    "operation": {
-                        "SSID": operationData["wifiSSID"],
-                        "hiddenNetwork": operationData["wifiHiddenNetwork"],
-                        "autoJoin": operationData["wifiAutoJoin"],
-                        "proxyType": operationData["wifiProxyType"],
-                        "encryptionType": operationData["wifiEncryptionType"],
-                        "hotspot": operationData["wifiIsHotSpot"],
-                        "domainName": operationData["wifiDomainName"],
-                        "serviceProviderRoamingEnabled": operationData["wifiServiceProviderRoamingEnabled"],
-                        "displayedOperatorName": operationData["wifiDisplayedOperatorName"],
-                        "roamingConsortiumOIs": operationData["wifiRoamingConsortiumOIs"],
-                        "password": operationData["wifiPassword"],
-                        "clientConfiguration": {
-                            "username": operationData["wifiEAPUsername"],
-                            "acceptEAPTypes": operationData["wifiAcceptedEAPTypes"],
-                            "userPassword": operationData["wifiEAPPassword"],
-                            "oneTimePassword": operationData["wifiEAPOneTimePassword"],
-                            "payloadCertificateAnchorUUID": operationData["wifiPayloadCertificateAnchorUUIDs"],
-                            "outerIdentity": operationData["wifiEAPOuterIdentity"],
-                            "tlstrustedServerNames": operationData["wifiTLSTrustedServerNames"],
-                            "tlsallowTrustExceptions": operationData["wifiEAPTLSAllowTrustExceptions"],
-                            "tlscertificateIsRequired": operationData["wifiEAPTLSCertIsRequired"],
-                            "ttlsinnerAuthentication": operationData["wifiEAPTLSInnerAuthType"],
-                            "eapfastusePAC": operationData["wifiEAPFastUsePAC"],
-                            "eapfastprovisionPAC": operationData["wifiEAPFastProvisionPAC"],
-                            "eapfastprovisionPACAnonymously": operationData["wifiEAPFastProvisionPACAnonymously"],
-                            "eapsimnumberOfRANDs": operationData["wifiEAPSIMNoOfRands"]
-                        },
-                        "payloadCertificateUUID": operationData["wifiPayloadCertUUID"],
-                        "proxyServer": operationData["wifiProxyServer"],
-                        "proxyPort": operationData["wifiProxyPort"],
-                        "proxyUsername": operationData["wifiProxyUsername"],
-                        "proxyPassword": operationData["wifiProxyPassword"],
-                        "proxyPACURL": operationData["wifiProxyPACURL"],
-                        "proxyPACFallbackAllowed": operationData["wifiProxyPACFallbackAllowed"],
-                        "nairealmNames": operationData["wifiNAIRealmNames"],
-                        "mccandMNCs": operationData["wifiMCCAndMNCs"]
-                    }
-                };
-                break;
-            case iosOperationConstants["VPN_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                var ppp = {};
-                var ipSec = {};
-                var ikev2 = {};
-                var pulseSecure = {};
-
-                if (operationData["vpnType"] == "PPTP") {
-                    ppp = {
-                        "authName": operationData["pptpAuthName"],
-                        "tokenCard": operationData["pptpTokenCard"],
-                        "authPassword": operationData["pptpAuthPassword"],
-                        "commRemoteAddress": operationData["pptpCommRemoteAddress"],
-                        "RSASecureID": operationData["pptpRSASecureID"],
-                        "CCPEnabled": operationData["pptpCCPEnabled"],
-                        "CCPMPPE40Enabled": operationData["pptpCCPMPPE40Enabled"],
-                        "CCPMPPE128Enabled": operationData["pptpCCPMPPE128Enabled"]
-                    };
-                } else if (operationData["vpnType"] == "L2TP") {
-                    ppp = {
-                        "authName": operationData["l2tpAuthName"],
-                        "tokenCard": operationData["l2tpTokenCard"],
-                        "authPassword": operationData["l2tpAuthPassword"],
-                        "commRemoteAddress": operationData["l2tpCommRemoteAddress"],
-                        "RSASecureID": operationData["l2tpRSASecureID"]
-                    };
-                } else if (operationData["vpnType"] == "IPSec") {
-                    ipSec = {
-                        "remoteAddress": operationData["ipsecRemoteAddress"],
-                        "authenticationMethod": operationData["ipsecAuthenticationMethod"],
-                        "localIdentifier": operationData["ipsecLocalIdentifier"],
-                        "sharedSecret": operationData["ipsecSharedSecret"],
-                        "payloadCertificateUUID": operationData["ipsecPayloadCertificateUUID"],
-                        "XAuthEnabled": operationData["ipsecXAuthEnabled"],
-                        "XAuthName": operationData["ipsecXAuthName"],
-                        "promptForVPNPIN": operationData["ipsecPromptForVPNPIN"]
-                    };
-                } else if (operationData["vpnType"] == "IKEv2") {
-                    ikev2 = {
-                        "remoteAddress": operationData["ikev2RemoteAddress"],
-                        "localIdentifier": operationData["ikev2LocalIdentifier"],
-                        "remoteIdentifier": operationData["ikev2RemoteIdentifier"],
-                        "authenticationMethod": operationData["ikev2AuthenticationMethod"],
-                        "sharedSecret": operationData["ikev2SharedSecret"],
-                        "payloadCertificateUUID": operationData["ikev2PayloadCertificateUUID"],
-                        "extendedAuthEnabled": operationData["ikev2ExtendedAuthEnabled"],
-                        "authName": operationData["ikev2AuthName"],
-                        "authPassword": operationData["ikev2AuthPassword"],
-                        "deadPeerDetectionInterval": operationData["ikev2DeadPeerDetectionInterval"],
-                        "serverCertificateIssuerCommonName": operationData["ikev2ServerCertificateIssuerCommonName"],
-                        "serverCertificateCommonName": operationData["ikev2ServerCertificateCommonName"]
-                    };
-                } else if (operationData["vpnType"] == "PulseSecure") {
-                    pulseSecure = {
-                        "remoteAddress": operationData["pulsesecureRemoteAddress"],
-                        "userName": operationData["pulsesecureName"],
-                        "sharedSecret": operationData["pulsesecureSharedSecret"]
-                    };
-                }
-
-                var domainsAlways = new Array();
-                for (var i = 0; i < operationData["onDemandMatchDomainsAlways"].length; i++) {
-                    domainsAlways.push(operationData["onDemandMatchDomainsAlways"][i].domain);
-                }
-
-                var domainsNever = new Array();
-                for (var i = 0; i < operationData["onDemandMatchDomainsNever"].length; i++) {
-                    domainsNever.push(operationData["onDemandMatchDomainsNever"][i].domain);
-                }
-
-                var domainsRetry = new Array();
-                for (var i = 0; i < operationData["onDemandMatchDomainsOnRetry"].length; i++) {
-                    domainsRetry.push(operationData["onDemandMatchDomainsOnRetry"][i].domain);
-                }
-
-                payload = {
-                    "operation": {
-                        "userDefinedName": operationData["userDefinedName"],
-                        "overridePrimary": operationData["overridePrimary"],
-                        "onDemandEnabled": operationData["onDemandEnabled"],
-                        "onDemandMatchDomainsAlways": domainsAlways,
-                        "onDemandMatchDomainsNever": domainsNever,
-                        "onDemandMatchDomainsOnRetry": domainsRetry,
-                        "onDemandRules": operationData["onDemandRules"],
-                        "vendorConfigs": operationData["vendorConfigs"],
-                        "vpnType": operationData["vpnType"],
-                        "ppp": ppp,
-                        "ipSec": ipSec,
-                        "ikEv2": ikev2,
-                        "pulseSecure": pulseSecure
-                    }
-                };
-                break;
-            case iosOperationConstants["PER_APP_VPN_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                var domains = new Array();
-                for (var i = 0; i < operationData["safariDomains"].length; i++) {
-                    domains.push(operationData["safariDomains"][i].domain);
-                }
-                payload = {
-                    "operation": {
-                        "VPNUUID": operationData["VPNUUID"],
-                        "safariDomains": domains,
-                        "onDemandMatchAppEnabled": operationData["onDemandMatchAppEnabled"]
-                    }
-                };
-                break;
-            case iosOperationConstants["APP_TO_PER_APP_VPN_MAPPING_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "appLayerVPNMappings": operationData["appLayerVPNMappings"]
-                    }
-                };
-                break;
-            case iosOperationConstants["RESTRICTIONS_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "allowAccountModification": operationData["restrictionsAllowAccountModification"],
-                        "allowAddingGameCenterFriends": operationData["restrictionsAllowAddingGameCenterFriends"],
-                        "allowAirDrop": operationData["restrictionsAllowAirDrop"],
-                        "allowAppCellularDataModification": operationData["restrictionsAllowAppCellularDataModification"],
-                        "allowAppInstallation": operationData["restrictionsAllowAppInstallation"],
-                        "allowAppRemoval": operationData["restrictionsAllowAppRemoval"],
-                        "allowAssistant": operationData["restrictionsAllowAssistant"],
-                        "allowAssistantUserGeneratedContent": operationData["restrictionsAllowAssistantUserGeneratedContent"],
-                        "allowAssistantWhileLocked": operationData["restrictionsAllowAssistantWhileLocked"],
-                        "allowBookstore": operationData["restrictionsAllowBookstore"],
-                        "allowBookstoreErotica": operationData["restrictionsAllowBookstoreErotica"],
-                        "allowCamera": operationData["restrictionsAllowCamera"],
-                        "allowChat": operationData["restrictionsAllowChat"],
-                        "allowCloudBackup": operationData["restrictionsAllowCloudBackup"],
-                        "allowCloudDocumentSync": operationData["restrictionsAllowCloudDocumentSync"],
-                        "allowCloudKeychainSync": operationData["restrictionsAllowCloudKeychainSync"],
-                        "allowDiagnosticSubmission": operationData["restrictionsAllowDiagnosticSubmission"],
-                        "allowExplicitContent": operationData["restrictionsAllowExplicitContent"],
-                        "allowFindMyFriendsModification": operationData["restrictionsAllowFindMyFriendsModification"],
-                        "allowFingerprintForUnlock": operationData["restrictionsAllowFingerprintForUnlock"],
-                        "allowGameCenter": operationData["restrictionsAllowGameCenter"],
-                        "allowGlobalBackgroundFetchWhenRoaming": operationData["restrictionsAllowGlobalBackgroundFetchWhenRoaming"],
-                        "allowInAppPurchases": operationData["restrictionsAllowInAppPurchases"],
-                        "allowLockScreenControlCenter": operationData["restrictionsAllowLockScreenControlCenter"],
-                        "allowHostPairing": operationData["restrictionsAllowHostPairing"],
-                        "allowLockScreenNotificationsView": operationData["restrictionsAllowLockScreenNotificationsView"],
-                        "allowLockScreenTodayView": operationData["restrictionsAllowLockScreenTodayView"],
-                        "allowMultiplayerGaming": operationData["restrictionsAllowMultiplayerGaming"],
-                        "allowOpenFromManagedToUnmanaged": operationData["restrictionsAllowOpenFromManagedToUnmanaged"],
-                        "allowOpenFromUnmanagedToManaged": operationData["restrictionsAllowOpenFromUnmanagedToManaged"],
-                        "allowOTAPKIUpdates": operationData["restrictionsAllowOTAPKIUpdates"],
-                        "allowPassbookWhileLocked": operationData["restrictionsAllowPassbookWhileLocked"],
-                        "allowPhotoStream": operationData["restrictionsAllowPhotoStream"],
-                        "allowSafari": operationData["restrictionsAllowSafari"],
-                        "safariAllowAutoFill": operationData["restrictionsSafariAllowAutoFill"],
-                        "safariForceFraudWarning": operationData["restrictionsSafariForceFraudWarning"],
-                        "safariAllowJavaScript": operationData["restrictionsSafariAllowJavaScript"],
-                        "safariAllowPopups": operationData["restrictionsSafariAllowPopups"],
-                        "allowScreenShot": operationData["restrictionsAllowScreenShot"],
-                        "allowSharedStream": operationData["restrictionsAllowSharedStream"],
-                        "allowUIConfigurationProfileInstallation": operationData["restrictionsAllowUIConfigurationProfileInstallation"],
-                        "allowUntrustedTLSPrompt": operationData["restrictionsAllowUntrustedTLSPrompt"],
-                        "allowVideoConferencing": operationData["restrictionsAllowVideoConferencing"],
-                        "allowVoiceDialing": operationData["restrictionsAllowVoiceDialing"],
-                        "allowYouTube": operationData["restrictionsAllowYouTube"],
-                        "allowiTunes": operationData["restrictionsAllowITunes"],
-                        "forceAssistantProfanityFilter": operationData["restrictionsForceAssistantProfanityFilter"],
-                        "forceEncryptedBackup": operationData["restrictionsForceEncryptedBackup"],
-                        "forceITunesStorePasswordEntry": operationData["restrictionsForceITunesStorePasswordEntry"],
-                        "forceLimitAdTracking": operationData["restrictionsForceLimitAdTracking"],
-                        "forceAirPlayOutgoingRequestsPairingPassword": operationData["restrictionsForceAirPlayOutgoingRequestsPairingPassword"],
-                        "forceAirPlayIncomingRequestsPairingPassword": operationData["restrictionsForceAirPlayIncomingRequestsPairingPassword"],
-                        "allowManagedAppsCloudSync": operationData["restrictionsAllowManagedAppsCloudSync"],
-                        "allowEraseContentAndSettings": operationData["restrictionsAllowEraseContentAndSettings"],
-                        "allowSpotlightInternetResults": operationData["restrictionsAllowSpotlightInternetResults"],
-                        "allowEnablingRestrictions": operationData["restrictionsAllowEnablingRestrictions"],
-                        "allowActivityContinuation": operationData["restrictionsAllowActivityContinuation"],
-                        "allowEnterpriseBookBackup": operationData["restrictionsAllowEnterpriseBookBackup"],
-                        "allowEnterpriseBookMetadataSync": operationData["restrictionsAllowEnterpriseBookMetadataSync"],
-                        "allowPodcasts": operationData["restrictionsAllowPodcasts"],
-                        "allowDefinitionLookup": operationData["restrictionsAllowDefinitionLookup"],
-                        "allowPredictiveKeyboard": operationData["restrictionsAllowPredictiveKeyboard"],
-                        "allowAutoCorrection": operationData["restrictionsAllowAutoCorrection"],
-                        "allowSpellCheck": operationData["restrictionsAllowSpellCheck"],
-                        "safariAcceptCookies": operationData["restrictionsSafariAcceptCookies"],
-                        "autonomousSingleAppModePermittedAppIDs": operationData["restrictionsAutonomousSingleAppModePermittedAppIDs"]
-                    }
-                };
-                break;
-            case iosOperationConstants["EMAIL_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "emailAccountDescription": operationData["emailAccountDescription"],
-                        "emailAccountName": operationData["emailAccountName"],
-                        "emailAccountType": operationData["emailAccountType"],
-                        "emailAddress": operationData["emailAddress"],
-                        "incomingMailServerAuthentication": operationData["emailIncomingMailServerAuthentication"],
-                        "incomingMailServerHostName": operationData["emailIncomingMailServerHostname"],
-                        "incomingMailServerPortNumber": operationData["emailIncomingMailServerPort"],
-                        "incomingMailServerUseSSL": operationData["emailIncomingUseSSL"],
-                        "incomingMailServerUsername": operationData["emailIncomingMailServerUsername"],
-                        "incomingPassword": operationData["emailIncomingMailServerPassword"],
-                        "outgoingPassword": operationData["emailOutgoingMailServerPassword"],
-                        "outgoingPasswordSameAsIncomingPassword": operationData["emailOutgoingPasswordSameAsIncomingPassword"],
-                        "outgoingMailServerAuthentication": operationData["emailOutgoingMailServerAuthentication"],
-                        "outgoingMailServerHostName": operationData["emailOutgoingMailServerHostname"],
-                        "outgoingMailServerPortNumber": operationData["emailOutgoingMailServerPort"],
-                        "outgoingMailServerUseSSL": operationData["emailOutgoingUseSSL"],
-                        "outgoingMailServerUsername": operationData["emailOutgoingMailServerUsername"],
-                        "preventMove": operationData["emailPreventMove"],
-                        "preventAppSheet": operationData["emailPreventAppSheet"],
-                        "disableMailRecentsSyncing": operationData["emailDisableMailRecentsSyncing"],
-                        "incomingMailServerIMAPPathPrefix": operationData["emailIncomingMailServerIMAPPathPrefix"],
-                        "smimeenabled": operationData["emailSMIMEEnabled"],
-                        "smimesigningCertificateUUID": operationData["emailSMIMESigningCertificateUUID"],
-                        "smimeencryptionCertificateUUID": operationData["emailSMIMEEncryptionCertificateUUID"],
-                        "smimeenablePerMessageSwitch": operationData["emailSMIMEEnablePerMessageSwitch"]
-                    }
-                };
-                break;
-            case iosOperationConstants["AIRPLAY_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "airPlayDestinations": operationData["airplayDestinations"],
-                        "airPlayCredentials": operationData["airplayCredentials"]
-                    }
-                };
-                break;
-            case iosOperationConstants["LDAP_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "accountDescription": operationData["ldapAccountDescription"],
-                        "accountHostName": operationData["ldapAccountHostname"],
-                        "accountUseSSL": operationData["ldapUseSSL"],
-                        "accountUsername": operationData["ldapAccountUsername"],
-                        "accountPassword": operationData["ldapAccountPassword"],
-                        "ldapSearchSettings": operationData["ldapSearchSettings"]
-                    }
-                };
-                break;
-            case iosOperationConstants["CALENDAR_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "accountDescription": operationData["calendarAccountDescription"],
-                        "hostName": operationData["calendarAccountHostname"],
-                        "username": operationData["calendarAccountUsername"],
-                        "password": operationData["calendarAccountPassword"],
-                        "useSSL": operationData["calendarUseSSL"],
-                        "port": operationData["calendarAccountPort"],
-                        "principalURL": operationData["calendarPrincipalURL"]
-                    }
-                };
-                break;
-            case iosOperationConstants["CALENDAR_SUBSCRIPTION_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "accountDescription": operationData["calendarSubscriptionDescription"],
-                        "hostName": operationData["calendarSubscriptionHostname"],
-                        "username": operationData["calendarSubscriptionUsername"],
-                        "password": operationData["calendarSubscriptionPassword"],
-                        "useSSL": operationData["calendarSubscriptionUseSSL"]
-                    }
-                };
-                break;
-            case iosOperationConstants["APN_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "apnConfigurations": operationData["apnConfigurations"]
-                    }
-                };
-                break;
-            case iosOperationConstants["DOMAIN_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "emailDomains": operationData["emailDomains"],
-                        "webDomains": operationData["webDomains"]
-                    }
-                };
-                break;
-            case
-            iosOperationConstants["CELLULAR_OPERATION_CODE"]
-            :
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "attachAPNName": operationData["cellularAttachAPNName"],
-                        "authenticationType": operationData["cellularAuthenticationType"],
-                        "username": operationData["cellularUsername"],
-                        "password": operationData["cellularPassword"],
-                        "apnConfigurations": operationData["cellularAPNConfigurations"]
-                    }
-                };
-                break;
-            case
-            iosOperationConstants["NOTIFICATION_OPERATION_CODE"]
-            :
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "messageTitle": operationData["messageTitle"],
-                        "messageText": operationData["messageText"]
-                    }
-                };
-                break;
-            default:
-                // If the operation is neither of above, it is a command operation
-                operationType = operationTypeConstants["COMMAND"];
-                // Operation payload of a command operation is simply an array of device IDs
-                payload = deviceList;
-        }
-
-        if (operationType == operationTypeConstants["PROFILE"] && deviceList) {
-            payload["deviceIDs"] = deviceList;
-        }
-        return payload;
-    }
-    ;
-
     /**
      * Convert the android platform specific code to the generic payload.
-     * TODO: think of the possibility to follow a pattern to the key name (namespace?)
      * @param operationCode
      * @param operationPayload
      * @returns {{}}
@@ -1125,118 +395,6 @@ var operationModule = function () {
     };
 
     /**
-     * Convert the windows platform specific code to the generic payload.
-     * TODO: think of the possibility to follow a pattern to the key name (namespace?)
-     * @param operationCode
-     * @param operationPayload
-     * @returns {{}}
-     */
-    privateMethods.generateGenericPayloadFromWindowsPayload = function (operationCode, operationPayload) {
-        var payload = {};
-        operationPayload = JSON.parse(operationPayload);
-        switch (operationCode) {
-            case windowsOperationConstants["PASSCODE_POLICY_OPERATION_CODE"]:
-                payload = {
-                    "passcodePolicyAllowSimple": operationPayload["allowSimple"],
-                    "passcodePolicyRequireAlphanumeric": operationPayload["requireAlphanumeric"],
-                    "passcodePolicyMinLength": operationPayload["minLength"],
-                    "passcodePolicyMinComplexChars": operationPayload["minComplexChars"],
-                    "passcodePolicyMaxPasscodeAgeInDays": operationPayload["maxPINAgeInDays"],
-                    "passcodePolicyPasscodeHistory": operationPayload["pinHistory"],
-                    "passcodePolicyMaxFailedAttempts": operationPayload["maxFailedAttempts"]
-                };
-                break;
-            case windowsOperationConstants["CAMERA_OPERATION_CODE"]:
-                payload = {
-                    "cameraEnabled": operationPayload["enabled"]
-                };
-                break;
-            case windowsOperationConstants["ENCRYPT_STORAGE_OPERATION_CODE"]:
-                payload = {
-                    "encryptStorageEnabled": operationPayload["encrypted"]
-                };
-                break;
-        }
-        return payload;
-    };
-
-    privateMethods.generateWindowsOperationPayload = function (operationCode, operationData, deviceList) {
-        var payload;
-        var operationType;
-        switch (operationCode) {
-            case windowsOperationConstants["CAMERA_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "enabled": operationData["cameraEnabled"]
-                    }
-                };
-                break;
-            case windowsOperationConstants["CHANGE_LOCK_CODE_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "lockCode": operationData["lockCode"]
-                    }
-                };
-                break;
-            case windowsOperationConstants["ENCRYPT_STORAGE_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "encrypted": operationData["encryptStorageEnabled"]
-                    }
-                };
-                break;
-            case windowsOperationConstants["NOTIFICATION_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "message": operationData["message"]
-                    }
-                };
-                break;
-            case windowsOperationConstants["PASSCODE_POLICY_OPERATION_CODE"]:
-                operationType = operationTypeConstants["PROFILE"];
-                payload = {
-                    "operation": {
-                        "allowSimple": operationData["passcodePolicyAllowSimple"],
-                        "requireAlphanumeric": operationData["passcodePolicyRequireAlphanumeric"],
-                        "minLength": operationData["passcodePolicyMinLength"],
-                        "minComplexChars": operationData["passcodePolicyMinComplexChars"],
-                        "maxPINAgeInDays": operationData["passcodePolicyMaxPasscodeAgeInDays"],
-                        "pinHistory": operationData["passcodePolicyPasscodeHistory"],
-                        "maxFailedAttempts": operationData["passcodePolicyMaxFailedAttempts"]
-                    }
-                };
-                break;
-            default:
-                // If the operation is neither of above, it is a command operation
-                operationType = operationTypeConstants["COMMAND"];
-                // Operation payload of a command operation is simply an array of device IDs
-                payload = deviceList;
-        }
-
-        if (operationType == operationTypeConstants["PROFILE"] && deviceList) {
-            payload["deviceIDs"] = deviceList;
-        }
-
-        return payload;
-    };
-
-
-    publicMethods.getWindowsServiceEndpoint = function (operationCode) {
-        var featureMap = {
-            "DEVICE_LOCK": "lock-devices",
-            "DISENROLL": "disenroll",
-            "DEVICE_RING": "ring-device",
-            "LOCK_RESET": "lock-reset",
-            "WIPE_DATA": "wipe-data"
-        };
-        //return "/mdm-windows-agent/services/windows/operation/" + featureMap[operationCode];
-        return "/api/device-mgt/windows/v1.0/services/windows/admin/devices/" + featureMap[operationCode];
-    };
-    /**
      * Get the icon for the featureCode
      * @param operationCode
      * @returns icon class
@@ -1260,38 +418,6 @@ var operationModule = function () {
     };
 
     /**
-     * Get the icon for the featureCode
-     * @param operationCode
-     * @returns icon class
-     */
-    publicMethods.getWindowsIconForFeature = function (operationCode) {
-        var featureMap = {
-            "DEVICE_LOCK": "fw-lock",
-            "DEVICE_RING": "fw-dial-up",
-            "DISENROLL": "fw-export",
-            "LOCK_RESET": "fw-key",
-            "WIPE_DATA": "fw-delete"
-        };
-        return featureMap[operationCode];
-    };
-
-    /**
-     * Get the icon for the featureCode
-     * @param operationCode
-     * @returns icon class
-     */
-    publicMethods.getIOSIconForFeature = function (operationCode) {
-        var featureMap = {
-            "DEVICE_LOCK": "fw-lock",
-            "LOCATION": "fw-map-location",
-            "ENTERPRISE_WIPE": "fw-block",
-            "NOTIFICATION": "fw-message",
-            "RING": "fw-dial-up"
-        };
-        return featureMap[operationCode];
-    };
-
-    /**
      * Filter a list by a data attribute.
      * @param prop
      * @param val
@@ -1308,12 +434,11 @@ var operationModule = function () {
     /**
      * Method to generate Platform specific operation payload.
      *
-     * @param platformType Platform Type of the profile
      * @param operationCode Operation Codes to generate the profile from
      * @param deviceList Optional device list to include in payload body for operations
      * @returns {*}
      */
-    publicMethods.generatePayload = function (platformType, operationCode, deviceList) {
+    publicMethods.generatePayload = function (operationCode, deviceList) {
         var payload;
         var operationData = {};
         // capturing form input data designated by .operationDataKeys
@@ -1430,47 +555,23 @@ var operationModule = function () {
                 }
             }
         );
-
-        switch (platformType) {
-            case platformTypeConstants["ANDROID"]:
-                payload = privateMethods.generateAndroidOperationPayload(operationCode, operationData, deviceList);
-                break;
-            case platformTypeConstants["IOS"]:
-                payload = privateMethods.generateIOSOperationPayload(operationCode, operationData, deviceList);
-                break;
-            case platformTypeConstants["WINDOWS"]:
-                payload = privateMethods.generateWindowsOperationPayload(operationCode, operationData, deviceList);
-                break;
-        }
+        payload = privateMethods.generateAndroidOperationPayload(operationCode, operationData, deviceList);
         return payload;
     };
 
     /**
      * Method to populate the Platform specific operation payload.
      *
-     * @param platformType Platform Type of the profile
      * @param operationCode Operation Codes to generate the profile from
      * @param operationPayload payload
      * @returns {*}
      */
-    publicMethods.populateUI = function (platformType, operationCode, operationPayload) {
-        var uiPayload;
-        switch (platformType) {
-            case platformTypeConstants["ANDROID"]:
-                uiPayload = privateMethods.generateGenericPayloadFromAndroidPayload(operationCode, operationPayload);
-                break;
-            case platformTypeConstants["IOS"]:
-                uiPayload = privateMethods.generateGenericPayloadFromIOSPayload(operationCode, operationPayload);
-                break;
-            case platformTypeConstants["WINDOWS"]:
-                uiPayload = privateMethods.generateGenericPayloadFromWindowsPayload(operationCode, operationPayload);
-                break;
-        }
+    publicMethods.populateUI = function (operationCode, operationPayload) {
+        var uiPayload = privateMethods.generateGenericPayloadFromAndroidPayload(operationCode, operationPayload);
         // capturing form input data designated by .operationDataKeys
         $(".operation-data").filterByData("operation-code", operationCode).find(".operationDataKeys").each(
             function () {
                 var operationDataObj = $(this);
-                //TODO :remove
                 //operationDataObj.prop('disabled', true)
                 var key = operationDataObj.data("key");
                 // retrieve corresponding input value associated with the key
@@ -1612,18 +713,16 @@ var operationModule = function () {
     /**
      * generateProfile method is only used for policy-creation UIs.
      *
-     * @param platformType Platform Type of the profile
      * @param operationCodes Operation codes to generate the profile from
-     * @returns {{}}
+     * @returns {object} generated profile
      */
-    publicMethods.generateProfile = function (platformType, operationCodes) {
+    publicMethods.generateProfile = function (operationCodes) {
         var generatedProfile = {};
         for (var i = 0; i < operationCodes.length; ++i) {
             var operationCode = operationCodes[i];
-            var payload = publicMethods.generatePayload(platformType, operationCode, null);
+            var payload = publicMethods.generatePayload(operationCode, null);
 
-            if (platformType == platformTypeConstants["ANDROID"] &&
-                operationCodes[i] == androidOperationConstants["CAMERA_OPERATION_CODE"]) {
+            if (operationCodes[i] == androidOperationConstants["CAMERA_OPERATION_CODE"]) {
                 var operations = payload["operation"];
                 for (var key in operations) {
                     operationCode = key;
@@ -1649,130 +748,127 @@ var operationModule = function () {
     /**
      * populateProfile method is used to populate the html ui with saved payload.
      *
-     * @param platformType Platform Type of the profile
      * @param payload List of profileFeatures
      * @returns [] configuredOperations array
      */
-    publicMethods.populateProfile = function (platformType, payload) {
+    publicMethods.populateProfile = function (payload) {
         var i, configuredOperations = [];
         var restrictions = {};
         for (i = 0; i < payload.length; ++i) {
             var configuredFeature = payload[i];
             var featureCode = configuredFeature["featureCode"];
             var operationPayload = configuredFeature["content"];
-            if (platformType == platformTypeConstants["ANDROID"]) {
-                var restriction = JSON.parse(operationPayload);
-                if (featureCode == androidOperationConstants["CAMERA_OPERATION_CODE"]) {
-                    restrictions["cameraEnabled"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_ADJUST_VOLUME"]) {
-                    restrictions["disallowAdjustVolumeEnabled"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_BLUETOOTH"]) {
-                    restrictions["disallowConfigBluetooth"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_CELL_BROADCASTS"]) {
-                    restrictions["disallowConfigCellBroadcasts"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_CREDENTIALS"]) {
-                    restrictions["disallowConfigCredentials"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_MOBILE_NETWORKS"]) {
-                    restrictions["disallowConfigMobileNetworks"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_TETHERING"]) {
-                    restrictions["disallowConfigTethering"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_VPN"]) {
-                    restrictions["disallowConfigVpn"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_WIFI"]) {
-                    restrictions["disallowConfigWifi"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_APPS_CONTROL"]) {
-                    restrictions["disallowAppControl"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_CREATE_WINDOWS"]) {
-                    restrictions["disallowCreateWindows"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_CROSS_PROFILE_COPY_PASTE"]) {
-                    restrictions["disallowCrossProfileCopyPaste"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_DEBUGGING_FEATURES"]) {
-                    restrictions["disallowDebugging"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_FACTORY_RESET"]) {
-                    restrictions["disallowFactoryReset"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_ADD_USER"]) {
-                    restrictions["disallowAddUser"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_INSTALL_APPS"]) {
-                    restrictions["disallowInstallApps"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_INSTALL_UNKNOWN_SOURCES"]) {
-                    restrictions["disallowInstallUnknownSources"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_MODIFY_ACCOUNTS"]) {
-                    restrictions["disallowModifyAccounts"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_MOUNT_PHYSICAL_MEDIA"]) {
-                    restrictions["disallowMountPhysicalMedia"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_NETWORK_RESET"]) {
-                    restrictions["disallowNetworkReset"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_OUTGOING_BEAM"]) {
-                    restrictions["disallowOutgoingBeam"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_OUTGOING_CALLS"]) {
-                    restrictions["disallowOutgoingCalls"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_REMOVE_USER"]) {
-                    restrictions["disallowRemoveUser"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_SAFE_BOOT"]) {
-                    restrictions["disallowSafeBoot"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_SHARE_LOCATION"]) {
-                    restrictions["disallowLocationSharing"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_SMS"]) {
-                    restrictions["disallowSMS"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_UNINSTALL_APPS"]) {
-                    restrictions["disallowUninstallApps"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_UNMUTE_MICROPHONE"]) {
-                    restrictions["disallowUnmuteMicrophone"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["DISALLOW_USB_FILE_TRANSFER"]) {
-                    restrictions["disallowUSBFileTransfer"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["ALLOW_PARENT_PROFILE_APP_LINKING"]) {
-                    restrictions["disallowParentProfileAppLinking"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["ENSURE_VERIFY_APPS"]) {
-                    restrictions["ensureVerifyApps"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["AUTO_TIME"]) {
-                    restrictions["enableAutoTime"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["SET_SCREEN_CAPTURE_DISABLED"]) {
-                    restrictions["disableScreenCapture"] = restriction["enabled"];
-                    continue;
-                } else if (featureCode == androidOperationConstants["SET_STATUS_BAR_DISABLED"]) {
-                    restrictions["disableStatusBar"] = restriction["enabled"];
-                    continue;
-                }
+            var restriction = JSON.parse(operationPayload);
+            if (featureCode == androidOperationConstants["CAMERA_OPERATION_CODE"]) {
+                restrictions["cameraEnabled"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_ADJUST_VOLUME"]) {
+                restrictions["disallowAdjustVolumeEnabled"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_BLUETOOTH"]) {
+                restrictions["disallowConfigBluetooth"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_CELL_BROADCASTS"]) {
+                restrictions["disallowConfigCellBroadcasts"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_CREDENTIALS"]) {
+                restrictions["disallowConfigCredentials"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_MOBILE_NETWORKS"]) {
+                restrictions["disallowConfigMobileNetworks"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_TETHERING"]) {
+                restrictions["disallowConfigTethering"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_VPN"]) {
+                restrictions["disallowConfigVpn"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_CONFIG_WIFI"]) {
+                restrictions["disallowConfigWifi"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_APPS_CONTROL"]) {
+                restrictions["disallowAppControl"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_CREATE_WINDOWS"]) {
+                restrictions["disallowCreateWindows"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_CROSS_PROFILE_COPY_PASTE"]) {
+                restrictions["disallowCrossProfileCopyPaste"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_DEBUGGING_FEATURES"]) {
+                restrictions["disallowDebugging"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_FACTORY_RESET"]) {
+                restrictions["disallowFactoryReset"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_ADD_USER"]) {
+                restrictions["disallowAddUser"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_INSTALL_APPS"]) {
+                restrictions["disallowInstallApps"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_INSTALL_UNKNOWN_SOURCES"]) {
+                restrictions["disallowInstallUnknownSources"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_MODIFY_ACCOUNTS"]) {
+                restrictions["disallowModifyAccounts"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_MOUNT_PHYSICAL_MEDIA"]) {
+                restrictions["disallowMountPhysicalMedia"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_NETWORK_RESET"]) {
+                restrictions["disallowNetworkReset"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_OUTGOING_BEAM"]) {
+                restrictions["disallowOutgoingBeam"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_OUTGOING_CALLS"]) {
+                restrictions["disallowOutgoingCalls"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_REMOVE_USER"]) {
+                restrictions["disallowRemoveUser"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_SAFE_BOOT"]) {
+                restrictions["disallowSafeBoot"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_SHARE_LOCATION"]) {
+                restrictions["disallowLocationSharing"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_SMS"]) {
+                restrictions["disallowSMS"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_UNINSTALL_APPS"]) {
+                restrictions["disallowUninstallApps"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_UNMUTE_MICROPHONE"]) {
+                restrictions["disallowUnmuteMicrophone"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["DISALLOW_USB_FILE_TRANSFER"]) {
+                restrictions["disallowUSBFileTransfer"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["ALLOW_PARENT_PROFILE_APP_LINKING"]) {
+                restrictions["disallowParentProfileAppLinking"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["ENSURE_VERIFY_APPS"]) {
+                restrictions["ensureVerifyApps"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["AUTO_TIME"]) {
+                restrictions["enableAutoTime"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["SET_SCREEN_CAPTURE_DISABLED"]) {
+                restrictions["disableScreenCapture"] = restriction["enabled"];
+                continue;
+            } else if (featureCode == androidOperationConstants["SET_STATUS_BAR_DISABLED"]) {
+                restrictions["disableStatusBar"] = restriction["enabled"];
+                continue;
             }
             //push the feature-code to the configuration array
             configuredOperations.push(featureCode);
-            publicMethods.populateUI(platformType, featureCode, operationPayload);
+            publicMethods.populateUI(featureCode, operationPayload);
         }
         if (typeof restrictions.cameraEnabled !== 'undefined') {
             configuredOperations.push(androidOperationConstants["CAMERA_OPERATION_CODE"]);
-            publicMethods.populateUI(platformType, androidOperationConstants["CAMERA_OPERATION_CODE"], JSON.stringify(restrictions));
+            publicMethods.populateUI(androidOperationConstants["CAMERA_OPERATION_CODE"], JSON.stringify(restrictions));
         }
         return configuredOperations;
     };

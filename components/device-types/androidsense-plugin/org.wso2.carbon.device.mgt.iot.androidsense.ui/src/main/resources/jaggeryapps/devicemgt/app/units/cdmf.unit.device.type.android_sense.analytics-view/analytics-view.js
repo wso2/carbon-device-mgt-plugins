@@ -17,26 +17,9 @@
  */
 
 function onRequest(context) {
-    var devices = context.unit.params.devices;
-    var deviceType = context.uriParams.deviceType;
+    var user = context.user;
     var deviceId = request.getParameter("deviceId");
 
-    if (devices) {
-        return {
-            "devices": stringify(devices),
-            "backendApiUri":  "/android_sense/stats/"
-        };
-    } else if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
-        var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
-        var device = deviceModule.viewDevice(deviceType, deviceId);
-        if (device && device.status != "error") {
-            return {
-                "device": device.content,
-                "backendApiUrl":  "/android_sense/stats/" + deviceId + "/sensors/"
-            };
-        } else {
-            response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
-            exit();
-        }
-    }
+    //Redirects to the portal app as we do not use the old analytics view.
+    response.sendRedirect(context.app.conf["portalURL"] + "/portal/dashboards/android-iot/real-time?owner=" + user.username + "&deviceId=" + deviceId);
 }
