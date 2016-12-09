@@ -97,22 +97,14 @@
     <jaxrs:server id="Syncmlinitial" address="/syncml">
         <jaxrs:serviceBeans>
             <ref bean="Syncml_initial_bean"/>
-            <ref bean="swaggerResource"/>
         </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="swaggerWriter"/>
-        </jaxrs:providers>
     </jaxrs:server>
 
     <!--BST provider Endpoint for returning binary security token after authentication-->
     <jaxrs:server id="bstprovider" address="/federated">
         <jaxrs:serviceBeans>
             <ref bean="bstProviderService"/>
-            <ref bean="swaggerResource"/>
         </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="swaggerWriter"/>
-        </jaxrs:providers>
     </jaxrs:server>
 
     <!--Endpoint for UI admin operations-->

@@ -36,8 +36,7 @@ import java.util.List;
 /**
  * Interface for Admin operations persisting. This interface accepts operations added via UI.
  */
-@Api(value = "Windows Device Management Administrative Service",
-        description = "Device management related admin APIs.")
+
 
 @SwaggerDefinition(
         info = @Info(
@@ -56,6 +55,8 @@ import java.util.List;
                 @Tag(name = "devicemgt_windows", description = "")
         }
 )
+@Api(value = "Windows Device Management Administrative Service",
+        description = "Device management related admin APIs.")
 @WebService
 @Path("/admin/devices")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -367,7 +368,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding adding a lock-reset operation.")
     })
-    //
     Response lockReset(@HeaderParam("Accept") String acceptHeader, @ApiParam(
             name = "deviceIDs",
             value = "Provide the ID of the A Windows device. Multiple device IDs can be added by " +
