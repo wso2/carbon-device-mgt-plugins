@@ -586,9 +586,9 @@
             {
               "content": {
                 "data": {
-                  "url": "fs://gadget/Android_Battery_Level_Chart/gadget.xml"
+                  "url": "fs://gadget/Android_Battery_History_Chart/gadget.xml"
                 },
-                "id": "Android_Battery_Level_Chart",
+                "id": "Android_Battery_History_Chart",
                 "locale_titles": {
                   "en-US": "History"
                 },
@@ -611,11 +611,11 @@
                   "title": "History",
                   "titlePosition": "center"
                 },
-                "thumbnail": "fs://gadget/Android_Battery_Level_Chart/thumbnail.png",
-                "title": "Android Battery Level Chart",
+                "thumbnail": "fs://gadget/Android_Battery_History_Chart/thumbnail.png",
+                "title": "Android Battery Hisory Chart",
                 "type": "gadget"
               },
-              "id": "Android_Battery_Level_Chart-0"
+              "id": "Android_Battery_History_Chart-0"
             }
           ],
           "e": [

@@ -21,7 +21,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
- * This hold the api defintion that is used as a contract with netflix feign.
+ * This hold the api definition that is used as a contract with netflix feign.
  */
 @Path("/token")
 public interface TokenIssuerService {
@@ -29,5 +29,11 @@ public interface TokenIssuerService {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     AccessTokenInfo getToken(@QueryParam("grant_type") String grant, @QueryParam("username") String username,
-            @QueryParam("password") String password);
+            @QueryParam("password") String password, @QueryParam("deviceId") String deviceId);
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    AccessTokenInfo getRefreshToken(@QueryParam("grant_type") String grantType, @QueryParam("refreshToken") String refreshToken);
+
+
 }

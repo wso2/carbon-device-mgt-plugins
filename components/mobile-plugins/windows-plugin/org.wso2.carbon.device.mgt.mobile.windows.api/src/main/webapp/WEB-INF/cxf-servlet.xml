@@ -33,7 +33,12 @@
     <jaxrs:server id="DiscoveryService_rest" address="/discovery/get">
         <jaxrs:serviceBeans>
             <ref bean="discoveryService"/>
+            <ref bean="swaggerResource"/>
         </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="jsonProvider"/>
+            <ref bean="swaggerWriter"/>
+        </jaxrs:providers>
     </jaxrs:server>
 
     <!--Discovery Service POST Endpoint-->
@@ -91,22 +96,6 @@
         </jaxws:handlers>
     </jaxws:endpoint>
 
-    <!--WSTEP Endpoint for OnPremise Auth-Policy-->
-    <jaxws:endpoint
-            id="CertificateEnrollmentServiceOnPremise"
-            implementor="org.wso2.carbon.device.mgt.mobile.windows.api.services.wstep.impl.CertificateEnrollmentServiceImpl"
-            address="/deviceenrolment/wstep/onpremise">
-        <jaxws:properties>
-            <entry key="ws-security.ut.validator" value-ref="customvalidatoronpremise"/>
-        </jaxws:properties>
-        <jaxws:inInterceptors>
-            <ref bean="wss4jInInterceptor"/>
-        </jaxws:inInterceptors>
-        <jaxws:handlers>
-            <ref bean="serviceOptionsHandler"/>
-        </jaxws:handlers>
-    </jaxws:endpoint>
-
     <!--Syncml Endpoint-->
     <jaxrs:server id="Syncmlinitial" address="/syncml">
         <jaxrs:serviceBeans>
@@ -125,9 +114,11 @@
     <jaxrs:server id="adminoperations" address="/windows">
         <jaxrs:serviceBeans>
             <ref bean="deviceMgtAdminService"/>
+            <ref bean="swaggerResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jsonProvider"/>
+            <ref bean="swaggerWriter"/>
         </jaxrs:providers>
     </jaxrs:server>
 
@@ -135,32 +126,12 @@
     <jaxrs:server id="configurationService" address="/configuration">
         <jaxrs:serviceBeans>
             <ref bean="configurationMgtService"/>
+            <ref bean="swaggerResource"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jsonProvider"/>
             <ref bean="errorHandler"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-
-    <!--Endpoint for Policy -->
-    <jaxrs:server id="policyService" address="/policy">
-        <jaxrs:serviceBeans>
-            <ref bean="policyManagementService"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="errorHandler"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-
-    <!--Endpoint for Devicemanager -->
-    <jaxrs:server id="deviceManagementService" address="/device">
-        <jaxrs:serviceBeans>
-            <ref bean="deviceMgtService"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="errorHandler"/>
+            <ref bean="swaggerWriter"/>
         </jaxrs:providers>
     </jaxrs:server>
 
@@ -189,7 +160,21 @@
             </map>
         </property>
     </bean>
+    <bean id="swaggerWriter" class="io.swagger.jaxrs.listing.SwaggerSerializers" />
+    <bean id="swaggerResource" class="io.swagger.jaxrs.listing.ApiListingResource" />
 
+    <bean id="swaggerConfig" class="io.swagger.jaxrs.config.BeanConfig">
+        <property name="resourcePackage" value="org.wso2.carbon.device.mgt.mobile.windows.api.services"/>
+        <property name="version" value="1.0"/>
+        <property name="host" value="localhost:9443"/>
+        <property name="schemes" value="https" />
+        <property name="basePath" value="/api/device-mgt/windows/v1.0"/>
+        <property name="title" value="Windows Device Management API Definitions"/>
+        <property name="contact" value="dev@wso2.org"/>
+        <property name="license" value="Apache 2.0"/>
+        <property name="licenseUrl" value="http://www.apache.org/licenses/LICENSE-2.0.html"/>
+        <property name="scan" value="true"/>
+    </bean>
     <bean id="Syncml_initial_bean"
           class="org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.impl.SyncmlServiceImpl"/>
     <bean id="customvalidator"
@@ -201,10 +186,6 @@
     <bean id="jsonProvider" class="org.wso2.carbon.device.mgt.mobile.windows.api.common.util.GsonMessageBodyHandler"/>
     <bean id="configurationMgtService"
           class="org.wso2.carbon.device.mgt.mobile.windows.api.services.impl.ConfigurationMgtServiceImpl"/>
-    <bean id="policyManagementService"
-          class="org.wso2.carbon.device.mgt.mobile.windows.api.services.impl.PolicyManagementServiceImpl"/>
     <bean id="errorHandler" class="org.wso2.carbon.device.mgt.mobile.windows.api.common.util.ErrorHandler"/>
-    <bean id="deviceMgtService"
-          class="org.wso2.carbon.device.mgt.mobile.windows.api.services.impl.DeviceManagementServiceImpl"/>
 </beans>
 

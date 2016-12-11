@@ -116,6 +116,10 @@ SpatialObject.prototype.update = function (geoJSON) {
 
     // Update the spatial object leaflet marker
     this.marker.setLatLng([this.latitude, this.longitude]);
+
+    if (this.latitude, this.longitude) {
+        map.setView([this.latitude, this.longitude]);
+    }
     this.marker.setIconAngle(this.heading);
     this.marker.setIcon(this.stateIcon());
 
@@ -677,13 +681,14 @@ function intializeWebsocketUrls() {
                             .constance.TENANT_INDEX + ApplicationOptions.constance.PATH_SEPARATOR + data.user.domain +
                         ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
                             .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
-                        + "?token=ee9971c8-bf09-3c83-b097-ce87a0c88806&deviceId=" + deviceId + "&deviceType=" + deviceType;
+                        + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
                     alertWebSocketURL = 'wss://' + data.ip + ':' + data.httpsPort + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
                             .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_WEBAPP_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions
                             .constance.TENANT_INDEX + ApplicationOptions.constance.PATH_SEPARATOR + data.user.domain +
                         ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
                             .CEP_ON_ALERT_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
-                        + "?token=ee9971c8-bf09-3c83-b097-ce87a0c88806&deviceId=" + deviceId + "&deviceType=" + deviceType;
+                        + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
+                    document.cookie = "websocket-token=f98d6142-e988-3c7f-a8c9-7e6d74da7113; path=/";
                     initializeWebSocket();
                     initializeOnAlertWebSocket();
                 });
@@ -705,7 +710,8 @@ intializeWebsocketUrls();
 
 
 SpatialObject.prototype.stateIcon = function () {
-    var iconUrl = "/portal/store/carbon.super/fs/gadget/geo-dashboard/img/markers/object-types/" + this.type.toLowerCase();
+    //TODO : Need to add separate icons for each device type
+    var iconUrl = "/portal/store/carbon.super/fs/gadget/geo-dashboard/img/markers/object-types/default";
     if (0 < this.speed && (-360 <= this.heading && 360 >= this.heading)) {
         iconUrl = iconUrl + "/moving/" + this.state.toLowerCase();
     } else {

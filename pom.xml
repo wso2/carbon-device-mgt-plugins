@@ -384,6 +384,11 @@
             <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.extension.siddhi.execution.json</artifactId>
+                <version>${carbon.devicemgt.plugins.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.output.adapter.mqtt</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
@@ -411,11 +416,6 @@
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.input.adapter.xmpp</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jayway.jsonpath</groupId>
-                <artifactId>json-path</artifactId>
-                <version>${jsonpath.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -851,7 +851,6 @@
                 <artifactId>gcm-server</artifactId>
                 <version>${gcm.server.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.json.wso2</groupId>
                 <artifactId>json</artifactId>
@@ -1185,6 +1184,24 @@
                 <artifactId>feign-gson</artifactId>
                 <version>${io.github.openfeign.version}</version>
             </dependency>
+
+            <!-- dependencies for siddhi extension -->
+            <dependency>
+                <groupId>org.wso2.siddhi</groupId>
+                <artifactId>siddhi-core</artifactId>
+                <version>${siddhi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.siddhi</groupId>
+                <artifactId>siddhi-query-api</artifactId>
+                <version>${siddhi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1241,7 +1258,7 @@
         <carbon.commons.version>4.4.8</carbon.commons.version>
 
         <!-- Carbon Deployment -->
-        <carbon.deployment.version>4.7.0</carbon.deployment.version>
+        <carbon.deployment.version>4.7.2</carbon.deployment.version>
 
         <!-- Carbon Identity -->
         <carbon.identity.framework.version>5.2.2</carbon.identity.framework.version>
@@ -1250,13 +1267,13 @@
         <carbon.identity.version.range>[5.2.2, 6.0.0)</carbon.identity.version.range>
 
         <!-- Carbon Multi-tenancy -->
-        <carbon.multitenancy.version>4.6.0</carbon.multitenancy.version>
+        <carbon.multitenancy.version>4.6.1</carbon.multitenancy.version>
 
         <!-- Carbon Registry -->
-        <carbon.registry.version>4.5.6</carbon.registry.version>
+        <carbon.registry.version>4.5.8</carbon.registry.version>
 
         <!-- Carbon Governance -->
-        <carbon.governance.version>4.6.4</carbon.governance.version>
+        <carbon.governance.version>4.6.5</carbon.governance.version>
 
         <!-- Carbon API Management -->
         <carbon.api.mgt.version>6.0.5</carbon.api.mgt.version>
@@ -1290,7 +1307,6 @@
         <commons-io.version>2.4</commons-io.version>
         <apache-felix.version>1.0.8</apache-felix.version>
         <googlecode.plist.version>1.8</googlecode.plist.version>
-        <jsonpath.version>0.9.1</jsonpath.version>
         <commons.lang.version>2.2</commons.lang.version>
 
 
@@ -1352,6 +1368,9 @@
         <io.github.openfeign.version>9.3.1</io.github.openfeign.version>
         <javax.ws.rs.jsr311-api.version>[1.1.0, 2.0.0)</javax.ws.rs.jsr311-api.version>
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
+        <siddhi.version>3.1.2</siddhi.version>
+        <maven.scr.version>1.7.2</maven.scr.version>
+        <analytics.json.version>2.0.0.wso2v1</analytics.json.version>
     </properties>
 
     <scm>

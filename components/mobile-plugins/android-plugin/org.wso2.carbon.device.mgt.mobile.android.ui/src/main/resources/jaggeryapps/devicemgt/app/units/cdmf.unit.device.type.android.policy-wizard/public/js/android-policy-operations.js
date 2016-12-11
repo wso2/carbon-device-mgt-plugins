@@ -16,6 +16,8 @@
  * under the License.
  */
 
+var configuredOperations = [];
+
 var androidOperationConstants = {
     "PASSCODE_POLICY_OPERATION": "passcode-policy",
     "PASSCODE_POLICY_OPERATION_CODE": "PASSCODE_POLICY",
@@ -523,13 +525,13 @@ var validatePolicyProfile = function () {
 };
 
 /**
- * Generates policy profile object which will be saved with the profile.
+ * Generates policy profile feature list which will be saved with the profile.
  *
  * This function will be invoked from the relevant cdmf unit at the time of policy creation.
  *
  * @returns {Array} profile payloads
  */
-var generatePolicyProfile = function () {
+var generateProfileFeaturesList = function () {
     var profilePayloads = [];
     // traverses key by key in policy["profile"]
     var key;
@@ -544,6 +546,24 @@ var generatePolicyProfile = function () {
     }
 
     return profilePayloads;
+};
+
+/**
+ * Generates policy profile object which will be saved with the profile.
+ * 
+ * This function will be invoked from the relevant cdmf unit at the time of policy creation.
+ * 
+ * @returns {object} generated profile.
+ */
+var generatePolicyProfile = function () {
+    return androidOperationModule.generateProfile(configuredOperations);
+};
+
+/**
+ * Resets policy profile configurations.
+ */
+var resetPolicyProfile = function () {
+  configuredOperations = [];
 };
 
 // Start of HTML embedded invoke methods
@@ -665,6 +685,23 @@ var slideDownPaneAgainstValueSet = function (selectElement, paneID, valueSet) {
         );
     }
 };
+
+var slideDownPaneAgainstValueSetForRadioButtons = function (selectElement, paneID, valueSet) {
+    var selectedValueOnChange = selectElement.value;
+    var slideDownVotes = 0;
+    for (var i = 0; i < valueSet.length; i++) {
+        if (selectedValueOnChange == valueSet[i]) {
+            slideDownVotes++;
+        }
+    }
+    var paneSelector = "#" + paneID;
+    if (slideDownVotes > 0) {
+        $(paneSelector).removeClass("hidden");
+    } else {
+        $(paneSelector).addClass("hidden");
+    }
+};
+
 // End of HTML embedded invoke methods
 
 

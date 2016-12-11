@@ -13,10 +13,15 @@
  */
 package org.wso2.carbon.iot.android.sense.event.streams.battery;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.BatteryManager;
+import android.util.Log;
 
+import org.wso2.carbon.iot.android.sense.data.publisher.DataPublisherService;
 import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
 
 /**
@@ -24,21 +29,20 @@ import org.wso2.carbon.iot.android.sense.util.SenseDataHolder;
  */
 public class BatteryDataReceiver extends BroadcastReceiver {
 
+    private final long ALARM_INTERVAL = 1000;
     /**
-     * when the data is retreived then its added to a inmemory map.
+     * When the data is retrieved then its added to a in memory map.
      *
-     * @param context of the reciever.
-     * @param intent  of the reciver
+     * @param context of the receiver.
+     * @param intent  of the receiver
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Intent.ACTION_BATTERY_OKAY.equals(intent.getAction())) {
-            SenseDataHolder.getBatteryDataHolder().add(new BatteryData(BatteryData.State.OK));
-        } else if (Intent.ACTION_BATTERY_LOW.equals(intent.getAction())) {
-            SenseDataHolder.getBatteryDataHolder().add(new BatteryData(BatteryData.State.LOW));
-        } else {
-            SenseDataHolder.getBatteryDataHolder().add(new BatteryData(intent));
-        }
+        AlarmManager service = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Log.i("Battery Data Receiver", "Triggered");
+        Intent i = new Intent(context, BatteryReaderService.class);
+        PendingIntent pending = PendingIntent.getService(context, 0, i, 0);
+        service.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), ALARM_INTERVAL, pending);
     }
 
 }

@@ -312,7 +312,7 @@ deviceModule = function () {
         var url;
         var license;
         if (deviceType == "windows") {
-            url = devicemgtProps["httpURL"] + "/api/device-mgt/windows/v1.0/services/configuration/license";
+            url = devicemgtProps["httpURL"] + "/api/device-mgt/windows/v1.0/configuration/license";
         } else if (deviceType == "ios") {
             url = devicemgtProps["httpsURL"] + "/ios-enrollment/license/";
         }

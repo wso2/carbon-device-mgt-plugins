@@ -16,6 +16,8 @@
  * under the License.
  */
 
+var configuredOperations = [];
+
 var windowsOperationConstants = {
     "PASSCODE_POLICY_OPERATION": "passcode-policy",
     "PASSCODE_POLICY_OPERATION_CODE": "PASSCODE_POLICY",
@@ -237,21 +239,21 @@ var validatePolicyProfile = function () {
 };
 
 /**
- * Generates policy profile object which will be saved with the profile.
+ * Generates policy profile feature list which will be saved with the profile.
  *
  * This function will be invoked from the relevant cdmf unit at the time of policy creation.
  *
  * @returns {Array} profile payloads
  */
-var generatePolicyProfile = function () {
+var generateProfileFeaturesList = function () {
     var profilePayloads = [];
     // traverses key by key in policy["profile"]
     var key;
     for (key in policy["profile"]) {
-        if (key == windowsOperationConstants["PASSCODE_POLICY_OPERATION_CODE"]) {
-            policy["profile"][key].enablePassword = true;
-        }
         if (policy["profile"].hasOwnProperty(key)) {
+            if (key == windowsOperationConstants["PASSCODE_POLICY_OPERATION_CODE"]) {
+                policy["profile"][key].enablePassword = true;
+            }
             profilePayloads.push({
                 "featureCode": key,
                 "deviceType": policy["platform"],
@@ -259,8 +261,25 @@ var generatePolicyProfile = function () {
             });
         }
     }
-
     return profilePayloads;
+};
+
+/**
+ * Generates policy profile object which will be saved with the profile.
+ *
+ * This function will be invoked from the relevant cdmf unit at the time of policy creation.
+ *
+ * @returns {object} generated profile.
+ */
+var generatePolicyProfile = function () {
+    return windowsOperationModule.generateProfile(configuredOperations);
+};
+
+/**
+ * Resets policy profile configurations.
+ */
+var resetPolicyProfile = function () {
+    configuredOperations = [];
 };
 
 // Start of HTML embedded invoke methods
@@ -270,37 +289,6 @@ var showAdvanceOperation = function (operation, button) {
     var hiddenOperation = ".wr-hidden-operations-content > div";
     $(hiddenOperation + '[data-operation="' + operation + '"]').show();
     $(hiddenOperation + '[data-operation="' + operation + '"]').siblings().hide();
-};
-
-
-/**
- * This method will display appropriate fields based on wifi type
- * @param select
- */
-var changeAndroidWifiPolicy = function (select) {
-    slideDownPaneAgainstValueSet(select, 'control-wifi-password', ['wep', 'wpa', '802eap']);
-    slideDownPaneAgainstValueSet(select, 'control-wifi-eap', ['802eap']);
-    slideDownPaneAgainstValueSet(select, 'control-wifi-phase2', ['802eap']);
-    slideDownPaneAgainstValueSet(select, 'control-wifi-identity', ['802eap']);
-    slideDownPaneAgainstValueSet(select, 'control-wifi-anoidentity', ['802eap']);
-    slideDownPaneAgainstValueSet(select, 'control-wifi-cacert', ['802eap']);
-};
-
-/**
- * This method will display appropriate fields based on wifi EAP type
- * @param select
- * @param superSelect
- */
-var changeAndroidWifiPolicyEAP = function (select, superSelect) {
-    slideDownPaneAgainstValueSet(select, 'control-wifi-password', ['peap', 'ttls', 'pwd', 'fast', 'leap']);
-    slideDownPaneAgainstValueSet(select, 'control-wifi-phase2', ['peap', 'ttls', 'fast']);
-    slideDownPaneAgainstValueSet(select, 'control-wifi-provisioning', ['fast']);
-    slideDownPaneAgainstValueSet(select, 'control-wifi-identity', ['peap', 'tls', 'ttls', 'pwd', 'fast', 'leap']);
-    slideDownPaneAgainstValueSet(select, 'control-wifi-anoidentity', ['peap', 'ttls']);
-    slideDownPaneAgainstValueSet(select, 'control-wifi-cacert', ['peap', 'tls', 'ttls']);
-    if (superSelect.value != '802eap') {
-        changeAndroidWifiPolicy(superSelect);
-    }
 };
 
 /**

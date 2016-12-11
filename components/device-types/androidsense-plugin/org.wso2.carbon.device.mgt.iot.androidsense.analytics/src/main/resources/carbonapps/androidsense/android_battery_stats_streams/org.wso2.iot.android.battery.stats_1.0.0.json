@@ -1,0 +1,58 @@
+{
+  "name": "org.wso2.iot.android.battery.stats",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "",
+  "metaData": [
+    {
+      "name": "owner",
+      "type": "STRING"
+    },
+    {
+      "name": "deviceId",
+      "type": "STRING"
+    },
+    {
+      "name": "timestamp",
+      "type": "LONG"
+    }
+  ],
+  "payloadData": [
+    {
+      "name": "level",
+      "type": "INT"
+    },
+    {
+      "name": "state",
+      "type": "STRING"
+    },
+    {
+      "name": "status",
+      "type": "STRING"
+    },
+    {
+      "name": "temperature",
+      "type": "INT"
+    },
+    {
+      "name": "year",
+      "type": "INT"
+    },
+    {
+      "name": "month",
+      "type": "INT"
+    },
+    {
+      "name": "day",
+      "type": "INT"
+    },
+    {
+      "name": "hour",
+      "type": "INT"
+    },
+    {
+      "name": "minute",
+      "type": "INT"
+    }
+  ]
+}
