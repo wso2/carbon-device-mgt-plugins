@@ -69,6 +69,35 @@ public class OperationReply {
         this.syncmlDocument = syncmlDocument;
         replySyncmlDocument = new SyncmlDocument();
     }
+    public OperationReply() {
+
+    }
+
+    /**
+     * Generate Device payloads.
+     *
+     * @param syncmlDocument Parsed syncml payload from the syncml engine.
+     * @param operations     Operations for generate payload.
+     * @return String type syncml payload.
+     * @throws WindowsOperationException
+     * @throws PolicyManagementException
+     * @throws org.wso2.carbon.policy.mgt.common.FeatureManagementException
+     */
+    public String generateReply(SyncmlDocument syncmlDocument, List<? extends Operation> operations)
+            throws SyncmlMessageFormatException, SyncmlOperationException {
+
+        OperationReply operationReply;
+        SyncmlGenerator generator;
+        SyncmlDocument syncmlResponse;
+        if (operations == null) {
+            operationReply = new OperationReply(syncmlDocument);
+        } else {
+            operationReply = new OperationReply(syncmlDocument, operations);
+        }
+        syncmlResponse = operationReply.generateReply();
+        generator = new SyncmlGenerator();
+        return generator.generatePayload(syncmlResponse);
+    }
 
     public SyncmlDocument generateReply() throws SyncmlMessageFormatException, SyncmlOperationException {
         generateHeader();

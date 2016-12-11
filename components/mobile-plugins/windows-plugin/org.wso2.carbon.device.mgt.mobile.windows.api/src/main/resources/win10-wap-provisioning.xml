@@ -1,0 +1,76 @@
+<wap-provisioningdoc version="1.1">
+    <characteristic type="CertificateStore">
+        <characteristic type="Root">
+            <characteristic type="System">
+                <characteristic type="031336C933CC7E228B88880D78824FB2909A0A2F">
+                    <parm name="EncodedCertificate" value="B64 encoded cert insert here" />
+                </characteristic>
+            </characteristic>
+        </characteristic>
+    </characteristic>
+    <characteristic type="CertificateStore">
+        <characteristic type="My" >
+            <characteristic type="User">
+                <characteristic type="F9A4F20FC50D990FDD0E3DB9AFCBF401818D5462">
+                    <parm name="EncodedCertificate" value="B64EncodedCertInsertedHere" />
+                </characteristic>
+                <characteristic type="PrivateKeyContainer"/>
+                <!-- This tag must be present for XML syntax correctness. -->
+            </characteristic>
+            <characteristic type="WSTEP">
+                <characteristic type="Renew">
+                   <!--If the datatype for ROBOSupport, RenewPeriod, and RetryInterval tags exist, they must be set explicitly. -->
+                    <parm name="ROBOSupport" value="true" datatype="boolean"/>
+                    <parm name="RenewPeriod" value="60" datatype="integer"/>
+                    <parm name="RetryInterval" value="4" datatype="integer"/>
+                </characteristic>
+            </characteristic>
+        </characteristic>
+    </characteristic>
+    <characteristic type="APPLICATION">
+        <parm name="APPID" value="w7"/>
+        <parm name="PROVIDER-ID" value="TestMDMServer"/>
+        <parm name="NAME" value="Microsoft"/>
+        <parm name="ADDR" value="https://DM.contoso.com:443/omadm/Windows.ashx"/>
+        <parm name="CONNRETRYFREQ" value="6" />
+        <parm name="INITIALBACKOFFTIME" value="30000" />
+        <parm name="MAXBACKOFFTIME" value="120000" />
+        <parm name="BACKCOMPATRETRYDISABLED" />
+        <parm name="DEFAULTENCODING" value="application/vnd.syncml.dm+wbxml" />
+        <parm name="SSLCLIENTCERTSEARCHCRITERIA" value=
+                "Subject=DC%3dcom%2cDC%3dmicrosoft%2cCN%3dUsers%2cCN%3dAdministrator&amp;amp;Stores=My%5CUser"/>
+        <characteristic type="APPAUTH">
+            <parm name="AAUTHLEVEL" value="CLIENT"/>
+            <parm name="AAUTHTYPE" value="DIGEST"/>
+            <parm name="AAUTHSECRET" value="password1"/>
+            <parm name="AAUTHDATA" value="B64encodedBinaryNonceInsertedHere"/>
+        </characteristic>
+        <characteristic type="APPAUTH">
+            <parm name="AAUTHLEVEL" value="APPSRV"/>
+            <parm name="AAUTHTYPE" value="BASIC"/>
+            <parm name="AAUTHNAME" value="testclient"/>
+            <parm name="AAUTHSECRET" value="password2"/>
+        </characteristic>
+    </characteristic>
+    <characteristic type="DMClient"> <!-- In Windows 10, an enrollment server should use DMClient CSP XML to configure DM polling schedules. -->
+        <characteristic type="Provider">
+            <!-- ProviderID in DMClient CSP must match to PROVIDER-ID in w7 APPLICATION characteristics -->
+            <characteristic type="TestMDMServer">
+                <parm name="UPN" value="UserPrincipalName@contoso.com" datatype="string" />
+                <characteristic type="Poll">
+                    <parm name="NumberOfFirstRetries" value="8" datatype="integer" />
+                    <parm name="IntervalForFirstSetOfRetries" value="15" datatype="integer" />
+                    <parm name="NumberOfSecondRetries" value="5" datatype="integer" />
+                    <parm name="IntervalForSecondSetOfRetries" value="3" datatype="integer" />
+                    <parm name="NumberOfRemainingScheduledRetries" value="0" datatype="integer" />
+                    <!-- Windows 10 supports MDM push for real-time communication. The DM client long term polling schedule’s retry waiting interval should be more than 24 hours (1440) to reduce the impact to data consumption and battery life. Refer to the DMClient Configuration Service Provider section for information about polling schedule parameters.-->
+                    <parm name="IntervalForRemainingScheduledRetries" value="1560" datatype="integer" />
+                    <parm name="PollOnLogin" value="true" datatype="boolean" />
+                </characteristic>
+                <parm name="EntDeviceName" value="Administrator_Windows" datatype="string" />
+            </characteristic>
+        </characteristic>
+    </characteristic>
+    <!-- For Windows 10, we removed EnterpriseAppManagement from the enrollment
+         protocol. -->
+</wap-provisioningdoc>
