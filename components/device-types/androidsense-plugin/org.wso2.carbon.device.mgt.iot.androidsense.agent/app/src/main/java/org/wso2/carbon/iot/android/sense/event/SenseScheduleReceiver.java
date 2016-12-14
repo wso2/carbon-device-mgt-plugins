@@ -25,7 +25,7 @@ import java.util.Calendar;
  * This is a service which triggers to collect
  */
 public class SenseScheduleReceiver extends BroadcastReceiver {
-    private static final int ALARM_INTERVAL = 5000;
+    private static final int ALARM_INTERVAL = 1000;
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -35,7 +35,7 @@ public class SenseScheduleReceiver extends BroadcastReceiver {
 
         Calendar cal = Calendar.getInstance();
 
-        cal.add(Calendar.SECOND, 30);
+        cal.add(Calendar.SECOND, 10);
         service.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), ALARM_INTERVAL, pending);
     }
 

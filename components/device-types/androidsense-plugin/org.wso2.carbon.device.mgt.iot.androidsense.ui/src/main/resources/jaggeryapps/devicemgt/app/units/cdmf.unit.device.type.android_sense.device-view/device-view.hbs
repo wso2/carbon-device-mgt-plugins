@@ -41,8 +41,6 @@
                           data-toggle="tab" aria-controls="device_statistics">Device
                                                                               Statistics</a>
     </li>
-    <li><a class="list-group-item" href="#device_location" role="tab" data-toggle="tab"
-           aria-controls="device_location">Device Location</a></li>
     <li><a class="list-group-item" href="#event_log" role="tab" data-toggle="tab"
            aria-controls="event_log">Operations Log</a></li>
 {{/zone}}
@@ -52,15 +50,6 @@
          id="device_statistics" role="tabpanel" aria-labelledby="device_statistics">
         <div class="panel-heading">Device Statistics</div>
         {{unit "cdmf.unit.device.type.android_sense.realtime.analytics-view" device=device}}
-    </div>
-    <div class="panel panel-default tab-pane" id="device_location" role="tabpanel"
-         aria-labelledby="device_location">
-        <div class="panel-heading">Device Location</div>
-        <div class="panel-body">
-            <div id="map" style="height: 400px;">
-            </div>
-            <br class="c-both"/>
-        </div>
     </div>
     <div class="panel panel-default tab-pane" id="event_log" role="tabpanel"
          aria-labelledby="event_log">
@@ -84,10 +73,4 @@
             </div>
         </div>
     </div>
-{{/zone}}
-
-{{#zone "bottomJs"}}
-    <script async defer
-            src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&callback=initMap">
-    </script>
 {{/zone}}

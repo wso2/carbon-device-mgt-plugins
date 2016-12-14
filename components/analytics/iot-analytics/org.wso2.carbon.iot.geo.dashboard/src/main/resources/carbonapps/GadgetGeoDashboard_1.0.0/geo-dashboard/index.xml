@@ -240,7 +240,7 @@
                 <ul class="uk-nav-sub">
                     <li><a style="margin-left: 20%;" data-toggle="modal" href="/portal/store/carbon.super/fs/gadget/geo-dashboard/controllers/modals/speed_alert.jag"
                            data-target="#commonModal"><i class="fa fa-tachometer"></i> Speed alert</a></li>
-                    <li><a style="margin-left: 20%;" data-toggle="modal" href="/portal/store/carbon.super/fs/gadget/geo-dashboard/controllers/modals/proximity_alert.jag"
+                    <li id = "proximity_alert"><a style="margin-left: 20%;" data-toggle="modal" href="/portal/store/carbon.super/fs/gadget/geo-dashboard/controllers/modals/proximity_alert.jag"
                            data-target="#commonModal"><i class="fa fa-link"></i> Proximity alert</a></li>
                     <li><a style="margin-left: 20%;" data-toggle="modal" href="/portal/store/carbon.super/fs/gadget/geo-dashboard/controllers/modals/stationery_alert.jag"
                             data-target="#commonModal"><i class="fa fa-chain-broken"></i> Stationary alert</a></li>
@@ -254,10 +254,6 @@
                 <ul class="uk-nav-sub">
                     <li><a style="margin-left: 20%;" data-toggle="modal" href="/portal/store/carbon.super/fs/gadget/geo-dashboard/controllers/modals/within_alert.jag"
                            data-target="#commonModal"><i class="fa fa-square-o"></i> Within</a></li>
-                    <li><a style="margin-left: 20%;color: grey;cursor: not-allowed;"><i
-                            class="fa fa-external-link-square"></i> Approaching</a></li>
-                    <li><a style="margin-left: 20%;color: grey;cursor: not-allowed;"><i class="fa fa-minus"></i>
-                        Cross</a></li>
                 </ul>
             </li>
 
