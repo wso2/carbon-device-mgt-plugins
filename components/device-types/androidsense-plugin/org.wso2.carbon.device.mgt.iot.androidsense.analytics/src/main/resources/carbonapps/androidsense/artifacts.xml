@@ -32,7 +32,7 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_activity_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_andriod_audio_filter_executionplan" version="1.0.0" include="true"
+        <dependency artifact="android_android_audio_filter_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_android_activity_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>

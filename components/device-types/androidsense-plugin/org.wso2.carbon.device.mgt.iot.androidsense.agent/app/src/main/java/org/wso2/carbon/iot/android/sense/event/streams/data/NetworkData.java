@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.iot.android.sense.event.streams.data;
 
-import java.util.Date;
-
 public class NetworkData {
 
     //Mobile or Wifi

@@ -1,8 +1,8 @@
 {
-  "name": "org.wso2.iot.andriod.device.details",
+  "name": "org.wso2.iot.android.device.details",
   "version": "1.0.0",
   "nickName": "",
-  "description": "Details of the Andriod Device",
+  "description": "Details of the Android Device",
   "metaData": [
     {
       "name": "username",
@@ -11,7 +11,7 @@
   ],
   "payloadData": [
     {
-      "name": "andriod_version",
+      "name": "android_version",
       "type": "STRING"
     },
     {
