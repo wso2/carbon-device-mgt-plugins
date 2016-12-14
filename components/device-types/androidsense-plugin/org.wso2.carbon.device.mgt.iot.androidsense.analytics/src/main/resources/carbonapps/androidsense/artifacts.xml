@@ -18,7 +18,7 @@
   -->
 
 <artifacts>
-    <artifact name="android_analytics" version="1.0.0" type="carbon/application">
+    <artifact name="androidsense" version="1.0.0" type="carbon/application">
         <dependency artifact="android_active_stack_chart_gadget" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_active_time_chart_gadget" version="1.0.0" include="true"

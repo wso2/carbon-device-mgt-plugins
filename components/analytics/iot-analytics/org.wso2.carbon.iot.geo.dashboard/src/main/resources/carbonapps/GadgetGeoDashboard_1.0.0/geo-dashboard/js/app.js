@@ -82,7 +82,7 @@ function initializeMap() {
 
     map = L.map("map", {
         zoom: 14,
-        center:[51.548525, 0.111749],
+        center: [51.548525, 0.111749],
         layers: [defaultOSM, defaultTFL],
         zoomControl: false,
         attributionControl: false,
@@ -137,7 +137,7 @@ var attributionControl;
 var groupedOverlays;
 var layerControl;
 
-function processAfterInitializationMap(){
+function processAfterInitializationMap() {
     attributionControl = L.control({
         position: "bottomright"
     });
@@ -259,11 +259,12 @@ $('#searchbox').typeahead({
         displayKey: 'value',
         source: substringMatcher()
     }).on('typeahead:selected', function ($e, datum) {
-        objectId = datum['value'];
-        focusOnSpatialObject(objectId)
-    });
+    objectId = datum['value'];
+    focusOnSpatialObject(objectId)
+});
 
 var toggled = false;
+
 function focusOnSpatialObject(objectId) {
     console.log("Selecting" + objectId);
     var spatialObject = currentSpatialObjects[objectId];// (local)
@@ -301,6 +302,110 @@ function focusOnSpatialObject(objectId) {
     }, 100);
 }
 
+
+var getProviderData = function (timeFrom, timeTo) {
+    var tableData;
+    $.ajax({
+        url: '/portal/store/carbon.super/fs/gadget/geo-dashboard/controllers/gadget-controller.jag?action=getData&id=' + deviceId + '&type=' + deviceType + '&timeFrom=' + timeFrom + '&timeTo=' + timeTo,
+        method: "GET",
+        contentType: "application/json",
+        async: false,
+        success: function (data) {
+            tableData = data;
+        }
+    });
+    return tableData;
+};
+
+function notifyError(message) {
+    $.UIkit.notify({
+        message: message,
+        status: 'warning',
+        timeout: ApplicationOptions.constance.NOTIFY_WARNING_TIMEOUT,
+        pos: 'bottom-left'
+    });
+}
+
+function enableRealTime() {
+    document.getElementById('realTimeShow').style.display = 'none';
+    spatialObject = currentSpatialObjects[selectedSpatialObject];
+    spatialObject.removePath();
+    spatialObject.marker.closePopup();
+    selectedSpatialObject = null;
+    clearFocus();
+    clearMap();
+    document.getElementById('objectInfo').style.display = 'none';
+    isBatchModeOn = false;
+}
+function focusOnHistorySpatialObject(objectId, timeFrom, timeTo) {
+    if (!timeFrom) {
+        notifyError('No start time provided to show history. Please provide a suitable value' + timeFrom);
+    } else if (!timeTo) {
+        notifyError('No end time provided to show history. Please provide a suitable value' + timeTo);
+    } else {
+        document.getElementById('realTimeShow').style.display = 'block';
+        isBatchModeOn = true;
+        clearFocus(); // Clear current focus if any
+        clearMap();
+        var tableData = getProviderData(timeFrom, timeTo);
+        for (var i = 0; i < tableData.length; i++) {
+            var data = tableData[i];
+            var geoMessage = {
+                "messageType": "Point",
+                "type": "Feature",
+                "id": data.id,
+                "deviceId": data.id,
+                "deviceType": data.type,
+                "properties": {
+                    "speed": data.speed,
+                    "heading": data.heading,
+                    "state": data.state,
+                    "information": data.information,
+                    "notify": data.notify,
+                    "type": data.type
+                },
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [data.longitude, data.latitude]
+                }
+            };
+            processPointMessage(geoMessage);
+        }
+        var spatialObject = currentSpatialObjects[objectId];// (local)
+        if (!spatialObject) {
+            $.UIkit.notify({
+                message: "Spatial Object <span style='color:red'>" + objectId + "</span> not in the Map!!",
+                status: 'warning',
+                timeout: ApplicationOptions.constance.NOTIFY_WARNING_TIMEOUT,
+                pos: 'top-center'
+            });
+            return false;
+        }
+        selectedSpatialObject = objectId; // (global) Why not use 'var' other than implicit declaration http://stackoverflow.com/questions/1470488/what-is-the-function-of-the-var-keyword-and-when-to-use-it-or-omit-it#answer-1471738
+
+        console.log("Selected " + objectId + " type " + spatialObject.type);
+        if (spatialObject.type == "area") {
+            spatialObject.focusOn(map);
+            return true;
+        }
+
+        map.setView(spatialObject.marker.getLatLng(), 15, {animate: true}); // TODO: check the map._layersMaxZoom and set the zoom level accordingly
+
+        $('#objectInfo').find('#objectInfoId').html(selectedSpatialObject);
+        spatialObject.marker.openPopup();
+        if (!toggled) {
+            $('#objectInfo').animate({width: 'toggle'}, 100);
+            toggled = true;
+        }
+        getAlertsHistory(objectId);
+        spatialObject.drawPath();
+        setTimeout(function () {
+            createChart();
+            chart.load({columns: [spatialObject.speedHistory.getArray()]});
+        }, 100);
+        $('#dateRangePopup').dialog('close');
+    }
+}
 
 // Unfocused on current searched spatial object
 function clearFocus() {

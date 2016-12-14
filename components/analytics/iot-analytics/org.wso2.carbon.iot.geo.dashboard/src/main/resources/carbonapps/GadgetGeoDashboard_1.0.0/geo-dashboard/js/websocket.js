@@ -29,6 +29,7 @@ var waitTime = 1000;
 var webSocketURL, alertWebSocketURL, trafficStreamWebSocketURL;
 var deviceId;
 var deviceType;
+var isBatchModeOn = false;
 
 function processPointMessage(geoJsonFeature) {
     if (geoJsonFeature.id in currentSpatialObjects) {
@@ -70,6 +71,10 @@ function SpatialObject(json) {
 
     this.marker.bindPopup(this.popupTemplate.html());
     return this;
+}
+
+function popupDateRange(){
+   $('#dateRangePopup').attr('title', 'Device ID - '+ deviceId +" Device Type - "+ deviceType).dialog();
 }
 
 SpatialObject.prototype.update = function (geoJSON) {
@@ -162,6 +167,13 @@ SpatialObject.prototype.removeFromMap = function () {
     this.removePath();
     this.marker.closePopup();
 };
+
+function clearMap() {
+    for (var i=0; i< currentSpatialObjects.length; i++ ){
+        console.log("removed - " + currentSpatialObjects[i]);
+        currentSpatialObjects[i].removeFromMap();
+    }
+}
 
 SpatialObject.prototype.createLineStringFeature = function (state, information, coordinates) {
     return {
@@ -552,11 +564,13 @@ var webSocketOnAlertOpen = function () {
 };
 
 var webSocketOnAlertMessage = function processMessage(message) {
-    var json = $.parseJSON(message.data);
-    if (json.messageType == "Alert") {
-        processAlertMessage(json);
-    } else {
-        console.log("Message type not supported.");
+    if (!isBatchModeOn) {
+        var json = $.parseJSON(message.data);
+        if (json.messageType == "Alert") {
+            processAlertMessage(json);
+        } else {
+            console.log("Message type not supported.");
+        }
     }
 };
 
@@ -594,18 +608,19 @@ var webSocketOnOpen = function () {
 };
 
 var webSocketOnMessage = function (message) {
-    var json = $.parseJSON(message.data);
-    if (json.messageType == "Point") {
-        processPointMessage(json);
-    } else if (json.messageType == "Prediction") {
-        //processPredictionMessage(json);
-    } else {
-        console.log("Message type not supported.");
+    if(!isBatchModeOn) {
+        var json = $.parseJSON(message.data);
+        if (json.messageType == "Point") {
+            processPointMessage(json);
+        } else if (json.messageType == "Prediction") {
+            //processPredictionMessage(json);
+        } else {
+            console.log("Message type not supported.");
+        }
     }
 };
 
 var webSocketOnClose = function (e) {
-
     if (websocket.get_opened()) {
         $.UIkit.notify({
             message: 'Connection lost with server!!',
