@@ -21,11 +21,10 @@
 * Get all available tile servers from RDB via HTTP GET, Insert new tile servers information via HTTP POST request
 */
 
-var configuration = require('../conf/database.json');
+var constants = require("constants.jag");
+var db = new Database(constants.DATA_SOURCE_NAME);
 var log = new Log();
-
 var tableName = "webMapService";
-var db = new Database("jdbc:h2:repository/database/WSO2_GEO",configuration.username,configuration.password);
 
 if(request.getMethod() == "GET"){
 
@@ -47,7 +46,9 @@ if(request.getMethod() == "GET"){
         var getAllWmsEndPoints = "select * from webMapService";
             try{
                 var allWmsEndPoints = db.query(getAllWmsEndPoints);
-                log.info(allWmsEndPoints);
+                if (log.isDebugEnabled()) {
+                    log.debug(allWmsEndPoints);
+                }
                 response.contentType = "application/json";
                 response.characterEncoding = "UTF-8";
                 response.content = allWmsEndPoints;
@@ -74,8 +75,9 @@ else if(request.getMethod() == "POST"){
     var insertWmsEndPoint  ="INSERT INTO webMapService (serviceUrl, name, layers, version, format) VALUES('"+ serviceEndPoint +"', '"+ serviceName +"', '"+ layers +"', '"+ wmsVersion +"', '"+ outputFormat +"' );";
     try{
         db.query(insertWmsEndPoint);
-        log.info(serviceName + ' wms service added successfully!');
-        print(serviceName + 'added successfully!');
+        if (log.isDebugEnabled()) {
+            log.info(serviceName + ' wms service added successfully!');
+        }
     }
     catch(e){
         log.error(e.toString());
@@ -102,7 +104,6 @@ function logToFile(message){
 
     message = file.write(message);
     file.close();
-
 }
 
 %>

@@ -32,8 +32,6 @@ var eventsProcessorServiceClient = eventprocessorStub._getServiceClient();
 var eventProcessorOption = eventsProcessorServiceClient.getOptions();
 eventProcessorOption.setManageSession(true);
 eventProcessorOption.setProperty(HTTPConstants.COOKIE_STRING, session.get('authToken'));
-
-var escapeSiddhiql = require('../include/commons.jag').escapeSiddhiql;
 var storeAlerts = require('../include/store_alerts.jag').store; // TODO: change to js
 var ws = require('ws');
 var process = require("process"), host = process.getProperty('server.host'),
@@ -90,7 +88,7 @@ if (verb == "POST") {
     } else if (executionPlan == 'Traffic') {
         var resourceContents = parseDataJson.geoFenceGeoJSON;
     }
-    storeAlerts(parseKey, resourceContents, executionPlan, optionalArgs, deviceId);
+    storeAlerts(resourceContents, executionPlan, optionalArgs, deviceId);
 
     var payload;
     if (cepAction == "edit") {
