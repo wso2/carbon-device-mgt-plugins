@@ -35,9 +35,7 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.DeviceManagementAdminService;
 
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -46,6 +44,9 @@ import java.util.List;
  * Implementation class of operations interface. Each method in this class receives the operations comes via UI
  * and persists those in the correct format.
  */
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Path("/operation/admin/devices")
 public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminService {
 
     private static Log log = LogFactory.getLog(OperationImpl.class);

@@ -58,9 +58,9 @@ import java.util.List;
 @Api(value = "Windows Device Management Administrative Service",
         description = "Device management related admin APIs.")
 @WebService
-@Path("/admin/devices")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
+@Path("/operation/admin/devices")
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public interface DeviceManagementAdminService {
 
     @POST

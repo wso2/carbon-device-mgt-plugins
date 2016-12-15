@@ -118,7 +118,7 @@
     </jaxrs:server>
 
     <!--Endpoint for UI admin operations-->
-    <jaxrs:server id="adminoperations" address="/operation">
+    <!--jaxrs:server id="adminoperations" address="/">
         <jaxrs:serviceBeans>
             <ref bean="deviceMgtAdminService"/>
             <ref bean="swaggerResource"/>
@@ -127,10 +127,10 @@
             <ref bean="jsonProvider"/>
             <ref bean="swaggerWriter"/>
         </jaxrs:providers>
-    </jaxrs:server>
+    </jaxrs:server-->
 
     <!-- Endpoint for Configurations -->
-    <jaxrs:server id="configurationService" address="/configuration">
+    <!--jaxrs:server id="configurationService" address="/">
         <jaxrs:serviceBeans>
             <ref bean="configurationMgtService"/>
             <ref bean="swaggerResource"/>
@@ -140,7 +140,26 @@
             <ref bean="errorHandler"/>
             <ref bean="swaggerWriter"/>
         </jaxrs:providers>
+    </jaxrs:server-->
+
+
+    <jaxrs:server id="services" address="/">
+    <jaxrs:serviceBeans>
+        <ref bean="configurationMgtService"/>
+        <ref bean="deviceMgtAdminService"/>
+        <ref bean="swaggerResource"/>
+    </jaxrs:serviceBeans>
+    <jaxrs:providers>
+        <ref bean="jsonProvider"/>
+        <ref bean="errorHandler"/>
+        <ref bean="swaggerWriter"/>
+    </jaxrs:providers>
+        <jaxrs:properties>
+            <!-- This is added to catch interceptor level exceptions in GlobalThrowableMapper. -->
+            <entry key="map.cxf.interceptor.fault" value="true" />
+        </jaxrs:properties>
     </jaxrs:server>
+
 
     <bean id="bstProviderService"
           class="org.wso2.carbon.device.mgt.mobile.windows.api.services.authbst.impl.BSTProviderImpl"/>
