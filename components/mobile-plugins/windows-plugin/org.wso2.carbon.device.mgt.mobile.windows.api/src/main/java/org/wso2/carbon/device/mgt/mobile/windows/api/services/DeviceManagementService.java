@@ -46,7 +46,7 @@ import javax.ws.rs.core.Response;
                         @Extension(properties = {
                                 @ExtensionProperty(name = "name", value = "Syncml Endpoint"),
                                 @ExtensionProperty(name = "context",
-                                        value = "/api/device-mgt/windows/v1.0/syncml"),
+                                        value = "/api/device-mgt/windows/v1.0/syncmlmgt"),
                         })
                 }
         ),
@@ -58,7 +58,7 @@ import javax.ws.rs.core.Response;
         description = "This carries all the resources related to Windows syncml message flow.")
 @Path("/devicemgt")
 public interface DeviceManagementService {
-    @Path("/request")
+    @Path("/pending-operations")
     @POST
     @Consumes({PluginConstants.SYNCML_MEDIA_TYPE, MediaType.APPLICATION_XML})
     @Produces(PluginConstants.SYNCML_MEDIA_TYPE)
