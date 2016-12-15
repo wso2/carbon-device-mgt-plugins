@@ -36,9 +36,6 @@ function onRequest(context) {
             if (filteredDeviceData["type"]) {
                 viewModel["type"] = filteredDeviceData["type"];
                 viewModel.isNotWindows = true;
-                if (viewModel["deviceType"] == "windows") {
-                    viewModel.isNotWindows = false;
-                }
             }
             if (filteredDeviceData["deviceIdentifier"]) {
                 viewModel["deviceIdentifier"] = filteredDeviceData["deviceIdentifier"];
@@ -92,10 +89,10 @@ function onRequest(context) {
 
                             viewModel["internalMemory"] = {};
                             viewModel["internalMemory"]["total"] = Math.
-                                round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] * 100) / 100;
+                                    round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] * 100) / 100;
                             if (filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] != 0) {
                                 viewModel["internalMemory"]["usage"] = Math.
-                                    round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] -
+                                        round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] -
                                         filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_AVAILABLE_MEMORY"])
                                         / filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] * 10000) / 100;
                             } else {
@@ -104,10 +101,10 @@ function onRequest(context) {
 
                             viewModel["externalMemory"] = {};
                             viewModel["externalMemory"]["total"] = Math.
-                                round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] * 100) / 100;
+                                    round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] * 100) / 100;
                             if (filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] != 0) {
                                 viewModel["externalMemory"]["usage"] = Math.
-                                    round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] -
+                                        round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] -
                                         filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_AVAILABLE_MEMORY"])
                                         / filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["EXTERNAL_TOTAL_MEMORY"] * 10000) / 100;
                             } else {
@@ -119,10 +116,10 @@ function onRequest(context) {
 
                             viewModel["internalMemory"] = {};
                             viewModel["internalMemory"]["total"] = Math.
-                                round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["DeviceCapacity"] * 100) / 100;
+                                    round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["DeviceCapacity"] * 100) / 100;
                             if (filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["DeviceCapacity"] != 0) {
                                 viewModel["internalMemory"]["usage"] = Math.
-                                    round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["DeviceCapacity"] -
+                                        round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["DeviceCapacity"] -
                                         filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["AvailableDeviceCapacity"])
                                         / filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["DeviceCapacity"] * 10000) / 100;
                             } else {
@@ -151,7 +148,7 @@ function onRequest(context) {
                 }
                 if (filteredDeviceData["latestDeviceInfo"]["updatedTime"]) {
                     viewModel["lastUpdatedTime"] = filteredDeviceData["latestDeviceInfo"]["updatedTime"].
-                    substr(0, filteredDeviceData["latestDeviceInfo"]["updatedTime"].indexOf("+"));
+                        substr(0, filteredDeviceData["latestDeviceInfo"]["updatedTime"].indexOf("+"));
                 }
                 viewModel["BatteryLevel"] = {};
                 viewModel["BatteryLevel"]["value"] = filteredDeviceData["latestDeviceInfo"]["batteryLevel"];
@@ -162,7 +159,7 @@ function onRequest(context) {
                 viewModel["ramUsage"] = {};
                 if (filteredDeviceData["latestDeviceInfo"]["totalRAMMemory"] != 0) {
                     viewModel["ramUsage"]["value"] = Math.
-                        round((filteredDeviceData["latestDeviceInfo"]["totalRAMMemory"] -
+                            round((filteredDeviceData["latestDeviceInfo"]["totalRAMMemory"] -
                             filteredDeviceData["latestDeviceInfo"]["availableRAMMemory"])
                             / filteredDeviceData["latestDeviceInfo"]["totalRAMMemory"] * 10000) / 100;
                 } else {
@@ -171,10 +168,10 @@ function onRequest(context) {
 
                 viewModel["internalMemory"] = {};
                 viewModel["internalMemory"]["total"] = Math.
-                    round(filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] * 100) / 100;
+                        round(filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] * 100) / 100;
                 if (filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] != 0) {
                     viewModel["internalMemory"]["usage"] = Math.
-                        round((filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] -
+                            round((filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] -
                             filteredDeviceData["latestDeviceInfo"]["internalAvailableMemory"])
                             / filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] * 10000) / 100;
                 } else {
@@ -183,10 +180,10 @@ function onRequest(context) {
 
                 viewModel["externalMemory"] = {};
                 viewModel["externalMemory"]["total"] = Math.
-                    round(filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] * 100) / 100;
+                        round(filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] * 100) / 100;
                 if (filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] != 0) {
                     viewModel["externalMemory"]["usage"] = Math.
-                        round((filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] -
+                            round((filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] -
                             filteredDeviceData["latestDeviceInfo"]["externalAvailableMemory"])
                             / filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] * 10000) / 100;
                 } else {
@@ -197,7 +194,7 @@ function onRequest(context) {
                 viewModel["deviceInfoAvailable"] = false;
             }
 
-            deviceViewData["deviceView"] = viewModel;
+            deviceViewData["device"] = viewModel;
         } else if (response["status"] == "unauthorized") {
             deviceViewData["deviceFound"] = true;
             deviceViewData["isAuthorized"] = false;
@@ -207,5 +204,11 @@ function onRequest(context) {
     } else {
         deviceViewData["deviceFound"] = false;
     }
+
+    var autoCompleteParams = [
+        {"name" : "deviceId", "value" : deviceId}
+    ];
+
+    deviceViewData["autoCompleteParams"] = autoCompleteParams;
     return deviceViewData;
 }

@@ -28,13 +28,14 @@ function onRequest(context) {
     var pathParams = [];
     for (var i = 0; i < controlOperations.length; i++) {
         var currentParamList = controlOperations[i]["params"];
+        var uiParamList = controlOperations[i]["uiParams"];
         for (var j = 0; j < currentParamList.length; j++) {
             var currentParam = currentParamList[j];
             currentParamList[j]["formParams"] = processParams(currentParam["formParams"], autoCompleteParams);
             currentParamList[j]["queryParams"] = processParams(currentParam["queryParams"], autoCompleteParams);
             currentParamList[j]["pathParams"] = processParams(currentParam["pathParams"], autoCompleteParams);
         }
-        controlOperations[i]["params"] = currentParamList;
+        controlOperations[i]["uiParams"] = uiParamList;
         if (encodedFeaturePayloads) {
             controlOperations[i]["payload"] = getPayload(encodedFeaturePayloads, controlOperations[i]["operation"]);
         }
@@ -43,9 +44,6 @@ function onRequest(context) {
 }
 
 function processParams(paramsList, autoCompleteParams) {
-    var log = new Log();
-    log.info("-- Params : "+paramsList.length);
-    log.info("-- Auto Params : "+autoCompleteParams);
     for (var i = 0; i < paramsList.length; i++) {
         var paramName = paramsList[i];
         var paramValue = "";

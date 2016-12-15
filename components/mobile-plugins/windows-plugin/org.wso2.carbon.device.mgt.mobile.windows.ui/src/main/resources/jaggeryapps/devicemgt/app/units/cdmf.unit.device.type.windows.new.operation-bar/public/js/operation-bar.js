@@ -31,6 +31,8 @@ function submitForm(formId) {
     var form = $("#" + formId);
     var uri = form.attr("action");
     var deviceId = form.data("device-id");
+    var contentType = form.data("content-type");
+    var operationCode = form.data("operation-code");
     var uriencodedQueryStr = "";
     var uriencodedFormStr = "";
     var payload = {};
@@ -44,25 +46,22 @@ function submitForm(formId) {
         } else if (input.data("param-type") == "form") {
             var prefix = (uriencodedFormStr == "") ? "" : "&";
             uriencodedFormStr += prefix + input.attr("id") + "=" + input.val();
-            //payload[input.attr("id")] = input.val();
+            if(input.attr("type") == "text"){
+                payload[input.attr("id")] = input.val();
+            } else if(input.attr("type") == "checkbox"){
+                payload[input.attr("id")] = input.is(":checked");
+            }
         }
     });
     uri += uriencodedQueryStr;
     var httpMethod = form.attr("method").toUpperCase();
-    var contentType = form.attr("enctype");
-    console.log("URL "+uri);
-    console.log("Method "+httpMethod);
-    console.log("Content Type "+contentType);
-    var featurePayload = form.attr("data-payload");
-    if (featurePayload) {
-        contentType = "application/json";
-        payload = JSON.parse(atob(featurePayload));
+    //var contentType = form.attr("enctype");
 
-    } else if (contentType == undefined || contentType.isEmpty()) {
+    if (contentType == undefined || contentType == "") {
         contentType = "application/x-www-form-urlencoded";
         payload = uriencodedFormStr;
     }
-    
+
     //setting responses callbacks
     var defaultStatusClasses = "fw fw-stack-1x";
     var content = $("#operation-response-template").find(".content");
@@ -101,9 +100,9 @@ function submitForm(formId) {
     if (httpMethod == "GET") {
         invokerUtil.get(uri, successCallBack, errorCallBack, contentType);
     } else if (httpMethod == "POST") {
-        console.log("------ cType "+contentType);
-        var payloadTest = [deviceId];
-        invokerUtil.post(uri, payloadTest, successCallBack, errorCallBack, "application/json");
+        var deviceList = [deviceId];
+        payload = generatePayload(operationCode, payload, deviceList);
+        invokerUtil.post(uri, payload, successCallBack, errorCallBack, contentType);
     } else if (httpMethod == "PUT") {
         invokerUtil.put(uri, payload, successCallBack, errorCallBack, contentType);
     } else if (httpMethod == "DELETE") {
@@ -120,9 +119,9 @@ $(document).on('submit', 'form', function (e) {
     cosole.log("darn!!");
     e.preventDefault();
     var postOperationRequest = $.ajax({
-                                          url: $(this).attr("action") + '&' + $(this).serialize(),
-                                          method: "post"
-                                      });
+        url: $(this).attr("action") + '&' + $(this).serialize(),
+        method: "post"
+    });
 
     var btnSubmit = $('#btnSend', this);
     btnSubmit.addClass('hidden');
@@ -144,3 +143,85 @@ $(document).on('submit', 'form', function (e) {
         lblSent.addClass('hidden');
     });
 });
+
+// Constants to define operation types available
+var operationTypeConstants = {
+    "PROFILE": "profile",
+    "CONFIG": "config",
+    "COMMAND": "command"
+};
+
+
+var generatePayload = function (operationCode, operationData, deviceList) {
+    var payload;
+    var operationType;
+    switch (operationCode) {
+        case windowsOperationConstants["CAMERA_OPERATION_CODE"]:
+            operationType = operationTypeConstants["PROFILE"];
+            payload = {
+                "operation": {
+                    "enabled": operationData["cameraEnabled"]
+                }
+            };
+            break;
+        case windowsOperationConstants["CHANGE_LOCK_CODE_OPERATION_CODE"]:
+            operationType = operationTypeConstants["PROFILE"];
+            payload = {
+                "operation": {
+                    "lockCode": operationData["lockCode"]
+                }
+            };
+            break;
+        case windowsOperationConstants["ENCRYPT_STORAGE_OPERATION_CODE"]:
+            operationType = operationTypeConstants["PROFILE"];
+            payload = {
+                "operation": {
+                    "encrypted": operationData["encryptStorageEnabled"]
+                }
+            };
+            break;
+        case windowsOperationConstants["NOTIFICATION_OPERATION_CODE"]:
+            operationType = operationTypeConstants["PROFILE"];
+            payload = {
+                "operation": {
+                    "message": operationData["message"]
+                }
+            };
+            break;
+        case windowsOperationConstants["PASSCODE_POLICY_OPERATION_CODE"]:
+            operationType = operationTypeConstants["PROFILE"];
+            payload = {
+                "operation": {
+                    "allowSimple": operationData["passcodePolicyAllowSimple"],
+                    "requireAlphanumeric": operationData["passcodePolicyRequireAlphanumeric"],
+                    "minLength": operationData["passcodePolicyMinLength"],
+                    "minComplexChars": operationData["passcodePolicyMinComplexChars"],
+                    "maxPINAgeInDays": operationData["passcodePolicyMaxPasscodeAgeInDays"],
+                    "pinHistory": operationData["passcodePolicyPasscodeHistory"],
+                    "maxFailedAttempts": operationData["passcodePolicyMaxFailedAttempts"]
+                }
+            };
+            break;
+        default:
+            // If the operation is neither of above, it is a command operation
+            operationType = operationTypeConstants["COMMAND"];
+            // Operation payload of a command operation is simply an array of device IDs
+            payload = deviceList;
+    }
+
+    if (operationType == operationTypeConstants["PROFILE"] && deviceList) {
+        payload["deviceIDs"] = deviceList;
+    }
+
+    return payload;
+};
+
+
+// Constants to define Windows Operation Constants
+var windowsOperationConstants = {
+    "PASSCODE_POLICY_OPERATION_CODE": "PASSCODE_POLICY",
+    "CAMERA_OPERATION_CODE": "CAMERA",
+    "ENCRYPT_STORAGE_OPERATION_CODE": "ENCRYPT_STORAGE",
+    "NOTIFICATION_OPERATION_CODE": "NOTIFICATION",
+    "CHANGE_LOCK_CODE_OPERATION_CODE": "CHANGE_LOCK_CODE"
+};
