@@ -26,6 +26,7 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.device.details.*;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
@@ -40,6 +41,7 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.DeviceUtil;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils;
 import org.wso2.carbon.device.mgt.mobile.windows.api.operations.*;
 import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.*;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.DeviceInfo;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.DeviceManagementService;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
@@ -89,6 +91,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
 
                         if (modifyEnrollWithMoreDetail(request)) {
                             pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
+
                             response = operationReply.generateReply(syncmlDocument,pendingOperations);
                             return Response.status(Response.Status.OK).entity(response).build();
                         } else {
@@ -196,18 +199,34 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                 existingDevice.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
                 status = WindowsAPIUtils.getDeviceManagementService().modifyEnrollment(existingDevice);
                 // call effective policy for the enrolling device.
-                PolicyManagerService policyManagerService = WindowsAPIUtils.getPolicyManagerService();
-                policyManagerService.getEffectivePolicy(deviceIdentifier);
+                //PolicyManagerService policyManagerService = WindowsAPIUtils.getPolicyManagerService();
+                //policyManagerService.getEffectivePolicy(deviceIdentifier);
                 return status;
 
             }
         } catch (DeviceManagementException e) {
             throw new WindowsDeviceEnrolmentException("Failure occurred while enrolling device.", e);
-        } catch (PolicyManagementException e) {
-            throw new WindowsOperationException("Error occurred while getting effective policy.", e);
+//        } catch (PolicyManagementException e) {
+//            throw new WindowsOperationException("Error occurred while getting effective policy.", e);
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
         }
         return status;
     }
+
+//    public void generateDeviceInfo(Document requestedInfo) {
+//        SyncmlDocument syncmlDocument;
+//        syncmlDocument = SyncmlParser.parseSyncmlPayload(requestedInfo);
+//        DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(syncmlDocument.
+//                getHeader().getSource().getLocURI());
+//        try {
+//            List<ItemTag> itemList = syncmlDocument.getBody().getResults().getItem();
+//            Device existingDevice = WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
+//            org.wso2.carbon.device.mgt.common.device.details.DeviceInfo existingDeviceInfo = existingDevice.getDeviceInfo();
+//            existingDeviceInfo.s
+//        } catch (DeviceManagementException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 }
