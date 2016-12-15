@@ -69,6 +69,7 @@ public class OperationReply {
         this.syncmlDocument = syncmlDocument;
         replySyncmlDocument = new SyncmlDocument();
     }
+
     public OperationReply() {
 
     }
@@ -228,8 +229,8 @@ public class OperationReply {
     }
 
     private void appendOperations(SyncmlBody syncmlBody) throws PolicyManagementException,
-                                                                FeatureManagementException, JSONException,
-                                                                SyncmlOperationException {
+            FeatureManagementException, JSONException, SyncmlOperationException {
+        
         GetTag getElement = new GetTag();
         List<ItemTag> getElements = new ArrayList<>();
         List<ExecuteTag> executeElements = new ArrayList<>();
@@ -238,6 +239,7 @@ public class OperationReply {
         ReplaceTag replaceElement = new ReplaceTag();
         List<ItemTag> replaceItems = new ArrayList<>();
         SequenceTag monitorSequence = new SequenceTag();
+        List<Operation> deviceInfoOperations;
 
         if (operations != null) {
             for (Operation operation : operations) {
@@ -317,6 +319,14 @@ public class OperationReply {
                                 }
                             }
                         }
+                        if (PluginConstants.OperationCodes.DEVICE_INFO.equals(operation.getCode())) {
+                            HeartBeatDeviceInfo heartBeatDeviceInfo = new HeartBeatDeviceInfo();
+                            deviceInfoOperations = heartBeatDeviceInfo.getDeviceInfo();
+                            for (int x = 0; x > deviceInfoOperations.size(); x++) {
+                                ItemTag deviceInfo = appendGetInfo(operation);
+                                getElements.add(deviceInfo);
+                            }
+                        }
                         break;
                 }
             }
@@ -370,7 +380,7 @@ public class OperationReply {
             }
         }
         if ((operationCode != null) &&
-            PluginConstants.OperationCodes.LOCK_RESET.equals(operationCode)) {
+                PluginConstants.OperationCodes.LOCK_RESET.equals(operationCode)) {
             operation.setCode(PluginConstants.OperationCodes.PIN_CODE);
             for (Info getInfo : Info.values()) {
                 if (operation.getCode().equals(getInfo.name())) {
@@ -543,8 +553,8 @@ public class OperationReply {
     }
 
     public SequenceTag buildSequence(Operation operation, SequenceTag sequenceElement) throws
-                                                                                       JSONException,
-                                                                                       SyncmlOperationException {
+            JSONException,
+            SyncmlOperationException {
 
         sequenceElement.setCommandId(operation.getId());
         List<ReplaceTag> replaceItems = new ArrayList<>();
