@@ -87,7 +87,7 @@ public class OperationHandler {
                         Notification lockResetNotification = new Notification();
                         lockResetNotification.setOperationId(status.getCommandReference());
                         lockResetNotification.setStatus(String.valueOf(Notification.Status.NEW));
-//                        lockResetNotification.setDeviceIdentifier(deviceIdentifier);
+
                         lockResetNotification.setDescription(
                                 Constants.SyncMLResponseCodes.LOCK_RESET_NOTIFICATION);
                         nmService.addNotification(deviceIdentifier, lockResetNotification);
@@ -152,7 +152,6 @@ public class OperationHandler {
                         Notification lockResetNotification = new Notification();
                         lockResetNotification.setOperationId(status.getCommandReference());
                         lockResetNotification.setStatus(String.valueOf(Notification.Status.NEW));
-//                        lockResetNotification.setDeviceIdentifier(deviceIdentifier);
                         lockResetNotification.setDescription(Constants.SyncMLResponseCodes.LOCK_RESET_NOTIFICATION);
 
                         nmService.addNotification(deviceIdentifier, lockResetNotification);
