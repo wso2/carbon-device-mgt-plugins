@@ -152,6 +152,7 @@ public final class PluginConstants {
         public static final int DOMAIN_POSITION = 7;
         public static final String ENROLL_SUBDOMAIN = "https://EnterpriseEnrollment.";
         public static final String SYNCML_PROVISIONING_SERVICE_URL = "/Syncml/initialquery";
+        public static final String SYNCML_PROVISIONING_WIN10_SERVICE_URL = "/devicemgt";
         public static final String ENROLLMENT_DISPOSITION_MESSAGE = "http://schemas.microsoft.com/windows/pki/" +
                 "2009/01/enrollment";
     }
@@ -206,6 +207,18 @@ public final class PluginConstants {
         public static final String MANUFACTURER = "MANUFACTURER";
         public static final String LANGUAGE = "LANGUAGE";
         public static final String RESOLUTION = "RESOLUTION";
+
+        // windows 10 codes
+        public static final String TOTAL_RAM = "TOTAL_RAM";// available ram in MB
+        public static final String TOTAL_STORAGE = "TOTAL_STORAGE";
+        public static final String OS_PLATFORM = "OS_PLATFORM";
+        public static final String DEVICE_TYPE = "DEVICE_TYPE";
+        public static final String BATTERY_QUERY = "BATTERY_QUERY";
+        public static final String BATTERY_STATUS = "BATTERY_STATUS";
+        public static final String BATTERY_CHARGE_REMAINING = "BATTERY_CHARGE_REMAINING";
+        public static final String BATTERY_ESTIMATED_RUNTIME = "BATTERY_ESTIMATED_RUNTIME";
+        public static final String MOBILE_ID = "MOBILE_ID";
+
     }
 
     /**
@@ -253,6 +266,7 @@ public final class PluginConstants {
         public static final String ENCRYPT_STORAGE_STATUS = "ENCRYPT_STORAGE_STATUS";
         public static final String DEVICE_PASSWORD_STATUS = "DEVICE_PASSWORD_STATUS";
         public static final String DEVICE_PASSCODE_DELETE = "DEVICE_PASSCODE_DELETE";
+        public static final String DEVICE_INFO = "DEVICE_INFO";
     }
 
     /**
