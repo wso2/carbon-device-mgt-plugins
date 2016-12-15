@@ -62,55 +62,63 @@
     </DataSource>
 
     <Features>
-        <Feature code="DEVICE_LOCK">
-            <Name>Device Lock</Name>
-            <Description>Lock the device</Description>
-            <Operation context="windows/lock-devices" method="POST">
-            </Operation>
-        </Feature>
         <Feature code="DISENROLL">
-            <Name>Device Lock</Name>
+            <Name>Disenroll</Name>
             <Description>Lock the device</Description>
-            <Operation context="windows/disenroll-devices" method="POST">
+            <Operation context="/api/device-mgt/windows/v1.0/operation/admin/devices/disenroll" method="POST" type="application/json">
             </Operation>
         </Feature>
         <Feature code="WIPE_DATA">
-            <Name>Device Lock</Name>
+            <Name>Wipe Data</Name>
             <Description>Lock the device</Description>
-            <Operation context="windows/wipe-devices" method="POST">
+            <Operation context="/api/device-mgt/windows/v1.0/operation/admin/devices/wipe-data" method="POST" type="application/json">
             </Operation>
         </Feature>
         <Feature code="DEVICE_RING">
+            <Name>Ring</Name>
+            <Description>Lock the device</Description>
+            <Operation context="/api/device-mgt/windows/v1.0/operation/admin/devices/ring-device" method="POST" type="application/json">
+            </Operation>
+        </Feature>
+        <Feature code="DEVICE_LOCK">
             <Name>Device Lock</Name>
             <Description>Lock the device</Description>
-            <Operation context="windows/ring-devices" method="POST">
+            <Operation context="/api/device-mgt/windows/v1.0/operation/admin/devices/lock-devices" method="POST" type="application/json">
             </Operation>
         </Feature>
         <Feature code="LOCK_RESET">
             <Name>Device Lock</Name>
             <Description>Lock the device</Description>
-            <Operation context="windows/lock-reset-devices" method="POST">
+            <Operation context="/api/device-mgt/windows/v1.0/operation/admin/devices/lock-reset" method="POST" type="application/json">
             </Operation>
+        </Feature>
+        <Feature code="DEVICE_INFO">
+            <Name>Device info</Name>
+            <Description>Request device information</Description>
         </Feature>
         <Feature code="PASSCODE_POLICY">
             <Name>Password Policy</Name>
             <Description>Set passcode policy</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="CAMERA">
             <Name>Camera Enable/Disable</Name>
             <Description>Enable/Disable camera</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
         <Feature code="ENCRYPT_STORAGE">
             <Name>Encrypt Storage</Name>
             <Description>Encrypt the device storage</Description>
-            <Operation context="" method="POST">
-            </Operation>
         </Feature>
     </Features>
+    <TaskConfiguration>
+        <Enable>true</Enable>
+        <Frequency>60000</Frequency>
+        <Operations>
+            <Operation>
+                <Name>DEVICE_INFO</Name>
+                <RecurrentTimes>1</RecurrentTimes>
+            </Operation>
+        </Operations>
+    </TaskConfiguration>
 
     <DeviceAuthorizationConfig>
         <authorizationRequired>false</authorizationRequired>
