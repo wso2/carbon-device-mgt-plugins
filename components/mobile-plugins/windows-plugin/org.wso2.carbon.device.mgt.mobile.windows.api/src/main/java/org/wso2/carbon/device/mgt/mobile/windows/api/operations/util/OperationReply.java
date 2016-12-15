@@ -230,7 +230,7 @@ public class OperationReply {
 
     private void appendOperations(SyncmlBody syncmlBody) throws PolicyManagementException,
             FeatureManagementException, JSONException, SyncmlOperationException {
-        
+
         GetTag getElement = new GetTag();
         List<ItemTag> getElements = new ArrayList<>();
         List<ExecuteTag> executeElements = new ArrayList<>();
@@ -248,7 +248,9 @@ public class OperationReply {
                     case POLICY:
                         if (this.syncmlDocument.getBody().getAlert() != null) {
                             if ((Constants.INITIAL_ALERT_DATA.equals(this.syncmlDocument.getBody()
-                                    .getAlert().getData()))) {
+                                    .getAlert().getData())) ||
+                                    Constants.INITIAL_WIN10_ALERT_DATA.equals(this.syncmlDocument.getBody()
+                                    .getAlert().getData())) {
                                 SequenceTag policySequence = new SequenceTag();
                                 policySequence = buildSequence(operation, policySequence);
                                 syncmlBody.setSequence(policySequence);
