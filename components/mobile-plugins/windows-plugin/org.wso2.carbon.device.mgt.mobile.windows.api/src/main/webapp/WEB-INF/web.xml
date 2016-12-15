@@ -43,7 +43,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>JAXServlet-windows</servlet-name>
-        <url-pattern>/services/*</url-pattern>
+        <url-pattern>/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>60</session-timeout>
@@ -66,8 +66,8 @@
     </context-param>
     <context-param>
         <param-name>nonSecuredEndPoints</param-name>
-        <param-value>/services/discovery/get,/services/discovery/post,/services/certificatepolicy/xcep,
-            ,/services/deviceenrolment/wstep,/services/syncml/devicemanagement/request,/services/deviceenrolment/enrollment
+        <param-value>/discovery/get,/discovery/post,/certificatepolicy/xcep,
+            ,/deviceenrolment/wstep,/syncml/devicemanagement/request,/deviceenrolment/enrollment,/management/devicemgt/pending-operations
         </param-value>
     </context-param>
 </web-app>
