@@ -287,7 +287,6 @@ public class SyncmlServiceImpl implements SyncmlService {
                 vendor = itemList.get(PluginConstants.SyncML.VENDOR_POSITION).getData();
                 devMod = itemList.get(PluginConstants.SyncML.MODEL_POSITION).getData();
                 macAddress = itemList.get(PluginConstants.SyncML.MAC_ADDRESS_POSITION).getData();
-                resolution = itemList.get(PluginConstants.SyncML.RESOLUTION_POSITION).getData();
                 deviceName = itemList.get(PluginConstants.SyncML.DEVICE_NAME_POSITION).getData();
                 DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(syncmlDocument.
                         getHeader().getSource().getLocURI());
@@ -320,11 +319,6 @@ public class SyncmlServiceImpl implements SyncmlService {
                     macAddressProperty.setValue(macAddress);
                     existingProperties.add(macAddressProperty);
 
-                    Device.Property deviceNameProperty = new Device.Property();
-                    deviceNameProperty.setName(PluginConstants.SyncML.DEVICE_NAME);
-                    deviceNameProperty.setValue(deviceName);
-                    existingProperties.add(deviceNameProperty);
-
                     Device.Property deviceModelProperty = new Device.Property();
                     deviceModelProperty.setName(PluginConstants.SyncML.MODEL);
                     deviceModelProperty.setValue(devMod);
@@ -334,6 +328,7 @@ public class SyncmlServiceImpl implements SyncmlService {
                     existingDevice.setDeviceIdentifier(syncmlDocument.getHeader().getSource().getLocURI());
                     existingDevice.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
                     status = WindowsAPIUtils.getDeviceManagementService().modifyEnrollment(existingDevice);
+                    existingDevice.setName(deviceName);
                     // call effective policy for the enrolling device.
                     PolicyManagerService policyManagerService = WindowsAPIUtils.getPolicyManagerService();
                     policyManagerService.getEffectivePolicy(deviceIdentifier);
