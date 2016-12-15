@@ -103,6 +103,13 @@
         </jaxrs:serviceBeans>
     </jaxrs:server>
 
+    <!--Syncml Windows 10 device mgt Endpoint-->
+    <jaxrs:server id="Win10devicemgtSession" address="/management">
+        <jaxrs:serviceBeans>
+            <ref bean="devicemgt_bean"/>
+        </jaxrs:serviceBeans>
+    </jaxrs:server>
+
     <!--BST provider Endpoint for returning binary security token after authentication-->
     <jaxrs:server id="bstprovider" address="/federated">
         <jaxrs:serviceBeans>
@@ -111,7 +118,7 @@
     </jaxrs:server>
 
     <!--Endpoint for UI admin operations-->
-    <jaxrs:server id="adminoperations" address="/windows">
+    <jaxrs:server id="adminoperations" address="/operation">
         <jaxrs:serviceBeans>
             <ref bean="deviceMgtAdminService"/>
             <ref bean="swaggerResource"/>
@@ -177,6 +184,8 @@
     </bean>
     <bean id="Syncml_initial_bean"
           class="org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.impl.SyncmlServiceImpl"/>
+    <bean id="devicemgt_bean"
+          class="org.wso2.carbon.device.mgt.mobile.windows.api.services.impl.DeviceManagementServiceImpl"/>
     <bean id="customvalidator"
           class="org.wso2.carbon.device.mgt.mobile.windows.api.common.util.BSTValidator"/>
     <bean id="customvalidatoronpremise"
