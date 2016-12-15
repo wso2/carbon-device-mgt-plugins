@@ -27,6 +27,7 @@
         <dependency artifact="ThemeGeoDashboard" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <!-- CEP Artifacts -->
         <dependency artifact="Geo-Dashboard-Http-Receiver" version="1.0.0" include="true" serverRole="GeoDashboard"/>
+        <dependency artifact="Geo-EventSink-FusedStream" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="Geo-ExecutionPlan-EventsFusionGenerateNotifications" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="Geo-ExecutionPlan-InputStandardizer" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="Geo-ExecutionPlan-Pass_through" version="1.0.0" include="true" serverRole="GeoDashboard"/>

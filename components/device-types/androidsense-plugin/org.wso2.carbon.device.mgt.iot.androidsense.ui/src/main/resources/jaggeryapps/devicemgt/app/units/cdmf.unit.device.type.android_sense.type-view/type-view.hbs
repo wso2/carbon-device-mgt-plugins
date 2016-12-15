@@ -147,15 +147,15 @@
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double">
-            <span class="circle">01</span>
+            <span class="badge">01</span>
                Connect Android device to network.
         </li>
         <li class="padding-top-double">
-            <span class="circle">02</span>
+            <span class="badge">02</span>
                Start Android Sense app in your device.
         </li>
         <li class="padding-top-double">
-            <span class="circle">03</span>
+            <span class="badge">03</span>
                Fill login form with the credentials.
             <i>(Use server URL as [ https://&lt;WSO2_IoT_SERVER_HOST&gt;:&lt;
                HTTPS_SERVER_PORT&gt; ] and click on
@@ -169,7 +169,7 @@
         </li>
 
         <li class="padding-top-double">
-            <span class="circle">04</span>
+            <span class="badge">04</span>
                Once the device is enrolled, click on <strong>[+]</strong> button to
             select the sensors.
             <a href="{{@unit.publicUri}}/images/selectSensorView.png" target="_blank"
@@ -178,7 +178,7 @@
             </a>
         </li>
         <li class="padding-top-double">
-            <span class="circle">05</span>
+            <span class="badge">05</span>
                Click on <i>[Publish data]</i> button to publish sensor readings to
             IoT server.
             <a href="{{@unit.publicUri}}/images/publishDataView.png" target="_blank"
@@ -190,41 +190,47 @@
     <br>
 </div>
 
-<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">Try Out</h3>
-    <hr>
-    <ul class="list-unstyled">
-        <li class="padding-top-double">
-            <span class="fw-stack fw-lg margin-right">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double">
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
+            <h3 class="uppercase">Try Out</h3>
+            <hr>
+            <ul class="list-unstyled">
+                <li class="padding-top-double">
+            <span class="fw-stack margin-right">
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
-               You can view all your connected devices
-            <a href="{{@app.context}}/devices">[Device Management]</a> page.
-        </li>
-        <li class="padding-top-double">
-            <span class="fw-stack fw-lg margin-right">
+                    You can view all your connected devices
+                    <a href="{{@app.context}}/devices">[Device Management]</a> page.
+                </li>
+                <li class="padding-top-double">
+            <span class="fw-stack margin-right">
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
-               You can select any one of your connected devices for available
-            operations and Real-Time data monitoring.
-        </li>
-        <li class="padding-top-double">
-            <span class="fw-stack fw-lg margin-right">
+                    You can select any one of your connected devices for available
+                    operations and Real-Time data monitoring.
+                </li>
+                <li class="padding-top-double">
+            <span class="fw-stack margin-right">
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>   For historical analytics of sensor data navigate to device
-                   analytics page.
-        </li>
-    </ul>
-    <br/>
-    <p class="grey margin-top">Click on the image to zoom</p>
-    <center>
-        <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
-            <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
-        </a>
-    </center>
+                    analytics page.
+                </li>
+            </ul>
+            <br/>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
+            <p class="grey margin-top">Click on the image to zoom</p>
+            <center>
+                <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
+                    <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
+                </a>
+            </center>
+        </div>
+    </div>
 </div>
 
 <div id="qr-code-modal" data-enrollment-url="{{hostName}}{{@unit.publicUri}}/asset/androidsense.apk" class="hidden">
