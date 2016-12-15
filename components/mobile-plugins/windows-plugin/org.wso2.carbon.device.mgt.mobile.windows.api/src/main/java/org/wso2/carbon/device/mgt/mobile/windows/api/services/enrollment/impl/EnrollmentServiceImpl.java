@@ -91,7 +91,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             String nodeName = headerElement.getName().getLocalPart();
             if (PluginConstants.SECURITY.equals(nodeName)) {
                 Element element = (Element) headerElement.getObject();
-                headerBinarySecurityToken = element.getFirstChild().getNextSibling().getFirstChild().getTextContent();
+                headerBinarySecurityToken = element.getFirstChild().getFirstChild().getTextContent();
             }
             if (PluginConstants.TO.equals(nodeName)) {
                 Element toElement = (Element) headerElement.getObject();
@@ -130,7 +130,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         String[] splitDomain = email.split("(EnterpriseEnrollment.)");
         domain = splitDomain[PluginConstants.CertificateEnrolment.DOMAIN_SEGMENT];
         provisioningURL = PluginConstants.CertificateEnrolment.ENROLL_SUBDOMAIN + domain +
-                PluginConstants.CertificateEnrolment.SYNCML_PROVISIONING_SERVICE_URL;
+                PluginConstants.CertificateEnrolment.SYNCML_PROVISIONING_WIN10_SERVICE_URL;
 
         List<ConfigurationEntry> tenantConfigurations;
         try {
@@ -356,10 +356,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         org.wso2.carbon.device.mgt.common.Device generatedDevice = new org.wso2.carbon.device.mgt.common.Device();
 
-        org.wso2.carbon.device.mgt.common.Device.Property DeviceNameProperty = new org.wso2.carbon.device.mgt.common.Device.Property();
-        DeviceNameProperty.setName(PluginConstants.SyncML.DEVICE_NAME);
-        DeviceNameProperty.setValue(windowsDevice.getDeviceName());
-
         org.wso2.carbon.device.mgt.common.Device.Property OSVersionProperty = new org.wso2.carbon.device.mgt.common.Device.Property();
         OSVersionProperty.setName(PluginConstants.SyncML.OS_VERSION);
         OSVersionProperty.setValue(windowsDevice.getOsVersion());
@@ -376,7 +372,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         propertyList.add(OSVersionProperty);
         propertyList.add(IMSEIProperty);
         propertyList.add(IMEIProperty);
-        propertyList.add(DeviceNameProperty);
 
         EnrolmentInfo enrolmentInfo = new EnrolmentInfo();
         enrolmentInfo.setOwner(windowsDevice.getUser());
@@ -387,6 +382,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         generatedDevice.setDeviceIdentifier(windowsDevice.getDeviceId());
         generatedDevice.setProperties(propertyList);
         generatedDevice.setType(windowsDevice.getDeviceType());
+        generatedDevice.setName(windowsDevice.getDeviceName());
 
         return generatedDevice;
     }
