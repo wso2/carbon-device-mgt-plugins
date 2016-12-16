@@ -160,7 +160,7 @@
         <dependency artifact="android_screen_ui_event_publisher" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_sense_dashboard" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_sense_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="android_headset_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_sense_streams" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_sms_chart_gadget" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
