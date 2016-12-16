@@ -17,7 +17,7 @@
   ~ under the License.
   -->
 
-<artifact name= "android_sense_script" version="1.0.0" type="analytics/spark" serverRole="DataAnalyticsServer">
-	<file>Android_Sense_Script.xml</file>
+<artifact name= "android_headset_script" version="1.0.0" type="analytics/spark" serverRole="DataAnalyticsServer">
+	<file>HeadsetScript.xml</file>
 </artifact>
 

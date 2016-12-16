@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Analytics>
     <Editable>true</Editable>
-    <Name>AndriodDataScript</Name>
+    <Name>AndroidDataScript</Name>
     <Script>        CREATE TEMPORARY TABLE AndroidDataData USING CarbonAnalytics OPTIONS(tableName "ORG_WSO2_IOT_ANDROID_DATA_STATS", incrementalParams "ORG_WSO2_IOT_ANDROID_DATA_STATS, DAY");
 
         CREATE TEMPORARY TABLE Android_Data_Stat_Per_Day USING CarbonAnalytics

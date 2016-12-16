@@ -148,6 +148,7 @@ public class SenseDataReceiverManager {
             smsDataReceiver = new SmsDataReceiver();
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);
+            intentFilter.addAction(Telephony.Sms.Intents.SMS_DELIVER_ACTION);
             context.registerReceiver(smsDataReceiver, intentFilter);
         }
     }

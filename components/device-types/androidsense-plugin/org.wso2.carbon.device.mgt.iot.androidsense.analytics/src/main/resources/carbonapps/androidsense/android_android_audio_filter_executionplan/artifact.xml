@@ -17,7 +17,8 @@
   ~ under the License.
   -->
 
-<artifact name= "android_andriod_audio_filter_executionplan" version="1.0.0" type="event/execution-plan" serverRole="DataAnalyticsServer">
-	<file>Andriod-Audio-Filter-ExecutionPlan.siddhiql</file>
+<artifact name= "android_android_audio_filter_executionplan" version="1.0.0" type="event/execution-plan"
+		  serverRole="DataAnalyticsServer">
+	<file>Android-Audio-Filter-ExecutionPlan.siddhiql</file>
 </artifact>
 

@@ -32,7 +32,7 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_activity_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_andriod_audio_filter_executionplan" version="1.0.0" include="true"
+        <dependency artifact="android_android_audio_filter_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_android_activity_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
@@ -58,7 +58,7 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_battery_percentage_chart_gadget" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_battery_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <!--<dependency artifact="android_battery_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>-->
         <dependency artifact="android_battery_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_battery_stats_streams" version="1.0.0" include="true"
@@ -160,7 +160,7 @@
         <dependency artifact="android_screen_ui_event_publisher" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_sense_dashboard" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_sense_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="android_headset_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_sense_streams" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_sms_chart_gadget" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
