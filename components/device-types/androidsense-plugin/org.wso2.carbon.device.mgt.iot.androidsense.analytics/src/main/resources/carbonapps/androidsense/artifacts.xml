@@ -58,7 +58,7 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_battery_percentage_chart_gadget" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_battery_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <!--<dependency artifact="android_battery_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>-->
         <dependency artifact="android_battery_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_battery_stats_streams" version="1.0.0" include="true"
