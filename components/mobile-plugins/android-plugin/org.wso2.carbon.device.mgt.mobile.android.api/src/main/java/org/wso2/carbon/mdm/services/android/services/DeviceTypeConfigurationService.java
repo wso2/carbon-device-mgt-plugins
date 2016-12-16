@@ -24,16 +24,17 @@ import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.Extension;
 import io.swagger.annotations.Tag;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.AuthorizationScope;
-import io.swagger.annotations.Authorization;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.bean.AndroidPlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
+import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -61,6 +62,28 @@ import javax.ws.rs.core.Response;
 @Path("/configuration")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll Device",
+                        description = "Register an Android device",
+                        key = "cdmf:android:enroll",
+                        permissions = {"/device-mgt/devices/enroll/android"}
+                ),
+                @Scope(
+                        name = "View Configurations",
+                        description = "Getting Android Platform Configurations",
+                        key = "cdmf:android:view-configuration",
+                        permissions = {"/device-mgt/platform-configurations/view"}
+                ),
+                @Scope(
+                        name = "Manage Configurations",
+                        description = "Updating Android Platform Configurations",
+                        key = "cdmf:android:manage-configuration",
+                        permissions = {"/device-mgt/platform-configurations/manage"}
+                )
+        }
+)
 public interface DeviceTypeConfigurationService {
 
     @GET
@@ -71,12 +94,10 @@ public interface DeviceTypeConfigurationService {
             notes = "Get the Android platform configuration details using this REST API.",
             response = PlatformConfiguration.class,
             tags = "Android Configuration Management",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(scope = "/device-mgt/platform-configurations/view",
-                                    description = "View Configurations") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:view-configuration")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -127,12 +148,10 @@ public interface DeviceTypeConfigurationService {
             value = "Updating Android Platform Configurations",
             notes = "Update the Android platform configurations using this REST API.",
             tags = "Android Configuration Management",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(scope = "/device-mgt/platform-configurations/manage",
-                                    description = "Manage Configurations") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:manage-configuration")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -184,12 +203,10 @@ public interface DeviceTypeConfigurationService {
                     "registration process.",
             response = String.class,
             tags = "Android Configuration Management",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(scope = "/device-mgt/devices/enroll/android",
-                                    description = "Enroll Device") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:enroll")
+                    })
             }
     )
     @ApiResponses(value = {

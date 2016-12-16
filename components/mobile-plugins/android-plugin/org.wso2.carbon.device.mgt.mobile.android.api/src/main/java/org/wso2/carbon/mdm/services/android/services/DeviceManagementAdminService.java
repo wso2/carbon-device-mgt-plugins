@@ -24,15 +24,16 @@ import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.Extension;
 import io.swagger.annotations.Tag;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.AuthorizationScope;
-import io.swagger.annotations.Authorization;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.*;
+import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -64,6 +65,160 @@ import java.util.List;
 @Api(value = "Android Device Management Administrative Service", description = "Device management related admin APIs.")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Lock Device",
+                        description = "Hard lock own device",
+                        key = "cdmf:android:lock-devices",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/lock"}
+                ),
+                @Scope(
+                        name = "Unlock Device",
+                        description = "Unlock permanently locked device",
+                        key = "cdmf:android:unlock-devices",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/unlock"}
+                ),
+                @Scope(
+                        name = "Get Location",
+                        description = "Request device location coordinates",
+                        key = "cdmf:android:location",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/location"}
+                ),
+                @Scope(
+                        name = "Clear Password",
+                        description = "Clear the password on Android devices",
+                        key = "cdmf:android:clear-password",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/clear-password"}
+                ),
+                @Scope(
+                        name = "Control Camera",
+                        description = "Enabling or Disabling the Camera on Android Devices",
+                        key = "cdmf:android:control-camera",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/camera"}
+                ),
+                @Scope(
+                        name = "Get Info",
+                        description = "Requesting device information from Android Devices",
+                        key = "cdmf:android:info",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/info"}
+                ),
+                @Scope(
+                        name = "Get Logs",
+                        description = "Requesting Logcat Details from Android Devices",
+                        key = "cdmf:android:logcat",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/logcat"}
+                ),
+                @Scope(
+                        name = "Enterprise Wipe",
+                        description = "Enterprise Wiping Android Devices",
+                        key = "cdmf:android:enterprise-wipe",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/enterprise-wipe"}
+                ),
+                @Scope(
+                        name = "Factory Reset",
+                        description = "Factory Resetting Android Devices",
+                        key = "cdmf:android:wipe",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/wipe"}
+                ),
+                @Scope(
+                        name = "Get Installed Applications",
+                        description = "Get list of installed applications",
+                        key = "cdmf:android:applications",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/applications"}
+                ),
+                @Scope(
+                        name = "Ring Device",
+                        description = "Ring Android devices",
+                        key = "cdmf:android:ring",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/ring"}
+                ),
+                @Scope(
+                        name = "Reboot Device",
+                        description = "Reboot Android devices",
+                        key = "cdmf:android:reboot",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/reboot"}
+                ),
+                @Scope(
+                        name = "Mute Device",
+                        description = "Mute Android devices",
+                        key = "cdmf:android:mute",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/mute"}
+                ),
+                @Scope(
+                        name = "Install Applications",
+                        description = "Installing an Application on Android Devices",
+                        key = "cdmf:android:install-application",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/install-app"}
+                ),
+                @Scope(
+                        name = "Update Applications",
+                        description = "Updating an Application on Android Devices",
+                        key = "cdmf:android:update-application",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/update-app"}
+                ),
+                @Scope(
+                        name = "Uninstall Applications",
+                        description = "Uninstalling an Application on Android Devices",
+                        key = "cdmf:android:uninstall-application",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/uninstall-app"}
+                ),
+                @Scope(
+                        name = "Blacklist Applications",
+                        description = "Blacklisting applications on Android Devices",
+                        key = "cdmf:android:blacklist-applications",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/blacklist-app"}
+                ),
+                @Scope(
+                        name = "Upgrade Firmware",
+                        description = "Upgrading Firmware of Android Devices",
+                        key = "cdmf:android:upgrade-firmware",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/upgrade"}
+                ),
+                @Scope(
+                        name = "Configure VPN",
+                        description = "Configure VPN on Android Device",
+                        key = "cdmf:android:configure-vpn",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/vpn"}
+                ),
+                @Scope(
+                        name = "Send Notification",
+                        description = "Sending a notification to Android Device",
+                        key = "cdmf:android:send-notification",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/send-notification"}
+                ),
+                @Scope(
+                        name = "Configure Wi-Fi",
+                        description = "Configure Wi-Fi on Android Device",
+                        key = "cdmf:android:configure-wifi",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/wifi"}
+                ),
+                @Scope(
+                        name = "Encrypt Storage",
+                        description = "Encrypting storage on Android Device",
+                        key = "cdmf:android:encrypt-storage",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/encrypt"}
+                ),
+                @Scope(
+                        name = "Change Password",
+                        description = "Changing the lock code of an Android Device",
+                        key = "cdmf:android:change-lock-code",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/change-lock-code"}
+                ),
+                @Scope(
+                        name = "Password Policy",
+                        description = "Set password policy of an Android Device",
+                        key = "cdmf:android:set-password-policy",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/password-policy"}
+                ),
+                @Scope(
+                        name = "Add Web clip",
+                        description = "Setting a Web Clip on Android Devices",
+                        key = "cdmf:android:set-webclip",
+                        permissions = {"/device-mgt/devices/owning-device/operations/android/webclip"}
+                )
+        }
+)
 public interface DeviceManagementAdminService {
 
     @POST
@@ -76,13 +231,10 @@ public interface DeviceManagementAdminService {
                     "permanently locks the device or screen locking an Android device.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/lock",
-                                    description = "Lock Device") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:lock-devices")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -142,13 +294,10 @@ public interface DeviceManagementAdminService {
             notes = "Unlock devices that were locked permanently using the hard lock operation. Devices that are hard locked can only be unlocked by the EMM administrator.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/unlock",
-                                    description = "Unlock Device") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:unlock-devices")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -208,13 +357,10 @@ public interface DeviceManagementAdminService {
                     "Example: In situations where you have lost your device and need to find out where it is, you can use this REST API to get the location of the device.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/location",
-                                    description = "Get Device Location") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:location")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -270,13 +416,10 @@ public interface DeviceManagementAdminService {
             notes = "Clear the password on Android devices",
             response = Activity.class,
             tags = "Android Device Management Administrative Service.",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/clear-password",
-                                    description = "Clear Password of Device") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:clear-password")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -331,13 +474,11 @@ public interface DeviceManagementAdminService {
             notes = "Enable or disable the camera on Android devices.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(scope = "/device-mgt/devices/owning-device/operations/android/camera", description = "Manage Camera") }
-                    )
-            }
-    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:control-camera")
+                    })
+            }    )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 201,
@@ -398,13 +539,10 @@ public interface DeviceManagementAdminService {
                     "the list of operations that needs to be executed on the device",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/info",
-                                    description = "Get Device Information") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:info")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -464,13 +602,10 @@ public interface DeviceManagementAdminService {
                     "the list of operations that needs to be executed on the device.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/logcat",
-                                    description = "Get Logs") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:logcat")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -529,13 +664,10 @@ public interface DeviceManagementAdminService {
                     "personal data intact. You are able to enterprise wipe Android devices using this REST API.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/enterprise-wipe",
-                                    description = "Enterprise Wipe") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:enterprise-wipe")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -592,13 +724,10 @@ public interface DeviceManagementAdminService {
                     "to restore them back to the original system.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/wipe",
-                                    description = "Factory Reset") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:wipe")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -659,13 +788,10 @@ public interface DeviceManagementAdminService {
                     "on the device.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/applications",
-                                    description = "Get Installed Application") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:applications")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -722,13 +848,10 @@ public interface DeviceManagementAdminService {
             notes = "Ring Android devices.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/ring",
-                                    description = "Ring Device") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:ring")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -785,13 +908,10 @@ public interface DeviceManagementAdminService {
             notes = "Reboot or restart your Android devices.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/reboot",
-                                    description = "Reboot Device") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:reboot")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -840,6 +960,7 @@ public interface DeviceManagementAdminService {
             List<String> deviceIDs);
 
     @POST
+    @Path("/mute")
     @ApiOperation(
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
@@ -847,13 +968,10 @@ public interface DeviceManagementAdminService {
             notes = "Mute or enable a silent profile for Android devices.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/mute",
-                                    description = "Mute Device") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:mute")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -894,7 +1012,6 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new device mute operation.")
     })
-    @Path("/mute")
     Response muteDevice(
             @ApiParam(
                     name = "deviceIDs",
@@ -913,13 +1030,10 @@ public interface DeviceManagementAdminService {
                     " the application installation will happen in silent mode, else the device user's consent will be required.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/install-app",
-                                    description = "Install Applications") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:install-application")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -981,13 +1095,10 @@ public interface DeviceManagementAdminService {
                     "mode, else the device user's consent is required.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/update-app",
-                                    description = "Update installed applications") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:update-application")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -1046,13 +1157,10 @@ public interface DeviceManagementAdminService {
             notes = "Uninstall an application from Android devices.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/uninstall-app",
-                                    description = "Uninstall Applications") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:uninstall-application")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -1115,13 +1223,10 @@ public interface DeviceManagementAdminService {
                     "COPE devices. Applications can be blacklisted via the application restriction policy too.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/blacklist-app",
-                                    description = "Blacklist Applications") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:blacklist-applications")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -1176,17 +1281,14 @@ public interface DeviceManagementAdminService {
             consumes = MediaType.APPLICATION_JSON,
             produces = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
-            value = "UUpgrading Firmware of Android Devices",
+            value = "Upgrading Firmware of Android Devices",
             notes = "Upgrade the firmware of Android devices.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/upgrade",
-                                    description = "Upgrade Firmware") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:upgrade-firmware")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -1247,13 +1349,10 @@ public interface DeviceManagementAdminService {
             notes = "Configure VPN on Android devices.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/vpn",
-                                    description = "Add VPN") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:configure-vpn")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -1310,13 +1409,10 @@ public interface DeviceManagementAdminService {
             notes = "Send a notification or message to Android devices.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/send-notification",
-                                    description = "Send Notifications") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:send-notification")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -1374,13 +1470,10 @@ public interface DeviceManagementAdminService {
             notes = "Configure Wi-Fi on Android devices.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/wifi",
-                                    description = "Add Wifi Configuration") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:configure-wifi")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -1439,13 +1532,10 @@ public interface DeviceManagementAdminService {
             notes = "Encrypt the data stored on Android devices.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/encrypt",
-                                    description = "Encrypt Device") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:encrypt-storage")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -1504,13 +1594,10 @@ public interface DeviceManagementAdminService {
             notes = "Change the lock code on Android devices.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/change-lock-code",
-                                    description = "Change Password of Device") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:change-lock-code")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -1569,13 +1656,10 @@ public interface DeviceManagementAdminService {
             notes = "Set a password policy on Android devices.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/password-policy",
-                                    description = "Set Password Policy") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:set-password-policy")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -1624,7 +1708,7 @@ public interface DeviceManagementAdminService {
             PasswordPolicyBeanWrapper passwordPolicyBeanWrapper);
 
     @POST
-    @Path("set-webclip")
+    @Path("/set-webclip")
     @ApiOperation(
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
@@ -1632,13 +1716,10 @@ public interface DeviceManagementAdminService {
             notes = "Set a web clip on Android devices. A web clip is used to add a bookmark to a web application.",
             response = Activity.class,
             tags = "Android Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/android/webclip",
-                                    description = "Add Webclips") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:set-webclip")
+                    })
             }
     )
     @ApiResponses(value = {
