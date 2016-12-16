@@ -15,5 +15,7 @@
         FROM AndroidSmsData
         GROUP BY year, month, day, meta_deviceId, meta_owner, type ORDER BY timestamp DESC;
                      
-        INCREMENTAL_TABLE_COMMIT ORG_WSO2_IOT_ANDROID_SMS_STATS;                                 </Script>
+        INCREMENTAL_TABLE_COMMIT ORG_WSO2_IOT_ANDROID_SMS_STATS;
+    </Script>
+    <CronExpression>0 0/5 * * * ?</CronExpression>
 </Analytics>
