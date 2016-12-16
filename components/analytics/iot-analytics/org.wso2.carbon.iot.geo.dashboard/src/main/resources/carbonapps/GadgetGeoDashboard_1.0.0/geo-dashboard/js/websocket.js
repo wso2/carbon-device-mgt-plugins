@@ -29,6 +29,7 @@ var waitTime = 1000;
 var webSocketURL, alertWebSocketURL, trafficStreamWebSocketURL;
 var deviceId;
 var deviceType;
+var isBatchModeOn = false;
 
 function processPointMessage(geoJsonFeature) {
     if (geoJsonFeature.id in currentSpatialObjects) {
@@ -70,6 +71,10 @@ function SpatialObject(json) {
 
     this.marker.bindPopup(this.popupTemplate.html());
     return this;
+}
+
+function popupDateRange() {
+    $('#dateRangePopup').attr('title', 'Device ID - ' + deviceId + " Device Type - " + deviceType).dialog();
 }
 
 SpatialObject.prototype.update = function (geoJSON) {
@@ -161,7 +166,17 @@ function angleToHeading(angle) {
 SpatialObject.prototype.removeFromMap = function () {
     this.removePath();
     this.marker.closePopup();
+    map.removeLayer(this.marker);
 };
+
+function clearMap() {
+    for (var spacialObject in currentSpatialObjects) {
+        console.log(spacialObject);
+        currentSpatialObjects[spacialObject].removePath();
+        currentSpatialObjects[spacialObject].removeFromMap();
+    }
+    currentSpatialObjects = {};
+}
 
 SpatialObject.prototype.createLineStringFeature = function (state, information, coordinates) {
     return {
@@ -269,7 +284,6 @@ function processTrafficMessage(json) {
 }
 
 function processAlertMessage(json) {
-    //console.log(json);
     if (json.state != "NORMAL" && json.state != "MINIMAL") {
         console.log(json);
         notifyAlert("Object ID: <span style='color: blue;cursor: pointer' onclick='focusOnSpatialObject(" + json.id + ")'>" + json.id + "</span> change state to: <span style='color: red'>" + json.state + "</span> Info : " + json.information);
@@ -553,11 +567,13 @@ var webSocketOnAlertOpen = function () {
 };
 
 var webSocketOnAlertMessage = function processMessage(message) {
-    var json = $.parseJSON(message.data);
-    if (json.messageType == "Alert") {
-        processAlertMessage(json);
-    } else {
-        console.log("Message type not supported.");
+    if (!isBatchModeOn) {
+        var json = $.parseJSON(message.data);
+        if (json.messageType == "Alert") {
+            processAlertMessage(json);
+        } else {
+            console.log("Message type not supported.");
+        }
     }
 };
 
@@ -595,18 +611,19 @@ var webSocketOnOpen = function () {
 };
 
 var webSocketOnMessage = function (message) {
-    var json = $.parseJSON(message.data);
-    if (json.messageType == "Point") {
-        processPointMessage(json);
-    } else if (json.messageType == "Prediction") {
-        //processPredictionMessage(json);
-    } else {
-        console.log("Message type not supported.");
+    if (!isBatchModeOn) {
+        var json = $.parseJSON(message.data);
+        if (json.messageType == "Point") {
+            processPointMessage(json);
+        } else if (json.messageType == "Prediction") {
+            //processPredictionMessage(json);
+        } else {
+            console.log("Message type not supported.");
+        }
     }
 };
 
 var webSocketOnClose = function (e) {
-
     if (websocket.get_opened()) {
         $.UIkit.notify({
             message: 'Connection lost with server!!',
@@ -669,7 +686,7 @@ function initializeOnAlertWebSocket() {
 
 function intializeWebsocketUrls() {
     var username;
-    wso2.gadgets.state.getGlobalState(function(state) {
+    wso2.gadgets.state.getGlobalState(function (state) {
         deviceId = state.device.id;
         deviceType = state.device.type;
         if (deviceId && deviceType) {
@@ -688,7 +705,8 @@ function intializeWebsocketUrls() {
                         ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
                             .CEP_ON_ALERT_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
                         + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
-                    document.cookie = "websocket-token=f98d6142-e988-3c7f-a8c9-7e6d74da7113; path=/";
+                    document.cookie = "websocket-token=619e6170-10e8-31f0-904b-b7770d53e545; path=/";
+                    $("#proximity_alert").hide();
                     initializeWebSocket();
                     initializeOnAlertWebSocket();
                 });
@@ -703,7 +721,6 @@ function intializeWebsocketUrls() {
         }
     });
 }
-
 
 
 intializeWebsocketUrls();

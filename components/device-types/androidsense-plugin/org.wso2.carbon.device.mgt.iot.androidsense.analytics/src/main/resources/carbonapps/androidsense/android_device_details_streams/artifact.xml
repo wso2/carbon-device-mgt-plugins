@@ -18,6 +18,6 @@
   -->
 
 <artifact name= "android_device_details_streams" version="1.0.0" type="event/stream" serverRole="DataAnalyticsServer">
-	<file>org.wso2.iot.andriod.device.details_1.0.0.json</file>
+	<file>org.wso2.iot.android.device.details_1.0.0.json</file>
 </artifact>
 

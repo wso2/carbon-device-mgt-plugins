@@ -349,7 +349,7 @@ function updateDrawing(updatedGeoJson) {
 }
 
 function viewFence(geoFenceElement,id) {
-    var geoJson = JSON.parse($(geoFenceElement).attr('data-geoJson'));
+    var geoJson = JSON.parse($(geoFenceElement).attr('data-geoJson').replace(/'/g, '"'));
     var queryName = $(geoFenceElement).attr('data-queryName');
     var areaName = $(geoFenceElement).attr('data-areaName');
     var geometryShape;
@@ -382,7 +382,7 @@ function viewFence(geoFenceElement,id) {
 
         var stationeryTime=$(geoFenceElement).attr('data-stationeryTime');
 
-        $('#templateLoader').load("assets/html_templates/view_fence_popup.html #viewStationeryAlert", function () {
+        $('#templateLoader').load("/portal/store/carbon.super/fs/gadget/geo-dashboard/assets/html_templates/view_fence_popup.html #viewStationeryAlert", function () {
             var popupTemplate = $('#templateLoader').find('#viewStationeryAlert');
             popupTemplate.find('#exportGeoJson').attr('leaflet_id', geometryShape._leaflet_id);
             popupTemplate.find('#hideViewFence').attr('leaflet_id', geometryShape._leaflet_id);
@@ -397,7 +397,7 @@ function viewFence(geoFenceElement,id) {
         });
     } else if(id=="WithIn"){
 
-        $('#templateLoader').load("assets/html_templates/view_fence_popup.html #viewWithinAlert", function () {
+        $('#templateLoader').load("/portal/store/carbon.super/fs/gadget/geo-dashboard/assets/html_templates/view_fence_popup.html #viewWithinAlert", function () {
             var popupTemplate = $('#templateLoader').find('#viewWithinAlert');
             popupTemplate.find('#exportGeoJson').attr('leaflet_id', geometryShape._leaflet_id);
             popupTemplate.find('#hideViewFence').attr('leaflet_id', geometryShape._leaflet_id);
