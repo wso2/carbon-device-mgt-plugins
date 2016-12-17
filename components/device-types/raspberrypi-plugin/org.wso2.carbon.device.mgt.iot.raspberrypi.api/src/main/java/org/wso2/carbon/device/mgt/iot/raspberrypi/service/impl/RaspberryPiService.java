@@ -48,7 +48,7 @@ public interface RaspberryPiService {
 
     @Path("device/{deviceId}/bulb")
     @POST
-    @Scope(key = "device:raspberrypi:enroll", name = "", description = "")
+    @Scope(key = "device:raspberrypi:enroll", name = "", description = "", permissions = {})
     Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
     /**
@@ -58,7 +58,7 @@ public interface RaspberryPiService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    @Scope(key = "device:raspberrypi:enroll", name = "", description = "")
+    @Scope(key = "device:raspberrypi:enroll", name = "", description = "", permissions = {})
     Response getRaspberryPiTemperatureStats(@PathParam("deviceId") String deviceId,
                                         @QueryParam("from") long from, @QueryParam("to") long to);
 
@@ -68,7 +68,7 @@ public interface RaspberryPiService {
     @Path("device/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Scope(key = "device:raspberrypi:enroll", name = "", description = "")
+    @Scope(key = "device:raspberrypi:enroll", name = "", description = "", permissions = {})
     Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketch_type") String sketchType);
 
 }
