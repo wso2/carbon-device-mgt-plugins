@@ -19,7 +19,11 @@
 package org.wso2.carbon.device.mgt.mobile.windows.api.services.authbst;
 
 import io.swagger.annotations.*;
+
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.Constants;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.authbst.beans.Credentials;
 
 import javax.jws.WebService;
@@ -56,6 +60,16 @@ import javax.ws.rs.core.Response;
 @Path("/bst")
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll Device",
+                        description = "Register Windows device",
+                        key = "cdmf:windows:enroll",
+                        permissions = {"/device-mgt/devices/enroll/windows"}
+                )
+        }
+)
 public interface BSTProvider {
 
     @POST
@@ -68,13 +82,10 @@ public interface BSTProvider {
             value = "Getting Binary security token.",
             notes = "Using this API to fetch Binary security token to call window enrollment and policy endpoints.",
             tags = "BST Provider",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(scope = "/device-mgt/devices/enroll/windows",
-                                    description = "Getting Binary security token for Windows enrollment " +
-                                            "and policy endpoints.")}
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:enroll")
+                    })
             }
     )
     @ApiResponses(
