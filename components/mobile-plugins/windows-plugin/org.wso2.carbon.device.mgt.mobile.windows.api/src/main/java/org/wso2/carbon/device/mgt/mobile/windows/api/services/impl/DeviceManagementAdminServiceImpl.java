@@ -46,7 +46,7 @@ import java.util.List;
  */
 @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-@Path("/operation/admin/devices")
+@Path("/admin/devices")
 public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminService {
 
     private static Log log = LogFactory.getLog(OperationImpl.class);
@@ -103,7 +103,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
      * @throws WindowsDeviceEnrolmentException
      */
     @POST
-    @Path("/disenroll")
+    @Path("/disenroll-devices")
     public Response disenroll(@HeaderParam("Accept") String acceptHeader, List<String> deviceIDs)
             throws WindowsDeviceEnrolmentException {
 
@@ -128,11 +128,11 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.error(errorMessage, e);
             throw new WindowsOperationsException(message, responseMediaType);
         } catch (InvalidDeviceException e) {
-        String errorMessage = "Invalid Device Identifiers found.";
-        log.error(errorMessage, e);
-        throw new BadRequestException(
-                new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
-    }
+            String errorMessage = "Invalid Device Identifiers found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        }
     }
 
     /**
@@ -144,7 +144,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
      * @throws WindowsDeviceEnrolmentException
      */
     @POST
-    @Path("/wipe-data")
+    @Path("/wipe-devices")
     public Response wipe(@HeaderParam("Accept") String acceptHeader, List<String> deviceids)
             throws WindowsDeviceEnrolmentException {
 
@@ -187,7 +187,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
      * @throws WindowsDeviceEnrolmentException
      */
     @POST
-    @Path("/ring-device")
+    @Path("/ring-devices")
     public Response ring(@HeaderParam("Accept") String acceptHeader, List<String> deviceIDs)
             throws WindowsDeviceEnrolmentException {
 
@@ -235,7 +235,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
      * @throws WindowsDeviceEnrolmentException
      */
     @POST
-    @Path("/lock-reset")
+    @Path("/lock-reset-devices")
     public Response lockReset(@HeaderParam("Accept") String acceptHeader, List<String> deviceIDs)
             throws WindowsDeviceEnrolmentException {
 

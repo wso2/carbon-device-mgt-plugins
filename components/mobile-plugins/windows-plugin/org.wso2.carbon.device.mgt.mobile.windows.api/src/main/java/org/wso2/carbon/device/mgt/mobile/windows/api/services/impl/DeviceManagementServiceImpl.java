@@ -67,10 +67,8 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
         String token;
         String response;
         SyncmlDocument syncmlDocument;
-        List<Operation> deviceInfoOperations;
         List<? extends Operation> pendingOperations;
         OperationHandler operationHandler = new OperationHandler();
-        DeviceInfo deviceInfo = new DeviceInfo();
         OperationReply operationReply = new OperationReply();
 
         try {
@@ -91,11 +89,10 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
 
                         if (modifyEnrollWithMoreDetail(request)) {
                             pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
-
                             response = operationReply.generateReply(syncmlDocument,pendingOperations);
                             return Response.status(Response.Status.OK).entity(response).build();
                         } else {
-                            String msg = "Error occurred in device enrollment.";
+                            String msg = "Error occurred in while modify the enrollment.";
                             log.error(msg);
                             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
                         }
@@ -104,7 +101,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                         log.error(msg);
                         return Response.status(Response.Status.UNAUTHORIZED).entity(msg).build();
                     }
-                } else if (sessionId >= PluginConstants.SyncML.SYNCML_SECOND_SESSION_ID) {
+                } else  {
                     if ((syncmlDocument.getBody().getAlert() != null)) {
                         if (!syncmlDocument.getBody().getAlert().getData().equals(Constants.DISENROLL_ALERT_DATA)) {
                             pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
@@ -125,10 +122,6 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                         return Response.ok().entity(operationReply.generateReply(
                                 syncmlDocument, pendingOperations)).build();
                     }
-                } else {
-                    String msg = "Failure occurred in Device request message.";
-                    log.error(msg);
-                    return Response.status(Response.Status.BAD_REQUEST).entity(msg).build();
                 }
             }
         } catch (SyncmlMessageFormatException e) {
@@ -198,35 +191,13 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                 existingDevice.setDeviceIdentifier(syncmlDocument.getHeader().getSource().getLocURI());
                 existingDevice.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
                 status = WindowsAPIUtils.getDeviceManagementService().modifyEnrollment(existingDevice);
-                // call effective policy for the enrolling device.
-                //PolicyManagerService policyManagerService = WindowsAPIUtils.getPolicyManagerService();
-                //policyManagerService.getEffectivePolicy(deviceIdentifier);
                 return status;
-
             }
         } catch (DeviceManagementException e) {
             throw new WindowsDeviceEnrolmentException("Failure occurred while enrolling device.", e);
-//        } catch (PolicyManagementException e) {
-//            throw new WindowsOperationException("Error occurred while getting effective policy.", e);
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
         }
         return status;
     }
-
-//    public void generateDeviceInfo(Document requestedInfo) {
-//        SyncmlDocument syncmlDocument;
-//        syncmlDocument = SyncmlParser.parseSyncmlPayload(requestedInfo);
-//        DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(syncmlDocument.
-//                getHeader().getSource().getLocURI());
-//        try {
-//            List<ItemTag> itemList = syncmlDocument.getBody().getResults().getItem();
-//            Device existingDevice = WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
-//            org.wso2.carbon.device.mgt.common.device.details.DeviceInfo existingDeviceInfo = existingDevice.getDeviceInfo();
-//            existingDeviceInfo.s
-//        } catch (DeviceManagementException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
 }

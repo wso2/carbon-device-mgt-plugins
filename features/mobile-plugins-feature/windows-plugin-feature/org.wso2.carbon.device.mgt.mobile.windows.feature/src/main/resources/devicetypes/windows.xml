@@ -65,31 +65,31 @@
         <Feature code="DISENROLL">
             <Name>Disenroll</Name>
             <Description>Lock the device</Description>
-            <Operation context="/api/device-mgt/windows/v1.0/operation/admin/devices/disenroll" method="POST" type="application/json">
+            <Operation context="/api/device-mgt/windows/v1.0/admin/devices/disenroll-devices" method="POST" type="application/json">
             </Operation>
         </Feature>
         <Feature code="WIPE_DATA">
             <Name>Wipe Data</Name>
             <Description>Lock the device</Description>
-            <Operation context="/api/device-mgt/windows/v1.0/operation/admin/devices/wipe-data" method="POST" type="application/json">
+            <Operation context="/api/device-mgt/windows/v1.0/admin/devices/wipe-devices" method="POST" type="application/json">
             </Operation>
         </Feature>
         <Feature code="DEVICE_RING">
             <Name>Ring</Name>
             <Description>Lock the device</Description>
-            <Operation context="/api/device-mgt/windows/v1.0/operation/admin/devices/ring-device" method="POST" type="application/json">
+            <Operation context="/api/device-mgt/windows/v1.0/admin/devices/ring-devices" method="POST" type="application/json">
             </Operation>
         </Feature>
         <Feature code="DEVICE_LOCK">
             <Name>Device Lock</Name>
             <Description>Lock the device</Description>
-            <Operation context="/api/device-mgt/windows/v1.0/operation/admin/devices/lock-devices" method="POST" type="application/json">
+            <Operation context="/api/device-mgt/windows/v1.0/admin/devices/lock-devices" method="POST" type="application/json">
             </Operation>
         </Feature>
         <Feature code="LOCK_RESET">
-            <Name>Device Lock</Name>
+            <Name>Device Lock Reset</Name>
             <Description>Lock the device</Description>
-            <Operation context="/api/device-mgt/windows/v1.0/operation/admin/devices/lock-reset" method="POST" type="application/json">
+            <Operation context="/api/device-mgt/windows/v1.0/admin/devices/lock-reset-devices" method="POST" type="application/json">
             </Operation>
         </Feature>
         <Feature code="DEVICE_INFO">

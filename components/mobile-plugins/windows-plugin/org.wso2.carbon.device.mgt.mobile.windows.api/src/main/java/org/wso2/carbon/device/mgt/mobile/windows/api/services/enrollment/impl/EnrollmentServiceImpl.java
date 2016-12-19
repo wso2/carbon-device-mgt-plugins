@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * you may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.wso2.carbon.device.mgt.mobile.windows.api.services.enrollment.impl;
 
 import org.apache.commons.codec.binary.Base64;
@@ -12,13 +30,10 @@ import org.w3c.dom.*;
 import org.wso2.carbon.certificate.mgt.core.exception.KeystoreException;
 import org.wso2.carbon.certificate.mgt.core.service.CertificateManagementServiceImpl;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.EnrolmentInfo;
+import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.CacheEntry;
-import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.Device;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.CertificateGenerationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.SyncmlMessageFormatException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WAPProvisioningException;
@@ -29,6 +44,8 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.SyncmlCrede
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.enrollment.EnrollmentService;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.enrollment.beans.*;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.beans.WindowsDevice;
+import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
+import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 import org.xml.sax.SAXException;
 
 import javax.annotation.Resource;
@@ -59,8 +76,7 @@ import java.util.List;
 
 
 /**
- * Implementation class of CertificateEnrollmentService interface. This class implements MS-WSTEP
- * protocol.
+ * Implementation class of Windows10 Enrollment process.
  */
 @WebService(endpointInterface = PluginConstants.ENROLLMENT_SERVICE_ENDPOINT,
         targetNamespace = PluginConstants.DEVICE_ENROLLMENT_SERVICE_TARGET_NAMESPACE)
@@ -86,7 +102,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         String headerTo = null;
         String encodedWap;
         List<Header> headers = getHeaders();
-        WindowsDevice windowsDevice = new WindowsDevice();
         for (Header headerElement : headers != null ? headers : null) {
             String nodeName = headerElement.getName().getLocalPart();
             if (PluginConstants.SECURITY.equals(nodeName)) {
@@ -98,32 +113,13 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 headerTo = toElement.getFirstChild().getTextContent();
             }
         }
-        windowsDevice.setDeviceType(DeviceManagementConstants.MobileDeviceTypes.
-                MOBILE_DEVICE_TYPE_WINDOWS);
-        windowsDevice.setUser(getRequestedUser(headerBinarySecurityToken));
-        List<ContextItem> contextItems = additionalContext.getcontextitem();
-        for (int x= 0; x< contextItems.size(); x++) {
-            switch (x) {
-                case PluginConstants.WindowsEnrollmentProperties.WIN_DEVICE_NAME:
-                    windowsDevice.setDeviceName(contextItems.get(x).getValue());
-                case PluginConstants.WindowsEnrollmentProperties.WIN_DEVICE_IMEI:
-                    windowsDevice.setImei(contextItems.get(x).getValue());
-                case PluginConstants.WindowsEnrollmentProperties.WIN_DEVICE_ID:
-                    windowsDevice.setDeviceId(contextItems.get(x).getValue());
-                case PluginConstants.WindowsEnrollmentProperties.WIN_DEVICE_VERSION:
-                    windowsDevice.setOsVersion(contextItems.get(x).getValue());
-            }
-        }
-
-        /////////
-
-        org.wso2.carbon.device.mgt.common.Device device = generateDevice(windowsDevice);
         try {
-            WindowsAPIUtils.getDeviceManagementService().enrollDevice(device);
+            enrollDevice(additionalContext, headerBinarySecurityToken);
         } catch (DeviceManagementException e) {
-            e.printStackTrace();
+            throw new WindowsDeviceEnrolmentException("Error occurred while enrolling the device.");
+        } catch (PolicyManagementException e) {
+            throw new WindowsDeviceEnrolmentException("Error occurred while enforcing windows policies.");
         }
-        /////////
         String[] splitEmail = headerTo.split("(/ENROLLMENTSERVER)");
         String email = splitEmail[PluginConstants.CertificateEnrolment.EMAIL_SEGMENT];
 
@@ -187,6 +183,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         }
     }
+
     /**
      * Method used to Convert the Document object into a String.
      *
@@ -296,7 +293,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             Node authNameNode = appServerAttribute.getNamedItem(PluginConstants.CertificateEnrolment.VALUE);
             String userName = getRequestedUser(headerBst);
             //CacheEntry cacheEntry = (CacheEntry) DeviceUtil.getCacheEntry(headerBst);
-           // String userName = cacheEntry.getUsername();
+            // String userName = cacheEntry.getUsername();
             authNameNode.setTextContent(userName);
             DeviceUtil.removeToken(headerBst);
             String password = DeviceUtil.generateRandomToken();
@@ -346,29 +343,41 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         return CastUtils.cast((List<?>) message.get(Header.HEADER_LIST));
     }
 
+    /**
+     * This method to getting RSTR requested user from the Cache.
+     *
+     * @param bst Binary Security token which has given from BST Endpoint.
+     * @return User for given token.
+     */
     private String getRequestedUser(String bst) {
         CacheEntry cacheEntry = (CacheEntry) DeviceUtil.getCacheEntry(bst);
         String userName = cacheEntry.getUsername();
         return userName;
     }
 
-    private org.wso2.carbon.device.mgt.common.Device generateDevice(WindowsDevice windowsDevice) {
+    /**
+     * This Method to generate windows device.
+     *
+     * @param windowsDevice Requested Device with properties.
+     * @return Value added Device.
+     */
+    private Device generateDevice(WindowsDevice windowsDevice) {
 
-        org.wso2.carbon.device.mgt.common.Device generatedDevice = new org.wso2.carbon.device.mgt.common.Device();
+        Device generatedDevice = new Device();
 
-        org.wso2.carbon.device.mgt.common.Device.Property OSVersionProperty = new org.wso2.carbon.device.mgt.common.Device.Property();
+        Device.Property OSVersionProperty = new Device.Property();
         OSVersionProperty.setName(PluginConstants.SyncML.OS_VERSION);
         OSVersionProperty.setValue(windowsDevice.getOsVersion());
 
-        org.wso2.carbon.device.mgt.common.Device.Property IMSEIProperty = new org.wso2.carbon.device.mgt.common.Device.Property();
+        Device.Property IMSEIProperty = new Device.Property();
         IMSEIProperty.setName(PluginConstants.SyncML.IMSI);
         IMSEIProperty.setValue(windowsDevice.getImsi());
 
-        org.wso2.carbon.device.mgt.common.Device.Property IMEIProperty = new org.wso2.carbon.device.mgt.common.Device.Property();
+        Device.Property IMEIProperty = new Device.Property();
         IMEIProperty.setName(PluginConstants.SyncML.IMEI);
         IMEIProperty.setValue(windowsDevice.getImei());
 
-        List<org.wso2.carbon.device.mgt.common.Device.Property> propertyList = new ArrayList<>();
+        List<Device.Property> propertyList = new ArrayList<>();
         propertyList.add(OSVersionProperty);
         propertyList.add(IMSEIProperty);
         propertyList.add(IMEIProperty);
@@ -385,6 +394,40 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         generatedDevice.setName(windowsDevice.getDeviceName());
 
         return generatedDevice;
+    }
+
+    /**
+     * This method to enroll windows10 Device.
+     *
+     * @param requestContextItems       Context values to enroll the device.
+     * @param headerBinarySecurityToken SOAP request header value to identify the user.
+     * @throws DeviceManagementException Exception occurs while enrolling the Device.
+     * @throws PolicyManagementException Exception occurs while getting effective policies.
+     */
+    private void enrollDevice(AdditionalContext requestContextItems, String headerBinarySecurityToken)
+            throws DeviceManagementException, PolicyManagementException {
+        WindowsDevice windowsDevice = new WindowsDevice();
+        windowsDevice.setDeviceType(DeviceManagementConstants.MobileDeviceTypes.
+                MOBILE_DEVICE_TYPE_WINDOWS);
+        windowsDevice.setUser(getRequestedUser(headerBinarySecurityToken));
+        List<ContextItem> contextItems = requestContextItems.getcontextitem();
+        for (int x = 0; x < contextItems.size(); x++) {
+            switch (x) {
+                case PluginConstants.WindowsEnrollmentProperties.WIN_DEVICE_NAME:
+                    windowsDevice.setDeviceName(contextItems.get(x).getValue());
+                case PluginConstants.WindowsEnrollmentProperties.WIN_DEVICE_IMEI:
+                    windowsDevice.setImei(contextItems.get(x).getValue());
+                case PluginConstants.WindowsEnrollmentProperties.WIN_DEVICE_ID:
+                    windowsDevice.setDeviceId(contextItems.get(x).getValue());
+                case PluginConstants.WindowsEnrollmentProperties.WIN_DEVICE_VERSION:
+                    windowsDevice.setOsVersion(contextItems.get(x).getValue());
+            }
+        }
+        Device device = generateDevice(windowsDevice);
+        WindowsAPIUtils.getDeviceManagementService().enrollDevice(device);
+        PolicyManagerService policyManagerService = WindowsAPIUtils.getPolicyManagerService();
+        policyManagerService.getEffectivePolicy(new DeviceIdentifier(windowsDevice.getDeviceId(), device.getType()));
+
     }
 }
 

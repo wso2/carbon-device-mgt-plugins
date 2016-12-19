@@ -81,6 +81,10 @@ public class HeartBeatDeviceInfo {
         availableStorage.setCode(PluginConstants.SyncML.TOTAL_STORAGE);
         deviceInfoOperations.add(availableStorage);
 
+        Operation remainingBattery = new Operation();
+        remainingBattery.setCode(PluginConstants.SyncML.BATTERY_CHARGE_REMAINING);
+        deviceInfoOperations.add(remainingBattery);
+
         return deviceInfoOperations;
     }
 }
