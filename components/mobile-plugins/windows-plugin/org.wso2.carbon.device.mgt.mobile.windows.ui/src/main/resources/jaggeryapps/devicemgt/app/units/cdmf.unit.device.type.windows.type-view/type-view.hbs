@@ -1,5 +1,6 @@
 {{unit "cdmf.unit.lib.qrcode"}}
-{{unit "cdmf.unit.device.type.windows.qr-modal"}}
+{{unit "cdmf.unit.device.type.qr-modal" enrollmentURL=enrollmentURL deviceTypeName="Windows"}}
+{{unit "cdmf.unit.device.type.email.invite-modal" deviceTypeView="windows"}}
 
 <div class="col-lg-12  margin-top-double">
     <h1 class="grey ">Windows Mobile</h1>
@@ -18,7 +19,6 @@
     <br>
 
     <a href="#" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
-    <a href="#" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
     <a href="javascript:toggleEmailInvite()" class="btn-operations"><i class="fw fw-mail fw-inverse fw-lg add-margin-1x"></i> Invite by Email</a>
 
     <h3 class="uppercase"> Configure your workplace account</h3>
@@ -56,8 +56,6 @@
 </div>
 
 <br/>
-
-{{unit "cdmf.unit.device.type.email.invite-modal"}}
 
 {{#zone "topCss"}}
     {{css "css/styles.css"}}

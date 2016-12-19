@@ -19,6 +19,7 @@
 function onRequest(context){
     var viewModel = {};
     var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
-    viewModel.hostName = devicemgtProps["generalConfig"]["host"];
+    viewModel["hostName"] = devicemgtProps["generalConfig"]["host"];
+    viewModel["enrollmentURL"] = viewModel["hostName"] + context.unit.publicUri + "/asset/androidsense.apk";
     return viewModel;
 }
