@@ -327,13 +327,12 @@ public final class PluginConstants {
     }
 
     /**
-     * Windows version related constants.
+     * Windows version(8.1/10) related constants.
      */
     public final class WindowsVersionProperties {
         private WindowsVersionProperties() {
             throw new AssertionError();
         }
-
         public static final String REQUESTED_WIN10_VERSION = "3.0";
         public static final String REQUESTED_WIN81_VERSION = "2.0";
     }

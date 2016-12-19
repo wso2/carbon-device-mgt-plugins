@@ -229,7 +229,7 @@ public class OperationHandler {
         try {
             pendingDeviceInfoOperations = WindowsAPIUtils.getPendingOperations(deviceIdentifier);
         } catch (DeviceManagementException e) {
-            throw new OperationManagementException("Error occurred in getting pending operation.");
+            throw new OperationManagementException("Error occurred while getting pending operations.");
         }
         for (Operation operation : pendingDeviceInfoOperations) {
             if (PluginConstants.OperationCodes.DEVICE_INFO.equals(operation.getCode())) {

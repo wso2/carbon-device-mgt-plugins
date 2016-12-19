@@ -46,7 +46,6 @@ public class OperationCode {
         LONGITUDE("./Vendor/MSFT/RemoteFind/Location/Longitude"),
         LATITUDE("./Vendor/MSFT/RemoteFind/Location/Latitude"),
 
-
         // Windows10 operation codes
         TOTAL_RAM("./DevDetail/Ext/Microsoft/TotalRAM"),
         TOTAL_STORAGE("./DevDetail/Ext/Microsoft/TotalStorage"),
@@ -82,7 +81,7 @@ public class OperationCode {
         ENCRYPT_STORAGE_STATUS("./Vendor/MSFT/PolicyManager/Device/Security/RequireDeviceEncryption"),
         DEVICE_PASSWORD_ENABLE("./Vendor/MSFT/PolicyManager/My/DeviceLock/DevicePasswordEnabled"),
         DEVICE_PASSCODE_DELETE("./Vendor/MSFT/PolicyManager/My/DeviceLock"),
-        // windows 10
+        // Windows10 operation codes
         TOTAL_RAM("./DevDetail/Ext/Microsoft/TotalRAM"),
         TOTAL_STORAGE("./DevDetail/Ext/Microsoft/TotalStorage"),
         OS_PLATFORM("./DevDetail/Ext/Microsoft/OSPlatform"),
@@ -93,7 +92,6 @@ public class OperationCode {
         BATTERY_CHARGE_REMAINING("./Vendor/MSFT/DeviceStatus/Battery/EstimatedChargeRemaining"),
         BATTERY_ESTIMATED_RUNTIME("./Vendor/MSFT/DeviceStatus/Battery/EstimatedRuntime"),
         TEST("./Vendor/MSFT/DiagnosticLog/EtwLog/Collectors");
-
 
         private final String code;
 
