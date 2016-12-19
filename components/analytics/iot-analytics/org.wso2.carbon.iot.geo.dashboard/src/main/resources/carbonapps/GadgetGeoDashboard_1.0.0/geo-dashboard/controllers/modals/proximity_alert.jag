@@ -48,9 +48,6 @@
         }
     </style>
 </head>
-<%
-var get = require('../get_alerts.jag').get;
-%>
 <body>
 <div class="modal-header"
      style="cursor: move;background: #f9f9f9;-webkit-box-shadow: inset 0px 0px 14px 1px rgba(0,0,0,0.2);-moz-box-shadow: inset 0px 0px 14px 1px rgba(0,0,0,0.2);box-shadow: inset 0px 0px 14px 1px rgba(0,0,0,0.2);">
@@ -67,12 +64,12 @@ var get = require('../get_alerts.jag').get;
             <div class="col-md-10 col-md-offset-1">
                 <form class="form-inline" role="form">
                     <div class="input-group input-group-sm">
-                        <input type="text" id="proximityDistance" class="form-control" placeholder="Distance" value="<%= get('proximity').proximityDistance %>">
+                        <input type="text" id="proximityDistance" class="form-control" placeholder="Distance" >
                         <span class="input-group-addon">m</span>
                     </div>
                     <div class="input-group input-group-sm">
                         <input autofocus="enable" id="proximityTime" type="number" class="form-control"
-                               placeholder="Close time in S" value="<%= get('proximity').proximityTime %>">
+                               placeholder="Close time in S" >
                         <span class="input-group-addon">Seconds</span>
                     </div>
                 </form>

@@ -82,7 +82,7 @@ function initializeMap() {
 
     map = L.map("map", {
         zoom: 14,
-        center: [51.548525, 0.111749],
+        center: [6.927078, 79.861243],
         layers: [defaultOSM, defaultTFL],
         zoomControl: false,
         attributionControl: false,
@@ -120,8 +120,6 @@ function initializeMap() {
         }
 
     });
-
-
 }
 
 /* Attribution control */

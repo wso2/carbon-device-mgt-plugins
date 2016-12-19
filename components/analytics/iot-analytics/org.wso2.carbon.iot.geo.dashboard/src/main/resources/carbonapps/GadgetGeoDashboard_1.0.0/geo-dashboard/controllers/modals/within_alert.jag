@@ -22,20 +22,8 @@
     <style>
         .fa-trash-o:hover{color:red;}
     </style>
-
-    <script>
-    $(".removeGeoFence").tooltip();
-
-    $('.viewGeoFenceRow td:not(:last-child)').click(function () {
-            viewFence(this.parentElement,'WithIn');
-        });
-
-    </script>
 </head>
 <body>
-<%
-var get = require('../get_alerts.jag').get;
-%>
 <div class="modal-header" style="cursor: move;background: #f9f9f9;-webkit-box-shadow: inset 0px 0px 14px 1px rgba(0,0,0,0.2);-moz-box-shadow: inset 0px 0px 14px 1px rgba(0,0,0,0.2);box-shadow: inset 0px 0px 14px 1px rgba(0,0,0,0.2);">
     <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h4 class="modal-title">
@@ -45,9 +33,9 @@ var get = require('../get_alerts.jag').get;
 </div>
 <div class="modal-body">
     <div class="row">
-        <p class="text-info text-center">View current fences</p>
+        <p class="text-info text-center fence-not-exist">View current fences</p>
         <div class="">
-        <table class="table table-hover">
+        <table class="table table-hover" id ="within-alert">
               <thead>
                 <tr >
                   <th>Fence Name</th>
@@ -57,29 +45,10 @@ var get = require('../get_alerts.jag').get;
                 </tr>
               </thead>
               <tbody>
-
-            <%
-                var alerts = get('within');
-                if(alerts){
-                    for each(var alert in alerts){
-                        %>
-              <tr class="viewGeoFenceRow" style="cursor: pointer" data-areaName='<%= alert.areaName %>' data-queryName='<%= alert.queryName %>' data-geoJson='<%= alert.geoJson %>'>
-                                <td><%= alert.areaName %></td>
-                                <td><%= alert.queryName %></td>
-                                <td><%= alert.createdTime %></td>
-                                <td onClick="removeGeoFence(this.parentElement,'WithIn')" class="removeGeoFence" data-toggle="tooltip" title="Remove fence" ><i class="fa fa-trash-o"></i></td>
-              </tr>
-                        <%
-                    }
-                }
-                else{
-                %>
-                <div class="alert alert-danger" role="alert">
+                <div class="alert alert-danger fence-not-exist" role="alert">
                       <strong>Oh snap!</strong> Can't find any geo-fence areas,please draw a new area or try again.
                 </div>
-                <%
-                }
-            %>
+
             </tbody>
                         </table>
         </div>
@@ -96,5 +65,6 @@ var get = require('../get_alerts.jag').get;
         </div>
     </div>
 </div>
+<script src="/portal/store/carbon.super/fs/gadget/geo-dashboard/js/geo_within.js"></script>
 </body>
 </html>

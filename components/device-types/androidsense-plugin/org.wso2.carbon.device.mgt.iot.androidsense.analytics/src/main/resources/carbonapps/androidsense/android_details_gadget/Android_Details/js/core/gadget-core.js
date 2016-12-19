@@ -93,8 +93,8 @@ $(function () {
             if (deviceDetails.hasOwnProperty('meta_username')){
                 deviceDetailsTable += getDeviceDetailTableEntry('Owner:', deviceDetails.meta_username)
             }
-            if (deviceDetails.hasOwnProperty('andriod_version')){
-                deviceDetailsTable += getDeviceDetailTableEntry('Andriod Version:', deviceDetails.andriod_version)
+            if (deviceDetails.hasOwnProperty('android_version')){
+                deviceDetailsTable += getDeviceDetailTableEntry('Android Version:', deviceDetails.android_version)
             }
             if (deviceDetails.hasOwnProperty('memory')){
                 deviceDetailsTable += getDeviceDetailTableEntry('Memory:', deviceDetails.memory)

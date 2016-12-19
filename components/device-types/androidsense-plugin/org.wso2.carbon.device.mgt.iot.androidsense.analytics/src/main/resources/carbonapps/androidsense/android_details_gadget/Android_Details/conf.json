@@ -10,6 +10,6 @@
         "limit": "1",
         "provider-name": "batch",
         "query": "meta_username: \"admin\" AND id: \"123456\"",
-        "tableName": "ORG_WSO2_IOT_ANDRIOD_DEVICE_DETAILS"
+        "tableName": "ORG_WSO2_IOT_ANDROID_DEVICE_DETAILS"
     }
 }

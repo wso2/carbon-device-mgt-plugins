@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Analytics>
     <Editable>true</Editable>
-    <Name>AndriodScreenScript</Name>
+    <Name>AndroidScreenScript</Name>
     <Script>        CREATE TEMPORARY TABLE AndroidScreenData USING CarbonAnalytics OPTIONS(tableName "ORG_WSO2_IOT_ANDROID_SCREEN_STATS", incrementalParams "ORG_WSO2_IOT_ANDROID_SCREEN_STATS, DAY");
     
         CREATE TEMPORARY TABLE Android_Screen_Stat_Per_Day USING CarbonAnalytics

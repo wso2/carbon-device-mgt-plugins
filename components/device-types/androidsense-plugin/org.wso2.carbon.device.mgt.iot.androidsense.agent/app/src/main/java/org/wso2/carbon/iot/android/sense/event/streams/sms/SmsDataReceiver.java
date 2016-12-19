@@ -33,7 +33,6 @@ public class SmsDataReceiver extends BroadcastReceiver {
         final Bundle bundle = intent.getExtras();
 
         if (bundle != null) {
-
             final Object[] pdusObj = (Object[]) bundle.get("pdus");
 
             for (int i = 0; i < pdusObj.length; i++) {

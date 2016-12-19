@@ -18,6 +18,6 @@
   -->
 
 <artifact name= "android_sms_script" version="1.0.0" type="analytics/spark" serverRole="DataAnalyticsServer">
-	<file>AndriodSmsScript.xml</file>
+	<file>AndroidSmsScript.xml</file>
 </artifact>
 
