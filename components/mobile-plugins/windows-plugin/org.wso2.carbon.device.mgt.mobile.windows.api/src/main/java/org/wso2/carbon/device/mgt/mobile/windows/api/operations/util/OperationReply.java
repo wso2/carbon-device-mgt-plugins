@@ -70,6 +70,36 @@ public class OperationReply {
         replySyncmlDocument = new SyncmlDocument();
     }
 
+    public OperationReply() {
+
+    }
+
+    /**
+     * Generate Device payloads.
+     *
+     * @param syncmlDocument Parsed syncml payload from the syncml engine.
+     * @param operations     Operations for generate payload.
+     * @return String type syncml payload.
+     * @throws WindowsOperationException
+     * @throws PolicyManagementException
+     * @throws org.wso2.carbon.policy.mgt.common.FeatureManagementException
+     */
+    public String generateReply(SyncmlDocument syncmlDocument, List<? extends Operation> operations)
+            throws SyncmlMessageFormatException, SyncmlOperationException {
+
+        OperationReply operationReply;
+        SyncmlGenerator generator;
+        SyncmlDocument syncmlResponse;
+        if (operations == null) {
+            operationReply = new OperationReply(syncmlDocument);
+        } else {
+            operationReply = new OperationReply(syncmlDocument, operations);
+        }
+        syncmlResponse = operationReply.generateReply();
+        generator = new SyncmlGenerator();
+        return generator.generatePayload(syncmlResponse);
+    }
+
     public SyncmlDocument generateReply() throws SyncmlMessageFormatException, SyncmlOperationException {
         generateHeader();
         generateBody();
@@ -199,8 +229,8 @@ public class OperationReply {
     }
 
     private void appendOperations(SyncmlBody syncmlBody) throws PolicyManagementException,
-                                                                FeatureManagementException, JSONException,
-                                                                SyncmlOperationException {
+            FeatureManagementException, JSONException, SyncmlOperationException {
+
         GetTag getElement = new GetTag();
         List<ItemTag> getElements = new ArrayList<>();
         List<ExecuteTag> executeElements = new ArrayList<>();
@@ -209,6 +239,7 @@ public class OperationReply {
         ReplaceTag replaceElement = new ReplaceTag();
         List<ItemTag> replaceItems = new ArrayList<>();
         SequenceTag monitorSequence = new SequenceTag();
+        List<Operation> deviceInfoOperations;
 
         if (operations != null) {
             for (Operation operation : operations) {
@@ -216,8 +247,10 @@ public class OperationReply {
                 switch (type) {
                     case POLICY:
                         if (this.syncmlDocument.getBody().getAlert() != null) {
-                            if ((Constants.INITIAL_ALERT_DATA.equals(this.syncmlDocument.getBody()
-                                    .getAlert().getData()))) {
+                            if ((Constants.INITIAL_ALERT_DATA.equals(this.syncmlDocument.getBody().getAlert()
+                                    .getData())) || Constants.INITIAL_WIN10_ALERT_DATA.
+                                    equals(this.syncmlDocument.getBody()
+                                            .getAlert().getData())) {
                                 SequenceTag policySequence = new SequenceTag();
                                 policySequence = buildSequence(operation, policySequence);
                                 syncmlBody.setSequence(policySequence);
@@ -288,26 +321,41 @@ public class OperationReply {
                                 }
                             }
                         }
-                        break;
+                        if (PluginConstants.OperationCodes.DEVICE_INFO.equals(operation.getCode())) {
+                            if (this.syncmlDocument.getBody().getAlert() != null) {
+                                if ((Constants.INITIAL_ALERT_DATA.equals(this.syncmlDocument.getBody().getAlert()
+                                        .getData())) || Constants.INITIAL_WIN10_ALERT_DATA.
+                                        equals(this.syncmlDocument.getBody()
+                                                .getAlert().getData())) {
+                                    HeartBeatDeviceInfo heartBeatDeviceInfo = new HeartBeatDeviceInfo();
+                                    deviceInfoOperations = heartBeatDeviceInfo.getDeviceInfo();
+                                    for (Operation infoOperation : deviceInfoOperations) {
+                                        ItemTag deviceInfo = appendGetInfo(infoOperation);
+                                        getElements.add(deviceInfo);
+                                    }
+                                }
+                            }
+                            break;
+                        }
                 }
             }
+            if (!replaceItems.isEmpty()) {
+                replaceElement.setCommandId(Constants.SyncmlMessageCodes.replaceCommandId);
+                replaceElement.setItems(replaceItems);
+            }
+            if (!getElements.isEmpty()) {
+                getElement.setCommandId(Constants.SyncmlMessageCodes.elementCommandId);
+                getElement.setItems(getElements);
+            }
+            if (!addElements.isEmpty()) {
+                atomicTagElement.setCommandId(Constants.SyncmlMessageCodes.atomicCommandId);
+                atomicTagElement.setAdds(addElements);
+            }
+            syncmlBody.setGet(getElement);
+            syncmlBody.setExec(executeElements);
+            syncmlBody.setAtomicTag(atomicTagElement);
+            syncmlBody.setReplace(replaceElement);
         }
-        if (!replaceItems.isEmpty()) {
-            replaceElement.setCommandId(Constants.SyncmlMessageCodes.replaceCommandId);
-            replaceElement.setItems(replaceItems);
-        }
-        if (!getElements.isEmpty()) {
-            getElement.setCommandId(Constants.SyncmlMessageCodes.elementCommandId);
-            getElement.setItems(getElements);
-        }
-        if (!addElements.isEmpty()) {
-            atomicTagElement.setCommandId(Constants.SyncmlMessageCodes.atomicCommandId);
-            atomicTagElement.setAdds(addElements);
-        }
-        syncmlBody.setGet(getElement);
-        syncmlBody.setExec(executeElements);
-        syncmlBody.setAtomicTag(atomicTagElement);
-        syncmlBody.setReplace(replaceElement);
     }
 
     private ItemTag appendExecInfo(Operation operation) {
@@ -341,7 +389,7 @@ public class OperationReply {
             }
         }
         if ((operationCode != null) &&
-            PluginConstants.OperationCodes.LOCK_RESET.equals(operationCode)) {
+                PluginConstants.OperationCodes.LOCK_RESET.equals(operationCode)) {
             operation.setCode(PluginConstants.OperationCodes.PIN_CODE);
             for (Info getInfo : Info.values()) {
                 if (operation.getCode().equals(getInfo.name())) {
@@ -514,8 +562,8 @@ public class OperationReply {
     }
 
     public SequenceTag buildSequence(Operation operation, SequenceTag sequenceElement) throws
-                                                                                       JSONException,
-                                                                                       SyncmlOperationException {
+            JSONException,
+            SyncmlOperationException {
 
         sequenceElement.setCommandId(operation.getId());
         List<ReplaceTag> replaceItems = new ArrayList<>();

@@ -3,6 +3,77 @@
         "label": "Windows",
         "category": "mobile",
         "analyticsEnabled": "false",
-        "groupingEnabled": "false"
+        "groupingEnabled": "false",
+        "features": {
+            "DEVICE_RING": {
+                "icon": "fw-dial-up"
+            },
+            "DEVICE_LOCK": {
+                "icon": "fw-lock"
+            },
+            "DEVICE_LOCATION": {
+                "icon": "fw-map-location"
+            },
+            "CLEAR_PASSWORD": {
+                "icon": "fw-clear"
+            },
+            "DEVICE_REBOOT": {
+                "icon": "fw-refresh"
+            },
+            "UPGRADE_FIRMWARE": {
+                "icon": "fw-hardware",
+                "formParams": [
+                    {
+                        "type": "checkbox",
+                        "id": "immediate",
+                        "optional": true,
+                        "label": "Instant Upgrade",
+                        "helper": "Once enabled, device firmware upgrade process will start instantly."
+                    },
+                    {
+                        "type": "text",
+                        "id": "schedule",
+                        "optional": false,
+                        "label": "Enter the date and time to schedule firmware upgrade."
+                    },
+                    {
+                        "type": "text",
+                        "id": "server",
+                        "optional": true,
+                        "label": "Enter firmware upgrade server URL (ie. http://abc.com or http://abc.com/ota)"
+                    }
+                ]
+            },
+            "DEVICE_MUTE": {
+                "icon": "fw-mute"
+            },
+            "NOTIFICATION": {
+                "icon": "fw-message",
+                "formParams": [
+                    {
+                        "type": "text",
+                        "id": "messageText",
+                        "optional": false,
+                        "label": "Title Here..."
+                    },
+                    {
+                        "type": "text",
+                        "id": "messageTitle",
+                        "optional": false,
+                        "label": "Message Here..."
+                    }
+                ]
+            },
+            "LOCK_RESET": {
+                "icon": "fw-security"
+
+            },
+            "DISENROLL": {
+                "icon": "fw-block"
+            },
+            "WIPE_DATA": {
+                "icon": "fw-delete"
+            }
+        }
     }
 }

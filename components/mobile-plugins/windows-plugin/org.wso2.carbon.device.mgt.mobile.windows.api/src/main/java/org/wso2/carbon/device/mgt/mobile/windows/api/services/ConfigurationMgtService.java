@@ -66,8 +66,8 @@ import javax.ws.rs.core.Response;
         description = "This carries all the resources related to Windows configurations management functionalities")
 @WebService
 @Path("/configuration")
-@Produces({"application/json", "application/xml"})
-@Consumes({"application/json", "application/xml"})
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public interface ConfigurationMgtService {
 
     @GET

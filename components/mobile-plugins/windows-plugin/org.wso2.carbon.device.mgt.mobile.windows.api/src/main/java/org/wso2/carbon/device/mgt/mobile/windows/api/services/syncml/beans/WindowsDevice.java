@@ -31,6 +31,7 @@ public class WindowsDevice {
     private String manufacturer;
     private String model;
     private String user;
+    private String deviceName;
 
     public String getImei() {
         return imei;
@@ -94,6 +95,14 @@ public class WindowsDevice {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
     }
 
 

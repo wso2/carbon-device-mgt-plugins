@@ -44,8 +44,19 @@ public class OperationCode {
         DEVICE_PASSWORD_STATUS("./Vendor/MSFT/PolicyManager/Device/DeviceLock/DevicePasswordEnabled"),
         DEVICE_PASSCODE_DELETE("./Vendor/MSFT/PolicyManager/My/DeviceLock"),
         LONGITUDE("./Vendor/MSFT/RemoteFind/Location/Longitude"),
-        LATITUDE("./Vendor/MSFT/RemoteFind/Location/Latitude");
+        LATITUDE("./Vendor/MSFT/RemoteFind/Location/Latitude"),
 
+        // Windows10 operation codes
+        TOTAL_RAM("./DevDetail/Ext/Microsoft/TotalRAM"),
+        TOTAL_STORAGE("./DevDetail/Ext/Microsoft/TotalStorage"),
+        OS_PLATFORM("./DevDetail/Ext/Microsoft/OSPlatform"),
+        MOBILE_ID("./DevDetail/Ext/Microsoft/MobileID"),
+        DEVICE_TYPE("./DevDetail/DevTyp"),
+        BATTERY_QUERY("./Vendor/MSFT/DeviceStatus/Battery"),
+        BATTERY_STATUS("./Vendor/MSFT/DeviceStatus/Battery/Status"),
+        BATTERY_CHARGE_REMAINING("./Vendor/MSFT/DeviceStatus/Battery/EstimatedChargeRemaining"),
+        BATTERY_ESTIMATED_RUNTIME("./Vendor/MSFT/DeviceStatus/Battery/EstimatedRuntime"),
+        TEST("./Vendor/MSFT/DiagnosticLog/EtwLog/Collectors");
         private final String code;
 
         Info(String code) {
@@ -69,7 +80,18 @@ public class OperationCode {
         CAMERA_STATUS("./Vendor/MSFT/PolicyManager/Device/Camera/AllowCamera"),
         ENCRYPT_STORAGE_STATUS("./Vendor/MSFT/PolicyManager/Device/Security/RequireDeviceEncryption"),
         DEVICE_PASSWORD_ENABLE("./Vendor/MSFT/PolicyManager/My/DeviceLock/DevicePasswordEnabled"),
-        DEVICE_PASSCODE_DELETE("./Vendor/MSFT/PolicyManager/My/DeviceLock");
+        DEVICE_PASSCODE_DELETE("./Vendor/MSFT/PolicyManager/My/DeviceLock"),
+        // Windows10 operation codes
+        TOTAL_RAM("./DevDetail/Ext/Microsoft/TotalRAM"),
+        TOTAL_STORAGE("./DevDetail/Ext/Microsoft/TotalStorage"),
+        OS_PLATFORM("./DevDetail/Ext/Microsoft/OSPlatform"),
+        MOBILE_ID("./DevDetail/Ext/Microsoft/MobileID"),
+        DEVICE_TYPE("./DevDetail/DevTyp"),
+        BATTERY_QUERY("./Vendor/MSFT/DeviceStatus/Battery"),
+        BATTERY_STATUS("./Vendor/MSFT/DeviceStatus/Battery/Status"),
+        BATTERY_CHARGE_REMAINING("./Vendor/MSFT/DeviceStatus/Battery/EstimatedChargeRemaining"),
+        BATTERY_ESTIMATED_RUNTIME("./Vendor/MSFT/DeviceStatus/Battery/EstimatedRuntime"),
+        TEST("./Vendor/MSFT/DiagnosticLog/EtwLog/Collectors");
 
         private final String code;
 
