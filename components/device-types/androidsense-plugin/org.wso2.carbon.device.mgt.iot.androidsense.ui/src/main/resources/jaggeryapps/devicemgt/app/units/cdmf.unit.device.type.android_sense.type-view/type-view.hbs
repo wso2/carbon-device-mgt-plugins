@@ -15,6 +15,10 @@
   specific language governing permissions and limitations
   under the License.
 }}
+
+{{unit "cdmf.unit.device.type.qr-modal" enrollmentURL=enrollmentURL deviceTypeName="Android"}}
+{{unit "cdmf.unit.device.type.email.invite-modal" deviceTypeView="androidsense"}}
+
 <div class="col-lg-12  margin-top-double">
     <h1 class="grey ">Android Sense</h1>
     <hr>
@@ -35,7 +39,7 @@
                                data.</p>
     <br>
     <a href="#" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
-    <a href="#" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
+    <a href="{{hostName}}{{@unit.publicUri}}/asset/androidsense.apk" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
     <a href="javascript:toggleEmailInvite()" class="btn-operations"><i class="fw fw-mail fw-inverse fw-lg add-margin-1x"></i> Invite by Email</a>
 
     <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Android+Sense"
@@ -62,8 +66,6 @@
                Proceed to [Prepare] section.
     </ul>
     <br>
-
-
 
     <div id="device-400-content" class="hide">
         <div class="modal-content">
@@ -233,52 +235,6 @@
                     <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
                 </a>
             </center>
-        </div>
-    </div>
-</div>
-
-<div id="qr-code-modal" data-enrollment-url="{{hostName}}{{@unit.publicUri}}/asset/androidsense.apk" class="hidden">
-    <div class="modal-header">
-        <h4 class="pull-left modal-title">
-                <span class="fw-stack">
-                    <i class="fw fw-mobile fw-stack-2x"></i>
-                    <span class="fw-stack fw-move-right fw-move-bottom">
-                      <i class="fw fw-ring fw-stack-2x"></i>
-                      <i class="fw fw-circle fw-stack-2x fw-stroke text-info"></i>
-                      <i class="fw fw-add fw-stack-1x fw-inverse"></i>
-                   </span>
-                </span>
-              Add your new mobile device to {{@app.conf.appName}}
-        </h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fw fw-cancel"></i></button>
-    </div>
-    <hr>
-    <div class="modal-body add-margin-top-2x add-margin-bottom-2x">
-        <div class="panel-body col-centered text-center">
-            <h5>
-                Please scan the following QR code using your new <b>Android</b>, <b>iPhone</b> or <b>Windows</b> mobile device.
-            </h5>
-            <br>
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="qr-code"></div>
-                </div>
-            </div>
-            <br>
-            <h5>
-                Not having a QR code scanner in your device?
-                <br><br>
-                Try following link
-                <br><br>
-                <b>{{hostName}}{{@unit.publicUri}}/asset/androidsense.apk</b>
-                <br><br>
-                on your device's Internet browser instead.
-            </h5>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <div class="buttons">
-            <a href="javascript:hidePopup()" class="btn-operations btn-default">Ok</a>
         </div>
     </div>
 </div>
