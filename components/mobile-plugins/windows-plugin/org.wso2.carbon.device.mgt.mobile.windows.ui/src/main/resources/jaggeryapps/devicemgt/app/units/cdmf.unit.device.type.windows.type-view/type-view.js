@@ -19,6 +19,7 @@
 function onRequest(context){
     var viewModel = {};
     var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
-    viewModel.hostName = devicemgtProps["httpsURL"];
+    viewModel["hostName"] = devicemgtProps["httpsURL"];
+    viewModel["enrollmentURL"] = devicemgtProps["generalConfig"]["host"] + devicemgtProps["windowsEnrollmentDir"];
     return viewModel;
 }

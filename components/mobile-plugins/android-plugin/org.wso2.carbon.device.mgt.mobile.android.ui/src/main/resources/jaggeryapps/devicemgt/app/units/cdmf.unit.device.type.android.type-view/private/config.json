@@ -6,7 +6,8 @@
         "groupingEnabled": "false",
         "features": {
             "DEVICE_RING": {
-                "icon": "fw-dial-up"
+                "icon": "fw-dial-up",
+                "permission": "/device-mgt/devices/owning-device/operations/android/ring"
             },
             "DEVICE_LOCK": {
                 "icon": "fw-lock",
@@ -22,16 +23,20 @@
                         "optional": true,
                         "label": "Hard lock enabled"
                     }
-                ]
+                ],
+                "permission": "/device-mgt/devices/owning-device/operations/android/lock"
             },
             "DEVICE_LOCATION": {
-                "icon": "fw-map-location"
+                "icon": "fw-map-location",
+                "permission": "/device-mgt/devices/owning-device/operations/android/location"
             },
             "CLEAR_PASSWORD": {
-                "icon": "fw-clear"
+                "icon": "fw-clear",
+                "permission": "/device-mgt/devices/owning-device/operations/android/clear-password"
             },
             "DEVICE_REBOOT": {
-                "icon": "fw-refresh"
+                "icon": "fw-refresh",
+                "permission": "/device-mgt/devices/owning-device/operations/android/reboot"
             },
             "UPGRADE_FIRMWARE": {
                 "icon": "fw-hardware",
@@ -55,10 +60,12 @@
                         "optional": true,
                         "label": "Enter firmware upgrade server URL (ie. http://abc.com or http://abc.com/ota)"
                     }
-                ]
+                ],
+                "permission": "/device-mgt/devices/owning-device/operations/android/upgrade"
             },
             "DEVICE_MUTE": {
-                "icon": "fw-mute"
+                "icon": "fw-mute",
+                "permission": "/device-mgt/devices/owning-device/operations/android/mute"
             },
             "NOTIFICATION": {
                 "icon": "fw-message",
@@ -75,7 +82,8 @@
                         "optional": false,
                         "label": "Message Here..."
                     }
-                ]
+                ],
+                "permission": "/device-mgt/devices/owning-device/operations/android/send-notification"
             },
             "CHANGE_LOCK_CODE": {
                 "icon": "fw-security",
@@ -86,10 +94,12 @@
                         "optional": false,
                         "label": "Lock Code"
                     }
-                ]
+                ],
+                "permission": "/device-mgt/devices/owning-device/operations/android/change-lock-code"
             },
             "ENTERPRISE_WIPE": {
-                "icon": "fw-block"
+                "icon": "fw-block",
+                "permission": "/device-mgt/devices/owning-device/operations/android/enterprise-wipe"
             },
             "WIPE_DATA": {
                 "icon": "fw-delete",
@@ -100,7 +110,8 @@
                         "optional": false,
                         "label": "Enter PIN code* of the device."
                     }
-                ]
+                ],
+                "permission": "/device-mgt/devices/owning-device/operations/android/wipe"
             }
         }
     }

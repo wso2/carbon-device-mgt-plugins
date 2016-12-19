@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 }}
-{{#if controlOperations}}
+{{#if control_operations}}
     <div class="wr-operations" style="height: 87px; display: block;"
          xmlns="http://www.w3.org/1999/html">
         <style>
@@ -35,7 +35,7 @@
                 color: #B8B8B8;
             }
         </style>
-        {{#each controlOperations}}
+        {{#each control_operations}}
             <a href="javascript:operationSelect('{{operation}}')">
                 {{#if iconFont}}
                     <i class="fw {{iconFont}}"></i>
@@ -101,7 +101,7 @@
                                     {{/equal}}
                                 {{/each}}
                                 <button id="btnSend" type="button" onclick="submitForm('form-{{operation}}')" class="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;Send
-                                                                                                                                      to Device&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                    to Device&nbsp;&nbsp;&nbsp;&nbsp;</button>
                                 <label id="lblSending" class="wr-input-label hidden"><i
                                         class="fw fw-lifecycle fw-spin fw-2x"></i> Sending..</label>
                                 <label id="lblSent" class="wr-input-label hidden"><i

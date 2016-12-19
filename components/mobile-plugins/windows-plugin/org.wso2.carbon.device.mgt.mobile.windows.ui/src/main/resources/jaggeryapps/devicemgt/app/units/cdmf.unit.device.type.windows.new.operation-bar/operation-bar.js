@@ -19,37 +19,28 @@
 function onRequest(context) {
     var log = new Log("operation.js");
     var operationModule = require("/app/modules/business-controllers/operation.js")["operationModule"];
-    var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
-
     var device = context.unit.params.device;
     var autoCompleteParams = context.unit.params.autoCompleteParams;
-    var encodedFeaturePayloads = context.unit.params.encodedFeaturePayloads;
-    var allControlOps = operationModule.getControlOperations(device.type);
-    var filteredControlOps = [];
+    var encodedFeaturePayloads=context.unit.params.encodedFeaturePayloads;
+    var controlOperations = operationModule.getControlOperations(device.type);
     var queryParams = [];
     var formParams = [];
     var pathParams = [];
-    for (var i = 0; i < allControlOps.length; i++) {
-        var controlOperation = {};
-        var uiPermission = allControlOps[i]["uiPermission"];
-        if (uiPermission && !userModule.isAuthorized("/permission/admin/" + uiPermission)) {
-            continue;
-        }
-        controlOperation = allControlOps[i];
-        var currentParamList = allControlOps[i]["params"];
+    for (var i = 0; i < controlOperations.length; i++) {
+        var currentParamList = controlOperations[i]["params"];
+        var uiParamList = controlOperations[i]["uiParams"];
         for (var j = 0; j < currentParamList.length; j++) {
             var currentParam = currentParamList[j];
             currentParamList[j]["formParams"] = processParams(currentParam["formParams"], autoCompleteParams);
             currentParamList[j]["queryParams"] = processParams(currentParam["queryParams"], autoCompleteParams);
             currentParamList[j]["pathParams"] = processParams(currentParam["pathParams"], autoCompleteParams);
         }
-        controlOperation["params"] = currentParamList;
+        controlOperations[i]["uiParams"] = uiParamList;
         if (encodedFeaturePayloads) {
-            allControlOps[i]["payload"] = getPayload(encodedFeaturePayloads, allControlOps[i]["operation"]);
+            controlOperations[i]["payload"] = getPayload(encodedFeaturePayloads, controlOperations[i]["operation"]);
         }
-        filteredControlOps.push(controlOperation);
     }
-    return {"controlOperations": filteredControlOps, "device": device};
+    return {"control_operations": controlOperations, "device": device};
 }
 
 function processParams(paramsList, autoCompleteParams) {
@@ -68,7 +59,7 @@ function processParams(paramsList, autoCompleteParams) {
     return paramsList;
 }
 
-function getPayload(featuresPayload, featureCode) {
+function getPayload(featuresPayload, featureCode){
     var featuresJSONPayloads = JSON.parse(featuresPayload);
     return featuresJSONPayloads[featureCode];
 }

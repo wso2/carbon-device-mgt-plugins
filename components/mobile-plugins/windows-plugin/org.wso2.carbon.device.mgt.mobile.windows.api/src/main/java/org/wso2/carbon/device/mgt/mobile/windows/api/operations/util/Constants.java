@@ -27,6 +27,7 @@ public class Constants {
     public static final String INITIAL_NONCE = "ZHVtbXk=";
     public static final String DISENROLL_ALERT_DATA = "1226";
     public static final String INITIAL_ALERT_DATA = "1201";
+    public static final String INITIAL_WIN10_ALERT_DATA = "1224";
     public static final int EMPTY = 0;
 
     public static final String SYNCML_ROOT_ELEMENT_NAME = "SyncML";

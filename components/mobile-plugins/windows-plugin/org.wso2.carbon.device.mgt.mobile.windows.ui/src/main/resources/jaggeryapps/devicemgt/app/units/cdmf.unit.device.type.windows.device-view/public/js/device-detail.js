@@ -22,6 +22,7 @@ var InitiateViewOption = null;
     var deviceId = $(".device-id");
     var deviceIdentifier = deviceId.data("deviceid");
     var deviceType = deviceId.data("type");
+    var ownership = deviceId.data("ownership");
     var payload = [deviceIdentifier];
     var operationTable;
     var serviceUrl;
@@ -111,9 +112,6 @@ var InitiateViewOption = null;
     $(document).ready(function() {
         $(".device-detail-body").removeClass("hidden");
         $("#loading-content").remove();
-        console.log("##### something went wrong here!" + deviceType)
-        loadOperationBar(deviceType);
-        loadOperationsLog(false);
         loadApplicationsList();
         loadPolicyCompliance();
 
@@ -126,14 +124,10 @@ var InitiateViewOption = null;
             $("#apps-spinner").removeClass("hidden");
             loadApplicationsList();
         });
-
-        $("#refresh-operations").click(function () {
-            $("#operations-spinner").removeClass("hidden");
-            loadOperationsLog(true);
-        });
     });
 
     function loadOperationsLog(update) {
+        var owner = $("#device-owner").data("owner");
         var operationsLogTable = "#operations-log-table";
         if (update) {
             operationTable = $(operationsLogTable).DataTable();
@@ -148,8 +142,8 @@ var InitiateViewOption = null;
             pageLength : 10,
             order: [],
             ajax: {
-                url: "/emm/api/operation/paginate",
-                data: {deviceId : deviceIdentifier, deviceType: deviceType},
+                url: "/devicemgt/api/operation/paginate",
+                data: {deviceId : deviceIdentifier, deviceType: deviceType, owner:owner},
                 dataSrc: function (json) {
                     $("#operations-spinner").addClass("hidden");
                     $("#operations-log-container").empty();
@@ -242,7 +236,7 @@ var InitiateViewOption = null;
                         } else {
                             $("#applications-list-container").
                                 html("<div class='message message-info'><h4><i class='icon fw fw-info'></i>No applications found.</h4>" +
-                                    "<p>Please try refreshing the list in a while.</p></div>");
+                                "<p>Please try refreshing the list in a while.</p></div>");
                         }
                     }
                 },
@@ -250,8 +244,8 @@ var InitiateViewOption = null;
                 function () {
                     $("#applications-list-container").
                         html("<div class='panel-body'><br><p class='fw-warning'>&nbsp;Loading application list " +
-                            "was not successful. please try refreshing the list in a while.<p></div>");
-            });
+                        "was not successful. please try refreshing the list in a while.<p></div>");
+                });
         });
     }
 
@@ -304,7 +298,7 @@ var InitiateViewOption = null;
                                             } else {
                                                 $("#policy-list-container").
                                                     html("<div class='panel-body'><br><p class='fw-warning'> This device " +
-                                                        "has no policy applied.<p></div>");
+                                                    "has no policy applied.<p></div>");
                                             }
                                         }
                                     },
@@ -312,7 +306,7 @@ var InitiateViewOption = null;
                                     function () {
                                         $("#policy-list-container").
                                             html("<div class='panel-body'><br><p class='fw-warning'> Loading policy compliance related data " +
-                                                "was not successful. please try refreshing data in a while.<p></div>");
+                                            "was not successful. please try refreshing data in a while.<p></div>");
                                     }
                                 );
                             }
@@ -322,7 +316,7 @@ var InitiateViewOption = null;
                     function () {
                         $("#policy-list-container").
                             html("<div class='panel-body'><br><p class='fw-warning'> Loading policy compliance related data " +
-                                "was not successful. please try refreshing data in a while.<p></div>");
+                            "was not successful. please try refreshing data in a while.<p></div>");
                     }
                 );
             }
