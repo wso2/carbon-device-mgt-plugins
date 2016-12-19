@@ -96,7 +96,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password);
             tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
         }
-        synchronized(tokenInfo) {
+        synchronized(this) {
             if (System.currentTimeMillis() + refreshTimeOffset > tokenInfo.getExpires_in()) {
                 tokenInfo = tokenIssuerService.getToken(REFRESH_GRANT_TYPE, tokenInfo.getRefresh_token());
                 tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
