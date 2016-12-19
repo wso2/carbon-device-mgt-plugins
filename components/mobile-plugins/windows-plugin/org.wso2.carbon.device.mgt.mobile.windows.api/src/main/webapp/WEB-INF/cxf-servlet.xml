@@ -117,32 +117,6 @@
         </jaxrs:serviceBeans>
     </jaxrs:server>
 
-    <!--Endpoint for UI admin operations-->
-    <!--jaxrs:server id="adminoperations" address="/">
-        <jaxrs:serviceBeans>
-            <ref bean="deviceMgtAdminService"/>
-            <ref bean="swaggerResource"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="swaggerWriter"/>
-        </jaxrs:providers>
-    </jaxrs:server-->
-
-    <!-- Endpoint for Configurations -->
-    <!--jaxrs:server id="configurationService" address="/">
-        <jaxrs:serviceBeans>
-            <ref bean="configurationMgtService"/>
-            <ref bean="swaggerResource"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="errorHandler"/>
-            <ref bean="swaggerWriter"/>
-        </jaxrs:providers>
-    </jaxrs:server-->
-
-
     <jaxrs:server id="services" address="/">
     <jaxrs:serviceBeans>
         <ref bean="configurationMgtService"/>
