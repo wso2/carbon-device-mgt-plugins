@@ -5,17 +5,21 @@
     <h1 class="grey ">Windows Mobile</h1>
     <hr>
 </div>
-<div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 padding-top">
+<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 padding-top">
     <img src="{{@unit.publicUri}}/images/windows-icon.png" class="img-responsive">
 </div>
 
 
-<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 padding-top">
+<div class="col-xs-12 col-sm-8 col-md-9 col-lg-9 padding-top">
 
     <h3 class="uppercase">What it Does</h3>
     <hr>
     <p class="grey margin-top">Connect and manage your Windows device with WSO2 IoT Server.</p>
     <br>
+
+    <a href="#" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
+    <a href="#" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
+    <a href="javascript:toggleEmailInvite()" class="btn-operations"><i class="fw fw-mail fw-inverse fw-lg add-margin-1x"></i> Invite by Email</a>
 
     <h3 class="uppercase"> Configure your workplace account</h3>
     <hr>
@@ -52,6 +56,8 @@
 </div>
 
 <br/>
+
+{{unit "cdmf.unit.device.type.email.invite-modal"}}
 
 {{#zone "topCss"}}
     {{css "css/styles.css"}}
