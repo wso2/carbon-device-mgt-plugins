@@ -153,42 +153,12 @@ function onRequest(context) {
                 viewModel["BatteryLevel"] = {};
                 viewModel["BatteryLevel"]["value"] = filteredDeviceData["latestDeviceInfo"]["batteryLevel"];
 
-                viewModel["cpuUsage"] = {};
-                viewModel["cpuUsage"]["value"] = filteredDeviceData["latestDeviceInfo"]["cpuUsage"];
-
                 viewModel["ramUsage"] = {};
-                if (filteredDeviceData["latestDeviceInfo"]["totalRAMMemory"] != 0) {
-                    viewModel["ramUsage"]["value"] = Math.
-                            round((filteredDeviceData["latestDeviceInfo"]["totalRAMMemory"] -
-                            filteredDeviceData["latestDeviceInfo"]["availableRAMMemory"])
-                            / filteredDeviceData["latestDeviceInfo"]["totalRAMMemory"] * 10000) / 100;
-                } else {
-                    viewModel["ramUsage"]["value"] = 0;
-                }
+                viewModel["ramUsage"]["value"] = (filteredDeviceData["latestDeviceInfo"]["availableRAMMemory"]);
 
                 viewModel["internalMemory"] = {};
-                viewModel["internalMemory"]["total"] = Math.
-                        round(filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] * 100) / 100;
-                if (filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] != 0) {
-                    viewModel["internalMemory"]["usage"] = Math.
-                            round((filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] -
-                            filteredDeviceData["latestDeviceInfo"]["internalAvailableMemory"])
-                            / filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] * 10000) / 100;
-                } else {
-                    viewModel["internalMemory"]["usage"] = 0;
-                }
+                viewModel["internalMemory"]["value"] = Math.round((filteredDeviceData["latestDeviceInfo"]["internalAvailableMemory"]) / 1024);
 
-                viewModel["externalMemory"] = {};
-                viewModel["externalMemory"]["total"] = Math.
-                        round(filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] * 100) / 100;
-                if (filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] != 0) {
-                    viewModel["externalMemory"]["usage"] = Math.
-                            round((filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] -
-                            filteredDeviceData["latestDeviceInfo"]["externalAvailableMemory"])
-                            / filteredDeviceData["latestDeviceInfo"]["externalTotalMemory"] * 10000) / 100;
-                } else {
-                    viewModel["externalMemory"]["usage"] = 0;
-                }
             }
             if (!filteredDeviceData["initialDeviceInfo"] && !filteredDeviceData["latestDeviceInfo"]) {
                 viewModel["deviceInfoAvailable"] = false;
