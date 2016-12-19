@@ -226,13 +226,17 @@ public class WindowsAPIUtils {
         }
     }
 
-    private static void updateDeviceInfo(DeviceIdentifier deviceId, DeviceInfo deviceInfo)
+    /**
+     * This method is used to update Device Information.
+     * @param deviceId DeviceID to need to update.
+     * @param deviceInfo Device Info to be update/
+     * @throws DeviceDetailsMgtException Error occurs while updating Device Info.
+     */
+    public static void updateDeviceInfo(DeviceIdentifier deviceId, DeviceInfo deviceInfo)
             throws DeviceDetailsMgtException {
-
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         DeviceInformationManager informationManager =
                 (DeviceInformationManager) ctx.getOSGiService(DeviceInformationManager.class, null);
-
         informationManager.addDeviceInfo(deviceId, deviceInfo);
     }
 }

@@ -247,10 +247,10 @@ public class OperationReply {
                 switch (type) {
                     case POLICY:
                         if (this.syncmlDocument.getBody().getAlert() != null) {
-                            if ((Constants.INITIAL_ALERT_DATA.equals(this.syncmlDocument.getBody()
-                                    .getAlert().getData())) ||
-                                    Constants.INITIAL_WIN10_ALERT_DATA.equals(this.syncmlDocument.getBody()
-                                    .getAlert().getData())) {
+                            if ((Constants.INITIAL_ALERT_DATA.equals(this.syncmlDocument.getBody().getAlert()
+                                    .getData())) || Constants.INITIAL_WIN10_ALERT_DATA.
+                                    equals(this.syncmlDocument.getBody()
+                                            .getAlert().getData())) {
                                 SequenceTag policySequence = new SequenceTag();
                                 policySequence = buildSequence(operation, policySequence);
                                 syncmlBody.setSequence(policySequence);
@@ -322,33 +322,40 @@ public class OperationReply {
                             }
                         }
                         if (PluginConstants.OperationCodes.DEVICE_INFO.equals(operation.getCode())) {
-                            HeartBeatDeviceInfo heartBeatDeviceInfo = new HeartBeatDeviceInfo();
-                            deviceInfoOperations = heartBeatDeviceInfo.getDeviceInfo();
-                            for (int x = 0; x > deviceInfoOperations.size(); x++) {
-                                ItemTag deviceInfo = appendGetInfo(operation);
-                                getElements.add(deviceInfo);
+                            if (this.syncmlDocument.getBody().getAlert() != null) {
+                                if ((Constants.INITIAL_ALERT_DATA.equals(this.syncmlDocument.getBody().getAlert()
+                                        .getData())) || Constants.INITIAL_WIN10_ALERT_DATA.
+                                        equals(this.syncmlDocument.getBody()
+                                                .getAlert().getData())) {
+                                    HeartBeatDeviceInfo heartBeatDeviceInfo = new HeartBeatDeviceInfo();
+                                    deviceInfoOperations = heartBeatDeviceInfo.getDeviceInfo();
+                                    for (Operation infoOperation : deviceInfoOperations) {
+                                        ItemTag deviceInfo = appendGetInfo(infoOperation);
+                                        getElements.add(deviceInfo);
+                                    }
+                                }
                             }
+                            break;
                         }
-                        break;
                 }
             }
+            if (!replaceItems.isEmpty()) {
+                replaceElement.setCommandId(Constants.SyncmlMessageCodes.replaceCommandId);
+                replaceElement.setItems(replaceItems);
+            }
+            if (!getElements.isEmpty()) {
+                getElement.setCommandId(Constants.SyncmlMessageCodes.elementCommandId);
+                getElement.setItems(getElements);
+            }
+            if (!addElements.isEmpty()) {
+                atomicTagElement.setCommandId(Constants.SyncmlMessageCodes.atomicCommandId);
+                atomicTagElement.setAdds(addElements);
+            }
+            syncmlBody.setGet(getElement);
+            syncmlBody.setExec(executeElements);
+            syncmlBody.setAtomicTag(atomicTagElement);
+            syncmlBody.setReplace(replaceElement);
         }
-        if (!replaceItems.isEmpty()) {
-            replaceElement.setCommandId(Constants.SyncmlMessageCodes.replaceCommandId);
-            replaceElement.setItems(replaceItems);
-        }
-        if (!getElements.isEmpty()) {
-            getElement.setCommandId(Constants.SyncmlMessageCodes.elementCommandId);
-            getElement.setItems(getElements);
-        }
-        if (!addElements.isEmpty()) {
-            atomicTagElement.setCommandId(Constants.SyncmlMessageCodes.atomicCommandId);
-            atomicTagElement.setAdds(addElements);
-        }
-        syncmlBody.setGet(getElement);
-        syncmlBody.setExec(executeElements);
-        syncmlBody.setAtomicTag(atomicTagElement);
-        syncmlBody.setReplace(replaceElement);
     }
 
     private ItemTag appendExecInfo(Operation operation) {
