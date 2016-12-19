@@ -325,10 +325,10 @@ public class SyncmlServiceImpl implements SyncmlService {
                     existingProperties.add(deviceModelProperty);
 
                     existingDevice.setProperties(existingProperties);
+                    existingDevice.setName(deviceName);
                     existingDevice.setDeviceIdentifier(syncmlDocument.getHeader().getSource().getLocURI());
                     existingDevice.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
                     status = WindowsAPIUtils.getDeviceManagementService().modifyEnrollment(existingDevice);
-                    existingDevice.setName(deviceName);
                     // call effective policy for the enrolling device.
                     PolicyManagerService policyManagerService = WindowsAPIUtils.getPolicyManagerService();
                     policyManagerService.getEffectivePolicy(deviceIdentifier);
