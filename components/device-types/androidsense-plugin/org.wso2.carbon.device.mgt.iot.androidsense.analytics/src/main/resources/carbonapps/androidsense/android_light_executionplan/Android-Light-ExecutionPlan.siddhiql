@@ -1,0 +1,18 @@
+@Plan:name('Android-Light-ExecutionPlan')
+
+@Plan:description('Process light changes.')
+
+@Import('org.wso2.iot.android.light:1.0.0')
+define stream LightStream (meta_owner string, meta_deviceId string, meta_timestamp long, light float);
+
+@Export('org.wso2.iot.android.light.stats:1.0.0')
+define stream LightStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, light float, year int,
+month int, day int, hour int, minute int);
+
+partition with (meta_deviceId of LightStream)
+begin
+    from LightStream
+    select meta_owner, meta_deviceId, meta_timestamp, light, time:extract
+    (meta_timestamp, 'year') as year, time:extract(meta_timestamp, 'month') as month, time:extract(meta_timestamp, 'day') as day, time:extract(meta_timestamp, 'hour') as hour, time:extract(meta_timestamp, 'minute') as minute
+    insert into LightStatsStream;
+end;

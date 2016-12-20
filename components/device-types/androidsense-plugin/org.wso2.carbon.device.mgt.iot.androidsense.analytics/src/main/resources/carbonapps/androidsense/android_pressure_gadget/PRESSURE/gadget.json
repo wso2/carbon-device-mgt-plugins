@@ -1,0 +1,9 @@
+{
+    "id": "PRESSURE",
+    "title": "PRESSURE",
+    "type": "gadget",
+    "thumbnail": "gadget/PRESSURE/thumbnail.png",
+    "data": {
+        "url": "gadget/PRESSURE/gadget.xml"
+    }
+}
