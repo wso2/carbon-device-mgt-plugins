@@ -1,0 +1,9 @@
+{
+    "id": "Accelerometer_X",
+    "title": "Accelerometer X",
+    "type": "gadget",
+    "thumbnail": "gadget/Accelerometer_X/thumbnail.png",
+    "data": {
+        "url": "gadget/Accelerometer_X/gadget.xml"
+    }
+}

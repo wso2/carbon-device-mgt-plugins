@@ -1,0 +1,9 @@
+{
+    "id": "ACCELEROMETER_Z",
+    "title": "ACCELEROMETER Z",
+    "type": "gadget",
+    "thumbnail": "gadget/ACCELEROMETER_Z/thumbnail.png",
+    "data": {
+        "url": "gadget/ACCELEROMETER_Z/gadget.xml"
+    }
+}
