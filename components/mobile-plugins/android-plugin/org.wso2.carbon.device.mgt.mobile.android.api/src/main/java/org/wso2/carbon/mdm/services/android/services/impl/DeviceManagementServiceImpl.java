@@ -29,6 +29,7 @@ import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.core.service.EmailMetaInfo;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidApplication;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidDevice;
@@ -46,7 +47,15 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -162,6 +171,24 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
         return Response.status(Response.Status.CREATED).entity(pendingOperations).build();
+    }
+
+    @POST
+    @Path("/invite")
+    @Override
+    public Response sendEnrollmentInvitation(EmailMetaInfo metaInfo) {
+        try {
+            AndroidAPIUtils.getDeviceManagementService()
+                    .sendEnrolmentInvitation("android-enrollment-invitation", metaInfo);
+            Message responseMessage = new Message();
+            responseMessage.setResponseCode(Response.Status.OK.toString());
+            responseMessage.setResponseMessage("Enrollment invitations sent.");
+            return Response.status(Response.Status.OK).entity(responseMessage).build();
+        } catch (DeviceManagementException e) {
+            log.error(e.getMessage(), e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(e.getMessage()).build());
+        }
     }
 
     private void updateOperations(String deviceId, List<? extends Operation> operations)

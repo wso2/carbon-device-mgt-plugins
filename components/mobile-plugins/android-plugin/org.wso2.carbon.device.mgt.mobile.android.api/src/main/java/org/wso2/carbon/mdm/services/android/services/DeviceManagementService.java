@@ -33,6 +33,7 @@ import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
 
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.core.service.EmailMetaInfo;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidApplication;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidDevice;
 
@@ -197,6 +198,57 @@ public interface DeviceManagementService {
                     name = "resultOperations",
                     value = "Properties to update the device operations and their status.")
             List<? extends Operation> resultOperations);
+
+    @POST
+    @Path("/invite")
+    @ApiOperation(
+            produces = MediaType.APPLICATION_JSON,
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Send enrollment invitation for android device",
+            tags = "Android Device Management",
+            authorizations = {
+                    @Authorization(
+                            value="permission",
+                            scopes = { @AuthorizationScope(scope = "/device-mgt/devices/enroll/invite/android",
+                                    description = "Send device enrollment invitation") }
+                    )
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 201,
+                    message = "Invited. \n Successfully sent invitations.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                                  "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The format of the requested entity was not supported.\n"),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                              "Server error occurred while adding a new device.")
+    })
+    Response sendEnrollmentInvitation(@ApiParam(
+            name = "EmailConfig",
+            value = "The properties required to send device enrollment invitation.")
+                          @Valid EmailMetaInfo metaInfo);
 
     @POST
     @ApiOperation(
