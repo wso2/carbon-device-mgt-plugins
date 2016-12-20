@@ -73,8 +73,8 @@ function SpatialObject(json) {
     return this;
 }
 
-function popupDateRange(){
-   $('#dateRangePopup').attr('title', 'Device ID - '+ deviceId +" Device Type - "+ deviceType).dialog();
+function popupDateRange() {
+    $('#dateRangePopup').attr('title', 'Device ID - ' + deviceId + " Device Type - " + deviceType).dialog();
 }
 
 SpatialObject.prototype.update = function (geoJSON) {
@@ -166,13 +166,16 @@ function angleToHeading(angle) {
 SpatialObject.prototype.removeFromMap = function () {
     this.removePath();
     this.marker.closePopup();
+    map.removeLayer(this.marker);
 };
 
 function clearMap() {
-    for (var i=0; i< currentSpatialObjects.length; i++ ){
-        console.log("removed - " + currentSpatialObjects[i]);
-        currentSpatialObjects[i].removeFromMap();
+    for (var spacialObject in currentSpatialObjects) {
+        console.log(spacialObject);
+        currentSpatialObjects[spacialObject].removePath();
+        currentSpatialObjects[spacialObject].removeFromMap();
     }
+    currentSpatialObjects = {};
 }
 
 SpatialObject.prototype.createLineStringFeature = function (state, information, coordinates) {
@@ -608,7 +611,7 @@ var webSocketOnOpen = function () {
 };
 
 var webSocketOnMessage = function (message) {
-    if(!isBatchModeOn) {
+    if (!isBatchModeOn) {
         var json = $.parseJSON(message.data);
         if (json.messageType == "Point") {
             processPointMessage(json);
@@ -683,7 +686,7 @@ function initializeOnAlertWebSocket() {
 
 function intializeWebsocketUrls() {
     var username;
-    wso2.gadgets.state.getGlobalState(function(state) {
+    wso2.gadgets.state.getGlobalState(function (state) {
         deviceId = state.device.id;
         deviceType = state.device.type;
         if (deviceId && deviceType) {
@@ -702,7 +705,7 @@ function intializeWebsocketUrls() {
                         ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
                             .CEP_ON_ALERT_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
                         + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
-                    document.cookie = "websocket-token=f98d6142-e988-3c7f-a8c9-7e6d74da7113; path=/";
+                    document.cookie = "websocket-token=619e6170-10e8-31f0-904b-b7770d53e545; path=/";
                     $("#proximity_alert").hide();
                     initializeWebSocket();
                     initializeOnAlertWebSocket();
@@ -718,7 +721,6 @@ function intializeWebsocketUrls() {
         }
     });
 }
-
 
 
 intializeWebsocketUrls();

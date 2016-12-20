@@ -21,11 +21,11 @@
 * Get all available tile servers from RDB via HTTP GET, Insert new tile servers information via HTTP POST request
 */
 
-var configuration = require('../conf/database.json');
+var constants = require("constants.jag");
+var db = new Database(constants.DATA_SOURCE_NAME);
 var log = new Log();
 //Sample create table query create table tileServers (serverId int NOT NULL AUTO_INCREMENT, url varchar(255) NOT NULL, name varchar(255), PRIMARY KEY (serverID));
 var tableName = "tileservers";
-var db = new Database("jdbc:h2:repository/database/WSO2_GEO",configuration.username,configuration.password);
 
 if(request.getMethod() == "GET"){
 
@@ -46,7 +46,9 @@ if(request.getMethod() == "GET"){
         var getAllTileServers = "select * from tileServers";
             try{
                 var allTileServers = db.query(getAllTileServers);
-                log.info(allTileServers);
+                if (log.isDebugEnabled) {
+                    log.debug(allTileServers);
+                }
                 response.contentType = "application/json";
                 response.characterEncoding = "UTF-8";
                 response.content = allTileServers;
@@ -73,8 +75,9 @@ else if(request.getMethod() == "POST"){
     var insertTileServer  ="INSERT INTO tileServers (url, name, subdomains, attribution, maxzoom) VALUES('"+ url +"', '"+ name +"', '"+ subdomains +"', '"+ attribution +"', '"+ maxzoom +"' );";
     try{
         db.query(insertTileServer);
-        log.info(name + ' tile server added successfully!');
-        print(name + ' tile server added successfully!');
+        if (log.isDebugEnabled()) {
+            log.debug(name + ' tile server added successfully!');
+        }
     }
     catch(e){
         log.error(e.toString());

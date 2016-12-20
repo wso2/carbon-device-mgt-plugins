@@ -25,14 +25,12 @@
     var type = request.getParameter("type");
     var timeFrom = request.getParameter("timeFrom");
     var timeTo = request.getParameter("timeTo");
-    var log = new Log();
 
     var providerAPI = require('js/batch-provider-api.js');
     if (action === 'getSchema') {
         print(providerAPI.getSchema());
         return;
     } else if(action === 'getData'){
-        log.info('FromTime : '+timeFrom+', toTime: '+ timeTo);
         print(providerAPI.getData(id, type, timeFrom, timeTo));
         return;
     }

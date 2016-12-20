@@ -235,6 +235,7 @@ public class SyncmlServiceImpl implements SyncmlService {
         String devLang;
         String vendor;
         String macAddress;
+        String resolution;
         String modVersion;
         boolean status = false;
         String user;
@@ -323,11 +324,10 @@ public class SyncmlServiceImpl implements SyncmlService {
                     deviceModelProperty.setValue(devMod);
                     existingProperties.add(deviceModelProperty);
 
-                    existingDevice.setName(deviceName);
                     existingDevice.setProperties(existingProperties);
+                    existingDevice.setName(deviceName);
                     existingDevice.setDeviceIdentifier(syncmlDocument.getHeader().getSource().getLocURI());
                     existingDevice.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
-
                     status = WindowsAPIUtils.getDeviceManagementService().modifyEnrollment(existingDevice);
                     // call effective policy for the enrolling device.
                     PolicyManagerService policyManagerService = WindowsAPIUtils.getPolicyManagerService();
