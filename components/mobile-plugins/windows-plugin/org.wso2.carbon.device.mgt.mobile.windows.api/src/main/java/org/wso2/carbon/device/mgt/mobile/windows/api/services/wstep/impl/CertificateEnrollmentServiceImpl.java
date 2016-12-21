@@ -51,6 +51,7 @@ import org.xml.sax.SAXException;
 import javax.annotation.Resource;
 import javax.jws.WebService;
 import javax.servlet.ServletContext;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -233,9 +234,8 @@ public class CertificateEnrollmentServiceImpl implements CertificateEnrollmentSe
             signedCertEncodedString = base64Encoder.encodeAsString(signedCertificate.getEncoded());
 
             DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder;
-
-            builder = domFactory.newDocumentBuilder();
+            domFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            DocumentBuilder builder = domFactory.newDocumentBuilder();
             Document document = builder.parse(wapProvisioningFilePath);
             NodeList wapParm = document.getElementsByTagName(PluginConstants.CertificateEnrolment.PARM);
             Node caCertificatePosition = wapParm.item(PluginConstants.CertificateEnrolment.CA_CERTIFICATE_POSITION);

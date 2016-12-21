@@ -1,0 +1,34 @@
+{
+  "name": "org.wso2.iot.android.magnetic",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "",
+  "metaData": [
+    {
+      "name": "owner",
+      "type": "STRING"
+    },
+    {
+      "name": "deviceId",
+      "type": "STRING"
+    },
+    {
+      "name": "timestamp",
+      "type": "LONG"
+    }
+  ],
+  "payloadData": [
+    {
+      "name": "x",
+      "type": "FLOAT"
+    },
+    {
+      "name": "y",
+      "type": "FLOAT"
+    },
+    {
+      "name": "z",
+      "type": "FLOAT"
+    }
+  ]
+}

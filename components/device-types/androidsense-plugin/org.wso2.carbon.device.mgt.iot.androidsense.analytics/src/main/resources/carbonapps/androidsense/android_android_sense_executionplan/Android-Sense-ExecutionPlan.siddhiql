@@ -29,6 +29,63 @@ define stream BatteryStream (meta_owner string, meta_deviceId string, meta_times
 @Export('org.wso2.iot.android.sms:1.0.0')
 define stream SmsStream (meta_owner string, meta_deviceId string, meta_timestamp long, number string, type string, body string);
 
+@Export('org.wso2.geo.LocationStream:1.0.0')
+define stream geoLocationStream (id string, timeStamp long, latitude double, longitude double, type string, speed float, heading float);
+
+@Export('org.wso2.iot.android.accelerometer:1.0.0')
+define stream AccelerometerStream (meta_owner string, meta_deviceId string, meta_timestamp long, x float, y float, z float);
+
+@Export('org.wso2.iot.android.gyroscope:1.0.0')
+define stream GyroscopeStream (meta_owner string, meta_deviceId string, meta_timestamp long, x float, y float, z float);
+
+@Export('org.wso2.iot.android.magnetic:1.0.0')
+define stream MagneticStream (meta_owner string, meta_deviceId string, meta_timestamp long, x float, y float, z float);
+
+@Export('org.wso2.iot.android.gravity:1.0.0')
+define stream GravityStream (meta_owner string, meta_deviceId string, meta_timestamp long, x float, y float, z float);
+
+@Export('org.wso2.iot.android.rotation:1.0.0')
+define stream RotationStream (meta_owner string, meta_deviceId string, meta_timestamp long, x float, y float, z float);
+
+@Export('org.wso2.iot.android.pressure:1.0.0')
+define stream PressureStream (meta_owner string, meta_deviceId string, meta_timestamp long, pressure float);
+
+@Export('org.wso2.iot.android.light:1.0.0')
+define stream LightStream (meta_owner string, meta_deviceId string, meta_timestamp long, light float);
+
+@Export('org.wso2.iot.android.proximity:1.0.0')
+define stream ProximityStream (meta_owner string, meta_deviceId string, meta_timestamp long, proximity float);
+
+from AndroidSense[meta_type == 'accelerometer']
+select meta_owner, meta_deviceId, meta_timestamp, accelerometer_x as x, accelerometer_y as y, accelerometer_z as z
+insert into AccelerometerStream;
+
+from AndroidSense[meta_type == 'gyroscope']
+select meta_owner, meta_deviceId, meta_timestamp, gyroscope_x as x, gyroscope_y as y, gyroscope_z as z
+insert into GyroscopeStream;
+from AndroidSense[meta_type == 'magnetic']
+select meta_owner, meta_deviceId, meta_timestamp, magnetic_x as x, magnetic_y as y, magnetic_z as z
+insert into MagneticStream;
+
+from AndroidSense[meta_type == 'gravity']
+select meta_owner, meta_deviceId, meta_timestamp, gravity_x as x, gravity_y as y, gravity_z as z
+insert into GravityStream;
+
+from AndroidSense[meta_type == 'rotation']
+select meta_owner, meta_deviceId, meta_timestamp, rotation_x as x, rotation_y as y, rotation_z as z
+insert into RotationStream;
+
+from AndroidSense[meta_type == 'pressure']
+select meta_owner, meta_deviceId, meta_timestamp, pressure as pressure
+insert into PressureStream;
+
+from AndroidSense[meta_type == 'light']
+select meta_owner, meta_deviceId, meta_timestamp, light as light
+insert into LightStream;
+
+from AndroidSense[meta_type == 'proximity']
+select meta_owner, meta_deviceId, meta_timestamp, proximity as proximity
+insert into ProximityStream;
 
 from AndroidSense[meta_type == 'sms']
 select meta_owner, meta_deviceId, meta_timestamp, sms_number as number, action as type, "" as body
@@ -42,7 +99,7 @@ from AndroidSense[meta_type == 'audio']
 select meta_owner, meta_deviceId, meta_timestamp, audio_playing, headset_on, music_volume
 insert into AudioStream;
 
-from AndroidSense[meta_type == 'location']
+from AndroidSense[meta_type == 'gps']
 select meta_owner, meta_deviceId, meta_timestamp, gps_lat as latitude, gps_long as longitude
 insert into LocationStream;
 
@@ -61,3 +118,7 @@ insert into ActivityStream;
 from AndroidSense[meta_type == 'data']
 select meta_owner, meta_deviceId, meta_timestamp, data_type as type, data_received as received, data_sent as sent
 insert into DataStream;
+
+from AndroidSense[meta_type == 'gps']
+select meta_deviceId as id, meta_timestamp as timeStamp, gps_lat as latitude, gps_long as longitude, "android_sense" as type, speed_limit as speed, 0.0f as heading
+insert into geoLocationStream;

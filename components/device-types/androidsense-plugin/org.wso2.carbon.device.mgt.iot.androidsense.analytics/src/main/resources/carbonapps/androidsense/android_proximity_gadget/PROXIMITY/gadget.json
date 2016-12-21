@@ -1,0 +1,9 @@
+{
+    "id": "PROXIMITY",
+    "title": "PROXIMITY",
+    "type": "gadget",
+    "thumbnail": "gadget/PROXIMITY/thumbnail.png",
+    "data": {
+        "url": "gadget/PROXIMITY/gadget.xml"
+    }
+}

@@ -1,0 +1,1 @@
+{"provider-conf" : {"tableName" : "ORG_WSO2_IOT_ANDROID_GRAVITY_STATS", "query" : "", "limit" : "", "provider-name" : "batch"}, "chart-conf" : {"x" : "z", "title" : "GRAVITY", "maxLength" : "30", "gadget-name" : "GRAVITY", "chart-name" : "number-chart"}}

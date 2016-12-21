@@ -18,133 +18,148 @@
  */
 
 // TODO: change the name of this jaggery file even thoe it says 'store_alerts' it is actually removing the alerts from the data store as well o.O wired
-
-var dataStore = require('../include/commons.jag').dataStore;
 var log = new Log();
-var deviceIdSeperator = "---";
+var constants = require("../controllers/constants.jag");
 
-function store(parameterKeyName, resourceContents, executionPlan, optional, deviceId) {
-    log.info("DEBUG:*** resourceContents:" + resourceContents);
-    if (executionPlan == "Speed") {
-        var currentLimit;
-        var speedFile = "speed" + deviceIdSeperator + ".json";
-        try {
-            currentLimit = dataStore.get(speedFile);
+var getRegistry = function() {
+    var carbon = require("carbon");
+    var server = new carbon.server.Server();
+    return new carbon.registry.Registry(server, {
+        system: true
+    });
+};
+
+/**
+ * Get the registry path to save the alert
+ * @param {String} alert_type               Type of the alert
+ * @param {String} id                       Id of the device
+ * @param {String} optional                 /optional identity
+ * @return {String}                         Registry Path to save teh alert
+ * */
+var registryPath = function (alert_type, id, optional) {
+    if (alert_type  && id ) {
+        if (alert_type === constants.EXECUTION_PLAN_TYPE_SPEED || alert_type === constants
+                        .EXECUTION_PLAN_TYPE_PROXIMITY) {
+            return constants.REGISTRY_PATH_FOR_ALERTS + alert_type + "/" + id;
+        } else {
+            return constants.REGISTRY_PATH_FOR_ALERTS + alert_type + "/" + id + "/" + optional;
         }
-        catch (e) {
-            log.info("DEBUG:*** Catch error:" + e.message);
-            currentLimit = dataStore.newResource();
-            currentLimit.mediaType = 'application/json';
-            currentLimit.description = "User define speed limit for display alerts.";
-        }
-        currentLimit.content = String('{"speedLimit": ' + resourceContents + '}');
-        dataStore.put(speedFile, currentLimit);
-        log.info("DEBUG:*** Current speed limit set to:" + currentLimit.content);
+    } else {
+        throw "Alert type and ID are mandatory field to generate the relevant registry path";
     }
-    else if (executionPlan == "Within") {
-        try {
-            var res = dataStore.get("geo/alerts/within");
-        }
-        catch (e) {
-            var geo = dataStore.newCollection();
-            var alerts = dataStore.newCollection();
-            var within = dataStore.newCollection();
+};
 
-            dataStore.put("geo", geo);
-            dataStore.put("alerts", alerts);
-            dataStore.put("within", within);
 
-        }
-        log.info("DEBUG:****** resourceContents = " + String('{"geoJson": ' + resourceContents + '}'));
-        var resource = dataStore.newResource();
-        resource.addProperty("queryName", optional.queryName);
-        resource.addProperty("areaName", optional.customName);
-        resource.mediaType = 'application/json';
-        resource.content = String(resourceContents);
-        dataStore.put(String("geo/alerts/within/" + optional.queryName + deviceIdSeperator + deviceId + ".json"), resource);
-    } else if (executionPlan == "Proximity") {
-
-        try {
-            var res = dataStore.get("geo/alerts/proximity");
-        }
-        catch (e) {
-            var geo = dataStore.newCollection();
-            var alerts = dataStore.newCollection();
-            var proximity = dataStore.newCollection();
-
-            dataStore.put("geo", geo);
-            dataStore.put("alerts", alerts);
-            dataStore.put("proximity", proximity);
-        }
-        log.info("DEBUG:****** resourceContents = " + resourceContents);
-        var resource = dataStore.newResource();
-        resource.addProperty("proximityDistance", resourceContents.proximityDistance);
-        resource.addProperty("proximityTime", resourceContents.proximityTime);
-        dataStore.put(String("geo/alerts/proximity/" + optional.executionPlan + deviceIdSeperator + deviceId + ".json"), resource);
-
-    } else if (executionPlan == "Stationery") {
-
-        try {
-            var res = dataStore.get("geo/alerts/stationery");
-        }
-        catch (e) {
-            var geo = dataStore.newCollection();
-            var alerts = dataStore.newCollection();
-            var stationery = dataStore.newCollection();
-
-            dataStore.put("geo", geo);
-            dataStore.put("alerts", alerts);
-            dataStore.put("stationery", stationery);
-        }
-        log.info("DEBUG:****** resourceContents = " + resourceContents.geoFenceGeoJSON);
-        var resource = dataStore.newResource();
-        resource.addProperty("queryName", optional.queryName);
-        resource.addProperty("stationeryName", optional.customName);
-        resource.addProperty("stationeryTime", resourceContents.stationeryTime);
-        resource.addProperty("fluctuationRadius", resourceContents.fluctuationRadius);
-        resource.content = String(resourceContents.geoFenceGeoJSON);
-        dataStore.put(String("geo/alerts/stationery/" + optional.queryName + deviceIdSeperator + deviceId + ".json"), resource);
-
-    } else if (executionPlan == "Traffic") {
-
-        try {
-            var res = dataStore.get("geo/alerts/traffic");
-        }
-        catch (e) {
-            var geo = dataStore.newCollection();
-            var alerts = dataStore.newCollection();
-            var traffic = dataStore.newCollection();
-
-            dataStore.put("geo", geo);
-            dataStore.put("alerts", alerts);
-            dataStore.put("traffic", traffic);
-        }
-        log.info("DEBUG:****** resourceContents = " + resourceContents.geoFenceGeoJSON);
-        var resource = dataStore.newResource();
-        resource.addProperty("queryName", optional.queryName);
-        resource.addProperty("areaName", optional.customName);
-        resource.content = String(resourceContents);
-        dataStore.put(String("geo/alerts/traffic/" + optional.queryName + deviceIdSeperator + deviceId + ".json"), resource);
-
+/**
+ * To store the alerts for visualizing purposes
+ * @param resourceContents Value that need to saved
+ * @param executionPlan Type of the execution plan
+ * @param optional Optional parameters that are only specific to particular device types
+ * @param deviceId Id of the device
+ */
+function store(resourceContents, executionPlan, optional, deviceId) {
+    var registry = getRegistry();
+    var pathToAddAlert = "";
+    if (log.isDebugEnabled()) {
+        log.debug("DEBUG:*** resourceContents:" + resourceContents);
     }
-
+    if (executionPlan === constants.EXECUTION_PLAN_TYPE_SPEED) {
+        pathToAddAlert = registryPath(constants.EXECUTION_PLAN_TYPE_SPEED, deviceId);
+        registry.put(pathToAddAlert, {
+            content: '{"speedLimit": ' + resourceContents + '}',
+            mediaType: 'application/json'
+        });
+        if (log.isDebugEnabled()) {
+            log.debug("DEBUG:*** Current speed limit set to:" + currentLimit.content);
+        }
+    }
+    else if (executionPlan === constants.EXECUTION_PLAN_TYPE_WITHIN) {
+        pathToAddAlert = registryPath(constants.EXECUTION_PLAN_TYPE_WITHIN, deviceId, optional.queryName);
+        if (log.isDebugEnabled()) {
+            log.debug("DEBUG:****** resourceContents = " + String('{"geoJson": ' + resourceContents + '}'));
+        }
+        registry.put(pathToAddAlert, {
+            content: JSON.stringify(resourceContents),
+            mediaType: 'application/json',
+            properties : {
+                "queryName" : optional.queryName,
+                "areaName" : optional.customName
+            }
+        });
+    } else if (executionPlan === constants.EXECUTION_PLAN_TYPE_PROXIMITY) {
+        pathToAddAlert = registryPath(constants.EXECUTION_PLAN_TYPE_PROXIMITY, deviceId);
+        if (log.isDebugEnabled()) {
+            log.debug("DEBUG:****** resourceContents = " + resourceContents);
+        }
+        registry.put(pathToAddAlert, {
+            content: "",
+            mediaType: 'application/json'
+        });
+        registry.addProperty(pathToAddAlert, "proximityDistance", resourceContents.proximityDistance);
+        registry.addProperty(pathToAddAlert, "proximityTime", resourceContents.proximityTime);
+    } else if (executionPlan === constants.EXECUTION_PLAN_TYPE_STATIONARY) {
+        pathToAddAlert = registryPath(constants.EXECUTION_PLAN_TYPE_STATIONARY, deviceId, optional.queryName);
+        if (log.isDebugEnabled()) {
+            log.debug("DEBUG:****** resourceContents = " + resourceContents);
+        }
+        var registryResource = {
+            content: JSON.stringify(resourceContents.geoFenceGeoJSON),
+            mediaType: 'application/json',
+            properties: {
+                "queryName" :  optional.queryName,
+                "stationeryName" : optional.customName,
+                "stationeryTime" : resourceContents.stationeryTime,
+                "fluctuationRadius" : resourceContents.fluctuationRadius
+            }
+        };
+        registry.put(pathToAddAlert, registryResource);
+    } else if (executionPlan === constants.EXECUTION_PLAN_TYPE_TRAFFIC) {
+        pathToAddAlert = registryPath(constants.EXECUTION_PLAN_TYPE_TRAFFIC, deviceId, optional.queryName);
+        if (log.isDebugEnabled()) {
+            log.debug("DEBUG:****** resourceContents = " + resourceContents.geoFenceGeoJSON);
+        }
+        var registryResource = {
+            content: JSON.stringify(resourceContents),
+            mediaType: 'application/json',
+            properties: {
+                "queryName" :  optional.queryName,
+                "stationeryName" : optional.customName,
+                "stationeryTime" : resourceContents.stationeryTime,
+                "fluctuationRadius" : resourceContents.fluctuationRadius
+            }
+        };
+        registry.put(pathToAddAlert, {
+            content: JSON.stringify(resourceContents),
+            mediaType: 'application/json',
+            properties: {
+                "queryName" :  optional.queryName,
+                "areaName" : optional.customName
+            }
+        });
+    }
 }
 
-function remove(queryName, id, deviceId) {
+/**
+ * To remove the registry resource
+ * @param queryName Name of the query that need to be removed
+ * @param executionPlanType type of the execution plan that need to be removed
+ * @param deviceId Id of the device
+ */
+function remove(queryName, executionPlanType, deviceId) {
     var path = "";
     try {
-        if (id == "WithIn") {
-            path = "geo/alerts/within/" + queryName + deviceIdSeperator + deviceId + ".json";
-        } else if (id == "Stationery") {
-            path = "geo/alerts/stationery/" + queryName + deviceIdSeperator + deviceId + ".json";
-        } else if (id == "Traffic") {
-            path = "geo/alerts/traffic/" + queryName + deviceIdSeperator + deviceId + ".json";
+        if (executionPlanType === constants.EXECUTION_PLAN_TYPE_SPEED || executionPlanType === constants.EXECUTION_PLAN_TYPE_PROXIMITY) {
+            path = registryPath(executionPlanType, deviceId);
+        } else {
+            path = registryPath(executionPlanType, deviceId, queryName);
         }
-        log.info("DEBUG: path = " + path);
-        dataStore.remove(path);
+        getRegistry().remove(path);
+        if (log.isDebugEnabled()) {
+            log.debug("Resource is removed from the path" + path);
+        }
     }
     catch (e) {
-        log.info("The requested resource " + path + " was not found on this server. That’s all we know."); // Inspired by google 404 message
+        log.error("The requested resource " + path + " was not found on this server.");
     }
 }
 %>

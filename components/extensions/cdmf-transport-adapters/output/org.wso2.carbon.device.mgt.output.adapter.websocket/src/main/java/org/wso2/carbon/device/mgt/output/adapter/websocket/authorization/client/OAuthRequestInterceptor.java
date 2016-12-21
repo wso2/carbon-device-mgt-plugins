@@ -76,6 +76,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
                 .target(ApiApplicationRegistrationService.class,
                         deviceMgtServerUrl + API_APPLICATION_REGISTRATION_CONTEXT);
     }
+
     @Override
     public void apply(RequestTemplate template) {
         if (tokenInfo == null) {
@@ -95,9 +96,11 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password);
             tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
         }
-        if (System.currentTimeMillis() + refreshTimeOffset > tokenInfo.getExpires_in()) {
-            tokenInfo = tokenIssuerService.getToken(REFRESH_GRANT_TYPE, tokenInfo.getRefresh_token());
-            tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
+        synchronized(this) {
+            if (System.currentTimeMillis() + refreshTimeOffset > tokenInfo.getExpires_in()) {
+                tokenInfo = tokenIssuerService.getToken(REFRESH_GRANT_TYPE, tokenInfo.getRefresh_token());
+                tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
+            }
         }
         String headerValue = "Bearer " + tokenInfo.getAccess_token();
         template.header("Authorization", headerValue);

@@ -281,7 +281,8 @@ function setWithinAlert(leafletId) {
             'parseData': JSON.stringify({
                 'geoFenceGeoJSON': selectedAreaGeoJson,
                 'executionPlanName': createExecutionPlanName(queryName, "WithIn", deviceId),
-                'areaName': areaName
+                'areaName': areaName,
+                'deviceId' : deviceId
             }),
             'executionPlan': 'Within',
             'customName': areaName, // TODO: fix , When template copies there can be two queryName and areaName id elements in the DOM
@@ -594,7 +595,7 @@ function createExecutionPlanName(queryName, id, deviceId) {
         return 'Geo-ExecutionPlan-Within' + (queryName ? '_' + queryName : '') + "---" + (deviceId ? '_' + deviceId : '') + '_alert'; // TODO: value of the `queryName` can't be empty, because it will cause name conflicts in CEP, have to do validation(check not empty String)
     }
     else if (id == "Stationery") {
-        return 'Geo-ExecutionPlan-Stationery' + (queryName ? '_' + queryName : '') + '_alert'; // TODO: value of the `queryName` can't be empty, because it will cause name conflicts in CEP, have to do validation(check not empty String)
+        return 'Geo-ExecutionPlan-Stationery' + (queryName ? '_' + queryName : '') + "---" + (deviceId ? '_' + deviceId : '') + '_alert'; // TODO: value of the `queryName` can't be empty, because it will cause name conflicts in CEP, have to do validation(check not empty String)
     }
     else if (id == "Traffic") {
         return 'Geo-ExecutionPlan-Traffic' + (queryName ? '_' + queryName : '') + '_alert'; // TODO: value of the `queryName` can't be empty, because it will cause name conflicts in CEP, have to do validation(check not empty String)

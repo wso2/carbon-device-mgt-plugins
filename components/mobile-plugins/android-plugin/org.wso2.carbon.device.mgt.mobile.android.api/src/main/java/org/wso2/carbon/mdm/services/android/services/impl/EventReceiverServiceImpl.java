@@ -40,8 +40,7 @@ import java.util.List;
 
 @Path("/events")
 public class EventReceiverServiceImpl implements EventReceiverService {
-
-    private static final String EVENT_STREAM_DEFINITION = "android_agent";
+    private static final String EVENT_STREAM_DEFINITION = "org.wso2.android.agent.Stream";
     private static final Log log = LogFactory.getLog(EventReceiverServiceImpl.class);
 
     @POST

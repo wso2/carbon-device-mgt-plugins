@@ -20,138 +20,184 @@ package org.wso2.carbon.device.mgt.mobile.windows.api.services.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.license.mgt.License;
+import org.wso2.carbon.device.mgt.common.device.details.*;
+import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.CacheEntry;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.SyncmlMessageFormatException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.SyncmlOperationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
-import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.AuthenticationInfo;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.DeviceUtil;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.*;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.*;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.DeviceInfo;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.DeviceManagementService;
+import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
+import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
-import javax.jws.WebService;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Windows Device Management REST-API implementation.
- * All end points supports JSON, XMl with content negotiation.
- */
-@WebService
-@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+import static org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils.convertToDeviceIdentifierObject;
+
+
 public class DeviceManagementServiceImpl implements DeviceManagementService {
-
-
     private static Log log = LogFactory.getLog(
-            org.wso2.carbon.device.mgt.mobile.windows.api.services.impl.DeviceManagementServiceImpl.class);
+            org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.impl.SyncmlServiceImpl.class);
 
-    /**
-     * Get all devices.Returns list of Windows devices registered in MDM.
-     *
-     * @return Returns retrieved devices.
-     * @throws WindowsConfigurationException occurred while retrieving all the devices from DB.
-     */
-    @GET
-    public List<Device> getAllDevices() throws WindowsConfigurationException {
-        String msg;
-        List<Device> devices;
+    @Override
+    public Response getResponse(Document request) throws WindowsDeviceEnrolmentException, WindowsOperationException,
+            NotificationManagementException, WindowsConfigurationException {
+
+        int msgId;
+        int sessionId;
+        String user;
+        String token;
+        String response;
+        SyncmlDocument syncmlDocument;
+        List<? extends Operation> pendingOperations;
+        OperationHandler operationHandler = new OperationHandler();
+        OperationReply operationReply = new OperationReply();
+
         try {
-            devices = WindowsAPIUtils.getDeviceManagementService().
-                    getAllDevices(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
-        } catch (DeviceManagementException e) {
-            msg = "Error occurred while fetching the device list.";
+            if (SyncmlParser.parseSyncmlPayload(request) != null) {
+                syncmlDocument = SyncmlParser.parseSyncmlPayload(request);
+                SyncmlHeader syncmlHeader = syncmlDocument.getHeader();
+                sessionId = syncmlHeader.getSessionId();
+                user = syncmlHeader.getSource().getLocName();
+                DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(syncmlHeader.getSource().
+                        getLocURI());
+                msgId = syncmlHeader.getMsgID();
+                if ((PluginConstants.SyncML.SYNCML_FIRST_MESSAGE_ID == msgId) &&
+                        (PluginConstants.SyncML.SYNCML_FIRST_SESSION_ID == sessionId)) {
+                    token = syncmlHeader.getCredential().getData();
+                    CacheEntry cacheToken = (CacheEntry) DeviceUtil.getCacheEntry(token);
+
+                    if ((cacheToken.getUsername() != null) && (cacheToken.getUsername().equals(user))) {
+
+                        if (modifyEnrollWithMoreDetail(request)) {
+                            pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
+                            response = operationReply.generateReply(syncmlDocument,pendingOperations);
+                            return Response.status(Response.Status.OK).entity(response).build();
+                        } else {
+                            String msg = "Error occurred in while modify the enrollment.";
+                            log.error(msg);
+                            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(msg).build();
+                        }
+                    } else {
+                        String msg = "Authentication failure due to incorrect credentials.";
+                        log.error(msg);
+                        return Response.status(Response.Status.UNAUTHORIZED).entity(msg).build();
+                    }
+                } else  {
+                    if ((syncmlDocument.getBody().getAlert() != null)) {
+                        if (!syncmlDocument.getBody().getAlert().getData().equals(Constants.DISENROLL_ALERT_DATA)) {
+                            pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
+                            return Response.ok().entity(operationReply.generateReply(
+                                    syncmlDocument, pendingOperations)).build();
+                        } else {
+                            if (WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier) != null) {
+                                WindowsAPIUtils.getDeviceManagementService().disenrollDevice(deviceIdentifier);
+                                return Response.ok().entity(operationReply.generateReply(syncmlDocument, null)).build();
+                            } else {
+                                String msg = "Enrolled device can not be found in the server.";
+                                log.error(msg);
+                                return Response.status(Response.Status.NOT_FOUND).entity(msg).build();
+                            }
+                        }
+                    } else {
+                        pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
+                        return Response.ok().entity(operationReply.generateReply(
+                                syncmlDocument, pendingOperations)).build();
+                    }
+                }
+            }
+        } catch (SyncmlMessageFormatException e) {
+            String msg = "Error occurred while parsing syncml request.";
+            log.error(msg, e);
+            throw new WindowsOperationException(msg, e);
+        } catch (OperationManagementException e) {
+            String msg = "Cannot access operation management service.";
+            log.error(msg, e);
+            throw new WindowsOperationException(msg, e);
+        } catch (SyncmlOperationException e) {
+            String msg = "Error occurred while getting effective feature.";
             log.error(msg, e);
             throw new WindowsConfigurationException(msg, e);
+        } catch (DeviceManagementException e) {
+            String msg = "Failure occurred in dis-enrollment flow.";
+            log.error(msg, e);
+            throw new WindowsOperationException(msg, e);
         }
-        return devices;
+        return null;
     }
 
     /**
-     * Fetch Windows device details of a given device Id.
+     * Enroll phone device
      *
-     * @param deviceId Device Id
-     * @return Returns retrieved device.
-     * @throws WindowsConfigurationException occurred while getting device from DB.
+     * @param request Device syncml request for the server side.
+     * @return enroll state
+     * @throws WindowsDeviceEnrolmentException
+     * @throws WindowsOperationException
      */
-    @GET
-    @Path("{id}")
-    public Device getDevice(@PathParam("id") String deviceId) throws WindowsConfigurationException {
-        String msg;
-        Device device;
+    private boolean modifyEnrollWithMoreDetail(Document request) throws WindowsDeviceEnrolmentException,
+            WindowsOperationException {
+
+        String devMan;
+        String devMod;
+        boolean status = false;
+        String user;
+        SyncmlDocument syncmlDocument;
+
         try {
-            DeviceIdentifier deviceIdentifier = WindowsAPIUtils.convertToDeviceIdentifierObject(deviceId);
-            device = WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
-            if (device == null) {
-                Response.status(Response.Status.NOT_FOUND);
+            syncmlDocument = SyncmlParser.parseSyncmlPayload(request);
+            ReplaceTag replace = syncmlDocument.getBody().getReplace();
+            List<ItemTag> itemList = replace.getItems();
+            devMan = itemList.get(PluginConstants.SyncML.DEVICE_MAN_POSITION).getData();
+            devMod = itemList.get(PluginConstants.SyncML.DEVICE_MODEL_POSITION).getData();
+            user = syncmlDocument.getHeader().getSource().getLocName();
+            AuthenticationInfo authenticationInfo = new AuthenticationInfo();
+            authenticationInfo.setUsername(user);
+            WindowsAPIUtils.startTenantFlow(authenticationInfo);
+            DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(syncmlDocument.
+                    getHeader().getSource().getLocURI());
+            Device existingDevice = WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
+            if (!existingDevice.getProperties().isEmpty()) {
+                List<Device.Property> existingProperties = new ArrayList<>();
+
+                Device.Property vendorProperty = new Device.Property();
+                vendorProperty.setName(PluginConstants.SyncML.VENDOR);
+                vendorProperty.setValue(devMan);
+                existingProperties.add(vendorProperty);
+
+                Device.Property deviceModelProperty = new Device.Property();
+                deviceModelProperty.setName(PluginConstants.SyncML.MODEL);
+                deviceModelProperty.setValue(devMod);
+                existingProperties.add(deviceModelProperty);
+
+                existingDevice.setProperties(existingProperties);
+                existingDevice.setDeviceIdentifier(syncmlDocument.getHeader().getSource().getLocURI());
+                existingDevice.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
+                status = WindowsAPIUtils.getDeviceManagementService().modifyEnrollment(existingDevice);
+                return status;
             }
         } catch (DeviceManagementException e) {
-            msg = "Error occurred while fetching the device information.";
-            log.error(msg, e);
-            throw new WindowsConfigurationException(msg, e);
+            throw new WindowsDeviceEnrolmentException("Failure occurred while enrolling device.", e);
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
-        return device;
-    }
-
-    /**
-     * Update Windows device details of given device id.
-     *
-     * @param deviceId     Device Id.
-     * @param device Device details to be updated.
-     * @return Returns the message whether device update or not.
-     * @throws WindowsConfigurationException occurred while updating the Device Info.
-     */
-    @PUT
-    @Path("{id}")
-    public Message updateDevice(@PathParam("id") String deviceId, Device device) throws WindowsConfigurationException {
-        String msg;
-        Message responseMessage = new Message();
-        DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
-        deviceIdentifier.setId(deviceId);
-        deviceIdentifier.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
-        boolean isUpdated;
-        try {
-            device.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
-            isUpdated = WindowsAPIUtils.getDeviceManagementService().updateDeviceInfo(deviceIdentifier, device);
-            if (isUpdated) {
-                Response.status(Response.Status.ACCEPTED);
-                responseMessage.setResponseMessage("Device information has modified successfully.");
-            } else {
-                Response.status(Response.Status.NOT_MODIFIED);
-                responseMessage.setResponseMessage("Device not found for the update.");
-            }
-        } catch (DeviceManagementException e) {
-            msg = "Error occurred while modifying the device information.";
-            log.error(msg, e);
-            throw new WindowsConfigurationException(msg, e);
-        }
-        return responseMessage;
-    }
-
-    /**
-     * Fetch the Licence agreement for specific windows platform.
-     *
-     * @return Returns License agreement.
-     * @throws WindowsConfigurationException occurred while getting licence for specific platform and Language.
-     */
-    @GET
-    @Path("license")
-    @Produces("application/json")
-    public License getLicense() throws WindowsConfigurationException {
-        License license;
-        try {
-            license =
-                    WindowsAPIUtils.getDeviceManagementService().getLicense(
-                            DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS,
-                            DeviceManagementConstants.LanguageCodes.LANGUAGE_CODE_ENGLISH_US);
-        } catch (DeviceManagementException e) {
-            String msg = "Error occurred while retrieving the license configured for Windows device enrollment";
-            log.error(msg, e);
-            throw new WindowsConfigurationException(msg, e);
-        }
-        return license;
+        return status;
     }
 }

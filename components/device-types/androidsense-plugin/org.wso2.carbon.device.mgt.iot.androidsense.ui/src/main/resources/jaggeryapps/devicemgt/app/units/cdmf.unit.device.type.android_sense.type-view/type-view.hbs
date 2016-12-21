@@ -15,6 +15,10 @@
   specific language governing permissions and limitations
   under the License.
 }}
+
+{{unit "cdmf.unit.device.type.qr-modal" enrollmentURL=enrollmentURL deviceTypeName="Android"}}
+{{unit "cdmf.unit.device.type.email.invite-modal" deviceTypeView="androidsense"}}
+
 <div class="col-lg-12  margin-top-double">
     <h1 class="grey ">Android Sense</h1>
     <hr>
@@ -34,6 +38,14 @@
     <p class="grey margin-top">Connect an Android device to WSO2 IoT Server and visualize sensor
                                data.</p>
     <br>
+    <a href="#" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
+    <a href="{{hostName}}{{@unit.publicUri}}/asset/androidsense.apk" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
+    <a href="javascript:toggleEmailInvite()" class="btn-operations"><i class="fw fw-mail fw-inverse fw-lg add-margin-1x"></i> Invite by Email</a>
+
+    <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Android+Sense"
+                                 target="_blank">[ here ]</a> for latest instructions and
+        troubleshooting.</p>
+
     <h3 class="uppercase">What You Need</h3>
     <hr>
     <p class="grey margin-top">You should have an Android Device to get started.</p>
@@ -54,12 +66,6 @@
                Proceed to [Prepare] section.
     </ul>
     <br>
-    <a href="#" class="download-link btn-operations">
-        <i class="fw fw-mobile fw-inverse fw-lg"></i> Enroll Device</a>
-    <br/><br/>
-    <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Android+Sense"
-                                  target="_blank">[ here ]</a> for latest instructions and
-        troubleshooting.</p>
 
     <div id="device-400-content" class="hide">
         <div class="modal-content">
@@ -147,15 +153,15 @@
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double">
-            <span class="circle">01</span>
+            <span class="badge">01</span>
                Connect Android device to network.
         </li>
         <li class="padding-top-double">
-            <span class="circle">02</span>
+            <span class="badge">02</span>
                Start Android Sense app in your device.
         </li>
         <li class="padding-top-double">
-            <span class="circle">03</span>
+            <span class="badge">03</span>
                Fill login form with the credentials.
             <i>(Use server URL as [ https://&lt;WSO2_IoT_SERVER_HOST&gt;:&lt;
                HTTPS_SERVER_PORT&gt; ] and click on
@@ -169,7 +175,7 @@
         </li>
 
         <li class="padding-top-double">
-            <span class="circle">04</span>
+            <span class="badge">04</span>
                Once the device is enrolled, click on <strong>[+]</strong> button to
             select the sensors.
             <a href="{{@unit.publicUri}}/images/selectSensorView.png" target="_blank"
@@ -178,7 +184,7 @@
             </a>
         </li>
         <li class="padding-top-double">
-            <span class="circle">05</span>
+            <span class="badge">05</span>
                Click on <i>[Publish data]</i> button to publish sensor readings to
             IoT server.
             <a href="{{@unit.publicUri}}/images/publishDataView.png" target="_blank"
@@ -190,88 +196,50 @@
     <br>
 </div>
 
-<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <h3 class="uppercase">Try Out</h3>
-    <hr>
-    <ul class="list-unstyled">
-        <li class="padding-top-double">
-            <span class="fw-stack fw-lg margin-right">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double">
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
+            <h3 class="uppercase">Try Out</h3>
+            <hr>
+            <ul class="list-unstyled">
+                <li class="padding-top-double">
+            <span class="fw-stack margin-right">
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
-               You can view all your connected devices
-            <a href="{{@app.context}}/devices">[Device Management]</a> page.
-        </li>
-        <li class="padding-top-double">
-            <span class="fw-stack fw-lg margin-right">
+                    You can view all your connected devices
+                    <a href="{{@app.context}}/devices">[Device Management]</a> page.
+                </li>
+                <li class="padding-top-double">
+            <span class="fw-stack margin-right">
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
-               You can select any one of your connected devices for available
-            operations and Real-Time data monitoring.
-        </li>
-        <li class="padding-top-double">
-            <span class="fw-stack fw-lg margin-right">
+                    You can select any one of your connected devices for available
+                    operations and Real-Time data monitoring.
+                </li>
+                <li class="padding-top-double">
+            <span class="fw-stack margin-right">
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>   For historical analytics of sensor data navigate to device
-                   analytics page.
-        </li>
-    </ul>
-    <br/>
-    <p class="grey margin-top">Click on the image to zoom</p>
-    <center>
-        <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
-            <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
-        </a>
-    </center>
+                    analytics page.
+                </li>
+            </ul>
+            <br/>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
+            <p class="grey margin-top">Click on the image to zoom</p>
+            <center>
+                <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
+                    <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
+                </a>
+            </center>
+        </div>
+    </div>
 </div>
 
-<div id="qr-code-modal" data-enrollment-url="{{hostName}}{{@unit.publicUri}}/asset/androidsense.apk" class="hidden">
-    <div class="modal-header">
-        <h4 class="pull-left modal-title">
-                <span class="fw-stack">
-                    <i class="fw fw-mobile fw-stack-2x"></i>
-                    <span class="fw-stack fw-move-right fw-move-bottom">
-                      <i class="fw fw-ring fw-stack-2x"></i>
-                      <i class="fw fw-circle fw-stack-2x fw-stroke text-info"></i>
-                      <i class="fw fw-add fw-stack-1x fw-inverse"></i>
-                   </span>
-                </span>
-              Add your new mobile device to {{@app.conf.appName}}
-        </h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fw fw-cancel"></i></button>
-    </div>
-    <hr>
-    <div class="modal-body add-margin-top-2x add-margin-bottom-2x">
-        <div class="panel-body col-centered text-center">
-            <h5>
-                Please scan the following QR code using your new <b>Android</b>, <b>iPhone</b> or <b>Windows</b> mobile device.
-            </h5>
-            <br>
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="qr-code"></div>
-                </div>
-            </div>
-            <br>
-            <h5>
-                Not having a QR code scanner in your device?
-                <br><br>
-                Try following link
-                <br><br>
-                <b>{{hostName}}{{@unit.publicUri}}/asset/androidsense.apk</b>
-                <br><br>
-                on your device's Internet browser instead.
-            </h5>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <div class="buttons">
-            <a href="javascript:hidePopup()" class="btn-operations btn-default">Ok</a>
-        </div>
-    </div>
-</div>
+{{unit "cdmf.unit.device.type.email.invite-modal" deviceTypeView="androidSense"}}
 
 
 <!--<div class="content">-->

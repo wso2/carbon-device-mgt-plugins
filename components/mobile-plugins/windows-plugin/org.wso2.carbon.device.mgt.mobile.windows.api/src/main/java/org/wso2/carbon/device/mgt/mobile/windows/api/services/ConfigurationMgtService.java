@@ -54,7 +54,7 @@ import javax.ws.rs.core.Response;
                         @Extension(properties = {
                                 @ExtensionProperty(name = "name", value = "Windows Configuration Management"),
                                 @ExtensionProperty(name = "context",
-                                        value = "/api/device-mgt/windows/v1.0/services/configuration"),
+                                        value = "/api/device-mgt/windows/v1.0/configuration"),
                         })
                 }
         ),
@@ -63,13 +63,13 @@ import javax.ws.rs.core.Response;
         }
 )
 @Api(value = "Windows Configuration Management",
-     description = "This carries all the resources related to Windows configurations management functionalities")
+        description = "This carries all the resources related to Windows configurations management functionalities")
 @WebService
-@Path("services/configuration")
-@Produces({"application/json", "application/xml"})
-@Consumes({"application/json", "application/xml"})
+@Path("/configuration")
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public interface ConfigurationMgtService {
-    
+
     @GET
     @ApiOperation(
             produces = MediaType.APPLICATION_JSON,
@@ -80,9 +80,9 @@ public interface ConfigurationMgtService {
             tags = "Windows Configuration Management",
             authorizations = {
                     @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(scope = "/device-mgt/platform-configurations/view",
-                                    description = "View Configurations") }
+                            value = "permission",
+                            scopes = {@AuthorizationScope(scope = "/device-mgt/platform-configurations/view",
+                                    description = "View Configurations")}
                     )
             }
     )
@@ -117,7 +117,12 @@ public interface ConfigurationMgtService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching the Windows platform configuration.")
     })
-    PlatformConfiguration getConfiguration() throws WindowsConfigurationException;
+    Response getConfiguration(@ApiParam(
+            name = "If-Modified-Since",
+            value = "Checks if the requested variant was modified, since the specified date-time.\n" +
+                    "Provide the value in the following format: EEE, d MMM yyyy HH:mm:ss Z.\n" +
+                    "Example: Mon, 05 Jan 2014 15:10:00 +0200",
+            required = false) @HeaderParam("If-Modified-Since") String ifModifiedSince);
 
     /**
      * Update Tenant Configurations for the specific Device type.
@@ -136,9 +141,9 @@ public interface ConfigurationMgtService {
             tags = "Windows Configuration Management",
             authorizations = {
                     @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(scope = "/device-mgt/configurations/manage",
-                                    description = "Manage Configurations") }
+                            value = "permission",
+                            scopes = {@AuthorizationScope(scope = "/device-mgt/configurations/manage",
+                                    description = "Manage Configurations")}
                     )
             }
     )
@@ -175,11 +180,11 @@ public interface ConfigurationMgtService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while modifying the Windows platform configurations.")
     })
-    Message updateConfiguration
-    ( @ApiParam(
+    Response updateConfiguration
+    (@ApiParam(
             name = "configuration",
             value = "The properties to update the Windows platform configurations.")
-      PlatformConfiguration configuration) throws WindowsConfigurationException;
+     PlatformConfiguration configuration) throws WindowsConfigurationException;
 
     @GET
     @Path("license")
@@ -194,9 +199,9 @@ public interface ConfigurationMgtService {
             tags = "Windows Configuration Management",
             authorizations = {
                     @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(scope = "/device-mgt/devices/enroll/windows",
-                                    description = "Enroll Device") }
+                            value = "permission",
+                            scopes = {@AuthorizationScope(scope = "/device-mgt/devices/enroll/windows",
+                                    description = "Enroll Device")}
                     )
             }
     )
@@ -236,7 +241,7 @@ public interface ConfigurationMgtService {
                     name = "If-Modified-Since",
                     value = "Checks if the requested variant was modified, since the specified date-time.\n" +
                             "Provide the value in the following format: EEE, d MMM yyyy HH:mm:ss Z.\n" +
-                            "Example: Mon, 05 Jan 2014 15:10:00 +0200",
+                            "Example: Mon, 05 Jan 2014 15:10:00 +0200.",
                     required = false)
             @HeaderParam("If-Modified-Since") String ifModifiedSince) throws WindowsConfigurationException;
 

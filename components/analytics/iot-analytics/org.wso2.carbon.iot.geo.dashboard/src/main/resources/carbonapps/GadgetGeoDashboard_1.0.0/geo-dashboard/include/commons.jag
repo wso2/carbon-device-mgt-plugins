@@ -28,12 +28,4 @@ var escapeSiddhiql = function (s) {
         return XML_CHAR_MAP[ch];
     });
 };
-
-var cepInfo = function () {
-    var configuration = require("../conf/cep_info.json");
-    return configuration;
-};
-
-// TODO: move to new datastore api
-var dataStore = new MetadataStore("admin", "admin");
 %>

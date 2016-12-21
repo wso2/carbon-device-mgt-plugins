@@ -21,11 +21,6 @@
     <title></title>
 </head>
 <body>
-<%
-var log = new Log();
-var get = require('../get_alerts.jag').get;
-
-%>
 <div class="modal-header" style="cursor: move;background: #f9f9f9;-webkit-box-shadow: inset 0px 0px 14px 1px rgba(0,0,0,0.2);-moz-box-shadow: inset 0px 0px 14px 1px rgba(0,0,0,0.2);box-shadow: inset 0px 0px 14px 1px rgba(0,0,0,0.2);">
     <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
     <h4 class="modal-title">
@@ -38,7 +33,7 @@ var get = require('../get_alerts.jag').get;
         <div class="col-md-6 col-md-offset-3">
             <div class="input-group input-group-sm">
                 <input autofocus="enable" id="speedAlertValue" type="number" class="form-control"
-                       placeholder="Speed alert value " value="<%= get('speed').speedLimit %>">
+                       placeholder="Speed alert value " >
                 <span class="input-group-addon">km/h</span>
             </div>
         </div>
@@ -48,5 +43,6 @@ var get = require('../get_alerts.jag').get;
         </div>
     </div>
 </div>
+<script src="/portal/store/carbon.super/fs/gadget/geo-dashboard/js/geo_speed.js"></script>
 </body>
 </html>

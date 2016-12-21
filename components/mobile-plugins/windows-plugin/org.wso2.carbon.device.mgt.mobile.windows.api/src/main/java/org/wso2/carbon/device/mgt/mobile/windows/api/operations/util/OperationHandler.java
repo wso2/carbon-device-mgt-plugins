@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.device.details.DeviceInfo;
 import org.wso2.carbon.device.mgt.common.notification.mgt.Notification;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementService;
@@ -87,7 +88,7 @@ public class OperationHandler {
                         Notification lockResetNotification = new Notification();
                         lockResetNotification.setOperationId(status.getCommandReference());
                         lockResetNotification.setStatus(String.valueOf(Notification.Status.NEW));
-//                        lockResetNotification.setDeviceIdentifier(deviceIdentifier);
+
                         lockResetNotification.setDescription(
                                 Constants.SyncMLResponseCodes.LOCK_RESET_NOTIFICATION);
                         nmService.addNotification(deviceIdentifier, lockResetNotification);
@@ -152,7 +153,6 @@ public class OperationHandler {
                         Notification lockResetNotification = new Notification();
                         lockResetNotification.setOperationId(status.getCommandReference());
                         lockResetNotification.setStatus(String.valueOf(Notification.Status.NEW));
-//                        lockResetNotification.setDeviceIdentifier(deviceIdentifier);
                         lockResetNotification.setDescription(Constants.SyncMLResponseCodes.LOCK_RESET_NOTIFICATION);
 
                         nmService.addNotification(deviceIdentifier, lockResetNotification);
@@ -166,7 +166,7 @@ public class OperationHandler {
         }
     }
 
-    /***
+    /**
      * Update status of the ring operation.
      *
      * @param status           Ring status of the device.
@@ -194,7 +194,7 @@ public class OperationHandler {
         }
     }
 
-    /***
+    /**
      * Update the status of the DataWipe operation.
      *
      * @param status           Status of the data wipe.
@@ -223,6 +223,23 @@ public class OperationHandler {
         }
     }
 
+
+    public void updateDeviceInfoStatus(DeviceIdentifier deviceIdentifier) throws OperationManagementException {
+        List<? extends Operation> pendingDeviceInfoOperations;
+        try {
+            pendingDeviceInfoOperations = WindowsAPIUtils.getPendingOperations(deviceIdentifier);
+        } catch (DeviceManagementException e) {
+            throw new OperationManagementException("Error occurred while getting pending operations.");
+        }
+        for (Operation operation : pendingDeviceInfoOperations) {
+            if (PluginConstants.OperationCodes.DEVICE_INFO.equals(operation.getCode())) {
+                operation.setStatus(Operation.Status.COMPLETED);
+                updateStatus(deviceIdentifier.getId(), pendingDeviceInfoOperations);
+            }
+        }
+    }
+
+
     /**
      * Get pending operations.
      *
@@ -232,13 +249,20 @@ public class OperationHandler {
      */
     public List<? extends Operation> getPendingOperations(SyncmlDocument syncmlDocument)
             throws OperationManagementException, WindowsOperationException {
-
+        SyncmlHeader syncmlHeader = syncmlDocument.getHeader();
+        SyncmlBody syncmlBody = syncmlDocument.getBody();
         List<? extends Operation> pendingOperations;
-        DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(
-                syncmlDocument.getHeader().getSource().getLocURI());
+        DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(syncmlHeader.getSource().getLocURI());
+        int sessionId = syncmlHeader.getSessionId();
+        int msgId = syncmlHeader.getMsgID();
+        if (!(PluginConstants.SyncML.SYNCML_FIRST_MESSAGE_ID == msgId &&
+                PluginConstants.SyncML.SYNCML_FIRST_SESSION_ID == sessionId)) {
+            if ((syncmlBody.getResults() != null)) {
+                updateDeviceInfo(syncmlDocument);
+            }
+        }
         UpdateUriOperations(syncmlDocument);
         generateComplianceFeatureStatus(syncmlDocument);
-
         pendingOperations = WindowsAPIUtils.getDeviceManagementService().getPendingOperations(deviceIdentifier);
         return pendingOperations;
     }
@@ -486,5 +510,62 @@ public class OperationHandler {
             }
         }
 
+    }
+
+    public void updateDeviceInfo(SyncmlDocument syncmlDocument) throws WindowsOperationException {
+        String softwareVersion;
+        String imsi;
+        String imei;
+        String model;
+        String vendor;
+        String totalRAM;
+        String deviceID = null;
+        String totalStorage;
+
+        List<ItemTag> deviceInformations = syncmlDocument.getBody().getResults().getItem();
+        DeviceInfo deviceInfo = new DeviceInfo();
+        for (ItemTag item : deviceInformations) {
+            String source = item.getSource().getLocURI();
+            if (OperationCode.Info.SOFTWARE_VERSION.getCode().equals(source)) {
+                softwareVersion = item.getData();
+                deviceInfo.setOsVersion(softwareVersion);
+            }
+            if (OperationCode.Info.IMSI.getCode().equals(source)) {
+                imsi = item.getData();
+                deviceInfo.setIMSI(imsi);
+            }
+            if (OperationCode.Info.IMEI.getCode().equals(source)) {
+                imei = item.getData();
+                deviceInfo.setIMEI(imei);
+            }
+            if (OperationCode.Info.DEVICE_MODEL.getCode().equals(source)) {
+                model = item.getData();
+                deviceInfo.setDeviceModel(model);
+            }
+            if (OperationCode.Info.VENDOR.getCode().equals(source)) {
+                vendor = item.getData();
+                deviceInfo.setVendor(vendor);
+            }
+            if (OperationCode.Info.TOTAL_RAM.getCode().equals(source)) {
+                totalRAM = item.getData();
+                deviceInfo.setAvailableRAMMemory(Double.parseDouble(totalRAM));
+            }
+            if (OperationCode.Info.TOTAL_STORAGE.getCode().equals(source)) {
+                totalStorage = item.getData();
+                deviceInfo.setInternalAvailableMemory(Double.parseDouble(totalStorage));
+            }
+            if (OperationCode.Info.DEV_ID.getCode().equals(source)) {
+                deviceID = item.getData();
+            }
+        }
+        DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(deviceID);
+        try {
+            WindowsAPIUtils.updateDeviceInfo(deviceIdentifier, deviceInfo);
+            updateDeviceInfoStatus(deviceIdentifier);
+        } catch (org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceDetailsMgtException e) {
+            throw new WindowsOperationException("Error occurred while adding Device info.");
+        } catch (OperationManagementException e) {
+            throw new WindowsOperationException("Error occurred while updating Device info operation status.");
+        }
     }
 }

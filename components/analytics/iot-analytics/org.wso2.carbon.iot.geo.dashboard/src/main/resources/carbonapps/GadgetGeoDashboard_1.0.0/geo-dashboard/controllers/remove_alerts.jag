@@ -31,8 +31,6 @@ var eventProcessorOption = eventsProcessorServiceClient.getOptions();
 eventProcessorOption.setManageSession(true);
 eventProcessorOption.setProperty(HTTPConstants.COOKIE_STRING, session.get('authToken'));
 
-
-var cepInfo = require('../include/commons.jag').cepInfo;
 var removeAlert = require('../include/store_alerts.jag').remove;
 var ws = require('ws');
 var process = require("process"), host = process.getProperty('server.host'),

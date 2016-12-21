@@ -1,0 +1,37 @@
+<%
+/*
+ ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~ http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ */
+
+var DATA_SOURCE_NAME = "WSO2_GEO_DB";
+var EXECUTION_PLAN_TYPE_SPEED = "Speed";
+var EXECUTION_PLAN_TYPE_WITHIN = "Within";
+var EXECUTION_PLAN_TYPE_PROXIMITY = "Proximity";
+var EXECUTION_PLAN_TYPE_STATIONARY = "Stationery";
+var EXECUTION_PLAN_TYPE_TRAFFIC = "Traffic";
+var REGISTRY_PATH_FOR_ALERTS = "/_system/governance/geo/alerts/";
+var GET_METHOD = "get";
+var QUERY_NAME = "queryName";
+var AREA_NAME = "areaName";
+var CREATED_TIME = "createdTime";
+var GEO_JSON = "geoJson";
+var PROXIMITY_DISTANCE = "proximityDistance";
+var PROXIMITY_TIME = "proximityTime";
+var STATIONARY_NAME = "stationeryName";
+var STATIONARY_TIME = "stationeryTime";
+var FLUCTUATION_RADIUS = "fluctuationRadius";
+%>

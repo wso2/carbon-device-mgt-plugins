@@ -42,9 +42,9 @@ public class RealTimeSensorReader implements SensorEventListener {
         RealTimeSensor realTimeSensor = new RealTimeSensor();
         realTimeSensor.setName(supportedSensors.getType(event.sensor.getType()).toUpperCase());
 
-        realTimeSensor.setValueX(event.values[0] + "");
-        realTimeSensor.setValueY(event.values[1] + "");
-        realTimeSensor.setValueZ(event.values[2] + "");
+        realTimeSensor.setValueX(event.values == null ? "" : event.values[0] + "");
+        realTimeSensor.setValueY(event.values == null || event.values.length <= 1 ? "" : event.values[1] + "");
+        realTimeSensor.setValueZ(event.values == null || event.values.length <= 1 ? "" : event.values[2] + "");
 
         TempStore.sensorDataMap.put(supportedSensors.getType(event.sensor.getType()), realTimeSensor);
 
