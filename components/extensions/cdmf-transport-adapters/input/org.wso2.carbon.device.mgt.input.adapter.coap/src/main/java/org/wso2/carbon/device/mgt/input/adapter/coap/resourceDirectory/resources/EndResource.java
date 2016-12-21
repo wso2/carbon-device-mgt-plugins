@@ -158,7 +158,7 @@ public class EndResource extends TagResource {
 		{
 
 			String headerName = HTTP_OTHER_PROPERTIES.getProperty("coap.message.option." + option.getNumber());
-			String optionValue = null;
+			String optionValue;
 			if (headerName != null && !headerName.isEmpty()) {
 				// format the value
 				if (OtherOptionNumberRegistry.getFormatByNr(option.getNumber()) == OptionNumberRegistry.optionFormats.STRING) {
@@ -199,12 +199,9 @@ public class EndResource extends TagResource {
 			} else
 				proxyUri = new URL(request.getOptions().getProxyUri());
 
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException | MalformedURLException e) {
 			e.printStackTrace();
 		}
-
 		return proxyUri;
 	}
 

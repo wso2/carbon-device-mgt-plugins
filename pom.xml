@@ -378,9 +378,9 @@
 
             <!--IoT Server specific dependencies-->
             <!--<dependency>-->
-                <!--<groupId>org.wso2.carbon.devicemgt-plugins</groupId>-->
-                <!--<artifactId>org.wso2.carbon.device.mgt.iot.url.printer</artifactId>-->
-                <!--<version>${carbon.devicemgt.plugins.version}</version>-->
+            <!--<groupId>org.wso2.carbon.devicemgt-plugins</groupId>-->
+            <!--<artifactId>org.wso2.carbon.device.mgt.iot.url.printer</artifactId>-->
+            <!--<version>${carbon.devicemgt.plugins.version}</version>-->
             <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -416,11 +416,6 @@
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.input.adapter.xmpp</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jayway.jsonpath</groupId>
-                <artifactId>json-path</artifactId>
-                <version>${jsonpath.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -1111,12 +1106,6 @@
                 <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <scope>test</scope>
-                <version>${junit.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.jayway.jsonpath</groupId>
                 <artifactId>json-path</artifactId>
                 <version>${json.path.version}</version>
@@ -1190,7 +1179,7 @@
                 <version>${io.github.openfeign.version}</version>
             </dependency>
             <!-- Californium Dependency-->
-   <!--         <dependency>
+           <dependency>
                 <groupId>org.eclipse.californium</groupId>
                 <artifactId>californium-core</artifactId>
                 <version>${eclipse.californium.version}</version>
@@ -1210,7 +1199,7 @@
                 <artifactId>cf-rd</artifactId>
                 <version>${eclipse.californium.version}</version>
             </dependency>
--->
+
 
             <!-- dependencies for siddhi extension -->
             <dependency>
@@ -1297,10 +1286,10 @@
         <carbon.multitenancy.version>4.6.1</carbon.multitenancy.version>
 
         <!-- Carbon Registry -->
-        <carbon.registry.version>4.5.6</carbon.registry.version>
+        <carbon.registry.version>4.5.8</carbon.registry.version>
 
         <!-- Carbon Governance -->
-        <carbon.governance.version>4.6.4</carbon.governance.version>
+        <carbon.governance.version>4.6.5</carbon.governance.version>
 
         <!-- Carbon API Management -->
         <carbon.api.mgt.version>6.0.5</carbon.api.mgt.version>
@@ -1334,7 +1323,6 @@
         <commons-io.version>2.4</commons-io.version>
         <apache-felix.version>1.0.8</apache-felix.version>
         <googlecode.plist.version>1.8</googlecode.plist.version>
-        <jsonpath.version>0.9.1</jsonpath.version>
         <commons.lang.version>2.2</commons.lang.version>
 
 
@@ -1601,10 +1589,10 @@
             <name>GCM Server repository - GitHub</name>
             <url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
         </repository>
-   <!--     <repository>
+       <repository>
             <id>repo.eclipse.org</id>
             <name>Californium Repository</name>
             <url>https://repo.eclipse.org/content/repositories/californium/</url>
-        </repository>-->
+        </repository>
     </repositories>
 </project>

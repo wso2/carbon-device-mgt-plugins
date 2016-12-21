@@ -93,8 +93,11 @@ public class NodeResource extends RDNodeResource {
             }
             resource = subResource;
         }
-        subResource.setPath(resource.getPath());
-        subResource.setName(next);
+		if (subResource != null) {
+			subResource.setPath(resource.getPath());
+			subResource.setName(next);
+		}
+
         scanner.close();
         return subResource;
     }
