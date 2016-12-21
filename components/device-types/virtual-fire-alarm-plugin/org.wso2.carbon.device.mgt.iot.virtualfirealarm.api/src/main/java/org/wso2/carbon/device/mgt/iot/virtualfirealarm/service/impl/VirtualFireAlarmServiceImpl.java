@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,27 +51,13 @@ import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.user.api.UserStoreException;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
 
@@ -228,6 +213,29 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+//    @Path("/devices")
+//    @GET
+//    @Consumes("application/json")
+//    @Produces("application/json")
+//    public Response getAllDevices() {
+//        try {
+//            List<Device> userDevices =
+//                    APIUtil.getDeviceManagementService().getDevicesOfUser(APIUtil.getAuthenticatedUser());
+//            ArrayList<Device> userDevicesforFirealarm = new ArrayList<>();
+//            for (Device device : userDevices) {
+//                if (device.getType().equals(VirtualFireAlarmConstants.DEVICE_TYPE) &&
+//                        device.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.ACTIVE)) {
+//                    userDevicesforFirealarm.add(device);
+//                }
+//            }
+//            Device[] devices = userDevicesforFirealarm.toArray(new Device[]{});
+//            return Response.ok().entity(devices).build();
+//        } catch (DeviceManagementException e) {
+//            log.error(e.getMessage(), e);
+//            return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
+//        }
+//    }
 
     @Path("device/download")
     @GET

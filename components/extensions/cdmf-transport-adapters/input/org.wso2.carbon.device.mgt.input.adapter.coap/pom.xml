@@ -51,32 +51,32 @@
             <artifactId>org.wso2.carbon.device.mgt.input.adapter.extension</artifactId>
         </dependency>
         <!-- californium dependancies -->
+        <!-- <dependency>
+             <groupId>org.eclipse.californium</groupId>
+             <artifactId>californium-core</artifactId>
+         </dependency>-->
         <dependency>
             <groupId>org.eclipse.californium</groupId>
             <artifactId>cf-rd</artifactId>
             <version>1.1.0-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/cf-rd-1.1.0-SNAPSHOT.jar</systemPath>
+            <systemPath>${basedir}/lib/cf-rd-1.1.0-SNAPSHOT.jar</systemPath>
+            <!--     <exclusions>
+                     <exclusion>
+                         <groupId>org.eclipse.californium</groupId>
+                         <artifactId>californium.core</artifactId>
+                     </exclusion>
+                 </exclusions>-->
         </dependency>
-
         <dependency>
             <groupId>org.eclipse.californium</groupId>
-            <artifactId>californium-proxy</artifactId>
+            <artifactId>cf-proxy</artifactId>
             <version>1.1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/californium-proxy-1.1.0-SNAPSHOT.jar</systemPath>
         </dependency>
-        <!-- dependancies added as an aid of local califprnium repositories -->
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore-nio</artifactId>
-            <version>4.2.5</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.2.5</version>
-            <scope>compile</scope>
-        </dependency>
+
+        <!-- dependancies added as an aid of local californium repositories -->
         <dependency>
             <groupId>org.eclipse.californium</groupId>
             <artifactId>scandium</artifactId>
@@ -86,10 +86,14 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.user.core</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
+            <groupId>org.apache.httpcomponents.wso2</groupId>
+            <artifactId>httpcore</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>

@@ -36,7 +36,7 @@ public class DynamicParentResource extends TagResource {
 
 	/**
 	 * Get existing resource and set it as a DynamicParentResource
-	 * @param resource
+	 * @param resource - the Tag resource that will be converted into a Dynamic parent
 	 */
 	public DynamicParentResource(TagResource resource)
 	{
@@ -73,10 +73,14 @@ public class DynamicParentResource extends TagResource {
 	public void handleRequest(Exchange exchange) {
 
 		Request request = exchange.getRequest();
-		LinkedList<String> path = new LinkedList<String>(request.getOptions().getUriPath());
+		LinkedList<String> path = new LinkedList<>(request.getOptions().getUriPath());
 
+		//remove the first part of path until the current dynamic parent
 		for (String param : this.getPath().substring(1).split("/")) {
-			path.removeFirst();
+			if(param.equalsIgnoreCase(path.getFirst()))
+				path.removeFirst();
+			else
+				exchange.sendResponse(new Response(CoAP.ResponseCode.NOT_FOUND));
 		}
 
 		Resource current = this;
@@ -119,9 +123,7 @@ public class DynamicParentResource extends TagResource {
 
 			} else {
 
-				/**
-				 * for each child resource check if it is a dynamic resource with matching parameter type
-				 */
+				// for each child resource check if it is a dynamic resource with matching parameter type
 
 				String param = path.removeFirst();
 				for (Resource child : current.getChildren()) {

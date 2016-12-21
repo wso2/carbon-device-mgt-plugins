@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -18,8 +18,6 @@
 package org.wso2.carbon.device.mgt.input.adapter.coap;
 
 
-import org.eclipse.californium.core.CoapClient;
-import org.wso2.carbon.device.mgt.input.adapter.coap.util.COAPEventAdapterConstants;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapter;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterListener;
@@ -54,21 +52,6 @@ public class COAPEventAdapter implements InputEventAdapter {
 
     @Override
     public void connect() {
-
-        String endpoint = eventAdapterConfiguration.getName();
-        String payload = "";
-        CoapClient coapClient = new CoapClient(COAPEventAdapterConstants.COAP, "localhost", COAPEventAdapterConstants.DEFAULT_COAP_PORT, COAPEventAdapterConstants.RESOURCE_DIRECTORY+"?ep="+endpoint); //schema, host,port,path
-//        coapClient.post(new CoapHandler() {
-//            @Override
-//            public void onLoad(CoapResponse response) {
-//
-//            }
-//
-//            @Override
-//            public void onError() {
-//
-//            }
-//        },payload, C);C
     }
 
     @Override

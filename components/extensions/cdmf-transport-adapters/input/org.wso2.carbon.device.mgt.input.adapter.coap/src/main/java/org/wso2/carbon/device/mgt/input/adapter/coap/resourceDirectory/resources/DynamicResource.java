@@ -21,6 +21,7 @@ import org.eclipse.californium.tools.resources.RDNodeResource;
  * Eg: <code>devices/{deviceId}/stats</code>
  * here, the <code>{deviceId}</code> is stored as a DynamicResource, which can get any value accoring to it's parameter type.
  */
+
 public class DynamicResource extends TagResource {
 
 	public enum DataType {INTEGER, STRING}
@@ -51,8 +52,7 @@ public class DynamicResource extends TagResource {
 			String value = queryValue.split(";")[1];
 			String type=value.substring(0,value.length()-2);
 			try {
-				DataType dataType = DataType.valueOf(type);
-				return dataType;
+				return DataType.valueOf(type);
 			} catch (IllegalArgumentException e) {
 				return DataType.STRING;
 			}

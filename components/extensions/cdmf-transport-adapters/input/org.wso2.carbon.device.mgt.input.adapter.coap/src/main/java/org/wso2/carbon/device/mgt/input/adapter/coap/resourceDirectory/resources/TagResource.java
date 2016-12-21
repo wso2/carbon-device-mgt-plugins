@@ -15,6 +15,7 @@
 package org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.resources;
 
 import org.eclipse.californium.core.CoapResource;
+import org.eclipse.californium.core.server.resources.ResourceAttributes;
 import org.eclipse.californium.tools.resources.RDNodeResource;
 
 /**
@@ -25,6 +26,7 @@ public class TagResource extends CoapResource{
 
     private RDNodeResource parentNode;
 
+
     public TagResource(String name, boolean visible, RDNodeResource parentNode) {
         super(name, visible);
         this.parentNode = parentNode;
@@ -32,6 +34,11 @@ public class TagResource extends CoapResource{
 
     public RDNodeResource getParentNode() {
         return parentNode;
+    }
+
+    @Override
+    public ResourceAttributes getAttributes() {
+        return super.getAttributes();
     }
 
 

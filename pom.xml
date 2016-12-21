@@ -1195,6 +1195,28 @@
                 <artifactId>feign-gson</artifactId>
                 <version>${io.github.openfeign.version}</version>
             </dependency>
+            <!-- Californium Dependency-->
+   <!--         <dependency>
+                <groupId>org.eclipse.californium</groupId>
+                <artifactId>californium-core</artifactId>
+                <version>${eclipse.californium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.californium</groupId>
+                <artifactId>cf-proxy</artifactId>
+                <version>${eclipse.californium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.californium</groupId>
+                <artifactId>scandium</artifactId>
+                <version>${eclipse.californium.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.californium</groupId>
+                <artifactId>cf-rd</artifactId>
+                <version>${eclipse.californium.version}</version>
+            </dependency>
+-->
         </dependencies>
     </dependencyManagement>
 
@@ -1564,10 +1586,10 @@
             <name>GCM Server repository - GitHub</name>
             <url>https://github.com/slorber/gcm-server-repository/raw/master/releases/</url>
         </repository>
-        <repository>
+   <!--     <repository>
             <id>repo.eclipse.org</id>
             <name>Californium Repository</name>
             <url>https://repo.eclipse.org/content/repositories/californium/</url>
-        </repository>
+        </repository>-->
     </repositories>
 </project>

@@ -28,7 +28,12 @@ import java.util.List;
  * modified RD resource
  */
 
-public class RootResource extends RDResource {
+public class RootRDResource extends RDResource {
+
+    public RootRDResource()
+    {
+        super();
+    }
 
     @Override
     public void handlePOST(CoapExchange exchange) {

@@ -15,33 +15,28 @@
 package org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.resources;
 
 import org.apache.http.*;
-import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
-import org.apache.http.message.BasicRequestLine;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
-import org.eclipse.californium.core.coap.CoAP;
-import org.eclipse.californium.core.coap.MediaTypeRegistry;
-import org.eclipse.californium.core.coap.Request;
-import org.eclipse.californium.core.coap.Response;
+import org.eclipse.californium.core.coap.*;
 import org.eclipse.californium.core.network.Exchange;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.eclipse.californium.proxy.HttpTranslator;
 import org.eclipse.californium.proxy.TranslationException;
 import org.eclipse.californium.tools.resources.RDNodeResource;
+import org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.ResourceDirectory;
+import org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.coap.MappingRDProperties;
+import org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.coap.OtherOptionNumberRegistry;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * resource that add at the end of a path which starts from a NodeResource
@@ -49,29 +44,31 @@ import java.util.regex.Pattern;
 
 public class EndResource extends TagResource {
 
+	public static final Properties HTTP_OTHER_PROPERTIES = new MappingRDProperties("OtherProxy.properties");
 	private CoAP.Code resourceCode; // an EndResource can handle only one request type [GET/POST/PUT/DELETE]
 
 	public EndResource(String name, boolean visible, RDNodeResource parentNode, String resourceCode) {
 
 		super(name, visible, parentNode);
-		if (resourceCode != null)
-			setResourceCode(resourceCode);
-		else
-			setResourceCode("GET"); //default value code of an end resource is 'GET'
+		setResourceCode(resourceCode);
+	}
 
+	public EndResource(String name, boolean visible, RDNodeResource parentNode) {
+		super(name, visible, parentNode);
+		this.resourceCode = null;
 	}
 
 	@Override public void handleRequest(Exchange exchange) {
+
 		CoAP.Code code = exchange.getRequest().getCode();
 
-		// TODO the post method is used to extrace auth information since GET method restrict payload
+		/* TODO - The attributes should be validated and set before constructing the EndResource*/
+		if (this.resourceCode == null) {
+			if (getAttributes().containsAttribute(LinkFormat.INTERFACE_DESCRIPTION))
+				setResourceCode(getAttributes().getAttributeValues(LinkFormat.INTERFACE_DESCRIPTION).get(0));
+		}
 
-		if (code.equals(CoAP.Code.POST) && resourceCode.equals(CoAP.Code.GET))
-			handleGET(new CoapExchange(exchange, this));
-
-		/*above if condition must be removed when a necessary alternative is found*/
-
-		else if (code.equals(resourceCode)) {
+		if (code.equals(resourceCode)) {
 			switch (code) {
 			case GET:
 				handleGET(new CoapExchange(exchange, this));
@@ -85,6 +82,8 @@ public class EndResource extends TagResource {
 			case DELETE:
 				handleDELETE(new CoapExchange(exchange, this));
 				break;
+			default:
+				exchange.sendResponse(new Response(CoAP.ResponseCode.METHOD_NOT_ALLOWED));
 			}
 		} else
 			exchange.sendResponse(new Response(CoAP.ResponseCode.METHOD_NOT_ALLOWED));
@@ -94,238 +93,91 @@ public class EndResource extends TagResource {
 	@Override
 	public void handleGET(CoapExchange exchange) {
 
-		Request request = exchange.advanced().getRequest();
-		request.getOptions().setContentFormat(MediaTypeRegistry.APPLICATION_JSON);
-		HttpRequest httpRequest = null;
-
-		//set http URI by removing 'rd' part in the reousrce path
-		URL proxyUri=getHttpURI(request);
-		if (request.getOptions().getProxyUri() == null)
-			request.getOptions().setProxyUri(proxyUri.toString());
-
-		//get hosts
-		HttpHost httpHost = new HttpHost(proxyUri.getHost(), proxyUri.getPort(),proxyUri.getProtocol());
-
-		// TODO the post method is used to extrace auth information since GET method restrict payload
-		if (request.getCode().equals(CoAP.Code.POST)) {
-
-			//create GET requestline and http request
-			RequestLine requestLine = new BasicRequestLine("GET", proxyUri.toString(), HttpVersion.HTTP_1_1);
-			httpRequest = new BasicHttpEntityEnclosingRequest(requestLine);
-
-			//set default headers
-			Header[] headers = HttpTranslator.getHttpHeaders(request.getOptions().asSortedList());
-			for (Header header : headers) {
-				httpRequest.addHeader(header);
-			}
-
-			//set payload and additional headers
-			httpRequest = setHttpPayload(httpRequest, request);
-
-		}
-		else {
-			try {
-				httpRequest = HttpTranslator.getHttpRequest(request);
-			} catch (TranslationException e) {
-				e.printStackTrace();
-			}
-		}
-
-		Response coapResponse = null;
-		try {
-			HttpResponse httpResponse = NodeResource.HTTP_CLIENT.execute(httpHost, httpRequest);
-			coapResponse = HttpTranslator.getCoapResponse(httpResponse, request);
-		} catch (TranslationException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		exchange.respond(coapResponse);
+		exchange.respond(this.handleAsHttp(exchange.advanced().getRequest()));
 	}
-
 
 	@Override
 	public void handlePOST(CoapExchange exchange) {
 
-		Request request = exchange.advanced().getRequest();
-		request.getOptions().setContentFormat(MediaTypeRegistry.APPLICATION_JSON);
-		HttpRequest httpRequest = null;
+		exchange.respond(this.handleAsHttp(exchange.advanced().getRequest()));
+	}
+
+	public Response handleAsHttp(Request request)
+	{
+		Response response=null;
 
 		//set http URI by removing 'rd' part in the reousrce path
-		URL proxyUri=getHttpURI(request);
-		if(request.getOptions().getProxyUri()==null)
+		URL proxyUri = getHttpURI(request);
+		if (request.getOptions().getProxyUri() == null)
 			request.getOptions().setProxyUri(proxyUri.toString());
 
 		//get hosts
-		HttpHost httpHost = new HttpHost(proxyUri.getHost(), proxyUri.getPort(),proxyUri.getProtocol());
+		HttpHost httpHost = new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getProtocol());
 
-		RequestLine requestLine = new BasicRequestLine("POST", proxyUri.toString(), HttpVersion.HTTP_1_1);
-		httpRequest = new BasicHttpEntityEnclosingRequest(requestLine);
-
-		//set default headers
-		Header[] headers = HttpTranslator.getHttpHeaders(request.getOptions().asSortedList());
-		for (Header header : headers) {
-			httpRequest.addHeader(header);
-		}
-
-		//set payload and additional headers
-		httpRequest = setHttpPayload(httpRequest, request);
-
-		Response coapResponse = null;
 		try {
-			HttpResponse httpResponse = NodeResource.HTTP_CLIENT.execute(httpHost, httpRequest);
-			coapResponse = HttpTranslator.getCoapResponse(httpResponse, request);
-		} catch (TranslationException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
-		exchange.respond(coapResponse);
+			//translate the coap request to http request
+			HttpRequest httpRequest=HttpTranslator.getHttpRequest(request);
 
-	}
-
-	/**
-	 * @param httpRequest
-	 * @param request     - coap request to be translated
-	 * @return - the modified HTTP request with extra headers and entity
-	 */
-	public HttpRequest setHttpPayload(HttpRequest httpRequest, Request request) {
-
-		//handle json
-		if (request.getOptions().getContentFormat() == MediaTypeRegistry.APPLICATION_JSON) {
-			ContentType contentType = null;
-			ObjectMapper mapper = new ObjectMapper();
-			Map<String, Object> payloadMap = new HashMap<String, Object>();
-			try {
-				payloadMap = mapper.readValue(request.getPayloadString(), new TypeReference<Map<String, Object>>() {
-
-				});
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			if (payloadMap.containsKey("header")) {
-				Map headerMap = (Map) payloadMap.get("header");
-				Iterator iterator = headerMap.keySet().iterator();
-				String key;
-				String value;
-				while (iterator.hasNext()) {
-					key = (String) iterator.next();
-					value = (String) headerMap.get(key);
-					httpRequest.addHeader(setHeader(key, value));
-					try {
-						if (key.equalsIgnoreCase("Content-Type"))
-							contentType = ContentType.parse(value);
-					} catch (ParseException e) {
-						contentType = ContentType.TEXT_PLAIN;
-					}
+			//other option values mapped to http headers
+			List<Header> headers= setOtherOptionHeaders(request.getOptions());
+			ContentType contentType=null;
+			for(Header header:headers) {
+				if((header.getName().equals(OtherOptionNumberRegistry.Names.Content_Type))) {
+					contentType = ContentType.parse(header.getValue());
+					httpRequest.removeHeaders("content-type");
 				}
-
+				httpRequest.addHeader(header);
 			}
-			if (payloadMap.containsKey("body") && !resourceCode.equals(CoAP.Code.GET)) {
-				String value = (String) payloadMap.get("body");
-				request.setPayload(value);
-			} else
-				request.setPayload("");
-
-			HttpEntity httpEntity = null;
-			if (contentType != null) {
-				httpEntity = new StringEntity(request.getPayloadString(), contentType);
-			} else if (request.getPayload().length != 0) {
-				httpEntity = new ByteArrayEntity(request.getPayload());
-			}
-
-			if (httpEntity != null)
+			
+			//set the http payload according to the other option content-type
+			if(contentType!=null && !request.getPayloadString().isEmpty()) {
+				HttpEntity httpEntity = new StringEntity(request.getPayloadString(),contentType);
 				((BasicHttpEntityEnclosingRequest) httpRequest).setEntity(httpEntity);
-
-		}
-		return httpRequest;
-	}
-
-/*	public HttpRequest setPayload(HttpRequest request, String payload) {
-
-		final Pattern HEADER_PATTERN = Pattern.compile("[H|h]eader\\{(.*?)\\}"); //e.g. Header{Autherization:"Bearer 785ht9t9t"}
-		final String HEADER_TITLE = "Header";
-		final Pattern PARAM_PATTERN=Pattern.compile("[P|p]aram\\{(.*?)\\}");
-		final String PARAM_TITLE="Param";
-
-		Scanner scanner = new Scanner(payload);
-		String line;
-		while (scanner.hasNext())//can be used to set other parameters in payload
-		{
-			if ((line = scanner.findInLine(HEADER_PATTERN)) != null) {
-				line = line
-						.substring(HEADER_TITLE.length() + 1, line.length() - 1); //trim Header{ & }
-				Scanner headerScanner = new Scanner(line);
-				String attribute = null;
-				while (headerScanner.findWithinHorizon(LinkFormat.DELIMITER, 1) == null
-						&& (attribute = headerScanner.findInLine(LinkFormat.WORD)) != null) {
-					if (headerScanner.findWithinHorizon(":", 0) != null) {
-						String value = null;
-						if ((value = headerScanner.findInLine(LinkFormat.QUOTED_STRING)) != null) {
-							value = value.substring(1, value.length() - 1); // trim " "
-						} else {
-							value = headerScanner.next();
-
-						}
-
-						request.addHeader(setHeader(attribute, value));
-
-					}
-				}
-			}
-			if((line = scanner.findInLine(PARAM_PATTERN)) != null)
-			{
-				line = line.substring(PARAM_TITLE.length() + 1, line.length() - 1); //trim Param{ & }
-				Scanner paramScanner = new Scanner(line);
-				String attribute = null;
-				while (paramScanner.findWithinHorizon(LinkFormat.DELIMITER, 1) == null
-						&& (attribute = paramScanner.findInLine(LinkFormat.WORD)) != null) {
-					if (paramScanner.findWithinHorizon("=", 0) != null) {
-						String value = null;
-						if ((value = paramScanner.findInLine(LinkFormat.QUOTED_STRING)) != null) {
-							value = value.substring(1, value.length() - 1); // trim " "
-						} else {
-							value = paramScanner.next();
-
-						}
-
-					}
-				}
-
-
 			}
 
+			//send the request from a static CLIENT and get the http response
+			HttpResponse httpResponse=ResourceDirectory.HTTP_CLIENT.execute(httpHost,httpRequest);
+			//translate the http response into coap response
+			response=HttpTranslator.getCoapResponse(httpResponse, request);
+		} catch (TranslationException | IOException e) {
+			e.printStackTrace();
 		}
-
-		return request;
+		return response;
 	}
-*/
+
 	/**
-	 *
-	 * @param attribute - header title attribute
-	 * @param value - value of the heade attribute
-	 * @return - Http header with the attribute and title
+	 * set headers for other option set
+	 * @param options coap option set
+	 * @return http converted header list
 	 */
-	public Header setHeader(String attribute, String value) {
-		Header header = null;
+	private List<Header> setOtherOptionHeaders(OptionSet options) {
 
-		//header
-		final String AUTHORIZATION_HEADER = "Authorization"; //can be used to set other header parameters [only authorization atm]
+		List<Header> headers=new ArrayList<>();
+		for(Option option:options.asSortedList())
+		{
 
-		//header values
-		final Pattern AUTHORIZATION_PATTERN = Pattern.compile("[B|b]earer\\s");
+			String headerName = HTTP_OTHER_PROPERTIES.getProperty("coap.message.option." + option.getNumber());
+			String optionValue = null;
+			if (headerName != null && !headerName.isEmpty()) {
+				// format the value
+				if (OtherOptionNumberRegistry.getFormatByNr(option.getNumber()) == OptionNumberRegistry.optionFormats.STRING) {
+					optionValue = option.getStringValue();
+				} else if (OtherOptionNumberRegistry.getFormatByNr(option.getNumber()) == OptionNumberRegistry.optionFormats.INTEGER) {
+					optionValue = Integer.toString(option.getIntegerValue());
+				} else if (OtherOptionNumberRegistry.getFormatByNr(option.getNumber()) == OptionNumberRegistry.optionFormats.OPAQUE) {
+					optionValue = new String(option.getValue());
+				} else {
+					// if the option is not formattable, skip it
+					continue;
+				}
 
-		if (attribute.equalsIgnoreCase(AUTHORIZATION_HEADER)) {
-			if (AUTHORIZATION_PATTERN.matcher(value).find()) {
-				header = new BasicHeader(AUTHORIZATION_HEADER, value);
+				headers.add(new BasicHeader(headerName, optionValue));
 			}
-		} else
-			header = new BasicHeader(attribute,value);
 
-		return header;
+		}
+
+		return headers;
 	}
 
 	/**
@@ -365,7 +217,12 @@ public class EndResource extends TagResource {
 	}
 
 	public void setResourceCode(String resourceCode) {
-		this.resourceCode = CoAP.Code.valueOf(resourceCode);
+		/*TODO - the validation must be moved to setting the attributes*/
+		try {
+			this.resourceCode = CoAP.Code.valueOf(resourceCode);
+		} catch (IllegalArgumentException e) {
+			this.resourceCode = CoAP.Code.GET; //default value code of an end resource is 'GET'
+		}
 	}
 
 }

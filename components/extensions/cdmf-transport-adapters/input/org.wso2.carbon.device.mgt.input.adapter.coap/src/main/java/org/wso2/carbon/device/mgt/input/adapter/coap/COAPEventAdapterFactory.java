@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -18,8 +18,8 @@
 package org.wso2.carbon.device.mgt.input.adapter.coap;
 
 import org.eclipse.californium.core.CoapServer;
-import org.wso2.carbon.device.mgt.input.adapter.coap.util.COAPEventAdapterConstants;
 import org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.ResourceDirectory;
+import org.wso2.carbon.device.mgt.input.adapter.coap.util.COAPEventAdapterConstants;
 import org.wso2.carbon.event.input.adapter.core.*;
 
 import java.util.ArrayList;
@@ -30,12 +30,10 @@ import java.util.concurrent.*;
 public class COAPEventAdapterFactory extends InputEventAdapterFactory {
 
     private int coapPort;
-    private int coapsPort;
     private CoapServer directory;
 
     public COAPEventAdapterFactory() {
         this.coapPort = COAPEventAdapterConstants.DEFAULT_COAP_PORT;
-        this.coapsPort = COAPEventAdapterConstants.DEFAULT_COAPS_PORT;
         directoryStartup();
     }
 
@@ -55,9 +53,8 @@ public class COAPEventAdapterFactory extends InputEventAdapterFactory {
 
     @Override
     public List<Property> getPropertyList() {
-        List<Property> propertyList = new ArrayList<>();
+        return  new ArrayList<>();
 
-        return propertyList;
     }
 
     @Override
@@ -71,13 +68,11 @@ public class COAPEventAdapterFactory extends InputEventAdapterFactory {
     }
 
 
-    public void directoryStartup() {
+    private void directoryStartup() {
         //coap directory server startup in coap port
         FutureTask<CoapServer> startup = new FutureTask<CoapServer>(new Callable() {
-
             @Override
             public CoapServer call() throws Exception {
-
                 CoapServer directory = new ResourceDirectory(coapPort);
                 directory.start();
                 return directory;
@@ -97,6 +92,10 @@ public class COAPEventAdapterFactory extends InputEventAdapterFactory {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+    }
+
+    public CoapServer getDirectory() {
+        return directory;
     }
 
 

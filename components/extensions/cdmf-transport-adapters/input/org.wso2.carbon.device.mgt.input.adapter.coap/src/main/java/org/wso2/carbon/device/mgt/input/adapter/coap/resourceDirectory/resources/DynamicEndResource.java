@@ -25,17 +25,24 @@ public class DynamicEndResource extends EndResource {
 		this(name, visible, parentNode, resourceCode,getDataType(name));
 	}
 
+	public DynamicEndResource(String name, boolean visible, RDNodeResource parentNode) {
+
+		this(name, visible, parentNode,getDataType(name));
+	}
 
 	public DynamicEndResource(String name, boolean visible, RDNodeResource parentNode,String resourceCode, DynamicResource.DataType paramType) {
 		super(getResourceName(name), visible, parentNode,resourceCode);
 		this.paramType = paramType;
 	}
 
+	public DynamicEndResource(String name, boolean visible, RDNodeResource parentNode,DynamicResource.DataType paramType) {
+		super(getResourceName(name), visible, parentNode);
+		this.paramType = paramType;
+	}
+
 	public boolean isParamType(String name) {
-		if (paramType.equals(DynamicResource.DataType.INTEGER)) {
-			if (!name.matches("^-?\\d+$"))
-				return false;
-		}
+		if (paramType.equals(DynamicResource.DataType.INTEGER) && !name.matches("^-?\\d+$"))
+			return false;
 
 		return true;
 	}

@@ -15,8 +15,6 @@
 package org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.resources;
 
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.eclipse.californium.core.CoapResource;
 import org.eclipse.californium.core.coap.LinkFormat;
 import org.eclipse.californium.core.server.resources.Resource;
@@ -35,14 +33,8 @@ public class NodeResource extends RDNodeResource {
 
     private static final Logger LOGGER = Logger.getLogger(NodeResource.class.getCanonicalName());
 
-    //parameter constants
-    public static final String URI_TEMPLATE = "ut";
-
 	//dynamic patterns
 	public Pattern dynamicResourcePattern= Pattern.compile("\\{(\\w+;?\\w+)\\}");
-
-    //http client for each endpoint
-    public static final HttpClient HTTP_CLIENT= HttpClientBuilder.create().build();
 
     public NodeResource(String ep, String domain) {
         super(ep, domain);
@@ -50,7 +42,7 @@ public class NodeResource extends RDNodeResource {
 
 
     @Override
-    public CoapResource addResource(String path, ResourceAttributes attributes) {
+    public CoapResource addNodeResource(String path) {
         Scanner scanner = new Scanner(path);
         scanner.useDelimiter("/");
         String next = "";
@@ -75,15 +67,18 @@ public class NodeResource extends RDNodeResource {
 				if(next.matches(dynamicResourcePattern.pattern())) //if the resource is dynamic
 				{
 					//FIXME - end resource must be changed into a tag resource when adding a child resoruce under it
-					if(!dynamicPath) //if the new subResource has no dynamic parent in it's path
-					{
-						resource= new DynamicParentResource((TagResource) resource);
+					try {
+						if (!dynamicPath) //if the new subResource has no dynamic parent in it's path
+							resource = new DynamicParentResource((TagResource) resource);
+
+					} catch (ClassCastException e) {
+						e.printStackTrace();
 					}
 
 					if (scanner.hasNext())//if the resource is not the end resource
 						subResource = new DynamicResource(next, true, this);
 					else
-						subResource = addEndResource(next,attributes,true);
+						subResource = new DynamicEndResource(next, true, this);
 
 				}
             	else
@@ -91,7 +86,7 @@ public class NodeResource extends RDNodeResource {
 					if (scanner.hasNext())//if the resource is not the end resource
 						subResource = new TagResource(next, true, this);
 					else
-						subResource = addEndResource(next, attributes,false);
+						subResource = new EndResource(next, true, this);
 				}
 
                 resource.add(subResource);
@@ -105,10 +100,10 @@ public class NodeResource extends RDNodeResource {
     }
 
 	/**
-	 * @param name
-	 * @param attributes
+	 * @param name - path name
+	 * @param attributes - end resource attributes e.g.(rt,if)
 	 * @param isDynamic check if the resource is a dynamic resource or not
-	 * @return
+	 * @return - new end resource
 	 */
     public CoapResource addEndResource(String name, ResourceAttributes attributes,boolean isDynamic) {
 
