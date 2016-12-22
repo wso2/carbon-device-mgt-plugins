@@ -34,12 +34,12 @@
             </div>
             <div style="background-color: #ffffff; line-height: 170%; color: #666666; padding: 20px 25px;">
                 <p style="font-size: 1em; font-family: Arial, Helvetica; line-height: 170%; color: #666666; margin: 5px 0px 20px;">
-                    Hi $first-name,
+                    Hi,
                 </p>
 
                 <p style="font-size: 1em; font-family: Arial, Helvetica; line-height: 170%; color: #666666; margin: 5px 0px;">
-                    You have been invited to enrol your android device in WSO2 IoT Server.
-                    Click <a href="$base-url-https/android-web-agent/enroll">here</a> to begin device enrolment from
+                    You have been invited by $first-name to enrol your android device in WSO2 IoT Server.
+                    Click <a href="$base-url-https/android-web-agent/enrollment">here</a> to begin device enrolment from
                     your Android device.</p>
 
                 <p style="font-size: 1em; font-family: Arial, Helvetica; line-height: 170%; color: #666666; margin: 5px 0px;">

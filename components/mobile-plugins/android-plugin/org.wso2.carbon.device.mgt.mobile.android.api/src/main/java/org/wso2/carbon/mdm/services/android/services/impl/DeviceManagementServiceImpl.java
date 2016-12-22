@@ -29,7 +29,6 @@ import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
-import org.wso2.carbon.device.mgt.core.service.EmailMetaInfo;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidApplication;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidDevice;
@@ -171,24 +170,6 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
         return Response.status(Response.Status.CREATED).entity(pendingOperations).build();
-    }
-
-    @POST
-    @Path("/invite")
-    @Override
-    public Response sendEnrollmentInvitation(EmailMetaInfo metaInfo) {
-        try {
-            AndroidAPIUtils.getDeviceManagementService()
-                    .sendEnrolmentInvitation("android-enrollment-invitation", metaInfo);
-            Message responseMessage = new Message();
-            responseMessage.setResponseCode(Response.Status.OK.toString());
-            responseMessage.setResponseMessage("Enrollment invitations sent.");
-            return Response.status(Response.Status.OK).entity(responseMessage).build();
-        } catch (DeviceManagementException e) {
-            log.error(e.getMessage(), e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(e.getMessage()).build());
-        }
     }
 
     private void updateOperations(String deviceId, List<? extends Operation> operations)
