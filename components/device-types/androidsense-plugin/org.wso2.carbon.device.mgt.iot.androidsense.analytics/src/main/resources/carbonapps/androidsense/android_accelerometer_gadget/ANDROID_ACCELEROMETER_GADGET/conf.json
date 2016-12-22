@@ -1,0 +1,1 @@
+{"provider-conf" : {"streamName" : "org.wso2.iot.android.accelerometer:1.0.0", "provider-name" : "realtime"}, "chart-conf" : {"x" : "TIMESTAMP", "xType" : "time", "y" : "value", "yType" : "number", "color" : "axis", "maxLength" : "30", "gadget-name" : "ANDROID_ACCELETOMETER_GADGET", "chart-name" : "line-chart"}}
