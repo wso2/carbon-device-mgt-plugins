@@ -19,9 +19,11 @@
 package org.wso2.carbon.device.mgt.mobile.windows.api.services;
 
 import io.swagger.annotations.*;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.Constants;
 
 import javax.jws.WebService;
 import javax.ws.rs.Consumes;
@@ -36,7 +38,8 @@ import java.util.List;
 /**
  * Interface for Admin operations persisting. This interface accepts operations added via UI.
  */
-
+@Api(value = "Windows Device Management Administrative Service",
+        description = "Device management related admin APIs.")
 
 @SwaggerDefinition(
         info = @Info(
@@ -55,12 +58,44 @@ import java.util.List;
                 @Tag(name = "devicemgt_windows", description = "")
         }
 )
-@Api(value = "Windows Device Management Administrative Service",
-        description = "Device management related admin APIs.")
 @WebService
-@Path("/operation/admin/devices")
-@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Path("/admin/devices")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Lock Device",
+                        description = "Adding a Device Lock on Windows devices.",
+                        key = "cdmf:windows:lock-devices",
+                        permissions = {"/device-mgt/devices/owning-device/operations/windows/lock"}
+                ),
+                @Scope(
+                        name = "Un-enroll Device",
+                        description = "Unregister an Windows device",
+                        key = "cdmf:windows:disenroll",
+                        permissions = {"/device-mgt/devices/disenroll/windows"}
+                ),
+                @Scope(
+                        name = "Factory Reset",
+                        description = "Factory Resetting Windows Devices",
+                        key = "cdmf:windows:wipe",
+                        permissions = {"/device-mgt/devices/owning-device/operations/windows/wipe"}
+                ),
+                @Scope(
+                        name = "Ring Device",
+                        description = "Ring Windows devices",
+                        key = "cdmf:windows:ring",
+                        permissions = {"/device-mgt/devices/owning-device/operations/windows/ring"}
+                ),
+                @Scope(
+                        name = "Lock Reset",
+                        description = "Lock reset on Windows devices",
+                        key = "cdmf:windows:lock-reset",
+                        permissions = {"/device-mgt/devices/owning-device/operations/windows/lock-reset"}
+                )
+        }
+)
 public interface DeviceManagementAdminService {
 
     @POST
@@ -72,13 +107,10 @@ public interface DeviceManagementAdminService {
             notes = "Using this API you have the option of Device Windows device.",
             response = Activity.class,
             tags = "Windows Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/windows/lock",
-                                    description = "Lock Device")}
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:lock-devices")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -134,13 +166,10 @@ public interface DeviceManagementAdminService {
             notes = "Dis-enroll on Android devices",
             response = Activity.class,
             tags = "Windows Device Management Administrative Service.",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(
-                                    scope = "/device-mgt/devices/disenroll/windows",
-                                    description = "Dis-enroll the windows devices ")}
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:disenroll")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -198,13 +227,10 @@ public interface DeviceManagementAdminService {
                     "to restore them back to the original system.",
             response = Activity.class,
             tags = "Windows Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/windows/wipe",
-                                    description = "DeviceWipe")}
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:wipe")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -259,13 +285,10 @@ public interface DeviceManagementAdminService {
             notes = "Ring Windows devices.",
             response = Activity.class,
             tags = "Windows Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/windows/ring",
-                                    description = "Ring Device") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:ring")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -321,13 +344,10 @@ public interface DeviceManagementAdminService {
             notes = "Lock reset on Windows devices.Its use to reset the device pass code",
             response = Activity.class,
             tags = "Windows Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/windows/lock-reset",
-                                    description = "Lock reset") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:lock-reset")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -368,6 +388,7 @@ public interface DeviceManagementAdminService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding adding a lock-reset operation.")
     })
+    //
     Response lockReset(@HeaderParam("Accept") String acceptHeader, @ApiParam(
             name = "deviceIDs",
             value = "Provide the ID of the A Windows device. Multiple device IDs can be added by " +

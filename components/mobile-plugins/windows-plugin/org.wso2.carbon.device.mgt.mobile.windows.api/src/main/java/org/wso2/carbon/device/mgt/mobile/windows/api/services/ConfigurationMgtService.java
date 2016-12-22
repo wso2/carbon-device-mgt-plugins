@@ -32,9 +32,12 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
 
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.Constants;
 
 import javax.jws.WebService;
 import javax.ws.rs.*;
@@ -66,8 +69,30 @@ import javax.ws.rs.core.Response;
         description = "This carries all the resources related to Windows configurations management functionalities")
 @WebService
 @Path("/configuration")
-@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Produces({"application/json", "application/xml"})
+@Consumes({"application/json", "application/xml"})
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll Device",
+                        description = "Register an Windows device",
+                        key = "cdmf:windows:enroll",
+                        permissions = {"/device-mgt/devices/enroll/windows"}
+                ),
+                @Scope(
+                        name = "View Configurations",
+                        description = "Getting Windows Platform Configurations",
+                        key = "cdmf:windows:view-configuration",
+                        permissions = {"/device-mgt/platform-configurations/view"}
+                ),
+                @Scope(
+                        name = "Manage Configurations",
+                        description = "Updating Windows Platform Configurations",
+                        key = "cdmf:windows:manage-configuration",
+                        permissions = {"/device-mgt/platform-configurations/manage"}
+                )
+        }
+)
 public interface ConfigurationMgtService {
 
     @GET
@@ -78,12 +103,10 @@ public interface ConfigurationMgtService {
             notes = "Get the Windows platform configuration details using this REST API.",
             response = PlatformConfiguration.class,
             tags = "Windows Configuration Management",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(scope = "/device-mgt/platform-configurations/view",
-                                    description = "View Configurations")}
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:view-configuration")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -139,12 +162,10 @@ public interface ConfigurationMgtService {
             value = "Updating Windows Platform Configurations",
             notes = "Update the Windows platform configurations using this REST API.",
             tags = "Windows Configuration Management",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(scope = "/device-mgt/configurations/manage",
-                                    description = "Manage Configurations")}
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:manage-configuration")
+                    })
             }
     )
     @ApiResponses(value = {
@@ -197,12 +218,10 @@ public interface ConfigurationMgtService {
                     "registration process.",
             response = String.class,
             tags = "Windows Configuration Management",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(scope = "/device-mgt/devices/enroll/windows",
-                                    description = "Enroll Device")}
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:enroll")
+                    })
             }
     )
     @ApiResponses(value = {

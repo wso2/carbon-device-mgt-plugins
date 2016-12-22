@@ -63,7 +63,7 @@ public interface VirtualFireAlarmService {
      */
     @POST
     @Path("device/{deviceId}/buzz")
-    @Scope(key = "device:firealarm:enroll", name = "", description = "")
+    @Scope(key = "device:firealarm:enroll", name = "", description = "", permissions = {})
     Response switchBuzzer(@PathParam("deviceId") String deviceId,
                              @FormParam("state") String state);
 
@@ -72,7 +72,7 @@ public interface VirtualFireAlarmService {
      */
     @Path("device/stats/{deviceId}")
     @GET
-    @Scope(key = "device:firealarm:enroll", name = "", description = "")
+    @Scope(key = "device:firealarm:enroll", name = "", description = "", permissions = {})
     @Consumes("application/json")
     @Produces("application/json")
     Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
@@ -81,7 +81,7 @@ public interface VirtualFireAlarmService {
     @Path("device/download")
     @GET
     @Produces("application/zip")
-    @Scope(key = "device:firealarm:enroll", name = "", description = "")
+    @Scope(key = "device:firealarm:enroll", name = "", description = "", permissions = {})
     Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketchType") String sketchType);
 
 }
