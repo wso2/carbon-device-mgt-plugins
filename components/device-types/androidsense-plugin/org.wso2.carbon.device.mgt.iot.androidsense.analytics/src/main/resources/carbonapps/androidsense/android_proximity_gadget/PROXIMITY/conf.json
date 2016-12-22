@@ -1,0 +1,1 @@
+{"provider-conf" : {"tableName" : "ORG_WSO2_IOT_ANDROID_PRESSURE_STATS", "query" : "", "limit" : "", "provider-name" : "batch"}, "chart-conf" : {"x" : "pressure", "title" : "PRESSURE", "maxLength" : "30", "gadget-name" : "PROXIMITY", "chart-name" : "number-chart"}}
