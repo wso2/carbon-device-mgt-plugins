@@ -3,16 +3,15 @@
 @Plan:description('Process magnetic field changes.')
 
 @Import('org.wso2.iot.android.magnetic:1.0.0')
-define stream MagneticStream (meta_owner string, meta_deviceId string, meta_timestamp long, x float, y float, z float);
+define stream MagneticStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value float);
 
 @Export('org.wso2.iot.android.magnetic.stats:1.0.0')
-define stream MagneticStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, x
-float, y float, z float, year int, month int, day int, hour int, minute int);
+define stream MagneticStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value float, year int, month int, day int, hour int, minute int);
 
 partition with (meta_deviceId of MagneticStream)
 begin
     from MagneticStream
-    select meta_owner, meta_deviceId, meta_timestamp, x, y, z, time:extract
+    select meta_owner, meta_deviceId, meta_timestamp, axis, value, time:extract
     (meta_timestamp, 'year') as year, time:extract(meta_timestamp, 'month') as month, time:extract(meta_timestamp, 'day') as day, time:extract(meta_timestamp, 'hour') as hour, time:extract(meta_timestamp, 'minute') as minute
     insert into MagneticStatsStream;
 end;

@@ -19,15 +19,11 @@
   ],
   "payloadData": [
     {
-      "name": "x",
-      "type": "FLOAT"
+      "name": "axis",
+      "type": "STRING"
     },
     {
-      "name": "y",
-      "type": "FLOAT"
-    },
-    {
-      "name": "z",
+      "name": "value",
       "type": "FLOAT"
     },
     {
