@@ -187,11 +187,7 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_accelerometer_ui_event_publisher" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_accelerometer_x_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_accelerometer_y_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_accelerometer_z_gadget" version="1.0.0" include="true"
+        <dependency artifact="android_accelerometer_gadget" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
 
         <dependency artifact="android_gyroscope_streams" version="1.0.0" include="true"
@@ -203,6 +199,8 @@
         <dependency artifact="android_gyroscope_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_gyroscope_ui_event_publisher" version="1.0.0" include="true"
+                    serverRole="DataAnalyticsServer"/>
+        <dependency artifact="android_gyroscope_gadget" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
 
         <dependency artifact="android_gravity_streams" version="1.0.0" include="true"
@@ -228,6 +226,8 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_magnetic_ui_event_publisher" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
+        <dependency artifact="android_magnetic_gadget" version="1.0.0" include="true"
+                    serverRole="DataAnalyticsServer"/>
 
         <dependency artifact="android_rotation_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
@@ -238,6 +238,8 @@
         <dependency artifact="android_rotation_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_rotation_ui_event_publisher" version="1.0.0" include="true"
+                    serverRole="DataAnalyticsServer"/>
+        <dependency artifact="android_rotation_gadget" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
 
         <dependency artifact="android_light_streams" version="1.0.0" include="true"
