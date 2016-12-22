@@ -1,0 +1,9 @@
+{
+    "id": "ANDROID_MAGNETIC_GADGET",
+    "title": "ANDROID_MAGNETIC_GADGET",
+    "type": "gadget",
+    "thumbnail": "gadget/ANDROID_MAGNETIC_GADGET/thumbnail.png",
+    "data": {
+        "url": "gadget/ANDROID_MAGNETIC_GADGET/gadget.xml"
+    }
+}
