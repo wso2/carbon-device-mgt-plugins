@@ -17,6 +17,8 @@
  */
 package org.wso2.carbon.device.mgt.input.adapter.coap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.californium.core.CoapServer;
 import org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.ResourceDirectory;
 import org.wso2.carbon.device.mgt.input.adapter.coap.util.COAPEventAdapterConstants;
@@ -27,10 +29,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 
+/**
+ * The CoAp event adapter factory class to create a CoAP input adapter and start the RD server
+ */
 public class COAPEventAdapterFactory extends InputEventAdapterFactory {
 
     private int coapPort;
     private CoapServer directory;
+    private static final Log log = LogFactory.getLog(COAPEventAdapterFactory.class);
 
     public COAPEventAdapterFactory() {
         this.coapPort = COAPEventAdapterConstants.DEFAULT_COAP_PORT;
@@ -87,10 +93,8 @@ public class COAPEventAdapterFactory extends InputEventAdapterFactory {
                 this.directory = startup.get();
                 executor.shutdown();
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        } catch (InterruptedException | ExecutionException e) {
+            log.error(e.getMessage());
         }
     }
 

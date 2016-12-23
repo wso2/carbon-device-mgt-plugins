@@ -25,7 +25,7 @@ import org.eclipse.californium.tools.resources.RDResource;
 import java.util.List;
 
 /**
- * modified RD resource
+ * Modified RD resource
  */
 
 public class RootRDResource extends RDResource {

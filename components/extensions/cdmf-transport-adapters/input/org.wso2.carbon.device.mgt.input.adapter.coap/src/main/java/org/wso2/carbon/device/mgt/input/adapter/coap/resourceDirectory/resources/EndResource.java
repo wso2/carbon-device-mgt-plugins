@@ -37,15 +37,21 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * resource that add at the end of a path which starts from a NodeResource
+ * This resource added at the end of a path which starts from a NodeResource which handles all the RESTful requests.
+ *
+ * If the incoming request Code (GET/POST/PUT/DELETE) is equal to the Resource's registered Code, the class direct the request to the needed method handler
+ * if not, a Method Not Allowed message is sent.
  */
 
 public class EndResource extends TagResource {
 
 	public static final Properties HTTP_OTHER_PROPERTIES = new MappingRDProperties("OtherProxy.properties");
 	private CoAP.Code resourceCode; // an EndResource can handle only one request type [GET/POST/PUT/DELETE]
+	private static final Logger LOGGER = Logger.getLogger(EndResource.class.getCanonicalName());
 
 	public EndResource(String name, boolean visible, RDNodeResource parentNode, String resourceCode) {
 
@@ -58,6 +64,9 @@ public class EndResource extends TagResource {
 		this.resourceCode = null;
 	}
 
+	/**
+	 * check for the code and direct it to the needed method
+	 */
 	@Override public void handleRequest(Exchange exchange) {
 
 		CoAP.Code code = exchange.getRequest().getCode();
@@ -102,6 +111,11 @@ public class EndResource extends TagResource {
 		exchange.respond(this.handleAsHttp(exchange.advanced().getRequest()));
 	}
 
+	/**
+	 * This method convert the CoAP request into a HTTP request and send to the relevant HTTP endpoints
+	 * @param request - CoAP Request message
+	 * @return - Http Response from the HTTP endpoint.
+	 */
 	public Response handleAsHttp(Request request)
 	{
 		Response response=null;
@@ -141,7 +155,7 @@ public class EndResource extends TagResource {
 			//translate the http response into coap response
 			response=HttpTranslator.getCoapResponse(httpResponse, request);
 		} catch (TranslationException | IOException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.WARNING,e.getMessage());
 		}
 		return response;
 	}
@@ -200,7 +214,7 @@ public class EndResource extends TagResource {
 				proxyUri = new URL(request.getOptions().getProxyUri());
 
 		} catch (URISyntaxException | MalformedURLException e) {
-			e.printStackTrace();
+			LOGGER.log(Level.WARNING,e.getMessage());
 		}
 		return proxyUri;
 	}

@@ -27,6 +27,10 @@ import org.eclipse.californium.tools.resources.RDTagTopResource;
 import org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.network.DynamicMessageDeliverer;
 import org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.resources.RootRDResource;
 
+/**
+ * A Specialized Directory Server created from the Californium Resource Directory Library
+ */
+
 public class ResourceDirectory extends CoapServer {
 
     private static RDResource rdResource;
@@ -50,19 +54,13 @@ public class ResourceDirectory extends CoapServer {
 
     public void init() {
 
-        try {
-            //the messages with dynamic resources are delivered by DynamicMessageDeliverer
+        //the messages with dynamic resources are delivered by DynamicMessageDeliverer
             this.setMessageDeliverer(new DynamicMessageDeliverer(this.getRoot()));
             //directory adds ResourceDiirectory resource, ResourseDirectoryLookup resource and Tag resource
             rdResource = new RootRDResource();
             this.add(rdResource);
             this.add(new RDLookUpTopResource(rdResource));
             this.add(new RDTagTopResource(rdResource));
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
 
     }
 

@@ -16,6 +16,10 @@ package org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.coap;
 
 import org.eclipse.californium.proxy.MappingProperties;
 
+/**
+ * This class maps extra coap RD config file properties
+ */
+
 public class MappingRDProperties extends MappingProperties{
 
 	public MappingRDProperties(String fileName) {

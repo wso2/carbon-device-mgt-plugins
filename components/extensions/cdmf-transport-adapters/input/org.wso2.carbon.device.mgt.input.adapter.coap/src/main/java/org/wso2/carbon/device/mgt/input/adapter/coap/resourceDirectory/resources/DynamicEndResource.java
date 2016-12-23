@@ -16,6 +16,9 @@ package org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.resource
 
 import org.eclipse.californium.tools.resources.RDNodeResource;
 
+/**
+ * An End Resource which also a Dynamic Resource
+ */
 public class DynamicEndResource extends EndResource {
 
 	public final DynamicResource.DataType paramType;

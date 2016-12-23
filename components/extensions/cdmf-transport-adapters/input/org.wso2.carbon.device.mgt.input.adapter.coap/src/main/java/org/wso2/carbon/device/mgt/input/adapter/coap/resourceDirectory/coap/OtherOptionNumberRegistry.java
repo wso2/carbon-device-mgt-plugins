@@ -16,6 +16,9 @@ package org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.coap;
 
 import org.eclipse.californium.core.coap.OptionNumberRegistry;
 
+/**
+ * This class describes the other CoAP Option Number Registry which is used to set HTTP header values
+ */
 public final class OtherOptionNumberRegistry {
 
 	public static final int AUTHORIZATION = 65000;

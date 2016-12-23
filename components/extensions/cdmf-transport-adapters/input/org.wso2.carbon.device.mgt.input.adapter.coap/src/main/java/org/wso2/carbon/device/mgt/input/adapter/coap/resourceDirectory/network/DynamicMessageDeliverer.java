@@ -32,6 +32,15 @@ import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * A strategy for delivering inbound CoAP messages to an appropriate processor.
+ *
+ * Implementations should try to deliver incoming CoAP requests to a published
+ * resource matching the request's URI. If no such resource exists, it checks for a Dynamic Resource Parent to the not-matching Resource
+ * if no such Resource found an incoming CoAP response
+ * message should be delivered to its corresponding outbound request.
+ */
+
 public class DynamicMessageDeliverer implements MessageDeliverer{
 
 	private static final Logger LOGGER = Logger.getLogger(DynamicMessageDeliverer.class.getCanonicalName());
@@ -106,7 +115,7 @@ public class DynamicMessageDeliverer implements MessageDeliverer{
 			current = current.getChild(name);
 		}
 
-        /*if the exact path doesn't match check if it has a dynamic resource*/
+        //if the exact path doesn't match check if it has a dynamic resource
 		if(current==null && last instanceof DynamicParentResource)
 		{
 			return last;

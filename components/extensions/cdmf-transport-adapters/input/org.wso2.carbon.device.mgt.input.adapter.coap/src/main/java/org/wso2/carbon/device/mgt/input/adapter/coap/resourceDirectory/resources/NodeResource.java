@@ -16,17 +16,17 @@ package org.wso2.carbon.device.mgt.input.adapter.coap.resourceDirectory.resource
 
 
 import org.eclipse.californium.core.CoapResource;
-import org.eclipse.californium.core.coap.LinkFormat;
 import org.eclipse.californium.core.server.resources.Resource;
-import org.eclipse.californium.core.server.resources.ResourceAttributes;
 import org.eclipse.californium.tools.resources.RDNodeResource;
 
 import java.util.Scanner;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
  * Endpoint resource which directly links to RD (Resource Directory)
+ * Register the path creating Resources specific to the register request.
  */
 
 public class NodeResource extends RDNodeResource {
@@ -40,7 +40,19 @@ public class NodeResource extends RDNodeResource {
         super(ep, domain);
 	}
 
-
+	/**
+	 * add a new resource to the node. E.g. the resource temperature or
+	 * humidity. If the path is /readings/temp, temp will be a subResource
+	 * of readings, which is a subResource of the node.
+	 *
+	 * As the overriding feature it checks for a Dynamic Resource Parent when adding a Dynamic Resource
+	 * if no Dynamic Resource Parent found it change the parent Resource as the Dynamic Resource Parent
+	 * before adding the the Dynamic Resource
+	 *
+	 * if the resource is the last resource of the path it is added as an End Resource or a Dynamic End Resource
+	 * other wise the default resource type is Tag Resource
+	 *
+	 */
     @Override
     public CoapResource addNodeResource(String path) {
         Scanner scanner = new Scanner(path);
@@ -66,13 +78,13 @@ public class NodeResource extends RDNodeResource {
 
 				if(next.matches(dynamicResourcePattern.pattern())) //if the resource is dynamic
 				{
-					//FIXME - end resource must be changed into a tag resource when adding a child resoruce under it
+					//FIXME - end resource must be changed into a tag resource when adding a child resource under it
 					try {
 						if (!dynamicPath) //if the new subResource has no dynamic parent in it's path
 							resource = new DynamicParentResource((TagResource) resource);
 
 					} catch (ClassCastException e) {
-						e.printStackTrace();
+						LOGGER.log(Level.INFO,e.getMessage());
 					}
 
 					if (scanner.hasNext())//if the resource is not the end resource
@@ -101,29 +113,6 @@ public class NodeResource extends RDNodeResource {
         scanner.close();
         return subResource;
     }
-
-	/**
-	 * @param name - path name
-	 * @param attributes - end resource attributes e.g.(rt,if)
-	 * @param isDynamic check if the resource is a dynamic resource or not
-	 * @return - new end resource
-	 */
-    public CoapResource addEndResource(String name, ResourceAttributes attributes,boolean isDynamic) {
-
-    	CoapResource endResource;
-		String resourceCode =null;
-
-        if (attributes.containsAttribute(LinkFormat.INTERFACE_DESCRIPTION))
-            resourceCode=attributes.getAttributeValues(LinkFormat.INTERFACE_DESCRIPTION).get(0);
-
-		if(isDynamic)
-			endResource = new DynamicEndResource(name, true, this, resourceCode);
-		else
-			endResource = new EndResource(name, true, this, resourceCode);
-		return endResource;
-    }
-
-
 
 
 }

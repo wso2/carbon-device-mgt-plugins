@@ -18,6 +18,8 @@
 package org.wso2.carbon.device.mgt.input.adapter.coap;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapter;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterListener;
@@ -32,6 +34,7 @@ public class COAPEventAdapter implements InputEventAdapter {
 
     private final InputEventAdapterConfiguration eventAdapterConfiguration;
     private final Map<String, String> globalProperties;
+    private static final Log log = LogFactory.getLog(COAPEventAdapter.class);
 
     public COAPEventAdapter(InputEventAdapterConfiguration eventAdapterConfiguration,
                             Map<String, String> globalProperties) {
