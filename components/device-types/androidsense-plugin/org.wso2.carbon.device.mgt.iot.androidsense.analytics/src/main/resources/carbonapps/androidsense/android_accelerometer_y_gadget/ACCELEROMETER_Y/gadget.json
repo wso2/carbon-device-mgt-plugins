@@ -1,9 +1,0 @@
-{
-    "id": "ACCELEROMETER_Y",
-    "title": "ACCELEROMETER Y",
-    "type": "gadget",
-    "thumbnail": "gadget/ACCELEROMETER_Y/thumbnail.png",
-    "data": {
-        "url": "gadget/ACCELEROMETER_Y/gadget.xml"
-    }
-}
