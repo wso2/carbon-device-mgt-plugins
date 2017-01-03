@@ -196,11 +196,11 @@
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double">
-            <span class="circle">01</span>
+            <span class="badge">01</span>
                Wifi-Shield mounted onto the Arduino-UNO board
         </li>
         <li class="padding-top-double">
-            <span class="circle">02</span>
+            <span class="badge">02</span>
                Connect LED bulb to arduino as follows
             <br/><br/>
             <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
@@ -210,20 +210,20 @@
         </li>
 
         <li class="padding-top-double">
-            <span class="circle">03</span>
+            <span class="badge">03</span>
                Download Arduino-Sketch from [Download Sketch] link above.
         </li>
         <li class="padding-top-double">
-            <span class="circle">04</span>
+            <span class="badge">04</span>
                Unzip the downloaded Arduino Agent
         </li>
         <li class="padding-top-double">
-            <span class="circle">05</span>
+            <span class="badge">05</span>
                Create a folder called "ArduinoBoardSketch" and move all source files
             inside
         </li>
         <li class="padding-top-double">
-            <span class="circle">06</span>
+            <span class="badge">06</span>
                Open ArduinoBoardSketch.h and provide appropriate values for
             <i>[WLAN_SSID]</i>,
             <i>[WLAN_PASS]</i>,
@@ -233,19 +233,19 @@
             variables according to your network.
         </li>
         <li class="padding-top-double">
-            <span class="circle">07</span>
+            <span class="badge">07</span>
                Burn the sketch onto your Arduino board and let the program run.
         </li>
         <li class="padding-top-double">
 
-            <span class="fw-stack fw-lg margin-right">
+            <span class="fw-stack margin-right">
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
                Arduino will publish it's internal temperature to WSO2-IoT-Server
             <br/><br/>
 
-            <span class="fw-stack fw-lg margin-right">
+            <span class="fw-stack margin-right">
                 <i class="fw fw-ring fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
@@ -256,36 +256,38 @@
 </div>
 
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double">
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
-        <h3 class="uppercase">Try Out</h3>
-        <hr>
-        <ul class="list-unstyled">
-            <li class="padding-top-double">
-                <span class="circle">01</span>
-                   You can view all your connected devices at
-                <a href="{{@app.context}}/devices">[Device Management]</a> page.
-            </li>
-            <li class="padding-top-double">
-                <span class="circle">02</span>
-                   Select one of connected devices and check for available control
-                operations and monitor Real-Time data.
-            </li>
-            <li class="padding-top-double">
-                <span class="circle">03</span>
-                   You can also view analytics of the data published to IoT-Server by
-                navigating to Device Analytics page.
-            </li>
-        </ul>
-        <br/>
-    </div>
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
-        <p class="grey margin-top">Click on the image to zoom</p>
-        <center>
-            <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
-                <img src="{{@unit.publicUri}}/images/myDevices_analytics.png"
-                     class="img-responsive">
-            </a>
-        </center>
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
+            <h3 class="uppercase">Try Out</h3>
+            <hr>
+            <ul class="list-unstyled">
+                <li class="padding-top-double">
+                    <span class="badge">01</span>
+                       You can view all your connected devices at
+                    <a href="{{@app.context}}/devices">[Device Management]</a> page.
+                </li>
+                <li class="padding-top-double">
+                    <span class="badge">02</span>
+                       Select one of connected devices and check for available control
+                    operations and monitor Real-Time data.
+                </li>
+                <li class="padding-top-double">
+                    <span class="badge">03</span>
+                       You can also view analytics of the data published to IoT-Server by
+                    navigating to Device Analytics page.
+                </li>
+            </ul>
+            <br/>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 padding-double">
+            <p class="grey margin-top">Click on the image to zoom</p>
+            <center>
+                <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
+                    <img src="{{@unit.publicUri}}/images/myDevices_analytics.png"
+                         class="img-responsive">
+                </a>
+            </center>
+        </div>
     </div>
 </div>
 

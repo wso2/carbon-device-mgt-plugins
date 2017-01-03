@@ -32,6 +32,94 @@ define stream SmsStream (meta_owner string, meta_deviceId string, meta_timestamp
 @Export('org.wso2.geo.LocationStream:1.0.0')
 define stream geoLocationStream (id string, timeStamp long, latitude double, longitude double, type string, speed float, heading float);
 
+@Export('org.wso2.iot.android.accelerometer:1.0.0')
+define stream AccelerometerStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value float);
+
+@Export('org.wso2.iot.android.gyroscope:1.0.0')
+define stream GyroscopeStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value float);
+
+@Export('org.wso2.iot.android.magnetic:1.0.0')
+define stream MagneticStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value float);
+
+@Export('org.wso2.iot.android.gravity:1.0.0')
+define stream GravityStream (meta_owner string, meta_deviceId string, meta_timestamp long, x float, y float, z float);
+
+@Export('org.wso2.iot.android.rotation:1.0.0')
+define stream RotationStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value float);
+
+@Export('org.wso2.iot.android.pressure:1.0.0')
+define stream PressureStream (meta_owner string, meta_deviceId string, meta_timestamp long, pressure float);
+
+@Export('org.wso2.iot.android.light:1.0.0')
+define stream LightStream (meta_owner string, meta_deviceId string, meta_timestamp long, light float);
+
+@Export('org.wso2.iot.android.proximity:1.0.0')
+define stream ProximityStream (meta_owner string, meta_deviceId string, meta_timestamp long, proximity float);
+
+from AndroidSense[meta_type == 'accelerometer']
+select meta_owner, meta_deviceId, meta_timestamp, 'X' as axis, accelerometer_x as value
+insert into AccelerometerStream;
+
+from AndroidSense[meta_type == 'accelerometer']
+select meta_owner, meta_deviceId, meta_timestamp, 'Y' as axis, accelerometer_y as value
+insert into AccelerometerStream;
+
+from AndroidSense[meta_type == 'accelerometer']
+select meta_owner, meta_deviceId, meta_timestamp, 'Z' as axis, accelerometer_z as value
+insert into AccelerometerStream;
+
+from AndroidSense[meta_type == 'gyroscope']
+select meta_owner, meta_deviceId, meta_timestamp, 'X' as axis, gyroscope_x as value
+insert into GyroscopeStream;
+
+from AndroidSense[meta_type == 'gyroscope']
+select meta_owner, meta_deviceId, meta_timestamp, 'Y' as axis, gyroscope_y as value
+insert into GyroscopeStream;
+
+from AndroidSense[meta_type == 'gyroscope']
+select meta_owner, meta_deviceId, meta_timestamp, 'Z' as axis, gyroscope_z as value
+insert into GyroscopeStream;
+
+from AndroidSense[meta_type == 'magnetic']
+select meta_owner, meta_deviceId, meta_timestamp, 'X' as axis, magnetic_x as value
+insert into MagneticStream;
+
+from AndroidSense[meta_type == 'magnetic']
+select meta_owner, meta_deviceId, meta_timestamp, 'Y' as axis, magnetic_y as value
+insert into MagneticStream;
+
+from AndroidSense[meta_type == 'magnetic']
+select meta_owner, meta_deviceId, meta_timestamp, 'Z' as axis, magnetic_z as value
+insert into MagneticStream;
+
+from AndroidSense[meta_type == 'gravity']
+select meta_owner, meta_deviceId, meta_timestamp, gravity_x as x, gravity_y as y, gravity_z as z
+insert into GravityStream;
+
+from AndroidSense[meta_type == 'rotation']
+select meta_owner, meta_deviceId, meta_timestamp, 'X' as axis, rotation_x as value
+insert into RotationStream;
+
+from AndroidSense[meta_type == 'rotation']
+select meta_owner, meta_deviceId, meta_timestamp, 'Y' as axis, rotation_y as value
+insert into RotationStream;
+
+from AndroidSense[meta_type == 'rotation']
+select meta_owner, meta_deviceId, meta_timestamp, 'Z' as axis, rotation_z as value
+insert into RotationStream;
+
+from AndroidSense[meta_type == 'pressure']
+select meta_owner, meta_deviceId, meta_timestamp, pressure as pressure
+insert into PressureStream;
+
+from AndroidSense[meta_type == 'light']
+select meta_owner, meta_deviceId, meta_timestamp, light as light
+insert into LightStream;
+
+from AndroidSense[meta_type == 'proximity']
+select meta_owner, meta_deviceId, meta_timestamp, proximity as proximity
+insert into ProximityStream;
+
 from AndroidSense[meta_type == 'sms']
 select meta_owner, meta_deviceId, meta_timestamp, sms_number as number, action as type, "" as body
 insert into SmsStream;

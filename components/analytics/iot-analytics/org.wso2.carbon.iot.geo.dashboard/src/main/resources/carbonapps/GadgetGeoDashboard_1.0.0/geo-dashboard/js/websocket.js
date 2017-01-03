@@ -29,6 +29,7 @@ var waitTime = 1000;
 var webSocketURL, alertWebSocketURL, trafficStreamWebSocketURL;
 var deviceId;
 var deviceType;
+var isBatchModeOn = false;
 
 function processPointMessage(geoJsonFeature) {
     if (geoJsonFeature.id in currentSpatialObjects) {
@@ -70,6 +71,10 @@ function SpatialObject(json) {
 
     this.marker.bindPopup(this.popupTemplate.html());
     return this;
+}
+
+function popupDateRange() {
+    $('#dateRangePopup').attr('title', 'Device ID - ' + deviceId + " Device Type - " + deviceType).dialog();
 }
 
 SpatialObject.prototype.update = function (geoJSON) {
@@ -161,7 +166,17 @@ function angleToHeading(angle) {
 SpatialObject.prototype.removeFromMap = function () {
     this.removePath();
     this.marker.closePopup();
+    map.removeLayer(this.marker);
 };
+
+function clearMap() {
+    for (var spacialObject in currentSpatialObjects) {
+        console.log(spacialObject);
+        currentSpatialObjects[spacialObject].removePath();
+        currentSpatialObjects[spacialObject].removeFromMap();
+    }
+    currentSpatialObjects = {};
+}
 
 SpatialObject.prototype.createLineStringFeature = function (state, information, coordinates) {
     return {
@@ -552,11 +567,13 @@ var webSocketOnAlertOpen = function () {
 };
 
 var webSocketOnAlertMessage = function processMessage(message) {
-    var json = $.parseJSON(message.data);
-    if (json.messageType == "Alert") {
-        processAlertMessage(json);
-    } else {
-        console.log("Message type not supported.");
+    if (!isBatchModeOn) {
+        var json = $.parseJSON(message.data);
+        if (json.messageType == "Alert") {
+            processAlertMessage(json);
+        } else {
+            console.log("Message type not supported.");
+        }
     }
 };
 
@@ -594,18 +611,19 @@ var webSocketOnOpen = function () {
 };
 
 var webSocketOnMessage = function (message) {
-    var json = $.parseJSON(message.data);
-    if (json.messageType == "Point") {
-        processPointMessage(json);
-    } else if (json.messageType == "Prediction") {
-        //processPredictionMessage(json);
-    } else {
-        console.log("Message type not supported.");
+    if (!isBatchModeOn) {
+        var json = $.parseJSON(message.data);
+        if (json.messageType == "Point") {
+            processPointMessage(json);
+        } else if (json.messageType == "Prediction") {
+            //processPredictionMessage(json);
+        } else {
+            console.log("Message type not supported.");
+        }
     }
 };
 
 var webSocketOnClose = function (e) {
-
     if (websocket.get_opened()) {
         $.UIkit.notify({
             message: 'Connection lost with server!!',
@@ -668,29 +686,30 @@ function initializeOnAlertWebSocket() {
 
 function intializeWebsocketUrls() {
     var username;
-    wso2.gadgets.state.getGlobalState(function(state) {
+    wso2.gadgets.state.getGlobalState(function (state) {
         deviceId = state.device.id;
         deviceType = state.device.type;
         if (deviceId && deviceType) {
-            //TODO need to get the token
             wso2.gadgets.identity.getUsername(function (username) {
-                $.getJSON("/portal/store/carbon.super/fs/gadget/geo-dashboard/controllers/get_server_info.jag?username=" + username, function (data) {
-                    webSocketURL = 'wss://' + data.ip + ':' + data.httpsPort + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
-                            .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_WEBAPP_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions
-                            .constance.TENANT_INDEX + ApplicationOptions.constance.PATH_SEPARATOR + data.user.domain +
-                        ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
-                            .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
-                        + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
-                    alertWebSocketURL = 'wss://' + data.ip + ':' + data.httpsPort + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
-                            .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_WEBAPP_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions
-                            .constance.TENANT_INDEX + ApplicationOptions.constance.PATH_SEPARATOR + data.user.domain +
-                        ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
-                            .CEP_ON_ALERT_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
-                        + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
-                    document.cookie = "websocket-token=f98d6142-e988-3c7f-a8c9-7e6d74da7113; path=/";
-                    $("#proximity_alert").hide();
-                    initializeWebSocket();
-                    initializeOnAlertWebSocket();
+                wso2.gadgets.identity.getAccessToken(function (accessToken) {
+                    $.getJSON("/portal/store/carbon.super/fs/gadget/geo-dashboard/controllers/get_server_info.jag?username=" + username, function (data) {
+                        webSocketURL = 'wss://' + data.ip + ':' + data.httpsPort + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
+                                .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_WEBAPP_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions
+                                .constance.TENANT_INDEX + ApplicationOptions.constance.PATH_SEPARATOR + data.user.domain +
+                            ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
+                                .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
+                            + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
+                        alertWebSocketURL = 'wss://' + data.ip + ':' + data.httpsPort + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
+                                .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_WEBAPP_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions
+                                .constance.TENANT_INDEX + ApplicationOptions.constance.PATH_SEPARATOR + data.user.domain +
+                            ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
+                                .CEP_ON_ALERT_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
+                            + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
+                        document.cookie = "websocket-token="+accessToken+"; path=/";
+                        $("#proximity_alert").hide();
+                        initializeWebSocket();
+                        initializeOnAlertWebSocket();
+                    });
                 });
             });
         } else {
@@ -703,7 +722,6 @@ function intializeWebsocketUrls() {
         }
     });
 }
-
 
 
 intializeWebsocketUrls();

@@ -79,3 +79,9 @@
     box-shadow: 0 5px 15px rgba(0,0,0,.5);
 }
 
+.ui-dialog .ui-dialog-title {
+    word-break: keep-all !important;
+    word-wrap: normal !important;
+    white-space: normal !important;
+}
+

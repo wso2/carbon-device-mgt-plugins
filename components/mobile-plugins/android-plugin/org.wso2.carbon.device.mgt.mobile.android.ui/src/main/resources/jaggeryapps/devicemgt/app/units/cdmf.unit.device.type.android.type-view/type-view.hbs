@@ -1,5 +1,6 @@
 {{unit "cdmf.unit.lib.qrcode"}}
-{{unit "cdmf.unit.device.type.android.qr-modal"}}
+{{unit "cdmf.unit.device.type.qr-modal" enrollmentURL=enrollmentURL deviceTypeName="Android"}}
+{{unit "cdmf.unit.device.type.email.invite-modal" deviceTypeView="android"}}
 
 <div class="col-lg-12  margin-top-double">
     <h1 class="grey ">Android Mobile</h1>
@@ -9,13 +10,19 @@
     <img src="{{@unit.publicUri}}/images/android-icon.png" class="img-responsive">
 </div>
 
-
 <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9 padding-top">
 
     <h3 class="uppercase">What it Does</h3>
     <hr>
     <p class="grey margin-top">Connect and manage your Android device with WSO2 IoT Server.</p>
     <br>
+
+    <a href="javascript:toggleEnrollment()" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
+    <a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
+    <a href="javascript:toggleEmailInvite()" class="btn-operations"><i class="fw fw-mail fw-inverse fw-lg add-margin-1x"></i> Invite by Email</a>
+
+    <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Android"
+                                 target="_blank">here</a> for latest instructions and troubleshooting.</p>
 
     <h3 class="uppercase">What You Need</h3>
     <hr>
@@ -31,10 +38,27 @@
         </li>
     </ul>
     <br>
-    <a href="javascript:toggleEnrollment()" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
-    <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS100/Android"
-                                 target="_blank">here</a> for latest instructions and troubleshooting.</p>
-    <br/><br/>
+
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-8 col-lg-12 padding-double grey-bg">
+    <h3 class="uppercase">Prepare</h3><hr>
+    <ul class="list-unstyled">
+        <li class="padding-top-double"><span class="badge">01</span> Download Device Agent into your Android Mobile.</li>
+        <li><span class="badge">02</span> Install Agent APK file.</li>
+        <li><span class="badge">03</span> Configure Agent App</li>
+    </ul>
+    <br>
+
+</div>
+
+<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
+    <p class="grey margin-top">Click on the image to zoom</p>
+    <center>
+        <a href="{{@unit.publicUri}}/images/android_device.png" target="_blank">
+            <img src="{{@unit.publicUri}}/images/android_device.png" class="img-responsive">
+        </a>
+    </center>
 </div>
 
 <br/>

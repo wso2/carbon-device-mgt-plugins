@@ -1,0 +1,9 @@
+{
+    "id": "ANDROID_ACCELETOMETER_GADGET",
+    "title": "ANDROID_ACCELETOMETER_GADGET",
+    "type": "gadget",
+    "thumbnail": "gadget/ANDROID_ACCELETOMETER_GADGET/thumbnail.png",
+    "data": {
+        "url": "gadget/ANDROID_ACCELETOMETER_GADGET/gadget.xml"
+    }
+}

@@ -28,6 +28,12 @@ var proximityMap = L.map("proximityMap", {
 
 var proximityDistance = $("#proximityDistance");
 
+var serverUrl = "/portal/store/carbon.super/fs/gadget/geo-dashboard/controllers/get_alerts.jag?executionPlanType=Proximity&deviceId=" + deviceId;
+$.get(serverUrl, null, function (response) {
+    proximityDistance.val(response.proximityDistance);
+    $("#proximityTime").val(response.proximityTime);
+});
+
 L.grid({
     redraw: 'move'
     }).addTo(proximityMap);

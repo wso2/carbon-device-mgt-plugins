@@ -68,18 +68,32 @@ public class DiscoveryServiceImpl implements DiscoveryService {
         String emailId = discoveryRequest.getEmailId();
         String[] userDomains = emailId.split(DELIMITER);
         String domain = userDomains[DOMAIN_SEGMENT];
+        DiscoveryResponse discoveryResponse;
+        if (PluginConstants.WindowsVersionProperties.REQUESTED_WIN10_VERSION.equals(discoveryRequest.getVersion()) &&
+                FEDERATED.equals(getAuthPolicy())) {
+            discoveryResponse = new DiscoveryResponse();
 
-        DiscoveryResponse discoveryResponse = new DiscoveryResponse();
-        if (FEDERATED.equals(getAuthPolicy())) {
             discoveryResponse.setAuthPolicy(FEDERATED);
+            discoveryResponse.setEnrollmentVersion(PluginConstants.WindowsVersionProperties.REQUESTED_WIN10_VERSION);
             discoveryResponse.setEnrollmentPolicyServiceUrl(PluginConstants.Discovery.DEVICE_ENROLLMENT_SUBDOMAIN +
-                                                            domain + PluginConstants.Discovery.
+                    domain + PluginConstants.Discovery.
                     CERTIFICATE_ENROLLMENT_POLICY_SERVICE_URL);
             discoveryResponse.setEnrollmentServiceUrl(PluginConstants.Discovery.DEVICE_ENROLLMENT_SUBDOMAIN +
-                                                      domain + PluginConstants.Discovery.
+                    domain + PluginConstants.Discovery.
+                    ENROLLMENT_SERVICE_URL);
+            discoveryResponse.setAuthenticationServiceUrl(PluginConstants.Discovery.DEVICE_ENROLLMENT_SUBDOMAIN +
+                    domain + PluginConstants.Discovery.WAB_URL);
+        } else {
+            discoveryResponse = new DiscoveryResponse();
+            discoveryResponse.setAuthPolicy(FEDERATED);
+            discoveryResponse.setEnrollmentPolicyServiceUrl(PluginConstants.Discovery.DEVICE_ENROLLMENT_SUBDOMAIN +
+                    domain + PluginConstants.Discovery.
+                    CERTIFICATE_ENROLLMENT_POLICY_SERVICE_URL);
+            discoveryResponse.setEnrollmentServiceUrl(PluginConstants.Discovery.DEVICE_ENROLLMENT_SUBDOMAIN +
+                    domain + PluginConstants.Discovery.
                     CERTIFICATE_ENROLLMENT_SERVICE_URL);
             discoveryResponse.setAuthenticationServiceUrl(PluginConstants.Discovery.DEVICE_ENROLLMENT_SUBDOMAIN +
-                                                          domain + PluginConstants.Discovery.WAB_URL);
+                    domain + PluginConstants.Discovery.WAB_URL);
         }
         response.value = discoveryResponse;
         if (log.isDebugEnabled()) {

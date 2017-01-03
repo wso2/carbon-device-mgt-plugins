@@ -102,7 +102,6 @@
             <!-- Self javascript libraries (Order of the import is very important, changing the order might shadow some variables, append new script to bottom ) -->
             <!-- ** comment out below imports if using minimized wso2_geo.min library **  -->
             <script src="js/application_options.js"></script>
-
             <script type="text/javascript">
                 function reformatRadius(val){
                     if(val != "" && !isNaN(val)){
@@ -136,6 +135,11 @@
 
 
             <div class="navbar-collapse collapse" style="display:inline-block;">
+                <ul class="nav">
+                    <li>
+                        <button id='realTimeShow' type="submit" class="btn btn-primary" style="display:none;" onclick='enableRealTime()'>Return to Real Time View</button>
+                    </li>
+                </ul>
                 <ul class="nav navbar-nav-left">
                     <li class="hidden-xs"><a href="#left_side_pannel" data-uk-offcanvas>
                         <i class="fa fa-list" style="color: #FF9900"></i></a>
@@ -718,7 +722,17 @@
             <p id="information" class="bg-primary" style="margin: 0px;padding: 0px;"></p>
             <h6>Speed<span class="label label-primary pull-right"><span id="speed"></span> km/h</span></h6>
             <h6>Heading<span id="heading" class="label label-primary pull-right"></span></h6>
-            <button type="button" class="btn btn-info btn-xs" onClick="focusOnSpatialObject(document.getElementById('objectId').innerHTML);return false;">History</button>
+            <button type="button" class="btn btn-info btn-xs" onClick="focusOnSpatialObject(document.getElementById('objectId').innerHTML);return false;">Recent History</button>
+            <button type="button" class="btn btn-info btn-xs" onClick="popupDateRange();">Full History</button>
+        </div>
+    </div>
+
+    <div id="dateRangePopup">
+        <!--<h3 class="popover-title">ID <span id="objectId"></span></h3>-->
+        <div>
+            <label> From: <input id="timeFrom" type="text"> </label>
+            <label> To: <input id="timeTo" type="text"> </label>
+            <button type="button" class="btn btn-info btn-xs" onClick="focusOnHistorySpatialObject(document.getElementById('objectId').innerHTML, document.getElementById('timeFrom').value, document.getElementById('timeTo').value);return false;">Full History</button>
         </div>
     </div>
 

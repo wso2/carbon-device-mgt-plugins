@@ -64,19 +64,6 @@
         </jaxws:handlers>
     </jaxws:endpoint>
 
-    <!--XCEP endpoint for OnPremise Auth-Policy-->
-    <jaxws:endpoint
-            id="EnrollmentPolicyServiceOnPremise"
-            implementor="org.wso2.carbon.device.mgt.mobile.windows.api.services.xcep.impl.CertificateEnrollmentPolicyServiceImpl"
-            address="/certificatepolicy/xcep/onpremise">
-        <jaxws:properties>
-            <entry key="ws-security.ut.validator" value-ref="customvalidatoronpremise"/>
-        </jaxws:properties>
-        <jaxws:inInterceptors>
-            <ref bean="wss4jInInterceptor"/>
-        </jaxws:inInterceptors>
-    </jaxws:endpoint>
-
     <!--WSTEP Endpoint for Federated Auth-Policy-->
     <jaxws:endpoint
             id="CertificateEnrollmentService"
@@ -93,54 +80,60 @@
         </jaxws:handlers>
     </jaxws:endpoint>
 
+    <!-- Enrollment Endpoint for windows 10 -->
+    <jaxws:endpoint
+            id="EnrollmentService"
+            implementor="org.wso2.carbon.device.mgt.mobile.windows.api.services.enrollment.impl.EnrollmentServiceImpl"
+            address="/deviceenrolment/enrollment">
+        <jaxws:properties>
+            <entry key="ws-security.bst.validator" value-ref="customvalidator"/>
+        </jaxws:properties>
+        <jaxws:inInterceptors>
+            <ref bean="wss4jInInterceptor_federated"/>
+        </jaxws:inInterceptors>
+        <jaxws:handlers>
+            <ref bean="serviceOptionsHandler"/>
+        </jaxws:handlers>
+    </jaxws:endpoint>
+
     <!--Syncml Endpoint-->
     <jaxrs:server id="Syncmlinitial" address="/syncml">
         <jaxrs:serviceBeans>
             <ref bean="Syncml_initial_bean"/>
-            <ref bean="swaggerResource"/>
         </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="swaggerWriter"/>
-        </jaxrs:providers>
+    </jaxrs:server>
+
+    <!--Syncml Windows 10 device mgt Endpoint-->
+    <jaxrs:server id="Win10devicemgtSession" address="/management">
+        <jaxrs:serviceBeans>
+            <ref bean="devicemgt_bean"/>
+        </jaxrs:serviceBeans>
     </jaxrs:server>
 
     <!--BST provider Endpoint for returning binary security token after authentication-->
     <jaxrs:server id="bstprovider" address="/federated">
         <jaxrs:serviceBeans>
             <ref bean="bstProviderService"/>
-            <ref bean="swaggerResource"/>
         </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="swaggerWriter"/>
-        </jaxrs:providers>
     </jaxrs:server>
 
-    <!--Endpoint for UI admin operations-->
-    <jaxrs:server id="adminoperations" address="/windows">
-        <jaxrs:serviceBeans>
-            <ref bean="deviceMgtAdminService"/>
-            <ref bean="swaggerResource"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="swaggerWriter"/>
-        </jaxrs:providers>
+    <jaxrs:server id="services" address="/">
+    <jaxrs:serviceBeans>
+        <ref bean="configurationMgtService"/>
+        <ref bean="deviceMgtAdminService"/>
+        <ref bean="swaggerResource"/>
+    </jaxrs:serviceBeans>
+    <jaxrs:providers>
+        <ref bean="jsonProvider"/>
+        <ref bean="errorHandler"/>
+        <ref bean="swaggerWriter"/>
+    </jaxrs:providers>
+        <jaxrs:properties>
+            <!-- This is added to catch interceptor level exceptions in GlobalThrowableMapper. -->
+            <entry key="map.cxf.interceptor.fault" value="true" />
+        </jaxrs:properties>
     </jaxrs:server>
 
-    <!-- Endpoint for Configurations -->
-    <jaxrs:server id="configurationService" address="/configuration">
-        <jaxrs:serviceBeans>
-            <ref bean="configurationMgtService"/>
-            <ref bean="swaggerResource"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="jsonProvider"/>
-            <ref bean="errorHandler"/>
-            <ref bean="swaggerWriter"/>
-        </jaxrs:providers>
-    </jaxrs:server>
 
     <bean id="bstProviderService"
           class="org.wso2.carbon.device.mgt.mobile.windows.api.services.authbst.impl.BSTProviderImpl"/>
@@ -184,6 +177,8 @@
     </bean>
     <bean id="Syncml_initial_bean"
           class="org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.impl.SyncmlServiceImpl"/>
+    <bean id="devicemgt_bean"
+          class="org.wso2.carbon.device.mgt.mobile.windows.api.services.impl.DeviceManagementServiceImpl"/>
     <bean id="customvalidator"
           class="org.wso2.carbon.device.mgt.mobile.windows.api.common.util.BSTValidator"/>
     <bean id="customvalidatoronpremise"

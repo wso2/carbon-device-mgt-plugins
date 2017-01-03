@@ -18,6 +18,6 @@
   -->
 
 <artifact name= "android_data_script" version="1.0.0" type="analytics/spark" serverRole="DataAnalyticsServer">
-	<file>AndriodDataScript.xml</file>
+	<file>AndroidDataScript.xml</file>
 </artifact>
 

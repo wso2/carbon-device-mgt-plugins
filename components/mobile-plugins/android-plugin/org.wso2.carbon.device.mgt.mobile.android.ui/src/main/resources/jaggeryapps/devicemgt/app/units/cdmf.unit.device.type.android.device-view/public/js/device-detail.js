@@ -231,6 +231,8 @@ var InitiateViewOption = null;
                             var viewModel = {};
                             viewModel["applications"] = data;
                             viewModel["deviceType"] = deviceType;
+                            viewModel["deviceId"] = deviceId;
+                            viewModel["appContext"] = context;
                             var content = template(viewModel);
                             $("#applications-list-container").html(content);
                         } else {
