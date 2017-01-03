@@ -689,23 +689,25 @@ function intializeWebsocketUrls() {
     wso2.gadgets.state.getGlobalState(function (state) {
         deviceId = state.device.id;
         deviceType = state.device.type;
+        var hostname = window.parent.location.hostname;
+        var port = window.parent.location.port;
         if (deviceId && deviceType) {
             wso2.gadgets.identity.getUsername(function (username) {
                 wso2.gadgets.identity.getAccessToken(function (accessToken) {
                     $.getJSON("/portal/store/carbon.super/fs/gadget/geo-dashboard/controllers/get_server_info.jag?username=" + username, function (data) {
-                        webSocketURL = 'wss://' + data.ip + ':' + data.httpsPort + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
+                        webSocketURL = 'wss://' + hostname + ':' + port + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
                                 .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_WEBAPP_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions
                                 .constance.TENANT_INDEX + ApplicationOptions.constance.PATH_SEPARATOR + data.user.domain +
                             ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
                                 .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
                             + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
-                        alertWebSocketURL = 'wss://' + data.ip + ':' + data.httpsPort + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
+                        alertWebSocketURL = 'wss://' + hostname + ':' + port + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
                                 .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_WEBAPP_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions
                                 .constance.TENANT_INDEX + ApplicationOptions.constance.PATH_SEPARATOR + data.user.domain +
                             ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
                                 .CEP_ON_ALERT_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
                             + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
-                        document.cookie = "websocket-token="+accessToken+"; path=/";
+                        document.cookie = "websocket-token=" + accessToken + "; path=/";
                         $("#proximity_alert").hide();
                         initializeWebSocket();
                         initializeOnAlertWebSocket();
