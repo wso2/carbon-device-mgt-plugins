@@ -698,10 +698,10 @@ var operationModule = function () {
                         "preventAppSheet": operationData["emailPreventAppSheet"],
                         "disableMailRecentsSyncing": operationData["emailDisableMailRecentsSyncing"],
                         "incomingMailServerIMAPPathPrefix": operationData["emailIncomingMailServerIMAPPathPrefix"],
-                        "smimeenabled": operationData["emailSMIMEEnabled"],
-                        "smimesigningCertificateUUID": operationData["emailSMIMESigningCertificateUUID"],
-                        "smimeencryptionCertificateUUID": operationData["emailSMIMEEncryptionCertificateUUID"],
-                        "smimeenablePerMessageSwitch": operationData["emailSMIMEEnablePerMessageSwitch"]
+                        "SMIMEEnabled": operationData["emailSMIMEEnabled"],
+                        "SMIMESigningCertificateUUID": operationData["emailSMIMESigningCertificateUUID"],
+                        "SMIMEEncryptionCertificateUUID": operationData["emailSMIMEEncryptionCertificateUUID"],
+                        "SMIMEEnablePerMessageSwitch": operationData["emailSMIMEEnablePerMessageSwitch"]
                     }
                 };
                 break;
