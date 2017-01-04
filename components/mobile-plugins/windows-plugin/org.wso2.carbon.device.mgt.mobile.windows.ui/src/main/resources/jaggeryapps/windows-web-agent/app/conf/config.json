@@ -23,7 +23,9 @@
         "tokenServiceURL": "%https.ip%/oauth2/token"
     },
     "adminUser":"admin",
-    "usernameLength":30,
+    "userValidationConfig": {
+        "usernameLength":30
+    },
     "device" : {
         "ios" : {
             "location" : "%http.ip%/windows-web-agent/public/mdm.page.enrollments.ios.download-agent/asset/ios-agent.ipa",
