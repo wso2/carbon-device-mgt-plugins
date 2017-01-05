@@ -75,7 +75,8 @@ public class WebsocketConfig {
         return websocketValidationConfigs;
     }
 
-    public void setWebsocketValidationConfigs(WebsocketValidationConfigs websocketValidationConfigs) {
-        websocketValidationConfigs = websocketValidationConfigs;
+    public void setWebsocketValidationConfigs(WebsocketValidationConfigs websocketValidationConfigsTemp) {
+        websocketValidationConfigs = websocketValidationConfigsTemp;
     }
+
 }

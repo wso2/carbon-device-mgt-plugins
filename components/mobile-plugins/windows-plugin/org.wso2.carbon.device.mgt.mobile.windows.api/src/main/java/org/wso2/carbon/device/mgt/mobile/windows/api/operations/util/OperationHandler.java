@@ -181,7 +181,7 @@ public class OperationHandler {
             if ((Constants.SyncMLResponseCodes.ACCEPTED.equals(status.getData()))) {
                 pendingDataOperations = WindowsAPIUtils.getPendingOperations(deviceIdentifier);
                 for (Operation operation : pendingDataOperations) {
-                    if ((OperationCode.Command.DEVICE_RING.equals(operation.getCode())) &&
+                    if ((OperationCode.Command.DEVICE_RING.getCode().equals(operation.getCode())) &&
                             (operation.getId() == status.getCommandReference())) {
                         operation.setStatus(Operation.Status.COMPLETED);
                         updateStatus(syncmlDocument.getHeader().getSource().getLocURI(),
@@ -213,7 +213,7 @@ public class OperationHandler {
             }
             for (Operation operation : pendingDataOperations) {
 
-                if ((OperationCode.Command.WIPE_DATA.equals(operation.getCode())) &&
+                if ((OperationCode.Command.WIPE_DATA.getCode().equals(operation.getCode())) &&
                         (operation.getId() == status.getCommandReference())) {
                     operation.setStatus(Operation.Status.COMPLETED);
                     updateStatus(syncmlDocument.getHeader().getSource().getLocURI(),
@@ -306,13 +306,13 @@ public class OperationHandler {
                 if (status.getTargetReference() == null) {
                     updateDeviceOperations(status, syncmlDocument, deviceIdentifier);
                 } else {
-                    if ((OperationCode.Command.DEVICE_LOCK.equals(status.getTargetReference()))) {
+                    if ((OperationCode.Command.DEVICE_LOCK.getCode().equals(status.getTargetReference()))) {
                         updateLockOperation(status, syncmlDocument, deviceIdentifier);
                     }
-                    if ((OperationCode.Command.DEVICE_RING.equals(status.getTargetReference()))) {
+                    if ((OperationCode.Command.DEVICE_RING.getCode().equals(status.getTargetReference()))) {
                         ring(status, syncmlDocument, deviceIdentifier);
                     }
-                    if (equals(OperationCode.Command.WIPE_DATA.equals(status.getTargetReference()))) {
+                    if ((OperationCode.Command.WIPE_DATA.getCode().equals(status.getTargetReference()))) {
                         dataWipe(status, syncmlDocument, deviceIdentifier);
                     }
                 }

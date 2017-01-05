@@ -111,7 +111,7 @@ public class FireAlarmHTTPCommunicator extends HTTPTransportHandler {
 
                 AgentManager agentManager = AgentManager.getInstance();
                 String pathContext = request.getPathInfo();
-                String separator = File.separator;
+                String separator = File.separatorChar=='\\' ? "\\\\" : File.separator ;
 
                 if (pathContext.toUpperCase().contains(
                         separator + AgentConstants.TEMPERATURE_CONTROL)) {

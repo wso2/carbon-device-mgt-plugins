@@ -59,6 +59,7 @@
                             org.osgi.framework,
                             org.osgi.service.component,
                             org.apache.commons.logging,
+                            javax.xml,
                             javax.xml.bind.*,
                             javax.sql,
                             javax.xml.parsers; version=0.0.0,
