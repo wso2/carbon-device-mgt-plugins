@@ -1266,14 +1266,8 @@
         <carbon.deployment.version>4.7.2</carbon.deployment.version>
 
         <!-- Carbon Identity -->
-<!--<<<<<<< HEAD-->
-        <!--<carbon.identity.framework.version>5.2.2</carbon.identity.framework.version>-->
-        <!--<identity.inbound.auth.oauth.version>5.1.1</identity.inbound.auth.oauth.version>-->
-        <!--<identity.inbound.auth.saml.version>5.1.1</identity.inbound.auth.saml.version>-->
-        <!--<carbon.identity.version.range>[5.2.2, 6.0.0)</carbon.identity.version.range>-->
-<!--=======-->
         <carbon.identity.framework.version>5.6.89</carbon.identity.framework.version>
-        <identity.inbound.auth.oauth.version>5.2.33</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>5.3.1</identity.inbound.auth.oauth.version>
         <carbon.identity.version.range>[5.2.0, 6.0.0)</carbon.identity.version.range>
 
         <!-- Carbon Multi-tenancy -->
@@ -1286,10 +1280,7 @@
         <carbon.governance.version>4.7.0</carbon.governance.version>
 
         <!-- Carbon API Management -->
-<!--<<<<<<< HEAD-->
-        <!--<carbon.api.mgt.version>6.0.6-SNAPSHOT</carbon.api.mgt.version>-->
-<!--=======-->
-        <carbon.api.mgt.version>6.1.2</carbon.api.mgt.version>
+        <carbon.api.mgt.version>6.1.30-SNAPSHOT</carbon.api.mgt.version>
 
         <!-- XMPP/MQTT Version -->
         <smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>
