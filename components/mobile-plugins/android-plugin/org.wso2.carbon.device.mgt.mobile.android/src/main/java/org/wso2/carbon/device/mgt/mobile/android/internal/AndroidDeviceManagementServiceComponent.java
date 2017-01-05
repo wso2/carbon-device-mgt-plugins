@@ -25,10 +25,8 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.android.impl.AndroidDeviceManagementService;
-import org.wso2.carbon.device.mgt.mobile.android.impl.AndroidPolicyMonitoringService;
 import org.wso2.carbon.device.mgt.mobile.android.impl.gcm.GCMService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
-import org.wso2.carbon.policy.mgt.common.spi.PolicyMonitoringService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 /**
@@ -75,8 +73,8 @@ public class AndroidDeviceManagementServiceComponent {
 
             // Policy management service
 
-            bundleContext.registerService(PolicyMonitoringService.class,
-                                          new AndroidPolicyMonitoringService(), null);
+//            bundleContext.registerService(PolicyMonitoringManager.class,
+//                                          new AndroidPolicyMonitoringManager(), null);
 
             AndroidDeviceManagementDataHolder.getInstance().setAndroidDeviceManagementService(
                     androidDeviceManagementService);
