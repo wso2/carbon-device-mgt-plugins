@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">WSO2-SenseAgent</string>
     <string name="title_activity_sense_settings">Sense Settings</string>
-    <string name="hostname">Server URL https://host:9443</string>
+    <string name="hostname">Server URL https://host:8243</string>
     <string name="speakup">Speakup to capture the words</string>
     <string name="action_settings">DeEnroll</string>
     <string name="title_activity_activity_select_sensor">ActivitySelectSensor</string>
