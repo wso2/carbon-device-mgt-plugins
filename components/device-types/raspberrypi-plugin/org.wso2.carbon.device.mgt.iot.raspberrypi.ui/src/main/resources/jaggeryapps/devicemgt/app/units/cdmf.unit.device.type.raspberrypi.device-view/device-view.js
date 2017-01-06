@@ -20,6 +20,7 @@ function onRequest(context) {
     var log = new Log("device-view.js");
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("id");
+    var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
     var autoCompleteParams = [
         {"name" : "deviceId", "value" : deviceId}
     ];
