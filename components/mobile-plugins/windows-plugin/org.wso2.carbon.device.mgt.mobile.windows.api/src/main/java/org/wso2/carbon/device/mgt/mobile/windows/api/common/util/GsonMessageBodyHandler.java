@@ -82,13 +82,7 @@ public class GsonMessageBodyHandler implements MessageBodyWriter<Object>, Messag
 
         OutputStreamWriter writer = new OutputStreamWriter(entityStream, UTF_8);
         try {
-            Type jsonType;
-            if (type.equals(type)) {
-                jsonType = type;
-            } else {
-                jsonType = type;
-            }
-            getGson().toJson(object, jsonType, writer);
+            getGson().toJson(object, type, writer);
         } finally {
             writer.close();
         }
