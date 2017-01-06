@@ -19,6 +19,10 @@
 
 package org.wso2.carbon.device.mgt.iot.androidsense.service.impl;
 
+import io.swagger.annotations.*;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
+import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.constants.AndroidSenseConstants;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -30,6 +34,8 @@ import io.swagger.annotations.ResponseHeader;
 import io.swagger.annotations.SwaggerDefinition;
 import io.swagger.annotations.Tag;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -53,6 +59,16 @@ import javax.ws.rs.core.Response;
                 @Tag(name = "android_sense", description = "")
         }
 )
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll device",
+                        description = "",
+                        key = "perm:android-sense:enroll",
+                        permissions = {"/device-mgt/devices/enroll/android-sense"}
+                )
+        }
+)
 public interface AndroidSenseService {
 
     /**
@@ -70,7 +86,7 @@ public interface AndroidSenseService {
             tags = "android_sense",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = "", value = "perm:android-sense:enroll")
+                            @ExtensionProperty(name = AndroidSenseConstants.SCOPE, value = "perm:android-sense:enroll")
                     })
             }
     )
@@ -128,7 +144,7 @@ public interface AndroidSenseService {
             tags = "android_sense",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = "", value = "perm:android-sense:enroll")
+                            @ExtensionProperty(name = AndroidSenseConstants.SCOPE, value = "perm:android-sense:enroll")
                     })
             }
     )
@@ -184,7 +200,7 @@ public interface AndroidSenseService {
             tags = "android_sense",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = "", value = "perm:android-sense:enroll")
+                            @ExtensionProperty(name = AndroidSenseConstants.SCOPE, value = "perm:android-sense:enroll")
                     })
             }
     )
@@ -242,7 +258,7 @@ public interface AndroidSenseService {
             tags = "android_sense",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = "", value = "perm:android-sense:enroll")
+                            @ExtensionProperty(name = AndroidSenseConstants.SCOPE, value = "perm:android-sense:enroll")
                     })
             }
     )
@@ -307,7 +323,7 @@ public interface AndroidSenseService {
             tags = "android_sense",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = "", value = "perm:android-sense:enroll")
+                            @ExtensionProperty(name = AndroidSenseConstants.SCOPE, value = "perm:android-sense:enroll")
                     })
             }
     )

@@ -141,6 +141,10 @@
             <artifactId>org.wso2.carbon.analytics.api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -18,14 +18,12 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl;
 
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Info;
-import io.swagger.annotations.ExtensionProperty;
-import io.swagger.annotations.Extension;
-import io.swagger.annotations.Tag;
+import io.swagger.annotations.*;
 import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -50,7 +48,19 @@ import javax.ws.rs.core.Response;
                 @Tag(name = "virtual_firealarm", description = "")
         }
 )
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll device",
+                        description = "",
+                        key = "perm:firealarm:enroll",
+                        permissions = {"/device-mgt/devices/enroll/firealarm"}
+                )
+        }
+)
 public interface VirtualFireAlarmService {
+
+    String SCOPE = "scope";
 
     /**
      * This is an API called/used from within the Server(Front-End) or by a device Owner. It sends a control command to
@@ -63,7 +73,19 @@ public interface VirtualFireAlarmService {
      */
     @POST
     @Path("device/{deviceId}/buzz")
-    @Scope(key = "device:firealarm:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Switch Buzzer",
+            notes = "",
+            response = Response.class,
+            tags = "virtual_firealarm",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = SCOPE, value = "perm:firealarm:enroll")
+                    })
+            }
+    )
     Response switchBuzzer(@PathParam("deviceId") String deviceId,
                              @FormParam("state") String state);
 
@@ -72,7 +94,19 @@ public interface VirtualFireAlarmService {
      */
     @Path("device/stats/{deviceId}")
     @GET
-    @Scope(key = "device:firealarm:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "GET",
+            value = "Retrieve Sensor data for the device type",
+            notes = "",
+            response = Response.class,
+            tags = "virtual_firealarm",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = SCOPE, value = "perm:firealarm:enroll")
+                    })
+            }
+    )
     @Consumes("application/json")
     @Produces("application/json")
     Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
@@ -81,7 +115,19 @@ public interface VirtualFireAlarmService {
     @Path("device/download")
     @GET
     @Produces("application/zip")
-    @Scope(key = "device:firealarm:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "GET",
+            value = "Download agent",
+            notes = "",
+            response = Response.class,
+            tags = "virtual_firealarm",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = SCOPE, value = "perm:firealarm:enroll")
+                    })
+            }
+    )
     Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketchType") String sketchType);
 
 }
