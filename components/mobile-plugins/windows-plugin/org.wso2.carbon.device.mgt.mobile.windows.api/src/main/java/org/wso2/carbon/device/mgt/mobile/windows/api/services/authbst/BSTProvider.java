@@ -65,7 +65,7 @@ import javax.ws.rs.core.Response;
                 @Scope(
                         name = "Enroll Device",
                         description = "Register Windows device",
-                        key = "cdmf:windows:enroll",
+                        key = "perm:windows:enroll",
                         permissions = {"/device-mgt/devices/enroll/windows"}
                 )
         }
@@ -84,7 +84,7 @@ public interface BSTProvider {
             tags = "BST Provider",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:enroll")
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:enroll")
                     })
             }
     )

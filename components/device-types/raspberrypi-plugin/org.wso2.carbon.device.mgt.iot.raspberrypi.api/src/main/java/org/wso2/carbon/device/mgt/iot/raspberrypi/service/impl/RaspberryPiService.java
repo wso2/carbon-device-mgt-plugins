@@ -18,12 +18,10 @@
 
 package org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl;
 
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Info;
-import io.swagger.annotations.ExtensionProperty;
-import io.swagger.annotations.Extension;
-import io.swagger.annotations.Tag;
+import io.swagger.annotations.*;
 import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.constants.RaspberrypiConstants;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -44,11 +42,33 @@ import javax.ws.rs.core.Response;
                 @Tag(name = "raspberrypi", description = "")
         }
 )
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll device",
+                        description = "",
+                        key = "perm:raspberrypi:enroll",
+                        permissions = {"/device-mgt/devices/enroll/raspberrypi"}
+                )
+        }
+)
 public interface RaspberryPiService {
 
     @Path("device/{deviceId}/bulb")
     @POST
-    //@Scope(key = "device:raspberrypi:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Switch bulb",
+            notes = "",
+            response = Response.class,
+            tags = "raspberrypi",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = RaspberrypiConstants.SCOPE, value = "perm:raspberrypi:enroll")
+                    })
+            }
+    )
     Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
     /**
@@ -58,7 +78,19 @@ public interface RaspberryPiService {
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    //@Scope(key = "device:raspberrypi:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Retreive Sensor data for the device type",
+            notes = "",
+            response = Response.class,
+            tags = "raspberrypi",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = RaspberrypiConstants.SCOPE, value = "perm:raspberrypi:enroll")
+                    })
+            }
+    )
     Response getRaspberryPiTemperatureStats(@PathParam("deviceId") String deviceId,
                                         @QueryParam("from") long from, @QueryParam("to") long to);
 
@@ -68,7 +100,19 @@ public interface RaspberryPiService {
     @Path("device/download")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    //@Scope(key = "device:raspberrypi:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Download the agent.",
+            notes = "",
+            response = Response.class,
+            tags = "raspberrypi",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = RaspberrypiConstants.SCOPE, value = "perm:raspberrypi:enroll")
+                    })
+            }
+    )
     Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketch_type") String sketchType);
 
 }

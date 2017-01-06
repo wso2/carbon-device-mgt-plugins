@@ -67,7 +67,7 @@ import javax.ws.rs.core.Response;
                 @Scope(
                         name = "Enroll Device",
                         description = "Register an Android device",
-                        key = "cdmf:android:enroll",
+                        key = "perm:android:enroll",
                         permissions = {"/device-mgt/devices/enroll/android"}
                 )
         }
@@ -85,7 +85,7 @@ public interface EventReceiverService {
             tags = "Event Receiver",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:enroll")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
                     })
             }
     )
@@ -148,7 +148,7 @@ public interface EventReceiverService {
             tags = "Event Receiver",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:enroll")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
                     })
             }
     )

@@ -70,151 +70,151 @@ import java.util.List;
                 @Scope(
                         name = "Lock Device",
                         description = "Hard lock own device",
-                        key = "cdmf:android:lock-devices",
+                        key = "perm:android:lock-devices",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/lock"}
                 ),
                 @Scope(
                         name = "Unlock Device",
                         description = "Unlock permanently locked device",
-                        key = "cdmf:android:unlock-devices",
+                        key = "perm:android:unlock-devices",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/unlock"}
                 ),
                 @Scope(
                         name = "Get Location",
                         description = "Request device location coordinates",
-                        key = "cdmf:android:location",
+                        key = "perm:android:location",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/location"}
                 ),
                 @Scope(
                         name = "Clear Password",
                         description = "Clear the password on Android devices",
-                        key = "cdmf:android:clear-password",
+                        key = "perm:android:clear-password",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/clear-password"}
                 ),
                 @Scope(
                         name = "Control Camera",
                         description = "Enabling or Disabling the Camera on Android Devices",
-                        key = "cdmf:android:control-camera",
+                        key = "perm:android:control-camera",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/camera"}
                 ),
                 @Scope(
                         name = "Get Info",
                         description = "Requesting device information from Android Devices",
-                        key = "cdmf:android:info",
+                        key = "perm:android:info",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/info"}
                 ),
                 @Scope(
                         name = "Get Logs",
                         description = "Requesting Logcat Details from Android Devices",
-                        key = "cdmf:android:logcat",
+                        key = "perm:android:logcat",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/logcat"}
                 ),
                 @Scope(
                         name = "Enterprise Wipe",
                         description = "Enterprise Wiping Android Devices",
-                        key = "cdmf:android:enterprise-wipe",
+                        key = "perm:android:enterprise-wipe",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/enterprise-wipe"}
                 ),
                 @Scope(
                         name = "Factory Reset",
                         description = "Factory Resetting Android Devices",
-                        key = "cdmf:android:wipe",
+                        key = "perm:android:wipe",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/wipe"}
                 ),
                 @Scope(
                         name = "Get Installed Applications",
                         description = "Get list of installed applications",
-                        key = "cdmf:android:applications",
+                        key = "perm:android:applications",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/applications"}
                 ),
                 @Scope(
                         name = "Ring Device",
                         description = "Ring Android devices",
-                        key = "cdmf:android:ring",
+                        key = "perm:android:ring",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/ring"}
                 ),
                 @Scope(
                         name = "Reboot Device",
                         description = "Reboot Android devices",
-                        key = "cdmf:android:reboot",
+                        key = "perm:android:reboot",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/reboot"}
                 ),
                 @Scope(
                         name = "Mute Device",
                         description = "Mute Android devices",
-                        key = "cdmf:android:mute",
+                        key = "perm:android:mute",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/mute"}
                 ),
                 @Scope(
                         name = "Install Applications",
                         description = "Installing an Application on Android Devices",
-                        key = "cdmf:android:install-application",
+                        key = "perm:android:install-application",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/install-app"}
                 ),
                 @Scope(
                         name = "Update Applications",
                         description = "Updating an Application on Android Devices",
-                        key = "cdmf:android:update-application",
+                        key = "perm:android:update-application",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/update-app"}
                 ),
                 @Scope(
                         name = "Uninstall Applications",
                         description = "Uninstalling an Application on Android Devices",
-                        key = "cdmf:android:uninstall-application",
+                        key = "perm:android:uninstall-application",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/uninstall-app"}
                 ),
                 @Scope(
                         name = "Blacklist Applications",
                         description = "Blacklisting applications on Android Devices",
-                        key = "cdmf:android:blacklist-applications",
+                        key = "perm:android:blacklist-applications",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/blacklist-app"}
                 ),
                 @Scope(
                         name = "Upgrade Firmware",
                         description = "Upgrading Firmware of Android Devices",
-                        key = "cdmf:android:upgrade-firmware",
+                        key = "perm:android:upgrade-firmware",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/upgrade"}
                 ),
                 @Scope(
                         name = "Configure VPN",
                         description = "Configure VPN on Android Device",
-                        key = "cdmf:android:configure-vpn",
+                        key = "perm:android:configure-vpn",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/vpn"}
                 ),
                 @Scope(
                         name = "Send Notification",
                         description = "Sending a notification to Android Device",
-                        key = "cdmf:android:send-notification",
+                        key = "perm:android:send-notification",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/send-notification"}
                 ),
                 @Scope(
                         name = "Configure Wi-Fi",
                         description = "Configure Wi-Fi on Android Device",
-                        key = "cdmf:android:configure-wifi",
+                        key = "perm:android:configure-wifi",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/wifi"}
                 ),
                 @Scope(
                         name = "Encrypt Storage",
                         description = "Encrypting storage on Android Device",
-                        key = "cdmf:android:encrypt-storage",
+                        key = "perm:android:encrypt-storage",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/encrypt"}
                 ),
                 @Scope(
                         name = "Change Password",
                         description = "Changing the lock code of an Android Device",
-                        key = "cdmf:android:change-lock-code",
+                        key = "perm:android:change-lock-code",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/change-lock-code"}
                 ),
                 @Scope(
                         name = "Password Policy",
                         description = "Set password policy of an Android Device",
-                        key = "cdmf:android:set-password-policy",
+                        key = "perm:android:set-password-policy",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/password-policy"}
                 ),
                 @Scope(
                         name = "Add Web clip",
                         description = "Setting a Web Clip on Android Devices",
-                        key = "cdmf:android:set-webclip",
+                        key = "perm:android:set-webclip",
                         permissions = {"/device-mgt/devices/owning-device/operations/android/webclip"}
                 )
         }
@@ -233,7 +233,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:lock-devices")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:lock-devices")
                     })
             }
     )
@@ -296,7 +296,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:unlock-devices")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:unlock-devices")
                     })
             }
     )
@@ -359,7 +359,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:location")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:location")
                     })
             }
     )
@@ -418,7 +418,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service.",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:clear-password")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:clear-password")
                     })
             }
     )
@@ -476,7 +476,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:control-camera")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:control-camera")
                     })
             }    )
     @ApiResponses(value = {
@@ -541,7 +541,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:info")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:info")
                     })
             }
     )
@@ -604,7 +604,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:logcat")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:logcat")
                     })
             }
     )
@@ -666,7 +666,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:enterprise-wipe")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enterprise-wipe")
                     })
             }
     )
@@ -726,7 +726,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:wipe")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:wipe")
                     })
             }
     )
@@ -790,7 +790,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:applications")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:applications")
                     })
             }
     )
@@ -850,7 +850,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:ring")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:ring")
                     })
             }
     )
@@ -910,7 +910,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:reboot")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:reboot")
                     })
             }
     )
@@ -970,7 +970,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:mute")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:mute")
                     })
             }
     )
@@ -1032,7 +1032,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:install-application")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:install-application")
                     })
             }
     )
@@ -1097,7 +1097,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:update-application")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:update-application")
                     })
             }
     )
@@ -1159,7 +1159,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:uninstall-application")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:uninstall-application")
                     })
             }
     )
@@ -1225,7 +1225,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:blacklist-applications")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:blacklist-applications")
                     })
             }
     )
@@ -1287,7 +1287,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:upgrade-firmware")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:upgrade-firmware")
                     })
             }
     )
@@ -1351,7 +1351,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:configure-vpn")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:configure-vpn")
                     })
             }
     )
@@ -1411,7 +1411,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:send-notification")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:send-notification")
                     })
             }
     )
@@ -1472,7 +1472,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:configure-wifi")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:configure-wifi")
                     })
             }
     )
@@ -1534,7 +1534,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:encrypt-storage")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:encrypt-storage")
                     })
             }
     )
@@ -1596,7 +1596,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:change-lock-code")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:change-lock-code")
                     })
             }
     )
@@ -1658,7 +1658,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:set-password-policy")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:set-password-policy")
                     })
             }
     )
@@ -1718,7 +1718,7 @@ public interface DeviceManagementAdminService {
             tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:set-webclip")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:set-webclip")
                     })
             }
     )

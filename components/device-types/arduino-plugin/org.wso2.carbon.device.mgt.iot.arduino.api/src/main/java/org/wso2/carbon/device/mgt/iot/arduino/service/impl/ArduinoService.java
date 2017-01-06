@@ -18,15 +18,14 @@
 
 package org.wso2.carbon.device.mgt.iot.arduino.service.impl;
 
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Info;
-import io.swagger.annotations.ExtensionProperty;
-import io.swagger.annotations.Extension;
-import io.swagger.annotations.Tag;
+import io.swagger.annotations.*;
 
 import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
+import org.wso2.carbon.device.mgt.iot.arduino.service.impl.constants.ArduinoConstants;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @SwaggerDefinition(
@@ -44,26 +43,72 @@ import javax.ws.rs.core.Response;
                 @Tag(name = "arduino", description = "")
         }
 )
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll device",
+                        description = "",
+                        key = "perm:arduino:enroll",
+                        permissions = {"/device-mgt/devices/enroll/arduino"}
+                )
+        }
+)
 public interface ArduinoService {
 
     @Path("device/{deviceId}/bulb")
     @POST
-    //@Scope(key = "device:arduino:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Switch bulb",
+            notes = "",
+            response = Response.class,
+            tags = "arduino",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = ArduinoConstants.SCOPE, value = "perm:arduino:enroll")
+                    })
+            }
+    )
     Response switchBulb(@PathParam("deviceId") String deviceId, @QueryParam("state") String state);
 
     @Path("device/{deviceId}/controls")
     @GET
-    //@Scope(key = "device:arduino:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Read controls",
+            notes = "",
+            response = Response.class,
+            tags = "arduino",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = ArduinoConstants.SCOPE, value = "perm:arduino:enroll")
+                    })
+            }
+    )
     Response readControls(@PathParam("deviceId") String deviceId);
 
     /**
-     * Retreive Sensor data for the device type
+     * Retrieve Sensor data for the device type
      */
     @Path("device/stats/{deviceId}")
     @GET
     @Consumes("application/json")
     @Produces("application/json")
-    //@Scope(key = "device:arduino:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Retrieve Sensor data for the device type",
+            notes = "",
+            response = Response.class,
+            tags = "arduino",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = ArduinoConstants.SCOPE, value = "perm:arduino:enroll")
+                    })
+            }
+    )
     Response getArduinoTemperatureStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
                                                @QueryParam("to") long to);
 
@@ -73,7 +118,19 @@ public interface ArduinoService {
     @Path("device/download")
     @GET
     @Produces("application/octet-stream")
-    //@Scope(key = "device:arduino:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Download device agent",
+            notes = "",
+            response = Response.class,
+            tags = "arduino",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = ArduinoConstants.SCOPE, value = "perm:arduino:enroll")
+                    })
+            }
+    )
     Response downloadSketch(@QueryParam("deviceName") String customDeviceName);
 
 }

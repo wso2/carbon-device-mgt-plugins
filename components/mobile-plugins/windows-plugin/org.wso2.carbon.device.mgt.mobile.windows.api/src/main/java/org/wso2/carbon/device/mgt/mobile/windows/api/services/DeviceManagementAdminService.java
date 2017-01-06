@@ -69,31 +69,31 @@ import java.util.List;
                 @Scope(
                         name = "Lock Device",
                         description = "Adding a Device Lock on Windows devices.",
-                        key = "cdmf:windows:lock-devices",
+                        key = "perm:windows:lock-devices",
                         permissions = {"/device-mgt/devices/owning-device/operations/windows/lock"}
                 ),
                 @Scope(
                         name = "Un-enroll Device",
                         description = "Unregister an Windows device",
-                        key = "cdmf:windows:disenroll",
+                        key = "perm:windows:disenroll",
                         permissions = {"/device-mgt/devices/disenroll/windows"}
                 ),
                 @Scope(
                         name = "Factory Reset",
                         description = "Factory Resetting Windows Devices",
-                        key = "cdmf:windows:wipe",
+                        key = "perm:windows:wipe",
                         permissions = {"/device-mgt/devices/owning-device/operations/windows/wipe"}
                 ),
                 @Scope(
                         name = "Ring Device",
                         description = "Ring Windows devices",
-                        key = "cdmf:windows:ring",
+                        key = "perm:windows:ring",
                         permissions = {"/device-mgt/devices/owning-device/operations/windows/ring"}
                 ),
                 @Scope(
                         name = "Lock Reset",
                         description = "Lock reset on Windows devices",
-                        key = "cdmf:windows:lock-reset",
+                        key = "perm:windows:lock-reset",
                         permissions = {"/device-mgt/devices/owning-device/operations/windows/lock-reset"}
                 )
         }
@@ -111,7 +111,7 @@ public interface DeviceManagementAdminService {
             tags = "Windows Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:lock-devices")
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:lock-devices")
                     })
             }
     )
@@ -170,7 +170,7 @@ public interface DeviceManagementAdminService {
             tags = "Windows Device Management Administrative Service.",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:disenroll")
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:disenroll")
                     })
             }
     )
@@ -231,7 +231,7 @@ public interface DeviceManagementAdminService {
             tags = "Windows Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:wipe")
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:wipe")
                     })
             }
     )
@@ -289,7 +289,7 @@ public interface DeviceManagementAdminService {
             tags = "Windows Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:ring")
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:ring")
                     })
             }
     )
@@ -348,7 +348,7 @@ public interface DeviceManagementAdminService {
             tags = "Windows Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:lock-reset")
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:lock-reset")
                     })
             }
     )

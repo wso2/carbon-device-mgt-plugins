@@ -76,19 +76,19 @@ import javax.ws.rs.core.Response;
                 @Scope(
                         name = "Enroll Device",
                         description = "Register an Windows device",
-                        key = "cdmf:windows:enroll",
+                        key = "perm:windows:enroll",
                         permissions = {"/device-mgt/devices/enroll/windows"}
                 ),
                 @Scope(
                         name = "View Configurations",
                         description = "Getting Windows Platform Configurations",
-                        key = "cdmf:windows:view-configuration",
+                        key = "perm:windows:view-configuration",
                         permissions = {"/device-mgt/platform-configurations/view"}
                 ),
                 @Scope(
                         name = "Manage Configurations",
                         description = "Updating Windows Platform Configurations",
-                        key = "cdmf:windows:manage-configuration",
+                        key = "perm:windows:manage-configuration",
                         permissions = {"/device-mgt/platform-configurations/manage"}
                 )
         }
@@ -105,7 +105,7 @@ public interface ConfigurationMgtService {
             tags = "Windows Configuration Management",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:view-configuration")
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:view-configuration")
                     })
             }
     )
@@ -164,7 +164,7 @@ public interface ConfigurationMgtService {
             tags = "Windows Configuration Management",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:manage-configuration")
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:manage-configuration")
                     })
             }
     )
@@ -220,7 +220,7 @@ public interface ConfigurationMgtService {
             tags = "Windows Configuration Management",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = Constants.SCOPE, value = "cdmf:windows:enroll")
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:enroll")
                     })
             }
     )

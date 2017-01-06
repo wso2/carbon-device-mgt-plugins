@@ -67,19 +67,19 @@ import javax.ws.rs.core.Response;
                 @Scope(
                         name = "Enroll Device",
                         description = "Register an Android device",
-                        key = "cdmf:android:enroll",
+                        key = "perm:android:enroll",
                         permissions = {"/device-mgt/devices/enroll/android"}
                 ),
                 @Scope(
                         name = "View Configurations",
                         description = "Getting Android Platform Configurations",
-                        key = "cdmf:android:view-configuration",
+                        key = "perm:android:view-configuration",
                         permissions = {"/device-mgt/platform-configurations/view"}
                 ),
                 @Scope(
                         name = "Manage Configurations",
                         description = "Updating Android Platform Configurations",
-                        key = "cdmf:android:manage-configuration",
+                        key = "perm:android:manage-configuration",
                         permissions = {"/device-mgt/platform-configurations/manage"}
                 )
         }
@@ -96,7 +96,7 @@ public interface DeviceTypeConfigurationService {
             tags = "Android Configuration Management",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:view-configuration")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:view-configuration")
                     })
             }
     )
@@ -150,7 +150,7 @@ public interface DeviceTypeConfigurationService {
             tags = "Android Configuration Management",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:manage-configuration")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:manage-configuration")
                     })
             }
     )
@@ -205,7 +205,7 @@ public interface DeviceTypeConfigurationService {
             tags = "Android Configuration Management",
             extensions = {
                     @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "cdmf:android:enroll")
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
                     })
             }
     )
