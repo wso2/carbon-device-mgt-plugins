@@ -218,6 +218,8 @@ public final class PluginConstants {
         public static final String BATTERY_CHARGE_REMAINING = "BATTERY_CHARGE_REMAINING";
         public static final String BATTERY_ESTIMATED_RUNTIME = "BATTERY_ESTIMATED_RUNTIME";
         public static final String MOBILE_ID = "MOBILE_ID";
+        public static final String LONGITUDE = "LONGITUDE";
+        public static final String LATITUDE = "LATITUDE";
 
     }
 
@@ -267,6 +269,11 @@ public final class PluginConstants {
         public static final String DEVICE_PASSWORD_STATUS = "DEVICE_PASSWORD_STATUS";
         public static final String DEVICE_PASSCODE_DELETE = "DEVICE_PASSCODE_DELETE";
         public static final String DEVICE_INFO = "DEVICE_INFO";
+        public static final String POLICY_REVOKE = "POLICY_REVOKE";
+        public static final String DEVICE_LOCATION = "DEVICE_LOCATION";
+        public static final String LONGITUDE = "LONGITUDE";
+        public static final String LATITUDE = "LATITUDE";
+        public static final String DEVICE_REBOOT = "DEVICE_REBOOT";
     }
 
     /**

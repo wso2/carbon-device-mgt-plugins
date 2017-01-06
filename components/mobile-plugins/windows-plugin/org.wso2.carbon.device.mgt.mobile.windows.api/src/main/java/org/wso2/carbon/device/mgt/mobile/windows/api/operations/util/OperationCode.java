@@ -43,8 +43,6 @@ public class OperationCode {
         ENCRYPT_STORAGE_STATUS("./Vendor/MSFT/PolicyManager/Device/Security/RequireDeviceEncryption"),
         DEVICE_PASSWORD_STATUS("./Vendor/MSFT/PolicyManager/Device/DeviceLock/DevicePasswordEnabled"),
         DEVICE_PASSCODE_DELETE("./Vendor/MSFT/PolicyManager/My/DeviceLock"),
-        LONGITUDE("./Vendor/MSFT/RemoteFind/Location/Longitude"),
-        LATITUDE("./Vendor/MSFT/RemoteFind/Location/Latitude"),
 
         // Windows10 operation codes
         TOTAL_RAM("./DevDetail/Ext/Microsoft/TotalRAM"),
@@ -56,6 +54,8 @@ public class OperationCode {
         BATTERY_STATUS("./Vendor/MSFT/DeviceStatus/Battery/Status"),
         BATTERY_CHARGE_REMAINING("./Vendor/MSFT/DeviceStatus/Battery/EstimatedChargeRemaining"),
         BATTERY_ESTIMATED_RUNTIME("./Vendor/MSFT/DeviceStatus/Battery/EstimatedRuntime"),
+        LONGITUDE("./Vendor/MSFT/RemoteFind/Location/Longitude"),
+        LATITUDE("./Vendor/MSFT/RemoteFind/Location/Latitude"),
         TEST("./Vendor/MSFT/DiagnosticLog/EtwLog/Collectors");
         private final String code;
 
@@ -91,7 +91,10 @@ public class OperationCode {
         BATTERY_STATUS("./Vendor/MSFT/DeviceStatus/Battery/Status"),
         BATTERY_CHARGE_REMAINING("./Vendor/MSFT/DeviceStatus/Battery/EstimatedChargeRemaining"),
         BATTERY_ESTIMATED_RUNTIME("./Vendor/MSFT/DeviceStatus/Battery/EstimatedRuntime"),
-        TEST("./Vendor/MSFT/DiagnosticLog/EtwLog/Collectors");
+        LONGITUDE("./Vendor/MSFT/RemoteFind/Location/Longitude"),
+        LATITUDE("./Vendor/MSFT/RemoteFind/Location/Latitude"),
+        TEST("./Vendor/MSFT/DiagnosticLog/EtwLog/Collectors"),
+        DEVICE_REBOOT("./Vendor/MSFT/Reboot/RebootNow");
 
         private final String code;
 
