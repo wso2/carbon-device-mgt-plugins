@@ -29,6 +29,7 @@ import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.device.details.DeviceInfo;
+import org.wso2.carbon.device.mgt.common.device.details.DeviceLocation;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementService;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
@@ -238,5 +239,17 @@ public class WindowsAPIUtils {
         DeviceInformationManager informationManager =
                 (DeviceInformationManager) ctx.getOSGiService(DeviceInformationManager.class, null);
         informationManager.addDeviceInfo(deviceId, deviceInfo);
+    }
+
+    /**
+     * This method is used to update device location.
+     * @param deviceLocation Device coordination related information.
+     * @throws DeviceDetailsMgtException Error occurs while updating Device location.
+     */
+    public static void updateDeviceLocation(DeviceLocation deviceLocation) throws DeviceDetailsMgtException {
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        DeviceInformationManager informationManager =
+                (DeviceInformationManager) ctx.getOSGiService(DeviceInformationManager.class, null);
+        informationManager.addDeviceLocation(deviceLocation);
     }
 }

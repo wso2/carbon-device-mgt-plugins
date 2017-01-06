@@ -32,7 +32,7 @@ parser.getResult();
 var os = parser.getOS();
 var platform = os.name;
 
-if (platform != "Windows Phone") {
+if (platform != "Windows Phone" && platform != "Windows") {
     response.sendRedirect(mdmProps["appContext"] + "enrollments/error/unintentional-request");
 } else if (session.get("lastAccessedPage") != "login-agent") {
     response.sendRedirect(mdmProps["appContext"] + "enrollments/error/unintentional-request");

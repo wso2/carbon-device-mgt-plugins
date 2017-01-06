@@ -235,7 +235,6 @@ public class SyncmlServiceImpl implements SyncmlService {
         String devLang;
         String vendor;
         String macAddress;
-        String resolution;
         String modVersion;
         boolean status = false;
         String user;

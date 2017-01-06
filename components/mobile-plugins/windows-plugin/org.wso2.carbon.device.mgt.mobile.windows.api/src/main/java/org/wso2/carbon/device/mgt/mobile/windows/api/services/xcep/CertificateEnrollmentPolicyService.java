@@ -47,17 +47,17 @@ import javax.xml.ws.soap.SOAPBinding;
                 title = "",
                 extensions = {
                         @io.swagger.annotations.Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Windows Enrollment policy service"),
+                                @ExtensionProperty(name = "name", value = "Windows Enrollment policy Service"),
                                 @ExtensionProperty(name = "context",
                                         value = "/api/device-mgt/windows/v1.0/certificatepolicy/xcep"),
                         })
                 }
         ),
         tags = {
-                @Tag(name = "devicemgt_windows", description = "")
+                @Tag(name = "windows", description = "")
         }
 )
-@Api(value = "Windows enrollment policy Management",
+@Api(value = "Windows Enrollment policy Service",
         description = "This carries all the resources related to Windows enrollment policy.")
 @WebService(targetNamespace = PluginConstants.CERTIFICATE_ENROLLMENT_POLICY_SERVICE_TARGET_NAMESPACE,
 		name = "IPolicy")

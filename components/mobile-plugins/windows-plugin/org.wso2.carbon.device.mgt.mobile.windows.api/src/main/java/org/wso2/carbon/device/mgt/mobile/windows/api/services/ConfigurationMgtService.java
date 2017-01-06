@@ -62,11 +62,11 @@ import javax.ws.rs.core.Response;
                 }
         ),
         tags = {
-                @Tag(name = "devicemgt_windows", description = "")
+                @Tag(name = "windows", description = "")
         }
 )
 @Api(value = "Windows Configuration Management",
-        description = "This carries all the resources related to Windows configurations management functionalities")
+        description = "This carries all the resources related to Windows configurations management functionality")
 @WebService
 @Path("/configuration")
 @Produces({"application/json", "application/xml"})

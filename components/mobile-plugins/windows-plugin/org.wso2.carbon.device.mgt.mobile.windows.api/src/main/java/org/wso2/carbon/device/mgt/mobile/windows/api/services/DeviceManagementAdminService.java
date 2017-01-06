@@ -95,6 +95,18 @@ import java.util.List;
                         description = "Lock reset on Windows devices",
                         key = "perm:windows:lock-reset",
                         permissions = {"/device-mgt/devices/owning-device/operations/windows/lock-reset"}
+                ),
+                @Scope(
+                        name = "Reboot",
+                        description = "Lock reset on Windows devices",
+                        key = "perm:windows:reboot",
+                        permissions = {"/device-mgt/devices/owning-device/operations/windows/reboot"}
+                ),
+                @Scope(
+                        name = "Device Location",
+                        description = "Lock reset on Windows devices",
+                        key = "perm:windows:location",
+                        permissions = {"/device-mgt/devices/owning-device/operations/windows/location"}
                 )
         }
 )
@@ -395,4 +407,134 @@ public interface DeviceManagementAdminService {
             value = "Provide the ID of the A Windows device. Multiple device IDs can be added by " +
                     "using comma separated values. ",
             required = true)  List<String> deviceIds) throws WindowsDeviceEnrolmentException;
+
+        @POST
+        @Path("/location")
+        @ApiOperation(
+                consumes = MediaType.APPLICATION_JSON,
+                httpMethod = "POST",
+                value = "Requesting Location Coordinates",
+                responseContainer = "List",
+                notes = "Request location coordinates of Windows devices. \n" +
+                        "Example: In situations where you have lost your device and need to find out where it is, " +
+                        "you can use this REST API to get the location of the device.",
+                response = Activity.class,
+                tags = "Windows Device Management Administrative Service",
+                extensions = {
+                        @Extension(properties = {
+                                @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:location")
+                        })
+
+                }
+        )
+        @ApiResponses(value = {
+                @ApiResponse(
+                        code = 201,
+                        message = "Created. \n Get-location operation has successfully been scheduled",
+                        response = Activity.class,
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "URL of the activity instance that refers to the " +
+                                                "scheduled operation."),
+                                @ResponseHeader(
+                                        name = "Content-Type",
+                                        description = "Content type of the body"),
+                                @ResponseHeader(
+                                        name = "ETag",
+                                        description = "Entity Tag of the response resource.\n" +
+                                                "Used by caches, or in conditional requests."),
+                                @ResponseHeader(
+                                        name = "Last-Modified",
+                                        description = "Date and time the resource was last modified.\n" +
+                                                "Used by caches, or in conditional requests.")}),
+                @ApiResponse(
+                        code = 303,
+                        message = "See Other. \n The source can be retrieved from the URL specified in the" +
+                                " location header.",
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "The Source URL of the document.")}),
+                @ApiResponse(
+                        code = 400,
+                        message = "Bad Request. \n Invalid request or validation error."),
+                @ApiResponse(
+                        code = 415,
+                        message = "Unsupported media type. \n The format of the requested entity was not supported."),
+                @ApiResponse(
+                        code = 500,
+                        message = "Internal Server Error. \n " +
+                                "Server error occurred while adding a new get-location operation.")})
+        Response getDeviceLocation(
+                @ApiParam(
+                        name = "deviceIDs",
+                        value = "Provide the ID of the Windows device. Multiple device IDs can be added by " +
+                                "using comma separated values. ",
+                        required = true)
+                List<String> deviceIDs);
+
+        @POST
+        @Path("/reboot")
+        @ApiOperation(
+                consumes = MediaType.APPLICATION_JSON,
+                httpMethod = "POST",
+                value = "Rebooting Windows Devices",
+                notes = "Reboot or restart your Windows devices.",
+                response = Activity.class,
+                tags = "Windows Device Management Administrative Service",
+
+                extensions = {
+                @Extension(properties = {
+                        @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:reboot")
+                })
+
+                }
+        )
+        @ApiResponses(value = {
+                @ApiResponse(
+                        code = 201,
+                        message = "Created. \n Successfully scheduled the device reboot operation.",
+                        response = Activity.class,
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "URL of the activity instance that refers to the scheduled operation."),
+                                @ResponseHeader(
+                                        name = "Content-Type",
+                                        description = "Content type of the body"),
+                                @ResponseHeader(
+                                        name = "ETag",
+                                        description = "Entity Tag of the response resource.\n" +
+                                                "Used by caches, or in conditional requests."),
+                                @ResponseHeader(
+                                        name = "Last-Modified",
+                                        description = "Date and time the resource was last modified.\n" +
+                                                "Used by caches, or in conditional requests.")}),
+                @ApiResponse(
+                        code = 303,
+                        message = "See Other. \n The source can be retrieved from the URL specified in the location header.\n",
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "The Source URL of the document.")}),
+                @ApiResponse(
+                        code = 400,
+                        message = "Bad Request. \n Invalid request or validation error."),
+                @ApiResponse(
+                        code = 415,
+                        message = "Unsupported media type. \n The format of the requested entity was not supported.\n"),
+                @ApiResponse(
+                        code = 500,
+                        message = "Internal Server Error. \n " +
+                                "Server error occurred while adding the new device reboot operation.")
+        })
+        Response rebootDevice(
+                @ApiParam(
+                        name = "deviceIDs",
+                        value = "Provide the ID of the Android device. Multiple device IDs can be added using comma separated values. ",
+                        required = true)
+                List<String> deviceIDs);
+
 }
+
