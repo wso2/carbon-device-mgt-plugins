@@ -41,17 +41,17 @@ import javax.ws.rs.core.Response;
                 title = "",
                 extensions = {
                         @Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Windows Binary security token provider"),
+                                @ExtensionProperty(name = "name", value = "Windows Binary Security Token Service"),
                                 @ExtensionProperty(name = "context",
                                         value = "/api/device-mgt/windows/v1.0/federated"),
                         })
                 }
         ),
         tags = {
-                @Tag(name = "devicemgt_windows", description = "")
+                @Tag(name = "windows", description = "")
         }
 )
-@Api(value = "Windows BST Management",
+@Api(value = "Windows Binary Security Token Service",
         description = "This carries all the resources related to Windows Binary security token management.")
 @WebService
 @Path("/bst")

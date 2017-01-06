@@ -52,7 +52,7 @@ import java.util.List;
                 }
         ),
         tags = {
-                @Tag(name = "devicemgt_windows", description = "")
+                @Tag(name = "windows", description = "")
         }
 )
 @Api(value = "Windows Device Management Administrative Service",
@@ -63,215 +63,407 @@ import java.util.List;
 @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 public interface DeviceManagementAdminService {
 
-    @POST
-    @Path("/lock-devices")
-    @ApiOperation(
-            consumes = MediaType.APPLICATION_JSON,
-            httpMethod = "POST",
-            value = "Adding a Device Lock on Windows devices.",
-            notes = "Using this API you have the option of Device Windows device.",
-            response = Activity.class,
-            tags = "Windows Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/windows/lock",
-                                    description = "Lock Device")}
-                    )
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    code = 201,
-                    message = "Created. \n Successfully scheduled the device lock operation.",
-                    response = Activity.class,
-                    responseHeaders = {
-                            @ResponseHeader(
-                                    name = "Content-Location",
-                                    description = "URL of the activity instance that refers to the scheduled operation."),
-                            @ResponseHeader(
-                                    name = "Content-Type",
-                                    description = "Content type of the body"),
-                            @ResponseHeader(
-                                    name = "ETag",
-                                    description = "Entity Tag of the response resource.\n" +
-                                            "Used by caches, or in conditional requests."),
-                            @ResponseHeader(
-                                    name = "Last-Modified",
-                                    description = "Date and time the resource was last modified. \n" +
-                                            "Used by caches, or in conditional requests.")}),
-            @ApiResponse(
-                    code = 303,
-                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.",
-                    responseHeaders = {
-                            @ResponseHeader(
-                                    name = "Content-Location",
-                                    description = "The Source URL of the document.")}),
-            @ApiResponse(
-                    code = 400,
-                    message = "Bad Request. \n Invalid request or validation error."),
-            @ApiResponse(
-                    code = 415,
-                    message = "Unsupported media type. \n The format of the requested entity was not supported.\n"),
-            @ApiResponse(
-                    code = 500,
-                    message = "Internal Server Error. \n " +
-                            "Server error occurred while locking the device.")
-    })
-    Response lock(@HeaderParam("Accept") String headerParam, @ApiParam(
-            name = "deviceIDs",
-            value = "Provide the ID of the AWindows device. Multiple device IDs can be added by " +
-                    "using comma separated values. ",
-            required = true) List<String> deviceIds) throws WindowsDeviceEnrolmentException;
+        @POST
+        @Path("/lock-devices")
+        @ApiOperation(
+                consumes = MediaType.APPLICATION_JSON,
+                httpMethod = "POST",
+                value = "Adding a Device Lock on Windows devices.",
+                notes = "Using this API you have the option of Device Windows device.",
+                response = Activity.class,
+                tags = "Windows Device Management Administrative Service",
+                authorizations = {
+                        @Authorization(
+                                value = "permission",
+                                scopes = {@AuthorizationScope(
+                                        scope = "/device-mgt/devices/owning-device/operations/windows/lock",
+                                        description = "Lock Device")}
+                        )
+                }
+        )
+        @ApiResponses(value = {
+                @ApiResponse(
+                        code = 201,
+                        message = "Created. \n Successfully scheduled the device lock operation.",
+                        response = Activity.class,
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "URL of the activity instance that refers to the scheduled operation."),
+                                @ResponseHeader(
+                                        name = "Content-Type",
+                                        description = "Content type of the body"),
+                                @ResponseHeader(
+                                        name = "ETag",
+                                        description = "Entity Tag of the response resource.\n" +
+                                                "Used by caches, or in conditional requests."),
+                                @ResponseHeader(
+                                        name = "Last-Modified",
+                                        description = "Date and time the resource was last modified. \n" +
+                                                "Used by caches, or in conditional requests.")}),
+                @ApiResponse(
+                        code = 303,
+                        message = "See Other. \n The source can be retrieved from the URL specified in the location header.",
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "The Source URL of the document.")}),
+                @ApiResponse(
+                        code = 400,
+                        message = "Bad Request. \n Invalid request or validation error."),
+                @ApiResponse(
+                        code = 415,
+                        message = "Unsupported media type. \n The format of the requested entity was not supported.\n"),
+                @ApiResponse(
+                        code = 500,
+                        message = "Internal Server Error. \n " +
+                                "Server error occurred while locking the device.")
+        })
+        Response lock(@HeaderParam("Accept") String headerParam, @ApiParam(
+                name = "deviceIDs",
+                value = "Provide the ID of the AWindows device. Multiple device IDs can be added by " +
+                        "using comma separated values. ",
+                required = true) List<String> deviceIds) throws WindowsDeviceEnrolmentException;
+
+        @POST
+        @Path("/disenroll-devices")
+        @ApiOperation(
+                consumes = MediaType.APPLICATION_JSON,
+                httpMethod = "POST",
+                value = "Dis-enrol the windows Devices",
+                notes = "Dis-enroll on Android devices",
+                response = Activity.class,
+                tags = "Windows Device Management Administrative Service.",
+                authorizations = {
+                        @Authorization(
+                                value = "permission",
+                                scopes = {@AuthorizationScope(
+                                        scope = "/device-mgt/devices/disenroll/windows",
+                                        description = "Dis-enroll the windows devices ")}
+                        )
+                }
+        )
+        @ApiResponses(value = {
+                @ApiResponse(
+                        code = 201,
+                        message = "Created. \n Successfully scheduled the Dis-enroll operation.",
+                        response = Activity.class,
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "URL of the activity instance that refers to the scheduled operation."),
+                                @ResponseHeader(
+                                        name = "Content-Type",
+                                        description = "Content type of the body"),
+                                @ResponseHeader(
+                                        name = "ETag",
+                                        description = "Entity Tag of the response resource.\n" +
+                                                "Used by caches, or in conditional requests."),
+                                @ResponseHeader(
+                                        name = "Last-Modified",
+                                        description = "Date and time the resource was last modified the last time.\n" +
+                                                "Used by caches, or in conditional requests.")}),
+                @ApiResponse(
+                        code = 303,
+                        message = "See Other. \n The source can be retrieved from the URL specified in the location header.\n",
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "The Source URL of the document.")}),
+                @ApiResponse(
+                        code = 400,
+                        message = "Bad Request. \n Invalid request or validation error."),
+                @ApiResponse(
+                        code = 415,
+                        message = "Unsupported media type. \n The format of the requested entity was not supported."),
+                @ApiResponse(
+                        code = 500,
+                        message = "Internal Server Error. \n " +
+                                "Server error occurred while adding a Dis-enroll operation.")
+        })
+        Response disenroll(@HeaderParam("Accept") String headerParam, @ApiParam(
+                name = "deviceIDs",
+                value = "Provide the ID of the A Windows device. Multiple device IDs can be added by " +
+                        "using comma separated values. ",
+                required = true) List<String> deviceIds) throws WindowsDeviceEnrolmentException;
+
+        @POST
+        @Path("/wipe-devices")
+        @ApiOperation(
+                consumes = MediaType.APPLICATION_JSON,
+                produces = MediaType.APPLICATION_JSON,
+                httpMethod = "POST",
+                value = "Factory Resetting an Windows Device",
+                notes = "Factory rest or erase all the data stored on the Windows devices" +
+                        "to restore them back to the original system.",
+                response = Activity.class,
+                tags = "Windows Device Management Administrative Service",
+                authorizations = {
+                        @Authorization(
+                                value = "permission",
+                                scopes = {@AuthorizationScope(
+                                        scope = "/device-mgt/devices/owning-device/operations/windows/wipe",
+                                        description = "DeviceWipe")}
+                        )
+                }
+        )
+        @ApiResponses(value = {
+                @ApiResponse(
+                        code = 201,
+                        message = "Created. \n Successfully scheduled the Data wipe operation.",
+                        response = Activity.class,
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "URL of the activity instance that refers to the scheduled operation."),
+                                @ResponseHeader(
+                                        name = "Content-Type",
+                                        description = "Content type of the body"),
+                                @ResponseHeader(
+                                        name = "ETag",
+                                        description = "Entity Tag of the response resource.\n" +
+                                                "Used by caches, or in conditional requests."),
+                                @ResponseHeader(
+                                        name = "Last-Modified",
+                                        description = "Date and time the resource was last modified." +
+                                                "Used by caches, or in conditional requests.")}),
+                @ApiResponse(
+                        code = 303,
+                        message = "See Other. \n The source can be retrieved from the URL specified in the location header.\n",
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "The Source URL of the document.")}),
+                @ApiResponse(
+                        code = 400,
+                        message = "Bad Request. \n Invalid request or validation error."),
+                @ApiResponse(
+                        code = 415,
+                        message = "Unsupported media type. \n The format of the requested entity was not supported."),
+                @ApiResponse(
+                        code = 500,
+                        message = "Internal Server Error. \n " +
+                                "Server error occurred while adding the Data wipe operation.")})
+        Response wipe(@HeaderParam("Accept") String headerParam, @ApiParam(
+                name = "deviceIDs",
+                value = "Provide the ID of the A Windows device. Multiple device IDs can be added by " +
+                        "using comma separated values. ",
+                required = true) List<String> deviceIds) throws WindowsDeviceEnrolmentException;
+
+        @POST
+        @Path("/ring-devices")
+        @ApiOperation(
+                consumes = MediaType.APPLICATION_JSON,
+                httpMethod = "POST",
+                value = "Ringing Windows Devices",
+                notes = "Ring Windows devices.",
+                response = Activity.class,
+                tags = "Windows Device Management Administrative Service",
+                authorizations = {
+                        @Authorization(
+                                value = "permission",
+                                scopes = {@AuthorizationScope(
+                                        scope = "/device-mgt/devices/owning-device/operations/windows/ring",
+                                        description = "Ring Device")}
+                        )
+                }
+        )
+        @ApiResponses(value = {
+                @ApiResponse(
+                        code = 201,
+                        message = "Created. \n Successfully scheduled the device ring operation.",
+                        response = Activity.class,
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "URL of the activity instance that refers to the scheduled operation."),
+                                @ResponseHeader(
+                                        name = "Content-Type",
+                                        description = "Content type of the body"),
+                                @ResponseHeader(
+                                        name = "ETag",
+                                        description = "Entity Tag of the response resource.\n" +
+                                                "Used by caches, or in conditional requests."),
+                                @ResponseHeader(
+                                        name = "Last-Modified",
+                                        description = "Date and time the resource was last modified.\n" +
+                                                "Used by caches, or in conditional requests.")}),
+                @ApiResponse(
+                        code = 303,
+                        message = "See Other. \n The source can be retrieved from the URL specified in the location header.",
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "The Source URL of the document.")}),
+                @ApiResponse(
+                        code = 400,
+                        message = "Bad Request. \n Invalid request or validation error."),
+                @ApiResponse(
+                        code = 415,
+                        message = "Unsupported media type. \n The format of the requested entity was not supported.\n"),
+                @ApiResponse(
+                        code = 500,
+                        message = "Internal Server Error. \n " +
+                                "Server error occurred while adding a new device ring operation.")
+        })
+        Response ring(@HeaderParam("Accept") String headerParam, @ApiParam(
+                name = "deviceIDs",
+                value = "Provide the ID of the A Windows device. Multiple device IDs can be added by " +
+                        "using comma separated values. ",
+                required = true) List<String> deviceIds) throws WindowsDeviceEnrolmentException;
+
+        @POST
+        @Path("/lock-reset-devices")
+        @ApiOperation(
+                consumes = MediaType.APPLICATION_JSON,
+                httpMethod = "POST",
+                value = "Lock reset on Windows devices",
+                notes = "Lock reset on Windows devices.Its use to reset the device pass code",
+                response = Activity.class,
+                tags = "Windows Device Management Administrative Service",
+                authorizations = {
+                        @Authorization(
+                                value = "permission",
+                                scopes = {@AuthorizationScope(
+                                        scope = "/device-mgt/devices/owning-device/operations/windows/lock-reset",
+                                        description = "Lock reset")}
+                        )
+                }
+        )
+        @ApiResponses(value = {
+                @ApiResponse(
+                        code = 201,
+                        message = "Created. \n Successfully scheduled the lock-reset operation.",
+                        response = Activity.class,
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "URL of the activity instance that refers to the scheduled operation."),
+                                @ResponseHeader(
+                                        name = "Content-Type",
+                                        description = "Content type of the body"),
+                                @ResponseHeader(
+                                        name = "ETag",
+                                        description = "Entity Tag of the response resource.\n" +
+                                                "Used by caches, or in conditional requests."),
+                                @ResponseHeader(
+                                        name = "Last-Modified",
+                                        description = "Date and time the resource was last modified.\n" +
+                                                "Used by caches, or in conditional requests.")}),
+                @ApiResponse(
+                        code = 303,
+                        message = "See Other. \n The source can be retrieved from the URL specified in the location header.\n",
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "The Source URL of the document.")}),
+                @ApiResponse(
+                        code = 400,
+                        message = "Bad Request. \n Invalid request or validation error."),
+                @ApiResponse(
+                        code = 415,
+                        message = "Unsupported media type. \n The format of the requested entity was not supported."),
+                @ApiResponse(
+                        code = 500,
+                        message = "Internal Server Error. \n " +
+                                "Server error occurred while adding adding a lock-reset operation.")
+        })
+        Response lockReset(@HeaderParam("Accept") String acceptHeader, @ApiParam(
+                name = "deviceIDs",
+                value = "Provide the ID of the A Windows device. Multiple device IDs can be added by " +
+                        "using comma separated values. ",
+                required = true) List<String> deviceIds) throws WindowsDeviceEnrolmentException;
+
+        @POST
+        @Path("/location")
+        @ApiOperation(
+                consumes = MediaType.APPLICATION_JSON,
+                httpMethod = "POST",
+                value = "Requesting Location Coordinates",
+                responseContainer = "List",
+                notes = "Request location coordinates of Windows devices. \n" +
+                        "Example: In situations where you have lost your device and need to find out where it is, " +
+                        "you can use this REST API to get the location of the device.",
+                response = Activity.class,
+                tags = "Windows Device Management Administrative Service",
+                authorizations = {
+                        @Authorization(
+                                value = "permission",
+                                scopes = {@AuthorizationScope(
+                                        scope = "/device-mgt/devices/owning-device/operations/windows/location",
+                                        description = "Get Device Location")}
+                        )
+                }
+        )
+        @ApiResponses(value = {
+                @ApiResponse(
+                        code = 201,
+                        message = "Created. \n Get-location operation has successfully been scheduled",
+                        response = Activity.class,
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "URL of the activity instance that refers to the " +
+                                                "scheduled operation."),
+                                @ResponseHeader(
+                                        name = "Content-Type",
+                                        description = "Content type of the body"),
+                                @ResponseHeader(
+                                        name = "ETag",
+                                        description = "Entity Tag of the response resource.\n" +
+                                                "Used by caches, or in conditional requests."),
+                                @ResponseHeader(
+                                        name = "Last-Modified",
+                                        description = "Date and time the resource was last modified.\n" +
+                                                "Used by caches, or in conditional requests.")}),
+                @ApiResponse(
+                        code = 303,
+                        message = "See Other. \n The source can be retrieved from the URL specified in the" +
+                                " location header.",
+                        responseHeaders = {
+                                @ResponseHeader(
+                                        name = "Content-Location",
+                                        description = "The Source URL of the document.")}),
+                @ApiResponse(
+                        code = 400,
+                        message = "Bad Request. \n Invalid request or validation error."),
+                @ApiResponse(
+                        code = 415,
+                        message = "Unsupported media type. \n The format of the requested entity was not supported."),
+                @ApiResponse(
+                        code = 500,
+                        message = "Internal Server Error. \n " +
+                                "Server error occurred while adding a new get-location operation.")})
+        Response getDeviceLocation(
+                @ApiParam(
+                        name = "deviceIDs",
+                        value = "Provide the ID of the Windows device. Multiple device IDs can be added by " +
+                                "using comma separated values. ",
+                        required = true)
+                List<String> deviceIDs);
 
     @POST
-    @Path("/disenroll-devices")
+    @Path("/reboot")
     @ApiOperation(
             consumes = MediaType.APPLICATION_JSON,
             httpMethod = "POST",
-            value = "Dis-enrol the windows Devices",
-            notes = "Dis-enroll on Android devices",
-            response = Activity.class,
-            tags = "Windows Device Management Administrative Service.",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(
-                                    scope = "/device-mgt/devices/disenroll/windows",
-                                    description = "Dis-enroll the windows devices ")}
-                    )
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    code = 201,
-                    message = "Created. \n Successfully scheduled the Dis-enroll operation.",
-                    response = Activity.class,
-                    responseHeaders = {
-                            @ResponseHeader(
-                                    name = "Content-Location",
-                                    description = "URL of the activity instance that refers to the scheduled operation."),
-                            @ResponseHeader(
-                                    name = "Content-Type",
-                                    description = "Content type of the body"),
-                            @ResponseHeader(
-                                    name = "ETag",
-                                    description = "Entity Tag of the response resource.\n" +
-                                            "Used by caches, or in conditional requests."),
-                            @ResponseHeader(
-                                    name = "Last-Modified",
-                                    description = "Date and time the resource was last modified the last time.\n" +
-                                            "Used by caches, or in conditional requests.")}),
-            @ApiResponse(
-                    code = 303,
-                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.\n",
-                    responseHeaders = {
-                            @ResponseHeader(
-                                    name = "Content-Location",
-                                    description = "The Source URL of the document.")}),
-            @ApiResponse(
-                    code = 400,
-                    message = "Bad Request. \n Invalid request or validation error."),
-            @ApiResponse(
-                    code = 415,
-                    message = "Unsupported media type. \n The format of the requested entity was not supported."),
-            @ApiResponse(
-                    code = 500,
-                    message = "Internal Server Error. \n " +
-                            "Server error occurred while adding a Dis-enroll operation.")
-    })
-    Response disenroll(@HeaderParam("Accept") String headerParam, @ApiParam(
-            name = "deviceIDs",
-            value = "Provide the ID of the A Windows device. Multiple device IDs can be added by " +
-                    "using comma separated values. ",
-            required = true) List<String> deviceIds) throws WindowsDeviceEnrolmentException;
-
-    @POST
-    @Path("/wipe-devices")
-    @ApiOperation(
-            consumes = MediaType.APPLICATION_JSON,
-            produces = MediaType.APPLICATION_JSON,
-            httpMethod = "POST",
-            value = "Factory Resetting an Windows Device",
-            notes = "Factory rest or erase all the data stored on the Windows devices" +
-                    "to restore them back to the original system.",
-            response = Activity.class,
-            tags = "Windows Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/windows/wipe",
-                                    description = "DeviceWipe")}
-                    )
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    code = 201,
-                    message = "Created. \n Successfully scheduled the Data wipe operation.",
-                    response = Activity.class,
-                    responseHeaders = {
-                            @ResponseHeader(
-                                    name = "Content-Location",
-                                    description = "URL of the activity instance that refers to the scheduled operation."),
-                            @ResponseHeader(
-                                    name = "Content-Type",
-                                    description = "Content type of the body"),
-                            @ResponseHeader(
-                                    name = "ETag",
-                                    description = "Entity Tag of the response resource.\n" +
-                                            "Used by caches, or in conditional requests."),
-                            @ResponseHeader(
-                                    name = "Last-Modified",
-                                    description = "Date and time the resource was last modified." +
-                                            "Used by caches, or in conditional requests.")}),
-            @ApiResponse(
-                    code = 303,
-                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.\n",
-                    responseHeaders = {
-                            @ResponseHeader(
-                                    name = "Content-Location",
-                                    description = "The Source URL of the document.")}),
-            @ApiResponse(
-                    code = 400,
-                    message = "Bad Request. \n Invalid request or validation error."),
-            @ApiResponse(
-                    code = 415,
-                    message = "Unsupported media type. \n The format of the requested entity was not supported."),
-            @ApiResponse(
-                    code = 500,
-                    message = "Internal Server Error. \n " +
-                            "Server error occurred while adding the Data wipe operation.")})
-    Response wipe(@HeaderParam("Accept") String headerParam, @ApiParam(
-            name = "deviceIDs",
-            value = "Provide the ID of the A Windows device. Multiple device IDs can be added by " +
-                    "using comma separated values. ",
-            required = true) List<String> deviceIds) throws WindowsDeviceEnrolmentException;
-
-    @POST
-    @Path("/ring-devices")
-    @ApiOperation(
-            consumes = MediaType.APPLICATION_JSON,
-            httpMethod = "POST",
-            value = "Ringing Windows Devices",
-            notes = "Ring Windows devices.",
+            value = "Rebooting Windows Devices",
+            notes = "Reboot or restart your Windows devices.",
             response = Activity.class,
             tags = "Windows Device Management Administrative Service",
             authorizations = {
                     @Authorization(
                             value="permission",
                             scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/windows/ring",
-                                    description = "Ring Device") }
+                                    scope = "/device-mgt/devices/owning-device/operations/windows/reboot",
+                                    description = "Reboot Device") }
                     )
             }
     )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 201,
-                    message = "Created. \n Successfully scheduled the device ring operation.",
+                    message = "Created. \n Successfully scheduled the device reboot operation.",
                     response = Activity.class,
                     responseHeaders = {
                             @ResponseHeader(
@@ -290,7 +482,7 @@ public interface DeviceManagementAdminService {
                                             "Used by caches, or in conditional requests.")}),
             @ApiResponse(
                     code = 303,
-                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.",
+                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.\n",
                     responseHeaders = {
                             @ResponseHeader(
                                     name = "Content-Location",
@@ -304,73 +496,12 @@ public interface DeviceManagementAdminService {
             @ApiResponse(
                     code = 500,
                     message = "Internal Server Error. \n " +
-                            "Server error occurred while adding a new device ring operation.")
+                            "Server error occurred while adding the new device reboot operation.")
     })
-    Response ring(@HeaderParam("Accept") String headerParam, @ApiParam(
-            name = "deviceIDs",
-            value = "Provide the ID of the A Windows device. Multiple device IDs can be added by " +
-                    "using comma separated values. ",
-            required = true) List<String> deviceIds) throws WindowsDeviceEnrolmentException;
-
-    @POST
-    @Path("/lock-reset-devices")
-    @ApiOperation(
-            consumes = MediaType.APPLICATION_JSON,
-            httpMethod = "POST",
-            value = "Lock reset on Windows devices",
-            notes = "Lock reset on Windows devices.Its use to reset the device pass code",
-            response = Activity.class,
-            tags = "Windows Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(
-                                    scope = "/device-mgt/devices/owning-device/operations/windows/lock-reset",
-                                    description = "Lock reset") }
-                    )
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    code = 201,
-                    message = "Created. \n Successfully scheduled the lock-reset operation.",
-                    response = Activity.class,
-                    responseHeaders = {
-                            @ResponseHeader(
-                                    name = "Content-Location",
-                                    description = "URL of the activity instance that refers to the scheduled operation."),
-                            @ResponseHeader(
-                                    name = "Content-Type",
-                                    description = "Content type of the body"),
-                            @ResponseHeader(
-                                    name = "ETag",
-                                    description = "Entity Tag of the response resource.\n" +
-                                            "Used by caches, or in conditional requests."),
-                            @ResponseHeader(
-                                    name = "Last-Modified",
-                                    description = "Date and time the resource was last modified.\n" +
-                                            "Used by caches, or in conditional requests.")}),
-            @ApiResponse(
-                    code = 303,
-                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.\n",
-                    responseHeaders = {
-                            @ResponseHeader(
-                                    name = "Content-Location",
-                                    description = "The Source URL of the document.")}),
-            @ApiResponse(
-                    code = 400,
-                    message = "Bad Request. \n Invalid request or validation error."),
-            @ApiResponse(
-                    code = 415,
-                    message = "Unsupported media type. \n The format of the requested entity was not supported."),
-            @ApiResponse(
-                    code = 500,
-                    message = "Internal Server Error. \n " +
-                            "Server error occurred while adding adding a lock-reset operation.")
-    })
-    Response lockReset(@HeaderParam("Accept") String acceptHeader, @ApiParam(
-            name = "deviceIDs",
-            value = "Provide the ID of the A Windows device. Multiple device IDs can be added by " +
-                    "using comma separated values. ",
-            required = true)  List<String> deviceIds) throws WindowsDeviceEnrolmentException;
+    Response rebootDevice(
+            @ApiParam(
+                    name = "deviceIDs",
+                    value = "Provide the ID of the Android device. Multiple device IDs can be added using comma separated values. ",
+                    required = true)
+            List<String> deviceIDs);
 }

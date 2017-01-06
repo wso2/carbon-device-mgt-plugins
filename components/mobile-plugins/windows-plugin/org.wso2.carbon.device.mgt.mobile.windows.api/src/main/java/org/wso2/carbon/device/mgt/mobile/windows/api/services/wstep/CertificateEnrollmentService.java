@@ -47,14 +47,14 @@ import java.io.UnsupportedEncodingException;
                 title = "",
                 extensions = {
                         @Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Windows enrollment service provider"),
+                                @ExtensionProperty(name = "name", value = "Windows 8.1 Enrollment Service"),
                                 @ExtensionProperty(name = "context",
                                         value = "/api/device-mgt/windows/v1.0/deviceenrolment/wstep"),
                         })
                 }
         ),
         tags = {
-                @Tag(name = "devicemgt_windows", description = "")
+                @Tag(name = "windows", description = "")
         }
 )
 @Api(value = "Windows Enrollment service Management",

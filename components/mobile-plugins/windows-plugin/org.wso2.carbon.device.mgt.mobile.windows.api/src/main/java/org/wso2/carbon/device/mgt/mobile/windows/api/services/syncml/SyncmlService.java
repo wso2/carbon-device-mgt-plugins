@@ -35,7 +35,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * Interface for Syncml message flow.
+ * Interface for Windows 8.1 enrollment flow.
  */
 @SwaggerDefinition(
         info = @Info(
@@ -43,17 +43,17 @@ import javax.ws.rs.core.Response;
                 title = "",
                 extensions = {
                         @Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Syncml Endpoint"),
+                                @ExtensionProperty(name = "name", value = "Windows 8.1 Device Management Service"),
                                 @ExtensionProperty(name = "context",
                                         value = "/api/device-mgt/windows/v1.0/syncml"),
                         })
                 }
         ),
         tags = {
-                @Tag(name = "devicemgt_windows", description = "")
+                @Tag(name = "windows", description = "")
         }
 )
-@Api(value = "Windows syncml service",
+@Api(value = "Windows 8.1 Device Management Service",
         description = "This carries all the resources related to Windows syncml message flow.")
 @Path("/devicemanagement")
 public interface SyncmlService {
