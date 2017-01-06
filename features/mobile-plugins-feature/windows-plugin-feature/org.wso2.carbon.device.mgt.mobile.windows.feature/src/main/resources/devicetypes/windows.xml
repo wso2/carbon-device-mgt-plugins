@@ -152,4 +152,6 @@
         <authorizationRequired>false</authorizationRequired>
     </DeviceAuthorizationConfig>
 
+	<PolicyMonitoring enabled="true"/>
+
 </DeviceTypeConfiguration>

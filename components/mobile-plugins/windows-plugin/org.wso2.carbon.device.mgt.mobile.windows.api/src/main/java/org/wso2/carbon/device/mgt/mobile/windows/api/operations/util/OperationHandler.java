@@ -37,9 +37,9 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.beans.Profile;
 import org.wso2.carbon.device.mgt.mobile.windows.api.operations.*;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
-import org.wso2.carbon.policy.mgt.common.ProfileFeature;
-import org.wso2.carbon.policy.mgt.common.monitor.ComplianceFeature;
-import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
+import org.wso2.carbon.device.mgt.common.policy.mgt.ProfileFeature;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.ComplianceFeature;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +183,7 @@ public class OperationHandler {
             if ((Constants.SyncMLResponseCodes.ACCEPTED.equals(status.getData()))) {
                 pendingDataOperations = WindowsAPIUtils.getPendingOperations(deviceIdentifier);
                 for (Operation operation : pendingDataOperations) {
-                    if ((OperationCode.Command.DEVICE_RING.equals(operation.getCode())) &&
+                    if ((OperationCode.Command.DEVICE_RING.getCode().equals(operation.getCode())) &&
                             (operation.getId() == status.getCommandReference())) {
                         operation.setStatus(Operation.Status.COMPLETED);
                         updateStatus(syncmlDocument.getHeader().getSource().getLocURI(),
@@ -215,7 +215,7 @@ public class OperationHandler {
             }
             for (Operation operation : pendingDataOperations) {
 
-                if ((OperationCode.Command.WIPE_DATA.equals(operation.getCode())) &&
+                if ((OperationCode.Command.WIPE_DATA.getCode().equals(operation.getCode())) &&
                         (operation.getId() == status.getCommandReference())) {
                     operation.setStatus(Operation.Status.COMPLETED);
                     updateStatus(syncmlDocument.getHeader().getSource().getLocURI(),
@@ -341,13 +341,13 @@ public class OperationHandler {
                 if (status.getTargetReference() == null) {
                     updateDeviceOperations(status, syncmlDocument, deviceIdentifier);
                 } else {
-                    if ((OperationCode.Command.DEVICE_LOCK.equals(status.getTargetReference()))) {
+                    if ((OperationCode.Command.DEVICE_LOCK.getCode().equals(status.getTargetReference()))) {
                         updateLockOperation(status, syncmlDocument, deviceIdentifier);
                     }
-                    if ((OperationCode.Command.DEVICE_RING.equals(status.getTargetReference()))) {
+                    if ((OperationCode.Command.DEVICE_RING.getCode().equals(status.getTargetReference()))) {
                         ring(status, syncmlDocument, deviceIdentifier);
                     }
-                    if (equals(OperationCode.Command.WIPE_DATA.equals(status.getTargetReference()))) {
+                    if ((OperationCode.Command.WIPE_DATA.getCode().equals(status.getTargetReference()))) {
                         dataWipe(status, syncmlDocument, deviceIdentifier);
                     }
                 }

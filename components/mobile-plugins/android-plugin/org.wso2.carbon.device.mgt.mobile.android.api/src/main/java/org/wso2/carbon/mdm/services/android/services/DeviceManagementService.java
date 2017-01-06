@@ -64,7 +64,7 @@ import java.util.List;
                 }
         ),
         tags = {
-                @Tag(name = "devicemgt_android", description = "")
+                @Tag(name = "android", description = "")
         }
 )
 @Api(value = "Android Device Management",

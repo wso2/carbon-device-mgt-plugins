@@ -188,10 +188,10 @@ public class WindowsAPIUtils {
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         AuthenticatorConfigService authenticatorConfigService =
                 (AuthenticatorConfigService) ctx.getOSGiService(AuthenticatorConfigService.class, null);
-        AuthenticatorConfig authenticatorConfig = authenticatorConfigService.getAuthenticatorConfig("BST");
         if (authenticatorConfigService == null) {
             throw new IllegalStateException("AuthenticatorConfiguration service has not initialized.");
         }
+        AuthenticatorConfig authenticatorConfig = authenticatorConfigService.getAuthenticatorConfig("BST");
         if (authenticatorConfig == null) {
             throw new IllegalStateException("BST authenticatorConfig has not initialized.");
         }

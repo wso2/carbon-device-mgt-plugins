@@ -6,6 +6,7 @@ import org.w3c.dom.Document;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.config.exception.VirtualFirealarmConfigurationException;
 import org.wso2.carbon.utils.CarbonUtils;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -50,6 +51,7 @@ public class VirtualFirealarmConfig {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         try {
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             DocumentBuilder docBuilder = factory.newDocumentBuilder();
             return docBuilder.parse(file);
         } catch (Exception e) {
