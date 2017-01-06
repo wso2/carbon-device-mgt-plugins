@@ -300,7 +300,7 @@ public class AndroidDeviceInfo extends DeviceInfo implements Serializable {
     }
 
     public Date getUpdatedTime() {
-        if(this.updatedTime.equals((Object)null)) {
+        if(this.updatedTime == null) {
             this.updatedTime = new Date();
         }
 

@@ -83,6 +83,7 @@
 							org.wso2.carbon.event.input.adapter.core,
 							org.wso2.carbon.event.input.adapter.core.exception,
 							org.jivesoftware.smack.*,
+							javax.xml,
 							javax.xml.bind,
 							javax.xml.bind.annotation,
 							javax.xml.parsers; version="${javax.xml.parsers.import.pkg.version}",

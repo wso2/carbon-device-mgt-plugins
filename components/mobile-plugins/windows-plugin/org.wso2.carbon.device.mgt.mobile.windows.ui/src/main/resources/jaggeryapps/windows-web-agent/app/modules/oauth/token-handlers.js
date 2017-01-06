@@ -142,7 +142,7 @@ var handlers = function () {
                 "client credentials to session context as the server is unable to obtain " +
                 "dynamic client credentials - setUpEncodedTenantBasedClientAppCredentials(x)");
             } else {
-                if (devicemgtProps["apimgt-gateway"]) {
+                if (devicemgtProps["gatewayEnabled"]) {
                     var jwtToken = tokenUtil.getAccessTokenByJWTGrantType(dynamicClientAppCredentials);
                     if (!jwtToken) {
                         throw new Error("{/app/modules/oauth/token-handlers.js} Could not set up encoded tenant based " +

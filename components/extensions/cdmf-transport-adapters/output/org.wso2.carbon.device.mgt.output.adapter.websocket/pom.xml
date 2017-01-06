@@ -134,6 +134,7 @@
                         </Export-Package>
                         <Import-Package>
                             org.wso2.carbon.event.output.adapter.core.*,
+                            javax.xml,
                             javax.xml.namespace; version=0.0.0,
                             org.apache.axis2,
                             org.apache.axis2.client,
