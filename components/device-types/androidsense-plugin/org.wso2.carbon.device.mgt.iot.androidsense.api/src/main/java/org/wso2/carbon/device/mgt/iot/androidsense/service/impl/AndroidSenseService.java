@@ -19,14 +19,13 @@
 
 package org.wso2.carbon.device.mgt.iot.androidsense.service.impl;
 
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Info;
-import io.swagger.annotations.ExtensionProperty;
-import io.swagger.annotations.Extension;
-import io.swagger.annotations.Tag;
+import io.swagger.annotations.*;
 import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
+import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.constants.AndroidSenseConstants;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @SwaggerDefinition(
@@ -44,6 +43,16 @@ import javax.ws.rs.core.Response;
                 @Tag(name = "android_sense", description = "")
         }
 )
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll device",
+                        description = "",
+                        key = "perm:android-sense:enroll",
+                        permissions = {"/device-mgt/devices/enroll/android-sense"}
+                )
+        }
+)
 public interface AndroidSenseService {
 
     /**
@@ -54,7 +63,19 @@ public interface AndroidSenseService {
      */
     @Path("device/{deviceId}/words")
     @POST
-    @Scope(key = "device:android-sense:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Send the key words to the device",
+            notes = "",
+            response = Response.class,
+            tags = "android_sense",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidSenseConstants.SCOPE, value = "perm:android-sense:enroll")
+                    })
+            }
+    )
     Response sendKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("keywords") String keywords);
 
     /**
@@ -65,12 +86,36 @@ public interface AndroidSenseService {
      */
     @Path("device/{deviceId}/words/threshold")
     @POST
-    @Scope(key = "device:android-sense:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Send threshold value to the device",
+            notes = "",
+            response = Response.class,
+            tags = "android_sense",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidSenseConstants.SCOPE, value = "perm:android-sense:enroll")
+                    })
+            }
+    )
     Response sendThreshold(@PathParam("deviceId") String deviceId, @QueryParam("threshold") String threshold);
 
     @Path("device/{deviceId}/words")
     @DELETE
-    @Scope(key = "device:android-sense:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "DELETE",
+            value = "Remove key words from the device",
+            notes = "",
+            response = Response.class,
+            tags = "android_sense",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidSenseConstants.SCOPE, value = "perm:android-sense:enroll")
+                    })
+            }
+    )
     Response removeKeyWords(@PathParam("deviceId") String deviceId, @QueryParam("words") String words);
 
     /**
@@ -79,8 +124,20 @@ public interface AndroidSenseService {
     @Path("stats/{deviceId}/sensors/{sensorName}")
     @GET
     @Consumes("application/json")
-    @Scope(key = "device:android-sense:enroll", name = "", description = "")
     @Produces("application/json")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "GET",
+            value = "Retrieve Sensor data for the device type",
+            notes = "",
+            response = Response.class,
+            tags = "android_sense",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidSenseConstants.SCOPE, value = "perm:android-sense:enroll")
+                    })
+            }
+    )
     Response getAndroidSenseDeviceStats(@PathParam("deviceId") String deviceId, @PathParam("sensorName") String sensor,
                                         @QueryParam("from") long from, @QueryParam("to") long to);
 
@@ -89,7 +146,19 @@ public interface AndroidSenseService {
      */
     @Path("device/{device_id}/register")
     @POST
-    @Scope(key = "device:android-sense:enroll", name = "", description = "")
+    @ApiOperation(
+            consumes = MediaType.APPLICATION_JSON,
+            httpMethod = "POST",
+            value = "Enroll device",
+            notes = "",
+            response = Response.class,
+            tags = "android_sense",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidSenseConstants.SCOPE, value = "perm:android-sense:enroll")
+                    })
+            }
+    )
     Response register(@PathParam("device_id") String deviceId, @QueryParam("deviceName") String deviceName);
 
 }
