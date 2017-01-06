@@ -23,6 +23,7 @@ import org.wso2.carbon.device.mgt.common.DeviceManager;
 import org.wso2.carbon.device.mgt.common.OperationMonitoringTaskConfig;
 import org.wso2.carbon.device.mgt.common.ProvisioningConfig;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
+import org.wso2.carbon.device.mgt.common.policy.mgt.PolicyMonitoringManager;
 import org.wso2.carbon.device.mgt.common.push.notification.PushNotificationConfig;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 
@@ -34,6 +35,7 @@ public class WindowsDeviceManagementService implements DeviceManagementService {
     private DeviceManager deviceManager;
     public static final String DEVICE_TYPE_WINDOWS = "windows";
     private final static String DEVICE_TYPE_PROVIDER_DOMAIN = "carbon.super";
+    private PolicyMonitoringManager policyMonitoringManager;
 
     @Override
     public String getType() {
@@ -48,6 +50,7 @@ public class WindowsDeviceManagementService implements DeviceManagementService {
     @Override
     public void init() throws DeviceManagementException {
         this.deviceManager = new WindowsDeviceManager();
+        this.policyMonitoringManager = new WindowsPolicyMonitoringManager();
     }
 
     @Override
@@ -68,6 +71,11 @@ public class WindowsDeviceManagementService implements DeviceManagementService {
     @Override
     public PushNotificationConfig getPushNotificationConfig() {
         return null;
+    }
+
+    @Override
+    public PolicyMonitoringManager getPolicyMonitoringManager() {
+        return policyMonitoringManager;
     }
 
 }

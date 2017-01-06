@@ -55,7 +55,7 @@ import javax.ws.rs.core.Response;
                 }
         ),
         tags = {
-                @Tag(name = "devicemgt_android", description = "")
+                @Tag(name = "android", description = "")
         }
 )
 @Api(value = "Android Configuration Management", description = "This API carries all the resource used to mange the Android platform configurations.")

@@ -35,9 +35,9 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.beans.Profile;
 import org.wso2.carbon.device.mgt.mobile.windows.api.operations.*;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
-import org.wso2.carbon.policy.mgt.common.ProfileFeature;
-import org.wso2.carbon.policy.mgt.common.monitor.ComplianceFeature;
-import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
+import org.wso2.carbon.device.mgt.common.policy.mgt.ProfileFeature;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.ComplianceFeature;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
 
 import java.util.ArrayList;
 import java.util.List;

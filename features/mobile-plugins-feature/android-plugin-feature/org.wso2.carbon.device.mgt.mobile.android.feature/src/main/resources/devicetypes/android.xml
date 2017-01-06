@@ -348,4 +348,5 @@
             </Operation>
         </Operations>
     </TaskConfiguration>
+	<PolicyMonitoring enabled="true"/>
 </DeviceTypeConfiguration>

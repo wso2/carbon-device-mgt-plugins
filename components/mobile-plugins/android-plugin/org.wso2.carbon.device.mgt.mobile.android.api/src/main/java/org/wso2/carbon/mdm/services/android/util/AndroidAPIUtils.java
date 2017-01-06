@@ -47,6 +47,7 @@ import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagement
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.ComplianceFeature;
 import org.wso2.carbon.device.mgt.core.app.mgt.ApplicationManagementProviderService;
 import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceDetailsMgtException;
 import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManager;
@@ -55,7 +56,7 @@ import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
-import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
 import javax.ws.rs.core.MediaType;
@@ -275,7 +276,8 @@ public class AndroidAPIUtils {
             if (log.isDebugEnabled()) {
                 log.info("Received compliance status from MONITOR operation ID: " + operation.getId());
             }
-            getPolicyManagerService().checkPolicyCompliance(deviceIdentifier, operation.getPayLoad());
+            getPolicyManagerService().checkPolicyCompliance(deviceIdentifier,
+                                                            getComplianceFeatures(operation.getPayLoad()));
         } else if (!Operation.Status.ERROR.equals(operation.getStatus()) && AndroidConstants.
                 OperationCodes.APPLICATION_LIST.equals(operation.getCode())) {
             if (log.isDebugEnabled()) {
@@ -492,5 +494,30 @@ public class AndroidAPIUtils {
             }
         }
         return "";
+    }
+
+    private static List<ComplianceFeature> getComplianceFeatures(Object compliancePayload) throws PolicyComplianceException {
+        String compliancePayloadString = new Gson().toJson(compliancePayload);
+        if (compliancePayload == null) {
+            return null;
+        }
+        // Parsing json string to get compliance features.
+        JsonElement jsonElement;
+        if (compliancePayloadString instanceof String) {
+            jsonElement = new JsonParser().parse(compliancePayloadString);
+        } else {
+            throw new PolicyComplianceException("Invalid policy compliance payload");
+        }
+
+        JsonArray jsonArray = jsonElement.getAsJsonArray();
+        Gson gson = new Gson();
+        ComplianceFeature complianceFeature;
+        List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>(jsonArray.size());
+
+        for (JsonElement element : jsonArray) {
+            complianceFeature = gson.fromJson(element, ComplianceFeature.class);
+            complianceFeatures.add(complianceFeature);
+        }
+        return complianceFeatures;
     }
 }

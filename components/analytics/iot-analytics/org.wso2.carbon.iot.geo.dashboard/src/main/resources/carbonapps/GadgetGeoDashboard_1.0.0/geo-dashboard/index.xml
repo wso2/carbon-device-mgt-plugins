@@ -69,6 +69,12 @@
             <!--TODO: use http://requirejs.org/ for better performance, now we have too many imports  -->
             <!-- C3 chart library styles-->
             <link rel="stylesheet" href="css/d3/c3.css" type="text/css"/>
+            <link rel="stylesheet" href="css/bootstrap-datepicker.min.css" type="text/css"/>
+            <style>
+                .datepicker-inline {
+                    margin:0 auto;
+                }
+            </style>
 
 
             <!-- JAVASCRIPT -->
@@ -85,7 +91,17 @@
             <script src="js/jquery/jquery-2.1.1.min.js"></script>
             <script src="js/jquery/jquery-ui.min.js"></script>
             <script src="js/bootstrap/bootstrap.min.js"></script>
-
+            <script src="js/bootstrap-datepicker.min.js"></script>
+            <script>
+                $(function() {
+                    $("#timeFrom").datepicker({
+                        orientation: 'top'
+                    });
+                     $("#timeTo").datepicker({
+                        orientation: 'top'
+                    });
+                });
+            </script>
             <!--bootstrap-application-wizard-->
             <script src="js/bootstrap-wizard-lib/bootstrap-wizard.js"></script>
 
