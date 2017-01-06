@@ -28,7 +28,14 @@ function onRequest(context) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
         var device = deviceModule.viewDevice(deviceType, deviceId);
         if (device && device.status != "error") {
-            return {"device": device.content, "autoCompleteParams" : autoCompleteParams, "encodedFeaturePayloads": ""};
+            var anchor = { "device" : { "id" : device.content.deviceIdentifier, "type" : device.content.type}};
+            return {
+                "device": device.content,
+                "autoCompleteParams" : autoCompleteParams,
+                "encodedFeaturePayloads": "",
+                "portalUrl" : devicemgtProps['portalURL'],
+                "anchor" : JSON.stringify(anchor)
+            };
         } else {
             response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
             exit();
