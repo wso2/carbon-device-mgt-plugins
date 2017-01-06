@@ -79,6 +79,8 @@ public class Constants {
     public static final String META_FORMAT_INT = "int";
     public static final String META_FORMAT_CHARACTER = "chr";
 
+    public static final String SCOPE = "scope";
+
     /**
      * SynclML service related constants.
      */

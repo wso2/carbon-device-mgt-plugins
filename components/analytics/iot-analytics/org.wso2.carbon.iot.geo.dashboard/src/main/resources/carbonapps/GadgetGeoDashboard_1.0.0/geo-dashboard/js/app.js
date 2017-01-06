@@ -327,25 +327,31 @@ function notifyError(message) {
 function enableRealTime() {
     document.getElementById('realTimeShow').style.display = 'none';
     spatialObject = currentSpatialObjects[selectedSpatialObject];
-    spatialObject.removePath();
-    spatialObject.marker.closePopup();
+    if (spatialObject) {
+        spatialObject.removePath();
+        spatialObject.marker.closePopup();
+    }
     selectedSpatialObject = null;
     clearFocus();
     clearMap();
     document.getElementById('objectInfo').style.display = 'none';
     isBatchModeOn = false;
 }
+
 function focusOnHistorySpatialObject(objectId, timeFrom, timeTo) {
     if (!timeFrom) {
         notifyError('No start time provided to show history. Please provide a suitable value' + timeFrom);
     } else if (!timeTo) {
         notifyError('No end time provided to show history. Please provide a suitable value' + timeTo);
     } else {
+        $('#dateRangePopup').dialog('close');
         document.getElementById('realTimeShow').style.display = 'block';
         isBatchModeOn = true;
         clearFocus(); // Clear current focus if any
         clearMap();
-        var tableData = getProviderData(timeFrom, timeTo);
+        var fromDate = new Date(timeFrom);
+        var toDate = new Date(timeTo);
+        var tableData = getProviderData(fromDate.valueOf() / 1000, toDate.valueOf() / 1000);
         for (var i = 0; i < tableData.length; i++) {
             var data = tableData[i];
             var geoMessage = {
@@ -401,7 +407,6 @@ function focusOnHistorySpatialObject(objectId, timeFrom, timeTo) {
             createChart();
             chart.load({columns: [spatialObject.speedHistory.getArray()]});
         }, 100);
-        $('#dateRangePopup').dialog('close');
     }
 }
 

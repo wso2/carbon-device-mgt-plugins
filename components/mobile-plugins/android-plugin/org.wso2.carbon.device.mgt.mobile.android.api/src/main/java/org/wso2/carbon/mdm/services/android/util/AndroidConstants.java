@@ -26,6 +26,7 @@ public final class AndroidConstants {
     public static final String DEVICE_TYPE_ANDROID = "android";
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
     public static final String APPLICATION_JSON = "application/json";
+    public static final String SCOPE = "scope";
 
     public final class DeviceProperties {
         private DeviceProperties() {
