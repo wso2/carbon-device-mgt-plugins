@@ -29,7 +29,8 @@ public class WebsocketConstants {
     public static final String SCOPE_IDENTIFIER = "scopes";
     public static final String MAXIMUM_TOTAL_HTTP_CONNECTION = "maximumTotalHttpConnection";
     public static final String MAXIMUM_HTTP_CONNECTION_PER_HOST = "maximumHttpConnectionPerHost";
-    public static final String TOKEN_VALIDATION_ENDPOINT_URL = "tokenValidationEndpoint";
+    public static final String TOKEN_VALIDATION_ENDPOINT_URL = "keymanagerUrl";
+    public static final String TOKEN_VALIDATION_CONTEXT = "/services/OAuth2TokenValidationService";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String TOKEN_PARAM = "token";

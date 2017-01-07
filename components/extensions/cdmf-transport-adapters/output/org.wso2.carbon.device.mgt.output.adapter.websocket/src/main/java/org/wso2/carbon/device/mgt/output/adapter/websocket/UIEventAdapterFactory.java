@@ -18,6 +18,13 @@
  */
 package org.wso2.carbon.device.mgt.output.adapter.websocket;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.BundleContext;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.authentication.Authenticator;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.Authorizer;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.service.WebsocketValidationService;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.service.WebsocketValidationServiceImpl;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.util.UIEventAdapterConstants;
 import org.wso2.carbon.event.output.adapter.core.MessageType;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapter;
@@ -38,6 +45,9 @@ public class UIEventAdapterFactory extends OutputEventAdapterFactory {
 
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("org.wso2.carbon.device.mgt.output.adapter.websocket.i18n" +
             ".Resources", Locale.getDefault());
+    private BundleContext bundleContext;
+    private boolean isAuthInitialized = false;
+    private static final Log log = LogFactory.getLog(UIEventAdapter.class);
 
     public UIEventAdapterFactory() {
     }
@@ -74,7 +84,53 @@ public class UIEventAdapterFactory extends OutputEventAdapterFactory {
     @Override
     public OutputEventAdapter createEventAdapter(OutputEventAdapterConfiguration eventAdapterConfiguration,
                                                  Map<String, String> globalProperties) {
+        if (!isAuthInitialized) {
+            initializeAuthenticatorAndAuthorizor(globalProperties);
+        }
         return new UIEventAdapter(eventAdapterConfiguration, globalProperties);
+    }
+
+    public BundleContext getBundleContext() {
+        return bundleContext;
+    }
+
+    public void setBundleContext(BundleContext bundleContext) {
+        this.bundleContext = bundleContext;
+    }
+
+    private void initializeAuthenticatorAndAuthorizor (Map<String, String> globalProperties) {
+        if (!isAuthInitialized) {
+            synchronized (UIEventAdapterFactory.class) {
+                if (!isAuthInitialized) {
+                    try {
+                        WebsocketValidationServiceImpl websocketValidationService =
+                                new WebsocketValidationServiceImpl();
+                        String authenticatorClassName = globalProperties.get(
+                                UIEventAdapterConstants.AUTHENTICATOR_CLASS);
+                        String authorizerClassName = globalProperties.get(UIEventAdapterConstants.AUTHORIZER_CLASS);
+                        if (authenticatorClassName != null && !authenticatorClassName.isEmpty()) {
+                            Class<? extends Authenticator> authenticatorClass = Class.forName(authenticatorClassName)
+                                    .asSubclass(Authenticator.class);
+                            Authenticator authenticator = authenticatorClass.newInstance();
+                            websocketValidationService.setAuthenticator(authenticator);
+                        }
+                        if (authorizerClassName != null && !authorizerClassName.isEmpty()) {
+                            Class<? extends Authorizer> authorizerClass = Class.forName(authorizerClassName)
+                                    .asSubclass(Authorizer.class);
+                            Authorizer authorizer = authorizerClass.newInstance();
+                            websocketValidationService.setAuthorizer(authorizer);
+                        }
+                        bundleContext.registerService(
+                                WebsocketValidationService.class.getName(), websocketValidationService, null);
+                        isAuthInitialized = true;
+                    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                        log.error("Failed to initialize the class authentication and authorization given " +
+                                          "in the websocket validation configuration.", e);
+                    }
+                }
+            }
+        }
+
     }
 
 }

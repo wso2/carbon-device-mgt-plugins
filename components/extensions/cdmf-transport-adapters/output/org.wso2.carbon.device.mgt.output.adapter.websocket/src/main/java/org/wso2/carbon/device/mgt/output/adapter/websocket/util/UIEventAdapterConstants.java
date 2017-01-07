@@ -46,5 +46,7 @@ public class UIEventAdapterConstants {
 
     public static final String ADAPTER_EVENT_QUEUE_SIZE_NAME = "eventQueueSize";
     public static final int EVENTS_QUEUE_SIZE = 30;
+    public static final String AUTHENTICATOR_CLASS = "authenticator";
+    public static final String AUTHORIZER_CLASS = "authorizer";
 
 }

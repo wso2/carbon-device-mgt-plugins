@@ -23,12 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.UIEventAdapterFactory;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.UIOutputCallbackControllerServiceImpl;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.authentication.Authenticator;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.Authorizer;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.config.WebsocketConfig;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.config.WebsocketValidationConfigurationFailedException;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.service.WebsocketValidationService;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.service.WebsocketValidationServiceImpl;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterFactory;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.UIOutputCallbackControllerService;
 import org.wso2.carbon.event.stream.core.EventStreamService;
@@ -51,44 +45,19 @@ public class UILocalEventAdapterServiceComponent {
     protected void activate(ComponentContext context) {
 
         try {
-            OutputEventAdapterFactory uiEventAdapterFactory = new UIEventAdapterFactory();
+            UIEventAdapterFactory uiEventAdapterFactory = new UIEventAdapterFactory();
             context.getBundleContext().registerService(OutputEventAdapterFactory.class.getName(), uiEventAdapterFactory, null);
             UIOutputCallbackControllerServiceImpl UIOutputCallbackRegisterServiceImpl =
                     new UIOutputCallbackControllerServiceImpl();
             context.getBundleContext().registerService(UIOutputCallbackControllerService.class.getName(),
                     UIOutputCallbackRegisterServiceImpl, null);
 
+            uiEventAdapterFactory.setBundleContext(context.getBundleContext());
+
             UIEventAdaptorServiceDataHolder.registerUIOutputCallbackRegisterServiceInternal(
                     UIOutputCallbackRegisterServiceImpl);
             if (log.isDebugEnabled()) {
                 log.debug("Successfully deployed the output websocket adapter service");
-            }
-            try {
-                WebsocketConfig.getInstance().init();
-                WebsocketValidationServiceImpl websocketValidationService = new WebsocketValidationServiceImpl();
-                String authenticatorClassName = WebsocketConfig.getInstance().getWebsocketValidationConfigs()
-                        .getAuthenticator().getClazz();
-                String authorizerClassName = WebsocketConfig.getInstance().getWebsocketValidationConfigs()
-                        .getAuthorizer().getClazz();
-                if (authenticatorClassName != null && !authenticatorClassName.isEmpty()) {
-                    Class<? extends Authenticator> authenticatorClass = Class.forName(authenticatorClassName)
-                            .asSubclass(Authenticator.class);
-                    Authenticator authenticator = authenticatorClass.newInstance();
-                    websocketValidationService.setAuthenticator(authenticator);
-                }
-                if (authorizerClassName != null && !authorizerClassName.isEmpty()) {
-                    Class<? extends Authorizer> authorizerClass = Class.forName(authorizerClassName)
-                            .asSubclass(Authorizer.class);
-                    Authorizer authorizer = authorizerClass.newInstance();
-                    websocketValidationService.setAuthorizer(authorizer);
-                }
-                context.getBundleContext().registerService(
-                        WebsocketValidationService.class.getName(), websocketValidationService, null);
-            } catch (WebsocketValidationConfigurationFailedException e) {
-                log.error("Failed to initialize configuration for websocket.", e);
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-                log.error("Failed to initialize the class authentication and authorization given " +
-                                  "in the websocket validation configuration.", e);
             }
         } catch (RuntimeException e) {
             log.error("Can not create the output websocket adapter service ", e);

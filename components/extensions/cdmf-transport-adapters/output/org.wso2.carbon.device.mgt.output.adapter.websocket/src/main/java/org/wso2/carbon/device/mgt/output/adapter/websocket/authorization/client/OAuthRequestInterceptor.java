@@ -28,9 +28,8 @@ import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.dto.ApiApplicationRegistrationService;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.dto.ApiRegistrationProfile;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.dto.TokenIssuerService;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.config.Properties;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.config.Property;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.config.WebsocketConfig;
+
+import java.util.Map;
 
 /**
  * This is a request interceptor to add oauth token header.
@@ -51,25 +50,27 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
 
     private static final String CONNECTION_USERNAME = "username";
     private static final String CONNECTION_PASSWORD = "password";
-    private static final String TOKEN_ENDPOINT = "tokenEndpoint";
+    private static final String TOKEN_ENDPOINT = "keymanagerUrl";
     private static final String TOKEN_REFRESH_TIME_OFFSET = "tokenRefreshTimeOffset";
     private static final String DEVICE_MGT_SERVER_URL = "deviceMgtServerUrl";
+    private static final String TOKEN_ENDPOINT_CONTEXT = "tokenEndpointContext";
     private static String username;
     private static String password;
     private static String tokenEndpoint;
     private static String deviceMgtServerUrl;
+    private static Map<String, String> globalProperties;
+
 
     /**
      * Creates an interceptor that authenticates all requests.
      */
-    public OAuthRequestInterceptor() {
-        Properties properties =
-                WebsocketConfig.getInstance().getWebsocketValidationConfigs().getAuthorizer().getProperties();
-        deviceMgtServerUrl = getDeviceMgtServerUrl(properties);
-        refreshTimeOffset = getRefreshTimeOffset(properties);
-        username = getUsername(properties);
-        password = getPassword(properties);
-        tokenEndpoint = getTokenEndpoint(properties);
+    public OAuthRequestInterceptor(Map<String, String> globalProperties) {
+        this.globalProperties = globalProperties;
+        deviceMgtServerUrl = getDeviceMgtServerUrl(globalProperties);
+        refreshTimeOffset = getRefreshTimeOffset(globalProperties);
+        username = getUsername(globalProperties);
+        password = getPassword(globalProperties);
+        tokenEndpoint = getTokenEndpoint(globalProperties);
         apiApplicationRegistrationService = Feign.builder().requestInterceptor(
                 new BasicAuthRequestInterceptor(username, password))
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
@@ -106,71 +107,42 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         template.header("Authorization", headerValue);
     }
 
-    private String getUsername(Properties properties) {
-        String username = null;
-        for (Property property : properties.getProperty()) {
-            if (property.getName().equals(CONNECTION_USERNAME)) {
-                username = property.getValue();
-                break;
-            }
-        }
+    private String getUsername(Map<String, String> globalProperties) {
+        String username = globalProperties.get(CONNECTION_USERNAME);
         if (username == null || username.isEmpty()) {
             logger.error("username can't be empty ");
         }
         return username;
     }
 
-    private String getPassword(Properties properties) {
-        String password = null;
-        for (Property property : properties.getProperty()) {
-            if (property.getName().equals(CONNECTION_PASSWORD)) {
-                password = property.getValue();
-                break;
-            }
-        }
+    private String getPassword(Map<String, String> globalProperties) {
+        String password = globalProperties.get(CONNECTION_PASSWORD);;
         if (password == null || password.isEmpty()) {
             logger.error("password can't be empty ");
         }
         return password;
     }
 
-    private String getDeviceMgtServerUrl(Properties properties) {
-        String deviceMgtServerUrl = null;
-        for (Property property : properties.getProperty()) {
-            if (property.getName().equals(DEVICE_MGT_SERVER_URL)) {
-                deviceMgtServerUrl = property.getValue();
-                break;
-            }
-        }
+    private String getDeviceMgtServerUrl(Map<String, String> globalProperties) {
+        String deviceMgtServerUrl = globalProperties.get(DEVICE_MGT_SERVER_URL);
         if (deviceMgtServerUrl == null || deviceMgtServerUrl.isEmpty()) {
             logger.error("deviceMgtServerUrl can't be empty ");
         }
         return deviceMgtServerUrl;
     }
 
-    private String getTokenEndpoint(Properties properties) {
-        String tokenEndpoint = null;
-        for (Property property : properties.getProperty()) {
-            if (property.getName().equals(TOKEN_ENDPOINT)) {
-                tokenEndpoint = property.getValue();
-                break;
-            }
-        }
-        if (tokenEndpoint == null || tokenEndpoint.isEmpty()) {
+    private String getTokenEndpoint(Map<String, String> globalProperties) {
+        String tokenEndpoint = globalProperties.get(TOKEN_ENDPOINT) + globalProperties.get(TOKEN_ENDPOINT_CONTEXT);
+        if ( tokenEndpoint.isEmpty()) {
             logger.error("tokenEndpoint can't be empty ");
         }
         return tokenEndpoint;
     }
 
-    private long getRefreshTimeOffset(Properties properties) {
-        long refreshTimeOffset = 0;
+    private long getRefreshTimeOffset(Map<String, String> globalProperties) {
+        long refreshTimeOffset = 100;
         try {
-            for (Property property : properties.getProperty()) {
-                if (property.getName().equals(TOKEN_REFRESH_TIME_OFFSET)) {
-                    refreshTimeOffset = Long.parseLong(property.getValue());
-                    break;
-                }
-            }
+            refreshTimeOffset = Long.parseLong(globalProperties.get(TOKEN_REFRESH_TIME_OFFSET));
         } catch (NumberFormatException e) {
             logger.error("refreshTimeOffset should be a number", e);
         }
