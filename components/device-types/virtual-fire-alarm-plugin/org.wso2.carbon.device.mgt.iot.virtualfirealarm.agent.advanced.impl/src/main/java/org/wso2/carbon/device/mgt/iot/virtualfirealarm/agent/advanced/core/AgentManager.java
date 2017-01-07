@@ -168,13 +168,13 @@ public class AgentManager {
             }
         }
 
-        try {
-            EnrollmentManager.getInstance().beginEnrollmentFlow();
-        } catch (AgentCoreOperationException e) {
-            log.error("Device Enrollment Failed:\n");
-            e.printStackTrace();
-            System.exit(0);
-        }
+//        try {
+//            EnrollmentManager.getInstance().beginEnrollmentFlow();
+//        } catch (AgentCoreOperationException e) {
+//            log.error("Device Enrollment Failed:\n");
+//            e.printStackTrace();
+//            System.exit(0);
+//        }
 
         //Start agent communication
         agentCommunicator.get(protocol).connect();

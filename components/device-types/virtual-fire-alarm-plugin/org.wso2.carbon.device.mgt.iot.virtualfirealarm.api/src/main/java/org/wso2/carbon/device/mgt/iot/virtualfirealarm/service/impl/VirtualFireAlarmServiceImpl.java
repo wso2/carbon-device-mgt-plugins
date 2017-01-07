@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,18 +34,15 @@ import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.constants.VirtualFireAlarmConstants;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.exception.VirtualFirealarmDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.impl.VirtualFirealarmSecurityManager;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppAccount;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppConfig;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppServerClient;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.SensorRecord;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.exception.VirtualFireAlarmException;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.VirtualFireAlarmServiceUtils;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.ZipArchive;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.ZipUtil;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.xmpp.VirtualFirealarmXMPPException;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.xmpp.XmppAccount;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.xmpp.XmppConfig;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.xmpp.XmppServerClient;
 import org.wso2.carbon.identity.jwt.client.extension.JWTClient;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
@@ -76,11 +72,8 @@ import java.util.UUID;
 
 public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
 
-    private static final String XMPP_PROTOCOL = "XMPP";
-    private static final String MQTT_PROTOCOL = "MQTT";
     private static final String KEY_TYPE = "PRODUCTION";
     private static ApiApplicationKey apiApplicationKey;
-    private static final String DEVICE_MGT_SCOPE_IDENTIFIER = "device-mgt";
     private static Log log = LogFactory.getLog(VirtualFireAlarmServiceImpl.class);
 
     @POST
@@ -103,10 +96,7 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             String resource = VirtualFireAlarmConstants.BULB_CONTEXT.replace("/", "");
-            PrivateKey serverPrivateKey = VirtualFirealarmSecurityManager.getServerPrivateKey();
             String actualMessage = resource + ":" + switchToState;
-            String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage,
-                    serverPrivateKey);
             String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
                     + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
 
@@ -114,7 +104,7 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             commandOp.setCode("buzz");
             commandOp.setType(Operation.Type.COMMAND);
             commandOp.setEnabled(true);
-            commandOp.setPayLoad(encryptedMsg);
+            commandOp.setPayLoad(actualMessage);
 
             Properties props = new Properties();
             props.setProperty(VirtualFireAlarmConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
@@ -137,10 +127,6 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        } catch (VirtualFireAlarmException e) {
-            String errorMsg = "Preparing Secure payload failed for device - [" + deviceId + "]";
-            log.error(errorMsg);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         } catch (OperationManagementException e) {
             String msg = "Error occurred while executing command operation upon ringing the buzzer";
             log.error(msg, e);
@@ -162,36 +148,21 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                     DeviceGroupConstants.Permissions.DEFAULT_MANAGE_POLICIES_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
-            PrivateKey serverPrivateKey = VirtualFirealarmSecurityManager.getServerPrivateKey();
             String actualMessage = VirtualFireAlarmConstants.POLICY_CONTEXT + ":" + policy;
-            String encryptedMsg = VirtualFireAlarmServiceUtils.prepareSecurePayLoad(actualMessage,
-                                                                                    serverPrivateKey);
             Map<String, String> dynamicProperties = new HashMap<>();
-            switch (protocolString) {
-                case XMPP_PROTOCOL:
-                    dynamicProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY,
-                                          deviceId + "@" + XmppConfig.getInstance().getServerName());
-                    dynamicProperties.put(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "POLICTY-REQUEST");
-                    dynamicProperties.put(VirtualFireAlarmConstants.MESSAGE_TYPE_PROPERTY_KEY,
-                                          VirtualFireAlarmConstants.CHAT_PROPERTY_KEY);
-                    APIUtil.getOutputEventAdapterService().publish(VirtualFireAlarmConstants.XMPP_ADAPTER_NAME,
-                                                                   dynamicProperties, encryptedMsg);
-                    break;
-                default:
-
-                    String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
-                            + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
-                    dynamicProperties.put(VirtualFireAlarmConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
-                    APIUtil.getOutputEventAdapterService().publish(VirtualFireAlarmConstants.MQTT_ADAPTER_NAME,
-                                                                   dynamicProperties, encryptedMsg);
-                    break;
-            }
+            String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
+                    + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
+            dynamicProperties.put(VirtualFireAlarmConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
+            dynamicProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY,
+                                  deviceId + "@" + XmppConfig.getInstance().getServerName());
+            dynamicProperties.put(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "POLICTY-REQUEST");
+            dynamicProperties.put(VirtualFireAlarmConstants.MESSAGE_TYPE_PROPERTY_KEY,
+                                  VirtualFireAlarmConstants.CHAT_PROPERTY_KEY);
+            APIUtil.getOutputEventAdapterService().publish(VirtualFireAlarmConstants.XMPP_ADAPTER_NAME,
+                                                           dynamicProperties, actualMessage);
             return Response.ok().build();
         } catch (DeviceAccessAuthorizationException e) {
             log.error(e.getErrorMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        } catch (VirtualFireAlarmException e) {
-            log.error(e);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -260,7 +231,7 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
         } catch (UserStoreException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
-        } catch (VirtualFirealarmDeviceMgtPluginException ex) {
+        } catch (VirtualFirealarmXMPPException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         }
@@ -294,7 +265,7 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
 
     private ZipArchive createDownloadFile(String owner, String deviceName, String sketchType)
             throws DeviceManagementException, APIManagerException, JWTClientException,
-                   UserStoreException, VirtualFirealarmDeviceMgtPluginException {
+                   UserStoreException, VirtualFirealarmXMPPException {
         //create new device id
         String deviceId = shortUUID();
         boolean status = register(deviceId, deviceName);

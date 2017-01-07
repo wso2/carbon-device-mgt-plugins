@@ -38,7 +38,7 @@
         <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.impl</module>
         <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.impl</module>
         <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.api</module>
-        <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.scep.api</module>
+		<module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.analytics</module>
     </modules>
 
     <build>

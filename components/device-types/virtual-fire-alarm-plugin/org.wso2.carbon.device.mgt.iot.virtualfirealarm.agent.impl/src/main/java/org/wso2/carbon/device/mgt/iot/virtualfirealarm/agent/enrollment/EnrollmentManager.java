@@ -111,7 +111,7 @@ public class EnrollmentManager {
      */
     private EnrollmentManager() {
         this.SCEPUrl = AgentManager.getInstance().getEnrollmentEP();
-        setEnrollmentStatus();
+        //setEnrollmentStatus();
     }
 
     /**

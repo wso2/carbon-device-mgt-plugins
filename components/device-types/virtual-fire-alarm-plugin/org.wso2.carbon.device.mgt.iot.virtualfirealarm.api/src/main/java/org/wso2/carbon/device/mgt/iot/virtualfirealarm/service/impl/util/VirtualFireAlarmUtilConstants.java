@@ -1,6 +1,5 @@
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util;
 
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppConfig;
 
 public class VirtualFireAlarmUtilConstants {
 
