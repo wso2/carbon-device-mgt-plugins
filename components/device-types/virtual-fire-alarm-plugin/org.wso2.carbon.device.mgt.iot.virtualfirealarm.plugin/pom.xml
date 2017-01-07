@@ -23,7 +23,7 @@
     <parent>
 		<artifactId>virtual-fire-alarm-plugin</artifactId>
 		<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-		<version>3.0.5-SNAPSHOT</version>
+		<version>3.0.6-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -77,12 +77,12 @@
 							org.apache.commons.codec.binary,
 							org.json.*;version="${commons-json.version.range}",
 							org.wso2.carbon.certificate.mgt.core.*,
-							org.wso2.carbon.certificate.mgt.core.util,
 							org.wso2.carbon.device.mgt.analytics.data.publisher.exception,
 							org.wso2.carbon.device.mgt.analytics.data.publisher.service,
 							org.wso2.carbon.event.input.adapter.core,
 							org.wso2.carbon.event.input.adapter.core.exception,
 							org.jivesoftware.smack.*,
+							javax.xml,
 							javax.xml.bind,
 							javax.xml.bind.annotation,
 							javax.xml.parsers; version="${javax.xml.parsers.import.pkg.version}",

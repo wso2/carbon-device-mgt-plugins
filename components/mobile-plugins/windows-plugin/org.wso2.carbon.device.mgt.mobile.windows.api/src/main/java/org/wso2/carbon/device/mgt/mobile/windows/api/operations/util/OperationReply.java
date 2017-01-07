@@ -240,7 +240,6 @@ public class OperationReply {
         List<ItemTag> replaceItems = new ArrayList<>();
         SequenceTag monitorSequence = new SequenceTag();
         List<Operation> deviceInfoOperations;
-
         if (operations != null) {
             for (Operation operation : operations) {
                 Operation.Type type = operation.getType();
@@ -292,6 +291,23 @@ public class OperationReply {
                             SequenceTag sequenceElement = new SequenceTag();
                             SequenceTag sequence = buildSequence(operation, sequenceElement);
                             syncmlBody.setSequence(sequence);
+                        }
+                        if (PluginConstants.OperationCodes.DEVICE_LOCATION.equals(operation.getCode())) {
+                            Operation longitudeOperation = new Operation();
+                            Operation latitudeOperation = new Operation();
+                            longitudeOperation.setCode(PluginConstants.OperationCodes.LONGITUDE);
+                            latitudeOperation.setCode(PluginConstants.OperationCodes.LATITUDE);
+                            List<Operation> deviceLocationOperations = new ArrayList<>();
+                            deviceLocationOperations.add(latitudeOperation);
+                            deviceLocationOperations.add(longitudeOperation);
+                            for (Operation infoOperation : deviceLocationOperations) {
+                                ItemTag deviceInfo = appendGetInfo(infoOperation);
+                                getElements.add(deviceInfo);
+                            }
+                        }
+                        if (PluginConstants.OperationCodes.DEVICE_REBOOT.equals(operation.getCode())) {
+                            execElement = executeCommand(operation);
+                            executeElements.add(execElement);
                         }
                         if ((PluginConstants.OperationCodes.MONITOR.equals(operation.getCode()))) {
                             GetTag monitorGetElement = new GetTag();
@@ -561,8 +577,7 @@ public class OperationReply {
         return execElement;
     }
 
-    public SequenceTag buildSequence(Operation operation, SequenceTag sequenceElement) throws
-            JSONException,
+    public SequenceTag buildSequence(Operation operation, SequenceTag sequenceElement) throws JSONException,
             SyncmlOperationException {
 
         sequenceElement.setCommandId(operation.getId());
@@ -580,7 +595,6 @@ public class OperationReply {
             sequenceElement.setExec(execElement);
             sequenceElement.setGet(getElements);
             return sequenceElement;
-
         } else if ((PluginConstants.OperationCodes.POLICY_BUNDLE.equals(operation.getCode()))) {
             List<? extends Operation> policyOperations;
             try {

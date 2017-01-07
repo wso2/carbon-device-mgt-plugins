@@ -19,8 +19,11 @@
 package org.wso2.carbon.device.mgt.mobile.windows.api.services.authbst;
 
 import io.swagger.annotations.*;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
+
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.Constants;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.authbst.beans.Credentials;
 
 import javax.jws.WebService;
@@ -41,28 +44,37 @@ import javax.ws.rs.core.Response;
                 title = "",
                 extensions = {
                         @Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Windows Binary security token provider"),
+                                @ExtensionProperty(name = "name", value = "Windows Binary Security Token Service"),
                                 @ExtensionProperty(name = "context",
                                         value = "/api/device-mgt/windows/v1.0/federated"),
                         })
                 }
         ),
         tags = {
-                @Tag(name = "devicemgt_windows", description = "")
+                @Tag(name = "windows", description = "")
         }
 )
-@Api(value = "Windows BST Management",
+@Api(value = "Windows Binary Security Token Service",
         description = "This carries all the resources related to Windows Binary security token management.")
 @WebService
 @Path("/bst")
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll Device",
+                        description = "Register Windows device",
+                        key = "perm:windows:enroll",
+                        permissions = {"/device-mgt/devices/enroll/windows"}
+                )
+        }
+)
 public interface BSTProvider {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/authentication")
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/windows")
     @ApiOperation(
             produces = MediaType.APPLICATION_JSON,
             consumes = MediaType.APPLICATION_JSON,
@@ -70,13 +82,10 @@ public interface BSTProvider {
             value = "Getting Binary security token.",
             notes = "Using this API to fetch Binary security token to call window enrollment and policy endpoints.",
             tags = "BST Provider",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(scope = "/device-mgt/devices/enroll/windows",
-                                    description = "Getting Binary security token for Windows enrollment " +
-                                            "and policy endpoints.")}
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:enroll")
+                    })
             }
     )
     @ApiResponses(

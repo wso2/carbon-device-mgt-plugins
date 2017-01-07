@@ -21,6 +21,7 @@ function onRequest(context) {
     var deviceType = context["uriParams"]["deviceType"];
     var deviceId = request.getParameter("id");
     var deviceViewData = {};
+    var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
 
     if (deviceType && deviceId) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
@@ -210,5 +211,9 @@ function onRequest(context) {
     ];
 
     deviceViewData["autoCompleteParams"] = autoCompleteParams;
+
+    deviceViewData["portalUrl"] = devicemgtProps['portalURL'];
+    var anchor = { "device" : { "id" : deviceId, "type" : deviceType}};
+    deviceViewData["anchor"] = JSON.stringify(anchor);
     return deviceViewData;
 }

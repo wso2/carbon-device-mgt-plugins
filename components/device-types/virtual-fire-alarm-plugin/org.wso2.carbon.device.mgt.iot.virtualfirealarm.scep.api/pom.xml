@@ -26,10 +26,10 @@
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.api</artifactId>
+	<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.scep.api</artifactId>
 	<packaging>war</packaging>
-	<name>WSO2 Carbon - IoT Server VirtualFireAlarm API</name>
-	<description>WSO2 Carbon - Virtual FireAlarm Service Management API Implementation</description>
+	<name>WSO2 Carbon - IoT Server SCEP Server API</name>
+	<description>WSO2 Carbon - Virtual FireAlarm SCEP Server API Implementation</description>
 	<url>http://wso2.org</url>
 
 	<dependencies>
@@ -42,18 +42,6 @@
 		<dependency>
 			<groupId>org.wso2.carbon.devicemgt</groupId>
 			<artifactId>org.wso2.carbon.device.mgt.core</artifactId>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.apache.axis2.wso2</groupId>
-					<artifactId>axis2-client</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.analytics.data.publisher</artifactId>
 			<scope>provided</scope>
 			<exclusions>
 				<exclusion>
@@ -90,21 +78,6 @@
 		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-transports-http</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<!--MQTT -->
-		<dependency>
-			<groupId>org.eclipse.paho</groupId>
-			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<!--IOT -->
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpasyncclient</artifactId>
-			<version>4.1</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -196,50 +169,14 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt</groupId>
-			<artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.igniterealtime.smack.wso2</groupId>
-			<artifactId>smack</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.igniterealtime.smack.wso2</groupId>
-			<artifactId>smackx</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt</groupId>
-			<artifactId>org.wso2.carbon.identity.jwt.client.extension</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt</groupId>
-			<artifactId>org.wso2.carbon.apimgt.application.extension</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.analytics</groupId>
-			<artifactId>org.wso2.carbon.analytics.api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.extensions</artifactId>
-			<scope>provided</scope>
-		</dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.devicemgt</groupId>
-            <artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
-        </dependency>
-    </dependencies>
+	</dependencies>
+
+
 	<build>
 		<plugins>
 			<plugin>
@@ -253,7 +190,7 @@
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
 				<configuration>
-					<warName>virtual_firealarm</warName>
+					<warName>virtual_firealarm_scep</warName>
 				</configuration>
 			</plugin>
 		</plugins>

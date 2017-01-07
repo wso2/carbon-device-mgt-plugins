@@ -33,4 +33,6 @@ public class RaspberrypiConstants {
 
     public static final String APIM_APPLICATION_TOKEN_VALIDITY_PERIOD = "3600";
 
+    public static final String SCOPE = "scope";
+
 }

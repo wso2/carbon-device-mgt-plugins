@@ -143,9 +143,10 @@ var windowsOperationModule = function () {
             "DISENROLL": "disenroll",
             "DEVICE_RING": "ring-device",
             "LOCK_RESET": "lock-reset",
-            "WIPE_DATA": "wipe-data"
+            "WIPE_DATA": "wipe-data",
+            "DEVICE_LOCATION": "location",
+            "DEVICE_REBOOT": "reboot"
         };
-        //return "/mdm-windows-agent/services/windows/operation/" + featureMap[operationCode];
         return "/api/device-mgt/windows/v1.0/operation/admin/devices/" + featureMap[operationCode];
     };
 
@@ -160,7 +161,9 @@ var windowsOperationModule = function () {
             "DEVICE_RING": "fw-dial-up",
             "DISENROLL": "fw-export",
             "LOCK_RESET": "fw-key",
-            "WIPE_DATA": "fw-delete"
+            "WIPE_DATA": "fw-delete",
+            "DEVICE_LOCATION": "location",
+            "DEVICE_REBOOT": "fw-refresh"
         };
         return featureMap[operationCode];
     };

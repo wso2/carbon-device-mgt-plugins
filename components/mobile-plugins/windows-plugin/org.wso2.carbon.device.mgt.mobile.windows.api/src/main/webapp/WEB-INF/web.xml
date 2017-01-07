@@ -62,8 +62,11 @@
     </context-param>
     <context-param>
         <param-name>nonSecuredEndPoints</param-name>
-        <param-value>/discovery/get,/discovery/post,/certificatepolicy/xcep,
-            ,/deviceenrolment/wstep,/syncml/devicemanagement/request,/deviceenrolment/enrollment,/management/devicemgt/pending-operations
+        <param-value>/api/device-mgt/windows/v1.0/discovery/get,/api/device-mgt/windows/v1.0/discovery/post,
+            /api/device-mgt/windows/v1.0/certificatepolicy/xcep,/api/device-mgt/windows/v1.0/deviceenrolment/wstep,
+            /api/device-mgt/windows/v1.0/syncml/devicemanagement/request,
+            /api/device-mgt/windows/v1.0/deviceenrolment/enrollment,
+            /api/device-mgt/windows/v1.0/management/devicemgt/pending-operations
         </param-value>
     </context-param>
 </web-app>

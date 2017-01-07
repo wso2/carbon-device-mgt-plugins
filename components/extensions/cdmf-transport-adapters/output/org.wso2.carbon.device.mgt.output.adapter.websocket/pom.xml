@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>cdmf-transport-adapters</artifactId>
-        <version>3.0.5-SNAPSHOT</version>
+        <version>3.0.6-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -134,6 +134,7 @@
                         </Export-Package>
                         <Import-Package>
                             org.wso2.carbon.event.output.adapter.core.*,
+                            javax.xml,
                             javax.xml.namespace; version=0.0.0,
                             org.apache.axis2,
                             org.apache.axis2.client,
