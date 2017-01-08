@@ -21,21 +21,21 @@ package org.wso2.carbon.device.mgt.output.adapter.websocket.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.UIEventAdapterFactory;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.UIOutputCallbackControllerServiceImpl;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.WebsocketEventAdapterFactory;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.WebsocketOutputCallbackControllerServiceImpl;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterFactory;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.UIOutputCallbackControllerService;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.WebsocketOutputCallbackControllerService;
 import org.wso2.carbon.event.stream.core.EventStreamService;
 
 /**
- * @scr.component component.name="output.extensions.Ui.AdapterService.component" immediate="true"
+ * @scr.component component.name="output.extensions.secured.websocket.AdapterService.component" immediate="true"
  * @scr.reference name="eventStreamService.service"
  * interface="org.wso2.carbon.event.stream.core.EventStreamService" cardinality="1..1"
  * policy="dynamic" bind="setEventStreamService" unbind="unsetEventStreamService"
  */
-public class UILocalEventAdapterServiceComponent {
+public class WebsocketLocalEventAdapterServiceComponent {
 
-    private static final Log log = LogFactory.getLog(UILocalEventAdapterServiceComponent.class);
+    private static final Log log = LogFactory.getLog(WebsocketLocalEventAdapterServiceComponent.class);
 
     /**
      * initialize the websocket adapter service here service here.
@@ -45,16 +45,17 @@ public class UILocalEventAdapterServiceComponent {
     protected void activate(ComponentContext context) {
 
         try {
-            UIEventAdapterFactory uiEventAdapterFactory = new UIEventAdapterFactory();
-            context.getBundleContext().registerService(OutputEventAdapterFactory.class.getName(), uiEventAdapterFactory, null);
-            UIOutputCallbackControllerServiceImpl UIOutputCallbackRegisterServiceImpl =
-                    new UIOutputCallbackControllerServiceImpl();
-            context.getBundleContext().registerService(UIOutputCallbackControllerService.class.getName(),
+            WebsocketEventAdapterFactory websocketEventAdapterFactory = new WebsocketEventAdapterFactory();
+            context.getBundleContext().registerService(OutputEventAdapterFactory.class.getName()
+                    , websocketEventAdapterFactory, null);
+            WebsocketOutputCallbackControllerServiceImpl UIOutputCallbackRegisterServiceImpl =
+                    new WebsocketOutputCallbackControllerServiceImpl();
+            context.getBundleContext().registerService(WebsocketOutputCallbackControllerService.class.getName(),
                     UIOutputCallbackRegisterServiceImpl, null);
 
-            uiEventAdapterFactory.setBundleContext(context.getBundleContext());
+            websocketEventAdapterFactory.setBundleContext(context.getBundleContext());
 
-            UIEventAdaptorServiceDataHolder.registerUIOutputCallbackRegisterServiceInternal(
+            WebsocketEventAdaptorServiceDataHolder.registerUIOutputCallbackRegisterServiceInternal(
                     UIOutputCallbackRegisterServiceImpl);
             if (log.isDebugEnabled()) {
                 log.debug("Successfully deployed the output websocket adapter service");
@@ -70,13 +71,13 @@ public class UILocalEventAdapterServiceComponent {
         if (log.isDebugEnabled()) {
             log.debug("Setting the EventStreamService reference for the UILocalEventAdaptor Service");
         }
-        UIEventAdaptorServiceDataHolder.registerEventStreamService(eventStreamService);
+        WebsocketEventAdaptorServiceDataHolder.registerEventStreamService(eventStreamService);
     }
 
     protected void unsetEventStreamService(EventStreamService eventStreamService) {
         if (log.isDebugEnabled()) {
             log.debug("Un-Setting the EventStreamService reference for the UILocalEventAdaptor Service");
         }
-        UIEventAdaptorServiceDataHolder.registerEventStreamService(null);
+        WebsocketEventAdaptorServiceDataHolder.registerEventStreamService(null);
     }
 }

@@ -19,9 +19,9 @@
 package org.wso2.carbon.device.mgt.output.adapter.websocket;
 
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.internal.UIEventAdaptorServiceDataHolder;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.internal.WebsocketEventAdaptorServiceDataHolder;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.util.WebSocketSessionRequest;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.util.UIEventAdapterConstants;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.util.WebsocketEventAdapterConstants;
 
 import javax.websocket.Session;
 import java.util.Iterator;
@@ -32,12 +32,12 @@ import java.util.concurrent.LinkedBlockingDeque;
 /**
  * Service implementation class which exposes to front end
  */
-public class UIOutputCallbackControllerServiceImpl implements UIOutputCallbackControllerService {
+public class WebsocketOutputCallbackControllerServiceImpl implements WebsocketOutputCallbackControllerService {
 
     private ConcurrentHashMap<Integer, ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketSessionRequest>>>
             outputEventAdaptorSessionMap;
 
-    public UIOutputCallbackControllerServiceImpl() {
+    public WebsocketOutputCallbackControllerServiceImpl() {
         outputEventAdaptorSessionMap = new ConcurrentHashMap<>();
     }
 
@@ -53,9 +53,9 @@ public class UIOutputCallbackControllerServiceImpl implements UIOutputCallbackCo
         int tenantId = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
 
         if (version == null || " ".equals(version)) {
-            version = UIEventAdapterConstants.ADAPTER_UI_DEFAULT_OUTPUT_STREAM_VERSION;
+            version = WebsocketEventAdapterConstants.ADAPTER_UI_DEFAULT_OUTPUT_STREAM_VERSION;
         }
-        String streamId = streamName + UIEventAdapterConstants.ADAPTER_UI_COLON + version;
+        String streamId = streamName + WebsocketEventAdapterConstants.ADAPTER_UI_COLON + version;
         ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketSessionRequest>> tenantSpecificAdaptorMap =
                 outputEventAdaptorSessionMap.get(tenantId);
         if (tenantSpecificAdaptorMap == null) {
@@ -102,9 +102,9 @@ public class UIOutputCallbackControllerServiceImpl implements UIOutputCallbackCo
      */
     public LinkedBlockingDeque<Object> getEvents(int tenanId, String streamName, String version) {
         ConcurrentHashMap<String, LinkedBlockingDeque<Object>> tenantSpecificStreamMap =
-                UIEventAdaptorServiceDataHolder.getTenantSpecificStreamEventMap().get(tenanId);
+                WebsocketEventAdaptorServiceDataHolder.getTenantSpecificStreamEventMap().get(tenanId);
         if (tenantSpecificStreamMap != null) {
-            String streamId = streamName + UIEventAdapterConstants.ADAPTER_UI_COLON + version;
+            String streamId = streamName + WebsocketEventAdapterConstants.ADAPTER_UI_COLON + version;
             return tenantSpecificStreamMap.get(streamId);
         }
         return null;
@@ -120,9 +120,9 @@ public class UIOutputCallbackControllerServiceImpl implements UIOutputCallbackCo
     public void unsubscribeWebsocket(String streamName, String version, Session session) {
         int tenantId = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId();
         if (version == null || " ".equals(version)) {
-            version = UIEventAdapterConstants.ADAPTER_UI_DEFAULT_OUTPUT_STREAM_VERSION;
+            version = WebsocketEventAdapterConstants.ADAPTER_UI_DEFAULT_OUTPUT_STREAM_VERSION;
         }
-        String id = streamName + UIEventAdapterConstants.ADAPTER_UI_COLON + version;
+        String id = streamName + WebsocketEventAdapterConstants.ADAPTER_UI_COLON + version;
         ConcurrentHashMap<String, CopyOnWriteArrayList<WebSocketSessionRequest>> tenantSpecificAdaptorMap
                 = outputEventAdaptorSessionMap.get(tenantId);
         if (tenantSpecificAdaptorMap != null) {

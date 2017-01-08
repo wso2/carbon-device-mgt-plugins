@@ -24,7 +24,7 @@ import javax.websocket.Session;
 /**
  * This interface is exposed as an OSGI service, which will be invoked by the local websocket endpoint to inform new subscriptions; and do un-subscriptions..
  */
-public interface UIOutputCallbackControllerService {
+public interface WebsocketOutputCallbackControllerService {
 
     /**
      * Used to subscribe the session id and stream id for later web socket connectivity

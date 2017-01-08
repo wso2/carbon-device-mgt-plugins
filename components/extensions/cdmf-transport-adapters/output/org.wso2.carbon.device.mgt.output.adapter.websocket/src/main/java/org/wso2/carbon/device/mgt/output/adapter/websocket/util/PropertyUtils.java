@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 public class PropertyUtils {
 
     //This method is only used if the mb features are within DAS.
-    public static String replaceMqttProperty(String urlWithPlaceholders) throws OutputEventAdapterException {
+    public static String replaceProperty(String urlWithPlaceholders) throws OutputEventAdapterException {
         String regex = "\\$\\{(.*?)\\}";
         Pattern pattern = Pattern.compile(regex);
         Matcher matchPattern = pattern.matcher(urlWithPlaceholders);

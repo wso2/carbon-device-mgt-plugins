@@ -30,7 +30,7 @@ public final class MQTTEventAdapterConstants {
     public static final String ADAPTER_CONF_PASSWORD = "password";
     public static final String ADAPTER_CONF_PASSWORD_HINT = "password.hint";
     public static final String ADAPTER_CONF_DCR_URL = "dcrUrl";
-    public static final String ADAPTER_CONF_TOKEN_URL = "keymanagerUrl";
+    public static final String ADAPTER_CONF_TOKEN_URL = "tokenUrl";
     public static final String ADAPTER_CONF_SCOPES = "scopes";
     public static final String ADAPTER_CONF_SCOPES_HINT = "scopes.hint";
     public static final String ADAPTER_CONF_URL_HINT = "url.hint";
@@ -58,11 +58,11 @@ public final class MQTTEventAdapterConstants {
 
     public static final String DEFAULT_CALLBACK = "";
     public static final String DEFAULT_PASSWORD = "";
-    public static final String GRANT_TYPE = "grant_type";
+    public static final String GRANT_TYPE = "password";
     public static final String TOKEN_SCOPE = "production";
     public static final String APPLICATION_NAME_PREFIX = "OutputAdapter_";
-    public static final String CLIENT_ID = "client_id";
-    public static final String CLIENT_SECRET = "client_secret";
+    public static final String CLIENT_ID = "clientId";
+    public static final String CLIENT_SECRET = "clientSecret";
 
 
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";

@@ -28,6 +28,8 @@ import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.dto.ApiApplicationRegistrationService;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.dto.ApiRegistrationProfile;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.dto.TokenIssuerService;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.util.PropertyUtils;
+import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
 
 import java.util.Map;
 
@@ -50,14 +52,16 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
 
     private static final String CONNECTION_USERNAME = "username";
     private static final String CONNECTION_PASSWORD = "password";
-    private static final String TOKEN_ENDPOINT = "keymanagerUrl";
+    private static final String TOKEN_ENDPOINT = "tokenUrl";
     private static final String TOKEN_REFRESH_TIME_OFFSET = "tokenRefreshTimeOffset";
+    private static final String TOKEN_SCOPES = "scopes";
     private static final String DEVICE_MGT_SERVER_URL = "deviceMgtServerUrl";
-    private static final String TOKEN_ENDPOINT_CONTEXT = "tokenEndpointContext";
+    private static final String TOKEN_ENDPOINT_CONTEXT = "tokenUrl";
     private static String username;
     private static String password;
     private static String tokenEndpoint;
     private static String deviceMgtServerUrl;
+    private static String scopes;
     private static Map<String, String> globalProperties;
 
 
@@ -66,16 +70,22 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
      */
     public OAuthRequestInterceptor(Map<String, String> globalProperties) {
         this.globalProperties = globalProperties;
-        deviceMgtServerUrl = getDeviceMgtServerUrl(globalProperties);
-        refreshTimeOffset = getRefreshTimeOffset(globalProperties);
-        username = getUsername(globalProperties);
-        password = getPassword(globalProperties);
-        tokenEndpoint = getTokenEndpoint(globalProperties);
-        apiApplicationRegistrationService = Feign.builder().requestInterceptor(
-                new BasicAuthRequestInterceptor(username, password))
-                .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
-                .target(ApiApplicationRegistrationService.class,
-                        deviceMgtServerUrl + API_APPLICATION_REGISTRATION_CONTEXT);
+        try {
+            deviceMgtServerUrl = getDeviceMgtServerUrl(globalProperties);
+            refreshTimeOffset = getRefreshTimeOffset(globalProperties);
+            username = getUsername(globalProperties);
+            password = getPassword(globalProperties);
+            tokenEndpoint = getTokenEndpoint(globalProperties);
+            scopes = getScopes(globalProperties);
+            apiApplicationRegistrationService = Feign.builder().requestInterceptor(
+                    new BasicAuthRequestInterceptor(username, password))
+                    .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
+                    .target(ApiApplicationRegistrationService.class,
+                            deviceMgtServerUrl + API_APPLICATION_REGISTRATION_CONTEXT);
+        } catch (OutputEventAdapterException e) {
+            logger.error("Invalid url: deviceMgtServerUrl" + deviceMgtServerUrl + " or tokenEndpoint:" + tokenEndpoint,
+                         e);
+        }
     }
 
     @Override
@@ -94,7 +104,11 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
                     new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(TokenIssuerService.class, tokenEndpoint);
-            tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password);
+            if (scopes == null || scopes.isEmpty()) {
+                tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password);
+            } else {
+                tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password, scopes);
+            }
             tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
         }
         synchronized(this) {
@@ -123,20 +137,20 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         return password;
     }
 
-    private String getDeviceMgtServerUrl(Map<String, String> globalProperties) {
+    private String getDeviceMgtServerUrl(Map<String, String> globalProperties) throws OutputEventAdapterException {
         String deviceMgtServerUrl = globalProperties.get(DEVICE_MGT_SERVER_URL);
         if (deviceMgtServerUrl == null || deviceMgtServerUrl.isEmpty()) {
             logger.error("deviceMgtServerUrl can't be empty ");
         }
-        return deviceMgtServerUrl;
+        return PropertyUtils.replaceProperty(deviceMgtServerUrl);
     }
 
-    private String getTokenEndpoint(Map<String, String> globalProperties) {
-        String tokenEndpoint = globalProperties.get(TOKEN_ENDPOINT) + globalProperties.get(TOKEN_ENDPOINT_CONTEXT);
+    private String getTokenEndpoint(Map<String, String> globalProperties) throws OutputEventAdapterException {
+        String tokenEndpoint = globalProperties.get(TOKEN_ENDPOINT_CONTEXT);
         if ( tokenEndpoint.isEmpty()) {
             logger.error("tokenEndpoint can't be empty ");
         }
-        return tokenEndpoint;
+        return PropertyUtils.replaceProperty(tokenEndpoint);
     }
 
     private long getRefreshTimeOffset(Map<String, String> globalProperties) {
@@ -147,6 +161,10 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             logger.error("refreshTimeOffset should be a number", e);
         }
         return refreshTimeOffset;
+    }
+
+    private String getScopes(Map<String, String> globalProperties) {
+        return globalProperties.get(TOKEN_SCOPES);
     }
 
 

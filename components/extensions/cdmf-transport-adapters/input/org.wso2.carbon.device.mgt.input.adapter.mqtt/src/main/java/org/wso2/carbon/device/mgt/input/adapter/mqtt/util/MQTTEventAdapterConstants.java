@@ -56,8 +56,8 @@ public class MQTTEventAdapterConstants {
     public static final String GRANT_TYPE = "password refresh_token";
     public static final String TOKEN_SCOPE = "production";
     public static final String APPLICATION_NAME_PREFIX = "InputAdapter_";
-    public static final String CLIENT_ID = "client_id";
-    public static final String CLIENT_SECRET = "client_secret";
+    public static final String CLIENT_ID = "clientId";
+    public static final String CLIENT_SECRET = "clientSecret";
     public static final String CLIENT_NAME = "client_name";
     public static final String DEFAULT = "default";
     public static final String MQTT_CONTENT_VALIDATION_DEFAULT_PARAMETERS = "";

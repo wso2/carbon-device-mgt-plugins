@@ -144,6 +144,7 @@
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
             <artifactId>org.wso2.carbon.apimgt.annotations</artifactId>
+			<scope>provided</scope>
         </dependency>
     </dependencies>
 

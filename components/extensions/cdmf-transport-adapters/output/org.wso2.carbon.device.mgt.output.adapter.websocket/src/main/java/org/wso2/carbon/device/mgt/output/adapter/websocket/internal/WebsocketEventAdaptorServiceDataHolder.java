@@ -18,7 +18,7 @@
  */
 package org.wso2.carbon.device.mgt.output.adapter.websocket.internal;
 
-import org.wso2.carbon.device.mgt.output.adapter.websocket.UIOutputCallbackControllerServiceImpl;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.WebsocketOutputCallbackControllerServiceImpl;
 import org.wso2.carbon.event.stream.core.EventStreamService;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,9 +27,9 @@ import java.util.concurrent.LinkedBlockingDeque;
 /**
  * Creates a holder of type UIOutputCallbackRegisterServiceImpl.
  */
-public final class UIEventAdaptorServiceDataHolder {
+public final class WebsocketEventAdaptorServiceDataHolder {
 
-    private static UIOutputCallbackControllerServiceImpl UIOutputCallbackRegisterServiceImpl;
+    private static WebsocketOutputCallbackControllerServiceImpl UIOutputCallbackRegisterServiceImpl;
     private static ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>>
             tenantSpecificOutputEventStreamAdapterMap = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<Integer, ConcurrentHashMap<String, LinkedBlockingDeque<Object>>>
@@ -37,21 +37,21 @@ public final class UIEventAdaptorServiceDataHolder {
     private static EventStreamService eventStreamService;
 
     public static void registerEventStreamService(EventStreamService eventBuilderService) {
-        UIEventAdaptorServiceDataHolder.eventStreamService = eventBuilderService;
+        WebsocketEventAdaptorServiceDataHolder.eventStreamService = eventBuilderService;
     }
 
     public static EventStreamService getEventStreamService() {
-        return UIEventAdaptorServiceDataHolder.eventStreamService;
+        return WebsocketEventAdaptorServiceDataHolder.eventStreamService;
     }
 
     public static void registerUIOutputCallbackRegisterServiceInternal(
-            UIOutputCallbackControllerServiceImpl UIOutputCallbackRegisterServiceImpl) {
-        UIEventAdaptorServiceDataHolder.UIOutputCallbackRegisterServiceImpl =
+            WebsocketOutputCallbackControllerServiceImpl UIOutputCallbackRegisterServiceImpl) {
+        WebsocketEventAdaptorServiceDataHolder.UIOutputCallbackRegisterServiceImpl =
                 UIOutputCallbackRegisterServiceImpl;
     }
 
-    public static UIOutputCallbackControllerServiceImpl getUIOutputCallbackRegisterServiceImpl() {
-        return UIEventAdaptorServiceDataHolder.UIOutputCallbackRegisterServiceImpl;
+    public static WebsocketOutputCallbackControllerServiceImpl getUIOutputCallbackRegisterServiceImpl() {
+        return WebsocketEventAdaptorServiceDataHolder.UIOutputCallbackRegisterServiceImpl;
     }
 
     public static ConcurrentHashMap<Integer,ConcurrentHashMap<String, String>>

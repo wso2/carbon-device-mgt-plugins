@@ -21,9 +21,9 @@ package org.wso2.carbon.device.mgt.output.adapter.websocket.util;
 /**
  * This class contains the constants related to websocket Output Event Adaptor.
  */
-public class UIEventAdapterConstants {
+public class WebsocketEventAdapterConstants {
 
-    private UIEventAdapterConstants() {
+    private WebsocketEventAdapterConstants() {
     }
 
     public static final String ADAPTER_TYPE_UI = "secured-websocket";

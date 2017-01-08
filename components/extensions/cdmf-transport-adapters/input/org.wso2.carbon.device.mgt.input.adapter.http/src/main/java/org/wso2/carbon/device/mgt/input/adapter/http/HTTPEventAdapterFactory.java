@@ -66,7 +66,7 @@ public class HTTPEventAdapterFactory extends InputEventAdapterFactory {
 
 		// Transport Exposed
 		Property exposedTransportsProperty = new Property(HTTPEventAdapterConstants.EXPOSED_TRANSPORTS);
-		exposedTransportsProperty.setRequired(true);
+		exposedTransportsProperty.setRequired(false);
 		exposedTransportsProperty.setDisplayName(
 				resourceBundle.getString(HTTPEventAdapterConstants.EXPOSED_TRANSPORTS));
 		exposedTransportsProperty.setOptions(

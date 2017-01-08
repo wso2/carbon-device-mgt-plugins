@@ -94,9 +94,9 @@ public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
 	private OAuth2TokenValidationServiceStub generateStub() throws OAuthTokenValidationException {
 		OAuth2TokenValidationServiceStub stub;
         try {
-            URL hostURL = new URL(PropertyUtils.replaceMqttProperty(tokenValidationProperties.get(
+            URL hostURL = new URL(PropertyUtils.replaceProperty(tokenValidationProperties.get(
                     (WebsocketConstants.TOKEN_VALIDATION_ENDPOINT_URL)))
-                                          + WebsocketConstants.TOKEN_VALIDATION_CONTEXT);
+                                          + WebsocketConstants.TOKEN_VALIDATION_CONTEX);
             stub = new OAuth2TokenValidationServiceStub(hostURL.toString());
             ServiceClient client = stub._getServiceClient();
             client.getServiceContext().getConfigurationContext().setProperty(

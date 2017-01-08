@@ -175,7 +175,7 @@ public class MQTTAdapterPublisher {
                             JSONObject jsonPayload = (JSONObject) jsonParser.parse(response);
                             String clientId = (String) jsonPayload.get(MQTTEventAdapterConstants.CLIENT_ID);
                             String clientSecret = (String) jsonPayload.get(MQTTEventAdapterConstants.CLIENT_SECRET);
-                            getToken(clientId, clientSecret);
+                            return getToken(clientId, clientSecret);
                         }
                     } catch (ParseException e) {
                         String msg = "error occurred while parsing generating token for the adapter";

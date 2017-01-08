@@ -111,7 +111,7 @@ public class DeviceAuthorizer implements Authorizer {
     }
 
     private String getDeviceMgtServerUrl(Map<String, String> properties) throws OutputEventAdapterException {
-        String deviceMgtServerUrl = PropertyUtils.replaceMqttProperty(properties.get(DEVICE_MGT_SERVER_URL));
+        String deviceMgtServerUrl = PropertyUtils.replaceProperty(properties.get(DEVICE_MGT_SERVER_URL));
         if (deviceMgtServerUrl == null || deviceMgtServerUrl.isEmpty()) {
             logger.error("deviceMgtServerUrl can't be empty ");
         }

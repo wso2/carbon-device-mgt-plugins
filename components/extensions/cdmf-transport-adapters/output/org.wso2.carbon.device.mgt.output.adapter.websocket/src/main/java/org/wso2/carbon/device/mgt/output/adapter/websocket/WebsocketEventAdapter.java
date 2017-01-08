@@ -28,8 +28,8 @@ import org.wso2.carbon.databridge.commons.Attribute;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.StreamDefinition;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.constants.WebsocketConstants;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.internal.UIEventAdaptorServiceDataHolder;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.util.UIEventAdapterConstants;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.internal.WebsocketEventAdaptorServiceDataHolder;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.util.WebsocketEventAdapterConstants;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.util.WebSocketSessionRequest;
 import org.wso2.carbon.event.output.adapter.core.EventAdapterUtil;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapter;
@@ -56,9 +56,9 @@ import java.util.concurrent.TimeUnit;
  * Contains the life cycle of executions regarding the UI Adapter
  */
 
-public class UIEventAdapter implements OutputEventAdapter {
+public class WebsocketEventAdapter implements OutputEventAdapter {
 
-    private static final Log log = LogFactory.getLog(UIEventAdapter.class);
+    private static final Log log = LogFactory.getLog(WebsocketEventAdapter.class);
     private OutputEventAdapterConfiguration eventAdapterConfiguration;
     private Map<String, String> globalProperties;
     private int queueSize;
@@ -72,7 +72,7 @@ public class UIEventAdapter implements OutputEventAdapter {
     private List<Attribute> streamCorrelationAttributes;
     private List<Attribute> streamPayloadAttributes;
 
-    public UIEventAdapter(OutputEventAdapterConfiguration eventAdapterConfiguration, Map<String,
+    public WebsocketEventAdapter(OutputEventAdapterConfiguration eventAdapterConfiguration, Map<String,
             String> globalProperties) {
         this.eventAdapterConfiguration = eventAdapterConfiguration;
         this.globalProperties = globalProperties;
@@ -91,32 +91,32 @@ public class UIEventAdapter implements OutputEventAdapter {
             int jobQueSize;
 
             //If global properties are available those will be assigned else constant values will be assigned
-            if (globalProperties.get(UIEventAdapterConstants.ADAPTER_MIN_THREAD_POOL_SIZE_NAME) != null) {
+            if (globalProperties.get(WebsocketEventAdapterConstants.ADAPTER_MIN_THREAD_POOL_SIZE_NAME) != null) {
                 minThread = Integer.parseInt(globalProperties.get(
-                        UIEventAdapterConstants.ADAPTER_MIN_THREAD_POOL_SIZE_NAME));
+                        WebsocketEventAdapterConstants.ADAPTER_MIN_THREAD_POOL_SIZE_NAME));
             } else {
-                minThread = UIEventAdapterConstants.ADAPTER_MIN_THREAD_POOL_SIZE;
+                minThread = WebsocketEventAdapterConstants.ADAPTER_MIN_THREAD_POOL_SIZE;
             }
 
-            if (globalProperties.get(UIEventAdapterConstants.ADAPTER_MAX_THREAD_POOL_SIZE_NAME) != null) {
+            if (globalProperties.get(WebsocketEventAdapterConstants.ADAPTER_MAX_THREAD_POOL_SIZE_NAME) != null) {
                 maxThread = Integer.parseInt(globalProperties.get(
-                        UIEventAdapterConstants.ADAPTER_MAX_THREAD_POOL_SIZE_NAME));
+                        WebsocketEventAdapterConstants.ADAPTER_MAX_THREAD_POOL_SIZE_NAME));
             } else {
-                maxThread = UIEventAdapterConstants.ADAPTER_MAX_THREAD_POOL_SIZE;
+                maxThread = WebsocketEventAdapterConstants.ADAPTER_MAX_THREAD_POOL_SIZE;
             }
 
-            if (globalProperties.get(UIEventAdapterConstants.ADAPTER_KEEP_ALIVE_TIME_NAME) != null) {
+            if (globalProperties.get(WebsocketEventAdapterConstants.ADAPTER_KEEP_ALIVE_TIME_NAME) != null) {
                 defaultKeepAliveTime = Integer.parseInt(globalProperties.get(
-                        UIEventAdapterConstants.ADAPTER_KEEP_ALIVE_TIME_NAME));
+                        WebsocketEventAdapterConstants.ADAPTER_KEEP_ALIVE_TIME_NAME));
             } else {
-                defaultKeepAliveTime = UIEventAdapterConstants.DEFAULT_KEEP_ALIVE_TIME_IN_MILLIS;
+                defaultKeepAliveTime = WebsocketEventAdapterConstants.DEFAULT_KEEP_ALIVE_TIME_IN_MILLIS;
             }
 
-            if (globalProperties.get(UIEventAdapterConstants.ADAPTER_EXECUTOR_JOB_QUEUE_SIZE_NAME) != null) {
+            if (globalProperties.get(WebsocketEventAdapterConstants.ADAPTER_EXECUTOR_JOB_QUEUE_SIZE_NAME) != null) {
                 jobQueSize = Integer.parseInt(globalProperties.get(
-                        UIEventAdapterConstants.ADAPTER_EXECUTOR_JOB_QUEUE_SIZE_NAME));
+                        WebsocketEventAdapterConstants.ADAPTER_EXECUTOR_JOB_QUEUE_SIZE_NAME));
             } else {
-                jobQueSize = UIEventAdapterConstants.ADAPTER_EXECUTOR_JOB_QUEUE_SIZE;
+                jobQueSize = WebsocketEventAdapterConstants.ADAPTER_EXECUTOR_JOB_QUEUE_SIZE;
             }
 
             executorService = new ThreadPoolExecutor(minThread, maxThread, defaultKeepAliveTime, TimeUnit.MILLISECONDS,
@@ -137,7 +137,7 @@ public class UIEventAdapter implements OutputEventAdapter {
         streamPayloadAttributes = streamDefinition.getPayloadData();
 
         ConcurrentHashMap<Integer, ConcurrentHashMap<String, String>> tenantSpecifcEventOutputAdapterMap =
-                UIEventAdaptorServiceDataHolder.getTenantSpecificOutputEventStreamAdapterMap();
+                WebsocketEventAdaptorServiceDataHolder.getTenantSpecificOutputEventStreamAdapterMap();
 
         ConcurrentHashMap<String, String> streamSpecifAdapterMap = tenantSpecifcEventOutputAdapterMap.get(tenantId);
 
@@ -157,7 +157,7 @@ public class UIEventAdapter implements OutputEventAdapter {
             streamSpecifAdapterMap.put(streamId, eventAdapterConfiguration.getName());
 
             ConcurrentHashMap<Integer, ConcurrentHashMap<String, LinkedBlockingDeque<Object>>> tenantSpecificStreamMap =
-                    UIEventAdaptorServiceDataHolder.getTenantSpecificStreamEventMap();
+                    WebsocketEventAdaptorServiceDataHolder.getTenantSpecificStreamEventMap();
             ConcurrentHashMap<String, LinkedBlockingDeque<Object>> streamSpecificEventsMap =
                     tenantSpecificStreamMap.get(tenantId);
             if (streamSpecificEventsMap == null) {
@@ -175,16 +175,16 @@ public class UIEventAdapter implements OutputEventAdapter {
             }
         }
 
-        if (globalProperties.get(UIEventAdapterConstants.ADAPTER_EVENT_QUEUE_SIZE_NAME) != null) {
+        if (globalProperties.get(WebsocketEventAdapterConstants.ADAPTER_EVENT_QUEUE_SIZE_NAME) != null) {
             try {
                 queueSize = Integer.parseInt(
-                        globalProperties.get(UIEventAdapterConstants.ADAPTER_EVENT_QUEUE_SIZE_NAME));
+                        globalProperties.get(WebsocketEventAdapterConstants.ADAPTER_EVENT_QUEUE_SIZE_NAME));
             } catch (NumberFormatException e) {
                 log.error("String does not have the appropriate format for conversion." + e.getMessage());
-                queueSize = UIEventAdapterConstants.EVENTS_QUEUE_SIZE;
+                queueSize = WebsocketEventAdapterConstants.EVENTS_QUEUE_SIZE;
             }
         } else {
-            queueSize = UIEventAdapterConstants.EVENTS_QUEUE_SIZE;
+            queueSize = WebsocketEventAdapterConstants.EVENTS_QUEUE_SIZE;
         }
     }
 
@@ -256,9 +256,9 @@ public class UIEventAdapter implements OutputEventAdapter {
             eventString = message.toString();
         }
 
-        Object[] eventValues = new Object[UIEventAdapterConstants.INDEX_TWO];
-        eventValues[UIEventAdapterConstants.INDEX_ZERO] = eventString;
-        eventValues[UIEventAdapterConstants.INDEX_ONE] = System.currentTimeMillis();
+        Object[] eventValues = new Object[WebsocketEventAdapterConstants.INDEX_TWO];
+        eventValues[WebsocketEventAdapterConstants.INDEX_ZERO] = eventString;
+        eventValues[WebsocketEventAdapterConstants.INDEX_ONE] = System.currentTimeMillis();
         streamSpecificEvents.add(eventValues);
 
         // fetch all valid sessions checked against any queryParameters provided when subscribing.
@@ -282,14 +282,14 @@ public class UIEventAdapter implements OutputEventAdapter {
     public void destroy() {
         int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
 
-        ConcurrentHashMap<String, String> tenantSpecificAdapterMap = UIEventAdaptorServiceDataHolder
+        ConcurrentHashMap<String, String> tenantSpecificAdapterMap = WebsocketEventAdaptorServiceDataHolder
                 .getTenantSpecificOutputEventStreamAdapterMap().get(tenantId);
         if (tenantSpecificAdapterMap != null && streamId != null) {
             tenantSpecificAdapterMap.remove(streamId);      //Removing outputadapter and streamId
         }
 
         ConcurrentHashMap<String, LinkedBlockingDeque<Object>> tenantSpecificStreamEventMap =
-                UIEventAdaptorServiceDataHolder.getTenantSpecificStreamEventMap().get(tenantId);
+                WebsocketEventAdaptorServiceDataHolder.getTenantSpecificStreamEventMap().get(tenantId);
         if (tenantSpecificStreamEventMap != null && streamId != null) {
             //Removing the streamId and events registered for the output adapter
             tenantSpecificStreamEventMap.remove(streamId);
@@ -310,7 +310,7 @@ public class UIEventAdapter implements OutputEventAdapter {
      *                                     the matching Steam-Definition for the given StreamId cannot be retrieved.
      */
     private StreamDefinition getStreamDefinition(String streamId) throws OutputEventAdapterException {
-        EventStreamService eventStreamService = UIEventAdaptorServiceDataHolder.getEventStreamService();
+        EventStreamService eventStreamService = WebsocketEventAdaptorServiceDataHolder.getEventStreamService();
         if (eventStreamService != null) {
             try {
                 return eventStreamService.getStreamDefinition(streamId);
@@ -337,11 +337,11 @@ public class UIEventAdapter implements OutputEventAdapter {
      */
     private CopyOnWriteArrayList<WebSocketSessionRequest> getValidSessions(Object event) {
         CopyOnWriteArrayList<WebSocketSessionRequest> validSessions = new CopyOnWriteArrayList<>();
-        UIOutputCallbackControllerServiceImpl uiOutputCallbackControllerServiceImpl =
-                UIEventAdaptorServiceDataHolder.getUIOutputCallbackRegisterServiceImpl();
+        WebsocketOutputCallbackControllerServiceImpl websocketOutputCallbackControllerServiceImpl =
+                WebsocketEventAdaptorServiceDataHolder.getUIOutputCallbackRegisterServiceImpl();
         // get all subscribed web-socket sessions.
         CopyOnWriteArrayList<WebSocketSessionRequest> webSocketSessionUtils =
-                uiOutputCallbackControllerServiceImpl.getSessions(tenantId, streamId);
+                websocketOutputCallbackControllerServiceImpl.getSessions(tenantId, streamId);
         if (webSocketSessionUtils != null) {
             for (WebSocketSessionRequest webSocketSessionUtil : webSocketSessionUtils) {
                 boolean isValidSession;

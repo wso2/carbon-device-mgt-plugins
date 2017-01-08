@@ -25,7 +25,7 @@ import org.wso2.carbon.device.mgt.output.adapter.websocket.authentication.Authen
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.Authorizer;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.service.WebsocketValidationService;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.service.WebsocketValidationServiceImpl;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.util.UIEventAdapterConstants;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.util.WebsocketEventAdapterConstants;
 import org.wso2.carbon.event.output.adapter.core.MessageType;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapter;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterConfiguration;
@@ -41,20 +41,20 @@ import java.util.ResourceBundle;
 /**
  * The UI event adapter factory class to create a UI output adapter
  */
-public class UIEventAdapterFactory extends OutputEventAdapterFactory {
+public class WebsocketEventAdapterFactory extends OutputEventAdapterFactory {
 
     private ResourceBundle resourceBundle = ResourceBundle.getBundle("org.wso2.carbon.device.mgt.output.adapter.websocket.i18n" +
             ".Resources", Locale.getDefault());
     private BundleContext bundleContext;
     private boolean isAuthInitialized = false;
-    private static final Log log = LogFactory.getLog(UIEventAdapter.class);
+    private static final Log log = LogFactory.getLog(WebsocketEventAdapter.class);
 
-    public UIEventAdapterFactory() {
+    public WebsocketEventAdapterFactory() {
     }
 
     @Override
     public String getType() {
-        return UIEventAdapterConstants.ADAPTER_TYPE_UI;
+        return WebsocketEventAdapterConstants.ADAPTER_TYPE_UI;
     }
 
     @Override
@@ -77,8 +77,8 @@ public class UIEventAdapterFactory extends OutputEventAdapterFactory {
 
     @Override
     public String getUsageTips() {
-        return resourceBundle.getString(UIEventAdapterConstants.ADAPTER_USAGE_TIPS_PREFIX) + " "
-                + resourceBundle.getString(UIEventAdapterConstants.ADAPTER_USAGE_TIPS_POSTFIX);
+        return resourceBundle.getString(WebsocketEventAdapterConstants.ADAPTER_USAGE_TIPS_PREFIX) + " "
+                + resourceBundle.getString(WebsocketEventAdapterConstants.ADAPTER_USAGE_TIPS_POSTFIX);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class UIEventAdapterFactory extends OutputEventAdapterFactory {
         if (!isAuthInitialized) {
             initializeAuthenticatorAndAuthorizor(globalProperties);
         }
-        return new UIEventAdapter(eventAdapterConfiguration, globalProperties);
+        return new WebsocketEventAdapter(eventAdapterConfiguration, globalProperties);
     }
 
     public BundleContext getBundleContext() {
@@ -100,24 +100,26 @@ public class UIEventAdapterFactory extends OutputEventAdapterFactory {
 
     private void initializeAuthenticatorAndAuthorizor (Map<String, String> globalProperties) {
         if (!isAuthInitialized) {
-            synchronized (UIEventAdapterFactory.class) {
+            synchronized (WebsocketEventAdapterFactory.class) {
                 if (!isAuthInitialized) {
                     try {
                         WebsocketValidationServiceImpl websocketValidationService =
                                 new WebsocketValidationServiceImpl();
                         String authenticatorClassName = globalProperties.get(
-                                UIEventAdapterConstants.AUTHENTICATOR_CLASS);
-                        String authorizerClassName = globalProperties.get(UIEventAdapterConstants.AUTHORIZER_CLASS);
+                                WebsocketEventAdapterConstants.AUTHENTICATOR_CLASS);
+                        String authorizerClassName = globalProperties.get(WebsocketEventAdapterConstants.AUTHORIZER_CLASS);
                         if (authenticatorClassName != null && !authenticatorClassName.isEmpty()) {
                             Class<? extends Authenticator> authenticatorClass = Class.forName(authenticatorClassName)
                                     .asSubclass(Authenticator.class);
                             Authenticator authenticator = authenticatorClass.newInstance();
+                            authenticator.init(globalProperties);
                             websocketValidationService.setAuthenticator(authenticator);
                         }
                         if (authorizerClassName != null && !authorizerClassName.isEmpty()) {
                             Class<? extends Authorizer> authorizerClass = Class.forName(authorizerClassName)
                                     .asSubclass(Authorizer.class);
                             Authorizer authorizer = authorizerClass.newInstance();
+                            authorizer.init(globalProperties);
                             websocketValidationService.setAuthorizer(authorizer);
                         }
                         bundleContext.registerService(
