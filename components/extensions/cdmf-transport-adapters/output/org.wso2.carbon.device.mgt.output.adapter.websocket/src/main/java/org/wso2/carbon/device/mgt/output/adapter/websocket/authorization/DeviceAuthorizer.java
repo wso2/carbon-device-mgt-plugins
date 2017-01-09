@@ -31,13 +31,13 @@ import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.
         .DeviceAccessAuthorizationAdminService;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.dto.DeviceAuthorizationResult;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.dto.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.config.Properties;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.config.Property;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.config.WebsocketConfig;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.util.PropertyUtils;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.util.WebSocketSessionRequest;
+import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
 
 import javax.websocket.Session;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -50,26 +50,34 @@ public class DeviceAuthorizer implements Authorizer {
     private static final String CDMF_SERVER_BASE_CONTEXT = "/api/device-mgt/v1.0";
     private static final String DEVICE_MGT_SERVER_URL = "deviceMgtServerUrl";
     private static final String STAT_PERMISSION = "statsPermission";
+    private static final String DEVICE_ID = "deviceId";
+    private static final String DEVICE_TYPE = "deviceType";
     private static Log logger = LogFactory.getLog(DeviceAuthorizer.class);
     private static List<String> statPermissions;
 
     public DeviceAuthorizer() {
-        Properties properties =
-                WebsocketConfig.getInstance().getWebsocketValidationConfigs().getAuthorizer().getProperties();
-        statPermissions = getPermissions(properties);
-        deviceAccessAuthorizationAdminService = Feign.builder()
-                .requestInterceptor(new OAuthRequestInterceptor())
-                .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
-                .target(DeviceAccessAuthorizationAdminService.class, getDeviceMgtServerUrl(properties)
-                        + CDMF_SERVER_BASE_CONTEXT);
+    }
+
+    @Override
+    public void init(Map<String, String> globalProperties) {
+        statPermissions = getPermissions(globalProperties);
+        try {
+            deviceAccessAuthorizationAdminService = Feign.builder()
+                    .requestInterceptor(new OAuthRequestInterceptor(globalProperties))
+                    .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
+                    .target(DeviceAccessAuthorizationAdminService.class, getDeviceMgtServerUrl(globalProperties)
+                            + CDMF_SERVER_BASE_CONTEXT);
+        } catch (OutputEventAdapterException e) {
+            logger.error("Invalid value for deviceMgtServerUrl in globalProperties.");
+        }
     }
 
     @Override
     public boolean isAuthorized(AuthenticationInfo authenticationInfo, Session session, String stream) {
         WebSocketSessionRequest webSocketSessionRequest = new WebSocketSessionRequest(session);
         Map<String, String> queryParams = webSocketSessionRequest.getQueryParamValuePairs();
-        String deviceId = queryParams.get("deviceId");
-        String deviceType = queryParams.get("deviceType");
+        String deviceId = queryParams.get(DEVICE_ID);
+        String deviceType = queryParams.get(DEVICE_TYPE);
 
         if (deviceId != null && !deviceId.isEmpty() && deviceType != null && !deviceType.isEmpty()) {
 
@@ -102,27 +110,19 @@ public class DeviceAuthorizer implements Authorizer {
         return false;
     }
 
-    private String getDeviceMgtServerUrl(Properties properties) {
-        String deviceMgtServerUrl = null;
-        for (Property property : properties.getProperty()) {
-            if (property.getName().equals(DEVICE_MGT_SERVER_URL)) {
-                deviceMgtServerUrl = property.getValue();
-                break;
-            }
-        }
+    private String getDeviceMgtServerUrl(Map<String, String> properties) throws OutputEventAdapterException {
+        String deviceMgtServerUrl = PropertyUtils.replaceProperty(properties.get(DEVICE_MGT_SERVER_URL));
         if (deviceMgtServerUrl == null || deviceMgtServerUrl.isEmpty()) {
             logger.error("deviceMgtServerUrl can't be empty ");
         }
         return deviceMgtServerUrl;
     }
 
-    private List<String> getPermissions(Properties properties) {
-        List<String> permission = new ArrayList<>();
-        for (Property property : properties.getProperty()) {
-            if (property.getName().equals(STAT_PERMISSION)) {
-                permission.add(property.getValue());
-            }
+    private List<String> getPermissions(Map<String, String> properties) {
+        String stats =  properties.get(STAT_PERMISSION);
+        if (stats != null && !stats.isEmpty()) {
+            return Arrays.asList(stats.replace("\n", "").split(" "));
         }
-        return permission;
+        return null;
     }
 }

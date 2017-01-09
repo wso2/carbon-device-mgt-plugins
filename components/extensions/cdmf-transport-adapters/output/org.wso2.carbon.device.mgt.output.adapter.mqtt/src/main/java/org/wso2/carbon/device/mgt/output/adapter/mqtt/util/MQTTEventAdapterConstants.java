@@ -27,8 +27,10 @@ public final class MQTTEventAdapterConstants {
     public static final String ADAPTER_CONF_URL = "url";
     public static final String ADAPTER_CONF_USERNAME = "username";
     public static final String ADAPTER_CONF_USERNAME_HINT = "username.hint";
+    public static final String ADAPTER_CONF_PASSWORD = "password";
+    public static final String ADAPTER_CONF_PASSWORD_HINT = "password.hint";
     public static final String ADAPTER_CONF_DCR_URL = "dcrUrl";
-    public static final String ADAPTER_CONF_DCR_URL_HINT = "dcrUrl.hint";
+    public static final String ADAPTER_CONF_TOKEN_URL = "tokenUrl";
     public static final String ADAPTER_CONF_SCOPES = "scopes";
     public static final String ADAPTER_CONF_SCOPES_HINT = "scopes.hint";
     public static final String ADAPTER_CONF_URL_HINT = "url.hint";
@@ -41,6 +43,9 @@ public final class MQTTEventAdapterConstants {
     public static final String ADAPTER_TEMP_DIRECTORY_NAME = "java.io.tmpdir";
     public static final String ADAPTER_CONF_CLIENTID = "clientId";
     public static final String ADAPTER_CONF_CLIENTID_HINT = "clientId.hint";
+    public static final String EMPTY_STRING = "";
+    public static final String ADAPTER_CONF_KEEP_ALIVE = "keepAlive";
+    public static final int ADAPTER_CONF_DEFAULT_KEEP_ALIVE = 60000;
 
     public static final int DEFAULT_MIN_THREAD_POOL_SIZE = 8;
     public static final int DEFAULT_MAX_THREAD_POOL_SIZE = 100;
@@ -53,9 +58,19 @@ public final class MQTTEventAdapterConstants {
 
     public static final String DEFAULT_CALLBACK = "";
     public static final String DEFAULT_PASSWORD = "";
-    public static final String GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer refresh_token";
+    public static final String GRANT_TYPE = "password";
     public static final String TOKEN_SCOPE = "production";
-    public static final String APPLICATION_TYPE = "device";
-    public static final String CLIENT_ID = "client_id";
-    public static final String CLIENT_SECRET = "client_secret";
+    public static final String APPLICATION_NAME_PREFIX = "OutputAdapter_";
+    public static final String CLIENT_ID = "clientId";
+    public static final String CLIENT_SECRET = "clientSecret";
+
+
+    public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
+    public static final String AUTHORIZATION_HEADER_VALUE_PREFIX = "Basic ";
+    public static final String PASSWORD_GRANT_TYPE = "password";
+    public static final String PASSWORD_GRANT_TYPE_USERNAME = "username";
+    public static final String PASSWORD_GRANT_TYPE_PASSWORD = "password";
+    public static final String PASSWORD_GRANT_TYPE_SCOPES = "scopes";
+    public static final String ACCESS_TOKEN_GRANT_TYPE_PARAM_NAME = "access_token";
+    public static final String GRANT_TYPE_PARAM_NAME = "grant_type";
 }

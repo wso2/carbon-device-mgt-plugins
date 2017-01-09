@@ -66,7 +66,7 @@ public class HTTPEventAdapterFactory extends InputEventAdapterFactory {
 
 		// Transport Exposed
 		Property exposedTransportsProperty = new Property(HTTPEventAdapterConstants.EXPOSED_TRANSPORTS);
-		exposedTransportsProperty.setRequired(true);
+		exposedTransportsProperty.setRequired(false);
 		exposedTransportsProperty.setDisplayName(
 				resourceBundle.getString(HTTPEventAdapterConstants.EXPOSED_TRANSPORTS));
 		exposedTransportsProperty.setOptions(
@@ -74,45 +74,6 @@ public class HTTPEventAdapterFactory extends InputEventAdapterFactory {
 						HTTPEventAdapterConstants.LOCAL, HTTPEventAdapterConstants.ALL});
 		exposedTransportsProperty.setDefaultValue(HTTPEventAdapterConstants.ALL);
 		propertyList.add(exposedTransportsProperty);
-
-		// OAUTH validation endpoint admin service username
-		Property username = new Property(HTTPEventAdapterConstants.USERNAME);
-		username.setRequired(true);
-		username.setDisplayName(resourceBundle.getString(HTTPEventAdapterConstants.USERNAME));
-		username.setHint(resourceBundle.getString(HTTPEventAdapterConstants.USERNAME_HINT));
-		propertyList.add(username);
-
-		// OAUTH validation endpoint admin service password
-		Property password = new Property(HTTPEventAdapterConstants.PASSWORD);
-		password.setRequired(true);
-		password.setDisplayName(resourceBundle.getString(HTTPEventAdapterConstants.PASSWORD));
-		password.setHint(resourceBundle.getString(HTTPEventAdapterConstants.PASSWORD_HINT));
-		propertyList.add(password);
-
-		// OAUTH validation endpoint
-		Property tokenValidationEndpoint = new Property(HTTPEventAdapterConstants.TOKEN_VALIDATION_ENDPOINT_URL);
-		tokenValidationEndpoint.setRequired(true);
-		tokenValidationEndpoint.setDisplayName(resourceBundle.getString(HTTPEventAdapterConstants.TOKEN_VALIDATION_ENDPOINT_URL));
-		tokenValidationEndpoint.setHint(resourceBundle.getString(HTTPEventAdapterConstants.TOKEN_VALIDATION_ENDPOINT_URL_HINT));
-		propertyList.add(tokenValidationEndpoint);
-
-		Property maximumHttpConnectionPerHost = new Property(HTTPEventAdapterConstants.MAXIMUM_HTTP_CONNECTION_PER_HOST);
-		maximumHttpConnectionPerHost.setRequired(true);
-		maximumHttpConnectionPerHost.setDisplayName(resourceBundle.getString(
-				HTTPEventAdapterConstants.MAXIMUM_HTTP_CONNECTION_PER_HOST));
-		maximumHttpConnectionPerHost.setHint(resourceBundle.getString(
-				HTTPEventAdapterConstants.MAXIMUM_HTTP_CONNECTION_PER_HOST_HINT));
-		maximumHttpConnectionPerHost.setDefaultValue(HTTPEventAdapterConstants.MAX_HTTP_CONNECTION);
-		propertyList.add(maximumHttpConnectionPerHost);
-
-		Property maxTotalHttpConnection = new Property(HTTPEventAdapterConstants.MAXIMUM_TOTAL_HTTP_CONNECTION);
-		maxTotalHttpConnection.setRequired(true);
-		maxTotalHttpConnection.setDisplayName(resourceBundle.getString(
-				HTTPEventAdapterConstants.MAXIMUM_TOTAL_HTTP_CONNECTION));
-		maxTotalHttpConnection.setHint(resourceBundle.getString(
-				HTTPEventAdapterConstants.MAXIMUM_TOTAL_HTTP_CONNECTION_HINT));
-		maxTotalHttpConnection.setDefaultValue(HTTPEventAdapterConstants.MAX_TOTAL_HTTP_CONNECTION);
-		propertyList.add(maxTotalHttpConnection);
 
 		//Content Validator details
 		Property contentValidator = new Property(HTTPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME);

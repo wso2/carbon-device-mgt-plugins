@@ -30,7 +30,7 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppConfig;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.xmpp.XmppConfig;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.NetworkUtils;
 

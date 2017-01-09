@@ -36,7 +36,6 @@ import javax.ws.rs.core.MediaType;
 /**
  * This hold the api defintion that is used as a contract with netflix feign.
  */
-@Path("/token")
 public interface TokenIssuerService {
 
     @POST
@@ -44,6 +43,12 @@ public interface TokenIssuerService {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     AccessTokenInfo getToken(@QueryParam("grant_type") String grant, @QueryParam("username") String username,
                              @QueryParam("password") String password);
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    AccessTokenInfo getToken(@QueryParam("grant_type") String grant, @QueryParam("username") String username,
+                             @QueryParam("password") String password, @QueryParam("scopes") String scopes);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)

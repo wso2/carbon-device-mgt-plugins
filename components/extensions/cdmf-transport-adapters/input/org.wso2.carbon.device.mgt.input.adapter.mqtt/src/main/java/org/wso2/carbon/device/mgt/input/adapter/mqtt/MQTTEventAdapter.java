@@ -53,29 +53,13 @@ public class MQTTEventAdapter implements InputEventAdapter {
     public void init(InputEventAdapterListener eventAdapterListener) throws InputEventAdapterException {
         this.eventAdapterListener = eventAdapterListener;
         try {
-            int keepAlive;
 
-            //If global properties are available those will be assigned else constant values will be assigned
-            if (globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_KEEP_ALIVE) != null) {
-                keepAlive = Integer.parseInt((globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_KEEP_ALIVE)));
-            } else {
-                keepAlive = MQTTEventAdapterConstants.ADAPTER_CONF_DEFAULT_KEEP_ALIVE;
-            }
-            mqttBrokerConnectionConfiguration = new MQTTBrokerConnectionConfiguration(
-                    eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_URL),
-                    eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME),
-                    eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES),
-                    eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL),
-                    eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION),
-                    keepAlive,
-                    eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME),
-                    eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME)
-                    );
-            mqttAdapterListener = new MQTTAdapterListener(mqttBrokerConnectionConfiguration,
-                    eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC),
-                    eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID),
-                    eventAdapterListener, PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
-
+            mqttBrokerConnectionConfiguration = new MQTTBrokerConnectionConfiguration(eventAdapterConfiguration
+                    ,globalProperties);
+            mqttAdapterListener = new MQTTAdapterListener(mqttBrokerConnectionConfiguration
+                    ,eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC)
+                    ,eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID)
+                    ,eventAdapterListener, PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
         } catch (Throwable t) {
             throw new InputEventAdapterException(t.getMessage(), t);
         }

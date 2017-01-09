@@ -18,14 +18,7 @@
   -->
 <eventReceiver name="arduino_receiver" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
     <from eventAdapterType="oauth-http">
-        <property name="maximumHttpConnectionPerHost">2</property>
-        <property name="username">admin</property>
         <property name="contentValidator">org.wso2.carbon.device.mgt.input.adapter.http.util.HTTPContentValidator</property>
-        <property name="contentTransformer">default</property>
-        <property name="transports">all</property>
-        <property name="maximumTotalHttpConnection">100</property>
-        <property name="tokenValidationEndpointUrl">https://localhost:${dcr.endpoint.port}/services/OAuth2TokenValidationService</property>
-        <property name="password">admin</property>
     </from>
     <mapping customMapping="disable" type="json"/>
     <to streamName="org.wso2.iot.arduino" version="1.0.0"/>

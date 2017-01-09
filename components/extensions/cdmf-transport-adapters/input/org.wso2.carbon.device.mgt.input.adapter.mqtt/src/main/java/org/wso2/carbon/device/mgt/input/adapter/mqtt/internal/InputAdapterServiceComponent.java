@@ -23,13 +23,9 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.MQTTEventAdapterFactory;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterFactory;
-import org.wso2.carbon.user.core.service.RealmService;
 
 /**
  * @scr.component name="input.iot.mqtt.AdapterService.component" immediate="true"
- * @scr.reference name="user.realmservice.default"
- * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
- * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
  */
 public class InputAdapterServiceComponent {
 
@@ -46,14 +42,6 @@ public class InputAdapterServiceComponent {
 		} catch (RuntimeException e) {
 			log.error("Can not create the input adapter service ", e);
 		}
-	}
-
-	protected void setRealmService(RealmService realmService) {
-		InputAdapterServiceDataHolder.registerRealmService(realmService);
-	}
-
-	protected void unsetRealmService(RealmService realmService) {
-		InputAdapterServiceDataHolder.registerRealmService(null);
 	}
 
 	protected void setHttpService(HttpService httpService) {

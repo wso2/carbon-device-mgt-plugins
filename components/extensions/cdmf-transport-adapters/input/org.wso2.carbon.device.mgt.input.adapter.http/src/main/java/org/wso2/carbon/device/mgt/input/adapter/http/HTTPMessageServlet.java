@@ -60,7 +60,8 @@ public class HTTPMessageServlet extends HttpServlet {
 	private static OAuthAuthenticator oAuthAuthenticator;
 
 	public HTTPMessageServlet(InputEventAdapterListener eventAdaptorListener, int tenantId,
-							  InputEventAdapterConfiguration eventAdapterConfiguration) {
+							  InputEventAdapterConfiguration eventAdapterConfiguration,
+                              Map<String, String> globalProperties) {
 		this.eventAdaptorListener = eventAdaptorListener;
 		this.tenantId = tenantId;
 		this.exposedTransports = eventAdapterConfiguration.getProperties().get(
@@ -107,7 +108,7 @@ public class HTTPMessageServlet extends HttpServlet {
 		}
 
 		jwtAuthenticator = new JWTAuthenticator();
-		oAuthAuthenticator = new OAuthAuthenticator(eventAdapterConfiguration);
+		oAuthAuthenticator = new OAuthAuthenticator(globalProperties);
 	}
 
 	@Override
