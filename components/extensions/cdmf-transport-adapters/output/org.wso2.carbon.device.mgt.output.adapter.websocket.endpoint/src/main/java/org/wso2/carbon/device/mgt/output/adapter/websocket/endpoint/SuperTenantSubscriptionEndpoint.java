@@ -75,7 +75,7 @@ public class SuperTenantSubscriptionEndpoint extends SubscriptionEndpoint {
 					PrivilegedCarbonContext.startTenantFlow();
 					PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(
 							MultitenantConstants.SUPER_TENANT_ID);
-					ServiceHolder.getInstance().getUiOutputCallbackControllerService().subscribeWebsocket(streamName,
+					ServiceHolder.getInstance().getWebsocketOutputCallbackControllerService().subscribeWebsocket(streamName,
 																										  version,
 																										  session);
 				} finally {

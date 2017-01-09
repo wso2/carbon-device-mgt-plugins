@@ -52,7 +52,7 @@ public class SubscriptionEndpoint {
 					() +
 							  ", for request URI - " + session.getRequestURI());
 		}
-		ServiceHolder.getInstance().getUiOutputCallbackControllerService().unsubscribeWebsocket(streamName, version,
+		ServiceHolder.getInstance().getWebsocketOutputCallbackControllerService().unsubscribeWebsocket(streamName, version,
 																								session);
 	}
 
@@ -68,7 +68,7 @@ public class SubscriptionEndpoint {
 		log.error(
 				"Error occurred in session ID: " + session.getId() + ", for request URI - " + session.getRequestURI() +
 						", " + throwable.getMessage(), throwable);
-		ServiceHolder.getInstance().getUiOutputCallbackControllerService().unsubscribeWebsocket(streamName, version,
+		ServiceHolder.getInstance().getWebsocketOutputCallbackControllerService().unsubscribeWebsocket(streamName, version,
 																								session);
 	}
 }

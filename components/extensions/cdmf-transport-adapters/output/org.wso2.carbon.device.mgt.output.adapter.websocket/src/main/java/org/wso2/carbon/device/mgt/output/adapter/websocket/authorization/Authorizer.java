@@ -21,11 +21,18 @@ package org.wso2.carbon.device.mgt.output.adapter.websocket.authorization;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authentication.AuthenticationInfo;
 
 import javax.websocket.Session;
+import java.util.Map;
 
 /**
  * Check whether the client is authorized to connect.
  */
 public interface Authorizer {
+
+    /**
+     * This is used to initialize the authenticator
+     * @param globalProperties related to the output adapter
+     */
+    void init(Map<String, String> globalProperties);
 
     /**
      * Check whether the client is authorized to connect with the stream.

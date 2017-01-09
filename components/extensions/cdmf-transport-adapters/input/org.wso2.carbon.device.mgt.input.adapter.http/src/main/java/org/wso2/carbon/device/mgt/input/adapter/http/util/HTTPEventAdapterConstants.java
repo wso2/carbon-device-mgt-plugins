@@ -51,8 +51,8 @@ public final class HTTPEventAdapterConstants {
     public static final String MAXIMUM_TOTAL_HTTP_CONNECTION_HINT = "maximumTotalHttpConnection.hint";
     public static final String MAXIMUM_HTTP_CONNECTION_PER_HOST = "maximumHttpConnectionPerHost";
     public static final String MAXIMUM_HTTP_CONNECTION_PER_HOST_HINT = "maximumHttpConnectionPerHost.hint";
-    public static final String TOKEN_VALIDATION_ENDPOINT_URL = "tokenValidationEndpointUrl";
-    public static final String TOKEN_VALIDATION_ENDPOINT_URL_HINT = "tokenValidationEndpointUrl.hint";
+    public static final String TOKEN_VALIDATION_ENDPOINT_URL = "keymanagerUrl";
+    public static final String TOKEN_VALIDATION_POST_FIX = "/services/OAuth2TokenValidationService";
     public static final String USERNAME = "username";
     public static final String USERNAME_HINT = "username.hint";
     public static final String PASSWORD = "password";

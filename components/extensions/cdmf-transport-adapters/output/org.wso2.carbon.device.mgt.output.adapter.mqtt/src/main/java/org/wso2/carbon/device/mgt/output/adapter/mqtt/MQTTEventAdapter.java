@@ -118,19 +118,7 @@ public class MQTTEventAdapter implements OutputEventAdapter {
     @Override
     public void connect() {
         MQTTBrokerConnectionConfiguration mqttBrokerConnectionConfiguration =
-                new MQTTBrokerConnectionConfiguration(eventAdapterConfiguration.getStaticProperties()
-                                                              .get(MQTTEventAdapterConstants.ADAPTER_CONF_URL),
-                                                      eventAdapterConfiguration.getStaticProperties()
-                                                              .get(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME),
-                                                      eventAdapterConfiguration.getStaticProperties()
-                                                              .get(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL),
-                                                      eventAdapterConfiguration.getStaticProperties()
-                                                              .get(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES),
-                                                      connectionKeepAliveInterval,
-                                                      eventAdapterConfiguration.getStaticProperties()
-                                                              .get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION)
-                );
-
+                new MQTTBrokerConnectionConfiguration(eventAdapterConfiguration, globalProperties);
         String clientId = eventAdapterConfiguration.getStaticProperties().get(
                 MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID);
         qos = eventAdapterConfiguration.getStaticProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_QOS);

@@ -20,8 +20,13 @@ import java.util.List;
 import java.util.Map;
 
 public class OAuthAuthenticator implements Authenticator {
+    OAuthTokenValdiator oAuthTokenValdiator;
+    @Override
+    public void init(Map<String, String> globalProperties) {
+        oAuthTokenValdiator = new OAuthTokenValdiator(globalProperties);
+    }
 
     public AuthenticationInfo isAuthenticated(Map<String, List<String>> webSocketConnectionProperties) {
-        return OAuthTokenValdiator.getInstance().validateToken(webSocketConnectionProperties);
+        return oAuthTokenValdiator.validateToken(webSocketConnectionProperties);
     }
 }

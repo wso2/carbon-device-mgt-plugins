@@ -36,6 +36,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.rmi.RemoteException;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,8 +52,8 @@ public class OAuthAuthenticator {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static Log log = LogFactory.getLog(OAuthAuthenticator.class);
 
-    public OAuthAuthenticator(InputEventAdapterConfiguration eventAdapterConfiguration) {
-        this.stubs = new GenericObjectPool(new OAuthTokenValidaterStubFactory(eventAdapterConfiguration));
+    public OAuthAuthenticator(Map<String, String> globalProperties) {
+        this.stubs = new GenericObjectPool(new OAuthTokenValidaterStubFactory(globalProperties));
     }
 
     public AuthenticationInfo authenticate(HttpServletRequest req) {

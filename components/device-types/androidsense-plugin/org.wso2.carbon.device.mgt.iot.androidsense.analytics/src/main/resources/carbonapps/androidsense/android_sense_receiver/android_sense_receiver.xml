@@ -21,10 +21,8 @@
     <from eventAdapterType="oauth-mqtt">
         <property name="topic">carbon.super/android_sense/+/data</property>
         <property name="username">admin</property>
+		<property name="password">admin</property>
         <property name="contentValidator">org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTContentValidator</property>
-        <property name="contentTransformer">default</property>
-        <property name="dcrUrl">https://${iot.core.host}:${iot.core.https.port}/dynamic-client-web/register</property>
-        <property name="url">tcp://${mqtt.broker.host}:${mqtt.broker.port}</property>
         <property name="cleanSession">true</property>
     </from>
     <mapping customMapping="disable" type="json"/>

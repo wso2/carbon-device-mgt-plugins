@@ -35,13 +35,15 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.BasePoolableObjectFactory;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authentication.oauth.exception.OAuthTokenValidationException;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.constants.WebsocketConstants;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.util.PropertyUtils;
+import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * This follows object pool pattern to manage the stub for oauth validation service.
@@ -49,11 +51,11 @@ import java.util.Properties;
 public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
 	private static final Log log = LogFactory.getLog(OAuthTokenValidaterStubFactory.class);
 	private HttpClient httpClient;
-	Properties tokenValidationProperties;
+	Map<String, String> tokenValidationProperties;
 
 
-	public OAuthTokenValidaterStubFactory(Properties tokenValidationProperties) {
-		this.tokenValidationProperties = tokenValidationProperties;
+	public OAuthTokenValidaterStubFactory(Map<String, String> globalProperties) {
+		this.tokenValidationProperties = globalProperties;
 		this.httpClient = createHttpClient();
 	}
 
@@ -91,51 +93,46 @@ public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
 	 */
 	private OAuth2TokenValidationServiceStub generateStub() throws OAuthTokenValidationException {
 		OAuth2TokenValidationServiceStub stub;
-		try {
-			URL hostURL = new URL(tokenValidationProperties.getProperty((WebsocketConstants.TOKEN_VALIDATION_ENDPOINT_URL)));
-			if (hostURL != null) {
-				stub = new OAuth2TokenValidationServiceStub(hostURL.toString());
-				if (stub != null) {
-					ServiceClient client = stub._getServiceClient();
-					client.getServiceContext().getConfigurationContext().setProperty(
-							HTTPConstants.CACHED_HTTP_CLIENT, httpClient);
+        try {
+            URL hostURL = new URL(PropertyUtils.replaceProperty(tokenValidationProperties.get(
+                    (WebsocketConstants.TOKEN_VALIDATION_ENDPOINT_URL)))
+                                          + WebsocketConstants.TOKEN_VALIDATION_CONTEX);
+            stub = new OAuth2TokenValidationServiceStub(hostURL.toString());
+            ServiceClient client = stub._getServiceClient();
+            client.getServiceContext().getConfigurationContext().setProperty(
+                    HTTPConstants.CACHED_HTTP_CLIENT, httpClient);
 
-					HttpTransportProperties.Authenticator auth =
-							new HttpTransportProperties.Authenticator();
-					auth.setPreemptiveAuthentication(true);
-					String username = tokenValidationProperties.getProperty(WebsocketConstants.USERNAME);
-					String password = tokenValidationProperties.getProperty(WebsocketConstants.PASSWORD);
-					auth.setPassword(username);
-					auth.setUsername(password);
-					Options options = client.getOptions();
-					options.setProperty(HTTPConstants.AUTHENTICATE, auth);
-					options.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Constants.VALUE_TRUE);
-					client.setOptions(options);
-					if (hostURL.getProtocol().equals("https")) {
-						// set up ssl factory since axis2 https transport is used.
-						EasySSLProtocolSocketFactory sslProtocolSocketFactory = createProtocolSocketFactory();
-						Protocol authhttps = new Protocol(hostURL.getProtocol()
-								, (ProtocolSocketFactory) sslProtocolSocketFactory, hostURL.getPort());
-						Protocol.registerProtocol(hostURL.getProtocol(), authhttps);
-						options.setProperty(HTTPConstants.CUSTOM_PROTOCOL_HANDLER, authhttps);
-					}
-				} else {
-					String errorMsg = "OAuth Validation instanization failed.";
-					throw new OAuthTokenValidationException(errorMsg);
-				}
-			} else {
-				String errorMsg = "host url is invalid";
-				throw new OAuthTokenValidationException(errorMsg);
-			}
-		} catch (AxisFault axisFault) {
-			throw new OAuthTokenValidationException(
-					"Error occurred while creating the OAuth2TokenValidationServiceStub.", axisFault);
-		} catch (MalformedURLException e) {
-			throw new OAuthTokenValidationException(
-					"Error occurred while parsing token endpoint URL", e);
-		}
+            HttpTransportProperties.Authenticator auth =
+                    new HttpTransportProperties.Authenticator();
+            auth.setPreemptiveAuthentication(true);
+            String username = tokenValidationProperties.get(WebsocketConstants.USERNAME);
+            String password = tokenValidationProperties.get(WebsocketConstants.PASSWORD);
+            auth.setPassword(username);
+            auth.setUsername(password);
+            Options options = client.getOptions();
+            options.setProperty(HTTPConstants.AUTHENTICATE, auth);
+            options.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Constants.VALUE_TRUE);
+            client.setOptions(options);
+            if (hostURL.getProtocol().equals("https")) {
+                // set up ssl factory since axis2 https transport is used.
+                EasySSLProtocolSocketFactory sslProtocolSocketFactory = createProtocolSocketFactory();
+                Protocol authhttps = new Protocol(hostURL.getProtocol()
+                        , (ProtocolSocketFactory) sslProtocolSocketFactory, hostURL.getPort());
+                Protocol.registerProtocol(hostURL.getProtocol(), authhttps);
+                options.setProperty(HTTPConstants.CUSTOM_PROTOCOL_HANDLER, authhttps);
+            }
 
-		return stub;
+        } catch (AxisFault axisFault) {
+            throw new OAuthTokenValidationException(
+                    "Error occurred while creating the OAuth2TokenValidationServiceStub.", axisFault);
+        } catch (MalformedURLException e) {
+            throw new OAuthTokenValidationException(
+                    "Error occurred while parsing token endpoint URL", e);
+        } catch (OutputEventAdapterException e) {
+            throw new OAuthTokenValidationException("Invalid token endpoint url", e);
+        }
+
+        return stub;
 	}
 
 	/**
@@ -165,9 +162,9 @@ public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
 	 */
 	private HttpClient createHttpClient() {
 		HttpConnectionManagerParams params = new HttpConnectionManagerParams();
-		params.setDefaultMaxConnectionsPerHost(Integer.parseInt(tokenValidationProperties.getProperty(
-				WebsocketConstants.MAXIMUM_HTTP_CONNECTION_PER_HOST)));
-		params.setMaxTotalConnections(Integer.parseInt(tokenValidationProperties.getProperty(
+		params.setDefaultMaxConnectionsPerHost(Integer.parseInt(tokenValidationProperties.get(
+                WebsocketConstants.MAXIMUM_HTTP_CONNECTION_PER_HOST)));
+		params.setMaxTotalConnections(Integer.parseInt(tokenValidationProperties.get(
 				WebsocketConstants.MAXIMUM_TOTAL_HTTP_CONNECTION)));
 		HttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
 		connectionManager.setParams(params);

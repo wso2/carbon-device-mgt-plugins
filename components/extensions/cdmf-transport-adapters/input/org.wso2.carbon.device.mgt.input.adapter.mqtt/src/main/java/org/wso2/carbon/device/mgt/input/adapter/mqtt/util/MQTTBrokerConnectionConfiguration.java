@@ -17,28 +17,38 @@
 */
 package org.wso2.carbon.device.mgt.input.adapter.mqtt.util;
 
+import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;
 import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterException;
+
+import java.util.Map;
 
 /**
  * This holds the configurations related to MQTT Broker.
  */
 public class MQTTBrokerConnectionConfiguration {
 
-    private String brokerUsername = null;
+    private String username = null;
+    private String password = null;
     private String brokerScopes = null;
     private boolean cleanSession = true;
     private int keepAlive;
     private String brokerUrl;
     private String dcrUrl;
+    private String tokenUrl;
     private String contentValidatorClassName;
     private String contentTransformerClassName;
+    private String adapterName;
 
     public String getBrokerScopes() {
         return brokerScopes;
     }
 
-    public String getBrokerUsername() {
-        return brokerUsername;
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public boolean isCleanSession() {
@@ -65,21 +75,44 @@ public class MQTTBrokerConnectionConfiguration {
         return contentTransformerClassName;
     }
 
-    public MQTTBrokerConnectionConfiguration(String brokerUrl, String brokerUsername, String brokerScopes,
-                                             String dcrUrl, String cleanSession, int keepAlive,
-                                             String contentValidatorClassName, String contentTransformerClassName) throws InputEventAdapterException {
-        this.brokerUsername = brokerUsername;
-        this.brokerScopes = brokerScopes;
+    public String getTokenUrl() {
+        return tokenUrl;
+    }
+
+    public String getAdapterName() {
+        return adapterName;
+    }
+
+    public MQTTBrokerConnectionConfiguration(InputEventAdapterConfiguration eventAdapterConfiguration,
+                                             Map<String, String> globalProperties) throws InputEventAdapterException {
+
+        adapterName = eventAdapterConfiguration.getName();
+        this.username = eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME);
+        this.password = eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD);
+        this.brokerScopes = eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES);
         if (brokerScopes == null) {
             this.brokerScopes = MQTTEventAdapterConstants.EMPTY_STRING;
         }
-        this.brokerUrl = PropertyUtils.replaceMqttProperty(brokerUrl);
-        this.dcrUrl = PropertyUtils.replaceMqttProperty(dcrUrl);
-        this.contentValidatorClassName = contentValidatorClassName;
-        if (cleanSession != null) {
-            this.cleanSession = Boolean.parseBoolean(cleanSession);
+        String url = eventAdapterConfiguration .getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_URL);
+        if (url == null || url.isEmpty()) {
+            url = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_URL);
         }
-        this.keepAlive = keepAlive;
-        this.contentTransformerClassName = contentTransformerClassName;
+        this.brokerUrl = PropertyUtils.replaceMqttProperty(url);
+        this.dcrUrl = PropertyUtils
+                .replaceMqttProperty(globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL));
+        this.tokenUrl = PropertyUtils
+                .replaceMqttProperty(globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_TOKEN_URL));
+        this.contentValidatorClassName = eventAdapterConfiguration.getProperties()
+                .get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME);
+        this.cleanSession = Boolean.parseBoolean(eventAdapterConfiguration.getProperties()
+                                                         .get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION));
+        //If global properties are available those will be assigned else constant values will be assigned
+        if (globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_KEEP_ALIVE) != null) {
+            keepAlive = Integer.parseInt((globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_KEEP_ALIVE)));
+        } else {
+            keepAlive = MQTTEventAdapterConstants.ADAPTER_CONF_DEFAULT_KEEP_ALIVE;
+        }
+        this.contentTransformerClassName = eventAdapterConfiguration.getProperties()
+                .get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME);
     }
 }

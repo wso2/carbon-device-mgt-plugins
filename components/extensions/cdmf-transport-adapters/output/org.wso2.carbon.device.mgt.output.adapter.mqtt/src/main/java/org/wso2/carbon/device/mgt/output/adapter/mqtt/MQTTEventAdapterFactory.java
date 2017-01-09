@@ -50,7 +50,7 @@ public class MQTTEventAdapterFactory extends OutputEventAdapterFactory {
         //Broker Url
         Property brokerUrl = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_URL);
         brokerUrl.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_URL));
-        brokerUrl.setRequired(true);
+        brokerUrl.setRequired(false);
         brokerUrl.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_URL_HINT));
 
         //Broker Username
@@ -59,11 +59,11 @@ public class MQTTEventAdapterFactory extends OutputEventAdapterFactory {
         userName.setRequired(true);
         userName.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME_HINT));
 
-        //Broker dcr URL
-        Property dcrUrl = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL);
-        dcrUrl.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL));
-        dcrUrl.setRequired(true);
-        dcrUrl.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL_HINT));
+        //Broker Password
+        Property password = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD);
+        password.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD));
+        password.setRequired(true);
+        password.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD_HINT));
 
         //Broker Connection Scopes
         Property scopes = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES);
@@ -95,10 +95,10 @@ public class MQTTEventAdapterFactory extends OutputEventAdapterFactory {
 
         staticPropertyList.add(brokerUrl);
         staticPropertyList.add(userName);
-        staticPropertyList.add(dcrUrl);
         staticPropertyList.add(scopes);
         staticPropertyList.add(clearSession);
         staticPropertyList.add(qos);
+        staticPropertyList.add(password);
         return staticPropertyList;
     }
 

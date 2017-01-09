@@ -34,7 +34,6 @@ import org.apache.commons.pool.BasePoolableObjectFactory;
 import org.apache.log4j.Logger;
 import org.wso2.carbon.core.util.Utils;
 import org.wso2.carbon.device.mgt.input.adapter.http.oauth.exception.OAuthTokenValidationException;
-import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;
 import org.wso2.carbon.device.mgt.input.adapter.http.util.HTTPEventAdapterConstants;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
 
@@ -42,6 +41,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.util.Map;
 
 /**
  * This follows object pool pattern to manage the stub for oauth validation service.
@@ -49,11 +49,11 @@ import java.security.GeneralSecurityException;
 public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
 	private static final Logger log = Logger.getLogger(OAuthTokenValidaterStubFactory.class);
 	private HttpClient httpClient;
-	InputEventAdapterConfiguration eventAdapterConfiguration;
+    Map<String, String> globalProperties;
 
 
-	public OAuthTokenValidaterStubFactory(InputEventAdapterConfiguration eventAdapterConfiguration) {
-		this.eventAdapterConfiguration = eventAdapterConfiguration;
+	public OAuthTokenValidaterStubFactory(Map<String, String> globalProperties) {
+		this.globalProperties = globalProperties;
 		this.httpClient = createHttpClient();
 	}
 
@@ -92,9 +92,10 @@ public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
 	private OAuth2TokenValidationServiceStub generateStub() throws OAuthTokenValidationException {
 		OAuth2TokenValidationServiceStub stub;
 		try {
-			URL hostURL = new URL(Utils.replaceSystemProperty(eventAdapterConfiguration.getProperties().get(
-					HTTPEventAdapterConstants.TOKEN_VALIDATION_ENDPOINT_URL)));
-			if (hostURL != null) {
+            URL hostURL = new URL(Utils.replaceSystemProperty(globalProperties.get(
+                    HTTPEventAdapterConstants.TOKEN_VALIDATION_ENDPOINT_URL)
+                    + HTTPEventAdapterConstants.TOKEN_VALIDATION_POST_FIX));
+            if (hostURL != null) {
 				stub = new OAuth2TokenValidationServiceStub(hostURL.toString());
 				if (stub != null) {
 					ServiceClient client = stub._getServiceClient();
@@ -104,10 +105,8 @@ public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
 					HttpTransportProperties.Authenticator auth =
 							new HttpTransportProperties.Authenticator();
 					auth.setPreemptiveAuthentication(true);
-					String username = eventAdapterConfiguration.getProperties().get(HTTPEventAdapterConstants
-																							.USERNAME);
-					String password = eventAdapterConfiguration.getProperties().get(HTTPEventAdapterConstants
-																							.PASSWORD);
+					String username = globalProperties.get(HTTPEventAdapterConstants.USERNAME);
+					String password = globalProperties.get(HTTPEventAdapterConstants.PASSWORD);
 					auth.setPassword(username);
 					auth.setUsername(password);
 					Options options = client.getOptions();
@@ -151,8 +150,7 @@ public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
 	 */
 	private EasySSLProtocolSocketFactory createProtocolSocketFactory() throws OAuthTokenValidationException {
 		try {
-			EasySSLProtocolSocketFactory easySSLPSFactory = new EasySSLProtocolSocketFactory();
-			return  easySSLPSFactory;
+			return new EasySSLProtocolSocketFactory();
 		} catch (IOException e) {
 			String errorMsg = "Failed to initiate EasySSLProtocolSocketFactory.";
 			throw new OAuthTokenValidationException(errorMsg, e);
@@ -170,9 +168,9 @@ public class OAuthTokenValidaterStubFactory extends BasePoolableObjectFactory {
 	 */
 	private HttpClient createHttpClient() {
 		HttpConnectionManagerParams params = new HttpConnectionManagerParams();
-		params.setDefaultMaxConnectionsPerHost(Integer.parseInt(eventAdapterConfiguration.getProperties().get(
-				HTTPEventAdapterConstants.MAXIMUM_HTTP_CONNECTION_PER_HOST)));
-		params.setMaxTotalConnections(Integer.parseInt(eventAdapterConfiguration.getProperties().get(
+		params.setDefaultMaxConnectionsPerHost(Integer.parseInt(globalProperties.get(
+                HTTPEventAdapterConstants.MAXIMUM_HTTP_CONNECTION_PER_HOST)));
+		params.setMaxTotalConnections(Integer.parseInt(globalProperties.get(
 				HTTPEventAdapterConstants.MAXIMUM_TOTAL_HTTP_CONNECTION)));
 		HttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
 		connectionManager.setParams(params);
