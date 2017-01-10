@@ -45,7 +45,7 @@ $(document).ready(function () {
         var url = $(this).prop("href");
         var hash = url.substring(url.indexOf("#") + 1);
 
-        if (hash == "device_location") {
+        if (hash == "device_location_tab") {
             if (!map) {
                 loadLeafletMap();
             }

@@ -27,6 +27,7 @@ import org.wso2.carbon.device.mgt.common.ProvisioningConfig;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
+import org.wso2.carbon.device.mgt.common.policy.mgt.PolicyMonitoringManager;
 import org.wso2.carbon.device.mgt.common.push.notification.PushNotificationConfig;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.android.impl.util.AndroidPluginConstants;
@@ -47,6 +48,7 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
     private static final String NOTIFIER_PROPERTY = "notifierType";
     private static final String GCM_API_KEY = "gcmAPIKey";
     private static final String GCM_SENDER_ID = "gcmSenderId";
+    private PolicyMonitoringManager policyMonitoringManager;
 
     @Override
     public String getType() {
@@ -61,6 +63,7 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
     @Override
     public void init() throws DeviceManagementException {
         this.deviceManager = new AndroidDeviceManager();
+        this.policyMonitoringManager = new AndroidPolicyMonitoringManager();
     }
 
     @Override
@@ -103,6 +106,11 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
             log.error("Unable to get the Android platform configuration from registry.");
         }
         return null;
+    }
+
+    @Override
+    public PolicyMonitoringManager getPolicyMonitoringManager() {
+        return policyMonitoringManager;
     }
 
     private String getConfigProperty(List<ConfigurationEntry> configs, String propertyName) {

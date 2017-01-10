@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>cdmf-transport-adapters</artifactId>
-        <version>3.0.5-SNAPSHOT</version>
+        <version>3.0.6-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -59,10 +59,6 @@
         <dependency>
             <groupId>com.googlecode.json-simple.wso2</groupId>
             <artifactId>json-simple</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.devicemgt</groupId>
-            <artifactId>org.wso2.carbon.identity.jwt.client.extension</artifactId>
         </dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
@@ -128,7 +124,6 @@
                             org.apache.http.client.methods;version="${httpclient.version.range}",
                             org.apache.http.impl.client;version="${httpclient.version.range}",
                             org.json.simple.*,
-                            org.wso2.carbon.identity.jwt.client.extension.*,
                             com.jayway.jsonpath.*
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>

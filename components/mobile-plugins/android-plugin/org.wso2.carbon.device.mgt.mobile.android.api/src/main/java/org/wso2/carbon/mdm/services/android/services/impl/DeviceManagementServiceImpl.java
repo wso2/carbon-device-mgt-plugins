@@ -39,7 +39,7 @@ import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 import org.wso2.carbon.mdm.services.android.util.AndroidDeviceUtils;
 import org.wso2.carbon.mdm.services.android.util.Message;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
-import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
 import javax.validation.Valid;

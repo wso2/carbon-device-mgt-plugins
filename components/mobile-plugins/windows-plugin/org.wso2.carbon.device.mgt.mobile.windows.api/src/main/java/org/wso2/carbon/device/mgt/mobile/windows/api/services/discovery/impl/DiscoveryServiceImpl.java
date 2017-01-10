@@ -102,21 +102,6 @@ public class DiscoveryServiceImpl implements DiscoveryService {
     }
 
     /**
-     * This is the first method called through device. The device checks the availability of the
-     * Service end point by calling this method.
-     *
-     * @return - HTTP 200OK message
-     */
-    @Override
-    public Response discoverGet() {
-
-        if (log.isDebugEnabled()) {
-            log.debug("Discovery service end point was triggered via GET method.");
-        }
-        return Response.ok().build();
-    }
-
-    /**
      * Get authentication policy from the tenant configuration, otherwise set default value as Federated.
      *
      * @return Authentication policy.

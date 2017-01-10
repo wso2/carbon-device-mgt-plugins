@@ -24,15 +24,16 @@ import io.swagger.annotations.ExtensionProperty;
 import io.swagger.annotations.Extension;
 import io.swagger.annotations.Tag;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.AuthorizationScope;
-import io.swagger.annotations.Authorization;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ResponseHeader;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EventBeanWrapper;
+import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
@@ -52,7 +53,7 @@ import javax.ws.rs.core.Response;
                 }
         ),
         tags = {
-                @Tag(name = "devicemgt_android", description = "")
+                @Tag(name = "android", description = "")
         }
 )
 @Api(value = "Event Receiver", description = "Event publishing/retrieving related APIs. To enable event publishing/retrieving you need to" +
@@ -61,6 +62,16 @@ import javax.ws.rs.core.Response;
 @Path("/events")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll Device",
+                        description = "Register an Android device",
+                        key = "perm:android:enroll",
+                        permissions = {"/device-mgt/devices/enroll/android"}
+                )
+        }
+)
 public interface EventReceiverService {
 
     @POST
@@ -72,12 +83,10 @@ public interface EventReceiverService {
             value = "Publishing Events",
             notes = "Publish events received by the WSO2 EMM Android client to the WSO2 Data Analytics Server (DAS) using this API.",
             tags = "Event Receiver",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(scope = "/device-mgt/devices/enroll/android",
-                                    description = "Publish Events to DAS") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
+                    })
             }
     )
     @ApiResponses(
@@ -137,12 +146,10 @@ public interface EventReceiverService {
             response = DeviceState.class,
             responseContainer = "List",
             tags = "Event Receiver",
-            authorizations = {
-                    @Authorization(
-                            value="permission",
-                            scopes = { @AuthorizationScope(scope = "/device-mgt/devices/enroll/android",
-                                    description = "Publish Events to DAS") }
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
+                    })
             }
     )
     @ApiResponses(

@@ -116,7 +116,7 @@ public class SenseClientAsyncExecutor extends AsyncTask<String, Void, Map<String
             TokenIssuerService tokenIssuerService = Feign.builder().client(disableHostnameVerification).requestInterceptor(
                     new BasicAuthRequestInterceptor(apiApplicationKey.getConsumerKey(), apiApplicationKey.getConsumerSecret()))
                     .contract(new JAXRSContract()).encoder(new JacksonEncoder()).decoder(new JacksonDecoder())
-                    .target(TokenIssuerService.class, endpoint + SenseConstants.TOKEN_ISSUER_CONTEXT);
+                    .target(TokenIssuerService.class, endpoint);
             accessTokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password, "device_" + deviceId);
 
             //DeviceRegister

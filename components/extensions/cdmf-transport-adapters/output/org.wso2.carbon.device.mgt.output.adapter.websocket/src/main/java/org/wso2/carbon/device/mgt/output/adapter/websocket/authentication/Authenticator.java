@@ -23,8 +23,13 @@ import java.util.Map;
 public interface Authenticator {
 
     /**
+     * This is used to initialize the authenticator
+     * @param globalProperties related to the output adapter
+     */
+    void init(Map<String, String> globalProperties);
+
+    /**
      * Check whether the client is authenticated to connect.
-     * @param session user object.
      * @return AuthenticationInfo which contains authentication client information.
      */
     AuthenticationInfo isAuthenticated(Map<String, List<String>> webSocketConnectionProperties);

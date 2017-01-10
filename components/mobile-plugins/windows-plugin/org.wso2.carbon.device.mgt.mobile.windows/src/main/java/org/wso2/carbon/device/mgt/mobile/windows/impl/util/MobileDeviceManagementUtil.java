@@ -38,6 +38,7 @@ import org.wso2.carbon.registry.api.RegistryException;
 import org.wso2.carbon.registry.api.Resource;
 import org.wso2.carbon.registry.core.Registry;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
@@ -66,6 +67,7 @@ public class MobileDeviceManagementUtil {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
 		try {
+			factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			DocumentBuilder docBuilder = factory.newDocumentBuilder();
 			return docBuilder.parse(file);
 		} catch (Exception e) {

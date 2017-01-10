@@ -42,4 +42,6 @@ public class AndroidSenseConstants {
     public static final String CONFIG_TYPE = "general";
     public static final String DEFAULT_ENDPOINT = "tcp://localhost:1886";
 
+    public static final String SCOPE = "scope";
+
 }

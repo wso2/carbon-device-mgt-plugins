@@ -51,6 +51,7 @@ import org.xml.sax.SAXException;
 import javax.annotation.Resource;
 import javax.jws.WebService;
 import javax.servlet.ServletContext;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -102,7 +103,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         String headerTo = null;
         String encodedWap;
         List<Header> headers = getHeaders();
-        for (Header headerElement : headers != null ? headers : null) {
+        for (Header headerElement : headers) {
             String nodeName = headerElement.getName().getLocalPart();
             if (PluginConstants.SECURITY.equals(nodeName)) {
                 Element element = (Element) headerElement.getObject();
@@ -231,6 +232,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             signedCertEncodedString = base64Encoder.encodeAsString(signedCertificate.getEncoded());
 
             DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+            domFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             DocumentBuilder builder;
 
             builder = domFactory.newDocumentBuilder();
