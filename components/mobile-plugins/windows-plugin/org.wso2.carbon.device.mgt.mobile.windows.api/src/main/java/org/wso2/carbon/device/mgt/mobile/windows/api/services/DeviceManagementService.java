@@ -46,7 +46,7 @@ import javax.ws.rs.core.Response;
                         @Extension(properties = {
                                 @ExtensionProperty(name = "name", value = "Windows 10 Device management"),
                                 @ExtensionProperty(name = "context",
-                                        value = "/api/device-mgt/windows/v1.0/management"),
+                                        value = "/api/device-mgt/windows/v1.0/management/devicemgt"),
                         })
                 }
         ),

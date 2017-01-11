@@ -68,7 +68,7 @@ public final class PluginConstants {
     public static final String CXF_REQUEST_URI = "org.apache.cxf.request.uri";
 
     //Web services media types
-    public static final String SYNCML_MEDIA_TYPE = "application/vnd.syncml.dm+xml;charset=utf-8";
+    public static final String SYNCML_MEDIA_TYPE = "application/vnd.syncml.dm+xml";
 
     /**
      * Discovery service related other constants
