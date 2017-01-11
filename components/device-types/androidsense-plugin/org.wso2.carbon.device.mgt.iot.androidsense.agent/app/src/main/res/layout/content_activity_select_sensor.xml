@@ -11,18 +11,18 @@
     tools:context="org.wso2.carbon.iot.android.sense.realtimeviewer.ActivitySelectSensor"
     android:id="@+id/parentContainer">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:hint="@string/sessionId"
-        android:id="@+id/sessionId"
-        android:inputType="text"
-        android:maxLines="1" android:singleLine="true"/>
+    <!--<EditText-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content" android:hint="@string/sessionId"-->
+        <!--android:id="@+id/sessionId"-->
+        <!--android:inputType="text"-->
+        <!--android:maxLines="1" android:singleLine="true"/>-->
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/senseListContainer"
-        android:layout_below="@+id/sessionId">
+        >
     </ListView>
 
 </RelativeLayout>
