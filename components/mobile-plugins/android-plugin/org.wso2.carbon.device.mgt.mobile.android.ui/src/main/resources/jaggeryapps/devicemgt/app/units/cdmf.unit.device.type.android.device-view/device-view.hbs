@@ -336,14 +336,15 @@
                             <div id="device-location"
                                  data-lat="{{device.location.latitude}}"
                                  data-long="{{device.location.longitude}}">
-                                <a class="padding-left"
-                                   href="{{portalUrl}}/portal/dashboards/geo-dashboard/?GLOBAL-STATE={{anchor}}">
-
-                                     <span class="fw-fw-map-location">
-                                         <i class="fw fw-map-location fw-2x"></i>
-                                     </span> View device on the map
-                                </a>
                             </div>
+                            <br/>
+                            <a class="padding-left"
+                               href="{{portalUrl}}/portal/dashboards/geo-dashboard/?GLOBAL-STATE={{anchor}}">
+                                <span class="fw-stack">
+                                    <i class="fw fw-ring fw-stack-2x"></i>
+                                    <i class="fw fw-map-location fw-stack-1x"></i>
+                                </span>View device on the map
+                            </a>
                         {{else}}
                             <div id="map-error" class="message message-warning">
                                 <h4 class="remove-margin">
@@ -436,7 +437,6 @@
                 type="text/x-handlebars-template"></script>
         <!--suppress HtmlUnknownTarget -->
         {{js "js/device-detail.js"}}
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
         {{js "js/load-map.js"}}
     {{/if}}
 {{/zone}}

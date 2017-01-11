@@ -74,7 +74,7 @@ import javax.ws.rs.core.Response;
                         name = "View Configurations",
                         description = "Getting Android Platform Configurations",
                         key = "perm:android:view-configuration",
-                        permissions = {"/device-mgt/platform-configurations/view"}
+                        permissions = {"/device-mgt/devices/enroll/android"}
                 ),
                 @Scope(
                         name = "Manage Configurations",
