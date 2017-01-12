@@ -13,6 +13,7 @@ import org.wso2.carbon.apimgt.application.extension.APIManagementProviderService
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.core.util.Utils;
 import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorizationService;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
@@ -205,7 +206,7 @@ public class APIUtil {
 	}
 
 	public static String getMqttEndpoint() throws ConfigurationManagementException {
-		String iotServerIP = AndroidSenseConstants.DEFAULT_ENDPOINT;
+		String iotServerIP = Utils.replaceSystemProperty(AndroidSenseConstants.DEFAULT_ENDPOINT);
 		iotServerIP = iotServerIP.replace(AndroidSenseConstants.LOCALHOST, getServerUrl());;
 		PlatformConfiguration configuration = APIUtil.getTenantConfigurationManagementService().getConfiguration(
 				AndroidSenseConstants.CONFIG_TYPE);
@@ -224,15 +225,11 @@ public class APIUtil {
 	}
 
 	public static String getServerUrl() {
-		String hostName = ServerConfiguration.getInstance().getFirstProperty(AndroidSenseConstants.HOST_NAME);
 		try {
-			if (hostName == null) {
-				hostName = NetworkUtils.getLocalHostname();
-			}
+			return org.apache.axis2.util.Utils.getIpAddress();
 		} catch (SocketException e) {
-			hostName = "localhost";
 			log.warn("Failed retrieving the hostname, therefore set to localhost", e);
+            return "localhost";
 		}
-		return hostName;
 	}
 }

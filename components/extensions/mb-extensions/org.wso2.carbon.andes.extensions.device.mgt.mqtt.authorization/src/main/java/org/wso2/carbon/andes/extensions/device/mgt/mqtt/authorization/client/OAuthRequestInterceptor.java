@@ -18,6 +18,8 @@ import feign.Feign;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import feign.auth.BasicAuthRequestInterceptor;
+import feign.codec.EncodeException;
+import feign.codec.Encoder;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
@@ -76,7 +78,8 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             tokenIssuerService = Feign.builder().requestInterceptor(
                     new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
-                    .target(TokenIssuerService.class, AuthorizationConfigurationManager.getInstance().getTokenEndpoint());
+                    .target(TokenIssuerService.class,
+                            AuthorizationConfigurationManager.getInstance().getTokenEndpoint());
             tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password, REQUIRED_SCOPE);
             tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
         }
@@ -89,6 +92,5 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         String headerValue = "Bearer " + tokenInfo.getAccess_token();
         template.header("Authorization", headerValue);
     }
-
 
 }

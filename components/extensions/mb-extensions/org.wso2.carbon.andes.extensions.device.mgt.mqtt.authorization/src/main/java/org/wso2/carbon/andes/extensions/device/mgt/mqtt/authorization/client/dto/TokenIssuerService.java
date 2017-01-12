@@ -37,7 +37,7 @@ public interface TokenIssuerService {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     AccessTokenInfo getToken(@QueryParam("grant_type") String grant, @QueryParam("username") String username,
-                             @QueryParam("password") String password, @QueryParam("scopes") String scopes);
+                             @QueryParam("password") String password, @QueryParam("scope") String scopes);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)

@@ -45,6 +45,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private static final String APPLICATION_NAME = "websocket-app";
     private static final String PASSWORD_GRANT_TYPE = "password";
     private static final String REFRESH_GRANT_TYPE = "refresh_token";
+    private static final String REQUIRED_SCOPE = "perm:authorization:verify";
     private ApiApplicationRegistrationService apiApplicationRegistrationService;
     private TokenIssuerService tokenIssuerService;
 
@@ -76,7 +77,6 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             username = getUsername(globalProperties);
             password = getPassword(globalProperties);
             tokenEndpoint = getTokenEndpoint(globalProperties);
-            scopes = getScopes(globalProperties);
             apiApplicationRegistrationService = Feign.builder().requestInterceptor(
                     new BasicAuthRequestInterceptor(username, password))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
@@ -104,11 +104,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
                     new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(TokenIssuerService.class, tokenEndpoint);
-            if (scopes == null || scopes.isEmpty()) {
-                tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password);
-            } else {
-                tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password, scopes);
-            }
+            tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password, REQUIRED_SCOPE);
             tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
         }
         synchronized(this) {
@@ -162,10 +158,5 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         }
         return refreshTimeOffset;
     }
-
-    private String getScopes(Map<String, String> globalProperties) {
-        return globalProperties.get(TOKEN_SCOPES);
-    }
-
 
 }

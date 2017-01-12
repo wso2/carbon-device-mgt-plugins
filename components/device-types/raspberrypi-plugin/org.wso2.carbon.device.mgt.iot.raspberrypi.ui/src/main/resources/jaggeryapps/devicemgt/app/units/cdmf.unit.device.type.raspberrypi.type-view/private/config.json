@@ -2,6 +2,9 @@
   "deviceType": {
     "label": "Raspberry Pi",
     "category": "iot",
-    "downloadAgentUri": "raspberrypi/device/download"
+    "downloadAgentUri": "raspberrypi/device/download",
+    "scopes" : [
+      "perm:raspberrypi:enroll"
+    ]
   }
 }

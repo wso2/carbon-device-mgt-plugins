@@ -437,7 +437,7 @@ public class AgentUtilOperations {
     }
 
     private class APIManagerTokenUtils {
-        public static final String TOKEN_ENDPOINT = "/oauth2/token";
+        public static final String TOKEN_ENDPOINT = "/token";
         public static final String GRANT_TYPE = "grant_type";
         public static final String ACCESS_TOKEN = "access_token";
         public static final String REFRESH_TOKEN = "refresh_token";
