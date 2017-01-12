@@ -20,6 +20,7 @@ package org.wso2.carbon.device.mgt.output.adapter.websocket.internal;
 
 import org.wso2.carbon.device.mgt.output.adapter.websocket.WebsocketOutputCallbackControllerServiceImpl;
 import org.wso2.carbon.event.stream.core.EventStreamService;
+import org.wso2.carbon.registry.core.service.RegistryService;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -35,6 +36,7 @@ public final class WebsocketEventAdaptorServiceDataHolder {
     private static ConcurrentHashMap<Integer, ConcurrentHashMap<String, LinkedBlockingDeque<Object>>>
             tenantSpecificStreamEventMap = new ConcurrentHashMap<>();
     private static EventStreamService eventStreamService;
+    private static RegistryService registryService;
 
     public static void registerEventStreamService(EventStreamService eventBuilderService) {
         WebsocketEventAdaptorServiceDataHolder.eventStreamService = eventBuilderService;
@@ -62,5 +64,16 @@ public final class WebsocketEventAdaptorServiceDataHolder {
     public static ConcurrentHashMap<Integer, ConcurrentHashMap<String, LinkedBlockingDeque<Object>>>
     getTenantSpecificStreamEventMap() {
         return tenantSpecificStreamEventMap;
+    }
+
+    public static RegistryService getRegistryService() {
+        if (registryService == null) {
+            throw new IllegalStateException("Registry service is not initialized properly");
+        }
+        return registryService;
+    }
+
+    public static void setRegistryService(RegistryService registryService) {
+        WebsocketEventAdaptorServiceDataHolder.registryService = registryService;
     }
 }

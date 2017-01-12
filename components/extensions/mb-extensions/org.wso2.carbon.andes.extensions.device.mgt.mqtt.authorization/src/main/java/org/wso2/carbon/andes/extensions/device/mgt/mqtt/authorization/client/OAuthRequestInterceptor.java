@@ -40,6 +40,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private static final String APPLICATION_NAME = "mqtt_broker";
     private static final String PASSWORD_GRANT_TYPE = "password";
     private static final String REFRESH_GRANT_TYPE = "refresh_token";
+    private static final String REQUIRED_SCOPE = "perm:authorization:verify";
     private ApiApplicationRegistrationService apiApplicationRegistrationService;
     private TokenIssuerService tokenIssuerService;
 
@@ -76,7 +77,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
                     new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(TokenIssuerService.class, AuthorizationConfigurationManager.getInstance().getTokenEndpoint());
-            tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password);
+            tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password, REQUIRED_SCOPE);
             tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
         }
         synchronized (this) {
