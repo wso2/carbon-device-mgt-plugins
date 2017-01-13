@@ -213,7 +213,7 @@ function onRequest(context) {
     deviceViewData["autoCompleteParams"] = autoCompleteParams;
 
     deviceViewData["portalUrl"] = devicemgtProps['portalURL'];
-    var anchor = { "device" : { "id" : deviceId, "type" : deviceType}};
-    deviceViewData["anchor"] = JSON.stringify(anchor);
+    deviceViewData["deviceId"] = deviceId;
+    deviceViewData["deviceType"] = deviceType;
     return deviceViewData;
 }
