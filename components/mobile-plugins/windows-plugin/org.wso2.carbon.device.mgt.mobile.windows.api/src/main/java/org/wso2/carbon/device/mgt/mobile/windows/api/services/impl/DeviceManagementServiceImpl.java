@@ -89,7 +89,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
 
                         if (modifyEnrollWithMoreDetail(request)) {
                             pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
-                            response = operationReply.generateReply(syncmlDocument,pendingOperations);
+                            response = operationReply.generateReply(syncmlDocument, pendingOperations);
                             return Response.status(Response.Status.OK).entity(response).build();
                         } else {
                             String msg = "Error occurred in while modify the enrollment.";
@@ -101,7 +101,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                         log.error(msg);
                         return Response.status(Response.Status.UNAUTHORIZED).entity(msg).build();
                     }
-                } else  {
+                } else {
                     if ((syncmlDocument.getBody().getAlert() != null)) {
                         if (!syncmlDocument.getBody().getAlert().getData().equals(Constants.DISENROLL_ALERT_DATA)) {
                             pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
@@ -155,8 +155,8 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
     private boolean modifyEnrollWithMoreDetail(Document request) throws WindowsDeviceEnrolmentException,
             WindowsOperationException {
 
-        String devMan;
-        String devMod;
+        String devMan = null;
+        String devMod = null;
         boolean status = false;
         String user;
         SyncmlDocument syncmlDocument;
@@ -165,8 +165,15 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             syncmlDocument = SyncmlParser.parseSyncmlPayload(request);
             ReplaceTag replace = syncmlDocument.getBody().getReplace();
             List<ItemTag> itemList = replace.getItems();
-            devMan = itemList.get(PluginConstants.SyncML.DEVICE_MAN_POSITION).getData();
-            devMod = itemList.get(PluginConstants.SyncML.DEVICE_MODEL_POSITION).getData();
+            for (ItemTag itemTag : itemList) {
+                String locURI = itemTag.getSource().getLocURI();
+                if (OperationCode.Info.MANUFACTURER.getCode().equals(locURI)) {
+                    devMan = itemTag.getData();
+                }
+                if (OperationCode.Info.DEVICE_MODEL.getCode().equals(locURI)) {
+                    devMod = itemTag.getData();
+                }
+            }
             user = syncmlDocument.getHeader().getSource().getLocName();
             AuthenticationInfo authenticationInfo = new AuthenticationInfo();
             authenticationInfo.setUsername(user);

@@ -342,6 +342,7 @@ public final class PluginConstants {
         }
         public static final String REQUESTED_WIN10_VERSION = "3.0";
         public static final String REQUESTED_WIN81_VERSION = "2.0";
+        public static final String OS_VERSION = "10";
     }
 
     /**

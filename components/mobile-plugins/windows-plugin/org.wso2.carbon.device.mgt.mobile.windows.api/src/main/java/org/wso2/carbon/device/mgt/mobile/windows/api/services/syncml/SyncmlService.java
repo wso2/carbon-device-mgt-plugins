@@ -37,24 +37,7 @@ import javax.ws.rs.core.Response;
 /**
  * Interface for Windows 8.1 enrollment flow.
  */
-@SwaggerDefinition(
-        info = @Info(
-                version = "1.0.0",
-                title = "",
-                extensions = {
-                        @Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Windows 8.1 Device Management Service"),
-                                @ExtensionProperty(name = "context",
-                                        value = "/api/device-mgt/windows/v1.0/syncml"),
-                        })
-                }
-        ),
-        tags = {
-                @Tag(name = "windows", description = "")
-        }
-)
-@Api(value = "Windows 8.1 Device Management Service",
-        description = "This carries all the resources related to Windows syncml message flow.")
+
 @Path("/devicemanagement")
 public interface SyncmlService {
 

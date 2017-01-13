@@ -120,6 +120,13 @@
                        type="application/json">
             </Operation>
         </Feature>
+        <Feature code="DEVICE_REBOOT">
+            <Name>Reboot</Name>
+            <Description>Reboot the device</Description>
+            <Operation context="/api/device-mgt/windows/v1.0/admin/devices/reboot" method="POST"
+                       type="application/json">
+            </Operation>
+        </Feature>
         <Feature code="DEVICE_INFO">
             <Name>Device info</Name>
             <Description>Request device information</Description>
