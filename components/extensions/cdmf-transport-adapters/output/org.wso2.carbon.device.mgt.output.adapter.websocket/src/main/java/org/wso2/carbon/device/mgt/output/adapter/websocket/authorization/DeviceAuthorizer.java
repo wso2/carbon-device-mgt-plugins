@@ -61,6 +61,11 @@ public class DeviceAuthorizer implements Authorizer {
     @Override
     public void init(Map<String, String> globalProperties) {
         statPermissions = getPermissions(globalProperties);
+        if (statPermissions != null && !statPermissions.isEmpty()) {
+            for (String permission : statPermissions) {
+                PermissionUtil.putPermission(permission);
+            }
+        }
         try {
             deviceAccessAuthorizationAdminService = Feign.builder()
                     .requestInterceptor(new OAuthRequestInterceptor(globalProperties))

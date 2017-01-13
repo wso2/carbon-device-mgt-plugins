@@ -26,12 +26,19 @@ import org.wso2.carbon.device.mgt.output.adapter.websocket.WebsocketOutputCallba
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterFactory;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.WebsocketOutputCallbackControllerService;
 import org.wso2.carbon.event.stream.core.EventStreamService;
+import org.wso2.carbon.registry.core.service.RegistryService;
 
 /**
  * @scr.component component.name="output.extensions.secured.websocket.AdapterService.component" immediate="true"
  * @scr.reference name="eventStreamService.service"
  * interface="org.wso2.carbon.event.stream.core.EventStreamService" cardinality="1..1"
  * policy="dynamic" bind="setEventStreamService" unbind="unsetEventStreamService"
+ * @scr.reference name="registry.service"
+ * interface="org.wso2.carbon.registry.core.service.RegistryService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setRegistryService"
+ * unbind="unsetRegistryService"
  */
 public class WebsocketLocalEventAdapterServiceComponent {
 
@@ -79,5 +86,29 @@ public class WebsocketLocalEventAdapterServiceComponent {
             log.debug("Un-Setting the EventStreamService reference for the UILocalEventAdaptor Service");
         }
         WebsocketEventAdaptorServiceDataHolder.registerEventStreamService(null);
+    }
+
+    /**
+     * Sets Registry Service.
+     *
+     * @param registryService An instance of RegistryService
+     */
+    protected void setRegistryService(RegistryService registryService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Setting Registry Service");
+        }
+        WebsocketEventAdaptorServiceDataHolder.setRegistryService(registryService);
+    }
+
+    /**
+     * Unsets Registry Service.
+     *
+     * @param registryService An instance of RegistryService
+     */
+    protected void unsetRegistryService(RegistryService registryService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Un setting Registry Service");
+        }
+        WebsocketEventAdaptorServiceDataHolder.setRegistryService(null);
     }
 }

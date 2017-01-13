@@ -2,6 +2,9 @@
     "deviceType": {
         "label": "Windows",
         "category": "mobile",
+        "scopes" : [
+          "perm:windows:enroll"
+        ],
         "analyticsEnabled": "false",
         "groupingEnabled": "false",
         "features": {
