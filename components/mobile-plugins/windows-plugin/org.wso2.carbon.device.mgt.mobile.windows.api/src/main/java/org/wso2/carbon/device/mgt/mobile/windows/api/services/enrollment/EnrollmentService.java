@@ -35,25 +35,6 @@ import javax.xml.ws.ResponseWrapper;
 import javax.xml.ws.soap.SOAPBinding;
 import java.io.UnsupportedEncodingException;
 
-@SwaggerDefinition(
-        info = @Info(
-                version = "1.0.0",
-                title = "",
-                extensions = {
-                        @io.swagger.annotations.Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Windows 10 Enrollment Service"),
-                                @ExtensionProperty(name = "context",
-                                        value = "/api/device-mgt/windows/v1.0/deviceenrolment/enrollment"),
-                        })
-                }
-        ),
-        tags = {
-                @Tag(name = "windows", description = "")
-        }
-)
-//@Api(value = "Windows 10 Enrollment Service",
-//        description = "This carries all the resources related to Windows enrollment.")
-
 @WebService(targetNamespace = PluginConstants.DEVICE_ENROLLMENT_SERVICE_TARGET_NAMESPACE, name = "enrollment")
 @BindingType(value = SOAPBinding.SOAP12HTTP_BINDING)
 public interface EnrollmentService {
