@@ -54,8 +54,8 @@ import javax.ws.rs.core.Response;
                 @Tag(name = "windows", description = "")
         }
 )
-@Api(value = "Windows 10 Device management",
-        description = "This carries all the resources related to Windows 10 management session message flow.")
+//@Api(value = "Windows 10 Device management",
+//        description = "This carries all the resources related to Windows 10 management session message flow.")
 @Path("/devicemgt")
 public interface DeviceManagementService {
     @Path("/pending-operations")

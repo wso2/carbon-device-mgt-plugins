@@ -51,8 +51,8 @@ import java.io.UnsupportedEncodingException;
                 @Tag(name = "windows", description = "")
         }
 )
-@Api(value = "Windows 10 Enrollment Service",
-        description = "This carries all the resources related to Windows enrollment.")
+//@Api(value = "Windows 10 Enrollment Service",
+//        description = "This carries all the resources related to Windows enrollment.")
 
 @WebService(targetNamespace = PluginConstants.DEVICE_ENROLLMENT_SERVICE_TARGET_NAMESPACE, name = "enrollment")
 @BindingType(value = SOAPBinding.SOAP12HTTP_BINDING)
