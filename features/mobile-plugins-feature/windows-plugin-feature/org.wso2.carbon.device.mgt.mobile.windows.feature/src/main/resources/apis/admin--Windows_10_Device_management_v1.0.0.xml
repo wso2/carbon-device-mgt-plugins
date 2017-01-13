@@ -2,14 +2,9 @@
     <resource methods="POST" url-mapping="/pending-operations" faultSequence="fault">
         <inSequence>
             <property name="api.ut.backendRequestTime" expression="get-property('SYSTEM_TIME')"/>
+            <property name="AM_KEY_TYPE" value="PRODUCTION" scope="default"/>
             <filter source="$ctx:AM_KEY_TYPE" regex="PRODUCTION">
                 <then>
-<!--
-		<property name="ContentType" value="application/xml" scope="axis2"/>
-		<property name="messageType" value="application/xml" scope="axis2"/>
-		 <property name="DISABLE_CHUNKING" value="true" scope="axis2" />
--->
-
                     <send>
                         <endpoint name="admin--Windows 10 Device management_APIproductionEndpoint_0">
                             <http uri-template="https://localhost:9443/api/device-mgt/windows/v1.0/management/devicemgt"/>
@@ -24,10 +19,6 @@
         </inSequence>
         <outSequence>
             <class name="org.wso2.carbon.apimgt.gateway.handlers.analytics.APIMgtResponseHandler"/>
-<!--
-	    <property name="ContentType" value="application/vnd.syncml.dm+xml" scope="axis2"/>
-	    <property name="messageType" value="application/vnd.syncml.dm+xml" scope="axis2"/>
--->
             <send/>
         </outSequence>
     </resource>

@@ -2,6 +2,7 @@
     <resource methods="POST" url-mapping="/*" faultSequence="fault">
         <inSequence>
             <property name="api.ut.backendRequestTime" expression="get-property('SYSTEM_TIME')"/>
+            <property name="AM_KEY_TYPE" value="PRODUCTION" scope="default"/>
             <filter source="$ctx:AM_KEY_TYPE" regex="PRODUCTION">
                 <then>
                     <send>
@@ -26,17 +27,5 @@
         <handler class="org.wso2.carbon.apimgt.gateway.handlers.security.CORSRequestHandler">
             <property name="apiImplementationType" value="ENDPOINT"/>
         </handler>
-        <handler class="org.wso2.carbon.apimgt.gateway.handlers.security.APIAuthenticationHandler"/>
-        <handler class="org.wso2.carbon.apimgt.gateway.handlers.throttling.APIThrottleHandler">
-            <property name="policyKey" value="gov:/apimgt/applicationdata/tiers.xml"/>
-            <property name="policyKeyApplication" value="gov:/apimgt/applicationdata/app-tiers.xml"/>
-            <property name="id" value="A"/>
-            <property name="policyKeyResource" value="gov:/apimgt/applicationdata/res-tiers.xml"/>
-        </handler>
-        <handler class="org.wso2.carbon.apimgt.gateway.handlers.analytics.APIMgtUsageHandler"/>
-        <handler class="org.wso2.carbon.apimgt.gateway.handlers.analytics.APIMgtGoogleAnalyticsTrackingHandler">
-            <property name="configKey" value="gov:/apimgt/statistics/ga-config.xml"/>
-        </handler>
-        <handler class="org.wso2.carbon.apimgt.gateway.handlers.ext.APIManagerExtensionHandler"/>
     </handlers>
 </api>
