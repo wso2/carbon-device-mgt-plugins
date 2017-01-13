@@ -20,7 +20,7 @@
         <outSequence>
             <class name="org.wso2.carbon.apimgt.gateway.handlers.analytics.APIMgtResponseHandler"/>
             <property name="FORCE_HTTP_CONTENT_LENGTH" scope="axis2" value="true"/>
-    <property name="COPY_CONTENT_LENGTH_FROM_INCOMING" value="true" scope="axis2"/>
+            <property name="COPY_CONTENT_LENGTH_FROM_INCOMING" value="true" scope="axis2"/>
             <send/>
         </outSequence>
     </resource>
