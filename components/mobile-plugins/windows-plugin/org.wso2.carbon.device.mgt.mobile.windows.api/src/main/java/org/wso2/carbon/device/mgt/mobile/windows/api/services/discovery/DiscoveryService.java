@@ -42,24 +42,7 @@ import javax.xml.ws.soap.SOAPBinding;
 /**
  * Interface for Discovery service related operations.
  */
-@SwaggerDefinition(
-        info = @Info(
-                version = "1.0.0",
-                title = "",
-                extensions = {
-                        @Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Windows Discovery Service"),
-                                @ExtensionProperty(name = "context",
-                                        value = "/api/device-mgt/windows/v1.0/discovery/post"),
-                        })
-                }
-        ),
-        tags = {
-                @Tag(name = "windows", description = "")
-        }
-)
-@Api(value = "Windows Discovery Service",
-        description = "This carries all the resources related to Windows Discovery service.")
+
 @WebService(targetNamespace = PluginConstants.DISCOVERY_SERVICE_TARGET_NAMESPACE,
         name = "IDiscoveryService")
 @BindingType(value = SOAPBinding.SOAP12HTTP_BINDING)

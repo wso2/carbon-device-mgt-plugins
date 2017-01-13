@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><api xmlns="http://ws.apache.org/ns/synapse" name="admin--Windows 10 Device management" context="/api/device-mgt/windows/v1.0/management/devicemgt/1.0.0" version="1.0.0" version-type="context">
+    <resource methods="POST" url-mapping="/pending-operations" faultSequence="fault">
+        <inSequence>
+            <property name="api.ut.backendRequestTime" expression="get-property('SYSTEM_TIME')"/>
+            <property name="AM_KEY_TYPE" value="PRODUCTION" scope="default"/>
+            <filter source="$ctx:AM_KEY_TYPE" regex="PRODUCTION">
+                <then>
+                    <send>
+                        <endpoint name="admin--Windows 10 Device management_APIproductionEndpoint_0">
+                            <http uri-template="https://localhost:9443/api/device-mgt/windows/v1.0/management/devicemgt"/>
+                            <property name="ENDPOINT_ADDRESS" value="https://localhost:9443/api/device-mgt/windows/v1.0/management/devicemgt"/>
+                        </endpoint>
+                    </send>
+                </then>
+                <else>
+                    <sequence key="_sandbox_key_error_"/>
+                </else>
+            </filter>
+        </inSequence>
+        <outSequence>
+            <class name="org.wso2.carbon.apimgt.gateway.handlers.analytics.APIMgtResponseHandler"/>
+            <send/>
+        </outSequence>
+    </resource>
+    <handlers>
+        <handler class="org.wso2.carbon.apimgt.gateway.handlers.common.APIMgtLatencyStatsHandler"/>
+        <handler class="org.wso2.carbon.apimgt.gateway.handlers.security.CORSRequestHandler">
+            <property name="apiImplementationType" value="ENDPOINT"/>
+        </handler>
+    </handlers>
+</api>
