@@ -1,6 +1,9 @@
 {
   "deviceType": {
     "label": "Android Sense",
-    "category": "iot"
+    "category": "iot",
+    "scopes" : [
+      "perm:android-sense:enroll"
+    ]
   }
 }

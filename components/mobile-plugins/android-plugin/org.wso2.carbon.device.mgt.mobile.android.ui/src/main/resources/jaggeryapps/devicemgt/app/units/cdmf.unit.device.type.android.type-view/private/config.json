@@ -4,6 +4,9 @@
         "category": "mobile",
         "analyticsEnabled": "false",
         "groupingEnabled": "false",
+        "scopes" : [
+          "perm:android:enroll"
+        ],
         "features": {
             "DEVICE_RING": {
                 "icon": "fw-dial-up",
