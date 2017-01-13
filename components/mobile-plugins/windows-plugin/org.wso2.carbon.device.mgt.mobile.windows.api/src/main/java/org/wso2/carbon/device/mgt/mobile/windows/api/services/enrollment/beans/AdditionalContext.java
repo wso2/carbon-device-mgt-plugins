@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlAccessorType(XmlAccessType.PROPERTY)
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "OIDCollection", namespace = PluginConstants.SOAP_AUTHORIZATION_TARGET_NAMESPACE,
         propOrder = {"contextitem"})
 @SuppressWarnings("unused")
