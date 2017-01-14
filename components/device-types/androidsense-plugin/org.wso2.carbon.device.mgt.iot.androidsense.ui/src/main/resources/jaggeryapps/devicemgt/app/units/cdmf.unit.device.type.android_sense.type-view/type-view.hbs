@@ -282,16 +282,5 @@
 
 {{#zone "bottomJs"}}
     {{js "/js/download.js"}}
-    <script type="text/javascript">
-        $(".download-link").click(function () {
-            toggleEnrollment();
-        });
-
-        function toggleEnrollment() {
-            $(".modalpopup-content").html($("#qr-code-modal").html());
-            generateQRCode(".modalpopup-content .qr-code");
-            showPopup();
-        }
-    </script>
     {{js "/js/jquery.validate.js"}}
 {{/zone}}

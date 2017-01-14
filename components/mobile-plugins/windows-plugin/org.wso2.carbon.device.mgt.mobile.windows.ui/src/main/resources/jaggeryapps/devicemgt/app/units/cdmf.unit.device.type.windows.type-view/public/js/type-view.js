@@ -75,7 +75,7 @@ function generateQRCode(qrCodeClass) {
 function toggleEnrollment() {
     $(".modal-content").html($("#qr-code-modal").html());
     generateQRCode(".modal-content .qr-code");
-    showPopup();
+    modalDialog.show();
 }
 
 var updateNotificationCountOnSuccess = function (data, textStatus, jqXHR) {

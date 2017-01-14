@@ -73,10 +73,29 @@ function generateQRCode(qrCodeClass) {
 }
 
 function toggleEnrollment() {
-    console.log("something happenedfd!");
+    modalDialog.header('<h4 class="pull-left modal-title">' +
+        '<span class="fw-stack"><i class="fw fw-mobile fw-stack-2x"></i>' +
+        '<span class="fw-stack fw-move-right fw-move-bottom">' +
+        '<i class="fw fw-circle-outline fw-stack-2x"></i>' +
+        '<i class="fw fw-circle fw-stack-2x fw-stroke text-info"></i>' +
+        '<i class="fw fw-add fw-stack-1x fw-inverse"></i></span>' +
+        '</span>Add your {{@unit.params.deviceTypeName}} device to {{@app.conf.appName}}</h4>' +
+        '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+        '<i class="fw fw-cancel"></i></button>');
+    modalDialog.content('<div class="panel-body col-centered text-center">' +
+        '<h5>Please scan the following QR code using your Android device.</h5>' +
+        '<br><div class="panel panel-default"><div class="panel-body">' +
+        '<div class="qr-code"></div></div></div><br>' +
+        '<h5>Not having a QR code scanner in your device?<br><br>Try following link<br><br>' +
+        '<a href="http://10.100.7.101:9763/android-web-agent/enrollment" ' +
+        'target="_blank"><b>http://10.100.7.101:9763/android-web-agent/enrollment</b></a>' +
+        '<br><br>on your device\'s Internet browser instead.</h5></div>');
+    modalDialog.footer('<div class="buttons">' +
+        '<a href="javascript:modalDialog.hide()" class="btn-operations btn-default">Ok</a></div>');
+
     $(".modal-content").html($("#qr-code-modal").html());
     generateQRCode(".modal-content .qr-code");
-    showPopup();
+    modalDialog.show();
 }
 
 var updateNotificationCountOnSuccess = function (data, textStatus, jqXHR) {
@@ -344,10 +363,6 @@ $.fn.collapse_nav_sub = function () {
         $(navSelector).addClass('collapse-nav-sub');
     }
 };
-
-$(".download-link").click(function(){
-    toggleEnrollment();
-});
 
 $(document).ready(function () {
     $.sidebar_toggle();
