@@ -23,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.core.util.Utils;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
@@ -56,15 +57,12 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtil {
 
     private static final Log log = LogFactory.getLog(ZipUtil.class);
-    public static final String HOST_NAME = "HostName";
-    private static final String HTTPS_PORT_PROPERTY = "httpsPort";
-    private static final String HTTP_PORT_PROPERTY = "httpPort";
 
     private static final String LOCALHOST = "localhost";
-    private static final String HTTPS_PROTOCOL_APPENDER = "https://";
-    private static final String HTTP_PROTOCOL_APPENDER = "http://";
+    private static final String HTTPS_PROTOCOL_URL = "https://${iot.gateway.host}:${iot.gateway.https.port}";
+    private static final String HTTP_PROTOCOL_URL = "http://${iot.gateway.host}:${iot.gateway.http.port}";
     private static final String CONFIG_TYPE = "general";
-    private static final String DEFAULT_MQTT_ENDPOINT = "tcp://localhost:1886";
+    private static final String DEFAULT_MQTT_ENDPOINT = "tcp://${mqtt.broker.host}:${mqtt.broker.port}";
 
     public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
                                     String deviceId, String deviceName, String token,
@@ -78,16 +76,14 @@ public class ZipUtil {
 
         try {
             iotServerIP = getServerUrl();
-            String httpsServerPort = System.getProperty(HTTPS_PORT_PROPERTY);
-            String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
-            String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
-            String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
-            String apimEndpoint = httpsServerEP;
-            String mqttEndpoint = DEFAULT_MQTT_ENDPOINT;
+            String httpsServerEP = Utils.replaceSystemProperty(HTTPS_PROTOCOL_URL);
+            String httpServerEP = Utils.replaceSystemProperty(HTTP_PROTOCOL_URL);
+            String mqttEndpoint = Utils.replaceSystemProperty(DEFAULT_MQTT_ENDPOINT);
             if (mqttEndpoint.contains(LOCALHOST)) {
                 mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
+                httpsServerEP = httpsServerEP.replace(LOCALHOST, iotServerIP);
+                httpServerEP = httpServerEP.replace(LOCALHOST, iotServerIP);
             }
-
             PlatformConfiguration configuration = APIUtil.getTenantConfigurationManagementService().getConfiguration(
                     CONFIG_TYPE);
             if (configuration != null && configuration.getConfiguration() != null && configuration
@@ -115,7 +111,7 @@ public class ZipUtil {
             contextParams.put("DEVICE_NAME", deviceName);
             contextParams.put("HTTPS_EP", httpsServerEP);
             contextParams.put("HTTP_EP", httpServerEP);
-            contextParams.put("APIM_EP", apimEndpoint);
+            contextParams.put("APIM_EP", httpsServerEP);
             contextParams.put("MQTT_EP", mqttEndpoint);
             contextParams.put("DEVICE_TOKEN", token);
             contextParams.put("DEVICE_REFRESH_TOKEN", refreshToken);
@@ -130,17 +126,13 @@ public class ZipUtil {
         }
     }
 
-    private static String getServerUrl() {
-        String hostName = ServerConfiguration.getInstance().getFirstProperty(HOST_NAME);
+    public static String getServerUrl() {
         try {
-            if (hostName == null) {
-                hostName = NetworkUtils.getLocalHostname();
-            }
+            return org.apache.axis2.util.Utils.getIpAddress();
         } catch (SocketException e) {
-            hostName = "localhost";
             log.warn("Failed retrieving the hostname, therefore set to localhost", e);
+            return "localhost";
         }
-        return hostName;
     }
 
     private static ZipArchive getSketchArchive(String archivesPath, String templateSketchPath, Map contextParams

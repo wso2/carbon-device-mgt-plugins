@@ -2,77 +2,47 @@
     "deviceType": {
         "label": "Windows",
         "category": "mobile",
+        "scopes" : [
+          "perm:windows:enroll",
+            "perm:windows:lock-devices",
+            "perm:windows:ring",
+            "perm:windows:wipe",
+            "perm:windows:lock-reset",
+            "perm:windows:reboot",
+            "perm:windows:location",
+            "perm:windows:disenroll"
+        ],
         "analyticsEnabled": "false",
         "groupingEnabled": "false",
         "features": {
             "DEVICE_RING": {
-                "icon": "fw-dial-up"
+                "icon": "fw-dial-up",
+                "permission": "/device-mgt/devices/owning-device/operations/android/ring"
             },
             "DEVICE_LOCK": {
-                "icon": "fw-lock"
+                "icon": "fw-lock",
+                "permission": "/device-mgt/devices/owning-device/operations/windows/lock"
             },
             "DEVICE_LOCATION": {
-                "icon": "fw-map-location"
-            },
-            "CLEAR_PASSWORD": {
-                "icon": "fw-clear"
+                "icon": "fw-map-location",
+                "permission": "/device-mgt/devices/owning-device/operations/windows/location"
             },
             "DEVICE_REBOOT": {
-                "icon": "fw-refresh"
-            },
-            "UPGRADE_FIRMWARE": {
-                "icon": "fw-hardware",
-                "formParams": [
-                    {
-                        "type": "checkbox",
-                        "id": "immediate",
-                        "optional": true,
-                        "label": "Instant Upgrade",
-                        "helper": "Once enabled, device firmware upgrade process will start instantly."
-                    },
-                    {
-                        "type": "text",
-                        "id": "schedule",
-                        "optional": false,
-                        "label": "Enter the date and time to schedule firmware upgrade."
-                    },
-                    {
-                        "type": "text",
-                        "id": "server",
-                        "optional": true,
-                        "label": "Enter firmware upgrade server URL (ie. http://abc.com or http://abc.com/ota)"
-                    }
-                ]
-            },
-            "DEVICE_MUTE": {
-                "icon": "fw-mute"
-            },
-            "NOTIFICATION": {
-                "icon": "fw-message",
-                "formParams": [
-                    {
-                        "type": "text",
-                        "id": "messageText",
-                        "optional": false,
-                        "label": "Title Here..."
-                    },
-                    {
-                        "type": "text",
-                        "id": "messageTitle",
-                        "optional": false,
-                        "label": "Message Here..."
-                    }
-                ]
+                "icon": "fw-refresh",
+                "permission": "/device-mgt/devices/owning-device/operations/windows/reboot"
             },
             "LOCK_RESET": {
-                "icon": "fw-security"
+                "icon": "fw-security",
+                "permission": "/device-mgt/devices/owning-device/operations/windows/lock-reset"
 
             },
             "DISENROLL": {
-                "icon": "fw-block"
+                "icon": "fw-block",
+                "permission": "/device-mgt/devices/owning-device/operations/windows/disenroll"
             },
             "WIPE_DATA": {
-                "icon": "fw-delete"
+                "icon": "fw-delete",
+                "permission": "/device-mgt/devices/owning-device/operations/windows/wipe"
             }
         }
     }

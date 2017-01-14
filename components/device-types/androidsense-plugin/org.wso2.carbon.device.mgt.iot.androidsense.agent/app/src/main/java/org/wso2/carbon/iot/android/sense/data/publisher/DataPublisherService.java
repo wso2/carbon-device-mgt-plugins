@@ -52,11 +52,8 @@ import java.util.List;
  * This is an android service which publishes the data to the server.
  */
 public class DataPublisherService extends Service {
-    private static final String TAG = DataPublisherService.class.getName();
-    private static String KEY_TAG = "key";
-    private static String TIME_TAG = "time";
-    private static String VALUE_TAG = "value";
-    public static Context context;
+    private final String TAG = DataPublisherService.class.getName();
+    private Context context;
 
     @Nullable
     @Override
@@ -68,9 +65,9 @@ public class DataPublisherService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         context = this;
         Log.d(TAG, "service started");
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
+//        Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
                 try {
                     List<Event> events = new ArrayList<>();
                     //retrieve sensor data.
@@ -315,10 +312,10 @@ public class DataPublisherService extends Service {
                 } catch (TransportHandlerException e) {
                     Log.e(TAG, "Data Publish Failed", e);
                 }
-            }
-        };
-        Thread dataUploaderThread = new Thread(runnable);
-        dataUploaderThread.start();
+//            }
+//        };
+//        Thread dataUploaderThread = new Thread(runnable);
+//        dataUploaderThread.start();
         return Service.START_NOT_STICKY;
     }
 }

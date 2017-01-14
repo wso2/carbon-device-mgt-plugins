@@ -183,8 +183,8 @@ public class LocationDataReader extends DataReader implements LocationListener {
             double distance =CalculationByDistance(latitude, longitude, lat_old, lon_old)/1000;
 
             speed = (float)distance/(float)time;
-            Toast.makeText(mContext, longitude+"\n"+latitude+"\nDistance is: "
-                    +distance+"\nSpeed is: "+speed , Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, longitude+"\n"+latitude+"\nDistance is: "
+//                    +distance+"\nSpeed is: "+speed , Toast.LENGTH_SHORT).show();
 
 
             Intent intent = new Intent("speedUpdate");
