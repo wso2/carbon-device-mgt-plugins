@@ -76,7 +76,7 @@ import java.util.List;
                         name = "Un-enroll Device",
                         description = "Unregister an Windows device",
                         key = "perm:windows:disenroll",
-                        permissions = {"/device-mgt/devices/disenroll/windows"}
+                        permissions = {"/device-mgt/devices/owning-device/operations/windows/disenroll"}
                 ),
                 @Scope(
                         name = "Factory Reset",

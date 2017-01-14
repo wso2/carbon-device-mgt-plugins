@@ -41,24 +41,6 @@ import javax.xml.ws.soap.SOAPBinding;
  * Interface for MS-XCEP implementation.
  */
 
-@SwaggerDefinition(
-        info = @Info(
-                version = "1.0.0",
-                title = "",
-                extensions = {
-                        @io.swagger.annotations.Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Windows Enrollment policy Service"),
-                                @ExtensionProperty(name = "context",
-                                        value = "/api/device-mgt/windows/v1.0/certificatepolicy/xcep"),
-                        })
-                }
-        ),
-        tags = {
-                @Tag(name = "windows", description = "")
-        }
-)
-@Api(value = "Windows Enrollment policy Service",
-        description = "This carries all the resources related to Windows enrollment policy.")
 @WebService(targetNamespace = PluginConstants.CERTIFICATE_ENROLLMENT_POLICY_SERVICE_TARGET_NAMESPACE,
 		name = "IPolicy")
 @BindingType(value = SOAPBinding.SOAP12HTTP_BINDING)

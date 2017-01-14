@@ -18,6 +18,8 @@ import feign.Feign;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import feign.auth.BasicAuthRequestInterceptor;
+import feign.codec.EncodeException;
+import feign.codec.Encoder;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
@@ -40,6 +42,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private static final String APPLICATION_NAME = "mqtt_broker";
     private static final String PASSWORD_GRANT_TYPE = "password";
     private static final String REFRESH_GRANT_TYPE = "refresh_token";
+    private static final String REQUIRED_SCOPE = "perm:authorization:verify";
     private ApiApplicationRegistrationService apiApplicationRegistrationService;
     private TokenIssuerService tokenIssuerService;
 
@@ -75,8 +78,9 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             tokenIssuerService = Feign.builder().requestInterceptor(
                     new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
-                    .target(TokenIssuerService.class, AuthorizationConfigurationManager.getInstance().getTokenEndpoint());
-            tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password);
+                    .target(TokenIssuerService.class,
+                            AuthorizationConfigurationManager.getInstance().getTokenEndpoint());
+            tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password, REQUIRED_SCOPE);
             tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
         }
         synchronized (this) {
@@ -88,6 +92,5 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         String headerValue = "Bearer " + tokenInfo.getAccess_token();
         template.header("Authorization", headerValue);
     }
-
 
 }

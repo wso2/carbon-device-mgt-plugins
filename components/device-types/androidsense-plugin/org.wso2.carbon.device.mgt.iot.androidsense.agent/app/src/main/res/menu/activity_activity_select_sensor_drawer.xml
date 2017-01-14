@@ -3,8 +3,8 @@
 
     <item android:id="@+id/select" android:icon="@android:drawable/ic_menu_agenda"
           android:title="Sensors" />
-    <item android:id="@+id/speech_recognizer" android:icon="@android:drawable/ic_menu_agenda"
-          android:title="Speech Recognizer" />
+    <!--<item android:id="@+id/speech_recognizer" android:icon="@android:drawable/ic_menu_agenda"-->
+          <!--android:title="Speech Recognizer" />-->
     <!--<group android:checkableBehavior="single">-->
         <!-- -->
 
