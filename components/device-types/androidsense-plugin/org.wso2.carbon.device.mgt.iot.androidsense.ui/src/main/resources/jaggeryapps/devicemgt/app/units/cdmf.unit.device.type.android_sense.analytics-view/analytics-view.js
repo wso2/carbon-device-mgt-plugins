@@ -21,5 +21,5 @@ function onRequest(context) {
     var deviceId = request.getParameter("deviceId");
 
     //Redirects to the portal app as we do not use the old analytics view.
-    response.sendRedirect(context.app.conf["portalURL"] + "/portal/dashboards/android-iot/real-time?owner=" + user.username + "&deviceId=" + deviceId);
+    response.sendRedirect(context.app.conf["portalURL"] + "/portal/dashboards/android-iot/sensors?owner=" + user.username + "&deviceId=" + deviceId);
 }
