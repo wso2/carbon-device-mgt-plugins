@@ -285,23 +285,7 @@
             </li>-->
 
 			<!-- Advanced -->
-			<li class="uk-parent">
-				<a href="#"><i class="fa fa-plus"></i> Advanced Settings</a>
-				<ul class="uk-nav-sub">
-					<br>
-					<li style="color: white"> <strong>Settings</strong></li>
-				    <!-- Add new tile server url -->
-				    <li>
-				        <a data-toggle="modal" data-target="#addTileServer"><i class="fa fa-plus"></i> Add tile server</a>
-				    </li>
-				    <!-- Add new WMS server url -->
-				    <li>
-				        <a data-toggle="modal" data-target="#addWmsUrl"><i class="fa fa-globe"></i> Add WMS end point</a>
-				    </li>
-				    <br>
-				</ul>
-                </ul>
-			</li>
+			
         </ul>
 
     </div>

@@ -120,6 +120,8 @@ function initializeMap() {
         }
 
     });
+    //setting the sidebar to be opened when page loads
+    $("a[href='#left_side_pannel']").trigger('click');
 }
 
 /* Attribution control */
