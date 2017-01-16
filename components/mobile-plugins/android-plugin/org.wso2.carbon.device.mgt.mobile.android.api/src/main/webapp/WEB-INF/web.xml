@@ -50,6 +50,10 @@
         <param-name>doAuthentication</param-name>
         <param-value>true</param-value>
     </context-param>
+	<context-param>
+		<param-name>isSharedWithAllTenants</param-name>
+		<param-value>true</param-value>
+	</context-param>
     <!--<context-param>-->
     <!--<param-name>managed-api-version</param-name>-->
     <!--<param-value>1.0.0</param-value>-->
