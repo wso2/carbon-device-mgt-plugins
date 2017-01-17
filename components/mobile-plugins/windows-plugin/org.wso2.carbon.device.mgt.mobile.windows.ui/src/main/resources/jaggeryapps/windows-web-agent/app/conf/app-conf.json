@@ -27,10 +27,10 @@
         },
         "sso": {
             "enabled": false,
-            "issuer" : "emm",
-            "appName" : "emm",
+            "issuer" : "devicemgt",
+            "appName" : "devicemgt",
             "identityProviderUrl" : "https://localhost:9443/samlsso",
-            "acs": "https://localhost:9443/emm/uuf/sso/acs",
+            "acs": "https://localhost:9443/devicemgt/uuf/sso/acs",
             "identityAlias": "wso2carbon",
             "responseSigningEnabled" : "true",
             "useTenantKey": false
