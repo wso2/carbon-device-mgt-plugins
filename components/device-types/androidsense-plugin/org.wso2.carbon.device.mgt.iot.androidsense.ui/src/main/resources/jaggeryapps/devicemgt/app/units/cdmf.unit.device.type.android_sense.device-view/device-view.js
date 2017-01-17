@@ -35,7 +35,7 @@ function onRequest(context) {
                 "autoCompleteParams": autoCompleteParams,
                 "encodedFeaturePayloads": "",
                 "portalUrl" : devicemgtProps['portalURL'],
-                "anchor" : JSON.stringify(anchor)
+                "anchor" : encodeURI(JSON.stringify(anchor))
             };
         } else {
             response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
