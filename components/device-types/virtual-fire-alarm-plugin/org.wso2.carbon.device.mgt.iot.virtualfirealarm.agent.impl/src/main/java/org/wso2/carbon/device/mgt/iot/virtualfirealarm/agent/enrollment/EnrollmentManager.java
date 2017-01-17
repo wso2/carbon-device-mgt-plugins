@@ -129,11 +129,8 @@ public class EnrollmentManager {
 
     public void setEnrollmentStatus() {
         KeyStore keyStore;
-
         try {
             keyStore = KeyStore.getInstance(AgentConstants.DEVICE_KEYSTORE_TYPE);
-            keyStore.load(new FileInputStream(AgentConstants.DEVICE_KEYSTORE),
-                          AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray());
 
             this.isEnrolled = (keyStore.containsAlias(AgentConstants.DEVICE_CERT_ALIAS) &&
                     keyStore.containsAlias(AgentConstants.DEVICE_PRIVATE_KEY_ALIAS) &&
@@ -146,21 +143,7 @@ public class EnrollmentManager {
             log.error(AgentConstants.LOG_APPENDER + e);
             log.warn(AgentConstants.LOG_APPENDER + "Device will be re-enrolled.");
             return;
-        } catch (CertificateException | NoSuchAlgorithmException e) {
-            log.error(AgentConstants.LOG_APPENDER + "An error occurred whilst trying to [load] the device KeyStore '" +
-                              AgentConstants.DEVICE_KEYSTORE + "'.");
-            log.error(AgentConstants.LOG_APPENDER + e);
-            log.warn(AgentConstants.LOG_APPENDER + "Device will be re-enrolled.");
-            return;
-        } catch (IOException e) {
-            log.error(AgentConstants.LOG_APPENDER +
-                              "An error occurred whilst trying to load input stream with the keystore file: " +
-                              AgentConstants.DEVICE_KEYSTORE);
-            log.error(AgentConstants.LOG_APPENDER + e);
-            log.warn(AgentConstants.LOG_APPENDER + "Device will be re-enrolled.");
-            return;
         }
-
         try {
             if (this.isEnrolled) {
                 this.SCEPCertificate = (X509Certificate) keyStore.getCertificate(AgentConstants.DEVICE_CERT_ALIAS);
@@ -262,9 +245,6 @@ public class EnrollmentManager {
         KeyStore keyStore;
         try {
             keyStore = KeyStore.getInstance(AgentConstants.DEVICE_KEYSTORE_TYPE);
-            keyStore.load(new FileInputStream(AgentConstants.DEVICE_KEYSTORE),
-                          AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray());
-
             keyStore.setCertificateEntry(alias, certificate);
             keyStore.store(new FileOutputStream(AgentConstants.DEVICE_KEYSTORE),
                            AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray());
@@ -285,9 +265,6 @@ public class EnrollmentManager {
         KeyStore keyStore;
         try {
             keyStore = KeyStore.getInstance(AgentConstants.DEVICE_KEYSTORE_TYPE);
-            keyStore.load(new FileInputStream(AgentConstants.DEVICE_KEYSTORE),
-                          AgentConstants.DEVICE_KEYSTORE_PASSWORD.toCharArray());
-
             Certificate[] certChain = new Certificate[1];
             certChain[0] = certInCertChain;
 
