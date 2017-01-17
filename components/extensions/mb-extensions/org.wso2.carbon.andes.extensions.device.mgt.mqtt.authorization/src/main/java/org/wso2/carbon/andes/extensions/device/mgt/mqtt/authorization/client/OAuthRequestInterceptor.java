@@ -50,7 +50,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
      * Creates an interceptor that authenticates all requests.
      */
     public OAuthRequestInterceptor() {
-        refreshTimeOffset = AuthorizationConfigurationManager.getInstance().getTokenRefreshTimeOffset();
+        refreshTimeOffset = AuthorizationConfigurationManager.getInstance().getTokenRefreshTimeOffset() * 1000;
         String username = AuthorizationConfigurationManager.getInstance().getUsername();
         String password = AuthorizationConfigurationManager.getInstance().getPassword();
         apiApplicationRegistrationService = Feign.builder().requestInterceptor(
@@ -81,7 +81,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
                     .target(TokenIssuerService.class,
                             AuthorizationConfigurationManager.getInstance().getTokenEndpoint());
             tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password, REQUIRED_SCOPE);
-            tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
+            tokenInfo.setExpires_in(System.currentTimeMillis() + (tokenInfo.getExpires_in() * 1000));
         }
         synchronized (this) {
             if (System.currentTimeMillis() + refreshTimeOffset > tokenInfo.getExpires_in()) {
