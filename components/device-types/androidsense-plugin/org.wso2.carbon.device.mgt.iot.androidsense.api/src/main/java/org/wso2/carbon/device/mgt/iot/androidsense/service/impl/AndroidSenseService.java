@@ -69,6 +69,8 @@ import javax.ws.rs.core.Response;
                 )
         }
 )
+@Api(value = "Android Sense Device Management",
+        description = "This carries all the resources related to the Android sense device management functionalities.")
 public interface AndroidSenseService {
 
     /**
