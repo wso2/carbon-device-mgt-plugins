@@ -54,7 +54,7 @@ function setPageTitle() {
       var deviceInfoString = hash.substring(startIdx,lastIdx);
       var deviceInfo = JSON.parse(deviceInfoString);
       if(deviceInfo) {
-        var newTitle = " Geo Dashboard - Device ID: " + deviceInfo.device.id + " Type: " + deviceInfo.device.type;
+        var newTitle = "[ " + deviceInfo.device.id + "]" + " - Geo Dashboard ["  + deviceInfo.device.type + "]";
         window.parent.document.title =  newTitle;
       }
   }
