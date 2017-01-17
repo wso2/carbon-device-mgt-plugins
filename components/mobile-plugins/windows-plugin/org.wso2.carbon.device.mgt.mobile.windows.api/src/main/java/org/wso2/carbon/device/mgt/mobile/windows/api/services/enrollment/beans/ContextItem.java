@@ -20,18 +20,16 @@ package org.wso2.carbon.device.mgt.mobile.windows.api.services.enrollment.beans;
 
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
-@XmlAccessorType(XmlAccessType.PROPERTY)
-@XmlType(name = "ContextItem", namespace = PluginConstants.SOAP_AUTHORIZATION_TARGET_NAMESPACE)
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(name = "ContextItem", namespace = PluginConstants.SOAP_AUTHORIZATION_TARGET_NAMESPACE,
+        propOrder = {"Name", "Value"})
 public class ContextItem {
 
-    @XmlElement(required = true, namespace = PluginConstants.SOAP_AUTHORIZATION_TARGET_NAMESPACE)
+    @XmlAttribute(name = "Name", required = true, namespace = PluginConstants.SOAP_AUTHORIZATION_TARGET_NAMESPACE)
     protected String Name;
-    @XmlElement(required = true, namespace = PluginConstants.SOAP_AUTHORIZATION_TARGET_NAMESPACE)
+    @XmlElement(name = "Value", required = true, namespace = PluginConstants.SOAP_AUTHORIZATION_TARGET_NAMESPACE)
     protected String Value;
 
     public String getValue() {

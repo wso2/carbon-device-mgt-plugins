@@ -1,5 +1,5 @@
 {
-    "appName": "WSO2 Enterprise Mobility Manager",
+    "appName": "WSO2 IOTS",
     "cachingEnabled": true,
     "debuggingEnabled": false,
     "permissionRoot": "/",
@@ -38,8 +38,8 @@
     },
     "generalConfig" : {
         "host" : "https://localhost:9443",
-        "companyName" : "WSO2 Enterprise Mobility Manager",
-        "browserTitle" : "WSO2 EMM",
+        "companyName" : "WSO2 IOTS",
+        "browserTitle" : "WSO2 IOT",
         "copyrightPrefix" : "\u00A9 %date-year%, ",
         "copyrightOwner" : "WSO2 Inc.",
         "copyrightOwnersSite" : "http://www.wso2.org",
