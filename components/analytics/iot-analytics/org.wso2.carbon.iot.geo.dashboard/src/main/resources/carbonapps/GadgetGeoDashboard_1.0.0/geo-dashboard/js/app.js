@@ -41,10 +41,24 @@ function initialLoad() {
         processAfterInitializationMap();
         //Access gps and make zoom to server location as map center
         //navigator.geolocation.getCurrentPosition(success, error);
+        setPageTitle();
         $("#loading").hide();
     }
 }
 
+function setPageTitle() {
+  var hash = window.parent.location.hash;
+  if(hash) {
+      var startIdx = hash.indexOf("/") + 1;
+      var lastIdx = hash.length;
+      var deviceInfoString = hash.substring(startIdx,lastIdx);
+      var deviceInfo = JSON.parse(deviceInfoString);
+      if(deviceInfo) {
+        var newTitle = "[ " + deviceInfo.device.id + "]" + " - Geo Dashboard ["  + deviceInfo.device.type + "]";
+        window.parent.document.title =  newTitle;
+      }
+  }
+}
 
 //function success(position) {
 //    var browserLatitude = position.coords.latitude;
@@ -120,6 +134,8 @@ function initializeMap() {
         }
 
     });
+    //setting the sidebar to be opened when page loads
+    $("a[href='#left_side_pannel']").trigger('click');
 }
 
 /* Attribution control */

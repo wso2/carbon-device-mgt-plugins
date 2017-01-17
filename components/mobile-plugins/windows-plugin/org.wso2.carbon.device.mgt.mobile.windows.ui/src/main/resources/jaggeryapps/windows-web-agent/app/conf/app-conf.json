@@ -1,5 +1,5 @@
 {
-    "appName": "WSO2 IOTS",
+    "appName": "WSO2 IoT Server",
     "cachingEnabled": true,
     "debuggingEnabled": false,
     "permissionRoot": "/",
@@ -38,8 +38,13 @@
     },
     "generalConfig" : {
         "host" : "https://localhost:9443",
+<<<<<<< HEAD
         "companyName" : "WSO2 IOTS",
         "browserTitle" : "WSO2 IOT",
+=======
+        "companyName" : "WSO2 IoT Server",
+        "browserTitle" : "WSO2 IoT Server",
+>>>>>>> 05e2cb7bb8db033166a81e327d1c82c83a5a8178
         "copyrightPrefix" : "\u00A9 %date-year%, ",
         "copyrightOwner" : "WSO2 Inc.",
         "copyrightOwnersSite" : "http://www.wso2.org",
