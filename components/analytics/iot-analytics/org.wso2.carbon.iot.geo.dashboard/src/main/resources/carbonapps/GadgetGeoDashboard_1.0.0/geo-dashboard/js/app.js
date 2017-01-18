@@ -97,12 +97,12 @@ function initializeMap() {
         zoom: 14,
         center: [6.927078, 79.861243],
         layers: [defaultOSM, defaultTFL],
-        zoomControl: false,
+        zoomControl: true,
         attributionControl: false,
         maxZoom: 20,
         maxNativeZoom: 18
     });
-
+    map.zoomControl.setPosition('bottomleft');
     map.on('click', function (e) {
         $.UIkit.offcanvas.hide();//[force = false] no animation
     });
@@ -290,9 +290,7 @@ function focusOnSpatialObject(objectId) {
         });
         return false;
     }
-    if (selectedSpatialObject != objectId) {
-        clearFocus(); // Clear current focus if any
-    }
+    clearFocus(); // Clear current focus if any
     selectedSpatialObject = objectId; // (global) Why not use 'var' other than implicit declaration http://stackoverflow.com/questions/1470488/what-is-the-function-of-the-var-keyword-and-when-to-use-it-or-omit-it#answer-1471738
 
     console.log("Selected " + objectId + " type " + spatialObject.type);
