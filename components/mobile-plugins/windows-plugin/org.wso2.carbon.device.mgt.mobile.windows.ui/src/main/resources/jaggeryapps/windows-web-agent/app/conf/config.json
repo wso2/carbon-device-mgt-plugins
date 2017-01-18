@@ -3,12 +3,7 @@
     "httpsURL" : "%https.ip%",
     "httpURL" : "%http.ip%",
     "enrollmentDir": "/windows-web-agent/enrollment",
-    "iOSConfigRoot" : "%https.ip%/ios-enrollment/",
-    "iOSAPIRoot" : "%https.ip%/api/device-mgt/ios/v1.0/",
-    "dynamicClientRegistrationEndPoint" : "%https.ip%/dynamic-client-web/register/",
     "adminService":"%https.ip%",
-    "idPServer":"%https.ip%",
-    "callBackUrl":"%https.ip%/mdm-admin",
     "oauthProvider": {
         "appRegistration": {
             "appType": "webapp",
@@ -22,19 +17,9 @@
         },
         "tokenServiceURL": "%https.ip%/oauth2/token"
     },
-    "adminUser":"admin",
     "userValidationConfig": {
         "usernameLength":30
     },
-    "device" : {
-        "ios" : {
-            "location" : "%http.ip%/windows-web-agent/public/mdm.page.enrollments.ios.download-agent/asset/ios-agent.ipa",
-            "bundleID" : "org.wso2.carbon.emm.iOSMDMAgent",
-            "version" : "1.0",
-            "appName" : "IoT Server iOS Agent"
-        }
-    },
-    "androidAgentApp" : "android-agent.apk",
     "windowsConfigRoot" : "%http.ip%/api/device-mgt/windows/v1.0/federated/bst/authentication",
     "generalConfig" : {
         "host" : "%http.ip%",
