@@ -22,15 +22,27 @@ function loadLeafletMap() {
     var deviceLocationID = "#device-location",
         lat = $(deviceLocationID).data("lat"),
         long = $(deviceLocationID).data("long"),
+        locations = $(deviceLocationID).data("locations"),
         container = "device-location",
         zoomLevel = 13,
         tileSet = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         attribution = "&copy; <a href='https://openstreetmap.org/copyright'>OpenStreetMap</a> contributors";
 
-    if (lat && long) {
+    if (locations) {
+
+        var locationSets = locations.locations;
         map = L.map(container).setView([lat, long], zoomLevel);
         L.tileLayer(tileSet, {attribution: attribution}).addTo(map);
-        L.marker([lat, long]).addTo(map).bindPopup("Device is here...").openPopup();
+
+        for(var i = 0; i < locationSets.length; i++){
+            var m = L.marker(locationSets[i]).addTo(map).bindPopup(new Date(locations.times[i].time).toISOString())
+            m.on('mouseover', function (e) {
+                this.openPopup();
+            });
+            m.on('mouseout', function (e) {
+                this.closePopup();
+            });
+        }
 
         $("#map-error").hide();
         $("#device-location").show();
