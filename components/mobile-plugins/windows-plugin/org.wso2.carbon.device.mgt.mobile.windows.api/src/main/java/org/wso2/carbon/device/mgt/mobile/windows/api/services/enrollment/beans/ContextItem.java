@@ -22,14 +22,16 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
 
 import javax.xml.bind.annotation.*;
 
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ContextItem", namespace = PluginConstants.SOAP_AUTHORIZATION_TARGET_NAMESPACE,
-        propOrder = {"Name", "Value"})
+        propOrder = {"Value"})
 public class ContextItem {
 
-    @XmlAttribute(name = "Name", required = true, namespace = PluginConstants.SOAP_AUTHORIZATION_TARGET_NAMESPACE)
+    @XmlAttribute(name = "Name")
     protected String Name;
-    @XmlElement(name = "Value", required = true, namespace = PluginConstants.SOAP_AUTHORIZATION_TARGET_NAMESPACE)
+    @XmlElement(name = "Value", required = true,
+            namespace = PluginConstants.SOAP_AUTHORIZATION_TARGET_NAMESPACE)
     protected String Value;
 
     public String getValue() {

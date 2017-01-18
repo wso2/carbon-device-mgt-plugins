@@ -342,11 +342,10 @@ public final class PluginConstants {
         }
         public static final String REQUESTED_WIN10_VERSION = "3.0";
         public static final String REQUESTED_WIN81_VERSION = "2.0";
-        public static final String OS_VERSION = "10";
     }
 
     /**
-     * Windows enrollment property constants.
+     * Windows10 enrollment property constants.
      */
 
     public final class WindowsEnrollmentProperties {
@@ -354,10 +353,10 @@ public final class PluginConstants {
             throw new AssertionError();
         }
 
-        public static final int WIN_DEVICE_ID = 12;
-        public static final int WIN_DEVICE_NAME = 2;
-        public static final int WIN_DEVICE_VERSION = 15;
-        public static final int WIN_DEVICE_IMEI = 3;
+        public static final String DEVICE_NAME =  "DeviceName";
+        public static final String DEVICE_VERSION = "OSVersion";
+        public static final String DEVICE_ID = "DeviceID";
+        public static final String IMEI = "MobileEquipmentId";
 
     }
 }

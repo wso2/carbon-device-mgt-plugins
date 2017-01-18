@@ -85,7 +85,6 @@ import java.util.List;
 @BindingType(value = SOAPBinding.SOAP12HTTP_BINDING)
 public class EnrollmentServiceImpl implements EnrollmentService {
     private static Log log = LogFactory.getLog(EnrollmentServiceImpl.class);
-    private X509Certificate rootCACertificate;
     private String pollingFrequency;
     private String provisioningURL;
     private String domain;
@@ -224,7 +223,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         CertificateManagementServiceImpl certMgtServiceImpl = CertificateManagementServiceImpl.getInstance();
         Base64 base64Encoder = new Base64();
         try {
-            rootCACertificate = (X509Certificate) certMgtServiceImpl.getCACertificate();
+            X509Certificate rootCACertificate = (X509Certificate) certMgtServiceImpl.getCACertificate();
             rootCertEncodedString = base64Encoder.encodeAsString(rootCACertificate.getEncoded());
 
 
@@ -353,8 +352,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
      */
     private String getRequestedUser(String bst) {
         CacheEntry cacheEntry = (CacheEntry) DeviceUtil.getCacheEntry(bst);
-        String userName = cacheEntry.getUsername();
-        return userName;
+        return cacheEntry.getUsername();
     }
 
     /**
@@ -413,16 +411,18 @@ public class EnrollmentServiceImpl implements EnrollmentService {
                 MOBILE_DEVICE_TYPE_WINDOWS);
         windowsDevice.setUser(getRequestedUser(headerBinarySecurityToken));
         List<ContextItem> contextItems = requestContextItems.getcontextitem();
-        for (int x = 0; x < contextItems.size(); x++) {
-            switch (x) {
-                case PluginConstants.WindowsEnrollmentProperties.WIN_DEVICE_NAME:
-                    windowsDevice.setDeviceName(contextItems.get(x).getValue());
-                case PluginConstants.WindowsEnrollmentProperties.WIN_DEVICE_IMEI:
-                    windowsDevice.setImei(contextItems.get(x).getValue());
-                case PluginConstants.WindowsEnrollmentProperties.WIN_DEVICE_ID:
-                    windowsDevice.setDeviceId(contextItems.get(x).getValue());
-                case PluginConstants.WindowsEnrollmentProperties.WIN_DEVICE_VERSION:
-                    windowsDevice.setOsVersion(contextItems.get(x).getValue());
+        for(ContextItem contextItem : contextItems) {
+            if (PluginConstants.WindowsEnrollmentProperties.DEVICE_ID.equals(contextItem.getName())) {
+                windowsDevice.setDeviceId(contextItem.getValue());
+            }
+            if (PluginConstants.WindowsEnrollmentProperties.DEVICE_NAME.equals(contextItem.getName())) {
+                windowsDevice.setDeviceName(contextItem.getValue());
+            }
+            if (PluginConstants.WindowsEnrollmentProperties.IMEI.equals(contextItem.getName())) {
+                windowsDevice.setImei(contextItem.getValue());
+            }
+            if (PluginConstants.WindowsEnrollmentProperties.DEVICE_VERSION.equals(contextItem.getName())) {
+                windowsDevice.setOsVersion(contextItem.getValue());
             }
         }
         Device device = generateDevice(windowsDevice);
