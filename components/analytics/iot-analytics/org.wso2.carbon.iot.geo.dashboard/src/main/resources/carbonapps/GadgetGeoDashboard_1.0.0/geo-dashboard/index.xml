@@ -432,7 +432,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">
+                <h4 id = "title" class="modal-title">
                     WSO2 Geo Dashboard
                 </h4>
             </div>

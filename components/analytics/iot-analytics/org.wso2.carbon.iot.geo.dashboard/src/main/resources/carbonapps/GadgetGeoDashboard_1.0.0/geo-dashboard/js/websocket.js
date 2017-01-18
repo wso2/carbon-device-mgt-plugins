@@ -602,6 +602,8 @@ var webSocketOnAlertError = function (e) {
 
 var webSocketOnOpen = function () {
     websocket.set_opened();
+    initialLoad();
+    InitSpatialObject();
     $.UIkit.notify({
         message: 'You Are Connected to Spatial Stream !!',
         status: 'success',
