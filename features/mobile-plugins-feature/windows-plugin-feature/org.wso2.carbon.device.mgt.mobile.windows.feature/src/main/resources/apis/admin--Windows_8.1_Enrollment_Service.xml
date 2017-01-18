@@ -2,6 +2,7 @@
     <resource methods="HEAD DELETE POST GET OPTIONS PATCH PUT" url-mapping="/*" faultSequence="fault">
         <inSequence>
             <property name="isDefault" expression="$trp:WSO2_AM_API_DEFAULT_VERSION"/>
+            <property name="AM_KEY_TYPE" value="PRODUCTION" scope="default"/>
             <filter source="$ctx:isDefault" regex="true">
                 <then>
                     <log level="custom">
@@ -45,6 +46,8 @@
             </filter>
         </inSequence>
         <outSequence>
+            <property name="FORCE_HTTP_CONTENT_LENGTH" scope="axis2" value="true"/>
+            <property name="COPY_CONTENT_LENGTH_FROM_INCOMING" value="true" scope="axis2"/>
             <send/>
         </outSequence>
     </resource>

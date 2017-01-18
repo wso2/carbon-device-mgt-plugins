@@ -20,6 +20,8 @@ package org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml;
 
 import io.swagger.annotations.*;
 import org.w3c.dom.Document;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
@@ -39,6 +41,16 @@ import javax.ws.rs.core.Response;
  */
 
 @Path("/devicemanagement")
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Pending operations",
+                        description = "Register an Windows device",
+                        key = "perm:windows:enroll",
+                        permissions = {"/device-mgt/devices/enroll/windows"}
+                )
+        }
+)
 public interface SyncmlService {
 
     @Path("/request")

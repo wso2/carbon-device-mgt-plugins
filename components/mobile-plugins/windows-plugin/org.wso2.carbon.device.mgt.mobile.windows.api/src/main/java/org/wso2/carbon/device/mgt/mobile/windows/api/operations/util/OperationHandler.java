@@ -243,7 +243,6 @@ public class OperationHandler {
 
     public void updateDeviceLocationStatus(SyncmlDocument syncmlDocument) throws OperationManagementException {
         List<? extends Operation> pendingDataOperations;
-        List<StatusTag> statuses = syncmlDocument.getBody().getStatus();
         DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(
                 syncmlDocument.getHeader().getSource().getLocURI());
         try {
@@ -253,13 +252,16 @@ public class OperationHandler {
         }
         for (Operation operation : pendingDataOperations) {
             if (PluginConstants.OperationCodes.DEVICE_LOCATION.equals(operation.getCode())) {
-                for (StatusTag statusTag : statuses) {
-                    if (Constants.GET.equals(statusTag.getCommand()) && statusTag.getTargetReference() != null
-                            && OperationCode.Command.LATITUDE.getCode().equals(statusTag.getTargetReference())) {
-                        if (Constants.SyncMLResponseCodes.ACCEPTED.equals(statusTag.getData())) {
-                            operation.setStatus(Operation.Status.COMPLETED);
-                        } else {
-                            operation.setStatus(Operation.Status.ERROR);
+                if (syncmlDocument.getBody().getResults() != null) {
+                    List<ItemTag> items = syncmlDocument.getBody().getResults().getItem();
+                    for (ItemTag itemTag : items) {
+                        if (OperationCode.Command.LATITUDE.getCode().equals(itemTag.getSource().getLocURI())) {
+                            // at this moment we can't get accepted value 200 from the device.
+                            if (itemTag.getData() != null) {
+                                operation.setStatus(Operation.Status.COMPLETED);
+                            } else {
+                                operation.setStatus(Operation.Status.ERROR);
+                            }
                         }
                     }
                 }
@@ -282,16 +284,13 @@ public class OperationHandler {
         SyncmlBody syncmlBody = syncmlDocument.getBody();
         List<? extends Operation> pendingOperations;
         DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(syncmlHeader.getSource().getLocURI());
-        List<StatusTag> statuses = syncmlBody.getStatus();
-        for (StatusTag status : statuses ) {
-            if (OperationCode.Command.LATITUDE.getCode().equals(status.getTargetReference()) &&
-                    Constants.SyncMLResponseCodes.ACCEPTED.equals(status.getData())) {
-                updateLocation(syncmlDocument);
-            }
-
-            if (OperationCode.Command.TOTAL_RAM.getCode().equals(status.getTargetReference()) &&
-                    Constants.SyncMLResponseCodes.ACCEPTED.equals(status.getData())) {
-                if ((syncmlBody.getResults() != null)) {
+        if (syncmlBody.getResults() != null) {
+            List<ItemTag> items = syncmlBody.getResults().getItem();
+            for (ItemTag itemTag : items) {
+                if (OperationCode.Command.LATITUDE.getCode().equals(itemTag.getSource().getLocURI())) {
+                    updateLocation(syncmlDocument);
+                }
+                if (OperationCode.Command.TOTAL_RAM.getCode().equals(itemTag.getSource().getLocURI())) {
                     updateDeviceInfo(syncmlDocument);
                 }
             }
@@ -376,6 +375,9 @@ public class OperationHandler {
                         if ((PluginConstants.OperationCodes.MONITOR.equals(operation.getCode())) &&
                                 operation.getId() == status.getCommandReference()) {
                             operation.setStatus(Operation.Status.ERROR);
+                        }
+                        if (PluginConstants.OperationCodes.POLICY_REVOKE.equals(operation.getCode())) {
+                            operation.setStatus(Operation.Status.COMPLETED);
                         }
                     }
                     updateStatus(syncmlDocument.getHeader().getSource().getLocURI(),

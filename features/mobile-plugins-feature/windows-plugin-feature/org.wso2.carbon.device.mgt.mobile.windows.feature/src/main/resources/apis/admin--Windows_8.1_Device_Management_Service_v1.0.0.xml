@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><api xmlns="http://ws.apache.org/ns/synapse" name="admin--Windows 8.1 Device Management Service" context="/api/device-mgt/windows/v1.0/syncml/1.0.0" version="1.0.0" version-type="context">
+<?xml version="1.0" encoding="UTF-8"?><api xmlns="http://ws.apache.org/ns/synapse" name="admin--Windows 8.1 Device Management Service" context="/api/device-mgt/windows/v1.0/syncml/devicemanagement/1.0.0" version="1.0.0" version-type="context">
     <resource methods="POST" url-mapping="/request" faultSequence="fault">
         <inSequence>
             <property name="api.ut.backendRequestTime" expression="get-property('SYSTEM_TIME')"/>
@@ -7,8 +7,7 @@
                 <then>
                     <send>
                         <endpoint name="admin--Windows 8.1 Device Management Service_APIproductionEndpoint_0">
-                            <http uri-template="https://localhost:9443/api/device-mgt/windows/v1.0/syncml"/>
-                            <property name="ENDPOINT_ADDRESS" value="https://localhost:9443/api/device-mgt/windows/v1.0/syncml"/>
+                            <http uri-template="https://localhost:9443/api/device-mgt/windows/v1.0/syncml/devicemanagement"/>
                         </endpoint>
                     </send>
                 </then>
@@ -19,6 +18,8 @@
         </inSequence>
         <outSequence>
             <class name="org.wso2.carbon.apimgt.gateway.handlers.analytics.APIMgtResponseHandler"/>
+            <property name="FORCE_HTTP_CONTENT_LENGTH" scope="axis2" value="true"/>
+            <property name="COPY_CONTENT_LENGTH_FROM_INCOMING" value="true" scope="axis2"/>
             <send/>
         </outSequence>
     </resource>

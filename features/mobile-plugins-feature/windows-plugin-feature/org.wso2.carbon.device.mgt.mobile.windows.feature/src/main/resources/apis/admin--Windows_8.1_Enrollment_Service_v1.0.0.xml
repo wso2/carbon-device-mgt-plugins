@@ -8,7 +8,7 @@
                     <send>
                         <endpoint name="admin--Windows 8.1 Enrollment Service_APIproductionEndpoint_0">
                             <http uri-template="https://localhost:9443/api/device-mgt/windows/v1.0/deviceenrolment/wstep"/>
-                            <property name="ENDPOINT_ADDRESS" value="https://localhost:9443/api/device-mgt/windows/v1.0/deviceenrolment/wstep"/>
+                            <!--property name="ENDPOINT_ADDRESS" value="https://localhost:9443/api/device-mgt/windows/v1.0/deviceenrolment/wstep"/-->
                         </endpoint>
                     </send>
                 </then>
@@ -19,6 +19,8 @@
         </inSequence>
         <outSequence>
             <class name="org.wso2.carbon.apimgt.gateway.handlers.analytics.APIMgtResponseHandler"/>
+            <property name="FORCE_HTTP_CONTENT_LENGTH" scope="axis2" value="true"/>
+            <property name="COPY_CONTENT_LENGTH_FROM_INCOMING" value="true" scope="axis2"/>
             <send/>
         </outSequence>
     </resource>
