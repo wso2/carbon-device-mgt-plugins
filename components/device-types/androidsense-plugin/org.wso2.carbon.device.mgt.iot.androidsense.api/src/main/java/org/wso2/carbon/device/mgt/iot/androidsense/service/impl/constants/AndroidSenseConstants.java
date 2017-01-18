@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License"
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,6 +15,9 @@
  */
 
 package org.wso2.carbon.device.mgt.iot.androidsense.service.impl.constants;
+
+import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.user.api.Permission;
 
 public class AndroidSenseConstants {
 
@@ -43,5 +46,27 @@ public class AndroidSenseConstants {
     public static final String DEFAULT_ENDPOINT = "tcp://${mqtt.broker.host}:${mqtt.broker.port}";
 
     public static final String SCOPE = "scope";
+
+    public static Permission[] permissions;
+
+    static {
+
+        Permission enroll = new Permission("/permission/admin/device-mgt/devices/enroll", CarbonConstants
+                .UI_PERMISSION_ACTION);
+        Permission disEnroll = new Permission("/permission/admin/device-mgt/devices/disenroll", CarbonConstants
+                .UI_PERMISSION_ACTION);
+        Permission owningDevice = new Permission("/permission/admin/device-mgt/devices/owning-device",
+                CarbonConstants.UI_PERMISSION_ACTION);
+        Permission groups = new Permission("/permission/admin/device-mgt/groups", CarbonConstants.UI_PERMISSION_ACTION);
+        Permission notifications = new Permission("/permission/admin/device-mgt/notifications", CarbonConstants
+                .UI_PERMISSION_ACTION);
+        Permission policies = new Permission("/permission/admin/device-mgt/policies", CarbonConstants
+                .UI_PERMISSION_ACTION);
+        Permission subscribe = new Permission("/permission/admin/manage/api/subscribe", CarbonConstants
+                .UI_PERMISSION_ACTION);
+
+        permissions = new Permission[]{enroll, disEnroll, owningDevice, groups, notifications, policies, subscribe};
+
+    }
 
 }
