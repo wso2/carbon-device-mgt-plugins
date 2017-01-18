@@ -362,6 +362,9 @@ public class OperationHandler {
                                 operation.getId() == status.getCommandReference()) {
                             operation.setStatus(Operation.Status.COMPLETED);
                         }
+                        if (PluginConstants.OperationCodes.POLICY_REVOKE.equals(operation.getCode())) {
+                            operation.setStatus(Operation.Status.COMPLETED);
+                        }
                     }
                     updateStatus(syncmlDocument.getHeader().getSource().getLocURI(),
                             pendingDataOperations);
