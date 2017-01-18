@@ -17,7 +17,7 @@
  */
 
 function onRequest(context) {
-    // var log = new Log("device-view.js");
+// var log = new Log("device-view.js");
     var deviceType = context["uriParams"]["deviceType"];
     var deviceId = request.getParameter("id");
     var deviceViewData = {};
@@ -32,7 +32,7 @@ function onRequest(context) {
 
             var filteredDeviceData = response["content"];
 
-            // creating deviceView information model from filtered device data
+// creating deviceView information model from filtered device data
             var viewModel = {};
             if (filteredDeviceData["type"]) {
                 viewModel["type"] = filteredDeviceData["type"];
@@ -194,7 +194,7 @@ function onRequest(context) {
             if (!filteredDeviceData["initialDeviceInfo"] && !filteredDeviceData["latestDeviceInfo"]) {
                 viewModel["deviceInfoAvailable"] = false;
             }
-
+            viewModel.locationHistory = stringify(filteredDeviceData["locationHistory"]);
             deviceViewData["device"] = viewModel;
         } else if (response["status"] == "unauthorized") {
             deviceViewData["deviceFound"] = true;
