@@ -33,8 +33,23 @@ var conf = function () {
                 } else if ((typeof value === "string") && value.indexOf("%date-year%") > -1) {
                     var year = new Date().getFullYear();
                     return value.replace("%date-year%", year);
+                } else {
+                    var paramPattern = new RegExp("%(.*?)%", "g");
+                    var out = value;
+                    while ((matches = paramPattern.exec(value)) !== null) {
+                        // This is necessary to avoid infinite loops with zero-width matches
+                        if (matches.index === paramPattern.lastIndex) {
+                            paramPattern.lastIndex++;
+                        }
+                        if (matches.length == 2) {
+                            var property = process.getProperty(matches[1]);
+                            if (property) {
+                                out = out.replace(new RegExp("%" + matches[1] + "%", "g"), property);
+                            }
+                        }
+                    }
+                    return out;
                 }
-                return value;
             }
         );
         application.put("CONF", conf);
