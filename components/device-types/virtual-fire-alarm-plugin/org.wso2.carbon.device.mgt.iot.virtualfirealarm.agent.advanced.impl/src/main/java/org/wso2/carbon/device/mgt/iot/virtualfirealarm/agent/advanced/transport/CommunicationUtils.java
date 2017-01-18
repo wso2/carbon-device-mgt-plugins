@@ -43,7 +43,7 @@ public class CommunicationUtils {
     private static final Log log = LogFactory.getLog(TransportUtils.class);
 
     // The Signature Algorithm used.
-    private static final String SIGNATURE_ALG = "SHA1withRSA";
+    private static final String SHA_512 = "SHA-512";
     // The Encryption Algorithm and the Padding used.
     private static final String CIPHER_PADDING = "RSA/ECB/PKCS1Padding";
 
@@ -108,7 +108,7 @@ public class CommunicationUtils {
         String signedEncodedString;
 
         try {
-            signature = Signature.getInstance(SIGNATURE_ALG);
+            signature = Signature.getInstance(SHA_512);
             signature.initSign(signatureKey);
             signature.update(Base64.decodeBase64(message));
 
@@ -117,11 +117,11 @@ public class CommunicationUtils {
 
         } catch (NoSuchAlgorithmException e) {
             String errorMsg =
-                    "Algorithm not found exception occurred for Signature instance of [" + SIGNATURE_ALG + "]";
+                    "Algorithm not found exception occurred for Signature instance of [" + SHA_512 + "]";
             log.error(errorMsg);
             throw new TransportHandlerException(errorMsg, e);
         } catch (SignatureException e) {
-            String errorMsg = "Signature exception occurred for Signature instance of [" + SIGNATURE_ALG + "]";
+            String errorMsg = "Signature exception occurred for Signature instance of [" + SHA_512 + "]";
             log.error(errorMsg);
             throw new TransportHandlerException(errorMsg, e);
         } catch (InvalidKeyException e) {
@@ -153,7 +153,7 @@ public class CommunicationUtils {
         boolean verified;
 
         try {
-            signature = Signature.getInstance(SIGNATURE_ALG);
+            signature = Signature.getInstance(SHA_512);
             signature.initVerify(verificationKey);
             signature.update(Base64.decodeBase64(data));
 
@@ -161,11 +161,11 @@ public class CommunicationUtils {
 
         } catch (NoSuchAlgorithmException e) {
             String errorMsg =
-                    "Algorithm not found exception occurred for Signature instance of [" + SIGNATURE_ALG + "]";
+                    "Algorithm not found exception occurred for Signature instance of [" + SHA_512 + "]";
             log.error(errorMsg);
             throw new TransportHandlerException(errorMsg, e);
         } catch (SignatureException e) {
-            String errorMsg = "Signature exception occurred for Signature instance of [" + SIGNATURE_ALG + "]";
+            String errorMsg = "Signature exception occurred for Signature instance of [" + SHA_512 + "]";
             log.error(errorMsg);
             throw new TransportHandlerException(errorMsg, e);
         } catch (InvalidKeyException e) {
