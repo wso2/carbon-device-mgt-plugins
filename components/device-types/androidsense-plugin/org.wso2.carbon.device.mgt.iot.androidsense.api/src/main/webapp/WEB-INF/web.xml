@@ -30,4 +30,8 @@
 		<param-name>managed-api-enabled</param-name>
 		<param-value>true</param-value>
 	</context-param>
+
+	<listener>
+		<listener-class>org.wso2.carbon.device.mgt.iot.androidsense.service.impl.listener.PermissionUpdateListener</listener-class>
+	</listener>
 </web-app>
