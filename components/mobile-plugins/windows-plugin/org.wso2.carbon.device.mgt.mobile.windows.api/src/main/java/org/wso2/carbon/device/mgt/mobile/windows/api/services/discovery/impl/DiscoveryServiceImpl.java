@@ -68,13 +68,11 @@ public class DiscoveryServiceImpl implements DiscoveryService {
         String emailId = discoveryRequest.getEmailId();
         String[] userDomains = emailId.split(DELIMITER);
         String domain = userDomains[DOMAIN_SEGMENT];
-        String applicationVersion = discoveryRequest.getApplicationVersion();
-        String[] osVersions = applicationVersion .split("\\.");
-        String os = osVersions[0];
         DiscoveryResponse discoveryResponse;
-        if (PluginConstants.WindowsVersionProperties.OS_VERSION.equals(os) && FEDERATED.equals(getAuthPolicy())) {
-            discoveryResponse = new DiscoveryResponse();
 
+        if (!PluginConstants.WindowsVersionProperties.REQUESTED_WIN81_VERSION.equals(discoveryRequest.getVersion())
+                && FEDERATED.equals(getAuthPolicy())) {
+            discoveryResponse = new DiscoveryResponse();
             discoveryResponse.setAuthPolicy(FEDERATED);
             discoveryResponse.setEnrollmentVersion(PluginConstants.WindowsVersionProperties.REQUESTED_WIN10_VERSION);
             discoveryResponse.setEnrollmentPolicyServiceUrl(PluginConstants.Discovery.DEVICE_ENROLLMENT_SUBDOMAIN +

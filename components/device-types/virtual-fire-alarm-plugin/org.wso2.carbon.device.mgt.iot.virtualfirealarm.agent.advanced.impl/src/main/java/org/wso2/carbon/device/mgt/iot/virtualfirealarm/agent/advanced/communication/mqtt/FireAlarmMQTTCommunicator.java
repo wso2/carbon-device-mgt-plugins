@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONObject;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core.AgentConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core.AgentManager;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.core.AgentUtilOperations;
@@ -115,8 +116,11 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
 
         try {
             receivedMessage = message.toString();
-            if(!receivedMessage.contains("POLICY")){
+            if(!receivedMessage.contains("policyDefinition")){
                 receivedMessage = AgentUtilOperations.extractMessageFromPayload(receivedMessage);
+            }else{
+                JSONObject jsonMessage = new JSONObject(receivedMessage);
+                updateCEPPolicy(jsonMessage.getString("policyDefinition"));
             }
             log.info(AgentConstants.LOG_APPENDER + "Message [" + receivedMessage + "] was received");
         } catch (AgentCoreOperationException e) {
@@ -289,6 +293,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
         String fileLocation = agentManager.getRootPath() + AgentConstants.CEP_FILE_NAME;
         message = AgentUtilOperations.formatMessage(message);
         AgentUtilOperations.writeToFile(message, fileLocation);
+        AgentManager.setUpdated(true);
         agentManager.addToPolicyLog(message);
     }
 
