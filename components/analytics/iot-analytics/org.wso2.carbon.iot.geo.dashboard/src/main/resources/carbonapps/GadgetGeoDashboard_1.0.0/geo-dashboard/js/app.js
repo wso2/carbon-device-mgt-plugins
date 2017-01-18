@@ -29,8 +29,6 @@ $('body').on('hidden.bs.modal', '.modal', function () {
 /*Map layer configurations*/
 var map;
 
-initialLoad();
-
 function initialLoad() {
     if (document.getElementById('map') == null) {
         setTimeout(initialLoad, 500); // give everything some time to render
@@ -47,17 +45,18 @@ function initialLoad() {
 }
 
 function setPageTitle() {
-  var hash = window.parent.location.hash;
-  if(hash) {
-      var startIdx = hash.indexOf("/") + 1;
-      var lastIdx = hash.length;
-      var deviceInfoString = hash.substring(startIdx,lastIdx);
-      var deviceInfo = JSON.parse(deviceInfoString);
-      if(deviceInfo) {
-        var newTitle = "[ " + deviceInfo.device.id + "]" + " - Geo Dashboard ["  + deviceInfo.device.type + "]";
-        window.parent.document.title =  newTitle;
-      }
-  }
+    var hash = window.parent.location.hash;
+    if(hash) {
+        var startIdx = hash.indexOf("/") + 1;
+        var lastIdx = hash.length;
+        var deviceInfoString = hash.substring(startIdx,lastIdx);
+        var deviceInfo = JSON.parse(deviceInfoString);
+        if(deviceInfo) {
+            var newTitle = "[ " + deviceInfo.device.id + "]" + " - Geo Dashboard ["  + deviceInfo.device.type + "]";
+            window.parent.document.title =  newTitle;
+            $("#title").val(newTitle)
+        }
+    }
 }
 
 //function success(position) {
@@ -291,7 +290,9 @@ function focusOnSpatialObject(objectId) {
         });
         return false;
     }
-    clearFocus(); // Clear current focus if any
+    if (selectedSpatialObject != objectId) {
+        clearFocus(); // Clear current focus if any
+    }
     selectedSpatialObject = objectId; // (global) Why not use 'var' other than implicit declaration http://stackoverflow.com/questions/1470488/what-is-the-function-of-the-var-keyword-and-when-to-use-it-or-omit-it#answer-1471738
 
     console.log("Selected " + objectId + " type " + spatialObject.type);
@@ -352,6 +353,66 @@ function enableRealTime() {
     clearMap();
     document.getElementById('objectInfo').style.display = 'none';
     isBatchModeOn = false;
+}
+
+function InitSpatialObject() {
+    var fromDate = new Date();
+    fromDate.setHours(fromDate.getHours() - 2);
+    var toDate = new Date();
+    console.log(fromDate + " " + toDate);
+    var tableData = getProviderData(fromDate.valueOf(), toDate.valueOf());
+    for (var i = 0; i < tableData.length; i++) {
+        var data = tableData[i];
+        var geoMessage = {
+            "messageType": "Point",
+            "type": "Feature",
+            "id": data.id,
+            "deviceId": data.id,
+            "deviceType": data.type,
+            "properties": {
+                "speed": data.speed,
+                "heading": data.heading,
+                "state": data.state,
+                "information": data.information,
+                "notify": data.notify,
+                "type": data.type
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [data.longitude, data.latitude]
+            }
+        };
+        processPointMessage(geoMessage);
+    }
+    var spatialObject = currentSpatialObjects[deviceId];// (local)
+    if (!spatialObject) {
+        $.UIkit.notify({
+            message: "Spatial Object <span style='color:red'>" + deviceId + "</span> not in the Map!!",
+            status: 'warning',
+            timeout: ApplicationOptions.constance.NOTIFY_WARNING_TIMEOUT,
+            pos: 'top-center'
+        });
+        return false;
+    }
+    selectedSpatialObject = deviceId;
+    if (spatialObject.type == "area") {
+        spatialObject.focusOn(map);
+        return true;
+    }
+
+    map.setView(spatialObject.marker.getLatLng(), 15, {animate: true}); // TODO: check the map._layersMaxZoom and set the zoom level accordingly
+
+    $('#objectInfo').find('#objectInfoId').html(selectedSpatialObject);
+    spatialObject.marker.openPopup();
+    if (!toggled) {
+        $('#objectInfo').animate({width: 'toggle'}, 100);
+        toggled = true;
+    }
+    spatialObject.drawPath();
+    setTimeout(function () {
+        createChart();
+        chart.load({columns: [spatialObject.speedHistory.getArray()]});
+    }, 100);
 }
 
 function focusOnHistorySpatialObject(objectId, timeFrom, timeTo) {

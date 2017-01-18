@@ -44,7 +44,7 @@
     <li><a class="list-group-item" href="#event_log" role="tab" data-toggle="tab"
            aria-controls="event_log">Operations Log</a></li>
     <li><a class="list-group-item" href="#geo_dashboard" role="tab" data-toggle="tab"
-           aria-controls="geo_dashboard">Map</a></li>
+           aria-controls="geo_dashboard">Geo Fencing</a></li>
 {{/zone}}
 
 {{#zone "device-view-tab-contents"}}
@@ -77,18 +77,18 @@
     </div>
     <div class="panel panel-default tab-pane"
          id="geo_dashboard" role="tabpanel" aria-labelledby="geo_dashboard">
-        <div class="panel-heading">Map</div>
+        <div class="panel-heading">Geo Fencing</div>
 
         <div id="chartWrapper">
         </div>
 
-        <a class="padding-left"
+        <a class="padding-left" target="_blank" 
            href="{{portalUrl}}/portal/dashboards/geo-dashboard/?GLOBAL-STATE={{anchor}}">
 
             <span class="fw-stack">
                 <i class="fw fw-circle-outline fw-stack-2x"></i>
                 <i class="fw fw-statistics fw-stack-1x"></i>
-            </span> View Device Location
+            </span> Add Geo Fencing
         </a>
     </div>
 {{/zone}}

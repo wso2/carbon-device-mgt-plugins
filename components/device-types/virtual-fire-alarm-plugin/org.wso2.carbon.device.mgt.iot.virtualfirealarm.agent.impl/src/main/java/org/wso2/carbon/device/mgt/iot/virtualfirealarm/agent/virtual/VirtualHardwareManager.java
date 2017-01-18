@@ -33,6 +33,8 @@ import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 /**
  * This class use to emulate virtual hardware functionality
@@ -174,19 +176,19 @@ public class VirtualHardwareManager {
     }
 
     private int getRandom(int max, int min, int current, boolean isSmoothed, int svf) {
-
         if (isSmoothed) {
             int offset = (max - min) * svf / 100;
             double mx = current + offset;
             max = (mx > max) ? max : (int) Math.round(mx);
-
             double mn = current - offset;
             min = (mn < min) ? min : (int) Math.round(mn);
         }
-
-        double rnd = Math.random() * (max - min) + min;
-        return (int) Math.round(rnd);
-
+        try {
+            SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+            return secureRandom.nextInt(max - min) + min;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("SHA1PRNG algorithm could not be found.");
+        }
     }
 
     private void setAudioSequencer() {

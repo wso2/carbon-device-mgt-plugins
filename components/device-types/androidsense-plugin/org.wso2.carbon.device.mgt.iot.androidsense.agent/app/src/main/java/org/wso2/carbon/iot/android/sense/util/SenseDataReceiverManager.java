@@ -101,6 +101,7 @@ public class SenseDataReceiverManager {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
             intentFilter.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
+            intentFilter.setPriority(1000);
 
             context.registerReceiver(callDataReceiver, intentFilter);
         }
@@ -149,6 +150,7 @@ public class SenseDataReceiverManager {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction(Telephony.Sms.Intents.SMS_RECEIVED_ACTION);
             intentFilter.addAction(Telephony.Sms.Intents.SMS_DELIVER_ACTION);
+            intentFilter.setPriority(1000);
             context.registerReceiver(smsDataReceiver, intentFilter);
         }
     }
