@@ -32,6 +32,6 @@
 	</context-param>
 
 	<listener>
-		<listener-class>org.wso2.carbon.device.mgt.iot.androidsense.service.impl.listener.PermissionUpdateListener</listener-class>
+		<listener-class>org.wso2.carbon.device.mgt.iot.androidsense.service.impl.listener.AndroidSensePermissionUpdateListener</listener-class>
 	</listener>
 </web-app>
