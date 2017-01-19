@@ -114,15 +114,16 @@ public class OperationCode {
         CAMERA_STATUS("./Vendor/MSFT/PolicyManager/Device/Camera/AllowCamera"),
         ENCRYPT_STORAGE("./Vendor/MSFT/PolicyManager/My/Security/RequireDeviceEncryption"),
         ENCRYPT_STORAGE_STATUS("./Vendor/MSFT/PolicyManager/Device/Security/RequireDeviceEncryption"),
-        PASSWORD_MAX_FAIL_ATTEMPTS("./Vendor/MSFT/PolicyManager/My/DeviceLock/MaxDevicePasswordFailedAttempts"),
-        DEVICE_PASSWORD_ENABLE("./Vendor/MSFT/PolicyManager/My/DeviceLock/DevicePasswordEnabled"),
-        SIMPLE_PASSWORD("./Vendor/MSFT/PolicyManager/My/DeviceLock/AllowSimpleDevicePassword"),
-        MIN_PASSWORD_LENGTH("./Vendor/MSFT/PolicyManager/My/DeviceLock/MinDevicePasswordLength"),
-        Alphanumeric_PASSWORD("./Vendor/MSFT/PolicyManager/My/DeviceLock/AlphanumericDevicePasswordRequired"),
-        PASSWORD_EXPIRE("./Vendor/MSFT/PolicyManager/My/DeviceLock/DevicePasswordExpiration"),
-        PASSWORD_HISTORY("./Vendor/MSFT/PolicyManager/My/DeviceLock/DevicePasswordHistory"),
-        MAX_PASSWORD_INACTIVE_TIME("./Vendor/MSFT/PolicyManager/My/DeviceLock/MaxInactivityTimeDeviceLock"),
-        MIN_PASSWORD_COMPLEX_CHARACTERS("./Vendor/MSFT/PolicyManager/My/DeviceLock/MinDevicePasswordComplexCharacters");
+        PASSWORD_MAX_FAIL_ATTEMPTS("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/MaxDevicePasswordFailedAttempts"),
+        DEVICE_PASSWORD_ENABLE("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/DevicePasswordEnabled"),
+        SIMPLE_PASSWORD("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/AllowSimpleDevicePassword"),
+        MIN_PASSWORD_LENGTH("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/MinDevicePasswordLength"),
+        ALPHANUMERIC_PASSWORD("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/AlphanumericDevicePasswordRequired"),
+        PASSWORD_EXPIRE("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/DevicePasswordExpiration"),
+        PASSWORD_HISTORY("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/DevicePasswordHistory"),
+        MAX_PASSWORD_INACTIVE_TIME("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/MaxInactivityTimeDeviceLock"),
+        MIN_PASSWORD_COMPLEX_CHARACTERS("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/MinDevicePasswordComplexCharacters");
+
 
         private final String code;
 
