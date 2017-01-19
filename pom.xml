@@ -1290,7 +1290,7 @@
         <!-- Carbon Analytics -->
         <carbon.analytics.common.version>5.1.3</carbon.analytics.common.version>
         <carbon.analytics.common.version.range>[5.1.3,6.0.0)</carbon.analytics.common.version.range>
-        <carbon.analytics.version>1.3.0</carbon.analytics.version>
+        <carbon.analytics.version>1.3.3</carbon.analytics.version>
         <carbon.analytics.version.range>[1.3.0,2.0.0)</carbon.analytics.version.range>
         <carbon.event.processing.version>2.1.4</carbon.event.processing.version>
 
