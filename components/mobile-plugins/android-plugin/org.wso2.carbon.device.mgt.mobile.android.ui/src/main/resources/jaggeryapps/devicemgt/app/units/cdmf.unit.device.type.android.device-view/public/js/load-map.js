@@ -33,9 +33,11 @@ function loadLeafletMap() {
         var locationSets = locations.locations;
         map = L.map(container).setView([lat, long], zoomLevel);
         L.tileLayer(tileSet, {attribution: attribution}).addTo(map);
-
-        for(var i = 0; i < locationSets.length; i++){
-            var m = L.marker(locationSets[i]).addTo(map).bindPopup(new Date(locations.times[i].time).toISOString())
+        var initTime = locations.times[0].time, lastTime = locations.times[locationSets.length - 1].time;
+        var totalTime = lastTime - initTime;
+        for (var i = 0; i < locationSets.length; i++) {
+            var opacVal = (locations.times[i].time - initTime) / totalTime;
+            var m = L.marker(locationSets[i], {"opacity": opacVal}).addTo(map).bindPopup(new Date(locations.times[i].time).toISOString());
             m.on('mouseover', function (e) {
                 this.openPopup();
             });
@@ -53,7 +55,7 @@ function loadLeafletMap() {
 }
 
 $(document).ready(function () {
-    $("a[data-toggle='tab']").on("shown.bs.tab", function() {
+    $("a[data-toggle='tab']").on("shown.bs.tab", function () {
         var url = $(this).prop("href");
         var hash = url.substring(url.indexOf("#") + 1);
 
