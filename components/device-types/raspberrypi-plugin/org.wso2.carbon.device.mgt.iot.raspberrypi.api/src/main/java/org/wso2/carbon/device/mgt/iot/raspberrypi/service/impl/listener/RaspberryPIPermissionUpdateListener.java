@@ -13,14 +13,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.wso2.carbon.device.mgt.iot.androidsense.service.impl.listener;
+package org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.listener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.AndroidSenseServiceImpl;
-import org.wso2.carbon.device.mgt.iot.androidsense.service.impl.constants.AndroidSenseConstants;
+import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.constants.RaspberrypiConstants;
 import org.wso2.carbon.user.api.AuthorizationManager;
+import org.wso2.carbon.user.api.Permission;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.user.api.UserStoreManager;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -28,11 +29,9 @@ import org.wso2.carbon.user.core.service.RealmService;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-public class PermissionUpdateListener implements ServletContextListener {
+public class RaspberryPIPermissionUpdateListener implements ServletContextListener {
 
-    private static Log log = LogFactory.getLog(AndroidSenseServiceImpl.class);
-
-    private static final String ROLE_NAME = "internal/devicemgt-user";
+    private static Log log = LogFactory.getLog(RaspberryPIPermissionUpdateListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
@@ -40,16 +39,16 @@ public class PermissionUpdateListener implements ServletContextListener {
         UserStoreManager userStoreManager = getUserStoreManager();
         try {
             if (userStoreManager != null) {
-                if (!userStoreManager.isExistingRole(ROLE_NAME)) {
-                    userStoreManager.addRole(ROLE_NAME, null, AndroidSenseConstants.permissions);
+                if (!userStoreManager.isExistingRole(RaspberrypiConstants.ROLE_NAME)) {
+                    userStoreManager.addRole(RaspberrypiConstants.ROLE_NAME, null, getPermissions());
                 } else {
-                    getAuthorizationManager().authorizeRole(ROLE_NAME,
-                            "/permission/admin/device-mgt/devices/enroll/android-sense", "ui.execute");
-                    getAuthorizationManager().authorizeRole(ROLE_NAME,
-                            "/permission/admin/device-mgt/devices/owning-device/view", "ui.execute");
+                    getAuthorizationManager().authorizeRole(RaspberrypiConstants.ROLE_NAME,
+                            RaspberrypiConstants.PERM_ENROLL_RASPBERRYPI, CarbonConstants.UI_PERMISSION_ACTION);
+                    getAuthorizationManager().authorizeRole(RaspberrypiConstants.ROLE_NAME,
+                            RaspberrypiConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants.UI_PERMISSION_ACTION);
                 }
             } } catch (UserStoreException e) {
-            //
+            log.error("Error while creating a role and adding a user for Raspberry PI.", e);
         }
     }
 
@@ -101,25 +100,14 @@ public class PermissionUpdateListener implements ServletContextListener {
         return authorizationManager;
     }
 
+    private Permission[] getPermissions() {
 
-//    public static void registerApiAccessRoles(String user) {
-//        UserStoreManager userStoreManager = null;
-//        try {
-//            userStoreManager = getUserStoreManager();
-//            String[] userList = new String[]{user};
-//            if (userStoreManager != null) {
-//                String rolesOfUser[] = userStoreManager.getRoleListOfUser(user);
-//                if (!userStoreManager.isExistingRole(Constants.DEFAULT_ROLE_NAME)) {
-//                    userStoreManager.addRole(Constants.DEFAULT_ROLE_NAME, userList, Constants.DEFAULT_PERMISSION);
-//                } else if (rolesOfUser != null && Arrays.asList(rolesOfUser).contains(Constants.DEFAULT_ROLE_NAME)) {
-//                    return;
-//                } else {
-//                    userStoreManager.updateUserListOfRole(Constants.DEFAULT_ROLE_NAME, new String[0], userList);
-//                }
-//            }
-//        } catch (UserStoreException e) {
-//            log.error("Error while creating a role and adding a user for virtual_firealarm.", e);
-//        }
-//    }
+            Permission androidSense = new Permission(RaspberrypiConstants.PERM_ENROLL_RASPBERRYPI,
+                    CarbonConstants.UI_PERMISSION_ACTION);
+            Permission view = new Permission(RaspberrypiConstants.PERM_OWNING_DEVICE_VIEW, CarbonConstants
+                    .UI_PERMISSION_ACTION);
+
+            return new Permission[]{androidSense, view};
+    }
 
 }
