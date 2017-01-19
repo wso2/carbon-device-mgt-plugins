@@ -31,4 +31,8 @@
         <param-value>true</param-value>
     </context-param>
 
+    <listener>
+        <listener-class>org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.listener.RaspberryPIPermissionUpdateListener</listener-class>
+    </listener>
+
 </web-app>
