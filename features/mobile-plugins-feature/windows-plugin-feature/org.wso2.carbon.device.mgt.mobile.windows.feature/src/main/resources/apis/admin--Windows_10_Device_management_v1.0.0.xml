@@ -3,13 +3,12 @@
         <inSequence>
             <property name="api.ut.backendRequestTime" expression="get-property('SYSTEM_TIME')"/>
             <property name="AM_KEY_TYPE" value="PRODUCTION" scope="default"/>
-            <property name="uri.var.portnum" expression="get-property('system','iot.core.https.port')"/>
-            <property name="uri.var.hostname" expression="get-property('system','iot.core.host')"/>
             <filter source="$ctx:AM_KEY_TYPE" regex="PRODUCTION">
                 <then>
                     <send>
                         <endpoint name="admin--Windows 10 Device management_APIproductionEndpoint_0">
-                            <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/api/device-mgt/windows/v1.0/management/devicemgt"/>
+                            <http uri-template="https://localhost:9443/api/device-mgt/windows/v1.0/management/devicemgt"/>
+                            <property name="ENDPOINT_ADDRESS" value="https://localhost:9443/api/device-mgt/windows/v1.0/management/devicemgt"/>
                         </endpoint>
                     </send>
                 </then>
