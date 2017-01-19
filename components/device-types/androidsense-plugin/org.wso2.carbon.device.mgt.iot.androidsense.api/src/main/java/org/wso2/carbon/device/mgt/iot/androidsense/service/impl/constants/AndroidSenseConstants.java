@@ -16,9 +16,6 @@
 
 package org.wso2.carbon.device.mgt.iot.androidsense.service.impl.constants;
 
-import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.user.api.Permission;
-
 public class AndroidSenseConstants {
 
     public final static String DEVICE_TYPE = "android_sense";
@@ -47,26 +44,9 @@ public class AndroidSenseConstants {
 
     public static final String SCOPE = "scope";
 
-    public static Permission[] permissions;
+    public static final String PERM_ENROLL_ANDROID_SENSE = "/permission/admin/device-mgt/devices/enroll/android-sense";
+    public static final String PERM_OWNING_DEVICE_VIEW = "/permission/admin/device-mgt/devices/owning-device/view";
 
-    static {
-
-        Permission enroll = new Permission("/permission/admin/device-mgt/devices/enroll", CarbonConstants
-                .UI_PERMISSION_ACTION);
-        Permission disEnroll = new Permission("/permission/admin/device-mgt/devices/disenroll", CarbonConstants
-                .UI_PERMISSION_ACTION);
-        Permission owningDevice = new Permission("/permission/admin/device-mgt/devices/owning-device",
-                CarbonConstants.UI_PERMISSION_ACTION);
-        Permission groups = new Permission("/permission/admin/device-mgt/groups", CarbonConstants.UI_PERMISSION_ACTION);
-        Permission notifications = new Permission("/permission/admin/device-mgt/notifications", CarbonConstants
-                .UI_PERMISSION_ACTION);
-        Permission policies = new Permission("/permission/admin/device-mgt/policies", CarbonConstants
-                .UI_PERMISSION_ACTION);
-        Permission subscribe = new Permission("/permission/admin/manage/api/subscribe", CarbonConstants
-                .UI_PERMISSION_ACTION);
-
-        permissions = new Permission[]{enroll, disEnroll, owningDevice, groups, notifications, policies, subscribe};
-
-    }
+    public static final String ROLE_NAME = "internal/devicemgt-user";
 
 }
