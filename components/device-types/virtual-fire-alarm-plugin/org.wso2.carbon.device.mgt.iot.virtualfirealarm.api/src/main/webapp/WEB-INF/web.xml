@@ -27,6 +27,8 @@
         <param-value>true</param-value>
     </context-param>
 
-
+    <listener>
+        <listener-class>org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.listener.VirtualFireAlarmPermissionUpdateListener</listener-class>
+    </listener>
 
 </web-app>
