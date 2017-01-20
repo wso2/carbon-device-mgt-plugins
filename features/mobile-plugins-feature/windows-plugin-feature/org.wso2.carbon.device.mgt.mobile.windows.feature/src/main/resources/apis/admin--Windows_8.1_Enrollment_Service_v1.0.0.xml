@@ -9,7 +9,7 @@
                 <then>
                     <send>
                         <endpoint name="admin--Windows 8.1 Enrollment Service_APIproductionEndpoint_0">
-                            <http uri-template="https:/{uri.var.hostname}:{uri.var.portnum}/api/device-mgt/windows/v1.0/deviceenrolment/wstep"/>
+                            <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/api/device-mgt/windows/v1.0/deviceenrolment/wstep"/>
                         </endpoint>
                     </send>
                 </then>
