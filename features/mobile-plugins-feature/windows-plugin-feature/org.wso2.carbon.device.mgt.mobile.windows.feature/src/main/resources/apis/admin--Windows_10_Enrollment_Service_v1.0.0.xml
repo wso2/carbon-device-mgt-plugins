@@ -3,8 +3,8 @@
         <inSequence>
             <property name="api.ut.backendRequestTime" expression="get-property('SYSTEM_TIME')"/>
             <property name="AM_KEY_TYPE" value="PRODUCTION" scope="default"/>
-            <property name="uri.var.portnum" expression="get-property('system','iot.core.https.port')"/>
-            <property name="uri.var.hostname" expression="get-property('system','iot.core.host')"/>
+            <property name="uri.var.portnum" expression="get-property('system','iot.keymanager.https.port')"/>
+            <property name="uri.var.hostname" expression="get-property('system','iot.keymanager.host')"/>
             <filter source="$ctx:AM_KEY_TYPE" regex="PRODUCTION">
                 <then>
                     <send>
