@@ -122,12 +122,17 @@
                                   title="Minimum number of complex or non-alphanumeric characters allowed in a passcode">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
-                            <br>
-                            ( Should be in between 1-to-3 characters)
                         </label>
-                        <select id="passcode-policy-min-complex-chars" type="text"
-                                class="form-control operationDataKeys" data-key="passcodePolicyMinComplexChars"
-                                default="1" maxlength="1" placeholder="[ Requires Number Input ]">
+                        <select id="passcode-policy-min-complex-chars" class="form-control operationDataKeys"
+                                data-key="passcodePolicyMinComplexChars" data-default="0">
+                            <option value="" selected="selected">
+                                None
+                            </option>
+                            <option value="1">01</option>
+                            <option value="2">02</option>
+                            <option value="3">03</option>
+                            <option value="4">04</option>
+                            <option value="5">05</option>
                         </select>
                     </div>
 
