@@ -230,7 +230,7 @@ public class ArduinoServiceImpl implements ArduinoService {
                     ArduinoConstants.APIM_APPLICATION_TOKEN_VALIDITY_PERIOD);
         }
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
-        String scopes = " device_" + deviceId;
+        String scopes = " device_" + deviceId + " perm:arduino:enroll";
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
                                                                    apiApplicationKey.getConsumerSecret(), owner, scopes);
         //create token
