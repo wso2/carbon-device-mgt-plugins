@@ -29,17 +29,6 @@
             <span id="encrypt-storage-error" class="encryption-error status-icon hidden"><i
                     class="fw fw-error"></i></span>
         </a>
-        <a href="javascript:void(0)" onclick="showAdvanceOperation('app-restriction', this)">
-                <span class="fw-stack fw-lg">
-                    <i class="fw fw-application fw-stack-1x"></i>
-                    <i class="fw fw-block fw-stack-2x"></i>
-                </span>
-            Applications Restrictions
-            <span id="app-restriction-configured" class="has-configured status-icon hidden"><i
-                    class="fw fw-success"></i></span>
-            <span id="app-restriction-ok" class="has-success status-icon hidden"><i class="fw fw-success"></i></span>
-            <span id="app-restriction-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
-        </a>
     </div>
 
     <div class="wr-hidden-operations-content col-lg-8">
@@ -133,17 +122,12 @@
                                   title="Minimum number of complex or non-alphanumeric characters allowed in a passcode">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
+                            <br>
+                            ( Should be in between 1-to-3 characters)
                         </label>
-                        <select id="passcode-policy-min-complex-chars" class="form-control operationDataKeys"
-                                data-key="passcodePolicyMinComplexChars" data-default="0">
-                            <option value="" selected="selected">
-                                None
-                            </option>
-                            <option value="1">01</option>
-                            <option value="2">02</option>
-                            <option value="3">03</option>
-                            <option value="4">04</option>
-                            <option value="5">05</option>
+                        <select id="passcode-policy-min-complex-chars" type="text"
+                                class="form-control operationDataKeys" data-key="passcodePolicyMinComplexChars"
+                                default="1" maxlength="1" placeholder="[ Requires Number Input ]">
                         </select>
                     </div>
 
