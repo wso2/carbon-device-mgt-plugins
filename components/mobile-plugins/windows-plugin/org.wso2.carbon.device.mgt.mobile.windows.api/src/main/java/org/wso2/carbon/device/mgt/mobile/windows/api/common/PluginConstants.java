@@ -68,7 +68,7 @@ public final class PluginConstants {
     public static final String CXF_REQUEST_URI = "org.apache.cxf.request.uri";
 
     //Web services media types
-    public static final String SYNCML_MEDIA_TYPE = "application/vnd.syncml.dm+xml;charset=utf-8";
+    public static final String SYNCML_MEDIA_TYPE = "application/vnd.syncml.dm+xml";
 
     /**
      * Discovery service related other constants
@@ -218,6 +218,8 @@ public final class PluginConstants {
         public static final String BATTERY_CHARGE_REMAINING = "BATTERY_CHARGE_REMAINING";
         public static final String BATTERY_ESTIMATED_RUNTIME = "BATTERY_ESTIMATED_RUNTIME";
         public static final String MOBILE_ID = "MOBILE_ID";
+        public static final String LONGITUDE = "LONGITUDE";
+        public static final String LATITUDE = "LATITUDE";
 
     }
 
@@ -267,6 +269,11 @@ public final class PluginConstants {
         public static final String DEVICE_PASSWORD_STATUS = "DEVICE_PASSWORD_STATUS";
         public static final String DEVICE_PASSCODE_DELETE = "DEVICE_PASSCODE_DELETE";
         public static final String DEVICE_INFO = "DEVICE_INFO";
+        public static final String POLICY_REVOKE = "POLICY_REVOKE";
+        public static final String DEVICE_LOCATION = "DEVICE_LOCATION";
+        public static final String LONGITUDE = "LONGITUDE";
+        public static final String LATITUDE = "LATITUDE";
+        public static final String DEVICE_REBOOT = "DEVICE_REBOOT";
     }
 
     /**
@@ -338,7 +345,7 @@ public final class PluginConstants {
     }
 
     /**
-     * Windows enrollment property constants.
+     * Windows10 enrollment property constants.
      */
 
     public final class WindowsEnrollmentProperties {
@@ -346,10 +353,10 @@ public final class PluginConstants {
             throw new AssertionError();
         }
 
-        public static final int WIN_DEVICE_ID = 12;
-        public static final int WIN_DEVICE_NAME = 2;
-        public static final int WIN_DEVICE_VERSION = 15;
-        public static final int WIN_DEVICE_IMEI = 3;
+        public static final String DEVICE_NAME =  "DeviceName";
+        public static final String DEVICE_VERSION = "OSVersion";
+        public static final String DEVICE_ID = "DeviceID";
+        public static final String IMEI = "MobileEquipmentId";
 
     }
 }

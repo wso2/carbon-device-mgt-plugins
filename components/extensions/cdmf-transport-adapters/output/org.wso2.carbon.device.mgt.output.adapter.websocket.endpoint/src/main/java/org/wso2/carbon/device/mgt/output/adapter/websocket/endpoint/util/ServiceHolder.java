@@ -21,18 +21,18 @@ package org.wso2.carbon.device.mgt.output.adapter.websocket.endpoint.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.UIOutputCallbackControllerService;
+import org.wso2.carbon.device.mgt.output.adapter.websocket.WebsocketOutputCallbackControllerService;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.service.WebsocketValidationService;
 
 public class ServiceHolder {
 
     private static ServiceHolder instance;
-    private UIOutputCallbackControllerService uiOutputCallbackControllerService;
+    private WebsocketOutputCallbackControllerService websocketOutputCallbackControllerService;
     private static final Log log = LogFactory.getLog(ServiceHolder.class);
 
     private ServiceHolder(){
-        uiOutputCallbackControllerService = (UIOutputCallbackControllerService) PrivilegedCarbonContext
-                .getThreadLocalCarbonContext().getOSGiService(UIOutputCallbackControllerService.class, null);
+        websocketOutputCallbackControllerService = (WebsocketOutputCallbackControllerService) PrivilegedCarbonContext
+                .getThreadLocalCarbonContext().getOSGiService(WebsocketOutputCallbackControllerService.class, null);
     }
 
     public synchronized static ServiceHolder getInstance() {
@@ -42,8 +42,8 @@ public class ServiceHolder {
         return instance;
     }
 
-    public UIOutputCallbackControllerService getUiOutputCallbackControllerService() {
-        return uiOutputCallbackControllerService;
+    public WebsocketOutputCallbackControllerService getWebsocketOutputCallbackControllerService() {
+        return websocketOutputCallbackControllerService;
     }
 
     public static WebsocketValidationService getWebsocketValidationService() {

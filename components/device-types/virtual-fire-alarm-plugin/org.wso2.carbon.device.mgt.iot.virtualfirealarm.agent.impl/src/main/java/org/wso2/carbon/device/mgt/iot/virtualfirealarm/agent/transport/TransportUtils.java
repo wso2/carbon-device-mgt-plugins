@@ -36,6 +36,8 @@ import java.net.ServerSocket;
 import java.net.SocketException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -173,27 +175,26 @@ public class TransportUtils {
 	 */
 	public static synchronized int getAvailablePort(int randomAttempts) {
 		ArrayList<Integer> failedPorts = new ArrayList<Integer>(randomAttempts);
-
-		Random randomNum = new Random();
-		int randomPort = MAX_PORT_NUMBER;
-
-		while (randomAttempts > 0) {
-			randomPort = randomNum.nextInt(MAX_PORT_NUMBER - MIN_PORT_NUMBER) + MIN_PORT_NUMBER;
-
-			if (checkIfPortAvailable(randomPort)) {
-				return randomPort;
+		try {
+			SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+			int randomPort = MAX_PORT_NUMBER;
+			while (randomAttempts > 0) {
+				randomPort = secureRandom.nextInt(MAX_PORT_NUMBER - MIN_PORT_NUMBER) + MIN_PORT_NUMBER;
+				if (checkIfPortAvailable(randomPort)) {
+					return randomPort;
+				}
+				failedPorts.add(randomPort);
+				randomAttempts--;
 			}
-			failedPorts.add(randomPort);
-			randomAttempts--;
-		}
-
-		randomPort = MAX_PORT_NUMBER;
-
-		while (true) {
-			if (!failedPorts.contains(randomPort) && checkIfPortAvailable(randomPort)) {
-				return randomPort;
+			randomPort = MAX_PORT_NUMBER;
+			while (true) {
+				if (!failedPorts.contains(randomPort) && checkIfPortAvailable(randomPort)) {
+					return randomPort;
+				}
+				randomPort--;
 			}
-			randomPort--;
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException("SHA1PRNG algorithm could not be found.");
 		}
 	}
 

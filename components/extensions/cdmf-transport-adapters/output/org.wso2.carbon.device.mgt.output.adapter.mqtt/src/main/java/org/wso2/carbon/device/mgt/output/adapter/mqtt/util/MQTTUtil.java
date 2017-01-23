@@ -28,7 +28,6 @@ import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -85,15 +84,4 @@ public class MQTTUtil {
 		}
 	}
 
-	public static JWTClientManagerService getJWTClientManagerService() {
-		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-		JWTClientManagerService jwtClientManagerService =
-				(JWTClientManagerService) ctx.getOSGiService(JWTClientManagerService.class, null);
-		if (jwtClientManagerService == null) {
-			String msg = "JWT management service has not initialized.";
-			log.error(msg);
-			throw new IllegalStateException(msg);
-		}
-		return jwtClientManagerService;
-	}
 }

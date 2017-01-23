@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.core.util.Utils;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
@@ -59,7 +60,9 @@ public class ZipUtil {
     private static final String HTTP_PORT_PROPERTY = "httpPort";
     private static final String CONFIG_TYPE = "general";
     private static final Log log = LogFactory.getLog(ZipUtil.class);
-    public static final String HOST_NAME = "HostName";
+    private static final String LOCALHOST = "localhost";
+    private static final String HTTP_PROTOCOL_HOST = "${iot.gateway.host}";
+    private static final String HTTP_PROTOCOL_PORT = "${iot.gateway.http.port}";
 
     public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
                                     String deviceId, String deviceName, String token,
@@ -72,8 +75,10 @@ public class ZipUtil {
         String iotServerIP;
 
         try {
-            iotServerIP = getServerUrl();
-            String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
+            iotServerIP = Utils.replaceSystemProperty(HTTP_PROTOCOL_HOST);
+            String serverIpAddress = getServerUrl();
+            iotServerIP = iotServerIP.replace(LOCALHOST, serverIpAddress);
+            String httpServerPort = Utils.replaceSystemProperty(HTTP_PROTOCOL_PORT);
 
             Map<String, String> contextParams = new HashMap<>();
 
@@ -117,17 +122,13 @@ public class ZipUtil {
         }
     }
 
-    private static String getServerUrl() {
-        String hostName = ServerConfiguration.getInstance().getFirstProperty(HOST_NAME);
+    public static String getServerUrl() {
         try {
-            if (hostName == null) {
-                hostName = NetworkUtils.getLocalHostname();
-            }
+            return org.apache.axis2.util.Utils.getIpAddress();
         } catch (SocketException e) {
-            hostName = "localhost";
             log.warn("Failed retrieving the hostname, therefore set to localhost", e);
+            return "localhost";
         }
-        return hostName;
     }
 
     private static ZipArchive getSketchArchive(String archivesPath, String templateSketchPath, Map contextParams

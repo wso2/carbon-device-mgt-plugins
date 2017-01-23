@@ -18,7 +18,7 @@ under the License. --}}
 {{#zone "accessControl"}}
     {{
         unit "mdm.unit.enrollments.access-control"
-        allowedPlatform = "Windows Phone"
+        allowedPlatform = ["Windows Phone", "Windows"]
         currentPage = "invoke-agent"
         nextPage = "login-agent"
     }}
@@ -32,7 +32,7 @@ under the License. --}}
     {{
         unit "mdm.unit.wizard-stepper"
         steps = "Start Workplace,
-        Login to Enterprise Mobility Manager,
+        Login to WSO2 IoT Server,
         Accept End User License Agreement"
         currentStep = "Start Workplace"
         currentStepIndex = 0
@@ -40,7 +40,7 @@ under the License. --}}
     Start the Workplace app to continue device enrollment.
     <br class="c-both" />
     <br class="c-both" />
-    Setting up a Workplace account with WSO2 Enterprise Mobility Manager
+    Setting up a Workplace account with WSO2 IoT Server
     will offer you company policies, certificates and apps that help you connect
     to your business.
     <br class="c-both" />

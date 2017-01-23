@@ -1,5 +1,5 @@
 {
-    "appName": "WSO2 Enterprise Mobility Manager",
+    "appName": "WSO2 IoT Server",
     "cachingEnabled": true,
     "debuggingEnabled": false,
     "permissionRoot": "/",
@@ -27,10 +27,10 @@
         },
         "sso": {
             "enabled": false,
-            "issuer" : "emm",
-            "appName" : "emm",
+            "issuer" : "devicemgt",
+            "appName" : "devicemgt",
             "identityProviderUrl" : "https://localhost:9443/samlsso",
-            "acs": "https://localhost:9443/emm/uuf/sso/acs",
+            "acs": "https://localhost:9443/devicemgt/uuf/sso/acs",
             "identityAlias": "wso2carbon",
             "responseSigningEnabled" : "true",
             "useTenantKey": false
@@ -38,8 +38,8 @@
     },
     "generalConfig" : {
         "host" : "https://localhost:9443",
-        "companyName" : "WSO2 Enterprise Mobility Manager",
-        "browserTitle" : "WSO2 EMM",
+        "companyName" : "WSO2 IoT Server",
+        "browserTitle" : "WSO2 IoT Server",
         "copyrightPrefix" : "\u00A9 %date-year%, ",
         "copyrightOwner" : "WSO2 Inc.",
         "copyrightOwnersSite" : "http://www.wso2.org",

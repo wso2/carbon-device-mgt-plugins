@@ -10,17 +10,17 @@
   "hideAllMenuItems": false,
   "id": "android-iot",
   "identityServerUrl": "",
-  "isEditorEnable": true,
+  "isEditorEnable": false,
   "isUserCustom": false,
   "isanon": false,
-  "landing": "home",
+  "landing": "sensors",
   "menu": [
     {
-      "id": "home",
+      "id": "sensors",
       "isanon": false,
       "ishidden": false,
       "subordinates": [],
-      "title": "Home"
+      "title": "Sensors"
     },
     {
       "id": "real-time",
@@ -56,13 +56,6 @@
       "ishidden": false,
       "subordinates": [],
       "title": "Communication"
-    },
-    {
-      "id": "test",
-      "isanon": false,
-      "ishidden": false,
-      "title": "test",
-      "subordinates": []
     }
   ],
   "pages": [
@@ -70,22 +63,23 @@
       "content": {
         "anon": {},
         "default": {
-          "a": [
+          "a": [],
+          "b": [
             {
-              "id": "ACCELEROMETER_Y-0",
+              "id": "ANDROID_MAGNETIC_GADGET-0",
               "content": {
-                "id": "ACCELEROMETER_Y",
-                "title": "ACCELEROMETER Y",
+                "id": "ANDROID_MAGNETIC_GADGET",
+                "title": "ANDROID_MAGNETIC_GADGET",
                 "type": "gadget",
-                "thumbnail": "fs://gadget/ACCELEROMETER_Y/thumbnail.png",
+                "thumbnail": "fs://gadget/ANDROID_MAGNETIC_GADGET/thumbnail.png",
                 "data": {
-                  "url": "fs://gadget/ACCELEROMETER_Y/gadget.xml"
+                  "url": "fs://gadget/ANDROID_MAGNETIC_GADGET/gadget.xml"
                 },
                 "styles": {
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "center",
-                  "title": "ACCELEROMETER Y"
+                  "title": "MAGNETIC FIELD"
                 },
                 "options": {
                   "windowSize": {
@@ -97,7 +91,7 @@
                   }
                 },
                 "locale_titles": {
-                  "en-US": "ACCELEROMETER Y"
+                  "en-US": "MAGNETIC FIELD"
                 },
                 "settings": {
                   "priority": "5",
@@ -106,58 +100,22 @@
               }
             }
           ],
-          "b": [
-            {
-              "id": "ACCELEROMETER_Z-0",
-            "content": {
-              "id": "ACCELEROMETER_Z",
-              "title": "ACCELEROMETER Z",
-              "type": "gadget",
-              "thumbnail": "fs://gadget/ACCELEROMETER_Z/thumbnail.png",
-              "data": {
-                "url": "fs://gadget/ACCELEROMETER_Z/gadget.xml"
-              },
-              "styles": {
-                "no_heading": false,
-                "hide_gadget": false,
-                "titlePosition": "center",
-                "title": "ACCELEROMETER Z"
-              },
-              "options": {
-                "windowSize": {
-                  "type": "STRING",
-                  "title": "Window Size",
-                  "value": "10",
-                  "options": [],
-                  "required": false
-                }
-              },
-              "locale_titles": {
-                "en-US": "ACCELEROMETER Z"
-              },
-              "settings": {
-                "priority": "5",
-                "timeoutInterval": "60000"
-              }
-            }
-            }
-          ],
           "8e564cb7a1c6519179e2111cc05a79ca": [
             {
-              "id": "Accelerometer_X-0",
+              "id": "ANDROID_ACCELEROMETER_GADGET-0",
               "content": {
-                "id": "Accelerometer_X",
-                "title": "Accelerometer X",
+                "id": "ANDROID_ACCELEROMETER_GADGET",
+                "title": "ANDROID_ACCELEROMETER_GADGET",
                 "type": "gadget",
-                "thumbnail": "fs://gadget/Accelerometer_X/thumbnail.png",
+                "thumbnail": "fs://gadget/ANDROID_ACCELEROMETER_GADGET/thumbnail.png",
                 "data": {
-                  "url": "fs://gadget/Accelerometer_X/gadget.xml"
+                  "url": "fs://gadget/ANDROID_ACCELEROMETER_GADGET/gadget.xml"
                 },
                 "styles": {
                   "no_heading": false,
                   "hide_gadget": false,
                   "titlePosition": "center",
-                  "title": "Accelerometer X"
+                  "title": "ACCELEROMETER"
                 },
                 "options": {
                   "windowSize": {
@@ -169,7 +127,7 @@
                   }
                 },
                 "locale_titles": {
-                  "en-US": "Accelerometer X"
+                  "en-US": "ACCELEROMETER"
                 },
                 "settings": {
                   "priority": "5",
@@ -249,43 +207,107 @@
                 }
               }
             }
+          ],
+          "765379a7012b8819ea13524e5b312509": [
+            {
+              "id": "ANDROID_ROTATION_GADGET-0",
+              "content": {
+                "id": "ANDROID_ROTATION_GADGET",
+                "title": "ANDROID_ROTATION_GADGET",
+                "type": "gadget",
+                "thumbnail": "fs://gadget/ANDROID_ROTATION_GADGET/thumbnail.png",
+                "data": {
+                  "url": "fs://gadget/ANDROID_ROTATION_GADGET/gadget.xml"
+                },
+                "styles": {
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "center",
+                  "title": "ROTATIONAL VECTOR"
+                },
+                "options": {
+                  "windowSize": {
+                    "type": "STRING",
+                    "title": "Window Size",
+                    "value": "10",
+                    "options": [],
+                    "required": false
+                  }
+                },
+                "locale_titles": {
+                  "en-US": "ROTATIONAL VECTOR"
+                },
+                "settings": {
+                  "priority": "5",
+                  "timeoutInterval": "60000"
+                }
+              }
+            }
+          ],
+          "47ceaee8a089ea8ef75c91e5b83a1a36": [
+            {
+              "id": "ANDROID_GYROSCOPE_GADGET-0",
+              "content": {
+                "id": "ANDROID_GYROSCOPE_GADGET",
+                "title": "ANDROID_GYROSCOPE_GADGET",
+                "type": "gadget",
+                "thumbnail": "fs://gadget/ANDROID_GYROSCOPE_GADGET/thumbnail.png",
+                "data": {
+                  "url": "fs://gadget/ANDROID_GYROSCOPE_GADGET/gadget.xml"
+                },
+                "styles": {
+                  "no_heading": false,
+                  "hide_gadget": false,
+                  "titlePosition": "center",
+                  "title": "GYROSCOPE"
+                },
+                "options": {
+                  "windowSize": {
+                    "type": "STRING",
+                    "title": "Window Size",
+                    "value": "10",
+                    "options": [],
+                    "required": false
+                  }
+                },
+                "locale_titles": {
+                  "en-US": "GYROSCOPE"
+                },
+                "settings": {
+                  "priority": "5",
+                  "timeoutInterval": "60000"
+                }
+              }
+            }
           ]
         }
       },
-      "id": "home",
+      "id": "sensors",
       "isanon": false,
       "layout": {
         "content": {
           "loggedIn": {
             "blocks": [
               {
-                "id": "a",
-                "x": 4,
-                "y": 0,
-                "width": 4,
-                "height": 4,
-                "banner": false
-              },
-              {
                 "id": "b",
-                "x": 8,
+                "x": 6,
                 "y": 0,
-                "width": 4,
-                "height": 4,
+                "width": 6,
+                "height": 5,
                 "banner": false
               },
               {
                 "id": "8e564cb7a1c6519179e2111cc05a79ca",
                 "x": 0,
                 "y": 0,
-                "width": 4,
-                "height": 4,
+                "width": 6,
+                "height": 5,
                 "banner": false
               },
               {
                 "id": "fdfada688ff9e7b3271eece314618532",
                 "x": 0,
-                "y": 4,
+                "y": 5,
                 "width": 6,
                 "height": 3,
                 "banner": false
@@ -293,7 +315,7 @@
               {
                 "id": "46193833e958e9f7e879263f372eb508",
                 "x": 6,
-                "y": 4,
+                "y": 5,
                 "width": 6,
                 "height": 3,
                 "banner": false
@@ -301,25 +323,17 @@
               {
                 "id": "765379a7012b8819ea13524e5b312509",
                 "x": 0,
-                "y": 7,
-                "width": 4,
-                "height": 4,
+                "y": 8,
+                "width": 6,
+                "height": 5,
                 "banner": false
               },
               {
                 "id": "47ceaee8a089ea8ef75c91e5b83a1a36",
-                "x": 8,
-                "y": 7,
-                "width": 4,
-                "height": 4,
-                "banner": false
-              },
-              {
-                "id": "4a9feeb19fc2ea76e252dcd62c954279",
-                "x": 4,
-                "y": 7,
-                "width": 4,
-                "height": 4,
+                "x": 6,
+                "y": 8,
+                "width": 6,
+                "height": 5,
                 "banner": false
               }
             ]
@@ -327,7 +341,7 @@
         },
         "fluidLayout": false
       },
-      "title": "Home"
+      "title": "Sensors"
     },
     {
       "content": {
@@ -1278,151 +1292,6 @@
         "fluidLayout": false
       },
       "title": "Communication"
-    },
-    {
-      "id": "test",
-      "title": "test",
-      "layout": {
-        "content": {
-          "loggedIn": {
-            "blocks": [
-              {
-                "id": "49cada6f023f237c953761b597752212",
-                "x": 0,
-                "y": 1,
-                "width": 5,
-                "height": 1,
-                "banner": false
-              },
-              {
-                "id": "a26d2f62dbb0011edf13371a2eb3cdd1",
-                "x": 0,
-                "y": 0,
-                "width": 3,
-                "height": 1,
-                "banner": false
-              }
-            ]
-          }
-        },
-        "fluidLayout": false
-      },
-      "isanon": false,
-      "content": {
-        "default": {
-          "49cada6f023f237c953761b597752212": [
-            {
-              "id": "date-picker-widget-0",
-              "content": {
-                "id": "date-picker-widget",
-                "title": "Date Picker Widget",
-                "type": "widget",
-                "category": "Widgets",
-                "thumbnail": "fs://gadget/date-picker-widget/index.png",
-                "data": {
-                  "url": "fs://gadget/date-picker-widget/index.xml"
-                },
-                "options": {},
-                "styles": {
-                  "no_heading": true,
-                  "hide_gadget": false,
-                  "titlePosition": "left",
-                  "title": "Date Picker Widget"
-                },
-                "notify": {
-                  "date-selected": {
-                    "type": "message",
-                    "description": "This notifies selected date"
-                  }
-                },
-                "locale_titles": {
-                  "en-US": "Date Picker Widget"
-                },
-                "settings": {
-                  "priority": "5",
-                  "timeoutInterval": "60000"
-                }
-              }
-            }
-          ],
-          "33faa57accead8af549c70f111face99": [
-            {
-              "id": "EsbAnalytics-Gadget-Search_Box-0",
-              "content": {
-                "id": "EsbAnalytics-Gadget-Search_Box",
-                "title": "Search Box",
-                "type": "widget",
-                "category": "Widgets",
-                "thumbnail": "fs://gadget/usa-business-revenue/index.png",
-                "data": {
-                  "url": "fs://gadget/EsbAnalytics-Gadget-Search_Box/index.xml"
-                },
-                "styles": {
-                  "no_heading": true,
-                  "hide_gadget": false,
-                  "titlePosition": "left",
-                  "title": "Search Box"
-                },
-                "toolbarButtons": {
-                  "default": {
-                    "maximize": false,
-                    "configurations": false
-                  },
-                  "custom": [],
-                  "isDropdownView": false
-                },
-                "options": {},
-                "locale_titles": {
-                  "en-US": "Search Box"
-                },
-                "settings": {
-                  "priority": "5",
-                  "timeoutInterval": "60000"
-                }
-              }
-            }
-          ],
-          "be290fcc084ff118decc23588febc2ed": [],
-          "a26d2f62dbb0011edf13371a2eb3cdd1": [
-            {
-              "id": "Android_Device_SearchBox-0",
-              "content": {
-                "id": "Android_Device_SearchBox",
-                "title": "Search Box",
-                "type": "gadget",
-                "category": "Gadgets",
-                "thumbnail": "fs://gadget/usa-business-revenue/index.png",
-                "data": {
-                  "url": "fs://gadget/Android_Device_SearchBox/index.xml"
-                },
-                "styles": {
-                  "no_heading": true,
-                  "hide_gadget": false,
-                  "titlePosition": "left",
-                  "title": "Search Box"
-                },
-                "toolbarButtons": {
-                  "default": {
-                    "maximize": false,
-                    "configurations": false
-                  },
-                  "custom": [],
-                  "isDropdownView": false
-                },
-                "options": {},
-                "locale_titles": {
-                  "en-US": "Search Box"
-                },
-                "settings": {
-                  "priority": "5",
-                  "timeoutInterval": "60000"
-                }
-              }
-            }
-          ]
-        },
-        "anon": {}
-      }
     }
   ],
   "permissions": {
@@ -1438,5 +1307,6 @@
   },
   "shareDashboard": false,
   "theme": "Default Theme",
-  "title": "Android IOT"
+  "title": "Android IOT",
+  "defaultPriority": "5"
 }

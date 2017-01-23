@@ -22,29 +22,29 @@
         <Feature code="keywords">
             <Name>Add Keywords</Name>
             <Description>Send keywords to the device</Description>
-            <Operation context="/android_sense/device/{deviceId}/words" method="POST">
-                <QueryParameters>
-                    <Parameter>keywords</Parameter>
-                </QueryParameters>
-            </Operation>
+            <!--<Operation context="/android_sense/device/{deviceId}/words" method="POST">-->
+                <!--<QueryParameters>-->
+                    <!--<Parameter>keywords</Parameter>-->
+                <!--</QueryParameters>-->
+            <!--</Operation>-->
         </Feature>
         <Feature code="threshold">
             <Name>Add Threshold</Name>
             <Description>Send Threshold to the device</Description>
-            <Operation context="/android_sense/device/{deviceId}/words/threshold" method="POST">
-                <QueryParameters>
-                    <Parameter>threshold</Parameter>
-                </QueryParameters>
-            </Operation>
+            <!--<Operation context="/android_sense/device/{deviceId}/words/threshold" method="POST">-->
+                <!--<QueryParameters>-->
+                    <!--<Parameter>threshold</Parameter>-->
+                <!--</QueryParameters>-->
+            <!--</Operation>-->
         </Feature>
         <Feature code="remove_words">
             <Name>Remove words</Name>
             <Description>Remove Threshold from the device</Description>
-            <Operation context="/android_sense/device/{deviceId}/words" method="DELETE">
-                <QueryParameters>
-                    <Parameter>words</Parameter>
-                </QueryParameters>
-            </Operation>
+            <!--<Operation context="/android_sense/device/{deviceId}/words" method="DELETE">-->
+                <!--<QueryParameters>-->
+                    <!--<Parameter>words</Parameter>-->
+                <!--</QueryParameters>-->
+            <!--</Operation>-->
         </Feature>
     </Features>
 
@@ -56,10 +56,9 @@
         <FileBasedProperties>true</FileBasedProperties>
         <!--if file based properties is set to false then the configuration will be picked from platform configuration-->
         <ConfigProperties>
-            <Property Name="mqtt.adapter.name">androidsense.mqtt.adapter</Property>
-            <Property Name="url">tcp://localhost:1886</Property>
+            <Property Name="mqttAdapterName">androidsense.mqtt.adapter</Property>
             <Property Name="username">admin</Property>
-            <Property Name="dcrUrl">https://localhost:9443/dynamic-client-web/register</Property>
+            <Property Name="password">admin</Property>
             <Property Name="qos">0</Property>
             <Property Name="scopes"/>
             <Property Name="clearSession">true</Property>

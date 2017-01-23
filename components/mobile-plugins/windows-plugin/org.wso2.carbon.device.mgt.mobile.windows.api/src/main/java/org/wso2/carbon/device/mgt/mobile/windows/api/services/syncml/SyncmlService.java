@@ -20,6 +20,8 @@ package org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml;
 
 import io.swagger.annotations.*;
 import org.w3c.dom.Document;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
@@ -35,27 +37,20 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * Interface for Syncml message flow.
+ * Interface for Windows 8.1 enrollment flow.
  */
-@SwaggerDefinition(
-        info = @Info(
-                version = "1.0.0",
-                title = "",
-                extensions = {
-                        @Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Syncml Endpoint"),
-                                @ExtensionProperty(name = "context",
-                                        value = "/api/device-mgt/windows/v1.0/syncml"),
-                        })
-                }
-        ),
-        tags = {
-                @Tag(name = "devicemgt_windows", description = "")
+
+@Path("/devicemanagement")
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Pending operations",
+                        description = "Register an Windows device",
+                        key = "perm:windows:enroll",
+                        permissions = {"/device-mgt/devices/enroll/windows"}
+                )
         }
 )
-@Api(value = "Windows syncml service",
-        description = "This carries all the resources related to Windows syncml message flow.")
-@Path("/devicemanagement")
 public interface SyncmlService {
 
     @Path("/request")

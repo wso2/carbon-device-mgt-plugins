@@ -21,11 +21,14 @@ package org.wso2.carbon.device.mgt.mobile.windows.api.services;
 
 import io.swagger.annotations.*;
 import org.w3c.dom.Document;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.operations.WindowsOperationException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.Constants;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -36,27 +39,19 @@ import javax.ws.rs.core.Response;
 
 
 /**
- * Interface for Syncml message flow.
+ * Interface for Windows 10 Device management phase.
  */
-@SwaggerDefinition(
-        info = @Info(
-                version = "1.0.0",
-                title = "",
-                extensions = {
-                        @Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Syncml Endpoint"),
-                                @ExtensionProperty(name = "context",
-                                        value = "/api/device-mgt/windows/v1.0/syncmlmgt"),
-                        })
-                }
-        ),
-        tags = {
-                @Tag(name = "devicemgt_windows", description = "")
+@Path("/devicemgt")
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Pending operations",
+                        description = "Register an Windows device",
+                        key = "perm:windows:enroll",
+                        permissions = {"/device-mgt/devices/enroll/windows"}
+                )
         }
 )
-@Api(value = "Windows syncml service to initialize management session",
-        description = "This carries all the resources related to Windows syncml message flow.")
-@Path("/devicemgt")
 public interface DeviceManagementService {
     @Path("/pending-operations")
     @POST
@@ -68,14 +63,10 @@ public interface DeviceManagementService {
             notes = "Using this API to fetching more information to enroll the Device and " +
                     "getting pending operations.",
             tags = "Windows Device Management Administrative Service",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(
-                                    scope = "/device-mgt/devices/enroll/windows",
-                                    description = "Getting pending operations and " +
-                                            "device information to enroll the device")}
-                    )
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:android:enroll")
+                    })
             }
     )
     @ApiResponses(value = {

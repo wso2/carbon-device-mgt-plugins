@@ -42,24 +42,7 @@ import javax.xml.ws.soap.SOAPBinding;
 /**
  * Interface for Discovery service related operations.
  */
-@SwaggerDefinition(
-        info = @Info(
-                version = "1.0.0",
-                title = "",
-                extensions = {
-                        @Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Windows Discovery service provider"),
-                                @ExtensionProperty(name = "context",
-                                        value = "/api/device-mgt/windows/v1.0/discovery/post"),
-                        })
-                }
-        ),
-        tags = {
-                @Tag(name = "devicemgt_windows", description = "")
-        }
-)
-@Api(value = "Windows Discovery service",
-        description = "This carries all the resources related to Windows Discovery service.")
+
 @WebService(targetNamespace = PluginConstants.DISCOVERY_SERVICE_TARGET_NAMESPACE,
         name = "IDiscoveryService")
 @BindingType(value = SOAPBinding.SOAP12HTTP_BINDING)
@@ -132,55 +115,5 @@ public interface DiscoveryService {
                     targetNamespace = PluginConstants.DISCOVERY_SERVICE_TARGET_NAMESPACE)
             javax.xml.ws.Holder<DiscoveryResponse> response
     ) throws WindowsDeviceEnrolmentException;
-
-
-    @ApiOperation(
-            httpMethod = "GET",
-            value = "Device ping the server to check whether it is running or not.",
-            notes = ".",
-            tags = "Windows Discovery service.",
-            authorizations = {
-                    @Authorization(
-                            value = "permission",
-                            scopes = {@AuthorizationScope(scope = "/device-mgt/devices/enroll/windows",
-                                    description = "Ping the Discovery service")}
-                    )
-            }
-    )
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            code = 200,
-                            message = "OK. \n Server is already running."),
-                    @ApiResponse(
-                            code = 303,
-                            message = "See Other. \n The source can be retrieved from the URL specified " +
-                                    "in the location header.",
-                            responseHeaders = {
-                                    @ResponseHeader(name = "Content-Location",
-                                            description = "Source URL of the document.")
-                            }),
-                    @ApiResponse(
-                            code = 304,
-                            message = "Not Modified. \n " +
-                                    "Empty body because the client already has the latest version of " +
-                                    "the requested resource."),
-                    @ApiResponse(
-                            code = 400,
-                            message = "Bad Request. \n Invalid request or validation error. You must provide" +
-                                    " the device identifier. Additionally, the device identifier can be combined" +
-                                    " with either the device type" +
-                                    " OR the from and to date."),
-                    @ApiResponse(
-                            code = 404,
-                            message = "Not Found. \n The specified resource does not exist."),
-                    @ApiResponse(
-                            code = 500,
-                            message = "Error occurred while pinging the server.")
-            })
-    @GET
-    @WebMethod
-    @WebResult()
-    Response discoverGet();
 
 }

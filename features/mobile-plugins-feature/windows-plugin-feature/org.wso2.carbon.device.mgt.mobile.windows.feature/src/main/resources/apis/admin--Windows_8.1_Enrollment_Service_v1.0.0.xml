@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><api xmlns="http://ws.apache.org/ns/synapse" name="admin--Windows 8.1 Enrollment Service" context="/api/device-mgt/windows/v1.0/deviceenrolment/wstep/1.0.0" version="1.0.0" version-type="context">
+    <resource methods="POST" url-mapping="/*" faultSequence="fault">
+        <inSequence>
+            <property name="api.ut.backendRequestTime" expression="get-property('SYSTEM_TIME')"/>
+            <property name="AM_KEY_TYPE" value="PRODUCTION" scope="default"/>
+            <property name="uri.var.portnum" expression="get-property('system','iot.core.https.port')"/>
+            <property name="uri.var.hostname" expression="get-property('system','iot.core.host')"/>
+            <filter source="$ctx:AM_KEY_TYPE" regex="PRODUCTION">
+                <then>
+                    <send>
+                        <endpoint name="admin--Windows 8.1 Enrollment Service_APIproductionEndpoint_0">
+                            <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/api/device-mgt/windows/v1.0/deviceenrolment/wstep"/>
+                        </endpoint>
+                    </send>
+                </then>
+                <else>
+                    <sequence key="_sandbox_key_error_"/>
+                </else>
+            </filter>
+        </inSequence>
+        <outSequence>
+            <class name="org.wso2.carbon.apimgt.gateway.handlers.analytics.APIMgtResponseHandler"/>
+            <property name="FORCE_HTTP_CONTENT_LENGTH" scope="axis2" value="true"/>
+            <property name="COPY_CONTENT_LENGTH_FROM_INCOMING" value="true" scope="axis2"/>
+            <send/>
+        </outSequence>
+    </resource>
+    <handlers>
+        <handler class="org.wso2.carbon.apimgt.gateway.handlers.common.APIMgtLatencyStatsHandler"/>
+        <handler class="org.wso2.carbon.apimgt.gateway.handlers.security.CORSRequestHandler">
+            <property name="apiImplementationType" value="ENDPOINT"/>
+        </handler>
+    </handlers>
+</api>

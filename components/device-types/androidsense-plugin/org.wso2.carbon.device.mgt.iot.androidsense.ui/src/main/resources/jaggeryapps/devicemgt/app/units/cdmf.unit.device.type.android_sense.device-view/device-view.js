@@ -20,6 +20,7 @@ function onRequest(context) {
     var log = new Log("device-view.js");
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("id");
+    var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
     var autoCompleteParams = [
         {"name" : "deviceId", "value" : deviceId}
     ];
@@ -28,11 +29,15 @@ function onRequest(context) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
         var device = deviceModule.viewDevice(deviceType, deviceId);
         if (device && device.status != "error") {
-            return {
-                "device": device.content,
-                "autoCompleteParams": autoCompleteParams,
-                "encodedFeaturePayloads": ""
-            };
+            var anchor = { "device" : { "id" : device.content.deviceIdentifier, "type" : device.content.type}};
+            var viewObject = {};
+            viewObject.device = device.content;
+            viewObject.autoCompleteParams = autoCompleteParams;
+            viewObject.encodedFeaturePayloads = "";
+            viewObject.portalUrl = devicemgtProps['portalURL'];
+            viewObject.anchor = encodeURI(JSON.stringify(anchor));
+            viewObject.locationHistory = stringify(device.content.locationHistory);
+            return viewObject;
         } else {
             response.sendError(404, "Device Id " + deviceId + " of type " + deviceType + " cannot be found!");
             exit();

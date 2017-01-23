@@ -33,4 +33,11 @@ public class RaspberrypiConstants {
 
     public static final String APIM_APPLICATION_TOKEN_VALIDITY_PERIOD = "3600";
 
+    public static final String SCOPE = "scope";
+
+    public static final String PERM_ENROLL_RASPBERRYPI = "/permission/admin/device-mgt/devices/enroll/raspberrypi";
+    public static final String PERM_OWNING_DEVICE_VIEW = "/permission/admin/device-mgt/devices/owning-device/view";
+
+    public static final String ROLE_NAME = "internal/devicemgt-user";
+
 }

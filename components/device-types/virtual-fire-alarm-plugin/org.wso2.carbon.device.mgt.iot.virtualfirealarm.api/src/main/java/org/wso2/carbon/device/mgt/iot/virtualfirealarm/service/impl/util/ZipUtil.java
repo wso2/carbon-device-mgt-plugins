@@ -25,14 +25,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.JSONObject;
 import org.wso2.carbon.apimgt.application.extension.constants.ApiApplicationConstants;
-import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.carbon.core.util.Utils;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
-import org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin.xmpp.XmppConfig;
+import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.xmpp.XmppConfig;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.NetworkUtils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -64,10 +63,10 @@ public class ZipUtil {
     private static final String HTTP_PORT_PROPERTY = "httpPort";
 
     private static final String LOCALHOST = "localhost";
-    private static final String HTTPS_PROTOCOL_APPENDER = "https://";
-    private static final String HTTP_PROTOCOL_APPENDER = "http://";
+    private static final String HTTPS_PROTOCOL_URL = "https://${iot.gateway.host}:${iot.gateway.https.port}";
+    private static final String HTTP_PROTOCOL_URL = "http://${iot.gateway.host}:${iot.gateway.http.port}";
     private static final String CONFIG_TYPE = "general";
-    private static final String DEFAULT_MQTT_ENDPOINT = "tcp://localhost:1886";
+    private static final String DEFAULT_MQTT_ENDPOINT = "tcp://${mqtt.broker.host}:${mqtt.broker.port}";
     public static final String HOST_NAME = "HostName";
 
     public ZipArchive createZipFile(String owner, String deviceType, String deviceId, String deviceName,
@@ -83,13 +82,13 @@ public class ZipUtil {
 
         try {
             iotServerIP = getServerUrl();
-            String httpsServerPort = System.getProperty(HTTPS_PORT_PROPERTY);
-            String httpServerPort = System.getProperty(HTTP_PORT_PROPERTY);
-            String httpsServerEP = HTTPS_PROTOCOL_APPENDER + iotServerIP + ":" + httpsServerPort;
-            String httpServerEP = HTTP_PROTOCOL_APPENDER + iotServerIP + ":" + httpServerPort;
-            String mqttEndpoint = DEFAULT_MQTT_ENDPOINT;
+            String httpsServerEP = Utils.replaceSystemProperty(HTTPS_PROTOCOL_URL);
+            String httpServerEP = Utils.replaceSystemProperty(HTTP_PROTOCOL_URL);
+            String mqttEndpoint = Utils.replaceSystemProperty(DEFAULT_MQTT_ENDPOINT);
             if (mqttEndpoint.contains(LOCALHOST)) {
                 mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
+                httpsServerEP = httpsServerEP.replace(LOCALHOST, iotServerIP);
+                httpServerEP = httpServerEP.replace(LOCALHOST, iotServerIP);
             }
 
             String xmppEndpoint = "";
@@ -161,16 +160,12 @@ public class ZipUtil {
     }
 
     public static String getServerUrl() {
-        String hostName = ServerConfiguration.getInstance().getFirstProperty(HOST_NAME);
         try {
-            if (hostName == null) {
-                hostName = NetworkUtils.getLocalHostname();
-            }
+            return org.apache.axis2.util.Utils.getIpAddress();
         } catch (SocketException e) {
-            hostName = "localhost";
             log.warn("Failed retrieving the hostname, therefore set to localhost", e);
+            return "localhost";
         }
-        return hostName;
     }
 
     public static ZipArchive getSketchArchive(String archivesPath, String templateSketchPath, Map contextParams

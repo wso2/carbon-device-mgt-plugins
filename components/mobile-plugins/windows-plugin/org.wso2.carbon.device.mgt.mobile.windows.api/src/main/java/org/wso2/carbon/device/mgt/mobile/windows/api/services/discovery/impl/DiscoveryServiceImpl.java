@@ -69,10 +69,10 @@ public class DiscoveryServiceImpl implements DiscoveryService {
         String[] userDomains = emailId.split(DELIMITER);
         String domain = userDomains[DOMAIN_SEGMENT];
         DiscoveryResponse discoveryResponse;
-        if (PluginConstants.WindowsVersionProperties.REQUESTED_WIN10_VERSION.equals(discoveryRequest.getVersion()) &&
-                FEDERATED.equals(getAuthPolicy())) {
-            discoveryResponse = new DiscoveryResponse();
 
+        if (!PluginConstants.WindowsVersionProperties.REQUESTED_WIN81_VERSION.equals(discoveryRequest.getVersion())
+                && FEDERATED.equals(getAuthPolicy())) {
+            discoveryResponse = new DiscoveryResponse();
             discoveryResponse.setAuthPolicy(FEDERATED);
             discoveryResponse.setEnrollmentVersion(PluginConstants.WindowsVersionProperties.REQUESTED_WIN10_VERSION);
             discoveryResponse.setEnrollmentPolicyServiceUrl(PluginConstants.Discovery.DEVICE_ENROLLMENT_SUBDOMAIN +
@@ -99,21 +99,6 @@ public class DiscoveryServiceImpl implements DiscoveryService {
         if (log.isDebugEnabled()) {
             log.debug("Discovery service end point was triggered via POST method");
         }
-    }
-
-    /**
-     * This is the first method called through device. The device checks the availability of the
-     * Service end point by calling this method.
-     *
-     * @return - HTTP 200OK message
-     */
-    @Override
-    public Response discoverGet() {
-
-        if (log.isDebugEnabled()) {
-            log.debug("Discovery service end point was triggered via GET method.");
-        }
-        return Response.ok().build();
     }
 
     /**

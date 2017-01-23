@@ -41,24 +41,7 @@ import java.io.UnsupportedEncodingException;
 /**
  * Interface of WSTEP implementation.
  */
-@SwaggerDefinition(
-        info = @Info(
-                version = "1.0.0",
-                title = "",
-                extensions = {
-                        @Extension(properties = {
-                                @ExtensionProperty(name = "name", value = "Windows enrollment service provider"),
-                                @ExtensionProperty(name = "context",
-                                        value = "/api/device-mgt/windows/v1.0/deviceenrolment/wstep"),
-                        })
-                }
-        ),
-        tags = {
-                @Tag(name = "devicemgt_windows", description = "")
-        }
-)
-@Api(value = "Windows Enrollment service Management",
-        description = "This carries all the resources related to Windows enrollment service.")
+
 @WebService(targetNamespace = PluginConstants.DEVICE_ENROLLMENT_SERVICE_TARGET_NAMESPACE, name = "wstep")
 @BindingType(value = SOAPBinding.SOAP12HTTP_BINDING)
 public interface CertificateEnrollmentService {

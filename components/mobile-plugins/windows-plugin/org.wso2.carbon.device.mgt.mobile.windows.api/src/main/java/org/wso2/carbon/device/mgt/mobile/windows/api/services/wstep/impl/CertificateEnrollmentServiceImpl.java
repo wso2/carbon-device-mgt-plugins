@@ -112,7 +112,7 @@ public class CertificateEnrollmentServiceImpl implements CertificateEnrollmentSe
         String headerTo = null;
         String encodedWap;
         List<Header> headers = getHeaders();
-        for (Header headerElement : headers != null ? headers : null) {
+        for (Header headerElement : headers) {
             String nodeName = headerElement.getName().getLocalPart();
             if (PluginConstants.SECURITY.equals(nodeName)) {
                 Element element = (Element) headerElement.getObject();

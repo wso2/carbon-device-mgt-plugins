@@ -186,7 +186,7 @@ public final class HTTPEventAdapter implements InputEventAdapter {
                         "HttpService not available, Error in registering endpoint " + endpoint);
             }
             httpService.registerServlet(endpoint, new HTTPMessageServlet(eventAdaptorListener, tenantId,
-                    eventAdapterConfiguration),
+                    eventAdapterConfiguration, globalProperties),
                     new Hashtable(), httpService.createDefaultHttpContext());
         } catch (ServletException | NamespaceException e) {
             throw new InputEventAdapterRuntimeException("Error in registering endpoint " + endpoint, e);

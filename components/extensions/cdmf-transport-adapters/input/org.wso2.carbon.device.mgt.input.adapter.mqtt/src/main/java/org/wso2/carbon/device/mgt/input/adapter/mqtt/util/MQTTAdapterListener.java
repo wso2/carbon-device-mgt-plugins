@@ -17,13 +17,18 @@
 */
 package org.wso2.carbon.device.mgt.input.adapter.mqtt.util;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 import org.json.simple.JSONObject;
@@ -39,9 +44,6 @@ import org.wso2.carbon.device.mgt.input.adapter.extension.DefaultContentValidato
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterListener;
 import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterRuntimeException;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.exception.MQTTContentInitializationException;
-import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
-import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
-import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -49,7 +51,9 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MQTTAdapterListener implements MqttCallback, Runnable {
@@ -144,16 +148,14 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
     }
 
     public void startListener() throws MqttException {
-        if (this.mqttBrokerConnectionConfiguration.getBrokerUsername() != null &&
+        if (this.mqttBrokerConnectionConfiguration.getUsername() != null &&
                 this.mqttBrokerConnectionConfiguration.getDcrUrl() != null) {
-            String username = this.mqttBrokerConnectionConfiguration.getBrokerUsername();
+            String username = this.mqttBrokerConnectionConfiguration.getUsername();
+            String password = this.mqttBrokerConnectionConfiguration.getPassword();
             String dcrUrlString = this.mqttBrokerConnectionConfiguration.getDcrUrl();
             String scopes = this.mqttBrokerConnectionConfiguration.getBrokerScopes();
             //getJWT Client Parameters.
             if (dcrUrlString != null && !dcrUrlString.isEmpty()) {
-                PrivilegedCarbonContext.startTenantFlow();
-                PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(tenantId, true);
-                PrivilegedCarbonContext.getThreadLocalCarbonContext().setUsername(username);
                 try {
                     URL dcrUrl = new URL(dcrUrlString);
                     HttpClient httpClient = MQTTUtil.getHttpClient(dcrUrl.getProtocol());
@@ -163,11 +165,15 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                     registrationProfile.setGrantType(MQTTEventAdapterConstants.GRANT_TYPE);
                     registrationProfile.setOwner(username);
                     registrationProfile.setTokenScope(MQTTEventAdapterConstants.TOKEN_SCOPE);
-                    registrationProfile.setApplicationType(MQTTEventAdapterConstants.APPLICATION_TYPE);
-                    registrationProfile.setClientName(username + "_" + tenantId);
+                    registrationProfile.setClientName(MQTTEventAdapterConstants.APPLICATION_NAME_PREFIX
+                        + mqttBrokerConnectionConfiguration.getAdapterName() + "_" + tenantId);
                     String jsonString = registrationProfile.toJSON();
                     StringEntity requestEntity = new StringEntity(jsonString, ContentType.APPLICATION_JSON);
                     postMethod.setEntity(requestEntity);
+                    String basicAuth = getBase64Encode(username, password);
+                    postMethod.setHeader(new BasicHeader(MQTTEventAdapterConstants.AUTHORIZATION_HEADER_NAME,
+                                                         MQTTEventAdapterConstants.AUTHORIZATION_HEADER_VALUE_PREFIX +
+                                                                 basicAuth));
                     HttpResponse httpResponse = httpClient.execute(postMethod);
                     if (httpResponse != null) {
                         String response = MQTTUtil.getResponseString(httpResponse);
@@ -177,16 +183,10 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                                 JSONObject jsonPayload = (JSONObject) jsonParser.parse(response);
                                 String clientId = (String) jsonPayload.get(MQTTEventAdapterConstants.CLIENT_ID);
                                 String clientSecret = (String) jsonPayload.get(MQTTEventAdapterConstants.CLIENT_SECRET);
-                                JWTClientManagerService jwtClientManagerService = MQTTUtil.getJWTClientManagerService();
-                                AccessTokenInfo accessTokenInfo = jwtClientManagerService.getJWTClient().getAccessToken(
-                                        clientId, clientSecret, username, scopes);
-                                connectionOptions.setUserName(accessTokenInfo.getAccessToken());
+                                connectionOptions.setUserName(getToken(clientId, clientSecret));
                             }
                         } catch (ParseException e) {
-                            String msg = "error occurred while parsing client credential payload";
-                            log.error(msg, e);
-                        } catch (JWTClientException e) {
-                            String msg = "error occurred while parsing the response from JWT Client";
+                            String msg = "error occurred while parsing generating token for the adapter";
                             log.error(msg, e);
                         }
                     }
@@ -194,8 +194,6 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                     log.error("Invalid dcrUrl : " + dcrUrlString);
                 } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | IOException  e) {
                     log.error("Failed to create an https connection.", e);
-                } finally {
-                    PrivilegedCarbonContext.endTenantFlow();
                 }
             }
         }
@@ -286,5 +284,40 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
 
     public boolean isConnectionInitialized() {
         return connectionInitialized;
+    }
+
+    private String getToken(String clientId, String clientSecret)
+            throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException, ParseException {
+        URL tokenEndpoint = new URL(mqttBrokerConnectionConfiguration.getTokenUrl());
+        HttpClient httpClient = MQTTUtil.getHttpClient(tokenEndpoint.getProtocol());
+        HttpPost postMethod = new HttpPost(tokenEndpoint.toString());
+
+        List<NameValuePair> nameValuePairs = new ArrayList<>();
+        nameValuePairs.add(new BasicNameValuePair(MQTTEventAdapterConstants.GRANT_TYPE_PARAM_NAME,
+                                                  MQTTEventAdapterConstants.PASSWORD_GRANT_TYPE));
+        nameValuePairs.add(new BasicNameValuePair(MQTTEventAdapterConstants.PASSWORD_GRANT_TYPE_USERNAME,
+                                                  mqttBrokerConnectionConfiguration.getUsername()));
+        nameValuePairs.add(new BasicNameValuePair(MQTTEventAdapterConstants.PASSWORD_GRANT_TYPE_PASSWORD,
+                                                  mqttBrokerConnectionConfiguration.getPassword()));
+        String scopes = mqttBrokerConnectionConfiguration.getBrokerScopes();
+        if (scopes != null && !scopes.isEmpty()) {
+            nameValuePairs.add(new BasicNameValuePair(MQTTEventAdapterConstants.PASSWORD_GRANT_TYPE_SCOPES, scopes));
+        }
+
+        postMethod.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+        postMethod.addHeader("Authorization", "Basic " + getBase64Encode(clientId, clientSecret));
+        postMethod.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        HttpResponse httpResponse = httpClient.execute(postMethod);
+        String response = MQTTUtil.getResponseString(httpResponse);
+        if (log.isDebugEnabled()) {
+            log.debug(response);
+        }
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
+        return (String) jsonObject.get(MQTTEventAdapterConstants.ACCESS_TOKEN_GRANT_TYPE_PARAM_NAME);
+    }
+
+    private String getBase64Encode(String key, String value) {
+        return new String(Base64.encodeBase64((key + ":" + value).getBytes()));
     }
 }

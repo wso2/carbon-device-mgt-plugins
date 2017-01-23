@@ -33,7 +33,7 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.beans.Wifi;
 import org.wso2.carbon.device.mgt.mobile.windows.api.operations.*;
 import org.wso2.carbon.policy.mgt.common.FeatureManagementException;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
-import org.wso2.carbon.policy.mgt.common.ProfileFeature;
+import org.wso2.carbon.device.mgt.common.policy.mgt.ProfileFeature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -240,7 +240,6 @@ public class OperationReply {
         List<ItemTag> replaceItems = new ArrayList<>();
         SequenceTag monitorSequence = new SequenceTag();
         List<Operation> deviceInfoOperations;
-
         if (operations != null) {
             for (Operation operation : operations) {
                 Operation.Type type = operation.getType();
@@ -293,6 +292,23 @@ public class OperationReply {
                             SequenceTag sequence = buildSequence(operation, sequenceElement);
                             syncmlBody.setSequence(sequence);
                         }
+                        if (PluginConstants.OperationCodes.DEVICE_LOCATION.equals(operation.getCode())) {
+                            Operation longitudeOperation = new Operation();
+                            Operation latitudeOperation = new Operation();
+                            longitudeOperation.setCode(PluginConstants.OperationCodes.LONGITUDE);
+                            latitudeOperation.setCode(PluginConstants.OperationCodes.LATITUDE);
+                            List<Operation> deviceLocationOperations = new ArrayList<>();
+                            deviceLocationOperations.add(latitudeOperation);
+                            deviceLocationOperations.add(longitudeOperation);
+                            for (Operation infoOperation : deviceLocationOperations) {
+                                ItemTag deviceInfo = appendGetInfo(infoOperation);
+                                getElements.add(deviceInfo);
+                            }
+                        }
+                        if (PluginConstants.OperationCodes.DEVICE_REBOOT.equals(operation.getCode())) {
+                            execElement = executeCommand(operation);
+                            executeElements.add(execElement);
+                        }
                         if ((PluginConstants.OperationCodes.MONITOR.equals(operation.getCode()))) {
                             GetTag monitorGetElement = new GetTag();
                             List<ItemTag> monitorItems;
@@ -300,7 +316,9 @@ public class OperationReply {
 
                             if (this.syncmlDocument.getBody().getAlert() != null) {
                                 if (Constants.INITIAL_ALERT_DATA.equals(this.syncmlDocument.getBody().
-                                        getAlert().getData())) {
+                                        getAlert().getData()) || Constants.INITIAL_WIN10_ALERT_DATA.
+                                        equals(this.syncmlDocument.getBody()
+                                                .getAlert().getData())) {
 
                                     monitorSequence.setCommandId(operation.getId());
                                     DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(
@@ -561,8 +579,7 @@ public class OperationReply {
         return execElement;
     }
 
-    public SequenceTag buildSequence(Operation operation, SequenceTag sequenceElement) throws
-            JSONException,
+    public SequenceTag buildSequence(Operation operation, SequenceTag sequenceElement) throws JSONException,
             SyncmlOperationException {
 
         sequenceElement.setCommandId(operation.getId());
@@ -580,7 +597,6 @@ public class OperationReply {
             sequenceElement.setExec(execElement);
             sequenceElement.setGet(getElements);
             return sequenceElement;
-
         } else if ((PluginConstants.OperationCodes.POLICY_BUNDLE.equals(operation.getCode()))) {
             List<? extends Operation> policyOperations;
             try {
@@ -726,45 +742,105 @@ public class OperationReply {
     }
 
     public AddTag generatePasscodeBooleanData(Operation operation, Configure configure) {
-        TargetTag target = new TargetTag();
-        MetaTag meta = new MetaTag();
         AddTag addTag = null;
 
         PasscodePolicy passcodePolicy = gson.fromJson((String) operation.getPayLoad(), PasscodePolicy.class);
         if (operation.getCode() != null && (PluginConstants.OperationCodes.DEVICE_PASSWORD_ENABLE.
                 equals(configure.name()))) {
             if (passcodePolicy.isEnablePassword()) {
-                target.setLocURI(configure.getCode());
-                meta.setFormat(Constants.META_FORMAT_INT);
-                addTag = TagUtil.buildAddTag(operation, Constants.SyncMLResponseCodes.NEGATIVE_CSP_DATA);
+                addTag = new AddTag();
+                List<ItemTag> itemList = new ArrayList<>();
+                ItemTag item = new ItemTag();
+                TargetTag targetTag = new TargetTag();
+                targetTag.setLocURI(configure.getCode());
+                MetaTag metaag = new MetaTag();
+                metaag.setFormat(Constants.META_FORMAT_INT);
+                item.setTarget(targetTag);
+                item.setMeta(metaag);
+                item.setData(Constants.SyncMLResponseCodes.NEGATIVE_CSP_DATA);
+                itemList.add(item);
+                addTag.setCommandId(Constants.SyncmlMessageCodes.addCommandId);
+                addTag.setItems(itemList);
             } else {
-                target.setLocURI(configure.getCode());
-                meta.setFormat(Constants.META_FORMAT_INT);
-                addTag = TagUtil.buildAddTag(operation, Constants.SyncMLResponseCodes.POSITIVE_CSP_DATA);
+                addTag = new AddTag();
+                List<ItemTag> itemList = new ArrayList<>();
+                ItemTag item = new ItemTag();
+                TargetTag targetTag = new TargetTag();
+                targetTag.setLocURI(configure.getCode());
+                MetaTag metaag = new MetaTag();
+                metaag.setFormat(Constants.META_FORMAT_INT);
+                item.setTarget(targetTag);
+                item.setMeta(metaag);
+                item.setData(Constants.SyncMLResponseCodes.POSITIVE_CSP_DATA);
+                itemList.add(item);
+                addTag.setCommandId(Constants.SyncmlMessageCodes.addCommandId);
+                addTag.setItems(itemList);
             }
         }
         if (PluginConstants.OperationCodes.ALPHANUMERIC_PASSWORD.
                 equals(configure.name())) {
             if (passcodePolicy.isRequireAlphanumeric()) {
-                target.setLocURI(configure.getCode());
-                meta.setFormat(Constants.META_FORMAT_INT);
-                addTag = TagUtil.buildAddTag(operation, Constants.SyncMLResponseCodes.POSITIVE_CSP_DATA);
+                addTag = new AddTag();
+                List<ItemTag> itemList = new ArrayList<>();
+                ItemTag item = new ItemTag();
+                TargetTag targetTag = new TargetTag();
+                targetTag.setLocURI(configure.getCode());
+                MetaTag metaag = new MetaTag();
+                metaag.setFormat(Constants.META_FORMAT_INT);
+                item.setTarget(targetTag);
+                item.setMeta(metaag);
+                item.setData(Constants.SyncMLResponseCodes.POSITIVE_CSP_DATA);
+                itemList.add(item);
+                addTag.setCommandId(Constants.SyncmlMessageCodes.addCommandId);
+                addTag.setItems(itemList);
             } else {
-                target.setLocURI(configure.getCode());
-                meta.setFormat(Constants.META_FORMAT_INT);
-                addTag = TagUtil.buildAddTag(operation, Constants.SyncMLResponseCodes.NEGATIVE_CSP_DATA);
+                addTag = new AddTag();
+                List<ItemTag> itemList = new ArrayList<>();
+                ItemTag item = new ItemTag();
+                TargetTag targetTag = new TargetTag();
+                targetTag.setLocURI(configure.getCode());
+                MetaTag metaag = new MetaTag();
+                metaag.setFormat(Constants.META_FORMAT_INT);
+                item.setTarget(targetTag);
+                item.setMeta(metaag);
+                item.setData(Constants.SyncMLResponseCodes.NEGATIVE_CSP_DATA);
+                itemList.add(item);
+                addTag.setCommandId(Constants.SyncmlMessageCodes.addCommandId);
+                addTag.setItems(itemList);
             }
         }
         if (PluginConstants.OperationCodes.SIMPLE_PASSWORD.
                 equals(configure.name())) {
             if (passcodePolicy.isAllowSimple()) {
-                target.setLocURI(configure.getCode());
-                meta.setFormat(Constants.META_FORMAT_INT);
-                addTag = TagUtil.buildAddTag(operation, Constants.SyncMLResponseCodes.POSITIVE_CSP_DATA);
+                addTag = new AddTag();
+                List<ItemTag> itemList = new ArrayList<>();
+                ItemTag item = new ItemTag();
+                TargetTag targetTag = new TargetTag();
+                targetTag.setLocURI(configure.getCode());
+                MetaTag metaag = new MetaTag();
+                metaag.setFormat(Constants.META_FORMAT_INT);
+                item.setTarget(targetTag);
+                item.setMeta(metaag);
+                item.setData(Constants.SyncMLResponseCodes.POSITIVE_CSP_DATA);
+                itemList.add(item);
+                addTag.setCommandId(Constants.SyncmlMessageCodes.addCommandId);
+                addTag.setItems(itemList);
+
             } else {
-                target.setLocURI(configure.getCode());
-                meta.setFormat(Constants.META_FORMAT_INT);
-                addTag = TagUtil.buildAddTag(operation, Constants.SyncMLResponseCodes.NEGATIVE_CSP_DATA);
+                addTag = new AddTag();
+                List<ItemTag> itemList = new ArrayList<>();
+                ItemTag item = new ItemTag();
+                TargetTag targetTag = new TargetTag();
+                targetTag.setLocURI(configure.getCode());
+                MetaTag metaag = new MetaTag();
+                metaag.setFormat(Constants.META_FORMAT_INT);
+                item.setTarget(targetTag);
+                item.setMeta(metaag);
+                item.setData(Constants.SyncMLResponseCodes.NEGATIVE_CSP_DATA);
+                itemList.add(item);
+                addTag.setCommandId(Constants.SyncmlMessageCodes.addCommandId);
+                addTag.setItems(itemList);
+
             }
         }
         return addTag;

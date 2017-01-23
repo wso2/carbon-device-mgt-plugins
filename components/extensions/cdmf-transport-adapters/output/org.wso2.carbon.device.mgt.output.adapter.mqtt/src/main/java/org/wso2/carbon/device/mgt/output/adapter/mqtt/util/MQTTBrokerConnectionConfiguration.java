@@ -17,14 +17,25 @@
 */
 package org.wso2.carbon.device.mgt.output.adapter.mqtt.util;
 
+import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterConfiguration;
+import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
+
+import java.util.Map;
+
 public class MQTTBrokerConnectionConfiguration {
 
-    private String brokerUsername;
+    private String adapterName;
+    private String username;
+    private String password;
     private String dcrUrl;
     private String scopes;
     private String brokerUrl;
+    private String tokenUrl;
     private boolean cleanSession = true;
     private int keepAlive;
+    public String getTokenUrl() {
+        return tokenUrl;
+    }
 
     public String getDcrUrl() {
         return dcrUrl;
@@ -34,8 +45,12 @@ public class MQTTBrokerConnectionConfiguration {
         return scopes;
     }
 
-    public String getBrokerUsername() {
-        return brokerUsername;
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public boolean isCleanSession() {
@@ -50,15 +65,35 @@ public class MQTTBrokerConnectionConfiguration {
         return keepAlive;
     }
 
-    public MQTTBrokerConnectionConfiguration(String brokerUrl, String brokerUsername,
-                                             String dcrUrl, String scopes, int keepAlive, String cleanSession) {
-        this.brokerUsername = brokerUsername;
-        this.dcrUrl = dcrUrl;
-        this.scopes = scopes;
-        this.brokerUrl = brokerUrl;
-        this.keepAlive = keepAlive;
-        if (cleanSession != null) {
-            this.cleanSession = Boolean.parseBoolean(cleanSession);
+    public String getAdapterName() {
+        return adapterName;
+    }
+
+    public MQTTBrokerConnectionConfiguration(OutputEventAdapterConfiguration eventAdapterConfiguration,
+                                             Map<String, String> globalProperties) {
+        adapterName = eventAdapterConfiguration.getName();
+        this.username = eventAdapterConfiguration.getStaticProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME);
+        this.password = eventAdapterConfiguration.getStaticProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD);
+        String url = eventAdapterConfiguration .getStaticProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_URL);
+        if (url == null || url.isEmpty()) {
+            url = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_URL);
+        }
+        this.brokerUrl = PropertyUtils.replaceMqttProperty(url);
+        this.dcrUrl = PropertyUtils
+                .replaceMqttProperty(globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL));
+        this.tokenUrl = PropertyUtils
+                .replaceMqttProperty(globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_TOKEN_URL));
+        this.scopes = eventAdapterConfiguration.getStaticProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES);
+        if (scopes == null) {
+            this.scopes = MQTTEventAdapterConstants.EMPTY_STRING;
+        }
+        this.cleanSession = Boolean.parseBoolean(eventAdapterConfiguration.getStaticProperties()
+                                                         .get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION));
+        //If global properties are available those will be assigned else constant values will be assigned
+        if (globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_KEEP_ALIVE) != null) {
+            keepAlive = Integer.parseInt((globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_KEEP_ALIVE)));
+        } else {
+            keepAlive = MQTTEventAdapterConstants.ADAPTER_CONF_DEFAULT_KEEP_ALIVE;
         }
     }
 

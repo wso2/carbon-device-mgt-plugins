@@ -51,7 +51,7 @@ public class VirtualFirealarmSecurityManager {
     private static final Log log = LogFactory.getLog(VirtualFirealarmSecurityManager.class);
 
     private static PrivateKey serverPrivateKey;
-    private static final String SIGNATURE_ALG = "SHA1withRSA";
+    private static final String SHA_512 = "SHA-512";
     private static final String CIPHER_PADDING = "RSA/ECB/PKCS1Padding";
     private static CertificateKeystoreConfig certificateKeystoreConfig;
     private VirtualFirealarmSecurityManager() {
@@ -162,7 +162,7 @@ public class VirtualFirealarmSecurityManager {
         String signedEncodedString;
 
         try {
-            signature = Signature.getInstance(SIGNATURE_ALG);
+            signature = Signature.getInstance(SHA_512);
             signature.initSign(signatureKey);
             signature.update(Base64.decodeBase64(encryptedData));
 
@@ -170,11 +170,11 @@ public class VirtualFirealarmSecurityManager {
             signedEncodedString = Base64.encodeBase64String(signatureBytes);
 
         } catch (NoSuchAlgorithmException e) {
-            String errorMsg = "Algorithm not found exception occurred for Signature instance of [" + SIGNATURE_ALG + "]";
+            String errorMsg = "Algorithm not found exception occurred for Signature instance of [" + SHA_512 + "]";
             log.error(errorMsg);
             throw new VirtualFirealarmDeviceMgtPluginException(errorMsg, e);
         } catch (SignatureException e) {
-            String errorMsg = "Signature exception occurred for Signature instance of [" + SIGNATURE_ALG + "]";
+            String errorMsg = "Signature exception occurred for Signature instance of [" + SHA_512 + "]";
             log.error(errorMsg);
             throw new VirtualFirealarmDeviceMgtPluginException(errorMsg, e);
         } catch (InvalidKeyException e) {
@@ -193,18 +193,18 @@ public class VirtualFirealarmSecurityManager {
         boolean verified;
 
         try {
-            signature = Signature.getInstance(SIGNATURE_ALG);
+            signature = Signature.getInstance(SHA_512);
             signature.initVerify(verificationKey);
             signature.update(Base64.decodeBase64(data));
 
             verified = signature.verify(Base64.decodeBase64(signedData));
 
         } catch (NoSuchAlgorithmException e) {
-            String errorMsg = "Algorithm not found exception occurred for Signature instance of [" + SIGNATURE_ALG + "]";
+            String errorMsg = "Algorithm not found exception occurred for Signature instance of [" + SHA_512 + "]";
             log.error(errorMsg);
             throw new VirtualFirealarmDeviceMgtPluginException(errorMsg, e);
         } catch (SignatureException e) {
-            String errorMsg = "Signature exception occurred for Signature instance of [" + SIGNATURE_ALG + "]";
+            String errorMsg = "Signature exception occurred for Signature instance of [" + SHA_512 + "]";
             log.error(errorMsg);
             throw new VirtualFirealarmDeviceMgtPluginException(errorMsg, e);
         } catch (InvalidKeyException e) {

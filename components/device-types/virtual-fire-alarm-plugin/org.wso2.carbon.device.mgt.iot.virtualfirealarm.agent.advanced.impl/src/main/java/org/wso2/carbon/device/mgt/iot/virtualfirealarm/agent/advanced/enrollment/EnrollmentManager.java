@@ -96,6 +96,7 @@ public class EnrollmentManager {
     private PublicKey publicKey;
     private PublicKey serverPublicKey;
     private X509Certificate SCEPCertificate;
+    private boolean isEnrolled = false;
 
 
     /**
@@ -442,5 +443,14 @@ public class EnrollmentManager {
      */
     public PublicKey getServerPublicKey() {
         return serverPublicKey;
+    }
+
+    /**
+     * Checks whether the device has already been enrolled with the SCEP Server.
+     *
+     * @return the enrollment status; 'TRUE' if already enrolled else 'FALSE'.
+     */
+    public boolean isEnrolled() {
+        return isEnrolled;
     }
 }

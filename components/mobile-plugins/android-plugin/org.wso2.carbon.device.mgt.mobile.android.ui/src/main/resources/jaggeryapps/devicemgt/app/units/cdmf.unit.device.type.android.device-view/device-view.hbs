@@ -1,6 +1,6 @@
 {{unit "cdmf.unit.device.type.android.leaflet"}}
 {{unit "cdmf.unit.lib.qrcode"}}
-{{unit "cdmf.unit.device.type.android.qr-modal"}}
+{{unit "cdmf.unit.device.type.qr-modal"}}
 
 {{#if deviceFound}}
     {{#if isAuthorized}}
@@ -22,7 +22,7 @@
         {{#zone "overview-section"}}
             <div class="media-body asset-desc add-padding-left-5x">
                 <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">Device
-                                                                                                 Overview
+                    Overview
                 </div>
                 <table class="table table-responsive table-striped" id="members">
                     <tbody>
@@ -52,7 +52,7 @@
                             <td class="sorting_1" style="padding:10px 15px; width: 15%;">Status</td>
                             <td style="padding:10px 15px;">
                                 {{#equal device.status "ACTIVE"}}<span><i
-                                        class="fw fw-ok icon-success"></i>Active</span>{{/equal}}
+                                        class="fw fw-success icon-success"></i>Active</span>{{/equal}}
                                 {{#equal device.status "INACTIVE"}}<span><i
                                         class="fw fw-warning icon-warning"></i>Inactive</span>{{/equal}}
                                 {{#equal device.status "BLOCKED"}}<span><i
@@ -89,7 +89,7 @@
                     {{#if device.osBuildDate}}
                         <tr role="row" class="even">
                             <td class="sorting_1" style="padding:10px 15px; width: 15%;">Firmware Build
-                                                                                         Date
+                                Date
                             </td>
                             <td style="padding:10px 15px;">{{device.osBuildDate}}</td>
                         </tr>
@@ -131,7 +131,7 @@
                     <i class="icon fw fw-policy"></i><span class="hidden-sm">Policy Compliance</span>
                 </a>
             </li>
-            <li role="presentation" class="list-group-item">
+            <li role="presentation" class="list-group-item location_tab">
                 <a href="#device_location_tab" role="tab" data-toggle="tab"
                    data-lat="{{device.location.latitude}}"
                    data-long="{{device.location.longitude}}"
@@ -185,19 +185,19 @@
                                     </div>
                                 {{/if}}
                                     <!--{{#if device.cpuUsage}}-->
-                            <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">-->
-                            <!--<div class="col-md-12">-->
-                            <!--<div class="wr-stats-board-tile">-->
-                            <!--<div class="tile-name">CPU Usage</div>-->
-                            <!--<div>-->
-                            <!--<div class="tile-icon"><i class="fw fw-dashboard"></i></div>-->
-                            <!--<div class="tile-stats">-->
-                            <!--{{device.cpuUsage.value}} %-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--</div>-->
-                            <!--</div>-->
+                                <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">-->
+                                <!--<div class="col-md-12">-->
+                                <!--<div class="wr-stats-board-tile">-->
+                                <!--<div class="tile-name">CPU Usage</div>-->
+                                <!--<div>-->
+                                <!--<div class="tile-icon"><i class="fw fw-dashboard"></i></div>-->
+                                <!--<div class="tile-stats">-->
+                                <!--{{device.cpuUsage.value}} %-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <!--</div>-->
                                     <!--{{/if}}-->
                                 {{#if device.ramUsage}}
                                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -228,9 +228,9 @@
                                                     <div class="tile-stats">
                                                         {{device.internalMemory
                                                         .usage}} %
-                                                                                <span class="tile-stats-free">
+                                                        <span class="tile-stats-free">
                                                             TOTAL OF {{device.internalMemory
-                                                                                .total}} GB
+                                                        .total}} GB
                                                         </span>
                                                     </div>
                                                 </div>
@@ -249,9 +249,9 @@
                                                     <div class="tile-stats">
                                                         {{device.externalMemory
                                                         .usage}} %
-                                                                                <span class="tile-stats-free">
+                                                        <span class="tile-stats-free">
                                                             TOTAL OF {{device.externalMemory
-                                                                                .total}} GB
+                                                        .total}} GB
                                                         </span>
                                                     </div>
                                                 </div>
@@ -291,7 +291,7 @@
                 <div class="panel-heading display-none-xs">
                     Policy Compliance
 
-                                        <span>
+                    <span>
                             <a href="javascript:void(0);" id="refresh-policy">
                                 <i class="fw fw-refresh"></i>
                             </a>
@@ -308,7 +308,7 @@
                         <div id="policy-spinner"
                              class="wr-advance-operations-init add-padding-bottom-2x add-padding-bottom-4x hidden">
                             <i class="fw fw-settings fw-spin fw-2x"></i>Loading Policy
-                                                                        Compliance...
+                            Compliance...
                         </div>
                         <div id="policy-list-container">
                         </div>
@@ -335,8 +335,17 @@
                         {{#if device.location}}
                             <div id="device-location"
                                  data-lat="{{device.location.latitude}}"
-                                 data-long="{{device.location.longitude}}">
+                                 data-long="{{device.location.longitude}}"
+                                 data-locations = "{{device.locationHistory}}">
                             </div>
+                            <br/>
+                            <a class="padding-left" target="_blank"
+                               href="{{portalUrl}}/portal/dashboards/geo-dashboard/?GLOBAL-STATE={{anchor}}">
+                                <span class="fw-stack">
+                                    <i class="fw fw-circle-outline fw-stack-2x"></i>
+                                    <i class="fw fw-map-location fw-stack-1x"></i>
+                                </span>  Add Geo Fencing
+                            </a>
                         {{else}}
                             <div id="map-error" class="message message-warning">
                                 <h4 class="remove-margin">
@@ -367,7 +376,7 @@
                 <div class="panel-heading display-none-xs">
                     Installed Applications
 
-                                        <span>
+                    <span>
                             <a href="javascript:void(0);" id="refresh-apps">
                                 <i class="fw fw-refresh"></i>
                             </a>
@@ -383,7 +392,7 @@
                             </span>
                         <div id="apps-spinner" class="wr-advance-operations-init hidden">
                             <i class="fw fw-settings fw-spin fw-2x"></i> Loading Applications
-                                                                         List...
+                            List...
                         </div>
                         <div id="applications-list-container">
                             <div class="message message-info">
@@ -429,7 +438,6 @@
                 type="text/x-handlebars-template"></script>
         <!--suppress HtmlUnknownTarget -->
         {{js "js/device-detail.js"}}
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
         {{js "js/load-map.js"}}
     {{/if}}
 {{/zone}}

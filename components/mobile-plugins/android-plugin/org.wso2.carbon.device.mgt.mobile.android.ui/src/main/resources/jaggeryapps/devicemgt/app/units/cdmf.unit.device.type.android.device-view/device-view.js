@@ -17,10 +17,11 @@
  */
 
 function onRequest(context) {
-    // var log = new Log("device-view.js");
+// var log = new Log("device-view.js");
     var deviceType = context["uriParams"]["deviceType"];
     var deviceId = request.getParameter("id");
     var deviceViewData = {};
+    var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
 
     if (deviceType && deviceId) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
@@ -31,7 +32,7 @@ function onRequest(context) {
 
             var filteredDeviceData = response["content"];
 
-            // creating deviceView information model from filtered device data
+// creating deviceView information model from filtered device data
             var viewModel = {};
             if (filteredDeviceData["type"]) {
                 viewModel["type"] = filteredDeviceData["type"];
@@ -193,7 +194,7 @@ function onRequest(context) {
             if (!filteredDeviceData["initialDeviceInfo"] && !filteredDeviceData["latestDeviceInfo"]) {
                 viewModel["deviceInfoAvailable"] = false;
             }
-
+            viewModel.locationHistory = stringify(filteredDeviceData["locationHistory"]);
             deviceViewData["device"] = viewModel;
         } else if (response["status"] == "unauthorized") {
             deviceViewData["deviceFound"] = true;
@@ -210,5 +211,8 @@ function onRequest(context) {
     ];
 
     deviceViewData["autoCompleteParams"] = autoCompleteParams;
+
+    deviceViewData["portalUrl"] = devicemgtProps['portalURL'];
+    deviceViewData["anchor"] = encodeURI(JSON.stringify({ "device" : { "id" : deviceId, "type" : deviceType}}));
     return deviceViewData;
 }

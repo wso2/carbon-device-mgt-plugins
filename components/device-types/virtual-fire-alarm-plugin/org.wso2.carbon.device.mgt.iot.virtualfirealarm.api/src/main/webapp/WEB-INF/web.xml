@@ -17,16 +17,8 @@
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
     <context-param>
-        <param-name>isAdminService</param-name>
-        <param-value>false</param-value>
-    </context-param>
-    <context-param>
         <param-name>doAuthentication</param-name>
         <param-value>true</param-value>
-    </context-param>
-    <context-param>
-        <param-name>providerTenantDomain</param-name>
-        <param-value>carbon.super</param-value>
     </context-param>
 
     <!--publish to apim-->
@@ -34,9 +26,9 @@
         <param-name>managed-api-enabled</param-name>
         <param-value>true</param-value>
     </context-param>
-    <context-param>
-        <param-name>managed-api-owner</param-name>
-        <param-value>admin</param-value>
-    </context-param>
+
+    <listener>
+        <listener-class>org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.listener.VirtualFireAlarmPermissionUpdateListener</listener-class>
+    </listener>
 
 </web-app>

@@ -241,59 +241,67 @@ public class AgentUtilOperations {
 
 
     public static String prepareSecurePayLoad(String message) throws AgentCoreOperationException {
-        PrivateKey devicePrivateKey = EnrollmentManager.getInstance().getPrivateKey();
-        String encodedMessage = Base64.encodeBase64String(message.getBytes());
-        String signedPayload;
-        try {
-            signedPayload = CommunicationUtils.signMessage(encodedMessage, devicePrivateKey);
-        } catch (TransportHandlerException e) {
-            String errorMsg = "Error occurred whilst trying to sign encrypted message of: [" + message + "]";
-            log.error(errorMsg);
-            throw new AgentCoreOperationException(errorMsg, e);
+        if (EnrollmentManager.getInstance().isEnrolled()) {
+            PrivateKey devicePrivateKey = EnrollmentManager.getInstance().getPrivateKey();
+            String encodedMessage = Base64.encodeBase64String(message.getBytes());
+            String signedPayload;
+            try {
+                signedPayload = CommunicationUtils.signMessage(encodedMessage, devicePrivateKey);
+            } catch (TransportHandlerException e) {
+                String errorMsg = "Error occurred whilst trying to sign encrypted message of: [" + message + "]";
+                log.error(errorMsg);
+                throw new AgentCoreOperationException(errorMsg, e);
+            }
+
+            JSONObject jsonPayload = new JSONObject();
+            jsonPayload.put(JSON_MESSAGE_KEY, encodedMessage);
+            jsonPayload.put(JSON_SIGNATURE_KEY, signedPayload);
+            //below statements are temporary fix.
+            jsonPayload.put(JSON_SERIAL_KEY, EnrollmentManager.getInstance().getSCEPCertificate().getSerialNumber());
+
+            return jsonPayload.toString();
+        } else {
+            return message;
         }
-
-        JSONObject jsonPayload = new JSONObject();
-        jsonPayload.put(JSON_MESSAGE_KEY, encodedMessage);
-        jsonPayload.put(JSON_SIGNATURE_KEY, signedPayload);
-        //below statements are temporary fix.
-        jsonPayload.put(JSON_SERIAL_KEY, EnrollmentManager.getInstance().getSCEPCertificate().getSerialNumber());
-
-        return jsonPayload.toString();
     }
 
 
     public static String extractMessageFromPayload(String message) throws AgentCoreOperationException {
-        String actualMessage;
+        if (EnrollmentManager.getInstance().isEnrolled()) {
+            String actualMessage;
 
-        PublicKey serverPublicKey = EnrollmentManager.getInstance().getServerPublicKey();
-        JSONObject jsonPayload = new JSONObject(message);
-        Object encodedMessage = jsonPayload.get(JSON_MESSAGE_KEY);
-        Object signedPayload = jsonPayload.get(JSON_SIGNATURE_KEY);
-        boolean verification;
+            PublicKey serverPublicKey = EnrollmentManager.getInstance().getServerPublicKey();
+            JSONObject jsonPayload = new JSONObject(message);
+            Object encodedMessage = jsonPayload.get(JSON_MESSAGE_KEY);
+            Object signedPayload = jsonPayload.get(JSON_SIGNATURE_KEY);
+            boolean verification;
 
-        if (encodedMessage != null && signedPayload != null) {
-            try {
-                verification = CommunicationUtils.verifySignature(
-                        encodedMessage.toString(), signedPayload.toString(), serverPublicKey);
-            } catch (TransportHandlerException e) {
-                String errorMsg =
-                        "Error occurred whilst trying to verify signature on received message: [" + message + "]";
-                log.error(errorMsg);
-                throw new AgentCoreOperationException(errorMsg, e);
+            if (encodedMessage != null && signedPayload != null) {
+                try {
+                    verification = CommunicationUtils.verifySignature(
+                            encodedMessage.toString(), signedPayload.toString(), serverPublicKey);
+                } catch (TransportHandlerException e) {
+                    String errorMsg =
+                            "Error occurred whilst trying to verify signature on received message: [" + message + "]";
+                    log.error(errorMsg);
+                    throw new AgentCoreOperationException(errorMsg, e);
+                }
+            } else {
+                String errorMsg = "The received message is in an INVALID format. " +
+                        "Need to be JSON - {\"Msg\":\"<ENCRYPTED_MSG>\", \"Sig\":\"<SIGNED_MSG>\"}.";
+                throw new AgentCoreOperationException(errorMsg);
             }
+            if (verification) {
+                actualMessage = new String(Base64.decodeBase64(encodedMessage.toString()), StandardCharsets.UTF_8);
+            } else {
+                String errorMsg = "Could not verify payload signature. The message was not signed by a valid client";
+                log.error(errorMsg);
+                throw new AgentCoreOperationException(errorMsg);
+            }
+            return actualMessage;
         } else {
-            String errorMsg = "The received message is in an INVALID format. " +
-                    "Need to be JSON - {\"Msg\":\"<ENCRYPTED_MSG>\", \"Sig\":\"<SIGNED_MSG>\"}.";
-            throw new AgentCoreOperationException(errorMsg);
+            return message;
         }
-        if (verification) {
-            actualMessage = new String(Base64.decodeBase64(encodedMessage.toString()), StandardCharsets.UTF_8);
-        } else {
-            String errorMsg = "Could not verify payload signature. The message was not signed by a valid client";
-            log.error(errorMsg);
-            throw new AgentCoreOperationException(errorMsg);
-        }
-        return actualMessage;
     }
 
     public static String formatMessage(String message) {

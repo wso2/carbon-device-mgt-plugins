@@ -20,24 +20,18 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authentication.AuthenticationInfo;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.config.Property;
-import org.wso2.carbon.device.mgt.output.adapter.websocket.config.WebsocketConfig;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.constants.WebsocketConstants;
 import org.wso2.carbon.identity.oauth2.stub.OAuth2TokenValidationServiceStub;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationRequestDTO_OAuth2AccessToken;
 import org.wso2.carbon.identity.oauth2.stub.dto.OAuth2TokenValidationResponseDTO;
 import org.wso2.carbon.user.api.UserStoreException;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * This acts as a contract point for OAuth token validation.
@@ -47,8 +41,6 @@ public class OAuthTokenValdiator {
 	private static String cookie;
 	private GenericObjectPool stubs;
 	private static Log log = LogFactory.getLog(OAuthTokenValdiator.class);
-	private static final String WEBSOCKET_CONFIG_LOCATION =
-			CarbonUtils.getEtcCarbonConfigDirPath() + File.separator + "websocket-validation.properties";
 	private static final String COOKIE_KEY_VALUE_SEPERATOR = "=";
 	private static final String COOKIE_KEYPAIR_SEPERATOR = ";";
 	private static final String COOKIE = "cookie";
@@ -56,25 +48,9 @@ public class OAuthTokenValdiator {
 	private static final String TOKEN_IDENTIFIER = "websocket-token";
 	private static OAuthTokenValdiator oAuthTokenValdiator;
 
-	public static OAuthTokenValdiator getInstance() {
-		if (oAuthTokenValdiator == null) {
-			synchronized (OAuthTokenValdiator.class) {
-				if (oAuthTokenValdiator == null) {
-					oAuthTokenValdiator = new OAuthTokenValdiator();
-				}
-			}
-		}
-		return  oAuthTokenValdiator;
-	}
 
-	private OAuthTokenValdiator() {
-		try {
-			Properties properties = getWebSocketConfig();
-			this.stubs = new GenericObjectPool(new OAuthTokenValidaterStubFactory(properties));
-		} catch (IOException e) {
-			log.error("Failed to parse the web socket org.wso2.carbon.device.mgt.output.adapter.websocket.config file " +
-							  WEBSOCKET_CONFIG_LOCATION, e);
-		}
+	public OAuthTokenValdiator(Map<String, String> globalProperties) {
+		this.stubs = new GenericObjectPool(new OAuthTokenValidaterStubFactory(globalProperties));
 	}
 
 	/**
@@ -172,19 +148,6 @@ public class OAuthTokenValdiator {
 		cookie = (String) serviceContext.getProperty(HTTPConstants.COOKIE_STRING);
 		authenticationInfo.setAuthenticated(authenticated);
 		return authenticationInfo;
-	}
-
-	/**
-	 * Retrieve JWT configs from registry.
-	 */
-	private Properties getWebSocketConfig() throws IOException {
-		Properties properties = new Properties();
-		List<Property> propertyList = WebsocketConfig.getInstance().getWebsocketValidationConfigs().getAuthenticator()
-				.getProperties().getProperty();
-		for (Property property : propertyList) {
-			properties.put(property.getName(), property.getValue());
-		}
-		return properties;
 	}
 
 	/**

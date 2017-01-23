@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>cdmf-transport-adapters</artifactId>
-        <version>3.0.4-SNAPSHOT</version>
+        <version>3.0.8-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -60,10 +60,6 @@
         <dependency>
             <groupId>com.googlecode.json-simple.wso2</groupId>
             <artifactId>json-simple</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.devicemgt</groupId>
-            <artifactId>org.wso2.carbon.identity.jwt.client.extension</artifactId>
         </dependency>
     </dependencies>
     <build>
@@ -122,7 +118,10 @@
                             org.osgi.framework,
                             org.osgi.service.component,
                             org.wso2.carbon.context,
-                            org.wso2.carbon.identity.jwt.client.extension.*
+							org.apache.commons.codec.binary,
+							org.apache.http.client.entity,
+							org.apache.http.message,
+							org.apache.commons.ssl
                         </Import-Package>
                     </instructions>
                 </configuration>

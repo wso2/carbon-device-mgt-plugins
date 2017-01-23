@@ -86,4 +86,13 @@ public class DiscoveryRequest implements Serializable {
         this.osEdition = osEdition;
     }
 
+    public String getApplicationVersion() {
+        return applicationVersion;
+    }
+
+    public void setApplicationVersion(String applicationVersion) {
+        this.applicationVersion = applicationVersion;
+    }
+
+
 }

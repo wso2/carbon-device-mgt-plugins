@@ -54,6 +54,7 @@ public class RegisterActivity extends Activity {
     private EditText mHostView;
     private View mProgressView;
     private View mLoginFormView;
+    private Button deviceRegisterButton;
     private Handler mUiHandler = new Handler();
 
     @Override
@@ -73,7 +74,7 @@ public class RegisterActivity extends Activity {
         AvailableSensorsInDevice availableSensorsInDevice = new AvailableSensorsInDevice(getApplicationContext());
         availableSensorsInDevice.setContent();
 
-        Button deviceRegisterButton = (Button) findViewById(R.id.device_register_button);
+        deviceRegisterButton = (Button) findViewById(R.id.device_register_button);
 
 
         deviceRegisterButton.setOnClickListener(new OnClickListener() {
@@ -204,6 +205,7 @@ public class RegisterActivity extends Activity {
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            deviceRegisterButton.setVisibility(show? View.VISIBLE : View.GONE);
         }
     }
 

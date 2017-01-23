@@ -1,6 +1,6 @@
 {{unit "cdmf.unit.device.type.windows.leaflet"}}
 {{unit "cdmf.unit.lib.qrcode"}}
-{{unit "cdmf.unit.device.type.windows.qr-modal"}}
+{{unit "cdmf.unit.device.type.qr-modal"}}
 
 {{#if deviceFound}}
     {{#if isAuthorized}}
@@ -52,7 +52,7 @@
                             <td class="sorting_1" style="padding:10px 15px; width: 15%;">Status</td>
                             <td style="padding:10px 15px;">
                                 {{#equal device.status "ACTIVE"}}<span><i
-                                        class="fw fw-ok icon-success"></i>Active</span>{{/equal}}
+                                        class="fw fw-success icon-success"></i>Active</span>{{/equal}}
                                 {{#equal device.status "INACTIVE"}}<span><i
                                         class="fw fw-warning icon-warning"></i>Inactive</span>{{/equal}}
                                 {{#equal device.status "BLOCKED"}}<span><i
@@ -140,12 +140,12 @@
                         class="hidden-sm">Device Location</span>
                 </a>
             </li>
-            <li role="presentation" class="list-group-item">
+            <!--li role="presentation" class="list-group-item">
                 <a href="#installed_applications_tab" role="tab" data-toggle="tab"
                    aria-controls="installed_applications_tab">
                     <i class="icon fw fw-application"></i><span class="hidden-sm">Installed Applications</span>
                 </a>
-            </li>
+            </li-->
         {{/zone}}
 
         {{#zone "device-details-tab-contents"}}

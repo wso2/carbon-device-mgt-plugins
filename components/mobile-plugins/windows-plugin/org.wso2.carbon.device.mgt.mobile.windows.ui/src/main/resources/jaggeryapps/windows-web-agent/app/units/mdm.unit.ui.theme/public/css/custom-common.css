@@ -171,7 +171,7 @@ h2.app-title {
     margin:0;
     padding:3px 0 0 0;
     color:#fafafa;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 
 .wr-global-header {
@@ -208,7 +208,7 @@ h2.app-title {
 
 @media (max-width: 570px) {
     h2.app-title:after {
-        content: "EMM";
+        content: "IoT Server";
     }
     h2.app-title span {
         display: none;

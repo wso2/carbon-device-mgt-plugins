@@ -59,16 +59,10 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
         //Broker Url
         Property brokerUrl = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_URL);
         brokerUrl.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_URL));
-        brokerUrl.setRequired(true);
+        brokerUrl.setRequired(false);
         brokerUrl.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_URL_HINT));
         propertyList.add(brokerUrl);
 
-        //DCR endpoint details
-        Property dcrUrl = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL);
-        dcrUrl.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL));
-        dcrUrl.setRequired(false);
-        dcrUrl.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL_HINT));
-        propertyList.add(dcrUrl);
 
         //Content Validator details
         Property contentValidator = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME);
@@ -84,9 +78,17 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
         Property userName = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME);
         userName.setDisplayName(
                 resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME));
-        userName.setRequired(false);
+        userName.setRequired(true);
         userName.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME_HINT));
         propertyList.add(userName);
+
+        //Broker Password
+        Property password = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD);
+        userName.setDisplayName(
+                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD));
+        userName.setRequired(true);
+        userName.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD_HINT));
+        propertyList.add(password);
 
         //Broker Required Scopes.
         Property scopes = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES);

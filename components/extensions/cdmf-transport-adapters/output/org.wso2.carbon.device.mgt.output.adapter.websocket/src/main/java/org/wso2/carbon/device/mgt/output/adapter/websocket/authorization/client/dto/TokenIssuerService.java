@@ -27,6 +27,7 @@
 package org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.dto;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -36,7 +37,6 @@ import javax.ws.rs.core.MediaType;
 /**
  * This hold the api defintion that is used as a contract with netflix feign.
  */
-@Path("/token")
 public interface TokenIssuerService {
 
     @POST
@@ -44,6 +44,12 @@ public interface TokenIssuerService {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     AccessTokenInfo getToken(@QueryParam("grant_type") String grant, @QueryParam("username") String username,
                              @QueryParam("password") String password);
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    AccessTokenInfo getToken(@QueryParam("grant_type") String grant, @QueryParam("username") String username,
+                             @QueryParam("password") String password, @QueryParam("scope") String scopes);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
