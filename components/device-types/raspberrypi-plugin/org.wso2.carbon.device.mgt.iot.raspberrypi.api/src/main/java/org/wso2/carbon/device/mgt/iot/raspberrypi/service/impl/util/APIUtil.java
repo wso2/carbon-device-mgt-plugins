@@ -17,7 +17,6 @@ import org.wso2.carbon.device.mgt.common.authorization.DeviceAccessAuthorization
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfigurationManagementService;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.dto.SensorRecord;
-import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterService;
 import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
 
 import java.util.ArrayList;
@@ -168,18 +167,6 @@ public class APIUtil {
 			throw new IllegalStateException(msg);
 		}
 		return deviceAccessAuthorizationService;
-	}
-
-	public static OutputEventAdapterService getOutputEventAdapterService() {
-		PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-		OutputEventAdapterService outputEventAdapterService =
-				(OutputEventAdapterService) ctx.getOSGiService(OutputEventAdapterService.class, null);
-		if (outputEventAdapterService == null) {
-			String msg = "Device Authorization service has not initialized.";
-			log.error(msg);
-			throw new IllegalStateException(msg);
-		}
-		return outputEventAdapterService;
 	}
 
 	public static PlatformConfigurationManagementService getTenantConfigurationManagementService() {
