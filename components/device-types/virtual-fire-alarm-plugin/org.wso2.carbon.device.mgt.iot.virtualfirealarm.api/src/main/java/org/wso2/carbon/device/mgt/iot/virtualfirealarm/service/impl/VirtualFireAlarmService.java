@@ -112,6 +112,18 @@ public interface VirtualFireAlarmService {
     Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
                                                  @QueryParam("to") long to);
 
+//    /**
+//     * Get all device type instance which belongs to user
+//     * @return  Array of devices which includes device's information
+//     */
+//    @Path("/devices")
+//    @GET
+//    @Consumes("application/json")
+//    @Produces("application/json")
+//    @Scope(key = "device:firealarm:enroll", name = "", description = "")
+//    public Response getAllDevices();
+
+
     @Path("device/download")
     @GET
     @Produces("application/zip")
