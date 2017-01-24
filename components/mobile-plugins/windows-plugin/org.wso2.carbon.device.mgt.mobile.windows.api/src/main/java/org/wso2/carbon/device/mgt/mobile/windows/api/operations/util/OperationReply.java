@@ -316,7 +316,9 @@ public class OperationReply {
 
                             if (this.syncmlDocument.getBody().getAlert() != null) {
                                 if (Constants.INITIAL_ALERT_DATA.equals(this.syncmlDocument.getBody().
-                                        getAlert().getData())) {
+                                        getAlert().getData()) || Constants.INITIAL_WIN10_ALERT_DATA.
+                                        equals(this.syncmlDocument.getBody()
+                                                .getAlert().getData())) {
 
                                     monitorSequence.setCommandId(operation.getId());
                                     DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(
@@ -740,45 +742,105 @@ public class OperationReply {
     }
 
     public AddTag generatePasscodeBooleanData(Operation operation, Configure configure) {
-        TargetTag target = new TargetTag();
-        MetaTag meta = new MetaTag();
         AddTag addTag = null;
 
         PasscodePolicy passcodePolicy = gson.fromJson((String) operation.getPayLoad(), PasscodePolicy.class);
         if (operation.getCode() != null && (PluginConstants.OperationCodes.DEVICE_PASSWORD_ENABLE.
                 equals(configure.name()))) {
             if (passcodePolicy.isEnablePassword()) {
-                target.setLocURI(configure.getCode());
-                meta.setFormat(Constants.META_FORMAT_INT);
-                addTag = TagUtil.buildAddTag(operation, Constants.SyncMLResponseCodes.NEGATIVE_CSP_DATA);
+                addTag = new AddTag();
+                List<ItemTag> itemList = new ArrayList<>();
+                ItemTag item = new ItemTag();
+                TargetTag targetTag = new TargetTag();
+                targetTag.setLocURI(configure.getCode());
+                MetaTag metaag = new MetaTag();
+                metaag.setFormat(Constants.META_FORMAT_INT);
+                item.setTarget(targetTag);
+                item.setMeta(metaag);
+                item.setData(Constants.SyncMLResponseCodes.NEGATIVE_CSP_DATA);
+                itemList.add(item);
+                addTag.setCommandId(Constants.SyncmlMessageCodes.addCommandId);
+                addTag.setItems(itemList);
             } else {
-                target.setLocURI(configure.getCode());
-                meta.setFormat(Constants.META_FORMAT_INT);
-                addTag = TagUtil.buildAddTag(operation, Constants.SyncMLResponseCodes.POSITIVE_CSP_DATA);
+                addTag = new AddTag();
+                List<ItemTag> itemList = new ArrayList<>();
+                ItemTag item = new ItemTag();
+                TargetTag targetTag = new TargetTag();
+                targetTag.setLocURI(configure.getCode());
+                MetaTag metaag = new MetaTag();
+                metaag.setFormat(Constants.META_FORMAT_INT);
+                item.setTarget(targetTag);
+                item.setMeta(metaag);
+                item.setData(Constants.SyncMLResponseCodes.POSITIVE_CSP_DATA);
+                itemList.add(item);
+                addTag.setCommandId(Constants.SyncmlMessageCodes.addCommandId);
+                addTag.setItems(itemList);
             }
         }
         if (PluginConstants.OperationCodes.ALPHANUMERIC_PASSWORD.
                 equals(configure.name())) {
             if (passcodePolicy.isRequireAlphanumeric()) {
-                target.setLocURI(configure.getCode());
-                meta.setFormat(Constants.META_FORMAT_INT);
-                addTag = TagUtil.buildAddTag(operation, Constants.SyncMLResponseCodes.POSITIVE_CSP_DATA);
+                addTag = new AddTag();
+                List<ItemTag> itemList = new ArrayList<>();
+                ItemTag item = new ItemTag();
+                TargetTag targetTag = new TargetTag();
+                targetTag.setLocURI(configure.getCode());
+                MetaTag metaag = new MetaTag();
+                metaag.setFormat(Constants.META_FORMAT_INT);
+                item.setTarget(targetTag);
+                item.setMeta(metaag);
+                item.setData(Constants.SyncMLResponseCodes.POSITIVE_CSP_DATA);
+                itemList.add(item);
+                addTag.setCommandId(Constants.SyncmlMessageCodes.addCommandId);
+                addTag.setItems(itemList);
             } else {
-                target.setLocURI(configure.getCode());
-                meta.setFormat(Constants.META_FORMAT_INT);
-                addTag = TagUtil.buildAddTag(operation, Constants.SyncMLResponseCodes.NEGATIVE_CSP_DATA);
+                addTag = new AddTag();
+                List<ItemTag> itemList = new ArrayList<>();
+                ItemTag item = new ItemTag();
+                TargetTag targetTag = new TargetTag();
+                targetTag.setLocURI(configure.getCode());
+                MetaTag metaag = new MetaTag();
+                metaag.setFormat(Constants.META_FORMAT_INT);
+                item.setTarget(targetTag);
+                item.setMeta(metaag);
+                item.setData(Constants.SyncMLResponseCodes.NEGATIVE_CSP_DATA);
+                itemList.add(item);
+                addTag.setCommandId(Constants.SyncmlMessageCodes.addCommandId);
+                addTag.setItems(itemList);
             }
         }
         if (PluginConstants.OperationCodes.SIMPLE_PASSWORD.
                 equals(configure.name())) {
             if (passcodePolicy.isAllowSimple()) {
-                target.setLocURI(configure.getCode());
-                meta.setFormat(Constants.META_FORMAT_INT);
-                addTag = TagUtil.buildAddTag(operation, Constants.SyncMLResponseCodes.POSITIVE_CSP_DATA);
+                addTag = new AddTag();
+                List<ItemTag> itemList = new ArrayList<>();
+                ItemTag item = new ItemTag();
+                TargetTag targetTag = new TargetTag();
+                targetTag.setLocURI(configure.getCode());
+                MetaTag metaag = new MetaTag();
+                metaag.setFormat(Constants.META_FORMAT_INT);
+                item.setTarget(targetTag);
+                item.setMeta(metaag);
+                item.setData(Constants.SyncMLResponseCodes.POSITIVE_CSP_DATA);
+                itemList.add(item);
+                addTag.setCommandId(Constants.SyncmlMessageCodes.addCommandId);
+                addTag.setItems(itemList);
+
             } else {
-                target.setLocURI(configure.getCode());
-                meta.setFormat(Constants.META_FORMAT_INT);
-                addTag = TagUtil.buildAddTag(operation, Constants.SyncMLResponseCodes.NEGATIVE_CSP_DATA);
+                addTag = new AddTag();
+                List<ItemTag> itemList = new ArrayList<>();
+                ItemTag item = new ItemTag();
+                TargetTag targetTag = new TargetTag();
+                targetTag.setLocURI(configure.getCode());
+                MetaTag metaag = new MetaTag();
+                metaag.setFormat(Constants.META_FORMAT_INT);
+                item.setTarget(targetTag);
+                item.setMeta(metaag);
+                item.setData(Constants.SyncMLResponseCodes.NEGATIVE_CSP_DATA);
+                itemList.add(item);
+                addTag.setCommandId(Constants.SyncmlMessageCodes.addCommandId);
+                addTag.setItems(itemList);
+
             }
         }
         return addTag;

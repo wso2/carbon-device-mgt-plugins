@@ -15,6 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 }}
+{{unit "cdmf.unit.device.type.android_sense.leaflet"}}
 {{#zone "topCss"}}
     <style>
         .thumbnail.icon:before {
@@ -27,24 +28,18 @@
 {{/zone}}
 
 {{#zone "device-opetations"}}
-    <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">
-        Operations
-    </div>
-    <div class="add-margin-top-4x">
-        {{unit "cdmf.unit.device.operation-bar" device=device autoCompleteParams=autoCompleteParams
-        encodedFeaturePayloads=encodedFeaturePayloads}}
-    </div>
+
 {{/zone}}
 
 {{#zone "device-view-tabs"}}
     <li class="active"><a class="list-group-item" href="#device_statistics" role="tab"
                           data-toggle="tab" aria-controls="device_statistics">Device
-                                                                              Statistics</a>
+        Statistics</a>
     </li>
     <li><a class="list-group-item" href="#event_log" role="tab" data-toggle="tab"
            aria-controls="event_log">Operations Log</a></li>
-    <li><a class="list-group-item" href="#geo_dashboard" role="tab" data-toggle="tab"
-           aria-controls="geo_dashboard">Map</a></li>
+    <li><a class="list-group-item location_tab" href="#geo_dashboard" role="tab" data-toggle="tab"
+           aria-controls="geo_dashboard">Device Location</a></li>
 {{/zone}}
 
 {{#zone "device-view-tab-contents"}}
@@ -77,18 +72,34 @@
     </div>
     <div class="panel panel-default tab-pane"
          id="geo_dashboard" role="tabpanel" aria-labelledby="geo_dashboard">
-        <div class="panel-heading">Map</div>
-
+        <div class="panel-heading">Device Location</div>
+        {{#if locationHistory}}
+            <div id="device-location"
+                 data-locations = "{{locationHistory}}">
+            </div>
+            <br/>
+            <a class="padding-left" target="_blank"
+               href="{{portalUrl}}/portal/dashboards/geo-dashboard/?GLOBAL-STATE={{anchor}}">
+                                <span class="fw-stack">
+                                    <i class="fw fw-circle-outline fw-stack-2x"></i>
+                                    <i class="fw fw-map-location fw-stack-1x"></i>
+                                </span>  Add Geo Fencing
+            </a>
+        {{else}}
+            <div id="map-error" class="message message-warning">
+                <h4 class="remove-margin">
+                    <i class="icon fw fw-warning"></i>
+                    Device location information is not available.
+                </h4>
+            </div>
+            <p class="add-padding-5x"></p>
+            <p class="add-padding-5x"></p>
+            <p class="add-padding-5x"></p>
+        {{/if}}
         <div id="chartWrapper">
         </div>
-
-        <a class="padding-left"
-           href="{{portalUrl}}/portal/dashboards/geo-dashboard/?GLOBAL-STATE={{anchor}}">
-
-            <span class="fw-stack">
-                <i class="fw fw-circle-outline fw-stack-2x"></i>
-                <i class="fw fw-statistics fw-stack-1x"></i>
-            </span> View Device Location
-        </a>
     </div>
+{{/zone}}
+{{#zone "bottomJs"}}
+    {{js "js/load-map.js"}}
 {{/zone}}

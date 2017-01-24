@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License"
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -43,5 +43,10 @@ public class AndroidSenseConstants {
     public static final String DEFAULT_ENDPOINT = "tcp://${mqtt.broker.host}:${mqtt.broker.port}";
 
     public static final String SCOPE = "scope";
+
+    public static final String PERM_ENROLL_ANDROID_SENSE = "/permission/admin/device-mgt/devices/enroll/android-sense";
+    public static final String PERM_OWNING_DEVICE_VIEW = "/permission/admin/device-mgt/devices/owning-device/view";
+
+    public static final String ROLE_NAME = "internal/devicemgt-user";
 
 }

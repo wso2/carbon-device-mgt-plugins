@@ -67,6 +67,6 @@ function attachEvents() {
     function toggleEnrollment(){
         $(modalPopupContent).html($("#qr-code-modal").html());
         generateQRCode(modalPopupContent + " .qr-code");
-        showPopup();
+        modalDialog.show();
     }
 }

@@ -46,7 +46,7 @@ import javax.ws.rs.core.Response;
         scopes = {
                 @Scope(
                         name = "Pending operations",
-                        description = "Register an Android device",
+                        description = "Register an Windows device",
                         key = "perm:windows:enroll",
                         permissions = {"/device-mgt/devices/enroll/windows"}
                 )

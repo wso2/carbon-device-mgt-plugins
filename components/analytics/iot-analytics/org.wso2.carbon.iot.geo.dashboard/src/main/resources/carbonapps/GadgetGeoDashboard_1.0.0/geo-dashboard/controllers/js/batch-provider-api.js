@@ -129,7 +129,11 @@ var getConfig, validate, getMode, getSchema, getData, registerCallBackforPush;
             var filter = {
                 "query": luceneQuery,
                 "start": 0,
-                "count": limit
+                "count": limit,
+                "sortBy" : [{
+                    "field" : "timeStamp",
+                    "sortType" : "ASC"
+                }]
             };
             result = connector.search(loggedInUser, tableName, stringify(filter)).getMessage();
         } else {

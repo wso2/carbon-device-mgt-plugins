@@ -75,7 +75,7 @@ function generateQRCode(qrCodeClass) {
 function toggleEnrollment() {
     $(".modal-content").html($("#qr-code-modal").html());
     generateQRCode(".modal-content .qr-code");
-    showPopup();
+    modalDialog.show();
 }
 
 var updateNotificationCountOnSuccess = function (data, textStatus, jqXHR) {
@@ -131,7 +131,10 @@ function loadNewNotifications() {
                                 viewModel["appContext"] = context;
                                 $(messageSideBar).html(template(viewModel));
                             } else {
-                                $(messageSideBar).html('<div class="alert alert-info" role="alert"><i class="icon fw fw-info"></i>No new notifications found...</div>');
+                                $(messageSideBar).html("<h4 class='text-center'>No New Notifications</h4>" +
+                                    "<h5 class='text-center text-muted'>" +
+                                    "Check this section for error notifications<br>related to device operations" +
+                                    "</h5>");
                             }
                         } else {
                             $(messageSideBar).html("<h4 class ='message-danger'>Unexpected error " +
