@@ -22,4 +22,5 @@ package org.wso2.carbon.device.mgt.output.adapter.websocket.endpoint.constants;
 
 public class Constants {
     public static final String HTTP_HEADERS = "HttpHeaders";
+    public static final String  QUERY_STRING = "queryString";
 }
