@@ -18,77 +18,96 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services;
 
-import io.swagger.annotations.Api;
-import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.device.mgt.common.Device;
-import org.wso2.carbon.device.mgt.common.license.mgt.License;
-import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
-import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
 
-import javax.jws.WebService;
+import io.swagger.annotations.*;
+import org.w3c.dom.Document;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
+import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.WindowsOperationException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.Constants;
+
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
+import javax.ws.rs.core.Response;
+
 
 /**
- * Windows Device Management REST-API implementation. All end points supports JSON, XMl with content negotiation.
+ * Interface for Windows 10 Device management phase.
  */
-@Api(value = "Windows Device Management",
-     description = "This carries all the resources related to Windows device management functionalities")
-@API(name = "Windows Device Management", version = "1.0.0",
-     context = "api/device-mgt/windows/v1.0/devices",
-     tags = {"devicemgt_windows"})
-@WebService
-@Path("/devices")
-@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Path("/devicemgt")
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Pending operations",
+                        description = "Register an Windows device",
+                        key = "perm:windows:enroll",
+                        permissions = {"/device-mgt/devices/enroll/windows"}
+                )
+        }
+)
 public interface DeviceManagementService {
+    @Path("/pending-operations")
+    @POST
+    @Consumes({PluginConstants.SYNCML_MEDIA_TYPE, MediaType.APPLICATION_XML})
+    @Produces(PluginConstants.SYNCML_MEDIA_TYPE)
+    @ApiOperation(
+            httpMethod = "POST",
+            value = "Getting pending operations for Windows device.",
+            notes = "Using this API to fetching more information to enroll the Device and " +
+                    "getting pending operations.",
+            tags = "Windows Device Management Administrative Service",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:android:enroll")
+                    })
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 201,
+                    message = "Ok. \n Successfully getting pending operations.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource was last modified. \n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The format of the requested entity was not supported.\n"),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while getting pending operations.")
+    })
+    Response getResponse(Document request) throws WindowsDeviceEnrolmentException, WindowsOperationException,
+            NotificationManagementException, WindowsConfigurationException;
 
-    /**
-     * Get all devices.Returns list of Windows devices registered in MDM.
-     *
-     * @return Returns retrieved devices.
-     * @throws WindowsConfigurationException occurred while retrieving all the devices from DB.
-     */
-    @GET
-    List<Device> getAllDevices() throws WindowsConfigurationException;
-
-    /**
-     * Fetch Windows device details of a given device Id.
-     *
-     * @param deviceId Device Id
-     * @return Returns retrieved device.
-     * @throws WindowsConfigurationException occurred while getting device from DB.
-     */
-    @GET
-    @Path("{id}")
-    Device getDevice(@PathParam("id") String deviceId) throws WindowsConfigurationException;
-
-    /**
-     * Update Windows device details of given device id.
-     *
-     * @param deviceId Device Id.
-     * @param device   Device details to be updated.
-     * @return Returns the message whether device update or not.
-     * @throws WindowsConfigurationException occurred while updating the Device Info.
-     */
-    @PUT
-    @Path("{id}")
-    Message updateDevice(@PathParam("id") String deviceId, Device device) throws WindowsConfigurationException;
-
-    /**
-     * Fetch the Licence agreement for specific windows platform.
-     *
-     * @return Returns License agreement.
-     * @throws WindowsConfigurationException occurred while getting licence for specific platform and Language.
-     */
-    @GET
-    @Path("license")
-    @Produces("application/json")
-    License getLicense() throws WindowsConfigurationException;
 }
+

@@ -1,0 +1,391 @@
+<div class="row no-gutter">
+    <div class="wr-hidden-operations-nav col-lg-4">
+        <a href="javascript:void(0)" onclick="showAdvanceOperation('passcode-policy', this)" class="selected">
+                <span class="wr-hidden-operations-icon fw-stack">
+                    <i class="fw fw-key fw-stack-2x"></i>
+                </span>Passcode Policy
+            <span id="passcode-policy-configured" class="has-configured status-icon hidden"><i
+                    class="fw fw-success"></i></span>
+            <span id="passcode-policy-ok" class="has-success status-icon hidden"><i class="fw fw-success"></i></span>
+            <span id="passcode-policy-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
+        </a>
+        <a href="javascript:void(0)" onclick="showAdvanceOperation('camera', this)">
+                <span class="wr-hidden-operations-icon fw-stack">
+                    <i class="fw fw-block fw-stack-2x"></i>
+                </span>
+            Restrictions on Camera
+            <span id="camera-configured" class="has-configured status-icon hidden"><i class="fw fw-success"></i></span>
+            <span id="camera-ok" class="has-success status-icon hidden"><i class="fw fw-success"></i></span>
+            <span class="camera-error status-icon hidden"><i class="fw fw-error"></i></span>
+        </a>
+        <a href="javascript:void(0)" onclick="showAdvanceOperation('encrypt-storage', this)">
+                <span class="wr-hidden-operations-icon fw-stack">
+                    <i class="fw fw-security fw-stack-2x"></i>
+                </span>
+            Encryption Settings
+            <span id="encrypt-storage-configured" class="has-configured status-icon hidden"><i
+                    class="fw fw-success"></i></span>
+            <span id="encrypt-storage-ok" class="has-success status-icon hidden"><i class="fw fw-success"></i></span>
+            <span id="encrypt-storage-error" class="encryption-error status-icon hidden"><i
+                    class="fw fw-error"></i></span>
+        </a>
+    </div>
+
+    <div class="wr-hidden-operations-content col-lg-8">
+        <!-- passcode-policy -->
+        <div class="wr-hidden-operation" data-operation="passcode-policy" style="display: block">
+            <div class="panel panel-default operation-data" data-operation="passcode-policy"
+                 data-operation-code="PASSCODE_POLICY">
+                <div id="passcode-policy-heading" class="panel-heading" role="tab">
+                    <h2 class="sub-title panel-title">
+                        Passcode Policy
+                        <label id="passcode-policy-lbl" class="wr-input-control switch" data-toggle="collapse"
+                               data-target="#passcode-policy-body">
+                            <input type="checkbox"/>
+                            <span class="helper"></span>
+                            <span class="text"></span>
+                        </label>
+                    </h2>
+                    <div class="panel-title-description">
+                        This configuration can be used to set a passcode policy to an Windows Device.
+                        Once this configuration profile is installed on a device, corresponding users will not be able
+                        to modify these settings on their devices.
+                    </div>
+
+                </div>
+                <div id="passcode-policy-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="passcode-policy-body">
+                    <hr/>
+                    <div id="passcode-policy-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                        <i class="icon fw fw-error"></i><span></span>
+                    </div>
+
+                    <div class="wr-input-control">
+                        <label class="wr-input-control checkbox">
+                            <input id="passcode-policy-allow-simple" type="checkbox"
+                                   class="form-control operationDataKeys" data-key="passcodePolicyAllowSimple"
+                                   checked="checked"/>
+                            <span class="helper"
+                                  title="Permit the use of repeating, ascending and descending character sequences">
+                                   Allow simple value
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="wr-input-control">
+                        <label class="wr-input-control checkbox">
+                            <input id="passcode-policy-require-alphanumeric" type="checkbox"
+                                   class="form-control operationDataKeys" data-key="passcodePolicyRequireAlphanumeric"
+                                   checked="checked"/>
+                            <span class="helper" title="Require passcode to contain both letters and numbers">
+                                   Require alphanumeric value
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="wr-input-control">
+                        <label class="wr-input-label" for="passcode-policy-min-length">
+                            Minimum passcode length
+                            <span class="helper" title="Minimum number of characters allowed in a passcode">
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                        </label>
+                        <select id="passcode-policy-min-length" class="form-control operationDataKeys"
+                                data-key="passcodePolicyMinLength" data-default="0">
+                            <option value="" selected="selected">
+                                None
+                            </option>
+                            <option value="4">04</option>
+                            <option value="5">05</option>
+                            <option value="6">06</option>
+                            <option value="7">07</option>
+                            <option value="8">08</option>
+                            <option value="9">09</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                            <option value="17">17</option>
+                            <option value="18">18</option>
+                        </select>
+                    </div>
+
+                    <div class="wr-input-control">
+                        <label class="wr-input-label" for="passcode-policy-min-complex-chars">
+                            Minimum number of complex characters
+                            <span class="helper"
+                                  title="Minimum number of complex or non-alphanumeric characters allowed in a passcode">
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                        </label>
+                        <select id="passcode-policy-min-complex-chars" class="form-control operationDataKeys"
+                                data-key="passcodePolicyMinComplexChars" data-default="0">
+                            <option value="" selected="selected">
+                                None
+                            </option>
+                            <option value="1">01</option>
+                            <option value="2">02</option>
+                            <option value="3">03</option>
+                            <option value="4">04</option>
+                            <option value="5">05</option>
+                        </select>
+                    </div>
+
+                    <div class="wr-input-control">
+                        <label class="wr-input-label" for="passcode-policy-max-passcode-age-in-days">
+                            Maximum passcode age in days
+                            <span class="helper" title="Number of days after which a passcode must be changed">
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                            <br>
+                            ( Should be in between 1-to-730 days or none )
+                        </label>
+                        <input id="passcode-policy-max-passcode-age-in-days" type="text"
+                               class="form-control operationDataKeys" data-key="passcodePolicyMaxPasscodeAgeInDays"
+                               maxlength="3" placeholder="[ Requires Number Input ]">
+                    </div>
+
+                    <div class="wr-input-control">
+                        <label class="wr-input-label" for="passcode-policy-passcode-history">
+                            Passcode history
+                            <span class="helper" title="Number of consequent unique passcodes to be used before reuse">
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                            <br>
+                            ( Should be in between 1-to-50 passcodes or none )
+                        </label>
+                        <input id="passcode-policy-passcode-history" type="text" class="form-control operationDataKeys"
+                               data-key="passcodePolicyPasscodeHistory" maxlength="2"
+                               placeholder="[ Requires Number Input ]">
+                    </div>
+
+                    <div class="wr-input-control">
+                        <label class="wr-input-label" for="passcodePolicyMaxFailedAttempts">
+                            Maximum number of failed attempts
+                            <span class="helper" title="Maximum number of passcode entry attempts allowed before all
+                            data on a device will be erased">
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                        </label>
+                        <select id="passcode-policy-max-failed-attempts" class="form-control operationDataKeys"
+                                data-key="passcodePolicyMaxFailedAttempts" data-default="0">
+                            <option value="" selected="selected">
+                                None
+                            </option>
+                            <option value="3">03</option>
+                            <option value="4">04</option>
+                            <option value="5">05</option>
+                            <option value="6">06</option>
+                            <option value="7">07</option>
+                            <option value="8">08</option>
+                            <option value="9">09</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /passcode-policy -->
+
+        <!-- camera -->
+        <div class="wr-hidden-operation" data-operation="camera">
+            <div class="panel panel-default operation-data" data-operation="camera" data-operation-code="CAMERA">
+                <div id="camera-heading" class="panel-heading" role="tab">
+                    <h2 class="sub-title panel-title">
+                        Restrictions on Camera
+                        <label class="wr-input-control switch" data-toggle="collapse" data-target="#camera-body">
+                            <input type="checkbox"/>
+                            <span class="helper"></span>
+                            <span class="text"></span>
+                        </label>
+                    </h2>
+                    <div class="panel-title-description">
+                        This configuration can be used to restrict the usage of camera on an Windows device together
+                        with all the applications using the camera.
+                        Once this configuration profile is installed on a device, corresponding users will not be able
+                        to modify these settings on their devices.
+                    </div>
+                </div>
+                <div id="camera-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="camera-body">
+                    <hr/>
+                    <div id="camera-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                        <i class="icon fw fw-error"></i><span></span>
+                    </div>
+                    Un-check following checkbox in case you need to disable camera.
+                    <br>
+                    <br>
+                    <div class="wr-input-control">
+                        <label class="wr-input-control checkbox">
+                            <input id="camera-enabled" type="checkbox" class="operationDataKeys"
+                                   data-key="cameraEnabled" checked="checked"/>
+                            <span class="helper" title="Having this checked would enable Usage of phone camera in
+                            the device.">
+                                   Allow use of camera
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                        </label>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <!-- /camera -->
+
+        <!-- encrypt-storage -->
+        <div class="wr-hidden-operation" data-operation="encrypt-storage">
+            <div class="panel panel-default operation-data" data-operation="encrypt-storage"
+                 data-operation-code="ENCRYPT_STORAGE">
+                <div id="encrypt-storage-heading" class="panel-heading" role="tab">
+                    <h2 class="sub-title panel-title">
+                        Encryption Settings
+                        <label class="wr-input-control switch" data-toggle="collapse"
+                               data-target="#encrypt-storage-body">
+                            <input type="checkbox"/>
+                            <span class="helper"></span>
+                            <span class="text"></span>
+                        </label>
+                    </h2>
+                    <div class="panel-title-description">
+                        This configuration can be used to encrypt data on an Windows device, when the device is locked
+                        and
+                        make it readable when the passcode is entered. Once this configuration profile is installed on a
+                        device, corresponding users will not be able to modify these settings on their devices.
+                    </div>
+                </div>
+                <div id="encrypt-storage-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="encrypt-storage-body">
+                    <hr/>
+                    <div id="encrypt-storage-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                        <i class="icon fw fw-error"></i><span></span>
+                    </div>
+                    Un-check following checkbox in case you need to disable storage-encryption.
+                    <br>
+                    <br>
+                    <div class="wr-input-control">
+                        <label class="wr-input-control checkbox">
+                            <input id="encrypt-storage-enabled" type="checkbox" class="operationDataKeys"
+                                   data-key="encryptStorageEnabled" checked="checked"/>
+                            <span class="helper"
+                                  title="Having this checked would enable Storage-encryption in the device">
+                                   Enable storage-encryption
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                        </label>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+        <!-- /encrypt-storage -->
+        <!--app-restriction-->
+        <div class="wr-hidden-operation" data-operation="app-restriction">
+            <div class="panel panel-default operation-data" data-operation="app-restriction"
+                 data-operation-code="APP-RESTRICTION">
+                <div id="app-restriction-heading" class="panel-heading" role="tab">
+                    <h2 class="sub-title panel-title">
+                        Application Restriction Settings
+                        <label class="wr-input-control switch" data-toggle="collapse"
+                               data-target="#app-restriction-body">
+                            <input type="checkbox"/>
+                            <span class="helper"></span>
+                            <span class="text"></span>
+                        </label>
+                    </h2>
+                    <div class="panel-title-description">
+                        This configuration can be used to create a black list or white list of applications.
+                    </div>
+                </div>
+                <div id="app-restriction-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="app-restriction-body">
+                    <hr/>
+                    <div id="app-restriction-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                        <i class="icon fw fw-error"></i><span></span>
+                    </div>
+
+                    <select id="app-restriction-type" class="form-control operationDataKeys" data-key="restrictionType">
+                        <option value="" selected="selected">
+                            None
+                        </option>
+                        <option value="black-list">Black List</option>
+                        <option value="white-list">White List</option>
+                    </select>
+
+                    <div class="wr-input-control">
+                        <label class="wr-input-label" for="restricted-applications">
+                            Restricted Application List
+                            <span class="helper" title="Add an application to restrict.">
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                            <br>
+                            <a href="#restricted-applications-grid" class="btn btn-secondary grid-input-add"
+                               data-click-event="add-form">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-add fw-stack-1x"></i>
+                                    <i class="fw fw-circle-outline fw-stack-2x"></i>
+                                </span>
+                                Add Application
+                            </a>
+                        </label>
+                        <div id="restricted-applications"
+                             class="operationDataKeys grouped-array-input multi-column-key-value-pair-array"
+                             data-key="restrictedApplications" data-column-count="2">
+                            <table class="table table-responsive table-striped">
+                                <thead>
+                                <tr>
+                                    <th>No:</th>
+                                    <th>Application Name/Description</th>
+                                    <th>Package Name</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody data-add-form-container="#restricted-applications-grid">
+                                <tr data-help-text="add-form">
+                                    <td colspan="4">
+                                        No entries added yet .
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <table class="template hidden">
+                                <tbody data-add-form="#restricted-applications-grid">
+                                    <tr data-add-form-element="clone">
+                                        <td data-title="No:">
+                                            <span class="index"></span>
+                                        </td>
+                                        <td data-title="App Name">
+                                            <input type="text" class="form-control grid-input-text"
+                                                   data-child-key="appName" maxlength="100" data-default=""
+                                                   placeholder="[ Application Name or Description ]"/>
+                                        </td>
+                                        <td data-title="Package Name">
+                                            <input type="text" class="form-control grid-input-text"
+                                                   data-child-key="packageName" maxlength="100" data-default=""
+                                                   placeholder="[ Package Name of Application ]"/>
+                                        </td>
+                                        <td>
+                                            <span class="list-group-item-actions">
+                                                <a href="#restricted-applications-grid" class="grid-input-remove"
+                                                   data-click-event="remove-form">
+                                                    <span class="fw-stack helper" title="Remove Entry">
+                                                        <i class="fw fw-circle-outline fw-stack-2x"></i>
+                                                        <i class="fw fw-delete fw-stack-1x"></i>
+                                                    </span>
+                                                </a>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

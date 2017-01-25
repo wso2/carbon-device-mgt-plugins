@@ -1,0 +1,162 @@
+<%
+/*
+ ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ ~
+ ~ WSO2 Inc. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~ http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied.  See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ */
+var log = new Log();
+var method = request.getMethod();
+var resourceName = request.getParameter('name');
+var webService = request.getParameter('service');
+
+if(webService) {
+    response.contentType = 'application/json';
+    response.characterEncoding = 'UTF-8';
+    response.content = { resource : get(resourceName) };
+}
+
+function getRegistry () {
+    var carbon = require("carbon");
+    var server = new carbon.server.Server();
+    return new carbon.registry.Registry(server, {
+        system: true
+    });
+}
+
+if (method === "GET") {
+    var constants = require("constants.jag");
+    var executionPlanType = request.getParameter("executionPlanType");
+    var deviceId = request.getParameter("deviceId");
+    response.content = get(executionPlanType, deviceId);
+    response.contentType = "application/json";
+}
+
+function get(executionPlanType, deviceId){
+    var resource = null;
+    var fence = {};
+    var registry = getRegistry();
+    if(executionPlanType == constants.EXECUTION_PLAN_TYPE_WITHIN){
+        try {
+            resource = registry.get(constants.REGISTRY_PATH_FOR_ALERTS + constants.EXECUTION_PLAN_TYPE_WITHIN +
+                    "/"  + deviceId + "/");
+        } catch(e){
+            log.error(e.message);
+            return false;
+        }
+        var allFences = [];
+        if (resource) {
+            for each(var res in resource.content) {
+                var childResource = registry.get(res);
+                var properties = registry.properties(res);
+                fence = {};
+                try {
+                    fence[constants.GEO_JSON] = JSON.parse(childResource.content);
+                    fence[constants.QUERY_NAME] = properties[constants.QUERY_NAME][0];
+                    fence[constants.AREA_NAME] = properties[constants.AREA_NAME][0];
+                    fence[constants.CREATED_TIME] = childResource.created.time.toString();
+                    allFences.push(fence);
+                }
+                catch (e) {
+                    log.error("Error: " + e + '\n');
+                }
+            }
+        }
+        return allFences;
+    } else if(executionPlanType == constants.EXECUTION_PLAN_TYPE_SPEED){
+        try{
+            resource = registry.get(constants.REGISTRY_PATH_FOR_ALERTS + constants
+                            .EXECUTION_PLAN_TYPE_SPEED + "/"  + deviceId );
+        } catch(e){
+            resource = {'content': false};
+        }
+        if (log.isDebugEnabled()) {
+            log.info("DEBUG:***** name = " + executionPlanType);
+            log.info("DEBUG:***** resource.content = " + resource.content);
+        }
+        return JSON.parse(resource.content);
+    } else if(executionPlanType == constants.EXECUTION_PLAN_TYPE_PROXIMITY){
+
+        var result;
+        try{
+            resource = registry.properties(constants.REGISTRY_PATH_FOR_ALERTS + constants.EXECUTION_PLAN_TYPE_PROXIMITY +
+                    "/" + deviceId);
+            result = {
+                proximityDistance: resource[constants.PROXIMITY_DISTANCE],
+                proximityTime: resource[constants.PROXIMITY_TIME]
+            };
+        }catch(e){
+            result = {'content': false};
+        }
+        return result;
+    } else if(executionPlanType == constants.EXECUTION_PLAN_TYPE_STATIONARY){
+        try{
+            resource = registry.get(constants.REGISTRY_PATH_FOR_ALERTS + constants.EXECUTION_PLAN_TYPE_STATIONARY +
+                    "/" + deviceId);
+        }
+        catch(e){
+            log.info(e.message);
+            return false;
+        }
+        var allFences = [];
+
+        if (resource) {
+            for each(var res in resource.content) {
+                var fence = {};
+                var childResource = registry.get(res);
+                var properties = registry.properties(res);
+                try {
+                    fence[constants.GEO_JSON] = JSON.parse(childResource.content);
+                    fence[constants.QUERY_NAME] = properties[constants.QUERY_NAME][0];
+                    fence[constants.AREA_NAME] = properties[constants.STATIONARY_NAME][0];
+                    fence[constants.STATIONARY_TIME] = properties[constants.STATIONARY_TIME][0];
+                    fence[constants.FLUCTUATION_RADIUS] = properties[constants.FLUCTUATION_RADIUS][0];
+                    fence[constants.CREATED_TIME] = childResource.created.time.toString();
+                    allFences.push(fence);
+                } catch (e) {
+                    log.error("Error: " + e + '\n');
+                }
+            }
+        }
+        return allFences;
+    } else if( executionPlanType == constants.EXECUTION_PLAN_TYPE_TRAFFIC){
+        try{
+            resource = registry.get(constants.REGISTRY_PATH_FOR_ALERTS + constants.EXECUTION_PLAN_TYPE_TRAFFIC +
+                    "/" + deviceId + "/");
+        }
+        catch(e){
+            log.info(e.message);
+            return false;
+        }
+        var allFences = [];
+        for each (var res in resource.content) {
+            var fence = {};
+            var childResource = registry.get(res);
+            var properties = registry.properties(res);
+            try{
+                fence[constants.GEO_JSON] = JSON.parse(childResource.content);
+                fence[constants.QUERY_NAME] = properties[constants.QUERY_NAME][0];
+                fence[constants.AREA_NAME] = properties[constants.AREA_NAME][0];
+                fence[constants.CREATED.TIME] = childResource.created.time.toString();
+                allFences.push(fence);
+            }
+            catch(e){
+                log.info("Error: "+e+'\n');
+            }
+        }
+        return allFences;
+    }
+}
+
+%>

@@ -21,12 +21,12 @@ package org.wso2.carbon.device.mgt.mobile.windows.impl;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.Feature;
 import org.wso2.carbon.device.mgt.common.FeatureManager;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOException;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileDeviceManagementDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.dao.MobileFeatureDAO;
-import org.wso2.carbon.device.mgt.mobile.dto.MobileFeature;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.MobileDeviceManagementDAOFactory;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.MobileFeatureDAO;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.WindowsDAOFactory;
-import org.wso2.carbon.device.mgt.mobile.util.MobileDeviceManagementUtil;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dto.MobileFeature;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.util.MobileDeviceManagementUtil;
 
 import java.util.ArrayList;
 import java.util.List;

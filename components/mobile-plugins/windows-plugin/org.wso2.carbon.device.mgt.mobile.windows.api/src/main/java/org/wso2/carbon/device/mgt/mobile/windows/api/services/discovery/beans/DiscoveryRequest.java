@@ -18,14 +18,12 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services.discovery.beans;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
+import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DiscoveryRequest")
+@XmlType(name = "DiscoveryRequest", namespace = "http://schemas.microsoft.com/windows/management/2012/01/enrollment")
 @SuppressWarnings("unused")
 public class DiscoveryRequest implements Serializable {
 
@@ -38,16 +36,26 @@ public class DiscoveryRequest implements Serializable {
     @XmlElement(name = "DeviceType")
     private String deviceType;
 
+    @XmlElement(name = "OSEdition")
+    private String osEdition;
+
+    @XmlElement(name = "ApplicationVersion")
+    private String applicationVersion;
+
+    @XmlElementWrapper(name = "AuthPolicies")
+    @XmlElement(name = "AuthPolicy", required = true)
+    private List<String> authenticationPolicies;
+
     public String getEmailId() {
         return emailId;
     }
 
-    public String getVersion() {
-        return version;
-    }
-
     public void setEmailId(String emailId) {
         this.emailId = emailId;
+    }
+
+    public String getVersion() {
+        return version;
     }
 
     public void setVersion(String version) {
@@ -61,4 +69,30 @@ public class DiscoveryRequest implements Serializable {
     public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
     }
+
+    public List<String> getAuthenticationPolicies() {
+        return authenticationPolicies;
+    }
+
+    public void setAuthenticationPolicies(List<String> authenticationPolicies) {
+        this.authenticationPolicies = authenticationPolicies;
+    }
+
+    public String getOsEdition() {
+        return osEdition;
+    }
+
+    public void setOsEdition(String osEdition) {
+        this.osEdition = osEdition;
+    }
+
+    public String getApplicationVersion() {
+        return applicationVersion;
+    }
+
+    public void setApplicationVersion(String applicationVersion) {
+        this.applicationVersion = applicationVersion;
+    }
+
+
 }

@@ -29,9 +29,9 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.ErrorResponse;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.UnexpectedServerErrorException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
-import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.ConfigurationMgtService;
+import javax.ws.rs.core.MediaType;
 
 import javax.jws.WebService;
 import javax.ws.rs.*;
@@ -40,9 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebService
-@Produces({"application/json", "application/xml"})
-@Consumes({"application/json", "application/xml"})
-@Path("/")
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Path("/configuration")
 public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
 
     private static Log log = LogFactory.getLog(
@@ -55,17 +55,17 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
      * @throws WindowsConfigurationException
      */
     @GET
-    public PlatformConfiguration getConfiguration() throws WindowsConfigurationException {
+    public Response getConfiguration(@HeaderParam("If-Modified-Since") String ifModifiedSince) {
         String msg;
-        PlatformConfiguration tenantConfiguration;
+        PlatformConfiguration platformConfiguration;
         List<ConfigurationEntry> configs;
         try {
-            tenantConfiguration = WindowsAPIUtils.getDeviceManagementService().
+            platformConfiguration = WindowsAPIUtils.getDeviceManagementService().
                     getConfiguration(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
-            if (tenantConfiguration != null) {
-                configs = tenantConfiguration.getConfiguration();
+            if (platformConfiguration != null) {
+                configs = platformConfiguration.getConfiguration();
             } else {
-                tenantConfiguration = new PlatformConfiguration();
+                platformConfiguration = new PlatformConfiguration();
                 configs = new ArrayList<>();
             }
 
@@ -79,28 +79,29 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
                 entry.setName(PluginConstants.TenantConfigProperties.LICENSE_KEY);
                 entry.setValue(license.getText());
                 configs.add(entry);
-                tenantConfiguration.setConfiguration(configs);
+                platformConfiguration.setConfiguration(configs);
             }
         } catch (DeviceManagementException e) {
             msg = "Error occurred while retrieving the Windows tenant configuration";
             log.error(msg, e);
-            throw new WindowsConfigurationException(msg, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         }
-        return tenantConfiguration;
+        return Response.status(Response.Status.OK).entity(platformConfiguration).build();
     }
 
     /**
      * Update Tenant Configurations for the specific Device type.
      *
-     * @param configuration Tenant configurations to be updated.
+     * @param configurations to be updated.
      * @return Response message.
      * @throws WindowsConfigurationException
      */
     @PUT
-    public Message updateConfiguration(PlatformConfiguration configuration) throws WindowsConfigurationException {
+    public Response updateConfiguration(PlatformConfiguration windowsPlatformConfiguration) throws WindowsConfigurationException {
         String message;
-        Message responseMsg = new Message();
         ConfigurationEntry licenseEntry = null;
+        PlatformConfiguration configuration = new PlatformConfiguration();
         try {
             configuration.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
             List<ConfigurationEntry> configs = configuration.getConfiguration();
@@ -123,14 +124,15 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
             configuration.setConfiguration(configs);
             WindowsAPIUtils.getDeviceManagementService().saveConfiguration(configuration);
             Response.status(Response.Status.CREATED);
-            responseMsg.setResponseMessage("Windows platform configuration succeeded.");
-            responseMsg.setResponseCode(Response.Status.CREATED.toString());
         } catch (DeviceManagementException e) {
             message = "Error occurred while modifying configuration settings of Windows platform.";
             log.error(message, e);
-            throw new WindowsConfigurationException(message, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(message).build());
         }
-        return responseMsg;
+        return Response.status(Response.Status.OK).
+                entity("Windows platform configuration has been updated successfully.").build();
+
     }
 
     @GET

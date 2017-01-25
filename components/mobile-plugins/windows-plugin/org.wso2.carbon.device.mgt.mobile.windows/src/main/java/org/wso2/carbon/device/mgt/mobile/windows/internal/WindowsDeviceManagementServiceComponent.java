@@ -23,11 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
-import org.wso2.carbon.device.mgt.mobile.windows.impl.WindowsDeviceManagementService;
-import org.wso2.carbon.device.mgt.mobile.windows.impl.WindowsPolicyMonitoringService;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
-import org.wso2.carbon.policy.mgt.common.spi.PolicyMonitoringService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 /**
@@ -61,14 +57,14 @@ public class WindowsDeviceManagementServiceComponent {
         try {
             BundleContext bundleContext = ctx.getBundleContext();
 
-            androidServiceRegRef =
-                    bundleContext.registerService(DeviceManagementService.class.getName(),
-                            new WindowsDeviceManagementService(), null);
+//            androidServiceRegRef =
+//                    bundleContext.registerService(DeviceManagementService.class.getName(),
+//                            new WindowsDeviceManagementService(), null);
 
             // Policy management service
 
-            bundleContext.registerService(PolicyMonitoringService.class,
-                    new WindowsPolicyMonitoringService(), null);
+//            bundleContext.registerService(PolicyMonitoringManager.class,
+//                    new WindowsPolicyMonitoringManager(), null);
 
             if (log.isDebugEnabled()) {
                 log.debug("Android Mobile Device Management Service Component has been successfully activated");

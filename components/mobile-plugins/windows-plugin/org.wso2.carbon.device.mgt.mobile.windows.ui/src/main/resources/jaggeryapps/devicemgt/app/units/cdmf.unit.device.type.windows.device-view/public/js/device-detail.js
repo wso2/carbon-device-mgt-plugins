@@ -1,172 +1,212 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
+
+var InitiateViewOption = null;
 
 (function () {
     var deviceId = $(".device-id");
     var deviceIdentifier = deviceId.data("deviceid");
     var deviceType = deviceId.data("type");
+    var ownership = deviceId.data("ownership");
     var payload = [deviceIdentifier];
     var operationTable;
+    var serviceUrl;
+
     if (deviceType == "ios") {
         serviceUrl = "/ios/operation/deviceinfo";
     } else if (deviceType == "android") {
         //var serviceUrl = "/mdm-android-agent/operation/device-info";
         serviceUrl = "/api/device-mgt/android/v1.0/admin/devices/info";
     }
-    if (serviceUrl) {
-        invokerUtil.post(serviceUrl, payload,
-            function (message) {
-                console.log(message);
-            }, function (message) {
-                console.log(message);
-            });
-    }
-    $(document).ready(function () {
-        $(".panel-body").removeClass("hidden");
-        $("#loading-content").remove();
 
-        loadOperationsLog();
+    if (serviceUrl) {
+        invokerUtil.post(
+            serviceUrl,
+            payload,
+            // success-callback
+            function () {
+                $(".panel-body").show();
+            },
+            // error-callback
+            function () {
+                var defaultInnerHTML =
+                    "<br><p class='fw-warning'>Device data may not have been updated. Please refresh to try again.<p>";
+                $(".panel-body").append(defaultInnerHTML);
+            }
+        );
+    }
+
+
+    $(".media.tab-responsive [data-toggle=tab]").on("shown.bs.tab", function (e) {
+        var activeTabPane = $(e.target).attr("href");
+        var activeListGroupItem = $(".media .list-group-item.active");
+
+        $(activeTabPane).removeClass("visible-xs-block");
+        $(activeTabPane).siblings().not(".arrow-left").addClass("visible-xs-block");
+        positionArrow(activeListGroupItem);
+    });
+
+    $(".media.tab-responsive .tab-content").on("shown.bs.collapse", function (e) {
+        var thisParent = $(e.target).parent();
+        var activeTabPaneCaret = thisParent.find('.caret-updown');
+        var activeTabPaneCaretSiblings = thisParent.siblings().find('.caret-updown');
+
+        activeTabPaneCaret.removeClass("fw-up").addClass("fw-down");
+        activeTabPaneCaretSiblings.removeClass("fw-down").addClass("fw-up");
+    });
+
+
+    $('.media.tab-responsive a[data-toggle="collapse"]').on('click',function(){
+        var clickedPanel = $(this).attr('href');
+
+        if($(clickedPanel).hasClass('in')){
+            $(clickedPanel).collapse('hide');
+        }else{
+            $(clickedPanel).collapse('show');
+        }
+    });
+
+
+    function positionArrow(selectedTab) {
+        var selectedTabHeight = $(selectedTab).innerHeight();
+        var arrowPosition = 0;
+        var totalHeight = 0;
+        var arrow = $(".media .panel-group.tab-content .arrow-left");
+        var parentHeight = $(arrow).parent().innerHeight();
+
+
+        if($(selectedTab).prev().length){
+            $(selectedTab).prevAll().each(function() {
+                totalHeight += $(this).innerHeight();
+            });
+            arrowPosition = totalHeight + (selectedTabHeight / 2);
+        }else{
+            arrowPosition = selectedTabHeight / 2;
+        }
+
+        if(arrowPosition >= parentHeight){
+            parentHeight = arrowPosition + 50;
+            $(arrow).siblings(".panel.active").height(parentHeight);
+        }else{
+            $(arrow).parent().removeAttr("style");
+        }
+
+        $(arrow).css("top", arrowPosition - 10);
+    }
+
+    $(document).ready(function() {
+        $(".device-detail-body").removeClass("hidden");
+        $("#loading-content").remove();
         loadApplicationsList();
         loadPolicyCompliance();
 
         $("#refresh-policy").click(function () {
-            $('#policy-spinner').removeClass('hidden');
+            $("#policy-spinner").removeClass("hidden");
             loadPolicyCompliance();
         });
 
         $("#refresh-apps").click(function () {
-            $('#apps-spinner').removeClass('hidden');
+            $("#apps-spinner").removeClass("hidden");
             loadApplicationsList();
         });
-
-        $("#refresh-operations").click(function () {
-            $('#operations-spinner').removeClass('hidden');
-            loadOperationsLog(true);
-        });
-        loadOperationBar(deviceType);
     });
 
     function loadOperationsLog(update) {
+        var owner = $("#device-owner").data("owner");
         var operationsLogTable = "#operations-log-table";
         if (update) {
             operationTable = $(operationsLogTable).DataTable();
             operationTable.ajax.reload(false);
             return;
         }
-        operationTable = $(operationsLogTable)
-            .datatables_extended({
-                                     serverSide: true,
-                                     processing: false,
-                                     searching: false,
-                                     ordering: false,
-                                     pageLength: 10,
-                                     order: [],
-                                     ajax: {
-                                         url: context + "/api/operation/paginate",
-                                         data: {
-                                             deviceId: deviceIdentifier,
-                                             deviceType: deviceType
-                                         },
-                                         dataSrc: function (json) {
-                                             $("#operations-spinner").addClass(
-                                                 "hidden");
-                                             $("#operations-log-container").empty();
-                                             return json.data;
-                                         }
-                                     },
-                                     columnDefs: [
-                                         {targets: 0, data: "code"},
-                                         {
-                                             targets: 1,
-                                             data: "status",
-                                             render: function (status) {
-                                                 var html;
-                                                 switch (status) {
-                                                     case "COMPLETED" :
-                                                         html =
-                                                             "<span><i class='fw fw-ok icon-success'></i> Completed</span>";
-                                                         break;
-                                                     case "PENDING" :
-                                                         html =
-                                                             "<span><i class='fw fw-warning icon-warning'></i> Pending</span>";
-                                                         break;
-                                                     case "ERROR" :
-                                                         html =
-                                                             "<span><i class='fw fw-error icon-danger'></i> Error</span>";
-                                                         break;
-                                                     case "IN_PROGRESS" :
-                                                         html =
-                                                             "<span><i class='fw fw-ok icon-warning'></i> In Progress</span>";
-                                                         break;
-                                                     case "REPEATED" :
-                                                         html =
-                                                             "<span><i class='fw fw-ok icon-warning'></i> Repeated</span>";
-                                                         break;
-                                                 }
-                                                 return html;
-                                             }
-                                         },
-                                         {
-                                             targets: 2,
-                                             data: "createdTimeStamp",
-                                             render: function (date) {
-                                                 var value = String(date);
-                                                 return value.slice(0, 16);
-                                             }
-                                         }
-                                     ],
-                                     "createdRow": function (row, data) {
-                                         $(row).attr("data-type", "selectable");
-                                         $(row).attr("data-id", data["id"]);
-                                         $.each($("td", row),
-                                                function (colIndex) {
-                                                    switch (colIndex) {
-                                                        case 1:
-                                                            $(this).attr(
-                                                                "data-grid-label",
-                                                                "Code");
-                                                            $(this).attr(
-                                                                "data-display",
-                                                                data["code"]);
-                                                            break;
-                                                        case 2:
-                                                            $(this).attr(
-                                                                "data-grid-label",
-                                                                "Status");
-                                                            $(this).attr(
-                                                                "data-display",
-                                                                data["status"]);
-                                                            break;
-                                                        case 3:
-                                                            $(this).attr(
-                                                                "data-grid-label",
-                                                                "Created Timestamp");
-                                                            $(this).attr(
-                                                                "data-display",
-                                                                data["createdTimeStamp"]);
-                                                            break;
-                                                    }
-                                                }
-                                         );
-                                     }
-                                 });
+        operationTable = $(operationsLogTable).datatables_extended({
+            serverSide: true,
+            processing: false,
+            searching: false,
+            ordering:  false,
+            pageLength : 10,
+            order: [],
+            ajax: {
+                url: "/devicemgt/api/operation/paginate",
+                data: {deviceId : deviceIdentifier, deviceType: deviceType, owner:owner},
+                dataSrc: function (json) {
+                    $("#operations-spinner").addClass("hidden");
+                    $("#operations-log-container").empty();
+                    return json.data;
+                }
+            },
+            columnDefs: [
+                {targets: 0, data: "code" },
+                {targets: 1, data: "status", render:
+                    function (status) {
+                        var html;
+                        switch (status) {
+                            case "COMPLETED" :
+                                html = "<span><i class='fw fw-success icon-success'></i> Completed</span>";
+                                break;
+                            case "PENDING" :
+                                html = "<span><i class='fw fw-warning icon-warning'></i> Pending</span>";
+                                break;
+                            case "ERROR" :
+                                html = "<span><i class='fw fw-error icon-danger'></i> Error</span>";
+                                break;
+                            case "IN_PROGRESS" :
+                                html = "<span><i class='fw fw-success icon-warning'></i> In Progress</span>";
+                                break;
+                            case "REPEATED" :
+                                html = "<span><i class='fw fw-success icon-warning'></i> Repeated</span>";
+                                break;
+                        }
+                        return html;
+                    }
+                },
+                {targets: 2, data: "createdTimeStamp", render:
+                    function (date) {
+                        var value = String(date);
+                        return value.slice(0, 16);
+                    }
+                }
+            ],
+            "createdRow": function(row, data) {
+                $(row).attr("data-type", "selectable");
+                $(row).attr("data-id", data["id"]);
+                $.each($("td", row),
+                    function(colIndex) {
+                        switch(colIndex) {
+                            case 1:
+                                $(this).attr("data-grid-label", "Code");
+                                $(this).attr("data-display", data["code"]);
+                                break;
+                            case 2:
+                                $(this).attr("data-grid-label", "Status");
+                                $(this).attr("data-display", data["status"]);
+                                break;
+                            case 3:
+                                $(this).attr("data-grid-label", "Created Timestamp");
+                                $(this).attr("data-display", data["createdTimeStamp"]);
+                                break;
+                        }
+                    }
+                );
+            }
+        });
     }
-    
+
     function loadApplicationsList() {
         var applicationsList = $("#applications-list");
         var applicationListingTemplate = applicationsList.attr("src");
@@ -191,20 +231,22 @@
                             var viewModel = {};
                             viewModel["applications"] = data;
                             viewModel["deviceType"] = deviceType;
+                            viewModel["deviceId"] = deviceId;
+                            viewModel["appContext"] = context;
                             var content = template(viewModel);
                             $("#applications-list-container").html(content);
                         } else {
                             $("#applications-list-container").
-                            html("<div class='message message-info'><h4><i class='icon fw fw-info'></i>No applications found.</h4>" +
-                                 "<p>Please try refreshing the list in a while.</p></div>");
+                                html("<div class='message message-info'><h4><i class='icon fw fw-info'></i>No applications found.</h4>" +
+                                "<p>Please try refreshing the list in a while.</p></div>");
                         }
                     }
                 },
                 // error-callback
                 function () {
                     $("#applications-list-container").
-                    html("<div class='panel-body'><br><p class='fw-warning'>&nbsp;Loading application list " +
-                         "was not successful. please try refreshing the list in a while.<p></div>");
+                        html("<div class='panel-body'><br><p class='fw-warning'>&nbsp;Loading application list " +
+                        "was not successful. please try refreshing the list in a while.<p></div>");
                 });
         });
     }
@@ -257,16 +299,16 @@
                                                 }
                                             } else {
                                                 $("#policy-list-container").
-                                                html("<div class='panel-body'><br><p class='fw-warning'> This device " +
-                                                     "has no policy applied.<p></div>");
+                                                    html("<div class='panel-body'><br><p class='fw-warning'> This device " +
+                                                    "has no policy applied.<p></div>");
                                             }
                                         }
                                     },
                                     // error-callback
                                     function () {
                                         $("#policy-list-container").
-                                        html("<div class='panel-body'><br><p class='fw-warning'> Loading policy compliance related data " +
-                                             "was not successful. please try refreshing data in a while.<p></div>");
+                                            html("<div class='panel-body'><br><p class='fw-warning'> Loading policy compliance related data " +
+                                            "was not successful. please try refreshing data in a while.<p></div>");
                                     }
                                 );
                             }
@@ -275,11 +317,12 @@
                     // error-callback
                     function () {
                         $("#policy-list-container").
-                        html("<div class='panel-body'><br><p class='fw-warning'> Loading policy compliance related data " +
-                             "was not successful. please try refreshing data in a while.<p></div>");
+                            html("<div class='panel-body'><br><p class='fw-warning'> Loading policy compliance related data " +
+                            "was not successful. please try refreshing data in a while.<p></div>");
                     }
                 );
             }
         );
     }
+
 }());

@@ -1,0 +1,18 @@
+@Plan:name('Android-Accelerometer-ExecutionPlan')
+
+@Plan:description('Process accelerometer changes.')
+
+@Import('org.wso2.iot.android.accelerometer:1.0.0')
+define stream AccelerometerStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value
+float);
+
+@Export('org.wso2.iot.android.accelerometer.stats:1.0.0')
+define stream AccelerometerStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, axis string, value float, year int, month int, day int, hour int, minute int);
+
+partition with (meta_deviceId of AccelerometerStream)
+begin
+    from AccelerometerStream
+    select meta_owner, meta_deviceId, meta_timestamp, axis, value, time:extract
+    (meta_timestamp, 'year') as year, time:extract(meta_timestamp, 'month') as month, time:extract(meta_timestamp, 'day') as day, time:extract(meta_timestamp, 'hour') as hour, time:extract(meta_timestamp, 'minute') as minute
+    insert into AccelerometerStatsStream;
+end;

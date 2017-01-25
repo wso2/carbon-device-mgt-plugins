@@ -1,0 +1,6 @@
+{
+    "version": "1.0.0",
+    "uri": "/error/404",
+    "layout": "mdm.layout.enrollment",
+    "isAnonymous": true
+}

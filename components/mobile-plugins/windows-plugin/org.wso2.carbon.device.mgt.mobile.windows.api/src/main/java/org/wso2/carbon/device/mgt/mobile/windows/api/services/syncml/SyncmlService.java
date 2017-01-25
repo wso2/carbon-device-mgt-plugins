@@ -18,8 +18,12 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml;
 
+import io.swagger.annotations.*;
 import org.w3c.dom.Document;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
@@ -33,16 +37,80 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * Interface for Syncml message flow.
+ * Interface for Windows 8.1 enrollment flow.
  */
+
 @Path("/devicemanagement")
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Pending operations",
+                        description = "Register an Windows device",
+                        key = "perm:windows:enroll",
+                        permissions = {"/device-mgt/devices/enroll/windows"}
+                )
+        }
+)
 public interface SyncmlService {
 
     @Path("/request")
     @POST
-    @Consumes({ PluginConstants.SYNCML_MEDIA_TYPE, MediaType.APPLICATION_XML})
+    @Consumes({PluginConstants.SYNCML_MEDIA_TYPE, MediaType.APPLICATION_XML})
     @Produces(PluginConstants.SYNCML_MEDIA_TYPE)
+    @ApiOperation(
+            httpMethod = "POST",
+            value = "Getting pending operations for Windows device.",
+            notes = "Using this API to fetching more information to enroll the Device and " +
+                    "getting pending operations.",
+            tags = "Windows Device Management Administrative Service",
+            authorizations = {
+                    @Authorization(
+                            value = "permission",
+                            scopes = {@AuthorizationScope(
+                                    scope = "/device-mgt/devices/enroll/windows",
+                                    description = "Getting pending operations and " +
+                                            "device information to enroll the device")}
+                    )
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    code = 201,
+                    message = "Ok. \n Successfully getting pending operations.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "URL of the activity instance that refers to the scheduled operation."),
+                            @ResponseHeader(
+                                    name = "Content-Type",
+                                    description = "Content type of the body"),
+                            @ResponseHeader(
+                                    name = "ETag",
+                                    description = "Entity Tag of the response resource.\n" +
+                                            "Used by caches, or in conditional requests."),
+                            @ResponseHeader(
+                                    name = "Last-Modified",
+                                    description = "Date and time the resource was last modified. \n" +
+                                            "Used by caches, or in conditional requests.")}),
+            @ApiResponse(
+                    code = 303,
+                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.",
+                    responseHeaders = {
+                            @ResponseHeader(
+                                    name = "Content-Location",
+                                    description = "The Source URL of the document.")}),
+            @ApiResponse(
+                    code = 400,
+                    message = "Bad Request. \n Invalid request or validation error."),
+            @ApiResponse(
+                    code = 415,
+                    message = "Unsupported media type. \n The format of the requested entity was not supported.\n"),
+            @ApiResponse(
+                    code = 500,
+                    message = "Internal Server Error. \n " +
+                            "Server error occurred while getting pending operations.")
+    })
     Response getResponse(Document request) throws WindowsDeviceEnrolmentException, WindowsOperationException,
-                                                  NotificationManagementException, WindowsConfigurationException;
+            NotificationManagementException, WindowsConfigurationException;
 
 }
