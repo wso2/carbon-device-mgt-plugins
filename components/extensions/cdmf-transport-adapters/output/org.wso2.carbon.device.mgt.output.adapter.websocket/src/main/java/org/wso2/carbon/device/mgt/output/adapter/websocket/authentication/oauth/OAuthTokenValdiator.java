@@ -45,7 +45,10 @@ public class OAuthTokenValdiator {
 	private static final String COOKIE_KEYPAIR_SEPERATOR = ";";
 	private static final String COOKIE = "cookie";
 	private static final String TOKEN_TYPE = "bearer";
-	private static final String TOKEN_IDENTIFIER = "websocket-token";
+	private static final String TOKEN_IDENTIFIER = "websocketToken";
+	private static final String QUERY_STRING_SEPERATOR = "&";
+	private static final String QUERY_KEY_VALUE_SEPERATOR = "=";
+	private static final String QUERY_STRING = "queryString";
 	private static OAuthTokenValdiator oAuthTokenValdiator;
 
 
@@ -59,7 +62,7 @@ public class OAuthTokenValdiator {
 	 * @return AuthenticationInfo with the validated results.
 	 */
 	public AuthenticationInfo validateToken(Map<String, List<String>> webSocketConnectionProperties) {
-		String token = getToken(webSocketConnectionProperties);
+		String token = getTokenFromSession(webSocketConnectionProperties);
 		if (token == null) {
 			AuthenticationInfo authenticationInfo = new AuthenticationInfo();
 			authenticationInfo.setAuthenticated(false);
@@ -166,6 +169,29 @@ public class OAuthTokenValdiator {
             }
         }
 		log.error("WebSocket token should be specified in cookie");
+		return null;
+	}
+
+	/**
+	 * Retrieving the token from the http session
+	 * @param webSocketConnectionProperties WebSocket connection information including http headers
+	 * @return retrieved token
+	 */
+	private String getTokenFromSession(Map<String, List<String>> webSocketConnectionProperties) {
+		String queryString = webSocketConnectionProperties.get(QUERY_STRING).get(0);
+		if (queryString != null) {
+			String[] allQueryParamPairs = queryString.split(QUERY_STRING_SEPERATOR);
+			for (String keyValuePair : allQueryParamPairs) {
+				String[] queryParamPair = keyValuePair.split(QUERY_KEY_VALUE_SEPERATOR);
+				if (queryParamPair.length != 2) {
+					log.warn("Invalid query string [" + queryString + "] passed in.");
+					break;
+				}
+				if (queryParamPair[0].equals(TOKEN_IDENTIFIER)) {
+					return queryParamPair[1];
+				}
+			}
+		}
 		return null;
 	}
 }

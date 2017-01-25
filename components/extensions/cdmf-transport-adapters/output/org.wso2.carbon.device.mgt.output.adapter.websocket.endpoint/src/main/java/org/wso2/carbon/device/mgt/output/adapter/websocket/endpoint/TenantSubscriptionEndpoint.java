@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.output.adapter.websocket.endpoint;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
@@ -37,6 +38,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -63,10 +65,12 @@ public class TenantSubscriptionEndpoint extends SubscriptionEndpoint {
         if (log.isDebugEnabled()) {
             log.debug("WebSocket opened, for Session id: "+session.getId()+", for the Stream:"+streamName);
         }
-        Map<String, List<String>> httpHeaders;
-        httpHeaders = (Map<String, List<String>>) config.getUserProperties().get(Constants.HTTP_HEADERS);
+        Map<String, List<String>> sessionQueryParam = new HashedMap();
+        List<String> sessionQueryParamList = new LinkedList<>();
+        sessionQueryParamList.add(session.getQueryString());
+        sessionQueryParam.put(Constants.QUERY_STRING, sessionQueryParamList);
         Authenticator authenticator = ServiceHolder.getWebsocketValidationService().getAuthenticator();
-        AuthenticationInfo authenticationInfo = authenticator.isAuthenticated(httpHeaders);
+        AuthenticationInfo authenticationInfo = authenticator.isAuthenticated(sessionQueryParam);
         if (authenticationInfo != null && authenticationInfo.isAuthenticated()) {
             Authorizer authorizer = ServiceHolder.getWebsocketValidationService().getAuthorizer();
             boolean isAuthorized = authorizer.isAuthorized(authenticationInfo, session, streamName);

@@ -702,14 +702,13 @@ function intializeWebsocketUrls() {
                                 .constance.TENANT_INDEX + ApplicationOptions.constance.PATH_SEPARATOR + data.user.domain +
                             ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
                                 .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
-                            + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
+                            + "?deviceId=" + deviceId + "&deviceType=" + deviceType + "&websocketToken=" + accessToken;
                         alertWebSocketURL = 'wss://' + hostname + ':' + port + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
                                 .CEP_WEB_SOCKET_OUTPUT_ADAPTOR_WEBAPP_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions
                                 .constance.TENANT_INDEX + ApplicationOptions.constance.PATH_SEPARATOR + data.user.domain +
                             ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance
                                 .CEP_ON_ALERT_WEB_SOCKET_OUTPUT_ADAPTOR_NAME + ApplicationOptions.constance.PATH_SEPARATOR + ApplicationOptions.constance.VERSION
-                            + "?deviceId=" + deviceId + "&deviceType=" + deviceType;
-                        document.cookie = "websocket-token=" + accessToken + "; path=/";
+                            + "?deviceId=" + deviceId + "&deviceType=" + deviceType + "&websocketToken=" + accessToken;
                         $("#proximity_alert").hide();
                         initializeWebSocket();
                         initializeOnAlertWebSocket();
