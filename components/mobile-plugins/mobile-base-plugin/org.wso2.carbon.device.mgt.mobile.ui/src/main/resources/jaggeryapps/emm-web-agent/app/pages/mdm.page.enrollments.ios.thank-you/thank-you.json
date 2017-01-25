@@ -1,6 +1,0 @@
-{
-    "version": "1.0.0",
-    "uri": "/enrollments/ios/thank-you-agent",
-    "layout": "mdm.layout.enrollment",
-    "isAnonymous": true
-}

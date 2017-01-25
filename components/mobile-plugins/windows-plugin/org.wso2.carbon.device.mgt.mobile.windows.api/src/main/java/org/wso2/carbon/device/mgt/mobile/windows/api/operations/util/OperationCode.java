@@ -43,9 +43,20 @@ public class OperationCode {
         ENCRYPT_STORAGE_STATUS("./Vendor/MSFT/PolicyManager/Device/Security/RequireDeviceEncryption"),
         DEVICE_PASSWORD_STATUS("./Vendor/MSFT/PolicyManager/Device/DeviceLock/DevicePasswordEnabled"),
         DEVICE_PASSCODE_DELETE("./Vendor/MSFT/PolicyManager/My/DeviceLock"),
-        LONGITUDE("./Vendor/MSFT/RemoteFind/Location/Longitude"),
-        LATITUDE("./Vendor/MSFT/RemoteFind/Location/Latitude");
 
+        // Windows10 operation codes
+        TOTAL_RAM("./DevDetail/Ext/Microsoft/TotalRAM"),
+        TOTAL_STORAGE("./DevDetail/Ext/Microsoft/TotalStorage"),
+        OS_PLATFORM("./DevDetail/Ext/Microsoft/OSPlatform"),
+        MOBILE_ID("./DevDetail/Ext/Microsoft/MobileID"),
+        DEVICE_TYPE("./DevDetail/DevTyp"),
+        BATTERY_QUERY("./Vendor/MSFT/DeviceStatus/Battery"),
+        BATTERY_STATUS("./Vendor/MSFT/DeviceStatus/Battery/Status"),
+        BATTERY_CHARGE_REMAINING("./Vendor/MSFT/DeviceStatus/Battery/EstimatedChargeRemaining"),
+        BATTERY_ESTIMATED_RUNTIME("./Vendor/MSFT/DeviceStatus/Battery/EstimatedRuntime"),
+        LONGITUDE("./Vendor/MSFT/RemoteFind/Location/Longitude"),
+        LATITUDE("./Vendor/MSFT/RemoteFind/Location/Latitude"),
+        TEST("./Vendor/MSFT/DiagnosticLog/EtwLog/Collectors");
         private final String code;
 
         Info(String code) {
@@ -69,7 +80,21 @@ public class OperationCode {
         CAMERA_STATUS("./Vendor/MSFT/PolicyManager/Device/Camera/AllowCamera"),
         ENCRYPT_STORAGE_STATUS("./Vendor/MSFT/PolicyManager/Device/Security/RequireDeviceEncryption"),
         DEVICE_PASSWORD_ENABLE("./Vendor/MSFT/PolicyManager/My/DeviceLock/DevicePasswordEnabled"),
-        DEVICE_PASSCODE_DELETE("./Vendor/MSFT/PolicyManager/My/DeviceLock");
+        DEVICE_PASSCODE_DELETE("./Vendor/MSFT/PolicyManager/My/DeviceLock"),
+        // Windows10 operation codes
+        TOTAL_RAM("./DevDetail/Ext/Microsoft/TotalRAM"),
+        TOTAL_STORAGE("./DevDetail/Ext/Microsoft/TotalStorage"),
+        OS_PLATFORM("./DevDetail/Ext/Microsoft/OSPlatform"),
+        MOBILE_ID("./DevDetail/Ext/Microsoft/MobileID"),
+        DEVICE_TYPE("./DevDetail/DevTyp"),
+        BATTERY_QUERY("./Vendor/MSFT/DeviceStatus/Battery"),
+        BATTERY_STATUS("./Vendor/MSFT/DeviceStatus/Battery/Status"),
+        BATTERY_CHARGE_REMAINING("./Vendor/MSFT/DeviceStatus/Battery/EstimatedChargeRemaining"),
+        BATTERY_ESTIMATED_RUNTIME("./Vendor/MSFT/DeviceStatus/Battery/EstimatedRuntime"),
+        LONGITUDE("./Vendor/MSFT/RemoteFind/Location/Longitude"),
+        LATITUDE("./Vendor/MSFT/RemoteFind/Location/Latitude"),
+        TEST("./Vendor/MSFT/DiagnosticLog/EtwLog/Collectors"),
+        DEVICE_REBOOT("./Vendor/MSFT/Reboot/RebootNow");
 
         private final String code;
 
@@ -89,15 +114,16 @@ public class OperationCode {
         CAMERA_STATUS("./Vendor/MSFT/PolicyManager/Device/Camera/AllowCamera"),
         ENCRYPT_STORAGE("./Vendor/MSFT/PolicyManager/My/Security/RequireDeviceEncryption"),
         ENCRYPT_STORAGE_STATUS("./Vendor/MSFT/PolicyManager/Device/Security/RequireDeviceEncryption"),
-        PASSWORD_MAX_FAIL_ATTEMPTS("./Vendor/MSFT/PolicyManager/My/DeviceLock/MaxDevicePasswordFailedAttempts"),
-        DEVICE_PASSWORD_ENABLE("./Vendor/MSFT/PolicyManager/My/DeviceLock/DevicePasswordEnabled"),
-        SIMPLE_PASSWORD("./Vendor/MSFT/PolicyManager/My/DeviceLock/AllowSimpleDevicePassword"),
-        MIN_PASSWORD_LENGTH("./Vendor/MSFT/PolicyManager/My/DeviceLock/MinDevicePasswordLength"),
-        Alphanumeric_PASSWORD("./Vendor/MSFT/PolicyManager/My/DeviceLock/AlphanumericDevicePasswordRequired"),
-        PASSWORD_EXPIRE("./Vendor/MSFT/PolicyManager/My/DeviceLock/DevicePasswordExpiration"),
-        PASSWORD_HISTORY("./Vendor/MSFT/PolicyManager/My/DeviceLock/DevicePasswordHistory"),
-        MAX_PASSWORD_INACTIVE_TIME("./Vendor/MSFT/PolicyManager/My/DeviceLock/MaxInactivityTimeDeviceLock"),
-        MIN_PASSWORD_COMPLEX_CHARACTERS("./Vendor/MSFT/PolicyManager/My/DeviceLock/MinDevicePasswordComplexCharacters");
+        PASSWORD_MAX_FAIL_ATTEMPTS("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/MaxDevicePasswordFailedAttempts"),
+        DEVICE_PASSWORD_ENABLE("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/DevicePasswordEnabled"),
+        SIMPLE_PASSWORD("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/AllowSimpleDevicePassword"),
+        MIN_PASSWORD_LENGTH("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/MinDevicePasswordLength"),
+        ALPHANUMERIC_PASSWORD("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/AlphanumericDevicePasswordRequired"),
+        PASSWORD_EXPIRE("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/DevicePasswordExpiration"),
+        PASSWORD_HISTORY("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/DevicePasswordHistory"),
+        MAX_PASSWORD_INACTIVE_TIME("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/MaxInactivityTimeDeviceLock"),
+        MIN_PASSWORD_COMPLEX_CHARACTERS("./Vendor/MSFT/DeviceLock/Provider/TestMDMServer/MinDevicePasswordComplexCharacters");
+
 
         private final String code;
 

@@ -19,30 +19,67 @@
 package org.wso2.carbon.mdm.services.android.services;
 
 import io.swagger.annotations.*;
-import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
+
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidApplication;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidDevice;
+import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@API(name = "Android Device Management", version = "1.0.0",
-        context = "api/device-mgt/android/v1.0/devices",
-        tags = {"devicemgt_android"})
-
+@SwaggerDefinition(
+        info = @Info(
+                version = "1.0.0",
+                title = "",
+                extensions = {
+                        @Extension(properties = {
+                                @ExtensionProperty(name = "name", value = "Android Device Management"),
+                                @ExtensionProperty(name = "context", value = "/api/device-mgt/android/v1.0/devices"),
+                        })
+                }
+        ),
+        tags = {
+                @Tag(name = "android", description = "")
+        }
+)
 @Api(value = "Android Device Management",
         description = "This carries all the resources related to the Android device management functionalities.")
 @Path("/devices")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll Device",
+                        description = "Register an Android device",
+                        key = "perm:android:enroll",
+                        permissions = {"/device-mgt/devices/enroll/android"}
+                ),
+                @Scope(
+                        name = "Un-enroll Device",
+                        description = "Unregister an Android device",
+                        key = "perm:android:disenroll",
+                        permissions = {"/device-mgt/devices/disenroll/android"}
+                )
+        }
+)
 public interface DeviceManagementService {
 
     @PUT
@@ -53,7 +90,12 @@ public interface DeviceManagementService {
             httpMethod = "PUT",
             value = "Updating the Application Details on Android Devices",
             notes = "Update the details of the applications that are installed on Android devices.",
-            tags = "Android Device Management"
+            tags = "Android Device Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
+                    })
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -88,7 +130,6 @@ public interface DeviceManagementService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while updating the application list.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response updateApplicationList(
             @ApiParam(
                     name = "id",
@@ -114,7 +155,13 @@ public interface DeviceManagementService {
                     " While getting the pending operations the details of the operations executed at the device end is shared with the server. " +
                     "The server then updates the status of the operations that were carried out on the device.",
             response = Operation.class,
-            tags = "Android Device Management")
+            tags = "Android Device Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
+                    })
+            }
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
@@ -144,7 +191,6 @@ public interface DeviceManagementService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching the list of pending operations.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response getPendingOperations(
             @ApiParam(
                     name = "id",
@@ -173,7 +219,12 @@ public interface DeviceManagementService {
                     " the Android Agent on the device, before being able to register the device with WSO2 EMM. Instead," +
                     " you can use this REST API to register an Android device with WSO2 EMM, without having to install" +
                     " an Android Agent. This API can be mainly used to test the device enrollment process.",
-            tags = "Android Device Management"
+            tags = "Android Device Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
+                    })
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -212,7 +263,6 @@ public interface DeviceManagementService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while adding a new device.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response enrollDevice(@ApiParam(
             name = "device",
             value = "The properties required to enroll a device.")
@@ -224,7 +274,12 @@ public interface DeviceManagementService {
             httpMethod = "GET",
             value = "Getting the Registration Status of an Android Device",
             notes = "Use this REST API to retrieve the registration status of an Android device.",
-            tags = "Android Device Management"
+            tags = "Android Device Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
+                    })
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -253,7 +308,6 @@ public interface DeviceManagementService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching the enrollment status of the Android device.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response isEnrolled(
             @ApiParam(
                     name = "id",
@@ -273,7 +327,12 @@ public interface DeviceManagementService {
             httpMethod = "PUT",
             value = "Updating the Registration Details of an Android Device",
             notes = "Use this REST API to update the registration details of an Android device.",
-            tags = "Android Device Management"
+            tags = "Android Device Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
+                    })
+            }
     )
     @ApiResponses(
             value = {
@@ -309,7 +368,6 @@ public interface DeviceManagementService {
                             message = "Internal Server Error. \n " +
                                     "Server error occurred while updating the device enrollment.")
             })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response modifyEnrollment(
             @ApiParam(
                     name = "id",
@@ -325,7 +383,12 @@ public interface DeviceManagementService {
             httpMethod = "DELETE",
             value = "Unregistering an Android Device",
             notes = "Use this REST API to unregister an Android device.",
-            tags = "Android Device Management"
+            tags = "Android Device Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:disenroll")
+                    })
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -339,7 +402,6 @@ public interface DeviceManagementService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while dis-enrolling the device.")
     })
-    @Permission(name = "Disenroll Device", permission = "/device-mgt/devices/disenroll/android")
     Response disEnrollDevice(
             @ApiParam(
                     name = "id",

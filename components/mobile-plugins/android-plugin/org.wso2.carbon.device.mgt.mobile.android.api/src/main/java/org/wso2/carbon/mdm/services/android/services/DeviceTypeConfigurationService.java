@@ -18,26 +18,72 @@
  */
 package org.wso2.carbon.mdm.services.android.services;
 
-import io.swagger.annotations.*;
-import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.ExtensionProperty;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.Tag;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ResponseHeader;
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.bean.AndroidPlatformConfiguration;
 import org.wso2.carbon.mdm.services.android.exception.AndroidAgentException;
+import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@API(name = "Android Configuration Management", version = "1.0.0",
-        context = "api/device-mgt/android/v1.0/configuration",
-        tags = {"devicemgt_android"})
-
+@SwaggerDefinition(
+        info = @Info(
+                version = "1.0.0",
+                title = "",
+                extensions = {
+                        @Extension(properties = {
+                                @ExtensionProperty(name = "name",
+                                        value = "Android Configuration Management"),
+                                @ExtensionProperty(name = "context",
+                                        value = "/api/device-mgt/android/v1.0/configuration"),
+                        })
+                }
+        ),
+        tags = {
+                @Tag(name = "android", description = "")
+        }
+)
 @Api(value = "Android Configuration Management", description = "This API carries all the resource used to mange the Android platform configurations.")
 @Path("/configuration")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll Device",
+                        description = "Register an Android device",
+                        key = "perm:android:enroll",
+                        permissions = {"/device-mgt/devices/enroll/android"}
+                ),
+                @Scope(
+                        name = "View Configurations",
+                        description = "Getting Android Platform Configurations",
+                        key = "perm:android:view-configuration",
+                        permissions = {"/device-mgt/devices/enroll/android"}
+                ),
+                @Scope(
+                        name = "Manage Configurations",
+                        description = "Updating Android Platform Configurations",
+                        key = "perm:android:manage-configuration",
+                        permissions = {"/device-mgt/platform-configurations/manage"}
+                )
+        }
+)
 public interface DeviceTypeConfigurationService {
 
     @GET
@@ -47,7 +93,12 @@ public interface DeviceTypeConfigurationService {
             value = "Getting Android Platform Configurations",
             notes = "Get the Android platform configuration details using this REST API.",
             response = PlatformConfiguration.class,
-            tags = "Android Configuration Management"
+            tags = "Android Configuration Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:view-configuration")
+                    })
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -80,7 +131,6 @@ public interface DeviceTypeConfigurationService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching the Android platform configuration.")
     })
-    @Permission(name = "View Configurations", permission = "/device-mgt/platform-configurations/view")
     Response getConfiguration(
             @ApiParam(
                     name = "If-Modified-Since",
@@ -97,7 +147,12 @@ public interface DeviceTypeConfigurationService {
             httpMethod = "PUT",
             value = "Updating Android Platform Configurations",
             notes = "Update the Android platform configurations using this REST API.",
-            tags = "Android Configuration Management"
+            tags = "Android Configuration Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:manage-configuration")
+                    })
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -132,7 +187,6 @@ public interface DeviceTypeConfigurationService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while modifying the Android platform configuration.")
     })
-    @Permission(name = "Manage Configurations", permission = "/device-mgt/platform-configurations/manage")
     Response updateConfiguration(
             @ApiParam(name = "configuration",
                     value = "The properties to update the Android platform configurations.")
@@ -148,7 +202,13 @@ public interface DeviceTypeConfigurationService {
             notes = "Use this REST API to retrieve the license agreement that is used for the Android device " +
                     "registration process.",
             response = String.class,
-            tags = "Android Configuration Management")
+            tags = "Android Configuration Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
+                    })
+            }
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
@@ -180,7 +240,6 @@ public interface DeviceTypeConfigurationService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching the Android license configuration.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/android")
     Response getLicense(
             @ApiParam(
                     name = "If-Modified-Since",

@@ -18,19 +18,27 @@
 
 package org.wso2.carbon.mdm.services.android.util;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.api.AnalyticsDataAPI;
+import org.wso2.carbon.analytics.api.AnalyticsDataAPIUtil;
 import org.wso2.carbon.analytics.dataservice.commons.AnalyticsDataResponse;
 import org.wso2.carbon.analytics.dataservice.commons.SearchResultEntry;
-import org.wso2.carbon.analytics.dataservice.core.AnalyticsDataServiceUtils;
 import org.wso2.carbon.analytics.datasource.commons.Record;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.service.EventsPublisherService;
-import org.wso2.carbon.device.mgt.common.*;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
 import org.wso2.carbon.device.mgt.common.device.details.DeviceInfo;
@@ -39,6 +47,7 @@ import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagement
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.ComplianceFeature;
 import org.wso2.carbon.device.mgt.core.app.mgt.ApplicationManagementProviderService;
 import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceDetailsMgtException;
 import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManager;
@@ -47,7 +56,7 @@ import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.exception.BadRequestException;
-import org.wso2.carbon.policy.mgt.common.monitor.PolicyComplianceException;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
 import javax.ws.rs.core.MediaType;
@@ -218,7 +227,7 @@ public class AndroidAPIUtils {
         List<SearchResultEntry> resultEntries = analyticsDataAPI.search(tenantId, tableName, query, 0, eventCount);
         List<String> recordIds = getRecordIds(resultEntries);
         AnalyticsDataResponse response = analyticsDataAPI.get(tenantId, tableName, 1, null, recordIds);
-        Map<String, DeviceState> deviceStateses = createDeviceStatusData(AnalyticsDataServiceUtils.listRecords(
+        Map<String, DeviceState> deviceStateses = createDeviceStatusData(AnalyticsDataAPIUtil.listRecords(
                 analyticsDataAPI, response));
         return getSortedDeviceStateData(deviceStateses, resultEntries);
     }
@@ -267,7 +276,8 @@ public class AndroidAPIUtils {
             if (log.isDebugEnabled()) {
                 log.info("Received compliance status from MONITOR operation ID: " + operation.getId());
             }
-            getPolicyManagerService().checkPolicyCompliance(deviceIdentifier, operation.getPayLoad());
+            getPolicyManagerService().checkPolicyCompliance(deviceIdentifier,
+                                                            getComplianceFeatures(operation.getPayLoad()));
         } else if (!Operation.Status.ERROR.equals(operation.getStatus()) && AndroidConstants.
                 OperationCodes.APPLICATION_LIST.equals(operation.getCode())) {
             if (log.isDebugEnabled()) {
@@ -484,5 +494,30 @@ public class AndroidAPIUtils {
             }
         }
         return "";
+    }
+
+    private static List<ComplianceFeature> getComplianceFeatures(Object compliancePayload) throws PolicyComplianceException {
+        String compliancePayloadString = new Gson().toJson(compliancePayload);
+        if (compliancePayload == null) {
+            return null;
+        }
+        // Parsing json string to get compliance features.
+        JsonElement jsonElement;
+        if (compliancePayloadString instanceof String) {
+            jsonElement = new JsonParser().parse(compliancePayloadString);
+        } else {
+            throw new PolicyComplianceException("Invalid policy compliance payload");
+        }
+
+        JsonArray jsonArray = jsonElement.getAsJsonArray();
+        Gson gson = new Gson();
+        ComplianceFeature complianceFeature;
+        List<ComplianceFeature> complianceFeatures = new ArrayList<ComplianceFeature>(jsonArray.size());
+
+        for (JsonElement element : jsonArray) {
+            complianceFeature = gson.fromJson(element, ComplianceFeature.class);
+            complianceFeatures.add(complianceFeature);
+        }
+        return complianceFeatures;
     }
 }

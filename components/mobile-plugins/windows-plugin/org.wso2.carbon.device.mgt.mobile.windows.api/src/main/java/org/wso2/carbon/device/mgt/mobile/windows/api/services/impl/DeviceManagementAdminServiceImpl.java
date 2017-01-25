@@ -19,6 +19,7 @@
 package org.wso2.carbon.device.mgt.mobile.windows.api.services.impl;
 
 import com.ibm.wsdl.OperationImpl;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -29,15 +30,14 @@ import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.ErrorResponse;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.BadRequestException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.UnexpectedServerErrorException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsOperationsException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.DeviceManagementAdminService;
 
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -46,6 +46,9 @@ import java.util.List;
  * Implementation class of operations interface. Each method in this class receives the operations comes via UI
  * and persists those in the correct format.
  */
+@Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+@Path("/admin/devices")
 public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminService {
 
     private static Log log = LogFactory.getLog(OperationImpl.class);
@@ -102,7 +105,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
      * @throws WindowsDeviceEnrolmentException
      */
     @POST
-    @Path("/disenroll")
+    @Path("/disenroll-devices")
     public Response disenroll(@HeaderParam("Accept") String acceptHeader, List<String> deviceIDs)
             throws WindowsDeviceEnrolmentException {
 
@@ -127,11 +130,11 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.error(errorMessage, e);
             throw new WindowsOperationsException(message, responseMediaType);
         } catch (InvalidDeviceException e) {
-        String errorMessage = "Invalid Device Identifiers found.";
-        log.error(errorMessage, e);
-        throw new BadRequestException(
-                new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
-    }
+            String errorMessage = "Invalid Device Identifiers found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        }
     }
 
     /**
@@ -143,7 +146,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
      * @throws WindowsDeviceEnrolmentException
      */
     @POST
-    @Path("/wipe-data")
+    @Path("/wipe-devices")
     public Response wipe(@HeaderParam("Accept") String acceptHeader, List<String> deviceids)
             throws WindowsDeviceEnrolmentException {
 
@@ -186,7 +189,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
      * @throws WindowsDeviceEnrolmentException
      */
     @POST
-    @Path("/ring-device")
+    @Path("/ring-devices")
     public Response ring(@HeaderParam("Accept") String acceptHeader, List<String> deviceIDs)
             throws WindowsDeviceEnrolmentException {
 
@@ -234,7 +237,7 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
      * @throws WindowsDeviceEnrolmentException
      */
     @POST
-    @Path("/lock-reset")
+    @Path("/lock-reset-devices")
     public Response lockReset(@HeaderParam("Accept") String acceptHeader, List<String> deviceIDs)
             throws WindowsDeviceEnrolmentException {
 
@@ -265,6 +268,72 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
             log.error(errorMessage, e);
             throw new BadRequestException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        }
+    }
+
+    @POST
+    @Path("/location")
+    public Response getDeviceLocation(@ApiParam(
+            name = "deviceIDs",
+            value = "Provide the ID of the Windows device. Multiple device IDs can be added by " +
+                    "using comma separated values. ",
+            required = true) List<String> deviceIDs) {
+        if (log.isDebugEnabled()) {
+            log.debug("Invoking Windows device location operation.");
+        }
+        try {
+            CommandOperation operation = new CommandOperation();
+            operation.setCode(PluginConstants.OperationCodes.DEVICE_LOCATION);
+            operation.setType(Operation.Type.COMMAND);
+            return WindowsAPIUtils.getOperationResponse(deviceIDs, operation);
+        } catch (InvalidDeviceException e) {
+            String errorMessage = "Invalid Device Identifiers found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        } catch (OperationManagementException e) {
+            String errorMessage = "Issue in retrieving operation management service instance";
+            log.error(errorMessage, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+        } catch (DeviceManagementException e) {
+            String errorMessage = "Issue in retrieving device management service instance";
+            log.error(errorMessage, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+        }
+    }
+
+    @POST
+    @Path("/reboot")
+    public Response rebootDevice(@ApiParam(
+            name = "deviceIDs",
+            value = "Provide the ID of the Windows device. Multiple device IDs can be " +
+                    "added using comma separated values.",
+            required = true) List<String> deviceIDs) {
+        if (log.isDebugEnabled()) {
+            log.debug("Invoking Windows reboot-device device operation");
+        }
+        try {
+            CommandOperation operation = new CommandOperation();
+            operation.setCode(PluginConstants.OperationCodes.DEVICE_REBOOT);
+            operation.setType(Operation.Type.COMMAND);
+            return WindowsAPIUtils.getOperationResponse(deviceIDs, operation);
+        } catch (InvalidDeviceException e) {
+            String errorMessage = "Invalid Device Identifiers found.";
+            log.error(errorMessage, e);
+            throw new BadRequestException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
+        } catch (OperationManagementException e) {
+            String errorMessage = "Issue in retrieving operation management service instance";
+            log.error(errorMessage, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
+        } catch (DeviceManagementException e) {
+            String errorMessage = "Issue in retrieving device management service instance";
+            log.error(errorMessage, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
         }
     }
 }

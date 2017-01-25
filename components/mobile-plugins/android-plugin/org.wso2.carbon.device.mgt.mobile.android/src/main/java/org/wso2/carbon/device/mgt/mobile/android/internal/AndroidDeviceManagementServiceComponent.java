@@ -25,11 +25,8 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.android.impl.AndroidDeviceManagementService;
-import org.wso2.carbon.device.mgt.mobile.android.impl.AndroidPolicyMonitoringService;
 import org.wso2.carbon.device.mgt.mobile.android.impl.gcm.GCMService;
-import org.wso2.carbon.device.mgt.mobile.internal.MobileDeviceManagementDataHolder;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
-import org.wso2.carbon.policy.mgt.common.spi.PolicyMonitoringService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 /**
@@ -66,9 +63,9 @@ public class AndroidDeviceManagementServiceComponent {
             DeviceManagementService androidDeviceManagementService = new AndroidDeviceManagementService();
             GCMService gcmService = new GCMService();
 
-            androidServiceRegRef =
-                    bundleContext.registerService(DeviceManagementService.class.getName(),
-                                                  androidDeviceManagementService, null);
+//            androidServiceRegRef =
+//                    bundleContext.registerService(DeviceManagementService.class.getName(),
+//                                                  androidDeviceManagementService, null);
 
             gcmServiceRegRef =
                     bundleContext.registerService(GCMService.class.getName(), gcmService, null);
@@ -76,8 +73,8 @@ public class AndroidDeviceManagementServiceComponent {
 
             // Policy management service
 
-            bundleContext.registerService(PolicyMonitoringService.class,
-                                          new AndroidPolicyMonitoringService(), null);
+//            bundleContext.registerService(PolicyMonitoringManager.class,
+//                                          new AndroidPolicyMonitoringManager(), null);
 
             AndroidDeviceManagementDataHolder.getInstance().setAndroidDeviceManagementService(
                     androidDeviceManagementService);

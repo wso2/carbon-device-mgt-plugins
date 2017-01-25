@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>carbon-device-mgt-plugins-parent</artifactId>
-        <version>2.2.8-SNAPSHOT</version>
+        <version>3.0.9-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -33,7 +33,10 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.appmgt.mdm.osgiconnector</module>
+        <module>appm-connector</module>
+        <module>cdmf-transport-adapters</module>
+        <module>mb-extensions</module>
+        <module>siddhi-extensions</module>
     </modules>
 
     <build>
@@ -42,7 +45,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-scr-plugin</artifactId>
-                    <version>1.7.2</version>
+                    <version>${maven.scr.version}</version>
                     <executions>
                         <execution>
                             <id>generate-scr-scrdescriptor</id>

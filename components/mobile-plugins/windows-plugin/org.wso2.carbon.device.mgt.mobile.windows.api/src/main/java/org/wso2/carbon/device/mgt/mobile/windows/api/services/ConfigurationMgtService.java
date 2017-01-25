@@ -18,12 +18,26 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.api.services;
 
-import io.swagger.annotations.*;
-import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.ExtensionProperty;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.Tag;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.AuthorizationScope;
+import io.swagger.annotations.Authorization;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ResponseHeader;
+
+import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.Message;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.Constants;
 
 import javax.jws.WebService;
 import javax.ws.rs.*;
@@ -34,17 +48,53 @@ import javax.ws.rs.core.Response;
  * Windows Platform Configuration REST-API implementation.
  * All end points supports JSON, XMl with content negotiation.
  */
-@API(name = "Windows Configuration Management", version = "1.0.0",
-     context = "api/device-mgt/windows/v1.0/services/configuration",
-     tags = {"windows"})
+
+@SwaggerDefinition(
+        info = @Info(
+                version = "1.0.0",
+                title = "",
+                extensions = {
+                        @Extension(properties = {
+                                @ExtensionProperty(name = "name", value = "Windows Configuration Management"),
+                                @ExtensionProperty(name = "context",
+                                        value = "/api/device-mgt/windows/v1.0/configuration"),
+                        })
+                }
+        ),
+        tags = {
+                @Tag(name = "windows", description = "")
+        }
+)
 @Api(value = "Windows Configuration Management",
-     description = "This carries all the resources related to Windows configurations management functionalities")
+        description = "This carries all the resources related to Windows configurations management functionality")
 @WebService
-@Path("services/configuration")
+@Path("/configuration")
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll Device",
+                        description = "Register an Windows device",
+                        key = "perm:windows:enroll",
+                        permissions = {"/device-mgt/devices/enroll/windows"}
+                ),
+                @Scope(
+                        name = "View Configurations",
+                        description = "Getting Windows Platform Configurations",
+                        key = "perm:windows:view-configuration",
+                        permissions = {"/device-mgt/platform-configurations/view"}
+                ),
+                @Scope(
+                        name = "Manage Configurations",
+                        description = "Updating Windows Platform Configurations",
+                        key = "perm:windows:manage-configuration",
+                        permissions = {"/device-mgt/platform-configurations/manage"}
+                )
+        }
+)
 public interface ConfigurationMgtService {
-    
+
     @GET
     @ApiOperation(
             produces = MediaType.APPLICATION_JSON,
@@ -52,7 +102,12 @@ public interface ConfigurationMgtService {
             value = "Getting Windows Platform Configurations",
             notes = "Get the Windows platform configuration details using this REST API.",
             response = PlatformConfiguration.class,
-            tags = "Windows Configuration Management"
+            tags = "Windows Configuration Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:view-configuration")
+                    })
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -85,8 +140,12 @@ public interface ConfigurationMgtService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching the Windows platform configuration.")
     })
-    @Permission(name = "View Configurations", permission = "/device-mgt/platform-configurations/view")
-    PlatformConfiguration getConfiguration() throws WindowsConfigurationException;
+    Response getConfiguration(@ApiParam(
+            name = "If-Modified-Since",
+            value = "Checks if the requested variant was modified, since the specified date-time.\n" +
+                    "Provide the value in the following format: EEE, d MMM yyyy HH:mm:ss Z.\n" +
+                    "Example: Mon, 05 Jan 2014 15:10:00 +0200",
+            required = false) @HeaderParam("If-Modified-Since") String ifModifiedSince);
 
     /**
      * Update Tenant Configurations for the specific Device type.
@@ -102,7 +161,12 @@ public interface ConfigurationMgtService {
             httpMethod = "PUT",
             value = "Updating Windows Platform Configurations",
             notes = "Update the Windows platform configurations using this REST API.",
-            tags = "Windows Configuration Management"
+            tags = "Windows Configuration Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:manage-configuration")
+                    })
+            }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -137,12 +201,11 @@ public interface ConfigurationMgtService {
                     message = "Internal Server Error. \n " +
                             "Server error occurred while modifying the Windows platform configurations.")
     })
-    @Permission(name = "Manage Configurations", permission = "/device-mgt/configurations/manage")
-    Message updateConfiguration
-    ( @ApiParam(
+    Response updateConfiguration
+    (@ApiParam(
             name = "configuration",
             value = "The properties to update the Windows platform configurations.")
-      PlatformConfiguration configuration) throws WindowsConfigurationException;
+     PlatformConfiguration configuration) throws WindowsConfigurationException;
 
     @GET
     @Path("license")
@@ -154,7 +217,13 @@ public interface ConfigurationMgtService {
             notes = "Use this REST API to retrieve the license agreement that is used for the Windows device " +
                     "registration process.",
             response = String.class,
-            tags = "Windows Configuration Management")
+            tags = "Windows Configuration Management",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:enroll")
+                    })
+            }
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     code = 200,
@@ -186,13 +255,12 @@ public interface ConfigurationMgtService {
                     code = 500,
                     message = "Internal Server Error. \n Server error occurred while fetching the Windows license configuration.")
     })
-    @Permission(name = "Enroll Device", permission = "/device-mgt/devices/enroll/windows")
     Response getLicense(
             @ApiParam(
                     name = "If-Modified-Since",
                     value = "Checks if the requested variant was modified, since the specified date-time.\n" +
                             "Provide the value in the following format: EEE, d MMM yyyy HH:mm:ss Z.\n" +
-                            "Example: Mon, 05 Jan 2014 15:10:00 +0200",
+                            "Example: Mon, 05 Jan 2014 15:10:00 +0200.",
                     required = false)
             @HeaderParam("If-Modified-Since") String ifModifiedSince) throws WindowsConfigurationException;
 

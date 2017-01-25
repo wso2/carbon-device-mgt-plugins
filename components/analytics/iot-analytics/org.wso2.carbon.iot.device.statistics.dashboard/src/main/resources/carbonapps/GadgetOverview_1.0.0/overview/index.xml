@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (c)  2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<Module>
+    <ModulePrefs title="Connectivity Status"
+                 author="WSO2 Gadget Server"
+                 scrolling="false"
+                 tags="stack,chart,data,visualization"
+                 description="EMM Device Connectivity Status">
+        <Require feature="pubsub-2"/>
+        <Require feature="dynamic-height" />
+        <Require feature="dynamic-width" />
+        <Require feature="wso2-gadgets-remoteClient" />
+    </ModulePrefs>
+    <Content type="html">
+        <![CDATA[
+        <html>
+            <head>
+                <!-- Theme -->
+                <link rel="stylesheet" type="text/css" href="/portal/libs/bootstrap_3.3.5/css/bootstrap.min.css" />
+                <link rel="stylesheet" type="text/css" href="/portal/libs/font-wso2_1.0.0/css/font-wso2.min.css" />
+                <link rel="stylesheet" type="text/css" href="libs/font-wso2_1.0.2/css/font-wso2.css" />
+                <link rel="stylesheet" type="text/css" href="../commons/css/gadget.css" />
+
+                <!-- jQuery -->
+                <script src="../commons/js/jquery-1.10.2.js"></script>
+                <script src="../commons/js/moment.min.js"></script>
+                <script src="../commons/js/gadget-utils.js"></script>
+
+                <!-- Include VizGrammar -->
+                <script src="../commons/js/d3.min.js"></script>
+                <script src="../commons/js/vega.js"></script>
+                <script src="../commons/js/VizGrammar.min.js"></script>
+                <script src="/portal/extensions/themes/analytics/js/colorbrewer.js"></script>
+                <script src="/portal/extensions/themes/analytics/js/VizGrammarSettings.js"></script>
+
+                <!-- JS -->
+                <script src="js/bootstrap-paginator.min.js"></script>
+                <script src="js/topojson.js"></script>
+                <script src="js/gadgetconf.js"></script>
+                <script src="js/analyticsUtils.js"></script>
+                <script src="js/main.js"></script>
+
+                <!-- CSS -->
+                <link rel="stylesheet" href="css/style.css" type="text/css"/>
+            </head>
+            <body>
+                <div class="contents">
+                    <div class="col-3 image"></div>
+                    <div class="col-8 counts add-padding-right-4x">
+                        <ul class="list-group">
+                            <li id="TOTAL" class="list-group-item">
+                                <h4>
+                                    Devices in total
+                                </h4>
+                                <h2>
+                                    <span
+                                        id="deviceCount"
+                                        class="label label-primary">
+                                        0
+                                    </span>
+                                </h2>
+                            </li>
+                            <li id="ACTIVE" class="list-group-item">
+                                <i class="icon fw fw-success text-success"></i>
+                                &nbsp;&nbsp;Active
+                                <span class="label" id="activeDevices">0</span>
+                                <span class="progress-bg" id="activeDevicesProgress"></span>
+                            </li>
+                            <li id="UNREACHABLE" class="list-group-item">
+                                <i class="icon fw fw-warning text-warning"></i>
+                                &nbsp;&nbsp;Unreachable
+                                <span class="label" id="unreachableDevices">0</span>
+                                <span class="progress-bg" id="unreachableDevicesProgress"></span>
+                            </li>
+                            <li id="INACTIVE" class="list-group-item">
+                                <i class="icon fw fw-disabled text-mute"></i>
+                                &nbsp;&nbsp;Inactive
+                                <span class="label" id="inactiveDevices">0</span>
+                                <span class="progress-bg" id="inactiveDevicesProgress"></span>
+                            </li>
+                            <li id="REMOVED" class="list-group-item">
+                                <i class="icon fw fw-delete text-danger"></i>
+                                &nbsp;&nbsp;Removed
+                                <span class="label" id="removedDevices">0</span>
+                                <span class="progress-bg" id="removedDevicesProgress"></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </body>
+
+        </html>
+        ]]>
+    </Content>
+</Module>

@@ -18,12 +18,22 @@
  */
 package org.wso2.carbon.mdm.services.android.services;
 
-import io.swagger.annotations.*;
-import org.wso2.carbon.apimgt.annotations.api.API;
-import org.wso2.carbon.apimgt.annotations.api.Permission;
+import io.swagger.annotations.SwaggerDefinition;
+import io.swagger.annotations.Info;
+import io.swagger.annotations.ExtensionProperty;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.Tag;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ResponseHeader;
 import org.wso2.carbon.apimgt.annotations.api.Scope;
+import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.EventBeanWrapper;
+import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
@@ -31,16 +41,37 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@API(name = "Android Event Receiver", version = "1.0.0",
-        context = "api/device-mgt/android/v1.0/events",
-        tags = {"devicemgt_android"})
-
+@SwaggerDefinition(
+        info = @Info(
+                version = "1.0.0",
+                title = "",
+                extensions = {
+                        @Extension(properties = {
+                                @ExtensionProperty(name = "name", value = "Android Event Receiver"),
+                                @ExtensionProperty(name = "context", value = "/api/device-mgt/android/v1.0/events"),
+                        })
+                }
+        ),
+        tags = {
+                @Tag(name = "android", description = "")
+        }
+)
 @Api(value = "Event Receiver", description = "Event publishing/retrieving related APIs. To enable event publishing/retrieving you need to" +
         " configure WSO2 EMM as explained in https://docs.wso2.com/display/EMM220/Managing+Event+Publishing+with+WSO2+Data+Analytics+Server, " +
         "https://docs.wso2.com/display/EMM220/Creating+a+New+Event+Stream+and+Receiver")
 @Path("/events")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Scopes(
+        scopes = {
+                @Scope(
+                        name = "Enroll Device",
+                        description = "Register an Android device",
+                        key = "perm:android:enroll",
+                        permissions = {"/device-mgt/devices/enroll/android"}
+                )
+        }
+)
 public interface EventReceiverService {
 
     @POST
@@ -51,7 +82,12 @@ public interface EventReceiverService {
             httpMethod = "POST",
             value = "Publishing Events",
             notes = "Publish events received by the WSO2 EMM Android client to the WSO2 Data Analytics Server (DAS) using this API.",
-            tags = "Event Receiver"
+            tags = "Event Receiver",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
+                    })
+            }
     )
     @ApiResponses(
             value = {
@@ -91,7 +127,6 @@ public interface EventReceiverService {
                             message = "Internal Server Error. \n " +
                                     "Server error occurred while publishing events.")
             })
-    @Permission(name = "Publish Events to DAS", permission = "/device-mgt/devices/enroll/android")
     Response publishEvents(
             @ApiParam(
                     name = "eventBeanWrapper",
@@ -110,7 +145,12 @@ public interface EventReceiverService {
                     "(This cannot be combined with the to and from parameters).",
             response = DeviceState.class,
             responseContainer = "List",
-            tags = "Event Receiver"
+            tags = "Event Receiver",
+            extensions = {
+                    @Extension(properties = {
+                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:enroll")
+                    })
+            }
     )
     @ApiResponses(
             value = {
@@ -140,7 +180,6 @@ public interface EventReceiverService {
                             code = 500,
                             message = "Error occurred while getting the published events for the specified device.")
             })
-    @Permission(name = "Publish Events to DAS", permission = "/device-mgt/devices/enroll/android")
     Response retrieveAlerts(
             @ApiParam(
                     name = "id",

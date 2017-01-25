@@ -28,10 +28,14 @@ import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
+import org.wso2.carbon.device.mgt.common.device.details.DeviceInfo;
+import org.wso2.carbon.device.mgt.common.device.details.DeviceLocation;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementService;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceDetailsMgtException;
+import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManager;
 import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.ErrorResponse;
@@ -184,10 +188,10 @@ public class WindowsAPIUtils {
         PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         AuthenticatorConfigService authenticatorConfigService =
                 (AuthenticatorConfigService) ctx.getOSGiService(AuthenticatorConfigService.class, null);
-        AuthenticatorConfig authenticatorConfig = authenticatorConfigService.getAuthenticatorConfig("BST");
         if (authenticatorConfigService == null) {
             throw new IllegalStateException("AuthenticatorConfiguration service has not initialized.");
         }
+        AuthenticatorConfig authenticatorConfig = authenticatorConfigService.getAuthenticatorConfig("BST");
         if (authenticatorConfig == null) {
             throw new IllegalStateException("BST authenticatorConfig has not initialized.");
         }
@@ -221,5 +225,31 @@ public class WindowsAPIUtils {
         } else {
             return null;
         }
+    }
+
+    /**
+     * This method is used to update Device Information.
+     * @param deviceId DeviceID to need to update.
+     * @param deviceInfo Device Info to be update/
+     * @throws DeviceDetailsMgtException Error occurs while updating Device Info.
+     */
+    public static void updateDeviceInfo(DeviceIdentifier deviceId, DeviceInfo deviceInfo)
+            throws DeviceDetailsMgtException {
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        DeviceInformationManager informationManager =
+                (DeviceInformationManager) ctx.getOSGiService(DeviceInformationManager.class, null);
+        informationManager.addDeviceInfo(deviceId, deviceInfo);
+    }
+
+    /**
+     * This method is used to update device location.
+     * @param deviceLocation Device coordination related information.
+     * @throws DeviceDetailsMgtException Error occurs while updating Device location.
+     */
+    public static void updateDeviceLocation(DeviceLocation deviceLocation) throws DeviceDetailsMgtException {
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        DeviceInformationManager informationManager =
+                (DeviceInformationManager) ctx.getOSGiService(DeviceInformationManager.class, null);
+        informationManager.addDeviceLocation(deviceLocation);
     }
 }
