@@ -20,10 +20,6 @@
         <param-name>doAuthentication</param-name>
         <param-value>true</param-value>
     </context-param>
-    <context-param>
-        <param-name>isSharedWithAllTenants</param-name>
-        <param-value>true</param-value>
-    </context-param>
 
     <!--publish to apim-->
     <context-param>

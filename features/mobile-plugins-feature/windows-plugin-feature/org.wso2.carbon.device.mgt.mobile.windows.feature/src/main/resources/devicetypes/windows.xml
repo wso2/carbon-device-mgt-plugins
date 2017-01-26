@@ -49,7 +49,7 @@
     </License>
 
     <ProvisioningConfig>
-        <SharedWithAllTenants>false</SharedWithAllTenants>
+        <SharedWithAllTenants>true</SharedWithAllTenants>
     </ProvisioningConfig>
 
     <DataSource>

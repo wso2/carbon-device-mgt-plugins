@@ -56,6 +56,10 @@
         <param-name>doAuthentication</param-name>
         <param-value>true</param-value>
     </context-param>
+	<context-param>
+		<param-name>isSharedWithAllTenants</param-name>
+		<param-value>true</param-value>
+	</context-param>
     <context-param>
         <param-name>nonSecuredEndPoints</param-name>
         <param-value>/api/device-mgt/windows/v1.0/discovery/get,/api/device-mgt/windows/v1.0/discovery/post,
