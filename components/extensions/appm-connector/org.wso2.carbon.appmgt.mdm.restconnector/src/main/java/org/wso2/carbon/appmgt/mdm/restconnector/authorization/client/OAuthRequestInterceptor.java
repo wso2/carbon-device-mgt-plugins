@@ -43,7 +43,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private static final String DEVICE_MANAGEMENT_SERVICE_TAG[] = {"device_management"};
     private static final String APPLICATION_NAME = "appm_restconnector_application";
     private static final String PASSWORD_GRANT_TYPE = "password";
-    private static final String REFRESH_GRANT_TYPE = "refreshToken";
+    private static final String REFRESH_GRANT_TYPE = "refresh_token";
     private ApiApplicationRegistrationService apiApplicationRegistrationService;
     private TokenIssuerService tokenIssuerService;
 
@@ -74,7 +74,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         if (tokenInfo == null) {
             ApiRegistrationProfile apiRegistrationProfile = new ApiRegistrationProfile();
             apiRegistrationProfile.setApplicationName(APPLICATION_NAME);
-            apiRegistrationProfile.setIsAllowedToAllDomains(true);
+            apiRegistrationProfile.setIsAllowedToAllDomains(false);
             apiRegistrationProfile.setIsMappingAnExistingOAuthApp(false);
             apiRegistrationProfile.setTags(DEVICE_MANAGEMENT_SERVICE_TAG);
             ApiApplicationKey apiApplicationKey = apiApplicationRegistrationService.register(apiRegistrationProfile);
@@ -87,15 +87,15 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(TokenIssuerService.class, AuthorizationConfigurationManager.getInstance().getTokenApiURL());
             tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password);
-            tokenInfo.setExpiresIn(System.currentTimeMillis() + tokenInfo.getExpiresIn());
+            tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
         }
         synchronized (this) {
-            if (System.currentTimeMillis() + Long.parseLong(refreshTimeOffset) > tokenInfo.getExpiresIn()) {
-                tokenInfo = tokenIssuerService.getToken(REFRESH_GRANT_TYPE, tokenInfo.getRefreshToken());
-                tokenInfo.setExpiresIn(System.currentTimeMillis() + tokenInfo.getExpiresIn());
+            if (System.currentTimeMillis() + Long.parseLong(refreshTimeOffset) > tokenInfo.getExpires_in()) {
+                tokenInfo = tokenIssuerService.getToken(REFRESH_GRANT_TYPE, tokenInfo.getRefresh_token());
+                tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
             }
         }
-        String headerValue = Constants.RestConstants.BEARER + tokenInfo.getAccessToken();
+        String headerValue = Constants.RestConstants.BEARER + tokenInfo.getAccess_token();
         template.header(Constants.RestConstants.AUTHORIZATION, headerValue);
     }
 }

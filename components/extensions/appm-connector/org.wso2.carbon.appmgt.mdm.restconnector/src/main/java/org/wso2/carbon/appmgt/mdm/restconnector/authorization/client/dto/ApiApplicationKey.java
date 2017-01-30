@@ -21,22 +21,22 @@ package org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto;
  * This holds api application consumer key and secret.
  */
 public class ApiApplicationKey {
-    private String clientId;
-    private String clientSecret;
+    private String client_id;
+    private String client_secret;
 
     public String getConsumerKey() {
-        return this.clientId;
+        return this.client_id;
     }
 
-    public void setClientId(String consumerKey) {
-        this.clientId = consumerKey;
+    public void setClient_id(String consumerKey) {
+        this.client_id = consumerKey;
     }
 
     public String getConsumerSecret() {
-        return this.clientSecret;
+        return this.client_secret;
     }
 
-    public void setClientSecret(String consumerSecret) {
-        this.clientSecret = consumerSecret;
+    public void setClient_secret(String consumerSecret) {
+        this.client_secret = consumerSecret;
     }
 }

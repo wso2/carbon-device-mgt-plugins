@@ -21,40 +21,40 @@ package org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto;
  * This hold access token info that returned from the api call.
  */
 public class AccessTokenInfo {
-    public String tokenType;
-    public long expiresIn;
-    public String refreshToken;
-    public String accessToken;
+    public String token_type;
+    public long expires_in;
+    public String refresh_token;
+    public String access_token;
 
-    public String getTokenType() {
-        return tokenType;
+    public String getToken_type() {
+        return token_type;
     }
 
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
+    public void setToken_type(String token_type) {
+        this.token_type = token_type;
     }
 
-    public long getExpiresIn() {
-        return expiresIn;
+    public long getExpires_in() {
+        return expires_in;
     }
 
-    public void setExpiresIn(long expiresIn) {
-        this.expiresIn = expiresIn;
+    public void setExpires_in(long expires_in) {
+        this.expires_in = expires_in;
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
+    public String getRefresh_token() {
+        return refresh_token;
     }
 
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
+    public void setRefresh_token(String refresh_token) {
+        this.refresh_token = refresh_token;
     }
 
-    public String getAccessToken() {
-        return accessToken;
+    public String getAccess_token() {
+        return access_token;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+    public void setAccess_token(String access_token) {
+        this.access_token = access_token;
     }
 }
