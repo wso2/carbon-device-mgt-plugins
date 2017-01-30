@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * Number of Resources returned.
+ * Number of Resources.
  */
 public class BasePaginatedResult {
     @ApiModelProperty(value = "Number of total resources.", example = "2")

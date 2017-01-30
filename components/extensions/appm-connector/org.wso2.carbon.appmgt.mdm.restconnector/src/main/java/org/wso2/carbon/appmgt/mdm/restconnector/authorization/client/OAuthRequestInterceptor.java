@@ -64,6 +64,11 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
 
     }
 
+    /**
+     * Api create.
+     *
+     * @param template {@link RequestTemplate} object
+     */
     @Override
     public void apply(RequestTemplate template) {
         if (tokenInfo == null) {

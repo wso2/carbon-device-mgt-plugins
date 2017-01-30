@@ -22,8 +22,10 @@ import org.wso2.carbon.appmgt.mobile.utils.MobileConfigurations;
 
 import java.util.HashMap;
 
+/**
+ * The DTO class to AuthorizationConfigurationManager.
+ */
 public class AuthorizationConfigurationManager {
-
     private String tokenApiURL;
     private String imageURL;
     private String serverURL;
