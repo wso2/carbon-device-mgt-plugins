@@ -3,9 +3,9 @@
     "title": "Device Statistics Dashboard",
     "description": "",
     "permissions": {
-        "viewers": ["admin"],
-        "editors": ["admin"],
-        "owners": ["admin"]
+        "viewers": ["Internal/everyone"],
+        "editors": ["Internal/everyone"],
+        "owners": ["Internal/everyone"]
     },
     "pages": [{
         "id": "landing",
