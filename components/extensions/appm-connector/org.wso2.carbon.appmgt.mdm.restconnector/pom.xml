@@ -85,8 +85,7 @@
                             feign,
                             feign.auth,
                             feign.codec,
-                            feign.gson,
-                            *;resolution:=optional
+                            feign.gson
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.appmgt.mdm.restconnector.internal,
@@ -94,8 +93,7 @@
                         </Export-Package>
                         <Embed-Dependency>
                             jsr311-api,
-                            feign-jaxrs,
-                            org.wso2.carbon.device.mgt.common
+                            feign-jaxrs
                         </Embed-Dependency>
                     </instructions>
                 </configuration>
