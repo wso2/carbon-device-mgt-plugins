@@ -140,21 +140,17 @@
             <groupId>org.wso2.carbon.devicemgt</groupId>
             <artifactId>org.wso2.carbon.identity.jwt.client.extension</artifactId>
         </dependency>
-
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-core</artifactId>
-            <version>9.3.1</version>
         </dependency>
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-jaxrs</artifactId>
-            <version>9.3.1</version>
         </dependency>
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-gson</artifactId>
-            <version>9.3.1</version>
         </dependency>
         <dependency>
             <groupId>javax.ws.rs</groupId>
