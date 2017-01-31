@@ -19,7 +19,7 @@
 var map;
 
 function loadLeafletMap() {
-    console.log("hachind");
+   
     var deviceLocationID = "#device-location",
         locations = $(deviceLocationID).data("locations"),
         location_lat = $(deviceLocationID).data("lat"),
