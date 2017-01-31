@@ -19,8 +19,11 @@
 var map;
 
 function loadLeafletMap() {
+    console.log("hachind");
     var deviceLocationID = "#device-location",
         locations = $(deviceLocationID).data("locations"),
+        location_lat = $(deviceLocationID).data("lat"),
+        location_long = $(deviceLocationID).data("long"),
         container = "device-location",
         zoomLevel = 13,
         tileSet = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -46,6 +49,19 @@ function loadLeafletMap() {
 
         $("#map-error").hide();
         $("#device-location").show();
+    } else if (location_long && location_lat) {
+
+        map = L.map(container).setView([location_lat, location_long], zoomLevel);
+        L.tileLayer(tileSet, {attribution: attribution}).addTo(map);
+
+        var m = L.marker([location_lat, location_long], {"opacity": opacVal}).addTo(map).bindPopup("Your device is here");
+        m.on('mouseover', function (e) {
+            this.openPopup();
+        });
+        m.on('mouseout', function (e) {
+            this.closePopup();
+        });
+
     } else {
         $("#device-location").hide();
         $("#map-error").show();
