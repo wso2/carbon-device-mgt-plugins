@@ -1143,7 +1143,7 @@
         <carbon.governance.version>4.7.0</carbon.governance.version>
 
         <!-- Carbon API Management -->
-        <carbon.api.mgt.version>6.1.35</carbon.api.mgt.version>
+        <carbon.api.mgt.version>6.1.64</carbon.api.mgt.version>
 
         <!-- XMPP/MQTT Version -->
         <smack.wso2.version>3.0.4.wso2v1</smack.wso2.version>
