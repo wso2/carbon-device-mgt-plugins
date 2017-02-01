@@ -34,10 +34,10 @@ public class MQTTBrokerConnectionConfiguration {
     private int keepAlive;
     private String brokerUrl;
     private String dcrUrl;
-    private String tokenUrl;
-    private String contentValidatorClassName;
-    private String contentTransformerClassName;
+    private String contentValidatorType;
+    private String contentTransformerType;
     private String adapterName;
+    private boolean globalCredentailSet;
 
     public String getBrokerScopes() {
         return brokerScopes;
@@ -67,16 +67,16 @@ public class MQTTBrokerConnectionConfiguration {
         return keepAlive;
     }
 
-    public String getContentValidatorClassName() {
-        return contentValidatorClassName;
+    public String getContentValidatorType() {
+        return contentValidatorType;
     }
 
-    public String getContentTransformerClassName() {
-        return contentTransformerClassName;
+    public String getContentTransformerType() {
+        return contentTransformerType;
     }
 
-    public String getTokenUrl() {
-        return tokenUrl;
+    public boolean isGlobalCredentailSet() {
+        return globalCredentailSet;
     }
 
     public String getAdapterName() {
@@ -89,6 +89,11 @@ public class MQTTBrokerConnectionConfiguration {
         adapterName = eventAdapterConfiguration.getName();
         this.username = eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME);
         this.password = eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD);
+        if ((username == null || username.isEmpty()) && (password == null || password.isEmpty())) {
+            username = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME);
+            password = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD);
+            globalCredentailSet = true;
+        }
         this.brokerScopes = eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES);
         if (brokerScopes == null) {
             this.brokerScopes = MQTTEventAdapterConstants.EMPTY_STRING;
@@ -100,10 +105,8 @@ public class MQTTBrokerConnectionConfiguration {
         this.brokerUrl = PropertyUtils.replaceMqttProperty(url);
         this.dcrUrl = PropertyUtils
                 .replaceMqttProperty(globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL));
-        this.tokenUrl = PropertyUtils
-                .replaceMqttProperty(globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_TOKEN_URL));
-        this.contentValidatorClassName = eventAdapterConfiguration.getProperties()
-                .get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME);
+        this.contentValidatorType = eventAdapterConfiguration.getProperties()
+                .get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE);
         this.cleanSession = Boolean.parseBoolean(eventAdapterConfiguration.getProperties()
                                                          .get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION));
         //If global properties are available those will be assigned else constant values will be assigned
@@ -112,7 +115,7 @@ public class MQTTBrokerConnectionConfiguration {
         } else {
             keepAlive = MQTTEventAdapterConstants.ADAPTER_CONF_DEFAULT_KEEP_ALIVE;
         }
-        this.contentTransformerClassName = eventAdapterConfiguration.getProperties()
-                .get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME);
+        this.contentTransformerType = eventAdapterConfiguration.getProperties()
+                .get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_TYPE);
     }
 }

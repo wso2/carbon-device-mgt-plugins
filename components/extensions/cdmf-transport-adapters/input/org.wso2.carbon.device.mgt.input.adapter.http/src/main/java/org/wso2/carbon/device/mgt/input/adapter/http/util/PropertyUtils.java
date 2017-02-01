@@ -16,19 +16,17 @@
 * under the License.
 */
 
-package org.wso2.carbon.device.mgt.input.adapter.mqtt.util;
+package org.wso2.carbon.device.mgt.input.adapter.http.util;
 
-import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class PropertyUtils {
-    private static final String TENANT_DOMAIN_PROPERTY = "\\$\\{tenant-domain\\}";
+public class PropertyUtils {
 
     //This method is only used if the mb features are within DAS.
-    static String replaceMqttProperty(String urlWithPlaceholders) throws InputEventAdapterException {
+    public static String replaceProperty(String urlWithPlaceholders) throws InputEventAdapterException {
         String regex = "\\$\\{(.*?)\\}";
         Pattern pattern = Pattern.compile(regex);
         Matcher matchPattern = pattern.matcher(urlWithPlaceholders);
@@ -39,15 +37,9 @@ class PropertyUtils {
                 urlWithPlaceholders = urlWithPlaceholders.replaceAll("\\$\\{(" + sysPropertyName + ")\\}", sysPropertyValue);
             } else {
                 throw new InputEventAdapterException("System property - " + sysPropertyName
-                        + " is not defined, hence cannot resolve : " + urlWithPlaceholders);
+                                                              + " is not defined, hence cannot resolve : " + urlWithPlaceholders);
             }
         }
-        return urlWithPlaceholders;
-    }
-
-    public static String replaceTenantDomainProperty (String urlWithPlaceholders) {
-        urlWithPlaceholders = urlWithPlaceholders.replaceAll(TENANT_DOMAIN_PROPERTY, PrivilegedCarbonContext
-                .getThreadLocalCarbonContext().getTenantDomain(true));
         return urlWithPlaceholders;
     }
 }

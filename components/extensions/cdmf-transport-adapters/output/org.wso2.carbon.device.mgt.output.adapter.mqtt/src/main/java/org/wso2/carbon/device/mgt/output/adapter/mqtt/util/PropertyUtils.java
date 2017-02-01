@@ -21,10 +21,10 @@ package org.wso2.carbon.device.mgt.output.adapter.mqtt.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class PropertyUtils {
+public class PropertyUtils {
 
     //This method is only used if the mb features are within DAS.
-    static String replaceMqttProperty(String urlWithPlaceholders)  {
+    public static String replaceMqttProperty(String urlWithPlaceholders)  {
         String regex = "\\$\\{(.*?)\\}";
         Pattern pattern = Pattern.compile(regex);
         Matcher matchPattern = pattern.matcher(urlWithPlaceholders);

@@ -21,7 +21,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.PacketListener;
-import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -36,9 +35,10 @@ import org.wso2.carbon.core.ServerStatus;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentInfo;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentTransformer;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentValidator;
-import org.wso2.carbon.device.mgt.input.adapter.extension.DefaultContentTransformer;
-import org.wso2.carbon.device.mgt.input.adapter.extension.DefaultContentValidator;
+import org.wso2.carbon.device.mgt.input.adapter.extension.transformer.DefaultContentTransformer;
+import org.wso2.carbon.device.mgt.input.adapter.extension.validator.DefaultContentValidator;
 import org.wso2.carbon.device.mgt.input.adapter.xmpp.exception.XMPPContentInitializationException;
+import org.wso2.carbon.device.mgt.input.adapter.xmpp.internal.InputAdapterServiceDataHolder;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterListener;
 import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterRuntimeException;
 import java.util.HashMap;
@@ -58,55 +58,27 @@ public class XMPPAdapterListener implements Runnable {
 
     private InputEventAdapterListener eventAdapterListener = null;
 
-
     public XMPPAdapterListener(XMPPServerConnectionConfiguration xmppServerConnectionConfiguration,
                                InputEventAdapterListener inputEventAdapterListener, int tenantId) {
         this.xmppServerConnectionConfiguration = xmppServerConnectionConfiguration;
         this.eventAdapterListener = inputEventAdapterListener;
         this.tenantId = tenantId;
 
-        try {
-            String contentValidatorClassName = this.xmppServerConnectionConfiguration.getContentValidatorClassName();
-            if (contentValidatorClassName != null && contentValidatorClassName.equals(XMPPEventAdapterConstants.DEFAULT)) {
-                    contentValidator = new DefaultContentValidator();
-            } else if (contentValidatorClassName != null && !contentValidatorClassName.isEmpty()) {
-                try {
-                    Class<? extends ContentValidator> contentValidatorClass = Class.forName(contentValidatorClassName)
-                            .asSubclass(ContentValidator.class);
-                    contentValidator = contentValidatorClass.newInstance();
-                } catch (ClassNotFoundException e) {
-                    throw new XMPPContentInitializationException(
-                            "Unable to find the class validator: " + contentValidatorClassName, e);
-                } catch (InstantiationException e) {
-                    throw new XMPPContentInitializationException(
-                            "Unable to create an instance of :" + contentValidatorClassName, e);
-                } catch (IllegalAccessException e) {
-                    throw new XMPPContentInitializationException("Access of the instance in not allowed.", e);
-                }
-            }
+        String contentValidatorType = this.xmppServerConnectionConfiguration.getContentValidatorClassName();
+        if (contentValidatorType == null || contentValidatorType.equals(XMPPEventAdapterConstants.DEFAULT)) {
+            contentValidator = InputAdapterServiceDataHolder.getInputAdapterExtensionService().getDefaultContentValidator();
+        } else  {
+            contentValidator = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
+                    .getContentValidator(contentValidatorType);
+        }
 
-            String contentTransformerClassName = this.xmppServerConnectionConfiguration.getContentTransformerClassName();
-            if (contentTransformerClassName != null && contentTransformerClassName.equals(XMPPEventAdapterConstants.DEFAULT)) {
-                contentTransformer = new DefaultContentTransformer();
-            } else if (contentTransformerClassName != null && !contentTransformerClassName.isEmpty()) {
-                try {
-                    Class<? extends ContentTransformer> contentTransformerClass = Class.forName(contentTransformerClassName)
-                            .asSubclass(ContentTransformer.class);
-                    contentTransformer = contentTransformerClass.newInstance();
-                } catch (ClassNotFoundException e) {
-                    throw new XMPPContentInitializationException(
-                            "Unable to find the class transformer: " + contentTransformerClassName, e);
-                } catch (InstantiationException e) {
-                    throw new XMPPContentInitializationException(
-                            "Unable to create an instance of :" + contentTransformerClassName, e);
-                } catch (IllegalAccessException e) {
-                    throw new XMPPContentInitializationException("Access of the instance in not allowed.", e);
-                }
-            }
-        } catch (Throwable e) {
-            log.error("Exception occurred while subscribing to MQTT broker at "
-                              + xmppServerConnectionConfiguration.getHost());
-            throw new InputEventAdapterRuntimeException(e);
+        String contentTransformerType = this.xmppServerConnectionConfiguration.getContentTransformerClassName();
+        if (contentTransformer == null || contentTransformerType.equals(XMPPEventAdapterConstants.DEFAULT)) {
+            this.contentTransformer = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
+                    .getDefaultContentTransformer();
+        } else {
+            this.contentTransformer = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
+                    .getContentTransformer(contentTransformerType);
         }
 
     }

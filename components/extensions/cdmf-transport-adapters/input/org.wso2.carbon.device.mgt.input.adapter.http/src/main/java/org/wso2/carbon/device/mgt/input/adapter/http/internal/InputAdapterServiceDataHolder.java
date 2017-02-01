@@ -15,6 +15,7 @@
 package org.wso2.carbon.device.mgt.input.adapter.http.internal;
 
 import org.osgi.service.http.HttpService;
+import org.wso2.carbon.device.mgt.input.adapter.extension.InputAdapterExtensionService;
 import org.wso2.carbon.user.core.service.RealmService;
 
 /**
@@ -24,6 +25,7 @@ public final class InputAdapterServiceDataHolder {
 
 	private static RealmService realmService;
 	private static HttpService httpService;
+    private static InputAdapterExtensionService inputAdapterExtensionService;
 
 	private InputAdapterServiceDataHolder() {
 	}
@@ -46,5 +48,12 @@ public final class InputAdapterServiceDataHolder {
 		return httpService;
 	}
 
+    public static void setInputAdapterExtensionService(InputAdapterExtensionService inputAdapterExtensionService) {
+        InputAdapterServiceDataHolder.inputAdapterExtensionService = inputAdapterExtensionService;
+    }
+
+    public static InputAdapterExtensionService getInputAdapterExtensionService() {
+        return inputAdapterExtensionService;
+    }
 
 }

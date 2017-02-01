@@ -21,6 +21,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
+import org.wso2.carbon.device.mgt.input.adapter.extension.InputAdapterExtensionService;
 import org.wso2.carbon.device.mgt.input.adapter.http.HTTPEventAdapterFactory;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterFactory;
 import org.wso2.carbon.user.core.service.RealmService;
@@ -29,9 +30,19 @@ import org.wso2.carbon.user.core.service.RealmService;
  * @scr.component name="input.iot.http.AdapterService.component" immediate="true"
  * @scr.reference name="user.realmservice.default"
  * interface="org.wso2.carbon.user.core.service.RealmService" cardinality="1..1"
- * policy="dynamic" bind="setRealmService" unbind="unsetRealmService"
+ * policy="dynamic"
+ * bind="setRealmService"
+ * unbind="unsetRealmService"
  * @scr.reference name="http.service" interface="org.osgi.service.http.HttpService"
- * cardinality="1..1" policy="dynamic" bind="setHttpService" unbind="unsetHttpService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setHttpService"
+ * unbind="unsetHttpService"
+ * @scr.reference name="input.extension.service" interface="org.wso2.carbon.device.mgt.input.adapter.extension.InputAdapterExtensionService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setInputAdapterExtensionService"
+ * unbind="unsetInputAdapterExtensionService"
  */
 public class InputAdapterServiceComponent {
 
@@ -66,5 +77,13 @@ public class InputAdapterServiceComponent {
 	protected void unsetHttpService(HttpService httpService) {
 		InputAdapterServiceDataHolder.registerHTTPService(null);
 	}
+
+    protected void setInputAdapterExtensionService(InputAdapterExtensionService inputAdapterExtensionService) {
+        InputAdapterServiceDataHolder.setInputAdapterExtensionService(inputAdapterExtensionService);
+    }
+
+    protected void unsetInputAdapterExtensionService(InputAdapterExtensionService inputAdapterExtensionService) {
+        InputAdapterServiceDataHolder.setInputAdapterExtensionService(null);
+    }
 
 }

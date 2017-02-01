@@ -15,6 +15,8 @@
 package org.wso2.carbon.device.mgt.input.adapter.mqtt.internal;
 
 import org.osgi.service.http.HttpService;
+import org.wso2.carbon.device.mgt.input.adapter.extension.InputAdapterExtensionService;
+import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
 
 /**
  * common place to hold some OSGI service references.
@@ -22,6 +24,8 @@ import org.osgi.service.http.HttpService;
 public final class InputAdapterServiceDataHolder {
 
 	private static HttpService httpService;
+    private static InputAdapterExtensionService inputAdapterExtensionService;
+    private static JWTClientManagerService jwtClientManagerService;
 
 	private InputAdapterServiceDataHolder() {
 	}
@@ -35,5 +39,20 @@ public final class InputAdapterServiceDataHolder {
 		return httpService;
 	}
 
+    public static void setInputAdapterExtensionService(InputAdapterExtensionService inputAdapterExtensionService) {
+        InputAdapterServiceDataHolder.inputAdapterExtensionService = inputAdapterExtensionService;
+    }
 
+    public static InputAdapterExtensionService getInputAdapterExtensionService() {
+        return inputAdapterExtensionService;
+    }
+
+    public static JWTClientManagerService getJwtClientManagerService() {
+        return jwtClientManagerService;
+    }
+
+    public static void setJwtClientManagerService(
+            JWTClientManagerService jwtClientManagerService) {
+        InputAdapterServiceDataHolder.jwtClientManagerService = jwtClientManagerService;
+    }
 }

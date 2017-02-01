@@ -70,3 +70,4 @@ function attachEvents() {
         modalDialog.show();
     }
 }
+
