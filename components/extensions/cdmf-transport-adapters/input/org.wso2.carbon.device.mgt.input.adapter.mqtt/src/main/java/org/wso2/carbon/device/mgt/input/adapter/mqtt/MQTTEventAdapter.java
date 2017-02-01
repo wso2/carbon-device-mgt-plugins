@@ -53,7 +53,6 @@ public class MQTTEventAdapter implements InputEventAdapter {
     public void init(InputEventAdapterListener eventAdapterListener) throws InputEventAdapterException {
         this.eventAdapterListener = eventAdapterListener;
         try {
-
             mqttBrokerConnectionConfiguration = new MQTTBrokerConnectionConfiguration(eventAdapterConfiguration
                     ,globalProperties);
             mqttAdapterListener = new MQTTAdapterListener(mqttBrokerConnectionConfiguration

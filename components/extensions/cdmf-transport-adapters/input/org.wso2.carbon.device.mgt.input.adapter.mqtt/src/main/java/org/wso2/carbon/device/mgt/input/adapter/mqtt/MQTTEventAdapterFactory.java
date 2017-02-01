@@ -65,12 +65,12 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
 
 
         //Content Validator details
-        Property contentValidator = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME);
+        Property contentValidator = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE);
         contentValidator.setDisplayName(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME));
+                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE));
         contentValidator.setRequired(false);
         contentValidator.setHint(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME_HINT));
+                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE_HINT));
         contentValidator.setDefaultValue(MQTTEventAdapterConstants.DEFAULT);
         propertyList.add(contentValidator);
 
@@ -78,7 +78,7 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
         Property userName = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME);
         userName.setDisplayName(
                 resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME));
-        userName.setRequired(true);
+        userName.setRequired(false);
         userName.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME_HINT));
         propertyList.add(userName);
 
@@ -86,7 +86,7 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
         Property password = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD);
         userName.setDisplayName(
                 resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD));
-        userName.setRequired(true);
+        userName.setRequired(false);
         userName.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD_HINT));
         propertyList.add(password);
 
@@ -108,12 +108,12 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
         propertyList.add(clearSession);
 
         //Content Transformer details
-        Property contentTransformer = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME);
+        Property contentTransformer = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_TYPE);
         contentTransformer.setDisplayName(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME));
+                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_TYPE));
         contentTransformer.setRequired(false);
         contentTransformer.setHint(
-                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME_HINT));
+                resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_TYPE_HINT));
         contentTransformer.setDefaultValue(MQTTEventAdapterConstants.DEFAULT);
         propertyList.add(contentTransformer);
 
