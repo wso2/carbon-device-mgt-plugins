@@ -53,7 +53,7 @@ public class MQTTEventAdapterConstants {
 
     public static final String EMPTY_STRING = "";
     public static final String GRANT_TYPE_PARAM_NAME = "grant_type";
-    public static final String GRANT_TYPE = "password refresh_token";
+    public static final String GRANT_TYPE = "password refresh_token urn:ietf:params:oauth:grant-type:jwt-bearer";
     public static final String TOKEN_SCOPE = "production";
     public static final String APPLICATION_NAME_PREFIX = "InputAdapter_";
     public static final String CLIENT_ID = "clientId";

@@ -42,7 +42,6 @@ public class MQTTEventAdapter implements InputEventAdapter {
     private MQTTAdapterListener mqttAdapterListener;
     private MQTTBrokerConnectionConfiguration mqttBrokerConnectionConfiguration;
 
-
     public MQTTEventAdapter(InputEventAdapterConfiguration eventAdapterConfiguration,
                             Map<String, String> globalProperties) {
         this.eventAdapterConfiguration = eventAdapterConfiguration;

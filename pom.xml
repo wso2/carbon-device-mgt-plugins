@@ -793,6 +793,11 @@
             <!--<artifactId>commons-codec</artifactId>-->
             <!--<version>${commons-codec.wso2.version}</version>-->
             <!--</dependency>-->
+			<dependency>
+				<groupId>commons-codec.wso2</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>${commons-codec.version.wso2}</version>
+			</dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
@@ -1179,7 +1184,7 @@
 
 
         <orbit.version.commons-httpclient>3.1.0.wso2v2</orbit.version.commons-httpclient>
-        <!--<commons-codec.wso2.version>1.4.0.wso2v1</commons-codec.wso2.version>-->
+        <commons-codec.version.wso2>1.4.0.wso2v1</commons-codec.version.wso2>
         <commons-codec.version>1.7</commons-codec.version>
 
         <javaee-web-api.version>6.0</javaee-web-api.version>

@@ -67,7 +67,7 @@ public class RegistrationProfile {
 		String jsonString =
 				"{\"callbackUrl\": \"" + callbackUrl + "\",\"clientName\": \"" + clientName + "\", \"tokenScope\": " +
 						"\"" + tokenScope + "\", \"owner\": \"" + owner + "\"," + "\"grantType\": \"" + grantType +
-						"\", \"saasApp\" :false }\n";
+						"\", \"saasApp\" :true }\n";
 		return jsonString;
 	}
 }

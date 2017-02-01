@@ -267,18 +267,25 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
 
     private String getToken(String clientId, String clientSecret)
             throws UserStoreException, JWTClientException {
-        String scopes = mqttBrokerConnectionConfiguration.getBrokerScopes();
-        String username = mqttBrokerConnectionConfiguration.getUsername();
-        if (mqttBrokerConnectionConfiguration.isGlobalCredentailSet()) {
-            username = PrivilegedCarbonContext.getThreadLocalCarbonContext()
-                    .getUserRealm().getRealmConfiguration().getAdminUserName() + "@" + PrivilegedCarbonContext
-                    .getThreadLocalCarbonContext().getTenantDomain(true);
-        }
+        PrivilegedCarbonContext.startTenantFlow();
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(tenantId, true);
+        try {
+            String scopes = mqttBrokerConnectionConfiguration.getBrokerScopes();
+            String username = mqttBrokerConnectionConfiguration.getUsername();
+            if (mqttBrokerConnectionConfiguration.isGlobalCredentailSet()) {
+                username = PrivilegedCarbonContext.getThreadLocalCarbonContext()
+                        .getUserRealm().getRealmConfiguration().getAdminUserName() + "@" + PrivilegedCarbonContext
+                        .getThreadLocalCarbonContext().getTenantDomain(true);
+            }
 
-        JWTClientManagerService jwtClientManagerService = InputAdapterServiceDataHolder.getJwtClientManagerService();
-        AccessTokenInfo accessTokenInfo = jwtClientManagerService.getJWTClient().getAccessToken(
-                clientId, clientSecret, username, scopes);
-        return accessTokenInfo.getAccessToken();
+            JWTClientManagerService jwtClientManagerService =
+                    InputAdapterServiceDataHolder.getJwtClientManagerService();
+            AccessTokenInfo accessTokenInfo = jwtClientManagerService.getJWTClient().getAccessToken(
+                    clientId, clientSecret, username, scopes);
+            return accessTokenInfo.getAccessToken();
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+        }
     }
 
     private String getBase64Encode(String key, String value) {
