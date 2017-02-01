@@ -209,9 +209,9 @@ public interface ConfigurationMgtService {
 
     @GET
     @Path("license")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(
-            produces = MediaType.TEXT_PLAIN,
+            produces = MediaType.APPLICATION_JSON,
             httpMethod = "GET",
             value = "Getting the License Agreement to Register a Windows Device",
             notes = "Use this REST API to retrieve the license agreement that is used for the Windows device " +
