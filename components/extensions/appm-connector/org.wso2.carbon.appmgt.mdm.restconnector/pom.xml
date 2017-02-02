@@ -27,28 +27,6 @@
     <packaging>bundle</packaging>
     <name>WSO2 Carbon - App Manager WSO2 MDM REST Connector Component</name>
     <url>http://maven.apache.org</url>
-    <repositories>
-        <repository>
-            <id>wso2-maven2-repository</id>
-            <name>WSO2 Maven2 Repository</name>
-            <url>http://dist.wso2.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>wso2-maven2-snapshot-repository</id>
-            <name>WSO2 Maven2 Snapshot Repository</name>
-            <url>http://dist.wso2.org/snapshots/maven2/</url>
-        </repository>
-        <repository>
-            <id>wso2-nexus</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-    </repositories>
 
     <build>
         <plugins>
@@ -74,6 +52,8 @@
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Private-Package>org.wso2.carbon.appmgt.mdm.restconnector.internal</Private-Package>
                         <Import-Package>
+							org.osgi.framework,
+							org.osgi.service.component,
                             org.wso2.carbon.appmgt.mobile.utils.*,
                             org.wso2.carbon.appmgt.mobile.mdm.*,
                             org.wso2.carbon.appmgt.mobile.interfaces.*,
@@ -85,7 +65,9 @@
                             feign.auth,
                             feign.codec,
                             feign.gson,
-                            *;resolution:=optional
+							org.json.simple.*,
+							org.wso2.carbon.appmgt.mobile.beans,
+							org.wso2.carbon.context
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.appmgt.mdm.restconnector.internal,
@@ -93,8 +75,7 @@
                         </Export-Package>
                         <Embed-Dependency>
                             jsr311-api,
-                            feign-jaxrs,
-                            org.wso2.carbon.device.mgt.common
+                            feign-jaxrs
                         </Embed-Dependency>
                     </instructions>
                 </configuration>
@@ -104,36 +85,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>commons-io.wso2</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.googlecode.json-simple.wso2</groupId>
             <artifactId>json-simple</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.plist</groupId>
-            <artifactId>dd-plist</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.felix</groupId>
-            <artifactId>org.apache.felix.scr</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.ndatasource.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.governance</groupId>
-            <artifactId>org.wso2.carbon.governance.api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.appmgt</groupId>
-            <artifactId>org.wso2.carbon.appmgt.mobile</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt</groupId>
@@ -159,21 +116,10 @@
             <groupId>io.swagger</groupId>
             <artifactId>swagger-jaxrs</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.devicemgt</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.common</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.ws.commons.axiom</groupId>
-                    <artifactId>axiom-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.ws.commons.axiom</groupId>
-                    <artifactId>axiom-impl</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
+		<dependency>
+			<groupId>org.wso2.carbon.appmgt</groupId>
+			<artifactId>org.wso2.carbon.appmgt.mobile</artifactId>
+		</dependency>
     </dependencies>
 
 </project>

@@ -27,6 +27,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.OAuthRequestInterceptor;
+import org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto.Activity;
 import org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto.ApplicationManagementAdminService;
 import org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto.ApplicationWrapper;
 import org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto.DeviceManagementAdminService;
@@ -42,7 +43,6 @@ import org.wso2.carbon.appmgt.mobile.mdm.Device;
 import org.wso2.carbon.appmgt.mobile.utils.MobileApplicationException;
 import org.wso2.carbon.appmgt.mobile.utils.MobileConfigurations;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -528,6 +528,16 @@
                 <groupId>org.wso2.carbon.appmgt</groupId>
                 <artifactId>org.wso2.carbon.appmgt.mobile</artifactId>
                 <version>${carbon.appmgt.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.apache.ws.commons.axiom</groupId>
+						<artifactId>axiom-api</artifactId>
+					</exclusion>
+					<exclusion>
+						<groupId>org.apache.ws.commons.axiom</groupId>
+						<artifactId>axiom-impl</artifactId>
+					</exclusion>
+				</exclusions>
             </dependency>
 
             <!--Osgi dependencies-->
