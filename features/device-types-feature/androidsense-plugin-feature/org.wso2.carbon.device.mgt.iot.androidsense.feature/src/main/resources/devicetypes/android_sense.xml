@@ -49,7 +49,7 @@
     </Features>
 
     <ProvisioningConfig>
-        <SharedWithAllTenants>false</SharedWithAllTenants>
+        <SharedWithAllTenants>true</SharedWithAllTenants>
     </ProvisioningConfig>
 
     <PushNotificationProvider type="MQTT">

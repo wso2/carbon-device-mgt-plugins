@@ -73,7 +73,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         this.globalProperties = globalProperties;
         try {
             deviceMgtServerUrl = getDeviceMgtServerUrl(globalProperties);
-            refreshTimeOffset = getRefreshTimeOffset(globalProperties);
+            refreshTimeOffset = getRefreshTimeOffset(globalProperties) * 1000;
             username = getUsername(globalProperties);
             password = getPassword(globalProperties);
             tokenEndpoint = getTokenEndpoint(globalProperties);
@@ -105,7 +105,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(TokenIssuerService.class, tokenEndpoint);
             tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password, REQUIRED_SCOPE);
-            tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
+            tokenInfo.setExpires_in(System.currentTimeMillis() + (tokenInfo.getExpires_in() * 1000));
         }
         synchronized(this) {
             if (System.currentTimeMillis() + refreshTimeOffset > tokenInfo.getExpires_in()) {
