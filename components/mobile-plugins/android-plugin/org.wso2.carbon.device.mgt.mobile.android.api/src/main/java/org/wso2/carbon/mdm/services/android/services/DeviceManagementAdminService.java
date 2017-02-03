@@ -415,7 +415,7 @@ public interface DeviceManagementAdminService {
             value = "Clearing the Password on Android Devices",
             notes = "Clear the password on Android devices",
             response = Activity.class,
-            tags = "Android Device Management Administrative Service.",
+            tags = "Android Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
                             @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:clear-password")
