@@ -122,7 +122,7 @@ public class MQTTEventAdapter implements OutputEventAdapter {
         String clientId = eventAdapterConfiguration.getStaticProperties().get(
                 MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID);
         qos = eventAdapterConfiguration.getStaticProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_QOS);
-        mqttAdapterPublisher = new MQTTAdapterPublisher(mqttBrokerConnectionConfiguration, clientId);
+        mqttAdapterPublisher = new MQTTAdapterPublisher(mqttBrokerConnectionConfiguration, clientId, tenantId);
     }
 
     @Override

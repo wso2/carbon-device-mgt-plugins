@@ -12,6 +12,7 @@ public class RegistrationProfile {
 	private String owner;
 	private String grantType;
 	private String applicationType;
+    private boolean isSaasApp;
 
 	private static final String TAG = RegistrationProfile.class.getSimpleName();
 
@@ -63,11 +64,19 @@ public class RegistrationProfile {
 		this.applicationType = applicationType;
 	}
 
-	public String toJSON() {
+    public boolean isSaasApp() {
+        return isSaasApp;
+    }
+
+    public void setIsSaasApp(boolean isSaasApp) {
+        this.isSaasApp = isSaasApp;
+    }
+
+    public String toJSON() {
 		String jsonString =
 				"{\"callbackUrl\": \"" + callbackUrl + "\",\"clientName\": \"" + clientName + "\", \"tokenScope\": " +
 						"\"" + tokenScope + "\", \"owner\": \"" + owner + "\"," + "\"grantType\": \"" + grantType +
-						"\", \"saasApp\" :true }\n";
+						"\", \"saasApp\" :" + isSaasApp + " }\n";
 		return jsonString;
 	}
 }

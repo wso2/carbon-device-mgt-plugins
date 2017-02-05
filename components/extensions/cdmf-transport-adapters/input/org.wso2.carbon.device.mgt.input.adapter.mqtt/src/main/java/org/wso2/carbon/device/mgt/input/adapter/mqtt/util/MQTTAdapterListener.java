@@ -142,8 +142,16 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                     registrationProfile.setGrantType(MQTTEventAdapterConstants.GRANT_TYPE);
                     registrationProfile.setOwner(username);
                     registrationProfile.setTokenScope(MQTTEventAdapterConstants.TOKEN_SCOPE);
-                    registrationProfile.setClientName(MQTTEventAdapterConstants.APPLICATION_NAME_PREFIX
-                        + mqttBrokerConnectionConfiguration.getAdapterName() + "_" + tenantId);
+                    if (!mqttBrokerConnectionConfiguration.isGlobalCredentailSet()) {
+                        registrationProfile.setClientName(MQTTEventAdapterConstants.APPLICATION_NAME_PREFIX
+                                                                  + mqttBrokerConnectionConfiguration.getAdapterName() +
+                                                                  "_" + tenantId);
+                        registrationProfile.setIsSaasApp(false);
+                    } else {
+                        registrationProfile.setClientName(MQTTEventAdapterConstants.APPLICATION_NAME_PREFIX
+                                                                  + mqttBrokerConnectionConfiguration.getAdapterName());
+                        registrationProfile.setIsSaasApp(true);
+                    }
                     String jsonString = registrationProfile.toJSON();
                     StringEntity requestEntity = new StringEntity(jsonString, ContentType.APPLICATION_JSON);
                     postMethod.setEntity(requestEntity);

@@ -179,7 +179,9 @@ public class ArduinoServiceImpl implements ArduinoService {
     @Produces("application/zip")
     public Response downloadSketch(@QueryParam("deviceName") String deviceName) {
         try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName);
+            String username = APIUtil.getAuthenticatedUser() + "@" + PrivilegedCarbonContext
+                    .getThreadLocalCarbonContext().getTenantDomain();
+            ZipArchive zipFile = createDownloadFile(username, deviceName);
             Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
             response.status(Response.Status.OK);
             response.type("application/zip");
@@ -221,7 +223,8 @@ public class ArduinoServiceImpl implements ArduinoService {
             throw new DeviceManagementException(msg);
         }
         String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
-                .getRealmConfiguration().getAdminUserName();
+                .getRealmConfiguration().getAdminUserName() + "@" + PrivilegedCarbonContext
+                .getThreadLocalCarbonContext().getTenantDomain();;
         if (apiApplicationKey == null) {
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {ArduinoConstants.DEVICE_TYPE};

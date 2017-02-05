@@ -33,6 +33,8 @@ public class MQTTBrokerConnectionConfiguration {
     private String tokenUrl;
     private boolean cleanSession = true;
     private int keepAlive;
+    private boolean globalCredentailSet;
+
     public String getTokenUrl() {
         return tokenUrl;
     }
@@ -69,11 +71,20 @@ public class MQTTBrokerConnectionConfiguration {
         return adapterName;
     }
 
+    public boolean isGlobalCredentailSet() {
+        return globalCredentailSet;
+    }
+
     public MQTTBrokerConnectionConfiguration(OutputEventAdapterConfiguration eventAdapterConfiguration,
                                              Map<String, String> globalProperties) {
         adapterName = eventAdapterConfiguration.getName();
         this.username = eventAdapterConfiguration.getStaticProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME);
         this.password = eventAdapterConfiguration.getStaticProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD);
+        if ((username == null || username.isEmpty()) && (password == null || password.isEmpty())) {
+            username = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME);
+            password = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD);
+            globalCredentailSet = true;
+        }
         String url = eventAdapterConfiguration .getStaticProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_URL);
         if (url == null || url.isEmpty()) {
             url = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_URL);
