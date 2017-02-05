@@ -132,6 +132,28 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+					<execution>
+						<id>unpack-geo</id>
+						<phase>package</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+									<artifactId>org.wso2.carbon.iot.geo.dashboard</artifactId>
+									<version>${project.version}</version>
+									<type>zip</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>
+										${project.build.directory}/maven-shared-archive-resources/carbonapps
+									</outputDirectory>
+									<includes>**/*</includes>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
                     <execution>
                         <id>copy-jaxrs-war</id>
                         <phase>package</phase>
