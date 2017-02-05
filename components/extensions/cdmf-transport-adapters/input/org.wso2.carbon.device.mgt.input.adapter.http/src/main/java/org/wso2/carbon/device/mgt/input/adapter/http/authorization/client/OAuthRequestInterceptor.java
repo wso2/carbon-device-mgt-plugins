@@ -53,7 +53,6 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
 
     private static final String CONNECTION_USERNAME = "username";
     private static final String CONNECTION_PASSWORD = "password";
-    private static final String TOKEN_ENDPOINT = "tokenUrl";
     private static final String TOKEN_REFRESH_TIME_OFFSET = "tokenRefreshTimeOffset";
     private static final String TOKEN_SCOPES = "scopes";
     private static final String DEVICE_MGT_SERVER_URL = "deviceMgtServerUrl";

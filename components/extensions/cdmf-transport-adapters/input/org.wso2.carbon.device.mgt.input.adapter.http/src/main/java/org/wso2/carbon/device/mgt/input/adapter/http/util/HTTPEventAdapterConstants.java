@@ -49,7 +49,7 @@ public final class HTTPEventAdapterConstants {
     public static final int DEFAULT_HTTPS_PORT = 9443;
     public static final String MAXIMUM_TOTAL_HTTP_CONNECTION = "maximumTotalHttpConnection";
     public static final String MAXIMUM_HTTP_CONNECTION_PER_HOST = "maximumHttpConnectionPerHost";
-    public static final String TOKEN_VALIDATION_ENDPOINT_URL = "tokenUrl";
+    public static final String TOKEN_VALIDATION_ENDPOINT_URL = "tokenValidationUrl";
     public static final String TOKEN_VALIDATION_POST_FIX = "/services/OAuth2TokenValidationService";
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
