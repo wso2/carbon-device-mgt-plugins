@@ -210,7 +210,10 @@ function onRequest(context) {
         {"name" : "deviceId", "value" : deviceId}
     ];
 
+    var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
+    var permissions = userModule.getUIPermissions();
     deviceViewData["autoCompleteParams"] = autoCompleteParams;
+    deviceViewData["permissions"] = permissions;
 
     deviceViewData["portalUrl"] = devicemgtProps['portalURL'];
     deviceViewData["anchor"] = encodeURI(JSON.stringify({ "device" : { "id" : deviceId, "type" : deviceType}}));

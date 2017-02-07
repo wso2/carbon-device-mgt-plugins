@@ -112,6 +112,9 @@ function onRequest(context) {
         {"name" : "deviceId", "value" : deviceId}
     ];
 
+    var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
+    var permissions = userModule.getUIPermissions();
     deviceViewData["autoCompleteParams"] = autoCompleteParams;
+    deviceViewData["permissions"] = permissions;
     return deviceViewData;
 }
