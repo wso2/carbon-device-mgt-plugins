@@ -69,8 +69,7 @@ var InitiateViewOption = null;
         activeTabPaneCaret.removeClass("fw-up").addClass("fw-down");
         activeTabPaneCaretSiblings.removeClass("fw-down").addClass("fw-up");
     });
-
-
+    
     $('.media.tab-responsive a[data-toggle="collapse"]').on('click',function(){
         var clickedPanel = $(this).attr('href');
 
@@ -81,6 +80,62 @@ var InitiateViewOption = null;
         }
     });
 
+    $('#status').on('save', function (e, params) {
+        var deviceStatus = params.submitValue.toUpperCase();
+        var serviceUrl = "/api/device-mgt/v1.0/devices/" + deviceType + "/" + deviceIdentifier
+                         + "/changestatus?newStatus=" + deviceStatus;
+        var payload = null;
+
+        if (serviceUrl) {
+            var successCallback = function (jqXHR, status, resp) {
+                if (resp.status == 200) {
+                    setTimeout(function () {
+                        if (deviceStatus == "REMOVED") {
+                            $('#statusIcon').removeClass().addClass('fw fw-delete icon-danger');
+                        } else if (deviceStatus == "INACTIVE") {
+                            $('#statusIcon').removeClass().addClass('fw fw-warning icon-warning');
+                        } else if (deviceStatus == "ACTIVE") {
+                            $('#statusIcon').removeClass().addClass('fw fw-success icon-success');
+                        }
+                        $("#statusIcon").show();
+
+                    }, 1500);
+                } else {
+                    console.log(resp.status);
+                }
+            };
+
+            invokerUtil.put(serviceUrl, payload,
+                            successCallback, function (message) {
+                    console.log(message);
+                });
+        }
+
+    });
+
+    $("#status").click(function () {
+        $("#statusIcon").hide();
+    });
+    
+    $.fn.editable.defaults.mode = 'inline';
+
+    $('#status').editable({
+                              value: $('#status').attr("selectedValue"),
+                              source: [
+                                  {value: 'Active', text: 'Active'},
+                                  {value: "Inactive", text: 'Inactive'},
+                                  {value: "Removed", text: 'Removed'}
+                              ],
+                              success: this.update_elements
+                          });
+
+    $.fn.editableform.buttons =
+        '<button id="checkedBtn" type="submit" class="btn btn-primary btn-sm editable-submit">' +
+        '<i class="fw fw-check"></i>' +
+        '</button>' +
+        '<button type="button" class="btn btn-secondary btn-sm editable-cancel">' +
+        '<i class="fw fw-cancel"></i>' +
+        '</button>';
 
     function positionArrow(selectedTab) {
         var selectedTabHeight = $(selectedTab).innerHeight();
