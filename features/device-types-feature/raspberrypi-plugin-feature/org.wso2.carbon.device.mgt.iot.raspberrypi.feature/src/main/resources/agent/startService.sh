@@ -33,6 +33,17 @@ if [ ! -d "$destination" ]
 then
     mkdir $destination
 fi
+# installing dependencies
+echo ===Installing Dependencies
+sudo apt-get update
+sudo apt-get install python-pip
+sudo pip install paho-mqtt
+
+#installing ada
+sudo apt-get install build-essential python-dev
+unzip Adafruit_Python_DHT
+sudo python Adafruit_Python_DHT/setup.py install
+
 sudo cp $currentDir/deviceConfig.properties $currentDir/src
 sudo cp -r $currentDir/src $destination
 sudo chmod +x $destination/src/RaspberryAgent.py

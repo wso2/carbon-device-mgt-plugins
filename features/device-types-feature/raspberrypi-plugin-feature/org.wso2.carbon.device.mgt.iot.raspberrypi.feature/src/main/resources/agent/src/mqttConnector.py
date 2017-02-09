@@ -72,9 +72,11 @@ def on_publish(client, userdata, mid):
 #       The callback for when a PUBLISH message to the server when door is open or close
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def publish(msg):
-#    global mqttClient
+    global mqttClient
     mqttClient.publish(TOPIC_TO_PUBLISH, msg)
 
+def on_subscribe(client, userdata, mid, granted_qos):
+    print "Successfully subscribed to " + TOPIC_TO_SUBSCRIBE
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       The Main method of the server script
@@ -103,6 +105,7 @@ def main():
     mqttClient.on_connect = on_connect
     mqttClient.on_message = on_message
     mqttClient.on_publish = on_publish
+    mqttClient.on_subscribe = on_subscribe
     mqttClient.username_pw_set(iotUtils.AUTH_TOKEN, password = "")
 
     while True:
