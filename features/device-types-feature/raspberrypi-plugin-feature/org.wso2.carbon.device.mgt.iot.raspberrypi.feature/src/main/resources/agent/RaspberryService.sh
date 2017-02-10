@@ -15,7 +15,7 @@ DESC="This service is used to publish events from the Raspberry Pi to the WSO2 D
 NAME=RaspberryStats
 
 DIR=/usr/local/src/RaspberryAgent/src/
-DAEMON=python $DIR/RaspberryAgent.py
+DAEMON=$DIR/RaspberryAgent.py
 DAEMON_NAME=$NAME
 SCRIPTNAME=RaspberryService.sh
 
@@ -39,6 +39,7 @@ DAEMON_USER=root   #pi
 do_start () {
     log_daemon_msg "Starting system $DAEMON_NAME daemon"
     start-stop-daemon --start --background --pidfile $PIDFILE --make-pidfile --user $DAEMON_USER --chuid $DAEMON_USER --startas $DAEMON -- $DAEMON_OPTS
+    python $DAEMON &
     log_end_msg $?
 }
 do_stop () {
