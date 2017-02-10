@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin python
 """
 /**
 * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -23,7 +23,8 @@ import logging, logging.handlers
 import sys, os, signal, argparse
 import running_mode
 import time, threading, datetime, calendar
-import iotUtils, mqttConnector, Adafruit_DHT, httpServer
+import iotUtils, mqttConnector, httpServer
+import Adafruit_DHT
 
 # import httplib, ssl
 # from functools import wraps

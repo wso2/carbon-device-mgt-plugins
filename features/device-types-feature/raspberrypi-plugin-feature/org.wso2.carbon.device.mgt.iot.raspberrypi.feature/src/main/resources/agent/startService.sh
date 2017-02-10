@@ -46,9 +46,9 @@ sudo python Adafruit_Python_DHT/setup.py install
 
 sudo cp $currentDir/deviceConfig.properties $currentDir/src
 sudo cp -r $currentDir/src $destination
-sudo chmod +x $destination/src/RaspberryAgent.py
+sudo chmod 755 $destination/src/RaspberryAgent.py
 sudo update-rc.d -f RaspberryService.sh remove
 sudo cp $currentDir/RaspberryService.sh /etc/init.d
-sudo chmod +x /etc/init.d/RaspberryService.sh
+sudo chmod 755 /etc/init.d/RaspberryService.sh
 sudo update-rc.d RaspberryService.sh defaults
 sudo service RaspberryService.sh start
