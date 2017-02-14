@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>device-types</artifactId>
-        <version>3.0.11-SNAPSHOT</version>
+        <version>3.0.12-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -33,7 +33,6 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.plugin</module>
         <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.ui</module>
         <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.impl</module>
         <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.impl</module>
