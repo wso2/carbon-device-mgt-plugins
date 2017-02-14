@@ -213,6 +213,7 @@ function onRequest(context) {
     deviceViewData["autoCompleteParams"] = autoCompleteParams;
 
     deviceViewData["portalUrl"] = devicemgtProps['portalURL'];
+    deviceViewData["isCloud"] = devicemgtProps['isCloud'];
     deviceViewData["anchor"] = encodeURI(JSON.stringify({ "device" : { "id" : deviceId, "type" : deviceType}}));
     return deviceViewData;
 }
