@@ -39,7 +39,7 @@ import javax.ws.rs.core.Response;
                 }
         ),
         tags = {
-                @Tag(name = "raspberrypi", description = "")
+                @Tag(name = "raspberrypi,device_management", description = "")
         }
 )
 @Scopes(

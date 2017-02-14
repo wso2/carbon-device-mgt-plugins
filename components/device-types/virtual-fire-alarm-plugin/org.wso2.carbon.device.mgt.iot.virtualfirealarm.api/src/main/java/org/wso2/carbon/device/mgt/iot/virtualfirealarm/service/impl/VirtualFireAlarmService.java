@@ -45,7 +45,7 @@ import javax.ws.rs.core.Response;
                 }
         ),
         tags = {
-                @Tag(name = "virtual_firealarm", description = "")
+                @Tag(name = "virtual_firealarm,device_management", description = "")
         }
 )
 @Scopes(

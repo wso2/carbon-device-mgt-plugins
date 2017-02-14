@@ -56,7 +56,7 @@ import javax.ws.rs.core.Response;
                 }
         ),
         tags = {
-                @Tag(name = "android_sense", description = "")
+                @Tag(name = "android_sense,device_management", description = "")
         }
 )
 @Scopes(
