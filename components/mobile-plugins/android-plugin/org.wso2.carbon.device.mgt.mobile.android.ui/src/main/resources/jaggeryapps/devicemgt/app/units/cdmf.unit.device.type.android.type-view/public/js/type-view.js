@@ -349,6 +349,9 @@ $.fn.collapse_nav_sub = function () {
 
 $(document).ready(function () {
     $.sidebar_toggle();
+
+    generateQRCode(".enrollment-qr-container");
+
     if (typeof $.fn.collapse == 'function') {
         $('.navbar-collapse.tiles').on('shown.bs.collapse', function () {
             $(this).collapse_nav_sub();
