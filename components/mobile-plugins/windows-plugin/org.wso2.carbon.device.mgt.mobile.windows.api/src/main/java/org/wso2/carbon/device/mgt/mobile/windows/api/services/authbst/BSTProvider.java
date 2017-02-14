@@ -51,7 +51,7 @@ import javax.ws.rs.core.Response;
                 }
         ),
         tags = {
-                @Tag(name = "windows", description = "")
+                @Tag(name = "windows,device_management", description = "")
         }
 )
 @Api(value = "Windows Binary Security Token Service",

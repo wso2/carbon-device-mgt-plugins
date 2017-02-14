@@ -58,7 +58,7 @@ import java.util.List;
                 }
         ),
         tags = {
-                @Tag(name = "android", description = "")
+                @Tag(name = "android,device_management", description = "")
         }
 )
 @Path("/admin/devices")
