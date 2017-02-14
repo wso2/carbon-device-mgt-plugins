@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin python
 """
 /**
 * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -23,6 +23,8 @@ import logging, logging.handlers
 import sys, os, signal, argparse
 import running_mode
 import time, threading, datetime, calendar
+import iotUtils, mqttConnector, httpServer
+import Adafruit_DHT
 
 # import httplib, ssl
 # from functools import wraps
@@ -40,7 +42,7 @@ import time, threading, datetime, calendar
 #     return bar
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-PUSH_INTERVAL = 5000  # time interval between successive data pushes in seconds
+PUSH_INTERVAL = 2  # time interval between successive data pushes in seconds
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -82,7 +84,7 @@ if args.mode:
     running_mode.RUNNING_MODE = args.mode
     iotUtils = __import__('iotUtils')
     mqttConnector = __import__('mqttConnector')
-    # httpServer = __import__('httpServer') # python script used to start a http-server to listen for operations
+    httpServer = __import__('httpServer') # python script used to start a http-server to listen for operations
     # (includes the TEMPERATURE global variable)
 
     if running_mode.RUNNING_MODE == 'N':
@@ -329,6 +331,7 @@ def main():
     # ListenHTTPServerThread()  # starts an HTTP Server that listens for operational commands to switch ON/OFF Led
     SubscribeToMQTTQueue()  # connects and subscribes to an MQTT Queue that receives MQTT commands from the server
     TemperatureReaderThread()  # initiates and runs the thread to continuously read temperature from DHT Sensor
+    # time.sleep(2) #wait for agent to connect to broker before publishing data
     while True:
         try:
             if iotUtils.LAST_TEMP > 0:  # Push data only if there had been a successful temperature read
