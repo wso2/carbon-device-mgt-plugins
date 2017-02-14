@@ -40,7 +40,7 @@ import javax.ws.rs.core.Response;
                 }
         ),
         tags = {
-                @Tag(name = "arduino", description = "")
+                @Tag(name = "arduino,device_management", description = "")
         }
 )
 @Scopes(
