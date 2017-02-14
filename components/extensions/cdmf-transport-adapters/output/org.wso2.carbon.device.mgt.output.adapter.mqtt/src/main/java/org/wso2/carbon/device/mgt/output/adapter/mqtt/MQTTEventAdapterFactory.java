@@ -56,19 +56,20 @@ public class MQTTEventAdapterFactory extends OutputEventAdapterFactory {
         //Broker Username
         Property userName = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME);
         userName.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME));
-        userName.setRequired(true);
+        userName.setRequired(false);
         userName.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_USERNAME_HINT));
 
         //Broker Password
         Property password = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD);
         password.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD));
-        password.setRequired(true);
+        password.setRequired(false);
         password.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_PASSWORD_HINT));
 
         //Broker Connection Scopes
         Property scopes = new Property(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES);
         scopes.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES));
-        scopes.setRequired(true);
+        scopes.setRequired(false);
+        scopes.setDefaultValue("default");
         scopes.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_SCOPES_HINT));
 
         // set clientId

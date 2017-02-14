@@ -18,11 +18,13 @@ package org.wso2.carbon.device.mgt.input.adapter.http;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.input.adapter.http.authorization.DeviceAuthorizer;
+import org.wso2.carbon.device.mgt.input.adapter.http.internal.InputAdapterServiceDataHolder;
 import org.wso2.carbon.device.mgt.input.adapter.http.oauth.OAuthAuthenticator;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentInfo;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentTransformer;
-import org.wso2.carbon.device.mgt.input.adapter.extension.DefaultContentTransformer;
-import org.wso2.carbon.device.mgt.input.adapter.extension.DefaultContentValidator;
+import org.wso2.carbon.device.mgt.input.adapter.extension.transformer.DefaultContentTransformer;
+import org.wso2.carbon.device.mgt.input.adapter.extension.validator.DefaultContentValidator;
 import org.wso2.carbon.device.mgt.input.adapter.http.exception.HTTPContentInitializationException;
 import org.wso2.carbon.device.mgt.input.adapter.http.jwt.JWTAuthenticator;
 import org.wso2.carbon.device.mgt.input.adapter.http.util.AuthenticationInfo;
@@ -58,6 +60,7 @@ public class HTTPMessageServlet extends HttpServlet {
 	private String exposedTransports;
 	private static JWTAuthenticator jwtAuthenticator;
 	private static OAuthAuthenticator oAuthAuthenticator;
+    private static DeviceAuthorizer deviceAuthorizer;
 
 	public HTTPMessageServlet(InputEventAdapterListener eventAdaptorListener, int tenantId,
 							  InputEventAdapterConfiguration eventAdapterConfiguration,
@@ -67,48 +70,29 @@ public class HTTPMessageServlet extends HttpServlet {
 		this.exposedTransports = eventAdapterConfiguration.getProperties().get(
 				HTTPEventAdapterConstants.EXPOSED_TRANSPORTS);
 
-		String className = eventAdapterConfiguration.getProperties().get(
-				HTTPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME);
-		if (HTTPEventAdapterConstants.DEFAULT.equals(className)) {
-			contentValidator = new DefaultContentValidator();
+		String contentValidatorType = eventAdapterConfiguration.getProperties().get(
+				HTTPEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE);
+		if (contentValidatorType == null || HTTPEventAdapterConstants.DEFAULT.equals(contentValidatorType)) {
+			contentValidator = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
+                    .getDefaultContentValidator();
 		} else {
-			try {
-				Class<? extends ContentValidator> contentValidatorClass = Class.forName(className)
-						.asSubclass(ContentValidator.class);
-				contentValidator = contentValidatorClass.newInstance();
-			} catch (ClassNotFoundException e) {
-				throw new HTTPContentInitializationException(
-						"Unable to find the class validator: " + className, e);
-			} catch (InstantiationException e) {
-				throw new HTTPContentInitializationException(
-						"Unable to create an instance of :" + className, e);
-			} catch (IllegalAccessException e) {
-				throw new HTTPContentInitializationException("Access of the instance in not allowed.", e);
-			}
+            contentValidator = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
+                    .getContentValidator(contentValidatorType);
 		}
 
 		String contentTransformerClassName = eventAdapterConfiguration.getProperties().get(
 				HTTPEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME);
-		if (contentTransformerClassName != null && contentTransformerClassName.equals(HTTPEventAdapterConstants.DEFAULT)) {
-			contentTransformer = new DefaultContentTransformer();
-		} else if (contentTransformerClassName != null && !contentTransformerClassName.isEmpty()) {
-			try {
-				Class<? extends ContentTransformer> contentTransformerClass = Class.forName(contentTransformerClassName)
-						.asSubclass(ContentTransformer.class);
-				contentTransformer = contentTransformerClass.newInstance();
-			} catch (ClassNotFoundException e) {
-				throw new HTTPContentInitializationException(
-						"Unable to find the class transformer: " + contentTransformerClassName, e);
-			} catch (InstantiationException e) {
-				throw new HTTPContentInitializationException(
-						"Unable to create an instance of :" + contentTransformerClassName, e);
-			} catch (IllegalAccessException e) {
-				throw new HTTPContentInitializationException("Access of the instance in not allowed.", e);
-			}
+		if (contentTransformerClassName == null || contentTransformerClassName.equals(HTTPEventAdapterConstants.DEFAULT)) {
+			contentTransformer = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
+                    .getDefaultContentTransformer();
+		} else {
+            contentTransformer = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
+                    .getContentTransformer(contentValidatorType);
 		}
 
 		jwtAuthenticator = new JWTAuthenticator();
 		oAuthAuthenticator = new OAuthAuthenticator(globalProperties);
+        deviceAuthorizer = new DeviceAuthorizer(globalProperties);
 	}
 
 	@Override
@@ -177,14 +161,24 @@ public class HTTPMessageServlet extends HttpServlet {
 			paramMap.put(HTTPEventAdapterConstants.USERNAME_TAG, authenticationInfo.getUsername());
 			paramMap.put(HTTPEventAdapterConstants.TENANT_DOMAIN_TAG, authenticationInfo.getTenantDomain());
 			paramMap.put(HTTPEventAdapterConstants.SCOPE_TAG, authenticationInfo.getScopes());
-			if (contentValidator != null && contentTransformer != null) {
-				data = (String) contentTransformer.transform(data, paramMap);
-				ContentInfo contentInfo = contentValidator.validate(data, paramMap);
-				if (contentInfo != null && contentInfo.isValidContent()) {
-					HTTPEventAdapter.executorService.submit(new HTTPRequestProcessor(eventAdaptorListener,
-																					 (String) contentInfo.getMessage(), tenantId));
-				}
-			}
+            String deviceId = (String) paramMap.get("deviceId");
+            String deviceType = (String) paramMap.get("deviceType");
+            if (deviceAuthorizer.isAuthorized(authenticationInfo, deviceId, deviceType)) {
+                if (contentValidator != null && contentTransformer != null) {
+                    data = (String) contentTransformer.transform(data, paramMap);
+                    ContentInfo contentInfo = contentValidator.validate(data, paramMap);
+                    if (contentInfo != null && contentInfo.isValidContent()) {
+                        HTTPEventAdapter.executorService.submit(new HTTPRequestProcessor(eventAdaptorListener,
+                                                                                         (String) contentInfo
+                                                                                                 .getMessage(),
+                                                                                         tenantId));
+                    }
+                }
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("Unauthorized device with device id" + deviceId + " and device type" + deviceType);
+                }
+            }
 		}
 	}
 

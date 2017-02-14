@@ -172,7 +172,9 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
     public Response downloadSketch(@QueryParam("deviceName") String deviceName,
                                    @QueryParam("sketchType") String sketchType) {
         try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
+            String user = APIUtil.getAuthenticatedUser() + "@" + PrivilegedCarbonContext.getThreadLocalCarbonContext()
+                    .getTenantDomain();
+            ZipArchive zipFile = createDownloadFile(user, deviceName, sketchType);
             Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
             response.status(Response.Status.OK);
             response.type("application/zip");
@@ -242,7 +244,8 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
         if (apiApplicationKey == null) {
             String applicationUsername =
                     PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
-                            .getAdminUserName();
+                            .getAdminUserName() + "@" + PrivilegedCarbonContext.getThreadLocalCarbonContext()
+                            .getTenantDomain();
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {VirtualFireAlarmConstants.DEVICE_TYPE};
             apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(

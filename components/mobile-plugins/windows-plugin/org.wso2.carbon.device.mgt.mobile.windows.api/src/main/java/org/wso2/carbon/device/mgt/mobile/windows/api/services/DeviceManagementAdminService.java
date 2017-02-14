@@ -179,7 +179,7 @@ public interface DeviceManagementAdminService {
             value = "Dis-enrol the windows Devices",
             notes = "Dis-enroll on Android devices",
             response = Activity.class,
-            tags = "Windows Device Management Administrative Service.",
+            tags = "Windows Device Management Administrative Service",
             extensions = {
                     @Extension(properties = {
                             @ExtensionProperty(name = Constants.SCOPE, value = "perm:windows:disenroll")

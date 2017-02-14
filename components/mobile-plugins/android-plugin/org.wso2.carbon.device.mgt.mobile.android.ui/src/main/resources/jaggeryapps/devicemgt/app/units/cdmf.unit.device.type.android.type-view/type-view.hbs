@@ -20,6 +20,9 @@
     <a href="javascript:toggleEnrollment()" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
     <a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
     <a href="javascript:toggleEmailInvite()" class="btn-operations"><i class="fw fw-mail fw-inverse fw-lg add-margin-1x"></i> Invite by Email</a>
+    {{#if displayStatus}}
+        <a href="javascript:artifactUpload()" class="btn-operations"><i class="fw fw-upload fw-inverse fw-lg add-margin-1x"></i> Deploy Analytics Artifacts</a>
+    {{/if}}
 
     <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS300/Android"
                                  target="_blank">here</a> for latest instructions and troubleshooting.</p>
@@ -40,6 +43,28 @@
     <br>
 
 </div>
+
+<div id="android-statistic-response-template" style="display: none">
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-5 col-md-6 col-centered">
+                <h3>
+                    <span class="fw-stack">
+                        <i class="fw fw-circle-outline fw-stack-2x"></i>
+                        <i id="status-icon" class="fw fw-error fw-stack-1x"></i>
+                    </span>
+                    <br>
+                </h3>
+                <h4>
+                    <span id="title"></span>
+                    <br>
+                </h4>
+                <span id="description"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12 padding-double grey-bg">
     <h3 class="uppercase">Prepare</h3><hr>

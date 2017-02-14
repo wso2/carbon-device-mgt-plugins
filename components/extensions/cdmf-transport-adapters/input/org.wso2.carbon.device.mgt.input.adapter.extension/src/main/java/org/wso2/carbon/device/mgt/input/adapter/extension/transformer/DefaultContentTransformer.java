@@ -16,14 +16,22 @@
 * under the License.
 */
 
-package org.wso2.carbon.device.mgt.input.adapter.extension;
+package org.wso2.carbon.device.mgt.input.adapter.extension.transformer;
+
+import org.wso2.carbon.device.mgt.input.adapter.extension.ContentTransformer;
 
 import java.util.Map;
 
 /**
  * This holds the default implementation of ContentTransformer
  */
-public class DefaultContentTransformer implements ContentTransformer{
+public class DefaultContentTransformer implements ContentTransformer {
+    private static final String DEFAULT_CONTENT_VALIDATOR = "default";
+
+    @Override
+    public String getType() {
+        return DEFAULT_CONTENT_VALIDATOR;
+    }
 
     @Override
     public Object transform(Object message, Map<String, Object> dynamicProperties) {

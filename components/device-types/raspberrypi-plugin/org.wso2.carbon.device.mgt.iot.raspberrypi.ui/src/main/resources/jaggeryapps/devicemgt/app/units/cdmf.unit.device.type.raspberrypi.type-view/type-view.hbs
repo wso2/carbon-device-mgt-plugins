@@ -61,6 +61,10 @@
     <a href="#" class="download-link btn-operations">
         <i class="fw fw-download add-margin-1x"></i>Download Agent
     </a>
+    {{#if displayStatus}}
+        <a href="javascript:artifactUpload()" class="btn-operations"><i class="fw fw-upload fw-inverse fw-lg add-margin-1x"></i> Deploy Analytics Artifacts</a>
+    {{/if}}
+
     <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS300/Raspberry+Pi"
                                  target="_blank">here</a> for latest instructions and
         troubleshooting.</p>
@@ -273,6 +277,27 @@
             <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">
         </a>
     </center>
+</div>
+
+<div id="raspberrypi-statistic-response-template" style="display: none">
+    <div class="content">
+        <div class="row">
+            <div class="col-lg-5 col-md-6 col-centered">
+                <h3>
+                    <span class="fw-stack">
+                        <i class="fw fw-circle-outline fw-stack-2x"></i>
+                        <i id="status-icon" class="fw fw-error fw-stack-1x"></i>
+                    </span>
+                    <br>
+                </h3>
+                <h4>
+                    <span id="title"></span>
+                    <br>
+                </h4>
+                <span id="description"></span>
+            </div>
+        </div>
+    </div>
 </div>
 
 {{#zone "topCss"}}

@@ -58,7 +58,7 @@ public final class MQTTEventAdapterConstants {
 
     public static final String DEFAULT_CALLBACK = "";
     public static final String DEFAULT_PASSWORD = "";
-    public static final String GRANT_TYPE = "password";
+    public static final String GRANT_TYPE = "urn:ietf:params:oauth:grant-type:jwt-bearer";
     public static final String TOKEN_SCOPE = "production";
     public static final String APPLICATION_NAME_PREFIX = "OutputAdapter_";
     public static final String CLIENT_ID = "clientId";

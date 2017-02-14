@@ -23,14 +23,14 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>extensions-feature</artifactId>
-        <version>3.0.9-SNAPSHOT</version>
+        <version>3.0.12-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.adapter.feature</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.9-SNAPSHOT</version>
+    <version>3.0.12-SNAPSHOT</version>
     <name>WSO2 Carbon - Device Management Adapters Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the adapter bundles required for IoT Server</description>
@@ -77,6 +77,11 @@
 			<groupId>io.github.openfeign</groupId>
 			<artifactId>feign-gson</artifactId>
 			<version>${io.github.openfeign.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.identity.carbon.auth.jwt</groupId>
+			<artifactId>org.wso2.carbon.identity.authenticator.signedjwt</artifactId>
+			<version>${identity.carbon.auth.jwt.version}</version>
 		</dependency>
     </dependencies>
     <build>
@@ -195,6 +200,9 @@
 								</bundleDef>
 								<bundleDef>
 									io.github.openfeign:feign-gson:${io.github.openfeign.version}
+								</bundleDef>
+								<bundleDef>
+									org.wso2.carbon.identity.carbon.auth.jwt:org.wso2.carbon.identity.authenticator.signedjwt:${identity.carbon.auth.jwt.version}
 								</bundleDef>
                             </bundles>
                             <importFeatures>

@@ -141,7 +141,9 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
     @Produces("application/zip")
     public Response downloadSketch(@QueryParam("deviceName") String deviceName, @QueryParam("sketchType") String sketchType) {
         try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
+            String username = APIUtil.getAuthenticatedUser() + "@" + PrivilegedCarbonContext
+                    .getThreadLocalCarbonContext().getTenantDomain();
+            ZipArchive zipFile = createDownloadFile(username, deviceName, sketchType);
             Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
             response.status(Response.Status.OK);
             response.type("application/zip");
@@ -206,7 +208,8 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
         }
         if (apiApplicationKey == null) {
             String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
-                    .getRealmConfiguration().getAdminUserName();
+                    .getRealmConfiguration().getAdminUserName() + "@" + PrivilegedCarbonContext
+                    .getThreadLocalCarbonContext().getTenantDomain();
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {RaspberrypiConstants.DEVICE_TYPE};
             apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(

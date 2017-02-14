@@ -20,7 +20,7 @@ var modalPopup = ".modal",
     modalPopupContainer = modalPopup + " .modal-content",
     modalPopupContent = modalPopup + " .modal-content";
 
-var emmAdminBasePath = "/api/device-mgt/v1.0";
+var backendEndBasePath = "/api/device-mgt/v1.0";
 
 //function openCollapsedNav() {
 //    $(".wr-hidden-nav-toggle-btn").addClass("active");
@@ -102,7 +102,7 @@ function loadNewNotificationsOnSideViewPanel() {
     if ($("#right-sidebar").attr("is-authorized") == "false") {
         $("#notification-bubble-wrapper").remove();
     } else {
-        var serviceURL = emmAdminBasePath + "/notifications?status=NEW";
+        var serviceURL = backendEndBasePath + "/notifications?status=NEW";
         invokerUtil.get(serviceURL, updateNotificationCountOnSuccess, updateNotificationCountOnError);
         loadNewNotifications();
     }
@@ -117,7 +117,7 @@ function loadNewNotifications() {
         var currentUser = notifications.data("currentUser");
 
         $.template("notification-listing", notifications.attr("src"), function (template) {
-            var serviceURL = emmAdminBasePath + "/notifications?offset=0&limit=5&status=NEW";
+            var serviceURL = backendEndBasePath + "/notifications?offset=0&limit=5&status=NEW";
             invokerUtil.get(
                 serviceURL,
                 // on success
@@ -359,7 +359,7 @@ $(document).ready(function () {
     $("#right-sidebar").on("click", ".new-notification", function () {
         var notificationId = $(this).data("id");
         var redirectUrl = $(this).data("url");
-        var markAsReadNotificationsEpr = emmAdminBasePath + "/notifications/" + notificationId + "/mark-checked";
+        var markAsReadNotificationsEpr = backendEndBasePath + "/notifications/" + notificationId + "/mark-checked";
         var messageSideBar = ".sidebar-messages";
 
         invokerUtil.put(
@@ -382,3 +382,30 @@ $(document).ready(function () {
         );
     });
 });
+
+function artifactUpload() {
+	var contentType = "application/json";
+
+	var urix = backendEndBasePath + "/admin/devicetype/deploy/android";
+	var defaultStatusClasses = "fw fw-stack-1x";
+	var content = $("#android-statistic-response-template").find(".content");
+	var title = content.find("#title");
+	var statusIcon = content.find("#status-icon");
+	var data = {}
+	invokerUtil.post(urix, data, function (data) {
+		title.html("Deploying statistic artifacts. Please wait...");
+		statusIcon.attr("class", defaultStatusClasses + " fw-check");
+		$(modalPopupContent).html(content.html());
+		showPopup();
+		setTimeout(function () {
+			hidePopup();
+			location.reload(true);
+		}, 5000);
+
+	}, function (jqXHR) {
+		title.html("Failed to deploy artifacts, Please contact administrator.");
+		statusIcon.attr("class", defaultStatusClasses + " fw-error");
+		$(modalPopupContent).html(content.html());
+		showPopup();
+	}, contentType);
+}

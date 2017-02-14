@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>cdmf-transport-adapters</artifactId>
-        <version>3.0.9-SNAPSHOT</version>
+        <version>3.0.12-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -116,9 +116,16 @@
                             org.jivesoftware.smack.*,
                             org.apache.log4j,
                             org.wso2.carbon.base,
-                            org.wso2.carbon.core.util
+                            org.wso2.carbon.core.util,
+							org.apache.commons.logging,
+							org.osgi.framework,
+							org.osgi.service.component,
+							org.osgi.service.http,
+							org.wso2.carbon.context,
+							org.wso2.carbon.core,
+							org.wso2.carbon.device.mgt.input.adapter.extension,
+							org.wso2.carbon.user.core.service
                         </Import-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
             </plugin>
