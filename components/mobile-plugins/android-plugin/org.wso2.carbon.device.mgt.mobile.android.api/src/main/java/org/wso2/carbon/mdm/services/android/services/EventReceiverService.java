@@ -53,7 +53,7 @@ import javax.ws.rs.core.Response;
                 }
         ),
         tags = {
-                @Tag(name = "android", description = "")
+                @Tag(name = "android,device_management", description = "")
         }
 )
 @Api(value = "Event Receiver", description = "Event publishing/retrieving related APIs. To enable event publishing/retrieving you need to" +

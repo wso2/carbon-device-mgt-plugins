@@ -10,14 +10,15 @@
 </div>
 
 <div class="row">
-    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 add-padding-top-2x">
+    <!--<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 add-padding-top-2x">
         <img src="{{@unit.publicUri}}/images/android-icon.png" class="img-responsive">
-    </div>
-    <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9 add-padding-top-2x">
+    </div>-->
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 add-padding-top-2x">
         <h3 class="text-center">Scan QR Code to connect your device</h3>
         <div class="enrollment-qr-container text-center"></div>
-        <p class="text-center">or</p>
-        <div class="text-center"><a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk" class="btn-operations remove-margin">
+        <h3 class="text-center add-margin-bottom-2x add-margin-top-2x">or</h3>
+        <div class="text-center"><a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk"
+                                    class="btn-operations remove-margin download_agent">
             <i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a></div>
 
         <!--<p class="doc-link">Please scan the QR code to download the APK on to your android device or click
@@ -37,27 +38,28 @@
 
 <div class="row grey-bg">
     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 add-padding-top-2x add-padding-bottom-2x">
-        <h5>Step 1</h5>
+        <h5><strong>Step 1</strong></h5>
         <p>Install the downloaded application in to the device to proceed.</p>
         <img src="{{@unit.publicUri}}/images/install_agent.png" class="img-responsive">
     </div>
     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 add-padding-top-2x add-padding-bottom-2x">
-        <h5>Step 2</h5>
+        <h5><strong>Step 2</strong></h5>
         <p>Tap Skip to proceed with the default enrollment process.</p>
         <img src="{{@unit.publicUri}}/images/set_profile.png" class="img-responsive">
     </div>
     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 add-padding-top-2x add-padding-bottom-2x">
-        <h5>Step 3</h5>
+        <h5><strong>Step 3</strong></h5>
         <p>Enter the server address based on your environment, in the text box provided.</p>
         <img src="{{@unit.publicUri}}/images/registration.png" class="img-responsive">
     </div>
     <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 add-padding-top-2x add-padding-bottom-2x">
-        <h5>Step 4</h5>
+        <h5><strong>Step 4</strong></h5>
         <p>Enter your credentials on to the provided fields and tap Register. </p>
         <img src="{{@unit.publicUri}}/images/install_agent.png" class="img-responsive">
     </div>
 </div>
 
+<<<<<<< HEAD
 <!--<div class="row">
     <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12 padding-double ">
         <h3 class="uppercase">What You Need</h3>
@@ -76,6 +78,16 @@
         <br>
     </div>
 </div>
+=======
+    <a href="javascript:toggleEnrollment()" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
+    <a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
+    {{#unless isCloud}}
+    <a href="javascript:toggleEmailInvite()" class="btn-operations"><i class="fw fw-mail fw-inverse fw-lg add-margin-1x"></i> Invite by Email</a>
+    {{/unless}}
+    {{#if displayStatus}}
+        <a href="javascript:artifactUpload()" class="btn-operations"><i class="fw fw-upload fw-inverse fw-lg add-margin-1x"></i> Deploy Analytics Artifacts</a>
+    {{/if}}
+>>>>>>> 32c50e0ef78961ec90a3ed9b44c8237adb40a41e
 
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
