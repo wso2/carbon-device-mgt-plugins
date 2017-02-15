@@ -55,7 +55,7 @@ import java.util.List;
                 }
         ),
         tags = {
-                @Tag(name = "windows", description = "")
+                @Tag(name = "windows,device_management", description = "")
         }
 )
 @Api(value = "Windows Device Management Administrative Service",

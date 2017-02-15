@@ -19,7 +19,7 @@
 var map;
 
 function loadLeafletMap() {
-   
+
     var deviceLocationID = "#device-location",
         locations = $(deviceLocationID).data("locations"),
         location_lat = $(deviceLocationID).data("lat"),
@@ -28,7 +28,7 @@ function loadLeafletMap() {
         zoomLevel = 13,
         tileSet = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         attribution = "&copy; <a href='https://openstreetmap.org/copyright'>OpenStreetMap</a> contributors";
-    if (locations) {
+    if (locations && locations.locations.length > 0) {
 
         var locationSets = locations.locations;
         map = L.map(container).setView([locationSets[0].lat, locationSets[0].lng], zoomLevel);
