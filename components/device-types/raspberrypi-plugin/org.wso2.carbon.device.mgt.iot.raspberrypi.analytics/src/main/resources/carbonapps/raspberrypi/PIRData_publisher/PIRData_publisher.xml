@@ -17,12 +17,9 @@
   ~ under the License.
   -->
 
-<artifacts>
-    <artifact name="raspberrypi" version="1.0.0" type="carbon/application">
-        <dependency artifact="raspberrypi_stream" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="PIRData_stream" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="raspberrypi_receiver" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="raspberrypi_execution" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="PIRData_publisher" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-    </artifact>
-</artifacts>
+<eventPublisher name="PIR_Data_publisher" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventpublisher">
+    <from streamName="org.wso2.iot.devices.PIRData" version="1.0.0"/>
+    <mapping customMapping="disable" type="wso2event"/>
+    <to eventAdapterType="secured-websocket"/>
+</eventPublisher>
+
