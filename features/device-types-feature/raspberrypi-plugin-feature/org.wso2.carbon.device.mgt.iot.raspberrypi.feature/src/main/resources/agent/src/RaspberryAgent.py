@@ -180,7 +180,8 @@ def configureLogger(loggerName):
 def connectAndPushData():
     currentTime = calendar.timegm(time.gmtime())
     rPiTemperature = iotUtils.LAST_TEMP  # Push the last read temperature value
-    PUSH_DATA = iotUtils.DEVICE_INFO.format(currentTime, rPiTemperature)
+    pPiPIRreading = iotUtils.LAST_PIR # Push the last read PIR reading
+    PUSH_DATA = iotUtils.DEVICE_INFO.format(currentTime, rPiTemperature,pPiPIRreading)
     
     print '~~~~~~~~~~~~~~~~~~~~~~~~ Publishing Device-Data ~~~~~~~~~~~~~~~~~~~~~~~~~'
     print ('PUBLISHED DATA: ' + PUSH_DATA)
@@ -227,6 +228,51 @@ def connectAndPushData():
     #     print 'RASPBERRY_STATS: Re-registering Device IP'
     #     registerDeviceIP()
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#       This is a Thread object for reading PIR output continuously
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class PIRReaderThread(object):
+    def __init__(self):
+        self.file=None
+        self.interval=3
+        thread = threading.Thread(target=self.run, args=())
+        thread.daemon = True  # Daemonize thread
+        thread.start()  # Start the execution
+
+    def run(self):
+        filename="readings.txt"
+        while True:
+            try:
+                self.file=open(filename)
+                reading=self.file.read()
+                if reading=="Vacant":
+                    if iotUtils.LAST_PIR:
+                        iotUtils.LAST_PIR=False
+                        time.sleep(PUSH_INTERVAL)
+                        print "Vacant"
+                        connectAndPushData()
+                elif reading=="Occupied":
+                    if not iotUtils.LAST_PIR:
+                        iotUtils.LAST_PIR=True
+                        time.sleep(PUSH_INTERVAL)
+                        print "Occupied"
+                        connectAndPushData()
+            except Exception, e:
+                print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+                print "RASPBERRY_STATS: Exception in PIRReaderThread: Could not successfully read PIR value"
+                print ("RASPBERRY_STATS: " + str(e))
+                pass
+                time.sleep(self.interval)
+            try:
+                self.file.close()
+            except Exception, e:
+                print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+                print "RASPBERRY_STATS: Exception in PIRReaderThread: Could not close"
+                print ("RASPBERRY_STATS: " + str(e))
+
+
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -331,6 +377,7 @@ def main():
     # ListenHTTPServerThread()  # starts an HTTP Server that listens for operational commands to switch ON/OFF Led
     SubscribeToMQTTQueue()  # connects and subscribes to an MQTT Queue that receives MQTT commands from the server
     TemperatureReaderThread()  # initiates and runs the thread to continuously read temperature from DHT Sensor
+    PIRReaderThread()
     # time.sleep(2) #wait for agent to connect to broker before publishing data
     while True:
         try:
