@@ -54,6 +54,11 @@
         <div class="panel-heading">Device Statistics</div>
         {{unit "cdmf.unit.device.type.raspberrypi.realtime.analytics-view" device=device}}
     </div>
+    <div class="panel panel-default tab-pane active"
+         id="PIR_statistics" role="tabpanel" aria-labelledby="PIR_statistics">
+        <div class="panel-heading">Room occupancy</div>
+        {{unit "cdmf.unit.device.type.raspberrypi_PIR.realtime.analytics-view" device=device}}
+    </div>
     <div class="panel panel-default tab-pane" id="event_log" role="tabpanel"
          aria-labelledby="event_log">
         <div class="panel-heading">Operations Log <span><a href="#"
