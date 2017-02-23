@@ -1,7 +1,6 @@
 instructions.configure = \
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/devicetypes/);\
-org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/devicetypes/virtual_firealarm/);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/webapps/);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.virtualfirealarm_${feature.version}/webapps/,target:${installFolder}/../../deployment/server/webapps/,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/sketches/);\
@@ -21,7 +20,7 @@ org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../reso
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/devicetypes/);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.virtualfirealarm_${feature.version}/devicetypes/,target:${installFolder}/../../deployment/server/devicetypes/,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/carbonapps/);\
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.virtualfirealarm_${feature.version}/carbonapps/,target:${installFolder}/../../resources/devicetypes/virtual_firealarm/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.virtualfirealarm_${feature.version}/carbonapps/,target:${installFolder}/../../resources/devicetypes/,overwrite:true);\
 
 
 instructions.unconfigure = \
