@@ -471,6 +471,8 @@ public class AndroidAPIUtils {
                             getProperty(prop.getValue(), "PASSCODE_ENABLED"));
                     deviceInfo.getDeviceDetailsMap().put("operator",
                             getProperty(prop.getValue(), "OPERATOR"));
+		    deviceInfo.getDeviceDetailsMap().put("PhoneNumber",
+                            getProperty(prop.getValue(), "PHONE_NUMBER"));
                 }
             }
         }
