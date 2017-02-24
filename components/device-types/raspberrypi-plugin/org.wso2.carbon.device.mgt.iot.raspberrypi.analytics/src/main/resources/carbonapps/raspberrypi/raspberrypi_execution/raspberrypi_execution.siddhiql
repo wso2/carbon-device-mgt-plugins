@@ -7,14 +7,21 @@
 /* define streams/tables and write queries here ... */
 
 @Import('org.wso2.iot.raspberrypi:1.0.0')
-define stream raspberrypi (meta_owner string, meta_deviceId string, meta_time long, temperature float);
+define stream raspberrypi (meta_owner string, meta_deviceId string, meta_time long, temperature float, pirval bool);
 
 @Export('org.wso2.iot.devices.temperature:1.0.0')
 define stream temperature (meta_owner string, meta_deviceType string, meta_deviceId string, meta_time long, temperature float);
 
+@Export('org.wso2.iot.devices.PIRData:1.0.0')
+define stream pirval (meta_owner string, meta_deviceType string, meta_deviceId string, meta_time long, pirval bool);
+
 from raspberrypi
 select meta_owner, 'raspberrypi' as meta_deviceType, meta_deviceId, meta_time * 1000 as meta_time, temperature
 insert into temperature;
+
+from raspberrypi
+select meta_owner, 'raspberrypi' as meta_deviceType, meta_deviceId, meta_time * 1000 as meta_time, pirval
+insert into pirval;
 
 
 
