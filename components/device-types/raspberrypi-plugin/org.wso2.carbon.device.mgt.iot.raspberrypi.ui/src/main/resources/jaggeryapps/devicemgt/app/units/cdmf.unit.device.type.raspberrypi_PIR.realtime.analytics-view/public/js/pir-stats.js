@@ -18,9 +18,13 @@
 
 var ws;
 
+$( document ).ready(function() {
+    console.log( "ready!" );
+});
+
 $(window).load(function () {
     var websocketUrl = $("#div-text").data("websocketurl");
-    connect(websocketUrl)
+    connectpir(websocketUrl);
 });
 
 $(window).unload(function () {
@@ -28,8 +32,7 @@ $(window).unload(function () {
 });
 
 //websocket connection
-function connect(target) {
-    alert ("debugging");
+function connectpir(target) {
     if ('WebSocket' in window) {
         ws = new WebSocket(target);
     } else if ('MozWebSocket' in window) {
@@ -40,13 +43,14 @@ function connect(target) {
     if (ws) {
         ws.onmessage = function (event) {
             var dataPoint = JSON.parse(event.data);
-            var val = dataPoint[5]
-            alert(dataPoint[5])
+            var val = dataPoint.event.payloadData.pirval;
             var x = document.getElementById("occupancy");
-            if (val)
-                x.innerHTML = "Room is occupied"
-            else
-                x.innerHTML = "Room is vacant"
+            if (val == true){
+                x.innerText = "Room is occupied";
+            }
+            else {
+                x.innerText = "Room is vacant";
+            }
 
         };
     }

@@ -36,8 +36,9 @@ function onRequest(context) {
         if (tokenPair) {
             token = tokenPair.accessToken;
         }
-        websocketEndpoint = websocketEndpoint + "/secured-websocket/org.wso2.iot.devices.PIRData/1.0.0?"
-            + "deviceId=" + device.deviceIdentifier + "&deviceType=" + device.type + "&websocketToken=" + token;
+        /*websocketEndpoint = websocketEndpoint + "/secured-websocket/org.wso2.iot.devices.PIRData/1.0.0?"
+            + "deviceId=" + device.deviceIdentifier + "&deviceType=" + device.type + "&websocketToken=" + token;*/
+        websocketEndpoint = "wss://localhost:9445/outputwebsocket/PIR_Data_publisher"; //eventAdapterType changed to webbsocket-local
     }
     return {"device": device, "websocketEndpoint": websocketEndpoint};
 }

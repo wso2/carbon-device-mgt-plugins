@@ -18,7 +18,7 @@
 {{unit "cdmf.unit.lib.rickshaw-graph"}}
 
 <div id="div-text" data-websocketurl="{{websocketEndpoint}}">
-    <h1 id="occupancy">Room is vacant</h1>
+    <h1 id="occupancy"></h1>
 </div>
 <a class="padding-left"
    href="{{@app.context}}/device/{{device.type}}/analytics?deviceId={{device.deviceIdentifier}}&deviceName={{device.name}}">
@@ -31,5 +31,5 @@
 {{#zone "bottomJs"}}
     {{js "js/moment.min.js"}}
     {{js "js/socket.io.min.js"}}
-    {{js "js/device-stats.js"}}
+    {{js "js/pir-stats.js"}}
 {{/zone}}
