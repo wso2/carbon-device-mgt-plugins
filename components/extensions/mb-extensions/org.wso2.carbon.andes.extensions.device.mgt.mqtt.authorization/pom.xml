@@ -123,7 +123,8 @@
                             javax.xml.namespace,
                             javax.xml.stream,
 							org.wso2.carbon.base,
-							org.wso2.carbon.utils
+							org.wso2.carbon.utils,
+							javax.net.ssl
                         </Import-Package>
 						<Embed-Dependency>
 							jsr311-api,

@@ -169,7 +169,8 @@
 							feign.auth,
 							feign.codec,
 							feign.gson,
-							javax.cache
+							javax.cache,
+							javax.net.ssl
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
 						<Embed-Dependency>

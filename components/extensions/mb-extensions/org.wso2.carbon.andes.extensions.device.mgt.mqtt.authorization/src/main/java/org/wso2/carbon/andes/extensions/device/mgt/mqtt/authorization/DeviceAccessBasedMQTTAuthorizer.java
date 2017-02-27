@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization;
 
+import feign.Client;
 import feign.Feign;
 import feign.FeignException;
 import feign.gson.GsonDecoder;
@@ -45,6 +46,14 @@ import javax.cache.Cache;
 import javax.cache.CacheConfiguration;
 import javax.cache.CacheManager;
 import javax.cache.Caching;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -68,7 +77,7 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
 
     public DeviceAccessBasedMQTTAuthorizer() {
         this.MQTTAuthorizationConfiguration = AuthorizationConfigurationManager.getInstance();
-        deviceAccessAuthorizationAdminService = Feign.builder()
+        deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient())
                 .requestInterceptor(new OAuthRequestInterceptor())
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(DeviceAccessAuthorizationAdminService.class,
@@ -222,6 +231,39 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
         }
+    }
+
+    private static Client getSSLClient() {
+        return new Client.Default(getTrustedSSLSocketFactory(), new HostnameVerifier() {
+            @Override
+            public boolean verify(String s, SSLSession sslSession) {
+                return true;
+            }
+        });
+    }
+
+    private static SSLSocketFactory getTrustedSSLSocketFactory() {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+                        public void checkClientTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                        public void checkServerTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                    }
+            };
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            return sc.getSocketFactory();
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            return null;
+        }
+
     }
 
 }
