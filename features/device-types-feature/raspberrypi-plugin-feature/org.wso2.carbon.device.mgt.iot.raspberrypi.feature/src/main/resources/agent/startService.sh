@@ -33,6 +33,7 @@ if [ ! -d "$destination" ]
 then
     mkdir $destination
 fi
+
 # installing dependencies
 echo ===Installing Dependencies
 sudo apt-get update
@@ -48,6 +49,15 @@ cd ..
 
 sudo cp $currentDir/deviceConfig.properties $currentDir/src
 sudo cp -r $currentDir/src $destination
+sudo cp $currentDir/pir_sensor-1.0-SNAPSHOT-jar-with-dependencies.jar $destination
+
+sudo chmod 755 $destination/pir_sensor-1.0-SNAPSHOT-jar-with-dependencies.jar
+sudo update-rc.d -f PIRService.sh remove
+sudo cp $currentDir/PIRService.sh /etc/init.d
+sudo chmod 755 /etc/init.d/PIRService.sh
+sudo update-rc.d PIRService.sh defaults
+sudo service PIRService.sh start
+
 sudo chmod 755 $destination/src/RaspberryAgent.py
 sudo update-rc.d -f RaspberryService.sh remove
 sudo cp $currentDir/RaspberryService.sh /etc/init.d
