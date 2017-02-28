@@ -40,7 +40,7 @@ public class MDMComponent {
         mdmServiceRegistration = bundleContext.registerService(ApplicationOperations.class.getName(), new
                 ApplicationOperationsImpl(), null);
         if (log.isDebugEnabled()) {
-            log.debug("WSO2MDM MDM Component activated");
+            log.debug("WSO2MDM MDM Component activated.");
         }
     }
 
