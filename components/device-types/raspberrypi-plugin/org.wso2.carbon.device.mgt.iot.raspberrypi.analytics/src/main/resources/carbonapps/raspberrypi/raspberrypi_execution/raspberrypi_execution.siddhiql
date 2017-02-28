@@ -6,6 +6,7 @@
 
 /* define streams/tables and write queries here ... */
 
+/* change prival's type*/
 @Import('org.wso2.iot.raspberrypi:1.0.0')
 define stream raspberrypi (meta_owner string, meta_deviceId string, meta_time long, temperature float, pirval bool);
 

@@ -231,4 +231,8 @@
 
 		</plugins>
 	</build>
+
+	<modules>
+		<module>/src/main/resources/agent/lib</module>
+	</modules>
 </project>
