@@ -17,6 +17,7 @@
  */
 package org.wso2.carbon.device.mgt.input.adapter.http.authorization;
 
+import feign.Client;
 import feign.Feign;
 import feign.FeignException;
 import feign.gson.GsonDecoder;
@@ -33,6 +34,14 @@ import org.wso2.carbon.device.mgt.input.adapter.http.util.AuthenticationInfo;
 import org.wso2.carbon.device.mgt.input.adapter.http.util.PropertyUtils;
 import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterException;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +59,7 @@ public class DeviceAuthorizer {
 
     public DeviceAuthorizer(Map<String, String> globalProperties) {
         try {
-            deviceAccessAuthorizationAdminService = Feign.builder()
+            deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient())
                     .requestInterceptor(new OAuthRequestInterceptor(globalProperties))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(DeviceAccessAuthorizationAdminService.class, getDeviceMgtServerUrl(globalProperties)
@@ -97,5 +106,38 @@ public class DeviceAuthorizer {
             logger.error("deviceMgtServerUrl can't be empty ");
         }
         return deviceMgtServerUrl;
+    }
+
+    private static Client getSSLClient() {
+        return new Client.Default(getTrustedSSLSocketFactory(), new HostnameVerifier() {
+            @Override
+            public boolean verify(String s, SSLSession sslSession) {
+                return true;
+            }
+        });
+    }
+
+    private static SSLSocketFactory getTrustedSSLSocketFactory() {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+                        public void checkClientTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                        public void checkServerTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                    }
+            };
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            return sc.getSocketFactory();
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            return null;
+        }
+
     }
 }

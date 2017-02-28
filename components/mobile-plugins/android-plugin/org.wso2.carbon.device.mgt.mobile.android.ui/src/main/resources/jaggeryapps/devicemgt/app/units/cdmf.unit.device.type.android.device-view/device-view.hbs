@@ -364,16 +364,18 @@
                             <div id="device-location"
                                  data-lat="{{device.location.latitude}}"
                                  data-long="{{device.location.longitude}}"
-                                 data-locations = "{{device.locationHistory}}">
+                                 data-locations="{{device.locationHistory}}">
                             </div>
                             <br/>
-                            <a class="padding-left" target="_blank"
-                               href="{{portalUrl}}/portal/dashboards/geo-dashboard/?GLOBAL-STATE={{anchor}}">
+                            {{#unless isCloud}}
+                                <a class="padding-left" target="_blank"
+                                   href="{{portalUrl}}/portal/dashboards/geo-dashboard/?GLOBAL-STATE={{anchor}}">
                                 <span class="fw-stack">
                                     <i class="fw fw-circle-outline fw-stack-2x"></i>
                                     <i class="fw fw-map-location fw-stack-1x"></i>
-                                </span>  Add Geo Fencing
-                            </a>
+                                </span> Add Geo Fencing
+                                </a>
+                            {{/unless}}
                         {{else}}
                             <div id="map-error" class="message message-warning">
                                 <h4 class="remove-margin">
