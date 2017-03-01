@@ -71,6 +71,7 @@
 							</resources>
 						</configuration>
 					</execution>
+
 				</executions>
 			</plugin>
 
@@ -113,6 +114,31 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+									<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.agent</artifactId>
+									<version>${project.version}</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>
+										src/main/resources/agent
+									</outputDirectory>
+									<includes>/target/raspberry-pi-agent.jar</includes>
+								</artifactItem>
+
+							</artifactItems>
+						</configuration>
+				</execution>
+
 					<execution>
 						<id>copy-jaxrs-war</id>
 						<phase>package</phase>
@@ -152,6 +178,7 @@
 									</outputDirectory>
 									<includes>**/*</includes>
 								</artifactItem>
+
 							</artifactItems>
 						</configuration>
 					</execution>
@@ -231,8 +258,4 @@
 
 		</plugins>
 	</build>
-
-	<modules>
-		<module>/src/main/resources/agent/lib</module>
-	</modules>
 </project>
