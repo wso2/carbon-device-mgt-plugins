@@ -46,9 +46,10 @@ function loadLeafletMap() {
                 this.closePopup();
             });
         }
-
         $("#map-error").hide();
         $("#device-location").show();
+        setTimeout(function(){ map.invalidateSize()}, 400);
+
     } else if (location_long && location_lat) {
 
         map = L.map(container).setView([location_lat, location_long], zoomLevel);
@@ -61,7 +62,9 @@ function loadLeafletMap() {
         m.on('mouseout', function (e) {
             this.closePopup();
         });
-
+        $("#map-error").hide();
+        $("#device-location").show();
+        setTimeout(function(){ map.invalidateSize()}, 400);
     } else {
         $("#device-location").hide();
         $("#map-error").show();
