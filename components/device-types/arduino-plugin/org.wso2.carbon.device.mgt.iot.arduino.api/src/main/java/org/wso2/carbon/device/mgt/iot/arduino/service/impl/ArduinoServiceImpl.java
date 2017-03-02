@@ -182,12 +182,11 @@ public class ArduinoServiceImpl implements ArduinoService {
             String username = APIUtil.getAuthenticatedUser() + "@" + PrivilegedCarbonContext
                     .getThreadLocalCarbonContext().getTenantDomain();
             ZipArchive zipFile = createDownloadFile(username, deviceName);
-            Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
+            Response.ResponseBuilder response = Response.ok(zipFile.getZipFileContent());
             response.status(Response.Status.OK);
             response.type("application/zip");
             response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
             Response resp = response.build();
-            zipFile.getZipFile().delete();
             return resp;
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
@@ -198,9 +197,6 @@ public class ArduinoServiceImpl implements ArduinoService {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (APIManagerException ex) {
-            log.error(ex.getMessage(), ex);
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (UserStoreException ex) {
