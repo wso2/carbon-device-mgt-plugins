@@ -49,9 +49,9 @@ cd ..
 
 sudo cp $currentDir/deviceConfig.properties $currentDir/src
 sudo cp -r $currentDir/src $destination
-sudo cp $currentDir/pir_sensor-1.0-SNAPSHOT-jar-with-dependencies.jar $destination
+sudo cp $currentDir/org.wso2.carbon.device.mgt.iot.raspberrypi.agent-3.0.12-SNAPSHOT.jar $destination
 
-sudo chmod 755 $destination/pir_sensor-1.0-SNAPSHOT-jar-with-dependencies.jar
+sudo chmod 755 $destination/org.wso2.carbon.device.mgt.iot.raspberrypi.agent-3.0.12-SNAPSHOT.jar
 sudo update-rc.d -f PIRService.sh remove
 sudo cp $currentDir/PIRService.sh /etc/init.d
 sudo chmod 755 /etc/init.d/PIRService.sh

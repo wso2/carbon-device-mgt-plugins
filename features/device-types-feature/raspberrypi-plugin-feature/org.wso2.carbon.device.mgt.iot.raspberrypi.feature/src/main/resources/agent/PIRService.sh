@@ -14,8 +14,8 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin
 DESC="This service is used to publish events from the Raspberry Pi PIR to the WSO2 Device Cloud"
 NAME=RaspberryPIRStats
 
-DIR=/usr/local/src/RaspberryAgent/
-DAEMON=$DIR/pir_sensor-1.0-SNAPSHOT-jar-with-dependencies.jar
+DIR=/usr/local/src/RaspberryAgent
+DAEMON=$DIR/org.wso2.carbon.device.mgt.iot.raspberrypi.agent-3.0.12-SNAPSHOT.jar
 DAEMON_NAME=$NAME
 SCRIPTNAME=PIRService.sh
 
