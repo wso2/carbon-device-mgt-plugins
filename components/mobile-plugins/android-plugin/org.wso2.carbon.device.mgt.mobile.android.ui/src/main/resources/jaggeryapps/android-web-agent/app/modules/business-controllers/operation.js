@@ -60,7 +60,19 @@ var operationModule = function () {
                     feature["description"] = features[i].description;
                     feature["deviceType"] = deviceType;
                     feature["params"] = [];
-                    var metaData = features[i].metadataEntries;
+					var featuresEntry = utility.getDeviceTypeConfig(deviceType)["deviceType"]["features"];
+					if (featuresEntry) {
+						var featureEntry = featuresEntry[features[i].code];
+						if (featureEntry) {
+							var permissionEntry = featureEntry["permission"];
+							log.error(permissionEntry);
+							if (permissionEntry) {
+								feature["permission"] = permissionEntry
+							}
+						}
+					}
+
+					var metaData = features[i].metadataEntries;
                     if (metaData) {
                         for (var j = 0; j < metaData.length; j++) {
                             feature["params"].push(metaData[j].value);
