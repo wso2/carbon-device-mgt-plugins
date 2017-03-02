@@ -10,10 +10,9 @@
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.agent</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <name>pir_sensor</name>
   <packaging>jar</packaging>
 
-  <name>pir_sensor</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -33,7 +32,9 @@
             <manifest>
               <mainClass>org.wso2.App</mainClass>
             </manifest>
-          </archive>s
+          </archive>
+          <finalName>raspberry-pi-agent</finalName>
+          <appendAssemblyId>false</appendAssemblyId>
         </configuration>
         <executions>
           <execution>
