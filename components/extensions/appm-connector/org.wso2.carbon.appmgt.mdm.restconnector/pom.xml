@@ -67,7 +67,8 @@
                             feign.gson,
 							org.json.simple.*,
 							org.wso2.carbon.appmgt.mobile.beans,
-							org.wso2.carbon.context
+							org.wso2.carbon.context,
+							javax.net.ssl
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.carbon.appmgt.mdm.restconnector.internal,

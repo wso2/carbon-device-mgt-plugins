@@ -60,7 +60,7 @@ var operationModule = function () {
                     feature["description"] = features[i].description;
                     feature["deviceType"] = deviceType;
                     feature["params"] = [];
-                    var metaData = features[i].metadataEntries;
+					var metaData = features[i].metadataEntries;
                     if (metaData) {
                         for (var j = 0; j < metaData.length; j++) {
                             feature["params"].push(metaData[j].value);

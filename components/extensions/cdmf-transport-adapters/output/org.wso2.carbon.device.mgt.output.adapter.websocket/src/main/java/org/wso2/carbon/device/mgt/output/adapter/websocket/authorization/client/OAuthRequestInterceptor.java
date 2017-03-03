@@ -14,9 +14,13 @@
 
 package org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client;
 
+import feign.Client;
 import feign.Feign;
+import feign.Logger;
+import feign.Request;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import feign.Response;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
@@ -31,6 +35,15 @@ import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.
 import org.wso2.carbon.device.mgt.output.adapter.websocket.util.PropertyUtils;
 import org.wso2.carbon.event.output.adapter.core.exception.OutputEventAdapterException;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 /**
@@ -49,7 +62,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private ApiApplicationRegistrationService apiApplicationRegistrationService;
     private TokenIssuerService tokenIssuerService;
 
-    private static Log logger = LogFactory.getLog(OAuthRequestInterceptor.class);
+    private static Log log = LogFactory.getLog(OAuthRequestInterceptor.class);
 
     private static final String CONNECTION_USERNAME = "username";
     private static final String CONNECTION_PASSWORD = "password";
@@ -77,13 +90,13 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             username = getUsername(globalProperties);
             password = getPassword(globalProperties);
             tokenEndpoint = getTokenEndpoint(globalProperties);
-            apiApplicationRegistrationService = Feign.builder().requestInterceptor(
-                    new BasicAuthRequestInterceptor(username, password))
+            apiApplicationRegistrationService = Feign.builder().client(getSSLClient()).logger(getLogger())
+                    .logLevel(Logger.Level.FULL).requestInterceptor(new BasicAuthRequestInterceptor(username, password))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(ApiApplicationRegistrationService.class,
                             deviceMgtServerUrl + API_APPLICATION_REGISTRATION_CONTEXT);
         } catch (OutputEventAdapterException e) {
-            logger.error("Invalid url: deviceMgtServerUrl" + deviceMgtServerUrl + " or tokenEndpoint:" + tokenEndpoint,
+            log.error("Invalid url: deviceMgtServerUrl" + deviceMgtServerUrl + " or tokenEndpoint:" + tokenEndpoint,
                          e);
         }
     }
@@ -100,8 +113,8 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             ApiApplicationKey apiApplicationKey = apiApplicationRegistrationService.register(apiRegistrationProfile);
             String consumerKey = apiApplicationKey.getConsumerKey();
             String consumerSecret = apiApplicationKey.getConsumerSecret();
-            tokenIssuerService = Feign.builder().requestInterceptor(
-                    new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
+            tokenIssuerService = Feign.builder().client(getSSLClient()).logger(getLogger()).logLevel(Logger.Level.FULL)
+                    .requestInterceptor(new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(TokenIssuerService.class, tokenEndpoint);
             tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password, REQUIRED_SCOPE);
@@ -120,7 +133,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private String getUsername(Map<String, String> globalProperties) {
         String username = globalProperties.get(CONNECTION_USERNAME);
         if (username == null || username.isEmpty()) {
-            logger.error("username can't be empty ");
+            log.error("username can't be empty ");
         }
         return username;
     }
@@ -128,7 +141,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private String getPassword(Map<String, String> globalProperties) {
         String password = globalProperties.get(CONNECTION_PASSWORD);;
         if (password == null || password.isEmpty()) {
-            logger.error("password can't be empty ");
+            log.error("password can't be empty ");
         }
         return password;
     }
@@ -136,7 +149,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private String getDeviceMgtServerUrl(Map<String, String> globalProperties) throws OutputEventAdapterException {
         String deviceMgtServerUrl = globalProperties.get(DEVICE_MGT_SERVER_URL);
         if (deviceMgtServerUrl == null || deviceMgtServerUrl.isEmpty()) {
-            logger.error("deviceMgtServerUrl can't be empty ");
+            log.error("deviceMgtServerUrl can't be empty ");
         }
         return PropertyUtils.replaceProperty(deviceMgtServerUrl);
     }
@@ -144,7 +157,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private String getTokenEndpoint(Map<String, String> globalProperties) throws OutputEventAdapterException {
         String tokenEndpoint = globalProperties.get(TOKEN_ENDPOINT_CONTEXT);
         if ( tokenEndpoint.isEmpty()) {
-            logger.error("tokenEndpoint can't be empty ");
+            log.error("tokenEndpoint can't be empty ");
         }
         return PropertyUtils.replaceProperty(tokenEndpoint);
     }
@@ -154,9 +167,68 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         try {
             refreshTimeOffset = Long.parseLong(globalProperties.get(TOKEN_REFRESH_TIME_OFFSET));
         } catch (NumberFormatException e) {
-            logger.error("refreshTimeOffset should be a number", e);
+            log.error("refreshTimeOffset should be a number", e);
         }
         return refreshTimeOffset;
+    }
+
+    private static Client getSSLClient() {
+        return new Client.Default(getTrustedSSLSocketFactory(), new HostnameVerifier() {
+            @Override
+            public boolean verify(String s, SSLSession sslSession) {
+                return true;
+            }
+        });
+    }
+
+    private static SSLSocketFactory getTrustedSSLSocketFactory() {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+                        public void checkClientTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                        public void checkServerTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                    }
+            };
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            return sc.getSocketFactory();
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            return null;
+        }
+    }
+
+    private static Logger getLogger() {
+        return new Logger() {
+            @Override
+            protected void log(String configKey, String format, Object... args) {
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format(methodTag(configKey) + format, args));
+                }
+            }
+
+            @Override
+            protected void logRequest(String configKey, Level logLevel, Request request) {
+                if (log.isDebugEnabled()) {
+                    super.logRequest(configKey, logLevel, request);
+                }
+            }
+
+            @Override
+            protected Response logAndRebufferResponse(String configKey, Level logLevel, Response response,
+                                                      long elapsedTime) throws IOException {
+                if (log.isDebugEnabled()) {
+                    return super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
+                }
+                return response;
+            }
+        };
     }
 
 }

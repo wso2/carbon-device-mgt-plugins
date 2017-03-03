@@ -18,8 +18,12 @@
 
 package org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization;
 
+import feign.Client;
 import feign.Feign;
 import feign.FeignException;
+import feign.Logger;
+import feign.Request;
+import feign.Response;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
@@ -43,8 +47,16 @@ import org.wso2.carbon.user.api.UserStoreException;
 
 import javax.cache.Cache;
 import javax.cache.CacheConfiguration;
-import javax.cache.CacheManager;
 import javax.cache.Caching;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -58,7 +70,7 @@ import java.util.concurrent.TimeUnit;
 public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
 
     private static final String UI_EXECUTE = "ui.execute";
-    private static Log logger = LogFactory.getLog(DeviceAccessBasedMQTTAuthorizer.class);
+    private static Log log = LogFactory.getLog(DeviceAccessBasedMQTTAuthorizer.class);
     AuthorizationConfigurationManager MQTTAuthorizationConfiguration;
     private static final String CDMF_SERVER_BASE_CONTEXT = "/api/device-mgt/v1.0";
     private static final String CACHE_MANAGER_NAME = "mqttAuthorizationCacheManager";
@@ -68,8 +80,8 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
 
     public DeviceAccessBasedMQTTAuthorizer() {
         this.MQTTAuthorizationConfiguration = AuthorizationConfigurationManager.getInstance();
-        deviceAccessAuthorizationAdminService = Feign.builder()
-                .requestInterceptor(new OAuthRequestInterceptor())
+        deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient()).logger(getLogger())
+                .logLevel(Logger.Level.FULL).requestInterceptor(new OAuthRequestInterceptor())
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(DeviceAccessAuthorizationAdminService.class,
                         MQTTAuthorizationConfiguration.getDeviceMgtServerUrl() + CDMF_SERVER_BASE_CONTEXT);
@@ -108,7 +120,7 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     }
                     return false;
                 } catch (FeignException e) {
-                    logger.error(e.getMessage(), e);
+                    log.error(e.getMessage(), e);
                     return false;
                 }
             }
@@ -151,7 +163,7 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     }
                 }
             } catch (FeignException e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
@@ -195,7 +207,7 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     userRealm.getAuthorizationManager().isUserAuthorized(username, permission, action);
         } catch (UserStoreException e) {
             String errorMsg = String.format("Unable to authorize the user : %s", username);
-            logger.error(errorMsg, e);
+            log.error(errorMsg, e);
             return false;
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
@@ -222,6 +234,65 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
         }
+    }
+
+    private static Client getSSLClient() {
+        return new Client.Default(getTrustedSSLSocketFactory(), new HostnameVerifier() {
+            @Override
+            public boolean verify(String s, SSLSession sslSession) {
+                return true;
+            }
+        });
+    }
+
+    private static SSLSocketFactory getTrustedSSLSocketFactory() {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+                        public void checkClientTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                        public void checkServerTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                    }
+            };
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            return sc.getSocketFactory();
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            return null;
+        }
+    }
+
+    private static Logger getLogger() {
+        return new Logger() {
+            @Override
+            protected void log(String configKey, String format, Object... args) {
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format(methodTag(configKey) + format, args));
+                }
+            }
+
+            @Override
+            protected void logRequest(String configKey, Level logLevel, Request request) {
+                if (log.isDebugEnabled()) {
+                    super.logRequest(configKey, logLevel, request);
+                }
+            }
+
+            @Override
+            protected Response logAndRebufferResponse(String configKey, Level logLevel, Response response,
+                                                      long elapsedTime) throws IOException {
+                if (log.isDebugEnabled()) {
+                    return super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
+                }
+                return response;
+            }
+        };
     }
 
 }

@@ -26,12 +26,14 @@ var InitiateViewOption = null;
     var payload = [deviceIdentifier];
     var operationTable;
     var serviceUrl;
+    var serviceUrlLocal = "/api/device-mgt/android/v1.0/admin/devices/location";
 
     if (deviceType == "ios") {
         serviceUrl = "/ios/operation/deviceinfo";
     } else if (deviceType == "android") {
         //var serviceUrl = "/mdm-android-agent/operation/device-info";
         serviceUrl = "/api/device-mgt/android/v1.0/admin/devices/info";
+        serviceUrlLocal = "/api/device-mgt/android/v1.0/admin/devices/location";
     }
 
     if (serviceUrl) {
@@ -49,6 +51,23 @@ var InitiateViewOption = null;
                 $(".panel-body").append(defaultInnerHTML);
             }
         );
+        
+        
+         invokerUtil.post(
+            serviceUrlLocal,
+            payload,
+            // success-callback
+            function () {
+                $(".panel-body").show();
+            },
+            // error-callback
+            function () {
+                var defaultInnerHTML =
+                    "<br><p class='fw-warning'>Device data may not have been updated. Please refresh to try again.<p>";
+                $(".panel-body").append(defaultInnerHTML);
+            }
+        );
+        
     }
 
 

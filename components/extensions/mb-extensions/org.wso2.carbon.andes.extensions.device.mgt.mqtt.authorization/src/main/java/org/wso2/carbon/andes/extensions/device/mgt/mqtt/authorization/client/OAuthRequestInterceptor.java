@@ -14,21 +14,37 @@
 
 package org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.client;
 
+import feign.Client;
 import feign.Feign;
+import feign.Logger;
+import feign.Request;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import feign.Response;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.codec.EncodeException;
 import feign.codec.Encoder;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.client.dto.AccessTokenInfo;
 import org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.client.dto.ApiApplicationKey;
 import org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.client.dto.ApiApplicationRegistrationService;
 import org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.client.dto.ApiRegistrationProfile;
 import org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.client.dto.TokenIssuerService;
 import org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.config.AuthorizationConfigurationManager;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * This is a request interceptor to add oauth token header.
@@ -45,6 +61,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private static final String REQUIRED_SCOPE = "perm:authorization:verify";
     private ApiApplicationRegistrationService apiApplicationRegistrationService;
     private TokenIssuerService tokenIssuerService;
+    private static Log log = LogFactory.getLog(OAuthRequestInterceptor.class);
 
     /**
      * Creates an interceptor that authenticates all requests.
@@ -53,8 +70,8 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         refreshTimeOffset = AuthorizationConfigurationManager.getInstance().getTokenRefreshTimeOffset() * 1000;
         String username = AuthorizationConfigurationManager.getInstance().getUsername();
         String password = AuthorizationConfigurationManager.getInstance().getPassword();
-        apiApplicationRegistrationService = Feign.builder().requestInterceptor(
-                new BasicAuthRequestInterceptor(username, password))
+        apiApplicationRegistrationService = Feign.builder().client(getSSLClient()).logger(getLogger()).logLevel(
+                Logger.Level.FULL).requestInterceptor(new BasicAuthRequestInterceptor(username, password))
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(ApiApplicationRegistrationService.class,
                         AuthorizationConfigurationManager.getInstance().getDeviceMgtServerUrl() +
@@ -75,8 +92,8 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             String consumerSecret = apiApplicationKey.getConsumerSecret();
             String username = AuthorizationConfigurationManager.getInstance().getUsername();
             String password = AuthorizationConfigurationManager.getInstance().getPassword();
-            tokenIssuerService = Feign.builder().requestInterceptor(
-                    new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
+            tokenIssuerService = Feign.builder().client(getSSLClient()).logger(getLogger()).logLevel(Logger.Level.FULL)
+                    .requestInterceptor(new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(TokenIssuerService.class,
                             AuthorizationConfigurationManager.getInstance().getTokenEndpoint());
@@ -91,6 +108,65 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         }
         String headerValue = "Bearer " + tokenInfo.getAccess_token();
         template.header("Authorization", headerValue);
+    }
+
+    private static Client getSSLClient() {
+        return new Client.Default(getTrustedSSLSocketFactory(), new HostnameVerifier() {
+            @Override
+            public boolean verify(String s, SSLSession sslSession) {
+                return true;
+            }
+        });
+    }
+
+    private static SSLSocketFactory getTrustedSSLSocketFactory() {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+                        public void checkClientTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                        public void checkServerTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                    }
+            };
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            return sc.getSocketFactory();
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            return null;
+        }
+    }
+
+    private static Logger getLogger() {
+        return new Logger() {
+            @Override
+            protected void log(String configKey, String format, Object... args) {
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format(methodTag(configKey) + format, args));
+                }
+            }
+
+            @Override
+            protected void logRequest(String configKey, Level logLevel, Request request) {
+                if (log.isDebugEnabled()) {
+                    super.logRequest(configKey, logLevel, request);
+                }
+            }
+
+            @Override
+            protected Response logAndRebufferResponse(String configKey, Level logLevel, Response response,
+                                                      long elapsedTime) throws IOException {
+                if (log.isDebugEnabled()) {
+                    return super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
+                }
+                return response;
+            }
+        };
     }
 
 }

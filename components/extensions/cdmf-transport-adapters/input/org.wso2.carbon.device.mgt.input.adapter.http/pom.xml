@@ -160,7 +160,8 @@
 							org.wso2.carbon.core.util,
 							org.wso2.carbon.identity.oauth2.*,
 							org.wso2.carbon.utils,
-							org.wso2.carbon.utils.multitenancy
+							org.wso2.carbon.utils.multitenancy,
+							javax.net.ssl
                         </Import-Package>
 						<Embed-Dependency>
 							jsr311-api,

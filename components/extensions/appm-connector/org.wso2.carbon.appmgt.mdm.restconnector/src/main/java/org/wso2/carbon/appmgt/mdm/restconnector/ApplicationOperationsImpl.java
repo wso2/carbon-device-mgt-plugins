@@ -17,7 +17,11 @@
  */
 package org.wso2.carbon.appmgt.mdm.restconnector;
 
+import feign.Client;
 import feign.Feign;
+import feign.Logger;
+import feign.Request;
+import feign.Response;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
@@ -44,6 +48,15 @@ import org.wso2.carbon.appmgt.mobile.utils.MobileApplicationException;
 import org.wso2.carbon.appmgt.mobile.utils.MobileConfigurations;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,13 +75,13 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
     public ApplicationOperationsImpl() {
         String authorizationConfigManagerServerURL = AuthorizationConfigurationManager.getInstance().getServerURL();
         OAuthRequestInterceptor oAuthRequestInterceptor = new OAuthRequestInterceptor();
-        deviceManagementAdminService = Feign.builder()
-                .requestInterceptor(oAuthRequestInterceptor)
+        deviceManagementAdminService = Feign.builder().client(getSSLClient()).logger(getLogger()).logLevel(
+                Logger.Level.FULL).requestInterceptor(oAuthRequestInterceptor)
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(DeviceManagementAdminService.class,
                         authorizationConfigManagerServerURL + CDMF_SERVER_BASE_CONTEXT);
-        applicationManagementAdminService = Feign.builder()
-                .requestInterceptor(oAuthRequestInterceptor)
+        applicationManagementAdminService = Feign.builder().client(getSSLClient()).logger(getLogger()).logLevel(
+                Logger.Level.FULL).requestInterceptor(oAuthRequestInterceptor)
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(ApplicationManagementAdminService.class,
                         authorizationConfigManagerServerURL + CDMF_SERVER_BASE_CONTEXT);
@@ -270,5 +283,64 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
         } else {
             log.error(errorMessage);
         }
+    }
+
+    private static Client getSSLClient() {
+        return new Client.Default(getTrustedSSLSocketFactory(), new HostnameVerifier() {
+            @Override
+            public boolean verify(String s, SSLSession sslSession) {
+                return true;
+            }
+        });
+    }
+
+    private static SSLSocketFactory getTrustedSSLSocketFactory() {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+                        public void checkClientTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                        public void checkServerTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                    }
+            };
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            return sc.getSocketFactory();
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            return null;
+        }
+    }
+
+    private static Logger getLogger() {
+        return new Logger() {
+            @Override
+            protected void log(String configKey, String format, Object... args) {
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format(methodTag(configKey) + format, args));
+                }
+            }
+
+            @Override
+            protected void logRequest(String configKey, Level logLevel, Request request) {
+                if (log.isDebugEnabled()) {
+                    super.logRequest(configKey, logLevel, request);
+                }
+            }
+
+            @Override
+            protected Response logAndRebufferResponse(String configKey, Level logLevel, Response response,
+                                                      long elapsedTime) throws IOException {
+                if (log.isDebugEnabled()) {
+                    return super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
+                }
+                return response;
+            }
+        };
     }
 }
