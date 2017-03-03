@@ -1,8 +1,4 @@
-package org.wso2;
-
-/**
- * Created by thilinida on 2/1/17.
- */
+package agent;
 
 import org.wso2.siddhi.core.ExecutionPlanRuntime;
 import org.wso2.siddhi.core.SiddhiManager;

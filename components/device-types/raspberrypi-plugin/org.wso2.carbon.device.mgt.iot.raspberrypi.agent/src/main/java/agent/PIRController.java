@@ -1,8 +1,4 @@
-package org.wso2;
-
-/**
- * Created by thilinida on 2/1/17.
- */
+package agent;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
