@@ -8,8 +8,6 @@ import org.wso2.siddhi.core.stream.output.StreamCallback;
 
 public class SidhdhiQuery implements Runnable {
 
-    String file;
-
     //Bam data push client
     private static SiddhiManager siddhiManager = new SiddhiManager();
     private StartExecutionPlan startExecutionPlan;
@@ -32,7 +30,6 @@ public class SidhdhiQuery implements Runnable {
             //Sending events to Siddhi
             try {
                 int Reading = PIRController.getController().getData();
-                // System.out.printf("reading = %d\n",Reading);
                 inputHandler.send(new Object[]{"device_1",Reading});
                 Thread.sleep(200);
             } catch (InterruptedException e) {
