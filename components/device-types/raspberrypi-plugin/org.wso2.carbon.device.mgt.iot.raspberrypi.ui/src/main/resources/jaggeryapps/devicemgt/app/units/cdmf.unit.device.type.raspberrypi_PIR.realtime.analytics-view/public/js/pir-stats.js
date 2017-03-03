@@ -64,20 +64,3 @@ function disconnect() {
 }
 
 
-/*
-ws.onmessage = function (event) {
-    var dataPoint = JSON.parse(event.data);
-    var val = dataPoint.event.payloadData.pirval;
-    var x = document.getElementById("occupancy");
-    if (val == "true"){
-        x.innerText = "Room is occupied";
-    }
-    else if (val == "false"){
-        x.innerText = "Room is vacant";
-    }
-
-    else{
-        x.innerText = "PIR sensor is not connected";
-    }
-
-};*/
