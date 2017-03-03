@@ -58,15 +58,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -175,12 +171,11 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             String user = APIUtil.getAuthenticatedUser() + "@" + PrivilegedCarbonContext.getThreadLocalCarbonContext()
                     .getTenantDomain();
             ZipArchive zipFile = createDownloadFile(user, deviceName, sketchType);
-            Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
+            Response.ResponseBuilder response = Response.ok(zipFile.getZipFileContent());
             response.status(Response.Status.OK);
             response.type("application/zip");
             response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
             Response resp = response.build();
-            zipFile.getZipFile().delete();
             return resp;
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
@@ -191,9 +186,6 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (APIManagerException ex) {
-            log.error(ex.getMessage(), ex);
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (UserStoreException ex) {

@@ -20,6 +20,9 @@ package org.wso2.carbon.device.mgt.input.adapter.http.authorization;
 import feign.Client;
 import feign.Feign;
 import feign.FeignException;
+import feign.Logger;
+import feign.Request;
+import feign.Response;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
@@ -40,10 +43,10 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -55,17 +58,17 @@ public class DeviceAuthorizer {
     private static DeviceAccessAuthorizationAdminService deviceAccessAuthorizationAdminService;
     private static final String CDMF_SERVER_BASE_CONTEXT = "/api/device-mgt/v1.0";
     private static final String DEVICE_MGT_SERVER_URL = "deviceMgtServerUrl";
-    private static Log logger = LogFactory.getLog(DeviceAuthorizer.class);
+    private static Log log = LogFactory.getLog(DeviceAuthorizer.class);
 
     public DeviceAuthorizer(Map<String, String> globalProperties) {
         try {
-            deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient())
-                    .requestInterceptor(new OAuthRequestInterceptor(globalProperties))
+            deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient()).logger(getLogger())
+                    .logLevel(Logger.Level.FULL).requestInterceptor(new OAuthRequestInterceptor(globalProperties))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(DeviceAccessAuthorizationAdminService.class, getDeviceMgtServerUrl(globalProperties)
                             + CDMF_SERVER_BASE_CONTEXT);
         } catch (InputEventAdapterException e) {
-            logger.error("Invalid value for deviceMgtServerUrl in globalProperties.");
+            log.error("Invalid value for deviceMgtServerUrl in globalProperties.");
         }
     }
 
@@ -94,7 +97,7 @@ public class DeviceAuthorizer {
                     }
                 }
             } catch (FeignException e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         }
         return false;
@@ -103,7 +106,7 @@ public class DeviceAuthorizer {
     private String getDeviceMgtServerUrl(Map<String, String> properties) throws InputEventAdapterException {
         String deviceMgtServerUrl = PropertyUtils.replaceProperty(properties.get(DEVICE_MGT_SERVER_URL));
         if (deviceMgtServerUrl == null || deviceMgtServerUrl.isEmpty()) {
-            logger.error("deviceMgtServerUrl can't be empty ");
+            log.error("deviceMgtServerUrl can't be empty ");
         }
         return deviceMgtServerUrl;
     }
@@ -138,6 +141,33 @@ public class DeviceAuthorizer {
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             return null;
         }
-
     }
+
+    private static Logger getLogger() {
+        return new Logger() {
+            @Override
+            protected void log(String configKey, String format, Object... args) {
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format(methodTag(configKey) + format, args));
+                }
+            }
+
+            @Override
+            protected void logRequest(String configKey, Level logLevel, Request request) {
+                if (log.isDebugEnabled()) {
+                    super.logRequest(configKey, logLevel, request);
+                }
+            }
+
+            @Override
+            protected Response logAndRebufferResponse(String configKey, Level logLevel, Response response,
+                                                      long elapsedTime) throws IOException {
+                if (log.isDebugEnabled()) {
+                    return super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
+                }
+                return response;
+            }
+        };
+    }
+
 }
