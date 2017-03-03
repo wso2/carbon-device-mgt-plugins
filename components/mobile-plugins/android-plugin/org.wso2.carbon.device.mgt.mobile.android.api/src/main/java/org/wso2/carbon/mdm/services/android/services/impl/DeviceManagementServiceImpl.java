@@ -20,15 +20,14 @@ package org.wso2.carbon.mdm.services.android.services.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.common.Device;
-import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
+import org.wso2.carbon.device.mgt.core.util.DeviceManagerUtil;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidApplication;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidDevice;
@@ -219,7 +218,25 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             device.setProperties(androidDevice.getProperties());
 
             boolean status = AndroidAPIUtils.getDeviceManagementService().enrollDevice(device);
+            if (status) {
+                List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
+                deviceIdentifiers.add(new DeviceIdentifier(androidDevice.getDeviceIdentifier(), device.getType()));
 
+                 List<String> taskOperaions = new ArrayList<>();
+                 taskOperaions.add(AndroidConstants.OperationCodes.APPLICATION_LIST);
+                 taskOperaions.add(AndroidConstants.OperationCodes.DEVICE_INFO);
+                 taskOperaions.add(AndroidConstants.OperationCodes.DEVICE_LOCATION);
+
+                for (String str : taskOperaions) {
+                    CommandOperation operation = new CommandOperation();
+                    operation.setEnabled(true);
+                    operation.setType(Operation.Type.COMMAND);
+                    operation.setCode(str);
+                    AndroidAPIUtils.getDeviceManagementService().
+                            addOperation(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID,
+                                    operation, deviceIdentifiers);
+                }
+            }
             PolicyManagerService policyManagerService = AndroidAPIUtils.getPolicyManagerService();
             policyManagerService.getEffectivePolicy(new DeviceIdentifier(androidDevice.getDeviceIdentifier(), device.getType()));
             if (status) {
@@ -243,6 +260,20 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             throw new UnexpectedServerErrorException(
                     new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
         } catch (PolicyManagementException e) {
+            String msg = "Error occurred while enforcing default enrollment policy upon android " +
+                    "', which carries the id '" +
+                    androidDevice.getDeviceIdentifier() + "'";
+            log.error(msg, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
+        } catch (OperationManagementException e) {
+            String msg = "Error occurred while enforcing default enrollment policy upon android " +
+                    "', which carries the id '" +
+                    androidDevice.getDeviceIdentifier() + "'";
+            log.error(msg, e);
+            throw new UnexpectedServerErrorException(
+                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
+        } catch (InvalidDeviceException e) {
             String msg = "Error occurred while enforcing default enrollment policy upon android " +
                     "', which carries the id '" +
                     androidDevice.getDeviceIdentifier() + "'";
