@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.mobile.android.impl.gcm;
+package org.wso2.carbon.device.mgt.mobile.android.impl.fcm;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,17 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * GCM notification service implementation for Android platform.
+ * FCM notification service implementation for Android platform.
  */
-public class GCMService {
+public class FCMService {
 
-    private static final Log log = LogFactory.getLog(GCMService.class);
+    private static final Log log = LogFactory.getLog(FCMService.class);
     private static final String NOTIFIER_TYPE = "notifierType";
-    private static final String GCM_NOTIFIER_CODE = "2";
+    private static final String FCM_NOTIFIER_CODE = "2";
 
-    public boolean isGCMEnabled() {
-        String notifierType = GCMUtil.getConfigurationProperty(NOTIFIER_TYPE);
-        if (GCM_NOTIFIER_CODE.equals(notifierType)) {
+    public boolean isFCMEnabled() {
+        String notifierType = FCMUtil.getConfigurationProperty(NOTIFIER_TYPE);
+        if (FCM_NOTIFIER_CODE.equals(notifierType)) {
             return true;
         }
         return false;
@@ -45,20 +45,20 @@ public class GCMService {
     public void sendNotification(String messageData, Device device) {
         List<Device> devices = new ArrayList<>(1);
         devices.add(device);
-        GCMResult result = GCMUtil.sendWakeUpCall(messageData, devices);
+        FCMResult result = FCMUtil.sendWakeUpCall(messageData, devices);
         if (result.getStatusCode() != 200) {
-            log.error("Exception occurred while sending the GCM notification : " + result.getErrorMsg());
+            log.error("Exception occurred while sending the FCM notification : " + result.getErrorMsg());
         }
     }
 
     public void sendNotification(String messageData, List<Device> devices) {
-        GCMResult result = GCMUtil.sendWakeUpCall(messageData, devices);
+        FCMResult result = FCMUtil.sendWakeUpCall(messageData, devices);
         if (result.getStatusCode() != 200) {
-            log.error("Exception occurred while sending the GCM notification : " + result.getErrorMsg());
+            log.error("Exception occurred while sending the FCM notification : " + result.getErrorMsg());
         }
     }
 
     public void resetTenantConfigCache() {
-        GCMUtil.resetTenantConfigCache();
+        FCMUtil.resetTenantConfigCache();
     }
 }
