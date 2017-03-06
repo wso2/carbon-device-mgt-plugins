@@ -26,6 +26,7 @@ import feign.Response;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
+import feign.slf4j.Slf4jLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authentication.AuthenticationInfo;
@@ -80,7 +81,7 @@ public class DeviceAuthorizer implements Authorizer {
             }
         }
         try {
-            deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient()).logger(getLogger())
+            deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger())
                     .logLevel(Logger.Level.FULL).requestInterceptor(new OAuthRequestInterceptor(globalProperties))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(DeviceAccessAuthorizationAdminService.class, getDeviceMgtServerUrl(globalProperties)
@@ -174,32 +175,5 @@ public class DeviceAuthorizer implements Authorizer {
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             return null;
         }
-    }
-
-    private static Logger getLogger() {
-        return new Logger() {
-            @Override
-            protected void log(String configKey, String format, Object... args) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format(methodTag(configKey) + format, args));
-                }
-            }
-
-            @Override
-            protected void logRequest(String configKey, Level logLevel, Request request) {
-                if (log.isDebugEnabled()) {
-                    super.logRequest(configKey, logLevel, request);
-                }
-            }
-
-            @Override
-            protected Response logAndRebufferResponse(String configKey, Level logLevel, Response response,
-                                                      long elapsedTime) throws IOException {
-                if (log.isDebugEnabled()) {
-                    return super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
-                }
-                return response;
-            }
-        };
     }
 }

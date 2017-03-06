@@ -95,6 +95,10 @@
 			<groupId>javax.ws.rs</groupId>
 			<artifactId>jsr311-api</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-slf4j</artifactId>
+		</dependency>
     </dependencies>
 
     <build>
@@ -170,7 +174,8 @@
 							feign.codec,
 							feign.gson,
 							javax.cache,
-							javax.net.ssl
+							javax.net.ssl,
+							feign.slf4j
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
 						<Embed-Dependency>
