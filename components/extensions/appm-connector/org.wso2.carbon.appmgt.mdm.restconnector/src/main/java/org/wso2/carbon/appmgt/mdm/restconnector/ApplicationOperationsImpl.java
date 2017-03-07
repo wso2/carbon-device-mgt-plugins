@@ -25,6 +25,7 @@ import feign.Response;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
+import feign.slf4j.Slf4jLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONObject;
@@ -75,12 +76,12 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
     public ApplicationOperationsImpl() {
         String authorizationConfigManagerServerURL = AuthorizationConfigurationManager.getInstance().getServerURL();
         OAuthRequestInterceptor oAuthRequestInterceptor = new OAuthRequestInterceptor();
-        deviceManagementAdminService = Feign.builder().client(getSSLClient()).logger(getLogger()).logLevel(
+        deviceManagementAdminService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger()).logLevel(
                 Logger.Level.FULL).requestInterceptor(oAuthRequestInterceptor)
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(DeviceManagementAdminService.class,
                         authorizationConfigManagerServerURL + CDMF_SERVER_BASE_CONTEXT);
-        applicationManagementAdminService = Feign.builder().client(getSSLClient()).logger(getLogger()).logLevel(
+        applicationManagementAdminService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger()).logLevel(
                 Logger.Level.FULL).requestInterceptor(oAuthRequestInterceptor)
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(ApplicationManagementAdminService.class,
@@ -317,30 +318,4 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
         }
     }
 
-    private static Logger getLogger() {
-        return new Logger() {
-            @Override
-            protected void log(String configKey, String format, Object... args) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format(methodTag(configKey) + format, args));
-                }
-            }
-
-            @Override
-            protected void logRequest(String configKey, Level logLevel, Request request) {
-                if (log.isDebugEnabled()) {
-                    super.logRequest(configKey, logLevel, request);
-                }
-            }
-
-            @Override
-            protected Response logAndRebufferResponse(String configKey, Level logLevel, Response response,
-                                                      long elapsedTime) throws IOException {
-                if (log.isDebugEnabled()) {
-                    return super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
-                }
-                return response;
-            }
-        };
-    }
 }

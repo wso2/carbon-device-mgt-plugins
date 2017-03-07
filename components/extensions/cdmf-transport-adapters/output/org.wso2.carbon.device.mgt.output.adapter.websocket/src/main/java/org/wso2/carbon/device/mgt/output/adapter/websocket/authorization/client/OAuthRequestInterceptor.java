@@ -25,6 +25,7 @@ import feign.auth.BasicAuthRequestInterceptor;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
+import feign.slf4j.Slf4jLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authorization.client.dto.AccessTokenInfo;
@@ -90,7 +91,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             username = getUsername(globalProperties);
             password = getPassword(globalProperties);
             tokenEndpoint = getTokenEndpoint(globalProperties);
-            apiApplicationRegistrationService = Feign.builder().client(getSSLClient()).logger(getLogger())
+            apiApplicationRegistrationService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger())
                     .logLevel(Logger.Level.FULL).requestInterceptor(new BasicAuthRequestInterceptor(username, password))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(ApiApplicationRegistrationService.class,
@@ -113,7 +114,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             ApiApplicationKey apiApplicationKey = apiApplicationRegistrationService.register(apiRegistrationProfile);
             String consumerKey = apiApplicationKey.getConsumerKey();
             String consumerSecret = apiApplicationKey.getConsumerSecret();
-            tokenIssuerService = Feign.builder().client(getSSLClient()).logger(getLogger()).logLevel(Logger.Level.FULL)
+            tokenIssuerService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger()).logLevel(Logger.Level.FULL)
                     .requestInterceptor(new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(TokenIssuerService.class, tokenEndpoint);
@@ -202,33 +203,6 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             return null;
         }
-    }
-
-    private static Logger getLogger() {
-        return new Logger() {
-            @Override
-            protected void log(String configKey, String format, Object... args) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format(methodTag(configKey) + format, args));
-                }
-            }
-
-            @Override
-            protected void logRequest(String configKey, Level logLevel, Request request) {
-                if (log.isDebugEnabled()) {
-                    super.logRequest(configKey, logLevel, request);
-                }
-            }
-
-            @Override
-            protected Response logAndRebufferResponse(String configKey, Level logLevel, Response response,
-                                                      long elapsedTime) throws IOException {
-                if (log.isDebugEnabled()) {
-                    return super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
-                }
-                return response;
-            }
-        };
     }
 
 }

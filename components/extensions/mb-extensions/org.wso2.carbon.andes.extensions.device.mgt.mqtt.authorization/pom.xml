@@ -78,6 +78,10 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>javax.cache.wso2</artifactId>
         </dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-slf4j</artifactId>
+		</dependency>
     </dependencies>
 
     <build>
@@ -124,7 +128,8 @@
                             javax.xml.stream,
 							org.wso2.carbon.base,
 							org.wso2.carbon.utils,
-							javax.net.ssl
+							javax.net.ssl,
+							feign.slf4j
                         </Import-Package>
 						<Embed-Dependency>
 							jsr311-api,
