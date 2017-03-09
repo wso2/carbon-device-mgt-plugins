@@ -19,7 +19,6 @@
 package org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,14 +32,12 @@ import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.xmpp.XmppConfig;
 import org.wso2.carbon.utils.CarbonUtils;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -59,24 +56,18 @@ import java.util.zip.ZipOutputStream;
 public class ZipUtil {
 
     private static final Log log = LogFactory.getLog(ZipUtil.class);
-    private static final String HTTPS_PORT_PROPERTY = "httpsPort";
-    private static final String HTTP_PORT_PROPERTY = "httpPort";
 
     private static final String LOCALHOST = "localhost";
     private static final String HTTPS_PROTOCOL_URL = "https://${iot.gateway.host}:${iot.gateway.https.port}";
     private static final String HTTP_PROTOCOL_URL = "http://${iot.gateway.host}:${iot.gateway.http.port}";
     private static final String CONFIG_TYPE = "general";
     private static final String DEFAULT_MQTT_ENDPOINT = "tcp://${mqtt.broker.host}:${mqtt.broker.port}";
-    public static final String HOST_NAME = "HostName";
 
     public ZipArchive createZipFile(String owner, String deviceType, String deviceId, String deviceName,
                                     String apiApplicationKey, String token, String refreshToken)
             throws DeviceManagementException {
 
         String sketchFolder = "repository" + File.separator + "resources" + File.separator + "sketches";
-        String archivesPath =
-                CarbonUtils.getCarbonHome() + File.separator + sketchFolder + File.separator + "archives" +
-                        File.separator + deviceId;
         String templateSketchPath = sketchFolder + File.separator + deviceType;
         String iotServerIP;
 
@@ -141,7 +132,7 @@ public class ZipUtil {
                     ? "" : XmppConfig.getInstance().getJid());
 
             ZipArchive zipFile;
-            zipFile = getSketchArchive(archivesPath, templateSketchPath, contextParams, deviceName);
+            zipFile = getSketchArchive(templateSketchPath, contextParams, deviceName);
             return zipFile;
         } catch (IOException e) {
             throw new DeviceManagementException("Zip File Creation Failed", e);
@@ -159,7 +150,7 @@ public class ZipUtil {
         return Base64.encodeBase64String(stringToEncode.getBytes());
     }
 
-    public static String getServerUrl() {
+    private static String getServerUrl() {
         try {
             return org.apache.axis2.util.Utils.getIpAddress();
         } catch (SocketException e) {
@@ -168,33 +159,27 @@ public class ZipUtil {
         }
     }
 
-    public static ZipArchive getSketchArchive(String archivesPath, String templateSketchPath, Map contextParams
+    private ZipArchive getSketchArchive(String templateSketchPath, Map contextParams
             , String zipFileName)
             throws DeviceManagementException, IOException {
         String sketchPath = CarbonUtils.getCarbonHome() + File.separator + templateSketchPath;
-        FileUtils.deleteDirectory(new File(archivesPath));//clear directory
-        FileUtils.deleteDirectory(new File(archivesPath + ".zip"));//clear zip
-        if (!new File(archivesPath).mkdirs()) { //new dir
-            String message = "Could not create directory at path: " + archivesPath;
-            log.error(message);
-            throw new DeviceManagementException(message);
-        }
         zipFileName = zipFileName + ".zip";
         try {
             Map<String, List<String>> properties = getProperties(sketchPath + File.separator + "sketch" + ".properties");
             List<String> templateFiles = properties.get("templates");
+            List<TemplateFile> processTemplateFiles = new ArrayList<>();
 
             for (String templateFile : templateFiles) {
-                parseTemplate(templateSketchPath + File.separator + templateFile, archivesPath + File.separator + templateFile,
-                              contextParams);
+                TemplateFile tFile = new TemplateFile();
+                tFile.setContent(parseTemplate(templateSketchPath + File.separator + templateFile, contextParams));
+                tFile.setFileName(templateFile);
+                processTemplateFiles.add(tFile);
             }
 
             templateFiles.add("sketch.properties");         // ommit copying the props file
-            copyFolder(new File(sketchPath), new File(archivesPath), templateFiles);
-            createZipArchive(archivesPath);
-            FileUtils.deleteDirectory(new File(archivesPath));
-            File zip = new File(archivesPath + ".zip");
-            return new org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.ZipArchive(zipFileName, zip);
+
+            byte[] zip =  createZipArchive(templateSketchPath, processTemplateFiles);
+            return new ZipArchive(zipFileName, zip);
         } catch (IOException ex) {
             throw new DeviceManagementException(
                     "Error occurred when trying to read property " + "file sketch.properties", ex);
@@ -206,9 +191,7 @@ public class ZipUtil {
         InputStream input = null;
 
         try {
-
             input = new FileInputStream(propertyFilePath);
-
             // load a properties file
             prop.load(input);
             Map<String, List<String>> properties = new HashMap<String, List<String>>();
@@ -235,148 +218,124 @@ public class ZipUtil {
         }
     }
 
-    private static void parseTemplate(String srcFile, String dstFile, Map contextParams) throws IOException {
+    private static String parseTemplate(String srcFile, Map contextParams) throws IOException {
         //read from file
         FileInputStream inputStream = null;
-        FileOutputStream outputStream = null;
         try {
             inputStream = new FileInputStream(srcFile);
-            outputStream = new FileOutputStream(dstFile);
             String content = IOUtils.toString(inputStream, StandardCharsets.UTF_8.toString());
             Iterator iterator = contextParams.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry mapEntry = (Map.Entry) iterator.next();
                 content = content.replaceAll("\\$\\{" + mapEntry.getKey() + "\\}", mapEntry.getValue().toString());
             }
-            IOUtils.write(content, outputStream, StandardCharsets.UTF_8.toString());
+            return content;
         } finally {
             if (inputStream != null) {
                 inputStream.close();
             }
-            if (outputStream != null) {
-                outputStream.close();
-            }
         }
     }
 
-    private static void copyFolder(File src, File dest, List<String> excludeFileNames) throws IOException {
-
-        if (src.isDirectory()) {
-            //if directory not exists, create it
-            if (!dest.exists() && !dest.mkdirs()) {
-                String message = "Could not create directory at path: " + dest;
-                log.error(message);
-                throw new IOException(message);
-            }
-            //list all the directory contents
-            String files[] = src.list();
-
-            if (files == null) {
-                log.warn("There are no files insides the directory " + src.getAbsolutePath());
-                return;
-            }
-
-            for (String file : files) {
-                //construct the src and dest file structure
-                File srcFile = new File(src, file);
-                File destFile = new File(dest, file);
-                //recursive copy
-                copyFolder(srcFile, destFile, excludeFileNames);
-            }
-
-        } else {
-            for (String fileName : excludeFileNames) {
-                if (src.getName().equals(fileName)) {
-                    return;
-                }
-            }
-            //if file, then copy it
-            //Use bytes stream to support all file types
-            InputStream in = null;
-            OutputStream out = null;
-
-            try {
-                in = new FileInputStream(src);
-                out = new FileOutputStream(dest);
-
-                byte[] buffer = new byte[1024];
-
-                int length;
-                //copy the file content in bytes
-                while ((length = in.read(buffer)) > 0) {
-                    out.write(buffer, 0, length);
-                }
-            } finally {
-                if (in != null) {
-                    in.close();
-                }
-                if (out != null) {
-                    out.close();
-                }
-            }
-        }
-    }
-
-    private static boolean createZipArchive(String srcFolder) throws IOException {
-        BufferedInputStream origin = null;
+    private static byte[] createZipArchive(String srcFolder, List<TemplateFile> processTemplateFiles) throws IOException {
         ZipOutputStream out = null;
-
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
-            final int BUFFER = 2048;
-            FileOutputStream dest = new FileOutputStream(new File(srcFolder + ".zip"));
-            out = new ZipOutputStream(new BufferedOutputStream(dest));
-            byte data[] = new byte[BUFFER];
+            out = new ZipOutputStream(new BufferedOutputStream(baos));
             File subDir = new File(srcFolder);
             String subdirList[] = subDir.list();
             if (subdirList == null) {
                 log.warn("The sub directory " + subDir.getAbsolutePath() + " is empty");
-                return false;
+                return null;
             }
             for (String sd : subdirList) {
                 // get a list of files from current directory
-                File f = new File(srcFolder + "/" + sd);
+                File f = new File(srcFolder + File.separator + sd);
                 if (f.isDirectory()) {
                     String files[] = f.list();
 
                     if (files == null) {
                         log.warn("The current directory " + f.getAbsolutePath() + " is empty. Has no files");
-                        return false;
+                        return null;
                     }
 
                     for (int i = 0; i < files.length; i++) {
-                        FileInputStream fi = new FileInputStream(srcFolder + "/" + sd + "/" + files[i]);
-                        origin = new BufferedInputStream(fi, BUFFER);
-                        ZipEntry entry = new ZipEntry(sd + "/" + files[i]);
-                        out.putNextEntry(entry);
-                        int count;
-                        while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                            out.write(data, 0, count);
-                            out.flush();
+                        boolean fileAdded = false;
+                        for (TemplateFile templateFile : processTemplateFiles) {
+                            if (files[i].equals(templateFile.getFileName())) {
+                                ZipEntry entry = new ZipEntry(templateFile.getFileName());
+                                out.putNextEntry(entry);
+                                out.write(templateFile.getContent().getBytes());
+                                out.closeEntry();
+                                fileAdded = true;
+                                break;
+                            } else if (f.getName().equals("sketch.properties")) {
+                                fileAdded = true;
+                                break;
+                            }
                         }
+                        if (fileAdded) {
+                            continue;
+                        }
+                        ZipEntry entry = new ZipEntry(sd + File.separator + files[i]);
+                        out.putNextEntry(entry);
+                        out.write(IOUtils.toByteArray(new FileInputStream(srcFolder + File.separator + sd
+                                                                                  + File.separator + files[i])));
+                        out.closeEntry();
 
                     }
                 } else //it is just a file
                 {
-                    FileInputStream fi = new FileInputStream(f);
-                    origin = new BufferedInputStream(fi, BUFFER);
+                    boolean fileAdded = false;
+                    for (TemplateFile templateFile : processTemplateFiles) {
+                        if (f.getName().equals(templateFile.getFileName())) {
+                            ZipEntry entry = new ZipEntry(templateFile.getFileName());
+                            out.putNextEntry(entry);
+                            out.write(templateFile.getContent().getBytes());
+                            out.closeEntry();
+                            fileAdded = true;
+                            break;
+                        } else if (f.getName().equals("sketch.properties")) {
+                            fileAdded = true;
+                            break;
+                        }
+                    }
+                    if (fileAdded) {
+                        continue;
+                    }
                     ZipEntry entry = new ZipEntry(sd);
                     out.putNextEntry(entry);
-                    int count;
-                    while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                        out.write(data, 0, count);
-                        out.flush();
-                    }
+                    out.write(IOUtils.toByteArray(new FileInputStream(f)));
+                    out.closeEntry();
                 }
             }
-            out.flush();
+            out.finish();
         } finally {
-            if (origin != null) {
-                origin.close();
-            }
             if (out != null) {
                 out.close();
             }
         }
-        return true;
+        return baos.toByteArray();
+    }
+
+    public class TemplateFile {
+        private String content;
+        private String fileName;
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
+        }
     }
 }

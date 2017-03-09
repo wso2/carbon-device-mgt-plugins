@@ -21,9 +21,13 @@ package org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization;
 import feign.Client;
 import feign.Feign;
 import feign.FeignException;
+import feign.Logger;
+import feign.Request;
+import feign.Response;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
+import feign.slf4j.Slf4jLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dna.mqtt.moquette.server.IAuthorizer;
@@ -44,7 +48,6 @@ import org.wso2.carbon.user.api.UserStoreException;
 
 import javax.cache.Cache;
 import javax.cache.CacheConfiguration;
-import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -52,6 +55,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -67,7 +71,7 @@ import java.util.concurrent.TimeUnit;
 public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
 
     private static final String UI_EXECUTE = "ui.execute";
-    private static Log logger = LogFactory.getLog(DeviceAccessBasedMQTTAuthorizer.class);
+    private static Log log = LogFactory.getLog(DeviceAccessBasedMQTTAuthorizer.class);
     AuthorizationConfigurationManager MQTTAuthorizationConfiguration;
     private static final String CDMF_SERVER_BASE_CONTEXT = "/api/device-mgt/v1.0";
     private static final String CACHE_MANAGER_NAME = "mqttAuthorizationCacheManager";
@@ -77,8 +81,8 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
 
     public DeviceAccessBasedMQTTAuthorizer() {
         this.MQTTAuthorizationConfiguration = AuthorizationConfigurationManager.getInstance();
-        deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient())
-                .requestInterceptor(new OAuthRequestInterceptor())
+        deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger())
+                .logLevel(Logger.Level.FULL).requestInterceptor(new OAuthRequestInterceptor())
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(DeviceAccessAuthorizationAdminService.class,
                         MQTTAuthorizationConfiguration.getDeviceMgtServerUrl() + CDMF_SERVER_BASE_CONTEXT);
@@ -117,7 +121,7 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     }
                     return false;
                 } catch (FeignException e) {
-                    logger.error(e.getMessage(), e);
+                    log.error(e.getMessage(), e);
                     return false;
                 }
             }
@@ -160,7 +164,7 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     }
                 }
             } catch (FeignException e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
@@ -204,7 +208,7 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     userRealm.getAuthorizationManager().isUserAuthorized(username, permission, action);
         } catch (UserStoreException e) {
             String errorMsg = String.format("Unable to authorize the user : %s", username);
-            logger.error(errorMsg, e);
+            log.error(errorMsg, e);
             return false;
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
@@ -263,7 +267,6 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             return null;
         }
-
     }
 
 }

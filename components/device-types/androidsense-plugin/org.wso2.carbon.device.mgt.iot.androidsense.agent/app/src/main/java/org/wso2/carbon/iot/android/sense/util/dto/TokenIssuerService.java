@@ -29,7 +29,7 @@ public interface TokenIssuerService {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     AccessTokenInfo getToken(@QueryParam("grant_type") String grant, @QueryParam("username") String username,
-            @QueryParam("password") String password, @QueryParam("deviceId") String deviceId, @QueryParam("scope") String scope);
+            @QueryParam("password") String password, @QueryParam("scope") String scope);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)

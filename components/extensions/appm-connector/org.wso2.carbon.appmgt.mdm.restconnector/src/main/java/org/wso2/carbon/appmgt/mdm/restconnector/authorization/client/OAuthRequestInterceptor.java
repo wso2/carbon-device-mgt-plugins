@@ -19,12 +19,18 @@ package org.wso2.carbon.appmgt.mdm.restconnector.authorization.client;
 
 import feign.Client;
 import feign.Feign;
+import feign.Logger;
+import feign.Request;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import feign.Response;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
+import feign.slf4j.Slf4jLogger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.appmgt.mdm.restconnector.Constants;
 import org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto.AccessTokenInfo;
 import org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto.ApiApplicationKey;
@@ -40,6 +46,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
@@ -56,6 +63,8 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private static final String REFRESH_GRANT_TYPE = "refresh_token";
     private ApiApplicationRegistrationService apiApplicationRegistrationService;
     private TokenIssuerService tokenIssuerService;
+    private static Log log = LogFactory.getLog(OAuthRequestInterceptor.class);
+
 
     /**
      * Creates an interceptor that authenticates all requests.
@@ -64,8 +73,8 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         refreshTimeOffset = AuthorizationConfigurationManager.getInstance().getTokenRefreshTimeOffset();
         String username = AuthorizationConfigurationManager.getInstance().getUserName();
         String password = AuthorizationConfigurationManager.getInstance().getPassword();
-        apiApplicationRegistrationService = Feign.builder().client(getSSLClient()).requestInterceptor(
-                new BasicAuthRequestInterceptor(username, password))
+        apiApplicationRegistrationService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger()).logLevel(
+                Logger.Level.FULL).requestInterceptor(new BasicAuthRequestInterceptor(username, password))
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(ApiApplicationRegistrationService.class,
                         AuthorizationConfigurationManager.getInstance().getServerURL() +
@@ -92,8 +101,8 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             String consumerSecret = apiApplicationKey.getConsumerSecret();
             String username = AuthorizationConfigurationManager.getInstance().getUserName();
             String password = AuthorizationConfigurationManager.getInstance().getPassword();
-            tokenIssuerService = Feign.builder().client(getSSLClient()).requestInterceptor(
-                    new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
+            tokenIssuerService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger()).logLevel(Logger.Level.FULL)
+                    .requestInterceptor(new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(TokenIssuerService.class, AuthorizationConfigurationManager.getInstance().getTokenApiURL());
             tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password);
@@ -139,6 +148,6 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             return null;
         }
-
     }
+
 }
