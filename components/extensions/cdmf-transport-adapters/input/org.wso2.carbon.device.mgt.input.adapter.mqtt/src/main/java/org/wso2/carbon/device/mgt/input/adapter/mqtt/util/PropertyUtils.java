@@ -18,12 +18,14 @@
 
 package org.wso2.carbon.device.mgt.input.adapter.mqtt.util;
 
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class PropertyUtils {
+    private static final String TENANT_DOMAIN_PROPERTY = "\\$\\{tenant-domain\\}";
 
     //This method is only used if the mb features are within DAS.
     static String replaceMqttProperty(String urlWithPlaceholders) throws InputEventAdapterException {
@@ -40,6 +42,12 @@ class PropertyUtils {
                         + " is not defined, hence cannot resolve : " + urlWithPlaceholders);
             }
         }
+        return urlWithPlaceholders;
+    }
+
+    public static String replaceTenantDomainProperty (String urlWithPlaceholders) {
+        urlWithPlaceholders = urlWithPlaceholders.replaceAll(TENANT_DOMAIN_PROPERTY, PrivilegedCarbonContext
+                .getThreadLocalCarbonContext().getTenantDomain(true));
         return urlWithPlaceholders;
     }
 }

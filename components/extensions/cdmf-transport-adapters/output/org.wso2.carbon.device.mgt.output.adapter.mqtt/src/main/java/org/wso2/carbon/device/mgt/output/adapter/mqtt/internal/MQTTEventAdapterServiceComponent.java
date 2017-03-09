@@ -22,10 +22,15 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.wso2.carbon.device.mgt.output.adapter.mqtt.MQTTEventAdapterFactory;
 import org.wso2.carbon.event.output.adapter.core.OutputEventAdapterFactory;
-
+import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
 
 /**
  * @scr.component component.name="output.Mqtt.AdapterService.component" immediate="true"
+ * @scr.reference name="jwt.client.service" interface="org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setJWTClientManagerService"
+ * unbind="unsetJWTClientManagerService"
  */
 public class MQTTEventAdapterServiceComponent {
 
@@ -46,6 +51,14 @@ public class MQTTEventAdapterServiceComponent {
         } catch (RuntimeException e) {
             log.error("Exception occurred when deploying MQTT publisher service", e);
         }
+    }
+
+    protected void setJWTClientManagerService(JWTClientManagerService jwtClientManagerService) {
+        OutputAdapterServiceDataHolder.setJwtClientManagerService(jwtClientManagerService);
+    }
+
+    protected void unsetJWTClientManagerService(JWTClientManagerService jwtClientManagerService) {
+        OutputAdapterServiceDataHolder.setJwtClientManagerService(null);
     }
 
 }

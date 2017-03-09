@@ -17,6 +17,7 @@
  */
 package org.wso2.carbon.appmgt.mdm.restconnector.authorization.client;
 
+import feign.Client;
 import feign.Feign;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -32,6 +33,15 @@ import org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto.ApiRegi
 import org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto.TokenIssuerService;
 import org.wso2.carbon.appmgt.mdm.restconnector.config.AuthorizationConfigurationManager;
 import org.wso2.carbon.appmgt.mdm.restconnector.internal.AuthorizationDataHolder;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * This is a request interceptor to add oauth token header.
@@ -54,7 +64,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         refreshTimeOffset = AuthorizationConfigurationManager.getInstance().getTokenRefreshTimeOffset();
         String username = AuthorizationConfigurationManager.getInstance().getUserName();
         String password = AuthorizationConfigurationManager.getInstance().getPassword();
-        apiApplicationRegistrationService = Feign.builder().requestInterceptor(
+        apiApplicationRegistrationService = Feign.builder().client(getSSLClient()).requestInterceptor(
                 new BasicAuthRequestInterceptor(username, password))
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(ApiApplicationRegistrationService.class,
@@ -82,7 +92,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
             String consumerSecret = apiApplicationKey.getConsumerSecret();
             String username = AuthorizationConfigurationManager.getInstance().getUserName();
             String password = AuthorizationConfigurationManager.getInstance().getPassword();
-            tokenIssuerService = Feign.builder().requestInterceptor(
+            tokenIssuerService = Feign.builder().client(getSSLClient()).requestInterceptor(
                     new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(TokenIssuerService.class, AuthorizationConfigurationManager.getInstance().getTokenApiURL());
@@ -97,5 +107,38 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         }
         String headerValue = Constants.RestConstants.BEARER + tokenInfo.getAccess_token();
         template.header(Constants.RestConstants.AUTHORIZATION, headerValue);
+    }
+
+    private static Client getSSLClient() {
+        return new Client.Default(getTrustedSSLSocketFactory(), new HostnameVerifier() {
+            @Override
+            public boolean verify(String s, SSLSession sslSession) {
+                return true;
+            }
+        });
+    }
+
+    private static SSLSocketFactory getTrustedSSLSocketFactory() {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+                        public void checkClientTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                        public void checkServerTrusted(
+                                java.security.cert.X509Certificate[] certs, String authType) {
+                        }
+                    }
+            };
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            return sc.getSocketFactory();
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            return null;
+        }
+
     }
 }

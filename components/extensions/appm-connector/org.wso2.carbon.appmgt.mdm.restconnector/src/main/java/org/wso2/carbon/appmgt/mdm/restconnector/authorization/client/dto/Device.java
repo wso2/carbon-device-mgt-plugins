@@ -17,10 +17,7 @@
  */
 package org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto;
 
-import org.wso2.carbon.device.mgt.common.Feature;
-
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * The DTO class of device.
@@ -35,15 +32,6 @@ public class Device implements Serializable {
     private EnrolmentInfo enrolmentInfo;
 
     public Device() {
-    }
-
-    public Device(String name, String type, String description, String deviceId, EnrolmentInfo enrolmentInfo,
-                  List<Feature> features, List<Property> properties) {
-        this.name = name;
-        this.type = type;
-        this.description = description;
-        this.deviceIdentifier = deviceId;
-        this.enrolmentInfo = enrolmentInfo;
     }
 
     public int getId() {
@@ -129,23 +117,5 @@ public class Device implements Serializable {
                 "status=" + enrolmentInfo.getStatus() + ";" +
                 "]" +
                 "]";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof org.wso2.carbon.device.mgt.common.Device))
-            return false;
-
-        org.wso2.carbon.device.mgt.common.Device device = (org.wso2.carbon.device.mgt.common.Device) o;
-
-        return getDeviceIdentifier().equals(device.getDeviceIdentifier());
-
-    }
-
-    @Override
-    public int hashCode() {
-        return getDeviceIdentifier().hashCode();
     }
 }

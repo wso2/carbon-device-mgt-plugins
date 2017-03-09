@@ -21,11 +21,23 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.http.HttpService;
+import org.wso2.carbon.device.mgt.input.adapter.extension.InputAdapterExtensionService;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.MQTTEventAdapterFactory;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterFactory;
+import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
 
 /**
  * @scr.component name="input.iot.mqtt.AdapterService.component" immediate="true"
+ * @scr.reference name="input.extension.service" interface="org.wso2.carbon.device.mgt.input.adapter.extension.InputAdapterExtensionService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setInputAdapterExtensionService"
+ * unbind="unsetInputAdapterExtensionService"
+ * @scr.reference name="jwt.client.service" interface="org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setJWTClientManagerService"
+ * unbind="unsetJWTClientManagerService"
  */
 public class InputAdapterServiceComponent {
 
@@ -51,5 +63,21 @@ public class InputAdapterServiceComponent {
 	protected void unsetHttpService(HttpService httpService) {
 		InputAdapterServiceDataHolder.registerHTTPService(null);
 	}
+
+    protected void setInputAdapterExtensionService(InputAdapterExtensionService inputAdapterExtensionService) {
+        InputAdapterServiceDataHolder.setInputAdapterExtensionService(inputAdapterExtensionService);
+    }
+
+    protected void unsetInputAdapterExtensionService(InputAdapterExtensionService inputAdapterExtensionService) {
+        InputAdapterServiceDataHolder.setInputAdapterExtensionService(null);
+    }
+
+    protected void setJWTClientManagerService(JWTClientManagerService jwtClientManagerService) {
+        InputAdapterServiceDataHolder.setJwtClientManagerService(jwtClientManagerService);
+    }
+
+    protected void unsetJWTClientManagerService(JWTClientManagerService jwtClientManagerService) {
+        InputAdapterServiceDataHolder.setJwtClientManagerService(null);
+    }
 
 }

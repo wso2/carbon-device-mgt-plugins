@@ -24,6 +24,13 @@ import java.util.Map;
  * This interface will be triggered to validate the stream content before publishing.
  */
 public interface ContentValidator {
+
+    /**
+     * this returns the unique name of ContentValidatorType.
+     * @return
+     */
+    String getType();
+
 	/**
 	 * @param dynamicParameter that message.
 	 * @return ContentInfo.

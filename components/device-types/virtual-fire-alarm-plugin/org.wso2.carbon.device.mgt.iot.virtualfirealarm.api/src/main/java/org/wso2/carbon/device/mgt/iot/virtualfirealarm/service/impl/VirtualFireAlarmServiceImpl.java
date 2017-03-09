@@ -134,40 +134,6 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
         }
     }
 
-    @PUT
-    @Path("device/{deviceId}/policy")
-    public Response updatePolicy(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
-                                 @FormParam("policy") String policy) {
-        String protocolString = protocol.toUpperCase();
-        if (log.isDebugEnabled()) {
-            log.debug("Sending request to update-policy of device [" + deviceId + "] via " + protocolString);
-        }
-        try {
-            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(
-                    new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE),
-                    DeviceGroupConstants.Permissions.DEFAULT_MANAGE_POLICIES_PERMISSIONS)) {
-                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
-            }
-            String actualMessage = VirtualFireAlarmConstants.POLICY_CONTEXT + ":" + policy;
-            Map<String, String> dynamicProperties = new HashMap<>();
-            String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
-                    + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
-            dynamicProperties.put(VirtualFireAlarmConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
-            dynamicProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY,
-                                  deviceId + "@" + XmppConfig.getInstance().getServerName());
-            dynamicProperties.put(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "POLICTY-REQUEST");
-            dynamicProperties.put(VirtualFireAlarmConstants.MESSAGE_TYPE_PROPERTY_KEY,
-                                  VirtualFireAlarmConstants.CHAT_PROPERTY_KEY);
-            APIUtil.getOutputEventAdapterService().publish(VirtualFireAlarmConstants.XMPP_ADAPTER_NAME,
-                                                           dynamicProperties, actualMessage);
-            return Response.ok().build();
-        } catch (DeviceAccessAuthorizationException e) {
-            log.error(e.getErrorMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-
     @Path("device/stats/{deviceId}")
     @GET
     @Consumes("application/json")
@@ -206,7 +172,9 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
     public Response downloadSketch(@QueryParam("deviceName") String deviceName,
                                    @QueryParam("sketchType") String sketchType) {
         try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
+            String user = APIUtil.getAuthenticatedUser() + "@" + PrivilegedCarbonContext.getThreadLocalCarbonContext()
+                    .getTenantDomain();
+            ZipArchive zipFile = createDownloadFile(user, deviceName, sketchType);
             Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
             response.status(Response.Status.OK);
             response.type("application/zip");
@@ -276,7 +244,8 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
         if (apiApplicationKey == null) {
             String applicationUsername =
                     PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
-                            .getAdminUserName();
+                            .getAdminUserName() + "@" + PrivilegedCarbonContext.getThreadLocalCarbonContext()
+                            .getTenantDomain();
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {VirtualFireAlarmConstants.DEVICE_TYPE};
             apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(

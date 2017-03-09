@@ -16,7 +16,7 @@
 * under the License.
 */
 
-package org.wso2.carbon.device.mgt.input.adapter.mqtt.util;
+package org.wso2.carbon.device.mgt.input.adapter.extension.validator;
 
 import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.logging.Log;
@@ -32,13 +32,23 @@ import java.util.Map;
 public class MQTTContentValidator implements ContentValidator {
     private static final String JSON_ARRAY_START_CHAR = "[";
     private static final Log log = LogFactory.getLog(MQTTContentValidator.class);
+    private static final String CDMF_MQTT_CONTENT_VALIDATOR = "iot-mqtt";
+    public static final String DEVICE_ID_JSON_PATH = "event.metaData.deviceId";
+    public static final String DEVICE_TYPE_JSON_PATH = "event.metaData.deviceId";
+    public static final String TOPIC = "topic";
+    public static final int DEVICE_ID_TOPIC_HIERARCHY_INDEX = 2;
+
+    @Override
+    public String getType() {
+        return null;
+    }
 
     @Override
     public ContentInfo validate(Object msgPayload, Map<String, Object> dynamicParams) {
-        String topic = (String) dynamicParams.get(MQTTEventAdapterConstants.TOPIC);
+        String topic = (String) dynamicParams.get(TOPIC);
         String topics[] = topic.split("/");
-        String deviceIdJsonPath = MQTTEventAdapterConstants.DEVICE_ID_JSON_PATH;
-        int deviceIdInTopicHierarchyLevelIndex = MQTTEventAdapterConstants.DEVICE_ID_TOPIC_HIERARCHY_INDEX;
+        String deviceIdJsonPath = DEVICE_ID_JSON_PATH;
+        int deviceIdInTopicHierarchyLevelIndex = DEVICE_ID_TOPIC_HIERARCHY_INDEX;
         String deviceIdFromTopic = topics[deviceIdInTopicHierarchyLevelIndex];
         boolean status;
         String message = (String) msgPayload;

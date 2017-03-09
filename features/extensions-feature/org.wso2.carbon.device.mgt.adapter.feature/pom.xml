@@ -78,6 +78,11 @@
 			<artifactId>feign-gson</artifactId>
 			<version>${io.github.openfeign.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.identity.carbon.auth.jwt</groupId>
+			<artifactId>org.wso2.carbon.identity.authenticator.signedjwt</artifactId>
+			<version>${identity.carbon.auth.jwt.version}</version>
+		</dependency>
     </dependencies>
     <build>
         <plugins>
@@ -195,6 +200,9 @@
 								</bundleDef>
 								<bundleDef>
 									io.github.openfeign:feign-gson:${io.github.openfeign.version}
+								</bundleDef>
+								<bundleDef>
+									org.wso2.carbon.identity.carbon.auth.jwt:org.wso2.carbon.identity.authenticator.signedjwt:${identity.carbon.auth.jwt.version}
 								</bundleDef>
                             </bundles>
                             <importFeatures>

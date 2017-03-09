@@ -35,10 +35,10 @@ public class MQTTEventAdapterConstants {
     public static final String ADAPTER_CONF_DCR_URL = "dcrUrl";
     public static final String ADAPTER_CONF_TOKEN_URL = "tokenUrl";
     public static final String ADAPTER_CONF_DCR_URL_HINT = "dcrUrl.hint";
-    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME = "contentValidator";
-    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_CLASSNAME_HINT = "contentValidator.hint";
-    public static final String ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME = "contentTransformer";
-    public static final String ADAPTER_CONF_CONTENT_TRANSFORMER_CLASSNAME_HINT = "contentTransformer.hint";
+    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_TYPE = "contentValidator";
+    public static final String ADAPTER_CONF_CONTENT_VALIDATOR_TYPE_HINT = "contentValidator.hint";
+    public static final String ADAPTER_CONF_CONTENT_TRANSFORMER_TYPE = "contentTransformer";
+    public static final String ADAPTER_CONF_CONTENT_TRANSFORMER_TYPE_HINT = "contentTransformer.hint";
     public static final String ADAPTER_MESSAGE_TOPIC = "topic";
     public static final String ADAPTER_MESSAGE_TOPIC_HINT = "topic.hint";
     public static final String ADAPTER_CONF_CLIENTID = "clientId";
@@ -53,7 +53,7 @@ public class MQTTEventAdapterConstants {
 
     public static final String EMPTY_STRING = "";
     public static final String GRANT_TYPE_PARAM_NAME = "grant_type";
-    public static final String GRANT_TYPE = "password refresh_token";
+    public static final String GRANT_TYPE = "password refresh_token urn:ietf:params:oauth:grant-type:jwt-bearer";
     public static final String TOKEN_SCOPE = "production";
     public static final String APPLICATION_NAME_PREFIX = "InputAdapter_";
     public static final String CLIENT_ID = "clientId";
@@ -63,15 +63,7 @@ public class MQTTEventAdapterConstants {
     public static final String MQTT_CONTENT_VALIDATION_DEFAULT_PARAMETERS = "";
     public static final String TOPIC = "topic";
     public static final String PAYLOAD = "payload";
-    public static final String DEVICE_ID_JSON_PATH = "event.metaData.deviceId";
-    public static final String DEVICE_TYPE_JSON_PATH = "event.metaData.deviceId";
-    public static final int DEVICE_ID_TOPIC_HIERARCHY_INDEX = 2;
     public static final String AUTHORIZATION_HEADER_NAME = "Authorization";
     public static final String AUTHORIZATION_HEADER_VALUE_PREFIX = "Basic ";
-    public static final String PASSWORD_GRANT_TYPE = "password";
-    public static final String PASSWORD_GRANT_TYPE_USERNAME = "username";
-    public static final String PASSWORD_GRANT_TYPE_PASSWORD = "password";
-    public static final String PASSWORD_GRANT_TYPE_SCOPES = "scopes";
-    public static final String ACCESS_TOKEN_GRANT_TYPE_PARAM_NAME = "access_token";
 
 }

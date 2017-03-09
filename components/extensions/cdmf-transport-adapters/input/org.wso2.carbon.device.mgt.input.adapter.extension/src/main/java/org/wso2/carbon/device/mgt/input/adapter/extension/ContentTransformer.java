@@ -26,6 +26,11 @@ import java.util.Map;
 public interface ContentTransformer {
 
     /**
+     * This returns the type of ContentTransformer.
+     */
+    String getType();
+
+    /**
      * This is used to transform the receiver content
      * @param message message to be format
      * @param dynamicProperties related to transport.

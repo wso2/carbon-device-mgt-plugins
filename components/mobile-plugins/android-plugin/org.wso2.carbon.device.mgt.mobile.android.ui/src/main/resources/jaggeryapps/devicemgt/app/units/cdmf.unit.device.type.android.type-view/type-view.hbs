@@ -2,43 +2,131 @@
 {{unit "cdmf.unit.device.type.qr-modal" enrollmentURL=enrollmentURL deviceTypeName="Android"}}
 {{unit "cdmf.unit.device.type.email.invite-modal" deviceTypeView="android"}}
 
-<div class="col-lg-12  margin-top-double">
-    <h1 class="grey ">Android Mobile</h1>
-    <hr>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="grey ">DOWNLOAD THE ANDROID AGENT</h1>
+        <hr>
+    </div>
 </div>
-<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 padding-top">
-    <img src="{{@unit.publicUri}}/images/android-icon.png" class="img-responsive">
+
+<div class="row">
+    <!--<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 add-padding-top-2x">
+        <img src="{{@unit.publicUri}}/images/android-icon.png" class="img-responsive">
+    </div>-->
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 add-padding-top-2x">
+        <h3 class="text-center">Scan to download the Android Agent.</h3>
+        <div class="enrollment-qr-container text-center"></div>
+        <h3 class="text-center add-margin-bottom-2x add-margin-top-2x">or</h3>
+        <div class="text-center"><a
+                href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk"
+                class="btn-operations remove-margin download_agent">
+            <i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a></div>
+
+        <!--<p class="doc-link">Please scan the QR code to download the APK on to your android device or click
+            <a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk">here</a>
+            to save it to your computer.</p>
+        <p class="doc-link">For further instructions and troubleshooting please visit the following <a href="https://docs.wso2.com/display/IoTS300/Android"
+                                     target="_blank">link</a>.</p>-->
+        <p class="doc-link text-center">Need help? Read <a
+                href="https://docs.wso2.com/display/DeviceCloud/Enrolling+an+Android+Device" target="_blank">WSO2 Device
+            Cloud documentation.</a></p>
+    </div>
 </div>
 
-<div class="col-xs-12 col-sm-8 col-md-9 col-lg-9 padding-top">
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12 add-padding-top-2x ">
+        <h3 class="uppercase">START ENROLLING YOUR DEVICE</h3>
+        <hr>
+    </div>
+</div>
 
-    <h3 class="uppercase">What it Does</h3>
-    <hr>
-    <p class="grey margin-top">Connect and manage your Android device with WSO2 IoT Server.</p>
-    <br>
+<div class="row grey-bg">
+    {{#if isCloud}}
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 add-padding-top-2x add-padding-bottom-2x">
+    {{else}}
+    <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 add-padding-top-2x add-padding-bottom-2x">
+    {{/if}}
 
-    <a href="javascript:toggleEnrollment()" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
-    <a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
-    <a href="javascript:toggleEmailInvite()" class="btn-operations"><i class="fw fw-mail fw-inverse fw-lg add-margin-1x"></i> Invite by Email</a>
 
-    <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS300/Android"
-                                 target="_blank">here</a> for latest instructions and troubleshooting.</p>
+    <h5><strong>Step 1</strong></h5>
+    <p>Let's start by installing the Android agent on your device. Open the downloaded file, and tap <b>INSTALL</b>.</p>
+    <img src="{{@unit.publicUri}}/images/install_agent.png" class="img-responsive">
+</div>
 
-    <h3 class="uppercase">What You Need</h3>
-    <hr>
-    <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="badge">STEP 01</span>   Android
-                                                                            Mobile.
-        </li>
-        <li><span class="badge">STEP 02</span>   Go ahead
-                                                 and click [Enroll Device].
-        </li>
-        <li><span class="badge">STEP 03</span>   Proceed
-                                                 to the [Prepare] section.
-        </li>
-    </ul>
-    <br>
+    {{#if isCloud}}
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 add-padding-top-2x add-padding-bottom-2x">
+            <h5><strong>Step 2</strong></h5>
+            <p>Enter your:
+            <p>
+            <ul>
+                <li>Username: username/email that you used to sign in.</li>
+                <li>Password: the WSO2 Cloud password.</li>
+                <li>Organization: the name of the organization.</li>
+            </ul>
+            <img src="{{@unit.publicUri}}/images/login.png" class="img-responsive">
+        </div>
+    {{else}}
 
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 add-padding-top-2x add-padding-bottom-2x">
+            <h5><strong>Step 2</strong></h5>
+            <p>Tap Skip to proceed with the default enrollment process.</p>
+            <img src="{{@unit.publicUri}}/images/set_profile.png" class="img-responsive">
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 add-padding-top-2x add-padding-bottom-2x">
+            <h5><strong>Step 3</strong></h5>
+            <p>Enter the server address based on your environment, in the text box provided.</p>
+            <img src="{{@unit.publicUri}}/images/registration.png" class="img-responsive">
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 add-padding-top-2x add-padding-bottom-2x">
+            <h5><strong>Step 4</strong></h5>
+            <p>Enter your:
+            <p>
+            <ul>
+                <li>Username: username/email that you used to sign in to IoT server.</li>
+                <li>Password: the WSO2 Iot server password.</li>
+                <li>Domain: the name of the domain.</li>
+            </ul>
+            <img src="{{@unit.publicUri}}/images/install_agent.png" class="img-responsive">
+        </div>
+    {{/if}}
+
+</div>
+
+    <!--<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12 padding-double ">
+        <h3 class="uppercase">What You Need</h3>
+        <hr>
+        <ul class="list-unstyled">
+            <li class="padding-top-double"><span class="badge">STEP 01</span>   Android
+                Mobile.
+            </li>
+            <li><span class="badge">STEP 02</span>   Go ahead
+                and click [Enroll Device].
+            </li>
+            <li><span class="badge">STEP 03</span>   Proceed
+                to the [Prepare] section.
+            </li>
+        </ul>
+        <br>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+
+        <h3 class="uppercase">What it Does</h3>
+        <hr>
+        <p class="grey margin-top">Connect and manage your Android device with WSO2 IoT Server.</p>
+        <br>
+
+        <a href="javascript:toggleEnrollment()" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
+        <a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
+        <a href="javascript:toggleEmailInvite()" class="btn-operations"><i class="fw fw-mail fw-inverse fw-lg add-margin-1x"></i> Invite by Email</a>
+
+
+        <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS300/Android" target="_blank">here</a> for further instructions and troubleshooting.</p>
+
+    </div>
 </div>
 
 <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12 padding-double grey-bg">
@@ -50,23 +138,23 @@
     </ul>
     <br>
 
-</div>
+</div>-->
 
-<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
+    <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
     <p class="grey margin-top">Click on the image to zoom</p>
     <center>
         <a href="{{@unit.publicUri}}/images/android_device.png" target="_blank">
             <img src="{{@unit.publicUri}}/images/android_device.png" class="img-responsive">
         </a>
     </center>
-</div>
+</div>-->
 
-<br/>
+    <br/>
 
-{{#zone "topCss"}}
-    {{css "css/styles.css"}}
-{{/zone}}
+    {{#zone "topCss"}}
+        {{css "css/styles.css"}}
+    {{/zone}}
 
-{{#zone "bottomJs"}}
-    {{js "js/type-view.js"}}
-{{/zone}}
+    {{#zone "bottomJs"}}
+        {{js "js/type-view.js"}}
+    {{/zone}}
