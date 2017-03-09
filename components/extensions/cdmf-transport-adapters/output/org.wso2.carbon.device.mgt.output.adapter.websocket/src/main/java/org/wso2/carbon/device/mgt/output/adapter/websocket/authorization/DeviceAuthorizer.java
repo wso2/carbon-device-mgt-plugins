@@ -20,9 +20,13 @@ package org.wso2.carbon.device.mgt.output.adapter.websocket.authorization;
 import feign.Client;
 import feign.Feign;
 import feign.FeignException;
+import feign.Logger;
+import feign.Request;
+import feign.Response;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
+import feign.slf4j.Slf4jLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.device.mgt.output.adapter.websocket.authentication.AuthenticationInfo;
@@ -43,6 +47,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.websocket.Session;
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -61,7 +66,7 @@ public class DeviceAuthorizer implements Authorizer {
     private static final String STAT_PERMISSION = "statsPermission";
     private static final String DEVICE_ID = "deviceId";
     private static final String DEVICE_TYPE = "deviceType";
-    private static Log logger = LogFactory.getLog(DeviceAuthorizer.class);
+    private static Log log = LogFactory.getLog(DeviceAuthorizer.class);
     private static List<String> statPermissions;
 
     public DeviceAuthorizer() {
@@ -76,13 +81,13 @@ public class DeviceAuthorizer implements Authorizer {
             }
         }
         try {
-            deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient())
-                    .requestInterceptor(new OAuthRequestInterceptor(globalProperties))
+            deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger())
+                    .logLevel(Logger.Level.FULL).requestInterceptor(new OAuthRequestInterceptor(globalProperties))
                     .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                     .target(DeviceAccessAuthorizationAdminService.class, getDeviceMgtServerUrl(globalProperties)
                             + CDMF_SERVER_BASE_CONTEXT);
         } catch (OutputEventAdapterException e) {
-            logger.error("Invalid value for deviceMgtServerUrl in globalProperties.");
+            log.error("Invalid value for deviceMgtServerUrl in globalProperties.");
         }
     }
 
@@ -118,7 +123,7 @@ public class DeviceAuthorizer implements Authorizer {
                     }
                 }
             } catch (FeignException e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         }
         return false;
@@ -127,7 +132,7 @@ public class DeviceAuthorizer implements Authorizer {
     private String getDeviceMgtServerUrl(Map<String, String> properties) throws OutputEventAdapterException {
         String deviceMgtServerUrl = PropertyUtils.replaceProperty(properties.get(DEVICE_MGT_SERVER_URL));
         if (deviceMgtServerUrl == null || deviceMgtServerUrl.isEmpty()) {
-            logger.error("deviceMgtServerUrl can't be empty ");
+            log.error("deviceMgtServerUrl can't be empty ");
         }
         return deviceMgtServerUrl;
     }
@@ -170,6 +175,5 @@ public class DeviceAuthorizer implements Authorizer {
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             return null;
         }
-
     }
 }

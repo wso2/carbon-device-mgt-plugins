@@ -19,9 +19,13 @@ package org.wso2.carbon.appmgt.mdm.restconnector;
 
 import feign.Client;
 import feign.Feign;
+import feign.Logger;
+import feign.Request;
+import feign.Response;
 import feign.gson.GsonDecoder;
 import feign.gson.GsonEncoder;
 import feign.jaxrs.JAXRSContract;
+import feign.slf4j.Slf4jLogger;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONObject;
@@ -51,6 +55,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -71,13 +76,13 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
     public ApplicationOperationsImpl() {
         String authorizationConfigManagerServerURL = AuthorizationConfigurationManager.getInstance().getServerURL();
         OAuthRequestInterceptor oAuthRequestInterceptor = new OAuthRequestInterceptor();
-        deviceManagementAdminService = Feign.builder().client(getSSLClient())
-                .requestInterceptor(oAuthRequestInterceptor)
+        deviceManagementAdminService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger()).logLevel(
+                Logger.Level.FULL).requestInterceptor(oAuthRequestInterceptor)
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(DeviceManagementAdminService.class,
                         authorizationConfigManagerServerURL + CDMF_SERVER_BASE_CONTEXT);
-        applicationManagementAdminService = Feign.builder().client(getSSLClient())
-                .requestInterceptor(oAuthRequestInterceptor)
+        applicationManagementAdminService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger()).logLevel(
+                Logger.Level.FULL).requestInterceptor(oAuthRequestInterceptor)
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(ApplicationManagementAdminService.class,
                         authorizationConfigManagerServerURL + CDMF_SERVER_BASE_CONTEXT);
@@ -311,6 +316,6 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
         } catch (KeyManagementException | NoSuchAlgorithmException e) {
             return null;
         }
-
     }
+
 }

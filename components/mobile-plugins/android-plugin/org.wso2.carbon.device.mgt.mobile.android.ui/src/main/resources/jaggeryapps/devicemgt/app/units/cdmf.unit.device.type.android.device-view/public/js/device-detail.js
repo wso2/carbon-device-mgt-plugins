@@ -36,41 +36,6 @@ var InitiateViewOption = null;
         serviceUrlLocal = "/api/device-mgt/android/v1.0/admin/devices/location";
     }
 
-    if (serviceUrl) {
-        invokerUtil.post(
-            serviceUrl,
-            payload,
-            // success-callback
-            function () {
-                $(".panel-body").show();
-            },
-            // error-callback
-            function () {
-                var defaultInnerHTML =
-                    "<br><p class='fw-warning'>Device data may not have been updated. Please refresh to try again.<p>";
-                $(".panel-body").append(defaultInnerHTML);
-            }
-        );
-        
-        
-         invokerUtil.post(
-            serviceUrlLocal,
-            payload,
-            // success-callback
-            function () {
-                $(".panel-body").show();
-            },
-            // error-callback
-            function () {
-                var defaultInnerHTML =
-                    "<br><p class='fw-warning'>Device data may not have been updated. Please refresh to try again.<p>";
-                $(".panel-body").append(defaultInnerHTML);
-            }
-        );
-        
-    }
-
-
     $(".media.tab-responsive [data-toggle=tab]").on("shown.bs.tab", function (e) {
         var activeTabPane = $(e.target).attr("href");
         var activeListGroupItem = $(".media .list-group-item.active");

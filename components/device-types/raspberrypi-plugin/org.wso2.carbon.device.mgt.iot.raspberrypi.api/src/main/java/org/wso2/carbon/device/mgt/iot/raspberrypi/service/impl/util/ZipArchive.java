@@ -18,23 +18,21 @@
 
 package org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util;
 
-import java.io.File;
-
 /**
  * This is an utility class to hold zip files.
  */
 public class ZipArchive {
 
-    private File zipFile = null;
+    private byte[] zipFileContent = null;
     private String fileName = null;
 
-    public ZipArchive(String fileName, File zipFile) {
+    public ZipArchive(String fileName, byte[] zipFile) {
         this.fileName = fileName;
-        this.zipFile = zipFile;
+        this.zipFileContent = zipFile;
     }
 
-    public File getZipFile() {
-        return zipFile;
+    public byte[] getZipFileContent() {
+        return zipFileContent;
     }
 
     public String getFileName() {
