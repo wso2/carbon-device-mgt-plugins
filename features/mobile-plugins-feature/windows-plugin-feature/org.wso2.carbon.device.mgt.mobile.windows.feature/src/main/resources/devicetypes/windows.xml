@@ -164,5 +164,9 @@
     </DeviceAuthorizationConfig>
 
 	<PolicyMonitoring enabled="true"/>
+    <InitialOperationConfig>
+        <Operations>
+        </Operations>
+    </InitialOperationConfig>
 
 </DeviceTypeConfiguration>
