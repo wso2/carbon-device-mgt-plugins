@@ -4,7 +4,7 @@
     "category": "iot",
     "downloadAgentUri": "arduino/device/download",
     "category": "iot",
-    "scopes" : [
+    "scopes": [
       "perm:arduino:enroll"
     ]
   }

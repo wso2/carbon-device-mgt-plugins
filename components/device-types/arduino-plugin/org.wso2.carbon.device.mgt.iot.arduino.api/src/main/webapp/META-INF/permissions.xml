@@ -26,16 +26,16 @@
     it will result 403 error at the runtime.
 -->
 <PermissionConfiguration>
-	<APIVersion></APIVersion>
-	<!-- Device related APIs -->
+    <APIVersion></APIVersion>
+    <!-- Device related APIs -->
 
-	<Permission>
-		<name>control bulb</name>
-		<path>/device-mgt/user/operations</path>
-		<url>/device/*/bulb</url>
-		<method>POST</method>
-		<scope>arduino_user</scope>
-	</Permission>
+    <Permission>
+        <name>control bulb</name>
+        <path>/device-mgt/user/operations</path>
+        <url>/device/*/bulb</url>
+        <method>POST</method>
+        <scope>arduino_user</scope>
+    </Permission>
     <Permission>
         <name>get controls</name>
         <path>/device-mgt/user/operations</path>

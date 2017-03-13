@@ -148,7 +148,7 @@ public class ArduinoServiceImpl implements ArduinoService {
                                                @QueryParam("to") long to) {
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                   ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_STATS_MONITOR_PERMISSIONS)) {
+                    ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_STATS_MONITOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             String fromDate = String.valueOf(from);
@@ -211,7 +211,7 @@ public class ArduinoServiceImpl implements ArduinoService {
 
     private ZipArchive createDownloadFile(String owner, String deviceName)
             throws DeviceManagementException, JWTClientException, APIManagerException,
-                   UserStoreException {
+            UserStoreException {
         if (owner == null) {
             throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
         }
@@ -224,7 +224,8 @@ public class ArduinoServiceImpl implements ArduinoService {
         }
         String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
                 .getRealmConfiguration().getAdminUserName() + "@" + PrivilegedCarbonContext
-                .getThreadLocalCarbonContext().getTenantDomain();;
+                .getThreadLocalCarbonContext().getTenantDomain();
+        ;
         if (apiApplicationKey == null) {
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {ArduinoConstants.DEVICE_TYPE};
@@ -235,14 +236,14 @@ public class ArduinoServiceImpl implements ArduinoService {
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = " device_" + deviceId + " perm:arduino:enroll";
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
-                                                                   apiApplicationKey.getConsumerSecret(), owner, scopes);
+                apiApplicationKey.getConsumerSecret(), owner, scopes);
         //create token
         String accessToken = accessTokenInfo.getAccessToken();
         String refreshToken = accessTokenInfo.getRefreshToken();
         //Register the device with CDMF
         ZipUtil ziputil = new ZipUtil();
         return ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(),
-                                                   ArduinoConstants.DEVICE_TYPE, deviceId, deviceName, accessToken, refreshToken);
+                ArduinoConstants.DEVICE_TYPE, deviceId, deviceName, accessToken, refreshToken);
     }
 
     private static String shortUUID() {
