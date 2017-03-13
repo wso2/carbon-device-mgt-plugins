@@ -21,15 +21,19 @@
     width: 50px;
     color: #fff;
 }
+
 .padding-top-double {
     padding-top: 20px;
 }
+
 .padding-double {
     padding: 20px;
 }
+
 .grey {
     color: #333;
 }
+
 hr {
     display: block;
     height: 1px;
@@ -39,20 +43,25 @@ hr {
     padding: 0;
     opacity: 0.2;
 }
+
 .light-grey {
     color: #7c7c7c;
 }
+
 .uppercase {
     text-transform: uppercase;
 }
+
 .grey-bg {
     background-color: #f6f4f4;
 }
-.doc-link{
+
+.doc-link {
     background: none;
     color: #000;
     padding: 10px 0px;
 }
+
 .doc-link a {
     color: #006eff;
 }

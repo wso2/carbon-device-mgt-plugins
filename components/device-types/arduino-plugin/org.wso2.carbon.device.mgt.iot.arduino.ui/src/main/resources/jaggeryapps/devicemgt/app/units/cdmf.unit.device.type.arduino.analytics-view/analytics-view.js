@@ -18,7 +18,7 @@
 
 function onRequest(context) {
     var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
-    
+
     var devices = context.unit.params.devices;
     var deviceType = context.uriParams.deviceType;
     var deviceId = request.getParameter("deviceId");
@@ -26,7 +26,7 @@ function onRequest(context) {
     if (devices) {
         return {
             "devices": stringify(devices),
-            "backendApiUri":  "/arduino/device/stats/"
+            "backendApiUri": "/arduino/device/stats/"
         };
     } else if (deviceType != null && deviceType != undefined && deviceId != null && deviceId != undefined) {
         var deviceModule = require("/app/modules/business-controllers/device.js")["deviceModule"];
