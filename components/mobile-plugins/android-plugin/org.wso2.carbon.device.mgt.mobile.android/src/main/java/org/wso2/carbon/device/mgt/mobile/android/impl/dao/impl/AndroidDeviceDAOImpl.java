@@ -52,7 +52,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		try {
 			conn = AndroidDAOFactory.getConnection();
 			String selectDBQuery =
-					"SELECT DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, " +
+					"SELECT DEVICE_ID, FCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, " +
 					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION, OS_BUILD_DATE" +
 					" FROM AD_DEVICE WHERE DEVICE_ID = ?";
 			stmt = conn.prepareStatement(selectDBQuery);
@@ -73,7 +73,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 				mobileDevice.setOsBuildDate(rs.getString(AndroidPluginConstants.OS_BUILD_DATE));
 
 				Map<String, String> propertyMap = new HashMap<String, String>();
-				propertyMap.put(AndroidPluginConstants.GCM_TOKEN, rs.getString(AndroidPluginConstants.GCM_TOKEN));
+				propertyMap.put(AndroidPluginConstants.FCM_TOKEN, rs.getString(AndroidPluginConstants.FCM_TOKEN));
 				propertyMap.put(AndroidPluginConstants.DEVICE_INFO, rs.getString(AndroidPluginConstants.DEVICE_INFO));
 				propertyMap.put(AndroidPluginConstants.DEVICE_NAME, rs.getString(AndroidPluginConstants.DEVICE_NAME));
 				mobileDevice.setDeviceProperties(propertyMap);
@@ -103,7 +103,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		try {
 			conn = AndroidDAOFactory.getConnection();
 			String createDBQuery =
-					"INSERT INTO AD_DEVICE(DEVICE_ID, GCM_TOKEN, DEVICE_INFO, SERIAL, " +
+					"INSERT INTO AD_DEVICE(DEVICE_ID, FCM_TOKEN, DEVICE_INFO, SERIAL, " +
 					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, " +
 					"OS_VERSION, DEVICE_MODEL, OS_BUILD_DATE) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -111,7 +111,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 			stmt.setString(1, mobileDevice.getMobileDeviceId());
 
             Map<String, String> properties = mobileDevice.getDeviceProperties();
-			stmt.setString(2, properties.get(AndroidPluginConstants.GCM_TOKEN));
+			stmt.setString(2, properties.get(AndroidPluginConstants.FCM_TOKEN));
 			stmt.setString(3, properties.get(AndroidPluginConstants.DEVICE_INFO));
 			stmt.setString(4, mobileDevice.getSerial());
 			stmt.setString(5, mobileDevice.getVendor());
@@ -149,13 +149,13 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		try {
 			conn = AndroidDAOFactory.getConnection();
 			String updateDBQuery =
-					"UPDATE AD_DEVICE SET GCM_TOKEN = ?, DEVICE_INFO = ?, SERIAL = ?, VENDOR = ?, " +
+					"UPDATE AD_DEVICE SET FCM_TOKEN = ?, DEVICE_INFO = ?, SERIAL = ?, VENDOR = ?, " +
 					"MAC_ADDRESS = ?, DEVICE_NAME = ?, LATITUDE = ?, LONGITUDE = ?, IMEI = ?, " +
 					"IMSI = ?, OS_VERSION = ?, DEVICE_MODEL = ?, OS_BUILD_DATE = ? WHERE DEVICE_ID = ?";
 			stmt = conn.prepareStatement(updateDBQuery);
 
 			Map<String, String> properties = mobileDevice.getDeviceProperties();
-			stmt.setString(1, properties.get(AndroidPluginConstants.GCM_TOKEN));
+			stmt.setString(1, properties.get(AndroidPluginConstants.FCM_TOKEN));
 			stmt.setString(2, properties.get(AndroidPluginConstants.DEVICE_INFO));
 			stmt.setString(3, mobileDevice.getSerial());
 			stmt.setString(4, mobileDevice.getVendor());
@@ -227,7 +227,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 		try {
 			conn = AndroidDAOFactory.getConnection();
 			String selectDBQuery =
-					"SELECT DEVICE_ID, GCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, " +
+					"SELECT DEVICE_ID, FCM_TOKEN, DEVICE_INFO, DEVICE_MODEL, SERIAL, " +
 					"VENDOR, MAC_ADDRESS, DEVICE_NAME, LATITUDE, LONGITUDE, IMEI, IMSI, OS_VERSION, OS_BUILD_DATE " +
 					"FROM AD_DEVICE";
 			stmt = conn.prepareStatement(selectDBQuery);
@@ -247,7 +247,7 @@ public class AndroidDeviceDAOImpl implements MobileDeviceDAO{
 				mobileDevice.setOsBuildDate(rs.getString(AndroidPluginConstants.OS_BUILD_DATE));
 
 				Map<String, String> propertyMap = new HashMap<>();
-				propertyMap.put(AndroidPluginConstants.GCM_TOKEN, rs.getString(AndroidPluginConstants.GCM_TOKEN));
+				propertyMap.put(AndroidPluginConstants.FCM_TOKEN, rs.getString(AndroidPluginConstants.FCM_TOKEN));
 				propertyMap.put(AndroidPluginConstants.DEVICE_INFO, rs.getString(AndroidPluginConstants.DEVICE_INFO));
 				propertyMap.put(AndroidPluginConstants.DEVICE_NAME, rs.getString(AndroidPluginConstants.DEVICE_NAME));
 				mobileDevice.setDeviceProperties(propertyMap);

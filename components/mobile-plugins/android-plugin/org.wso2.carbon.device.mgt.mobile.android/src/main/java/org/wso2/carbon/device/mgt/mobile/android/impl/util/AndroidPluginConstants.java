@@ -25,7 +25,7 @@ public final class AndroidPluginConstants {
 
 	//Properties related to AD_DEVICE table
 	public static final String DEVICE_ID = "DEVICE_ID";
-	public static final String GCM_TOKEN = "GCM_TOKEN";
+	public static final String FCM_TOKEN = "FCM_TOKEN";
 	public static final String DEVICE_INFO = "DEVICE_INFO";
 	public static final String SERIAL = "SERIAL";
 	public static final String DEVICE_MODEL = "DEVICE_MODEL";
@@ -50,7 +50,7 @@ public final class AndroidPluginConstants {
 			throw new AssertionError();
 		}
 
-		public static final String GCM = "GCM";
+		public static final String FCM = "FCM";
 		public static final String LOCAL = "LOCAL";
 	}
 

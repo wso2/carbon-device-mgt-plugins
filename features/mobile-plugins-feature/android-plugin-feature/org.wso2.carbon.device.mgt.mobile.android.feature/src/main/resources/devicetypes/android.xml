@@ -52,6 +52,10 @@
         <SharedWithAllTenants>true</SharedWithAllTenants>
     </ProvisioningConfig>
 
+    <!--Configuration for enable firebase push notifications-->
+    <!--<PushNotificationProvider type="FCM">-->
+    <!--</PushNotificationProvider>-->
+
     <DataSource>
         <JndiConfig>
             <Name>jdbc/MobileAndroidDM_DS</Name>
@@ -60,7 +64,7 @@
             <Table name="AD_DEVICE">
                 <PrimaryKey>DEVICE_ID</PrimaryKey>
                 <Attributes>
-                    <Attribute>GCM_TOKEN</Attribute>
+                    <Attribute>FCM_TOKEN</Attribute>
                     <Attribute>DEVICE_INFO</Attribute>
                     <Attribute>IMEI</Attribute>
                     <Attribute>IMSI</Attribute>

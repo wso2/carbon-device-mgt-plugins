@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.mobile.android.impl.gcm;
+package org.wso2.carbon.device.mgt.mobile.android.impl.fcm;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -45,32 +45,32 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Implements utility methods used by GCMService.
+ * Implements utility methods used by FCMService.
  */
-public class GCMUtil {
+public class FCMUtil {
 
-    private static final Log log = LogFactory.getLog(GCMService.class);
+    private static final Log log = LogFactory.getLog(FCMService.class);
 
-    private final static String GCM_ENDPOINT = "https://fcm.googleapis.com/fcm/send";
-    private static final String GCM_API_KEY = "gcmAPIKey";
+    private final static String FCM_ENDPOINT = "https://fcm.googleapis.com/fcm/send";
+    private static final String FCM_API_KEY = "fcmAPIKey";
     private static final int TIME_TO_LIVE = 60;
     private static final int HTTP_STATUS_CODE_OK = 200;
 
     private static HashMap<Integer, PlatformConfiguration> tenantConfigurationCache = new HashMap<>();
 
-    public static GCMResult sendWakeUpCall(String message, List<Device> devices) {
-        GCMResult result = new GCMResult();
+    public static FCMResult sendWakeUpCall(String message, List<Device> devices) {
+        FCMResult result = new FCMResult();
 
-        byte[] bytes = getGCMRequest(message, getGCMTokens(devices)).getBytes();
+        byte[] bytes = getFCMRequest(message, getFCMTokens(devices)).getBytes();
         HttpURLConnection conn;
         try {
-            conn = (HttpURLConnection) (new URL(GCM_ENDPOINT)).openConnection();
+            conn = (HttpURLConnection) (new URL(FCM_ENDPOINT)).openConnection();
             conn.setDoOutput(true);
             conn.setUseCaches(false);
             conn.setFixedLengthStreamingMode(bytes.length);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Authorization", "key=" + getConfigurationProperty(GCM_API_KEY));
+            conn.setRequestProperty("Authorization", "key=" + getConfigurationProperty(FCM_API_KEY));
 
             OutputStream out = conn.getOutputStream();
             out.write(bytes);
@@ -86,7 +86,7 @@ public class GCMUtil {
         } catch (ProtocolException e) {
             log.error("Exception occurred while setting the HTTP protocol.", e);
         } catch (IOException ex) {
-            log.error("Exception occurred while sending the GCM request.", ex);
+            log.error("Exception occurred while sending the FCM request.", ex);
         }
 
         return result;
@@ -114,16 +114,16 @@ public class GCMUtil {
         return null;
     }
 
-    private static String getGCMRequest(String message, List<String> registrationIds) {
-        JsonObject gcmRequest = new JsonObject();
-        gcmRequest.addProperty("delay_while_idle", false);
-        gcmRequest.addProperty("time_to_live", TIME_TO_LIVE);
+    private static String getFCMRequest(String message, List<String> registrationIds) {
+        JsonObject fcmRequest = new JsonObject();
+        fcmRequest.addProperty("delay_while_idle", false);
+        fcmRequest.addProperty("time_to_live", TIME_TO_LIVE);
 
-        //Add message to GCM request
+        //Add message to FCM request
         JsonObject data = new JsonObject();
         if (message != null && !message.isEmpty()) {
             data.addProperty("data", message);
-            gcmRequest.add("data", data);
+            fcmRequest.add("data", data);
         }
 
         //Set device reg-ids
@@ -135,27 +135,27 @@ public class GCMUtil {
             regIds.add(new JsonPrimitive(regId));
         }
 
-        gcmRequest.add("registration_ids", regIds);
-        return gcmRequest.toString();
+        fcmRequest.add("registration_ids", regIds);
+        return fcmRequest.toString();
     }
 
-    private static List<String> getGCMTokens(List<Device> devices) {
+    private static List<String> getFCMTokens(List<Device> devices) {
         List<String> tokens = new ArrayList<>(devices.size());
         for (Device device : devices) {
-            tokens.add(getGCMToken(device.getProperties()));
+            tokens.add(getFCMToken(device.getProperties()));
         }
         return tokens;
     }
 
-    private static String getGCMToken(List<Device.Property> properties) {
-        String gcmToken = null;
+    private static String getFCMToken(List<Device.Property> properties) {
+        String fcmToken = null;
         for (Device.Property property : properties) {
-            if (AndroidPluginConstants.GCM_TOKEN.equals(property.getName())) {
-                gcmToken = property.getValue();
+            if (AndroidPluginConstants.FCM_TOKEN.equals(property.getName())) {
+                fcmToken = property.getValue();
                 break;
             }
         }
-        return gcmToken;
+        return fcmToken;
     }
 
     public static String getConfigurationProperty(String property) {
