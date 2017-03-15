@@ -26,7 +26,7 @@
     <property name="Arduino_dir" value="Arduino"/>
 
     <target name="clean">
-        <delete dir="${target-dir}" />
+        <delete dir="${target-dir}"/>
     </target>
 
     <target name="zip" depends="clean">
