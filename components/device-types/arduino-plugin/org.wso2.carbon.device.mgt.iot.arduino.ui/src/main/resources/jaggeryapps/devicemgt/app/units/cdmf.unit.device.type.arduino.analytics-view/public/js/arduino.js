@@ -48,25 +48,25 @@ function drawGraph_arduino(from, to) {
     if (devices) {
         for (var i = 0; i < devices.length; i++) {
             graphConfig['series'].push(
-                    {
-                        'color': palette.color(),
-                        'data': [{
-                            x: parseInt(new Date().getTime() / 1000),
-                            y: 0
-                        }],
-                        'name': devices[i].name
-                    });
-        }
-    } else {
-        graphConfig['series'].push(
                 {
                     'color': palette.color(),
                     'data': [{
                         x: parseInt(new Date().getTime() / 1000),
                         y: 0
                     }],
-                    'name': $("#arduino-details").data("devicename")
+                    'name': devices[i].name
                 });
+        }
+    } else {
+        graphConfig['series'].push(
+            {
+                'color': palette.color(),
+                'data': [{
+                    x: parseInt(new Date().getTime() / 1000),
+                    y: 0
+                }],
+                'name': $("#arduino-details").data("devicename")
+            });
     }
 
     var graph = new Rickshaw.Graph(graphConfig);
@@ -103,9 +103,9 @@ function drawGraph_arduino(from, to) {
         graph: graph,
         formatter: function (series, x, y) {
             var date = '<span class="date">' +
-                       moment((x + tzOffset) * 1000).format('Do MMM YYYY h:mm:ss a') + '</span>';
+                moment((x + tzOffset) * 1000).format('Do MMM YYYY h:mm:ss a') + '</span>';
             var swatch = '<span class="detail_swatch" style="background-color: ' +
-                         series.color + '"></span>';
+                series.color + '"></span>';
             return swatch + series.name + ": " + parseInt(y) + '<br>' + date;
         }
     });
@@ -145,7 +145,7 @@ function drawGraph_arduino(from, to) {
             return;
         }
         var backendApiUrl = $("#arduino-div-chart").data("backend-api-url") + devices[deviceIndex].deviceIdentifier
-                            + "?from=" + from + "&to=" + to;
+            + "?from=" + from + "&to=" + to;
         var successCallback = function (data) {
             if (data) {
                 drawLineGraph(JSON.parse(data));
@@ -167,10 +167,10 @@ function drawGraph_arduino(from, to) {
         var chartData = [];
         for (var i = 0; i < data.length; i++) {
             chartData.push(
-                    {
-                        x: parseInt(data[i].values.time) - tzOffset,
-                        y: parseInt(data[i].values.temperature)
-                    }
+                {
+                    x: parseInt(data[i].values.time) - tzOffset,
+                    y: parseInt(data[i].values.temperature)
+                }
             );
         }
 

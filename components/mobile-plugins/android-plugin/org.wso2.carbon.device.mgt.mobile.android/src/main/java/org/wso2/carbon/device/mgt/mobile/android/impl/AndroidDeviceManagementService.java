@@ -43,8 +43,8 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
     public static final String DEVICE_TYPE_ANDROID = "android";
     private static final String SUPER_TENANT_DOMAIN = "carbon.super";
     private static final String NOTIFIER_PROPERTY = "notifierType";
-    private static final String GCM_API_KEY = "gcmAPIKey";
-    private static final String GCM_SENDER_ID = "gcmSenderId";
+    private static final String FCM_API_KEY = "fcmAPIKey";
+    private static final String FCM_SENDER_ID = "fcmSenderId";
     private PolicyMonitoringManager policyMonitoringManager;
 
     @Override
@@ -92,9 +92,9 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
                         int notifierType = Integer.parseInt(notifierValue);
                         if (notifierType == 2) {
                             HashMap<String, String> config = new HashMap<>();
-                            config.put(GCM_API_KEY, this.getConfigProperty(configuration, GCM_API_KEY));
-                            config.put(GCM_SENDER_ID, this.getConfigProperty(configuration, GCM_SENDER_ID));
-                            return new PushNotificationConfig(AndroidPluginConstants.NotifierType.GCM, config);
+                            config.put(FCM_API_KEY, this.getConfigProperty(configuration, FCM_API_KEY));
+                            config.put(FCM_SENDER_ID, this.getConfigProperty(configuration, FCM_SENDER_ID));
+                            return new PushNotificationConfig(AndroidPluginConstants.NotifierType.FCM, config);
                         }
                     }
                 }

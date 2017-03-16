@@ -29,7 +29,7 @@ function isPositiveInteger(str) {
 
 var notifierTypeConstants = {
     "LOCAL": "1",
-    "GCM": "2"
+    "FCM": "2"
 };
 // Constants to define platform types available
 var platformTypeConstants = {
@@ -47,8 +47,8 @@ var responseCodes = {
 var configParams = {
     "NOTIFIER_TYPE": "notifierType",
     "NOTIFIER_FREQUENCY": "notifierFrequency",
-    "GCM_API_KEY": "gcmAPIKey",
-    "GCM_SENDER_ID": "gcmSenderId",
+    "FCM_API_KEY": "fcmAPIKey",
+    "FCM_SENDER_ID": "fcmSenderId",
     "ANDROID_EULA": "androidEula",
     "IOS_EULA": "iosEula",
     "CONFIG_COUNTRY": "configCountry",
@@ -81,7 +81,7 @@ var configParams = {
 };
 
 $(document).ready(function () {
-    $("#gcm-inputs").hide();
+    $("#fcm-inputs").hide();
     tinymce.init({
         selector: "textarea",
         height:500,
@@ -113,17 +113,17 @@ $(document).ready(function () {
                     var config = data.configuration[i];
                     if (config.name == configParams["NOTIFIER_TYPE"]) {
                         $("#android-config-notifier").val(config.value);
-                        if (config.value != notifierTypeConstants["GCM"]) {
-                            $("#gcm-inputs").hide();
+                        if (config.value != notifierTypeConstants["FCM"]) {
+                            $("#fcm-inputs").hide();
                             $("#local-inputs").show();
                         } else {
-                            $("#gcm-inputs").show();
+                            $("#fcm-inputs").show();
                             $("#local-inputs").hide();
                         }
                     } else if (config.name == configParams["NOTIFIER_FREQUENCY"]) {
                         $("input#android-config-notifier-frequency").val(config.value / 1000);
-                    } else if (config.name == configParams["GCM_API_KEY"]) {
-                        $("input#android-config-gcm-api-key").val(config.value);
+                    } else if (config.name == configParams["FCM_API_KEY"]) {
+                        $("input#android-config-fcm-api-key").val(config.value);
                     } else if (config.name == configParams["ANDROID_EULA"]) {
                         $("#android-eula").val(config.value);
                     }
@@ -139,12 +139,12 @@ $(document).ready(function () {
 
     $("#android-config-notifier").change(function () {
         var notifierType = $("#android-config-notifier").find("option:selected").attr("value");
-        if (notifierType != notifierTypeConstants["GCM"]) {
-            $("#gcm-inputs").hide();
+        if (notifierType != notifierTypeConstants["FCM"]) {
+            $("#fcm-inputs").hide();
             $("#local-inputs").show();
         } else {
             $("#local-inputs").hide();
-            $("#gcm-inputs").show();
+            $("#fcm-inputs").show();
         }
     });
 
@@ -156,8 +156,8 @@ $(document).ready(function () {
     $("button#save-android-btn").click(function () {
         var notifierType = $("#android-config-notifier").find("option:selected").attr("value");
         var notifierFrequency = $("input#android-config-notifier-frequency").val();
-        var gcmAPIKey = $("input#android-config-gcm-api-key").val();
-        var gcmSenderId = "sender_id";
+        var fcmAPIKey = $("input#android-config-fcm-api-key").val();
+        var fcmSenderId = "sender_id";
         var androidLicense = tinyMCE.activeEditor.getContent();
         var errorMsgWrapper = "#android-config-error-msg";
         var errorMsg = "#android-config-error-msg span";
@@ -167,7 +167,7 @@ $(document).ready(function () {
         } else if (notifierType == notifierTypeConstants["LOCAL"] && !isPositiveInteger(notifierFrequency)) {
             $(errorMsg).text("Provided notifier frequency is invalid. ");
             $(errorMsgWrapper).removeClass("hidden");
-        } else if (notifierType == notifierTypeConstants["GCM"] && !gcmAPIKey) {
+        } else if (notifierType == notifierTypeConstants["FCM"] && !fcmAPIKey) {
             $(errorMsg).text("FCM API Key is a required field. It cannot be empty.");
             $(errorMsgWrapper).removeClass("hidden");
         } else {
@@ -187,15 +187,15 @@ $(document).ready(function () {
                 "contentType": "text"
             };
 
-            var gcmKey = {
-                "name": configParams["GCM_API_KEY"],
-                "value": gcmAPIKey,
+            var fcmKey = {
+                "name": configParams["FCM_API_KEY"],
+                "value": fcmAPIKey,
                 "contentType": "text"
             };
 
-            var gcmId = {
-                "name": configParams["GCM_SENDER_ID"],
-                "value": gcmSenderId,
+            var fcmId = {
+                "name": configParams["FCM_SENDER_ID"],
+                "value": fcmSenderId,
                 "contentType": "text"
             };
 
@@ -208,9 +208,9 @@ $(document).ready(function () {
             configList.push(type);
             configList.push(frequency);
             configList.push(androidEula);
-            if (notifierType == notifierTypeConstants["GCM"]) {
-                configList.push(gcmKey);
-                configList.push(gcmId);
+            if (notifierType == notifierTypeConstants["FCM"]) {
+                configList.push(fcmKey);
+                configList.push(fcmId);
             }
 
             addConfigFormData.type = platformTypeConstants["ANDROID"];

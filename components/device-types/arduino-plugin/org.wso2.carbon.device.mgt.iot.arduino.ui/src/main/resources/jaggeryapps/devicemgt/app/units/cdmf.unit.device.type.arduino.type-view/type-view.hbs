@@ -32,31 +32,31 @@
     <h3 class="uppercase">What it Does</h3>
     <hr>
     <p class="grey margin-top">Connect Arduino UNO board to WSO2 IoT Server and visualize sensor
-                               data.</p>
+        data.</p>
     <br>
     <h3 class="uppercase">What You Need</h3>
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double">
             <span class="badge">ITEM 01</span>
-               Arduino UNO Board.
+            Arduino UNO Board.
         </li>
         <li>
             <span class="badge">ITEM 02</span>
-               Adafruit Wifi Shield for Arduino.
+            Adafruit Wifi Shield for Arduino.
         </li>
         <li>
             <span class="badge">ITEM 03</span>
-               LED bulb connected to Pin 13.
+            LED bulb connected to Pin 13.
             <i>(If not available, will use the one on the board.)</i>
         </li>
         <li>
             <span class="badge">ITEM 04</span>
-               Resister( e.g 330 ohms )
+            Resister( e.g 330 ohms )
         </li>
         <li>
             <span class="badge">STEP 05</span>
-               Proceed to [Prepare] section.
+            Proceed to [Prepare] section.
     </ul>
     <br>
     <a href="/api-store/apis/info?name={{@uriParams.deviceType}}&version=1.0.0&provider=admin"
@@ -67,7 +67,8 @@
         <i class="fw fw-download add-margin-1x"></i>Download Sketch
     </a>
     {{#if displayStatus}}
-        <a href="javascript:artifactUpload()" class="btn-operations"><i class="fw fw-upload fw-inverse fw-lg add-margin-1x"></i> Deploy Analytics Artifacts</a>
+        <a href="javascript:artifactUpload()" class="btn-operations"><i
+                class="fw fw-upload fw-inverse fw-lg add-margin-1x"></i> Deploy Analytics Artifacts</a>
     {{/if}}
 
     <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS300/Arduino"
@@ -201,11 +202,11 @@
     <ul class="list-unstyled">
         <li class="padding-top-double">
             <span class="badge">01</span>
-               Wifi-Shield mounted onto the Arduino-UNO board
+            Wifi-Shield mounted onto the Arduino-UNO board
         </li>
         <li class="padding-top-double">
             <span class="badge">02</span>
-               Connect LED bulb to arduino as follows
+            Connect LED bulb to arduino as follows
             <br/><br/>
             <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
                 <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive">
@@ -215,20 +216,20 @@
 
         <li class="padding-top-double">
             <span class="badge">03</span>
-               Download Arduino-Sketch from [Download Sketch] link above.
+            Download Arduino-Sketch from [Download Sketch] link above.
         </li>
         <li class="padding-top-double">
             <span class="badge">04</span>
-               Unzip the downloaded Arduino Agent
+            Unzip the downloaded Arduino Agent
         </li>
         <li class="padding-top-double">
             <span class="badge">05</span>
-               Create a folder called "ArduinoBoardSketch" and move all source files
+            Create a folder called "ArduinoBoardSketch" and move all source files
             inside
         </li>
         <li class="padding-top-double">
             <span class="badge">06</span>
-               Open ArduinoBoardSketch.h and provide appropriate values for
+            Open ArduinoBoardSketch.h and provide appropriate values for
             <i>[WLAN_SSID]</i>,
             <i>[WLAN_PASS]</i>,
             <i>[SERVICE_PORT]</i>,
@@ -238,7 +239,7 @@
         </li>
         <li class="padding-top-double">
             <span class="badge">07</span>
-               Burn the sketch onto your Arduino board and let the program run.
+            Burn the sketch onto your Arduino board and let the program run.
         </li>
         <li class="padding-top-double">
 
@@ -246,14 +247,14 @@
                 <i class="fw fw-circle-outline fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
-               Arduino will publish it's internal temperature to WSO2-IoT-Server
+            Arduino will publish it's internal temperature to WSO2-IoT-Server
             <br/><br/>
 
             <span class="fw-stack margin-right">
                 <i class="fw fw-circle-outline fw-stack-2x"></i>
                 <i class="fw fw-right-arrow fw-stack-1x"></i>
             </span>
-               LED on <i>PIN 13</i> can be controlled from Device Management page.
+            LED on <i>PIN 13</i> can be controlled from Device Management page.
         </li>
     </ul>
     <br>
@@ -267,17 +268,17 @@
             <ul class="list-unstyled">
                 <li class="padding-top-double">
                     <span class="badge">01</span>
-                       You can view all your connected devices at
+                    You can view all your connected devices at
                     <a href="{{@app.context}}/devices">[Device Management]</a> page.
                 </li>
                 <li class="padding-top-double">
                     <span class="badge">02</span>
-                       Select one of connected devices and check for available control
+                    Select one of connected devices and check for available control
                     operations and monitor Real-Time data.
                 </li>
                 <li class="padding-top-double">
                     <span class="badge">03</span>
-                       You can also view analytics of the data published to IoT-Server by
+                    You can also view analytics of the data published to IoT-Server by
                     navigating to Device Analytics page.
                 </li>
             </ul>

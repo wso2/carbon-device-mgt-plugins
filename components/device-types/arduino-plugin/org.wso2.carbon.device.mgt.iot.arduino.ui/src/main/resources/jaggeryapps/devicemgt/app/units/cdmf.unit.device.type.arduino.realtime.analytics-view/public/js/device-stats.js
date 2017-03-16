@@ -25,9 +25,9 @@ $(window).load(function () {
     var tNow = new Date().getTime() / 1000;
     for (var i = 0; i < 30; i++) {
         chartData.push({
-                           x: tNow - (30 - i) * 15,
-                           y: parseFloat(0)
-                       });
+            x: tNow - (30 - i) * 15,
+            y: parseFloat(0)
+        });
     }
 
     graph = new Rickshaw.Graph({
@@ -90,9 +90,9 @@ function connect(target) {
         ws.onmessage = function (event) {
             var dataPoint = JSON.parse(event.data);
             chartData.push({
-                               x: parseInt(dataPoint[0]) / 1000,
-                               y: parseFloat(dataPoint[5])
-                           });
+                x: parseInt(dataPoint[0]) / 1000,
+                y: parseFloat(dataPoint[5])
+            });
             chartData.shift();
             graph.update();
         };

@@ -31,7 +31,7 @@ function onRequest(context) {
     if (encodedClientKeys) {
         var tokenUtil = require("/app/modules/oauth/token-handler-utils.js")["utils"];
         var resp = tokenUtil.decode(encodedClientKeys).split(":");
-        var tokenPair = jwtClient.getAccessToken(resp[0], resp[1], context.user.username,"default", {});
+        var tokenPair = jwtClient.getAccessToken(resp[0], resp[1], context.user.username, "default", {});
         if (tokenPair) {
             token = tokenPair.accessToken;
         }

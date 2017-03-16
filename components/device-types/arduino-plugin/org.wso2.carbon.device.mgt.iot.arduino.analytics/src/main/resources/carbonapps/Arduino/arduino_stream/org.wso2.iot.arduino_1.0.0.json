@@ -4,12 +4,19 @@
   "nickName": "Arduino",
   "description": "Temperature data received from the Arduino",
   "metaData": [
-    {"name":"owner","type":"STRING"},
-    {"name":"deviceId","type":"STRING"}
+    {
+      "name": "owner",
+      "type": "STRING"
+    },
+    {
+      "name": "deviceId",
+      "type": "STRING"
+    }
   ],
   "payloadData": [
     {
-      "name": "temperature","type": "FLOAT"
+      "name": "temperature",
+      "type": "FLOAT"
     }
   ]
 }
