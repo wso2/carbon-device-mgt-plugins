@@ -98,9 +98,10 @@ public class ConfigurationMgtServiceImpl implements ConfigurationMgtService {
      * @throws WindowsConfigurationException
      */
     @PUT
-    public Response updateConfiguration(PlatformConfiguration configuration) throws WindowsConfigurationException {
+    public Response updateConfiguration(PlatformConfiguration windowsPlatformConfiguration) throws WindowsConfigurationException {
         String message;
         ConfigurationEntry licenseEntry = null;
+        PlatformConfiguration configuration = new PlatformConfiguration();
         try {
             configuration.setType(DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_WINDOWS);
             List<ConfigurationEntry> configs = configuration.getConfiguration();
