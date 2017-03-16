@@ -488,7 +488,7 @@ public class AndroidAPIUtils {
             //  if (((JsonObject) element).entrySet().iterator().next().getValue().getAsString().equalsIgnoreCase(needed));
             for (Map.Entry<String, JsonElement> ob : ((JsonObject) element).entrySet()) {
                 JsonElement val = ob.getValue();
-                if (val != null && !val.isJsonNull() && ob.getValue().getAsString().equalsIgnoreCase(needed)) {
+                if (val != null && !val.isJsonNull()) {
                     if (exist) {
                         {
                             return val.getAsString().replace("%", "");
