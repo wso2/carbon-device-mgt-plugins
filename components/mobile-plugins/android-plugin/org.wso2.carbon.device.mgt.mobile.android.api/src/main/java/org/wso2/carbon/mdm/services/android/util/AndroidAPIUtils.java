@@ -490,9 +490,7 @@ public class AndroidAPIUtils {
                 JsonElement val = ob.getValue();
                 if (val != null && !val.isJsonNull()) {
                     if (exist) {
-                        {
-                            return val.getAsString().replace("%", "");
-                        }
+                        return val.getAsString().replace("%", "");
                     }
                     if (val.getAsString().equalsIgnoreCase(needed)) {
                         exist = true;
