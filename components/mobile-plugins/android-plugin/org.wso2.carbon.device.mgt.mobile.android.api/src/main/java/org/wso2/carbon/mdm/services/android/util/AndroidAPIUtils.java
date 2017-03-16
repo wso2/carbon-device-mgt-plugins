@@ -487,12 +487,16 @@ public class AndroidAPIUtils {
         for (JsonElement element : jsonArray) {
             //  if (((JsonObject) element).entrySet().iterator().next().getValue().getAsString().equalsIgnoreCase(needed));
             for (Map.Entry<String, JsonElement> ob : ((JsonObject) element).entrySet()) {
-                if (exist) {
-                    return ob.getValue().getAsString().replace("%", "");
-                }
                 JsonElement val = ob.getValue();
                 if (val != null && !val.isJsonNull() && ob.getValue().getAsString().equalsIgnoreCase(needed)) {
-                    exist = true;
+                    if (exist) {
+                        {
+                            return val.getAsString().replace("%", "");
+                        }
+                    }
+                    if (val.getAsString().equalsIgnoreCase(needed)) {
+                        exist = true;
+                    }
                 }
             }
         }
