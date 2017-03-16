@@ -46,7 +46,6 @@
         <dependency>
             <groupId>org.json.wso2</groupId>
             <artifactId>json</artifactId>
-            <version>${analytics.json.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
