@@ -16,12 +16,12 @@
  * under the License.
  */
 
-package org.wso2.carbon.device.mgt.mobile.android.impl.gcm;
+package org.wso2.carbon.device.mgt.mobile.android.impl.fcm;
 
 /**
- * Represents model object for holding GCM response data.
+ * Represents model object for holding FCM response data.
  */
-public class GCMResult {
+public class FCMResult {
 
     private String errorMsg;
     private String msg;

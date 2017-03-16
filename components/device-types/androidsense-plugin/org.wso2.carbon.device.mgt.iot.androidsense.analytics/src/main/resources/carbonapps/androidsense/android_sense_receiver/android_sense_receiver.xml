@@ -19,10 +19,8 @@
 
 <eventReceiver name="android_sense_receiver" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
     <from eventAdapterType="oauth-mqtt">
-        <property name="topic">carbon.super/android_sense/+/data</property>
-        <property name="username">admin</property>
-		<property name="password">admin</property>
-        <property name="contentValidator">org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTContentValidator</property>
+        <property name="topic">${tenant-domain}/android_sense/+/data</property>
+        <property name="contentValidator">iot-mqtt</property>
         <property name="cleanSession">true</property>
     </from>
     <mapping customMapping="disable" type="json"/>

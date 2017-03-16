@@ -1,5 +1,7 @@
 #carbon-device-mgt-plugins
 
+<a href='https://wso2.org/jenkins/job/platform-builds/job/carbon-device-mgt-plugins/'><img src='https://wso2.org/jenkins/job/platform-builds/job/carbon-device-mgt-plugins/badge/icon'></a>
+
 WSO2 MOBILE DEVICE MANAGER
 
 WSO2 Mobile Device Manager (WSO2 MDM) is a comprehensive platform that helps solve mobile computing challenges enterprises face today when dealing with both corporate owned, personally enabled (COPE) devices and employee owned devices as part of a bring your own device (BYOD) program.

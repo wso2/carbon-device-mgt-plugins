@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<web-app version="2.5"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         version="2.5"
          xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
          metadata-complete="true">
-	<display-name>Arduino</display-name>
-	<description>Arduino</description>
+    <display-name>Arduino</display-name>
+    <description>Arduino</description>
 
     <servlet>
         <servlet-name>CXFServlet</servlet-name>
@@ -20,10 +20,6 @@
         <param-name>doAuthentication</param-name>
         <param-value>true</param-value>
     </context-param>
-    <context-param>
-        <param-name>isSharedWithAllTenants</param-name>
-        <param-value>true</param-value>
-    </context-param>
 
     <!--publish to apim-->
     <context-param>
@@ -32,7 +28,8 @@
     </context-param>
 
     <listener>
-        <listener-class>org.wso2.carbon.device.mgt.iot.arduino.service.impl.listener.ArduinoPermissionUpdateListener</listener-class>
+        <listener-class>org.wso2.carbon.device.mgt.iot.arduino.service.impl.listener.ArduinoPermissionUpdateListener
+        </listener-class>
     </listener>
 
 </web-app>

@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>cdmf-transport-adapters</artifactId>
-        <version>3.0.12-SNAPSHOT</version>
+        <version>3.0.15-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -94,6 +94,10 @@
 		<dependency>
 			<groupId>javax.ws.rs</groupId>
 			<artifactId>jsr311-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-slf4j</artifactId>
 		</dependency>
     </dependencies>
 
@@ -169,7 +173,9 @@
 							feign.auth,
 							feign.codec,
 							feign.gson,
-							javax.cache
+							javax.cache,
+							javax.net.ssl,
+							feign.slf4j
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
 						<Embed-Dependency>

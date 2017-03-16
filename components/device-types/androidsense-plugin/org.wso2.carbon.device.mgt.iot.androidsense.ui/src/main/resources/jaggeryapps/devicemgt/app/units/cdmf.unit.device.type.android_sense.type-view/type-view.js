@@ -19,6 +19,20 @@
 function onRequest(context){
     var viewModel = {};
     var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
+	var serviceInvokers = require("/app/modules/oauth/token-protected-service-invokers.js")["invokers"];
+	var url = devicemgtProps["httpsURL"] + "/api/device-mgt/v1.0/admin/devicetype/deploy/android_sense/status";
+	serviceInvokers.XMLHttp.get(
+		url, function (responsePayload) {
+			var responseContent = responsePayload.status;
+			new Log().error(responseContent);
+			if ("204" == responsePayload.status) {
+				viewModel["displayStatus"] = "Display";
+			}
+		},
+		function (responsePayload) {
+			//do nothing.
+		}
+	);
     viewModel["hostName"] = devicemgtProps["generalConfig"]["host"];
     viewModel["enrollmentURL"] = viewModel["hostName"] + context.unit.publicUri + "/asset/androidsense.apk";
     return viewModel;

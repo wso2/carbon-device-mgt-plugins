@@ -58,3 +58,6 @@ hr {
 .doc-link a {
     color: #006eff;
 }
+.enrollment-qr-container canvas {
+    width: 24%;
+}

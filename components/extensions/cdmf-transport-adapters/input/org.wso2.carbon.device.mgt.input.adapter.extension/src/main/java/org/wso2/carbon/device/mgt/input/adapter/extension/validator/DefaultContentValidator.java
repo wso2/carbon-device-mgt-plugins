@@ -16,7 +16,10 @@
 * under the License.
 */
 
-package org.wso2.carbon.device.mgt.input.adapter.extension;
+package org.wso2.carbon.device.mgt.input.adapter.extension.validator;
+
+import org.wso2.carbon.device.mgt.input.adapter.extension.ContentInfo;
+import org.wso2.carbon.device.mgt.input.adapter.extension.ContentValidator;
 
 import java.util.Map;
 
@@ -24,6 +27,12 @@ import java.util.Map;
  * This holds the default implementation of content validator interface.
  */
 public class DefaultContentValidator implements ContentValidator {
+    private static final String DEFAULT_TYPE = "default";
+
+    @Override
+    public String getType() {
+        return DEFAULT_TYPE;
+    }
 
     @Override
     public ContentInfo validate(Object message, Map<String, Object> dynamicParams) {

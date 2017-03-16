@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto;
 
-import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

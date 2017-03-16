@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>extensions-feature</artifactId>
-        <version>3.0.12-SNAPSHOT</version>
+        <version>3.0.15-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -80,6 +80,9 @@
                                 <bundleDef>
                                     io.github.openfeign:feign-gson:${io.github.openfeign.version}
                                 </bundleDef>
+								<bundleDef>
+									io.github.openfeign:feign-slf4j:${io.github.openfeign.version}
+								</bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>

@@ -58,15 +58,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -134,40 +130,6 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
         }
     }
 
-    @PUT
-    @Path("device/{deviceId}/policy")
-    public Response updatePolicy(@PathParam("deviceId") String deviceId, @QueryParam("protocol") String protocol,
-                                 @FormParam("policy") String policy) {
-        String protocolString = protocol.toUpperCase();
-        if (log.isDebugEnabled()) {
-            log.debug("Sending request to update-policy of device [" + deviceId + "] via " + protocolString);
-        }
-        try {
-            if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(
-                    new DeviceIdentifier(deviceId, VirtualFireAlarmConstants.DEVICE_TYPE),
-                    DeviceGroupConstants.Permissions.DEFAULT_MANAGE_POLICIES_PERMISSIONS)) {
-                return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
-            }
-            String actualMessage = VirtualFireAlarmConstants.POLICY_CONTEXT + ":" + policy;
-            Map<String, String> dynamicProperties = new HashMap<>();
-            String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
-                    + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
-            dynamicProperties.put(VirtualFireAlarmConstants.ADAPTER_TOPIC_PROPERTY, publishTopic);
-            dynamicProperties.put(VirtualFireAlarmConstants.JID_PROPERTY_KEY,
-                                  deviceId + "@" + XmppConfig.getInstance().getServerName());
-            dynamicProperties.put(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "POLICTY-REQUEST");
-            dynamicProperties.put(VirtualFireAlarmConstants.MESSAGE_TYPE_PROPERTY_KEY,
-                                  VirtualFireAlarmConstants.CHAT_PROPERTY_KEY);
-            APIUtil.getOutputEventAdapterService().publish(VirtualFireAlarmConstants.XMPP_ADAPTER_NAME,
-                                                           dynamicProperties, actualMessage);
-            return Response.ok().build();
-        } catch (DeviceAccessAuthorizationException e) {
-            log.error(e.getErrorMessage(), e);
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-
     @Path("device/stats/{deviceId}")
     @GET
     @Consumes("application/json")
@@ -206,13 +168,14 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
     public Response downloadSketch(@QueryParam("deviceName") String deviceName,
                                    @QueryParam("sketchType") String sketchType) {
         try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName, sketchType);
-            Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
+            String user = APIUtil.getAuthenticatedUser() + "@" + PrivilegedCarbonContext.getThreadLocalCarbonContext()
+                    .getTenantDomain();
+            ZipArchive zipFile = createDownloadFile(user, deviceName, sketchType);
+            Response.ResponseBuilder response = Response.ok(zipFile.getZipFileContent());
             response.status(Response.Status.OK);
             response.type("application/zip");
             response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
             Response resp = response.build();
-            zipFile.getZipFile().delete();
             return resp;
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
@@ -223,9 +186,6 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (APIManagerException ex) {
-            log.error(ex.getMessage(), ex);
-            return Response.status(500).entity(ex.getMessage()).build();
-        } catch (IOException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
         } catch (UserStoreException ex) {
@@ -276,7 +236,8 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
         if (apiApplicationKey == null) {
             String applicationUsername =
                     PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration()
-                            .getAdminUserName();
+                            .getAdminUserName() + "@" + PrivilegedCarbonContext.getThreadLocalCarbonContext()
+                            .getTenantDomain();
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {VirtualFireAlarmConstants.DEVICE_TYPE};
             apiApplicationKey = apiManagementProviderService.generateAndRetrieveApplicationKeys(

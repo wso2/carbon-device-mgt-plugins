@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>cdmf-transport-adapters</artifactId>
-        <version>3.0.12-SNAPSHOT</version>
+        <version>3.0.15-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -76,6 +76,26 @@
             <groupId>commons-pool.wso2</groupId>
             <artifactId>commons-pool</artifactId>
         </dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-jaxrs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-gson</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-slf4j</artifactId>
+		</dependency>
     </dependencies>
 
     <build>
@@ -117,7 +137,6 @@
                             org.wso2.carbon.event.input.adapter.core,
                             org.wso2.carbon.event.input.adapter.core.*,
                             javax.xml.namespace; version=0.0.0,
-                            com.jayway.jsonpath.*,
                             com.nimbusds.jose,
                             com.nimbusds.jose.crypto,
                             com.nimbusds.jwt,
@@ -130,9 +149,29 @@
                             org.wso2.carbon.user.core.service,
                             org.wso2.carbon.user.core.tenant,
                             org.apache.commons.pool,
-                            org.apache.commons.pool.impl
+                            org.apache.commons.pool.impl,
+							feign,
+							feign.auth,
+							feign.codec,
+							feign.gson,
+							org.wso2.carbon.device.mgt.input.adapter.extension,
+							org.apache.axiom.util.base64,
+							org.apache.axis2.*,
+							org.apache.commons.httpclient.*,
+							org.apache.commons.logging,
+							org.apache.log4j,
+							org.wso2.carbon.context,
+							org.wso2.carbon.core.util,
+							org.wso2.carbon.identity.oauth2.*,
+							org.wso2.carbon.utils,
+							org.wso2.carbon.utils.multitenancy,
+							javax.net.ssl,
+							feign.slf4j
                         </Import-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
+						<Embed-Dependency>
+							jsr311-api,
+							feign-jaxrs
+						</Embed-Dependency>
                     </instructions>
                 </configuration>
             </plugin>

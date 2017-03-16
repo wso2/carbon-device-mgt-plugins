@@ -148,7 +148,7 @@ public class ArduinoServiceImpl implements ArduinoService {
                                                @QueryParam("to") long to) {
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,
-                   ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_STATS_MONITOR_PERMISSIONS)) {
+                    ArduinoConstants.DEVICE_TYPE), DeviceGroupConstants.Permissions.DEFAULT_STATS_MONITOR_PERMISSIONS)) {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             String fromDate = String.valueOf(from);
@@ -179,13 +179,14 @@ public class ArduinoServiceImpl implements ArduinoService {
     @Produces("application/zip")
     public Response downloadSketch(@QueryParam("deviceName") String deviceName) {
         try {
-            ZipArchive zipFile = createDownloadFile(APIUtil.getAuthenticatedUser(), deviceName);
-            Response.ResponseBuilder response = Response.ok(FileUtils.readFileToByteArray(zipFile.getZipFile()));
+            String username = APIUtil.getAuthenticatedUser() + "@" + PrivilegedCarbonContext
+                    .getThreadLocalCarbonContext().getTenantDomain();
+            ZipArchive zipFile = createDownloadFile(username, deviceName);
+            Response.ResponseBuilder response = Response.ok(zipFile.getZipFileContent());
             response.status(Response.Status.OK);
             response.type("application/zip");
             response.header("Content-Disposition", "attachment; filename=\"" + zipFile.getFileName() + "\"");
             Response resp = response.build();
-            zipFile.getZipFile().delete();
             return resp;
         } catch (IllegalArgumentException ex) {
             return Response.status(400).entity(ex.getMessage()).build();//bad request
@@ -198,9 +199,6 @@ public class ArduinoServiceImpl implements ArduinoService {
         } catch (APIManagerException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
-        } catch (IOException ex) {
-            log.error(ex.getMessage(), ex);
-            return Response.status(500).entity(ex.getMessage()).build();
         } catch (UserStoreException ex) {
             log.error(ex.getMessage(), ex);
             return Response.status(500).entity(ex.getMessage()).build();
@@ -209,7 +207,7 @@ public class ArduinoServiceImpl implements ArduinoService {
 
     private ZipArchive createDownloadFile(String owner, String deviceName)
             throws DeviceManagementException, JWTClientException, APIManagerException,
-                   UserStoreException {
+            UserStoreException {
         if (owner == null) {
             throw new IllegalArgumentException("Error on createDownloadFile() Owner is null!");
         }
@@ -221,7 +219,9 @@ public class ArduinoServiceImpl implements ArduinoService {
             throw new DeviceManagementException(msg);
         }
         String applicationUsername = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm()
-                .getRealmConfiguration().getAdminUserName();
+                .getRealmConfiguration().getAdminUserName() + "@" + PrivilegedCarbonContext
+                .getThreadLocalCarbonContext().getTenantDomain();
+        ;
         if (apiApplicationKey == null) {
             APIManagementProviderService apiManagementProviderService = APIUtil.getAPIManagementProviderService();
             String[] tags = {ArduinoConstants.DEVICE_TYPE};
@@ -232,14 +232,14 @@ public class ArduinoServiceImpl implements ArduinoService {
         JWTClient jwtClient = APIUtil.getJWTClientManagerService().getJWTClient();
         String scopes = " device_" + deviceId + " perm:arduino:enroll";
         AccessTokenInfo accessTokenInfo = jwtClient.getAccessToken(apiApplicationKey.getConsumerKey(),
-                                                                   apiApplicationKey.getConsumerSecret(), owner, scopes);
+                apiApplicationKey.getConsumerSecret(), owner, scopes);
         //create token
         String accessToken = accessTokenInfo.getAccessToken();
         String refreshToken = accessTokenInfo.getRefreshToken();
         //Register the device with CDMF
         ZipUtil ziputil = new ZipUtil();
         return ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(),
-                                                   ArduinoConstants.DEVICE_TYPE, deviceId, deviceName, accessToken, refreshToken);
+                ArduinoConstants.DEVICE_TYPE, deviceId, deviceName, accessToken, refreshToken);
     }
 
     private static String shortUUID() {

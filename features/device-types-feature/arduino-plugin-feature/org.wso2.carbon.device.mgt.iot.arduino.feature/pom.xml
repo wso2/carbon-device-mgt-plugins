@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
 		<artifactId>arduino-plugin-feature</artifactId>
-		<version>3.0.12-SNAPSHOT</version>
+		<version>3.0.15-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -113,6 +113,28 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+					<execution>
+						<id>unpack-analytics</id>
+						<phase>package</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+									<artifactId>org.wso2.carbon.device.mgt.iot.analytics</artifactId>
+									<version>${project.version}</version>
+									<type>zip</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>
+										${project.build.directory}/maven-shared-archive-resources/carbonapps
+									</outputDirectory>
+									<includes>**/*</includes>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
 					<execution>
 						<id>copy-jaxrs-war</id>
 						<phase>package</phase>

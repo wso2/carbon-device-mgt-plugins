@@ -31,8 +31,8 @@ function onRequest(context) {
     var pathParams = [];
     for (var i = 0; i < allControlOps.length; i++) {
         var controlOperation = {};
-        var uiPermission = allControlOps[i]["uiPermission"];
-        if (uiPermission && !userModule.isAuthorized("/permission/admin/" + uiPermission)) {
+        var uiPermission = allControlOps[i]["permission"];
+        if (uiPermission && !userModule.isAuthorized("/permission/admin" + uiPermission)) {
             continue;
         }
         controlOperation = allControlOps[i];

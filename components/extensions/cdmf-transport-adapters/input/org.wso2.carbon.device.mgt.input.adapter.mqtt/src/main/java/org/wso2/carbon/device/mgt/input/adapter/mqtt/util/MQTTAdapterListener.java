@@ -21,14 +21,11 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 import org.json.simple.JSONObject;
@@ -39,11 +36,13 @@ import org.wso2.carbon.core.ServerStatus;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentInfo;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentTransformer;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentValidator;
-import org.wso2.carbon.device.mgt.input.adapter.extension.DefaultContentTransformer;
-import org.wso2.carbon.device.mgt.input.adapter.extension.DefaultContentValidator;
+import org.wso2.carbon.device.mgt.input.adapter.mqtt.internal.InputAdapterServiceDataHolder;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterListener;
 import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterRuntimeException;
-import org.wso2.carbon.device.mgt.input.adapter.mqtt.exception.MQTTContentInitializationException;
+import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
+import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
+import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
+import org.wso2.carbon.user.api.UserStoreException;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -51,9 +50,7 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MQTTAdapterListener implements MqttCallback, Runnable {
@@ -83,7 +80,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
         this.mqttBrokerConnectionConfiguration = mqttBrokerConnectionConfiguration;
         this.cleanSession = mqttBrokerConnectionConfiguration.isCleanSession();
         int keepAlive = mqttBrokerConnectionConfiguration.getKeepAlive();
-        this.topic = topic;
+        this.topic = PropertyUtils.replaceTenantDomainProperty(topic);
         this.eventAdapterListener = inputEventAdapterListener;
         this.tenantId = tenantId;
 
@@ -102,43 +99,23 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
 
             // Set this wrapper as the callback handler
             mqttClient.setCallback(this);
-            String contentValidatorClassName = this.mqttBrokerConnectionConfiguration.getContentValidatorClassName();
+            String contentValidatorType = this.mqttBrokerConnectionConfiguration.getContentValidatorType();
 
-            if (contentValidatorClassName != null && contentValidatorClassName.equals(MQTTEventAdapterConstants.DEFAULT)) {
-                    contentValidator = new DefaultContentValidator();
-            } else if (contentValidatorClassName != null && !contentValidatorClassName.isEmpty()) {
-                try {
-                    Class<? extends ContentValidator> contentValidatorClass = Class.forName(contentValidatorClassName)
-                            .asSubclass(ContentValidator.class);
-                    contentValidator = contentValidatorClass.newInstance();
-                } catch (ClassNotFoundException e) {
-                    throw new MQTTContentInitializationException(
-                            "Unable to find the class validator: " + contentValidatorClassName, e);
-                } catch (InstantiationException e) {
-                    throw new MQTTContentInitializationException(
-                            "Unable to create an instance of :" + contentValidatorClassName, e);
-                } catch (IllegalAccessException e) {
-                    throw new MQTTContentInitializationException("Access of the instance in not allowed.", e);
-                }
+            if (contentValidatorType == null || contentValidatorType.equals(MQTTEventAdapterConstants.DEFAULT)) {
+                contentValidator = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
+                        .getDefaultContentValidator();
+            } else  {
+                contentValidator = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
+                        .getContentValidator(contentValidatorType);
             }
 
-            String contentTransformerClassName = this.mqttBrokerConnectionConfiguration.getContentTransformerClassName();
-            if (contentTransformerClassName != null && contentTransformerClassName.equals(MQTTEventAdapterConstants.DEFAULT)) {
-                contentTransformer = new DefaultContentTransformer();
-            } else if (contentTransformerClassName != null && !contentTransformerClassName.isEmpty()) {
-                try {
-                    Class<? extends ContentTransformer> contentTransformerClass = Class.forName(contentTransformerClassName)
-                            .asSubclass(ContentTransformer.class);
-                    contentTransformer = contentTransformerClass.newInstance();
-                } catch (ClassNotFoundException e) {
-                    throw new MQTTContentInitializationException(
-                            "Unable to find the class transfoer: " + contentTransformerClassName, e);
-                } catch (InstantiationException e) {
-                    throw new MQTTContentInitializationException(
-                            "Unable to create an instance of :" + contentTransformerClassName, e);
-                } catch (IllegalAccessException e) {
-                    throw new MQTTContentInitializationException("Access of the instance in not allowed.", e);
-                }
+            String contentTransformerType = this.mqttBrokerConnectionConfiguration.getContentTransformerType();
+            if (contentTransformerType == null || contentTransformerType.equals(MQTTEventAdapterConstants.DEFAULT)) {
+                contentTransformer = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
+                        .getDefaultContentTransformer();
+            } else {
+                contentTransformer = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
+                        .getContentTransformer(contentTransformerType);
             }
         } catch (MqttException e) {
             log.error("Exception occurred while subscribing to MQTT broker at "
@@ -165,8 +142,16 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                     registrationProfile.setGrantType(MQTTEventAdapterConstants.GRANT_TYPE);
                     registrationProfile.setOwner(username);
                     registrationProfile.setTokenScope(MQTTEventAdapterConstants.TOKEN_SCOPE);
-                    registrationProfile.setClientName(MQTTEventAdapterConstants.APPLICATION_NAME_PREFIX
-                        + mqttBrokerConnectionConfiguration.getAdapterName() + "_" + tenantId);
+                    if (!mqttBrokerConnectionConfiguration.isGlobalCredentailSet()) {
+                        registrationProfile.setClientName(MQTTEventAdapterConstants.APPLICATION_NAME_PREFIX
+                                                                  + mqttBrokerConnectionConfiguration.getAdapterName() +
+                                                                  "_" + tenantId);
+                        registrationProfile.setIsSaasApp(false);
+                    } else {
+                        registrationProfile.setClientName(MQTTEventAdapterConstants.APPLICATION_NAME_PREFIX
+                                                                  + mqttBrokerConnectionConfiguration.getAdapterName());
+                        registrationProfile.setIsSaasApp(true);
+                    }
                     String jsonString = registrationProfile.toJSON();
                     StringEntity requestEntity = new StringEntity(jsonString, ContentType.APPLICATION_JSON);
                     postMethod.setEntity(requestEntity);
@@ -192,8 +177,10 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                     }
                 } catch (MalformedURLException e) {
                     log.error("Invalid dcrUrl : " + dcrUrlString);
-                } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | IOException  e) {
-                    log.error("Failed to create an https connection.", e);
+                } catch (JWTClientException | UserStoreException   e) {
+                    log.error("Failed to create an oauth token with jwt grant type.", e);
+                } catch (NoSuchAlgorithmException |KeyManagementException |KeyStoreException | IOException e) {
+                    log.error("Failed to create a http connection.", e);
                 }
             }
         }
@@ -287,34 +274,26 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
     }
 
     private String getToken(String clientId, String clientSecret)
-            throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException, ParseException {
-        URL tokenEndpoint = new URL(mqttBrokerConnectionConfiguration.getTokenUrl());
-        HttpClient httpClient = MQTTUtil.getHttpClient(tokenEndpoint.getProtocol());
-        HttpPost postMethod = new HttpPost(tokenEndpoint.toString());
+            throws UserStoreException, JWTClientException {
+        PrivilegedCarbonContext.startTenantFlow();
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(tenantId, true);
+        try {
+            String scopes = mqttBrokerConnectionConfiguration.getBrokerScopes();
+            String username = mqttBrokerConnectionConfiguration.getUsername();
+            if (mqttBrokerConnectionConfiguration.isGlobalCredentailSet()) {
+                username = PrivilegedCarbonContext.getThreadLocalCarbonContext()
+                        .getUserRealm().getRealmConfiguration().getAdminUserName() + "@" + PrivilegedCarbonContext
+                        .getThreadLocalCarbonContext().getTenantDomain(true);
+            }
 
-        List<NameValuePair> nameValuePairs = new ArrayList<>();
-        nameValuePairs.add(new BasicNameValuePair(MQTTEventAdapterConstants.GRANT_TYPE_PARAM_NAME,
-                                                  MQTTEventAdapterConstants.PASSWORD_GRANT_TYPE));
-        nameValuePairs.add(new BasicNameValuePair(MQTTEventAdapterConstants.PASSWORD_GRANT_TYPE_USERNAME,
-                                                  mqttBrokerConnectionConfiguration.getUsername()));
-        nameValuePairs.add(new BasicNameValuePair(MQTTEventAdapterConstants.PASSWORD_GRANT_TYPE_PASSWORD,
-                                                  mqttBrokerConnectionConfiguration.getPassword()));
-        String scopes = mqttBrokerConnectionConfiguration.getBrokerScopes();
-        if (scopes != null && !scopes.isEmpty()) {
-            nameValuePairs.add(new BasicNameValuePair(MQTTEventAdapterConstants.PASSWORD_GRANT_TYPE_SCOPES, scopes));
+            JWTClientManagerService jwtClientManagerService =
+                    InputAdapterServiceDataHolder.getJwtClientManagerService();
+            AccessTokenInfo accessTokenInfo = jwtClientManagerService.getJWTClient().getAccessToken(
+                    clientId, clientSecret, username, scopes);
+            return accessTokenInfo.getAccessToken();
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
         }
-
-        postMethod.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-        postMethod.addHeader("Authorization", "Basic " + getBase64Encode(clientId, clientSecret));
-        postMethod.addHeader("Content-Type", "application/x-www-form-urlencoded");
-        HttpResponse httpResponse = httpClient.execute(postMethod);
-        String response = MQTTUtil.getResponseString(httpResponse);
-        if (log.isDebugEnabled()) {
-            log.debug(response);
-        }
-        JSONParser jsonParser = new JSONParser();
-        JSONObject jsonObject = (JSONObject) jsonParser.parse(response);
-        return (String) jsonObject.get(MQTTEventAdapterConstants.ACCESS_TOKEN_GRANT_TYPE_PARAM_NAME);
     }
 
     private String getBase64Encode(String key, String value) {

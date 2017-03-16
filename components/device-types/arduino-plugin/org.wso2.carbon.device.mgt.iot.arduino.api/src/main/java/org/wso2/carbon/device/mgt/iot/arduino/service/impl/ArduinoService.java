@@ -19,7 +19,6 @@
 package org.wso2.carbon.device.mgt.iot.arduino.service.impl;
 
 import io.swagger.annotations.*;
-
 import org.wso2.carbon.apimgt.annotations.api.Scope;
 import org.wso2.carbon.apimgt.annotations.api.Scopes;
 import org.wso2.carbon.device.mgt.iot.arduino.service.impl.constants.ArduinoConstants;
@@ -40,7 +39,7 @@ import javax.ws.rs.core.Response;
                 }
         ),
         tags = {
-                @Tag(name = "arduino", description = "")
+                @Tag(name = "arduino,device_management", description = "")
         }
 )
 @Scopes(
@@ -110,7 +109,7 @@ public interface ArduinoService {
             }
     )
     Response getArduinoTemperatureStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
-                                               @QueryParam("to") long to);
+                                        @QueryParam("to") long to);
 
     /**
      * download device agent

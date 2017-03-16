@@ -13,7 +13,8 @@
             "apiManagerClientAppRegistrationServiceURL": "%https.ip%/api-application-registration/register/tenants",
             "grantType": "password refresh_token urn:ietf:params:oauth:grant-type:saml2-bearer",
             "tokenScope": "admin",
-            "callbackUrl": "%https.ip%/api/device-mgt/v1.0"
+            "callbackUrl": "%https.ip%/api/device-mgt/v1.0",
+            "samlGrantTypeName": "urn:ietf:params:oauth:grant-type:saml2-bearer"
         },
         "tokenServiceURL": "%https.ip%/oauth2/token"
     },

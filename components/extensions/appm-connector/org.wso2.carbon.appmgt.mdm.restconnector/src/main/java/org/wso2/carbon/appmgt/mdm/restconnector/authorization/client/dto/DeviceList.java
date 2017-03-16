@@ -17,17 +17,21 @@
  */
 package org.wso2.carbon.appmgt.mdm.restconnector.authorization.client.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeviceList extends BasePaginatedResult {
+public class DeviceList {
     private List<Device> devices = new ArrayList<>();
+    private int count;
 
-    @ApiModelProperty(value = "List of devices returned")
-    @JsonProperty("devices")
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
     public List<Device> getList() {
         return devices;
     }

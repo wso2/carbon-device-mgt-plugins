@@ -16,9 +16,10 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<eventReceiver name="arduino_receiver" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
+<eventReceiver name="arduino_receiver" statistics="disable" trace="disable"
+               xmlns="http://wso2.org/carbon/eventreceiver">
     <from eventAdapterType="oauth-http">
-        <property name="contentValidator">org.wso2.carbon.device.mgt.input.adapter.http.util.HTTPContentValidator</property>
+        <property name="contentValidator">iot-http</property>
     </from>
     <mapping customMapping="disable" type="json"/>
     <to streamName="org.wso2.iot.arduino" version="1.0.0"/>
