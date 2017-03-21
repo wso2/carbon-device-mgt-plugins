@@ -30,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jaxen.JaxenException;
 import org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.exception.AuthorizationException;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
@@ -70,8 +71,7 @@ public class AuthorizationConfiguration {
     /**
      * location to broker.xml
      */
-    private static final String ROOT_CONFIG_FILE_PATH = System.getProperty(ServerConstants.CARBON_HOME)
-            + "/repository/conf/";
+    private static final String ROOT_CONFIG_FILE_PATH = CarbonUtils.getCarbonConfigDirPath() + File.separator;
     /**
      * File name of the main configuration file.
      */
