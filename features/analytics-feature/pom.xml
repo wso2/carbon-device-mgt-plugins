@@ -36,6 +36,7 @@
         <module>org.wso2.carbon.device.mgt.iot.analytics.feature</module>
         <module>org.wso2.carbon.iot.geo.dashboard.feature</module>
         <module>org.wso2.carbon.iot.device.statistics.dashboard.feature</module>
+        <module>org.wso2.carbon.device.mgt.cdmf.analytics.feature</module>
     </modules>
 
 </project>
