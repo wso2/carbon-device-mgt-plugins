@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<artifact name="GadgetNonCompiantFeatures" version="1.0.0" type="dashboards/gadget" serverRole="CDMFAnalytics">
+    <file>non-compliant-features</file>
+</artifact>
+
