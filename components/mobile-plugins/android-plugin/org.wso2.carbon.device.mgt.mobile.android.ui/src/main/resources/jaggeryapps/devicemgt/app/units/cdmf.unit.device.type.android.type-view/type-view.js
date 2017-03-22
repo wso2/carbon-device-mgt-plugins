@@ -34,6 +34,7 @@ function onRequest(context){
 	//		//do nothing.
 	//	}
 	//);
+    viewModel["isVirtual"] = request.getParameter("type") == 'virtual';
     viewModel["isCloud"] = devicemgtProps["isCloud"];
     viewModel["hostName"] = devicemgtProps["httpsURL"];
     viewModel["enrollmentURL"] = devicemgtProps["generalConfig"]["host"] + devicemgtProps["androidEnrollmentDir"];
