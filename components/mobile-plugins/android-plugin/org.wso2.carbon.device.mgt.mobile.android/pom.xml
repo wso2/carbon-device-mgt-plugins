@@ -22,7 +22,7 @@
     <parent>
         <artifactId>android-plugin</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>3.0.15-SNAPSHOT</version>
+        <version>3.0.17-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

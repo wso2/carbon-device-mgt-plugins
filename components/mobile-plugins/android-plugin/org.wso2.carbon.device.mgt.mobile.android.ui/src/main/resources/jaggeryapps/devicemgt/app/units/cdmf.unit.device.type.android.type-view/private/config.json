@@ -1,7 +1,8 @@
 {
     "deviceType": {
         "label": "Android",
-        "category": "mobile",
+        "virtualLabel": "Android Emulator",
+        "category": "hybrid",
         "analyticsEnabled": "false",
         "groupingEnabled": "false",
         "scopes" : [

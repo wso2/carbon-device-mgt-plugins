@@ -17,23 +17,20 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project name="create-geo-fence-capps" default="zip" basedir=".">
 
-	<parent>
-		<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-		<artifactId>device-types-feature</artifactId>
-		<version>3.0.17-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <property name="project-name" value="${ant.project.name}"/>
+    <property name="target-dir" value="target/"/>
+    <property name="src-dir" value="src/main/resources/android-tryit"/>
 
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>arduino-plugin-feature</artifactId>
-	<packaging>pom</packaging>
-	<name>WSO2 Carbon - IoT Server Arduino Device Feature</name>
-	<url>http://wso2.org</url>
+    <target name="clean">
+        <delete dir="${target-dir}" />
+    </target>
 
-	<modules>
-		<module>org.wso2.carbon.device.mgt.iot.arduino.feature</module>
-    </modules>
-
+    <target name="zip" depends="clean">
+        <zip destfile="${target-dir}/android-tryit.ZIP">
+            <zipfileset dir="src/main/resources/jaggeryapps/android-web-agent/app/pages/mdm.page.enrollments.android.download-agent/public/asset/" includes="android-agent.apk" fullpath="resources/android-agent.apk"/>
+            <zipfileset dir="${src-dir}"/>
+        </zip>
+    </target>
 </project>
