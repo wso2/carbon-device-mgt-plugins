@@ -49,7 +49,6 @@
                 ${basedir}/target/android-tryit.ZIP
             </source>
             <outputDirectory>/devicemgt/app/units/cdmf.unit.device.type.android.type-view/public/assets/</outputDirectory>
-            <filtered>true</filtered>
             <fileMode>755</fileMode>
         </file>
     </files>
