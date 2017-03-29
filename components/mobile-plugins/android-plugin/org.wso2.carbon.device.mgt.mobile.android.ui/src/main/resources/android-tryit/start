@@ -151,7 +151,8 @@ runEmulator(){
         rm haxm-macosx_r6_0_5.zip
         ./"HAXM installation" -m 2048 -log $SCRIPT_HOME/haxm_silent_run.log
         echo "    Done!"
-        echo
+        echo "Please restart your computer and run this script again."
+        exit
     fi
     cd $SCRIPT_HOME
     $ANDROID_TRYIT_SDK_HOME/platform-tools/adb kill-server
