@@ -25,13 +25,24 @@
                     class="btn-operations remove-margin download_agent">
                 <i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download Try-it Emulator</a></div>
         {{else}}
-            <h3 class="text-center">Scan to download the Android Agent.</h3>
+            <h3 class="text-center">Scan to get the Android Agent.</h3>
             <div class="enrollment-qr-container text-center"></div>
             <h3 class="text-center add-margin-bottom-2x add-margin-top-2x">or</h3>
-            <div class="text-center"><a
-                    href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk"
+            {{#if isCloud}}
+                <div class="text-center">
+                    <a href='https://play.google.com/store/apps/details?id=org.wso2.iot.agent&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
+                    target="_blank">
+                        <img alt='Get it on Google Play'
+                             src='{{@unit.publicUri}}/images/en_badge_web_generic_export.png'/>
+                    </a>
+                </div>
+            {{else}}
+                <div class="text-center">
+                    <a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk"
                     class="btn-operations remove-margin download_agent">
-                <i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a></div>
+                        <i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
+                </div>
+            {{/if}}
         {{/if}}
     </div>
     <!--<p class="doc-link">Please scan the QR code to download the APK on to your android device or click
@@ -63,41 +74,84 @@
 
 {{#if isCloud}}
     <div class="row grey-bg">
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
             <h5><strong>Step 1</strong></h5>
-    {{#if isVirtual}}
-        <ol>
-            <li>Unzip the 'android-tryit.zip and run 'start' script in your terminal.</li>
-            <li>If you already have android sdk in your computer, please provide location of the sdk.
-                Otherwise this tool will download and install minimum SDK components which needs to run the emulator.
-                This is a one time process.</li>
-            <li>This tool will ask to create AVD if you don't have any in your computer.
-                Otherwise you can select existing AVD to try out IoT Agent.</li>
-        </ol>
-        <img src="{{@unit.publicUri}}/images/android-tryit.png" class="img-responsive">
-    {{else}}
-            <p>Let's start by installing the Android agent on your device. Open the downloaded file, and tap
-                <b>INSTALL</b>.</p>
-            <img src="{{@unit.publicUri}}/images/install_agent.png" class="img-responsive">
-    {{/if}}
+            {{#if isVirtual}}
+                <div class="add-min-height">
+                    <ol>
+                        <li>Unzip the 'android-tryit.zip file and run the 'start' script on your terminal.</li>
+                        <li>Download and install the Android SDK.
+                            <ul>
+                                <li>If you already have an Android SDK on your computer, please provide the location of the SDK.</li>
+                                <li>Else, this tool will download and install the minimum SDK components required to run the emulator.
+                                    This is a one-time process.</li>
+                            </ul>
+                        </li>
+                        <li>Next, you will be asked to create an AVD:
+                            <ul>
+                                <li>If you don't have one, the WSO2_AVD will be created for you.</li>
+                                <li>Else, you can use an existing AVD to try out IoT Android agent.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+                <img src="{{@unit.publicUri}}/images/android-tryit.png" class="img-responsive">
+            {{else}}
+                <div class="add-min-height">
+                    <p>Let's start by opening the Android agent on your device.
+                        <br/>Tap on <b>WSO2 Device Management Agent</b>.
+                    </p>
+                </div>
+                <img src="{{@unit.publicUri}}/images/launch_agent.png" class="img-responsive">
+            {{/if}}
         </div>
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-md-offset-2 col-lg-offset-2 add-padding-top-2x add-padding-bottom-2x">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
             <h5><strong>Step 2</strong></h5>
-            <p>Enter your:<p>
-            <ul>
-                <li>Organization: <b>{{@user.domain}}</b></li>
-                <li>Username: <b>{{@user.username}}</b></li>
-                <li>Password: <i>The WSO2 Cloud password.</i></li>
-            </ul>
-            <img src="{{@unit.publicUri}}/images/login.png" class="img-responsive">
+            <div class="add-min-height">
+                <p>Enter your:
+                <p>
+                <ul>
+                    <li>Organization: <b>{{@user.domain}}</b></li>
+                    <li>Username: <b>{{@user.username}}</b></li>
+                    <li>Password: <i>The WSO2 Cloud password.</i></li>
+                </ul>
+            </div>
+            <img src="{{@unit.publicUri}}/images/register.png" class="img-responsive">
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
+            <h5><strong>Step 3</strong></h5>
+            <div class="add-min-height">
+                <p>When prompt, allow necessary permissions and activate device admin.</p>
+            </div>
+            <img src="{{@unit.publicUri}}/images/activate_deviceadmin.png" class="img-responsive">
         </div>
 {{else}}
     <div class="row grey-bg">
         <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 add-padding-top-2x add-padding-bottom-2x">
             <h5><strong>Step 1</strong></h5>
-            <p>Let's start by installing the Android agent on your device. Open the downloaded file, and tap
-                <b>INSTALL</b>.</p>
-            <img src="{{@unit.publicUri}}/images/install_agent.png" class="img-responsive">
+            {{#if isVirtual}}
+                <ol>
+                    <li>Unzip the 'android-tryit.zip file and run the 'start' script on your terminal.</li>
+                    <li>Download and install the Android SDK.
+                        <ul>
+                            <li>If you already have an Android SDK on your computer, please provide the location of the SDK.</li>
+                            <li>Else, this tool will download and install the minimum SDK components required to run the emulator.
+                                This is a one-time process.</li>
+                        </ul>
+                    </li>
+                    <li>Next, you will be asked to create an AVD:
+                        <ul>
+                            <li>If you don't have one, the WSO2_AVD will be created for you.</li>
+                            <li>Else, you can use an existing AVD to try out IoT Android agent.</li>
+                        </ul>
+                    </li>
+                </ol>
+                <img src="{{@unit.publicUri}}/images/android-tryit.png" class="img-responsive">
+            {{else}}
+                <p>Let's start by installing the Android agent on your device. Open the downloaded file, and tap
+                    <b>INSTALL</b>.</p>
+                <img src="{{@unit.publicUri}}/images/install_agent.png" class="img-responsive">
+            {{/if}}
         </div>
 
         <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 add-padding-top-2x add-padding-bottom-2x">
@@ -115,11 +169,11 @@
             <p>Enter your:
             <p>
             <ul>
-                <li>Username: username/email that you used to sign in to IoT server.</li>
-                <li>Password: the WSO2 Iot server password.</li>
-                <li>Domain: the name of the domain.</li>
+                <li>Organization: <b>{{@user.domain}}</b></li>
+                <li>Username: <b>{{@user.username}}</b></li>
+                <li>Password: <i>The WSO2 Cloud password.</i></li>
             </ul>
-            <img src="{{@unit.publicUri}}/images/install_agent.png" class="img-responsive">
+            <img src="{{@unit.publicUri}}/images/register.png" class="img-responsive">
         </div>
 {{/if}}
 

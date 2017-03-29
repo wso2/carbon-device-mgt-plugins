@@ -61,3 +61,10 @@ hr {
 .enrollment-qr-container canvas {
     width: 14%;
 }
+
+@media (min-width:992px){
+    .add-min-height {
+        min-height: 115px;
+    }
+
+}
