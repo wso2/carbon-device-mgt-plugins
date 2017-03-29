@@ -56,48 +56,48 @@ getAndroidSDK() {
 }
 
 createAVD() {
-    if [ ! -d "$ANDROID_TRYIT_SDK_HOME/platforms/android-24" ]; then
+    if [ ! -d "$ANDROID_TRYIT_SDK_HOME/platforms/android-23" ]; then
         echo
         echo "Downloading Android platform..."
         cd $ANDROID_TRYIT_SDK_HOME
-        downloadArtifacts "https://dl.google.com/android/repository/platform-24_r02.zip"
+        downloadArtifacts "https://dl.google.com/android/repository/platform-23_r03.zip"
         echo -n "Configuring Android platform..."
-        unzip -q platform-24_r02.zip
-        mkdir -p platforms/android-24
-        mv android-7.0/* platforms/android-24/
-        rm -r android-7.0
-        rm platform-24_r02.zip
+        unzip -q platform-23_r03.zip
+        mkdir -p platforms/android-23
+        mv android-6.0/* platforms/android-23/
+        rm -r android-6.0
+        rm platform-23_r03.zip
         cd ..
         echo "   Done!"
     fi
-    if [ ! -d "$ANDROID_TRYIT_SDK_HOME/system-images/android-24/default" ]; then
+    if [ ! -d "$ANDROID_TRYIT_SDK_HOME/system-images/android-23/default" ]; then
         echo "Downloading Android system image..."
         cd $ANDROID_TRYIT_SDK_HOME
-        downloadArtifacts "https://dl.google.com/android/repository/sys-img/android/x86-24_r07.zip"
+        downloadArtifacts "https://dl.google.com/android/repository/sys-img/android/x86-23_r09.zip"
         echo -n "Configuring Android system image..."
-        unzip -q x86-24_r07.zip
-        mkdir -p system-images/android-24/default
-        mv x86 system-images/android-24/default
-        rm x86-24_r07.zip
+        unzip -q x86-23_r09.zip
+        mkdir -p system-images/android-23/default
+        mv x86 system-images/android-23/default
+        rm x86-23_r09.zip
         cd ..
         echo "   Done!"
     fi
     echo "Creating a new AVD device"
     if [ -f "$ANDROID_TRYIT_SDK_HOME/tools/bin/avdmanager" ]; then
-        $ANDROID_TRYIT_SDK_HOME/tools/bin/avdmanager create avd -k 'system-images;android-24;default;x86' -n WSO2_AVD
+        $ANDROID_TRYIT_SDK_HOME/tools/bin/avdmanager create avd -k 'system-images;android-23;default;x86' -n WSO2_AVD
     else
-        $ANDROID_TRYIT_SDK_HOME/tools/android create avd -n WSO2_AVD -t android-24
+        $ANDROID_TRYIT_SDK_HOME/tools/android create avd -n WSO2_AVD -t android-23
     fi
-    rm $HOME/.android/avd/WSO2_AVD.avd/resources/config.ini
+    rm $HOME/.android/avd/WSO2_AVD.avd/config.ini
     cp $SCRIPT_HOME/resources/config.ini $HOME/.android/avd/WSO2_AVD.avd/
     startAVD
 }
 
 startAVD() {
     if [ ! -d "$HOME/.android/avd/WSO2_AVD.avd" ]; then
-        echo -n "Seems you don't have WSO2_AVD. Do you want to create WSO2_AVD with default configs (y/N)?: "
+        echo -n "Looks you don't have the WSO2_AVD. Do you want to create WSO2_AVD with default configs (Y/n)?: "
         read answer
-        if echo "$answer" | grep -iq "^y" ;then
+        if ! echo "$answer" | grep -iq "^n" ;then
             createAVD
             return
         fi
@@ -178,12 +178,12 @@ echo "|                        WSO2 Android Tryit                      |"
 echo "+----------------------------------------------------------------+"
 echo "Detected OS: " $OSTYPE
 if [ ! -f "sdklocation" ]; then
-    echo -n "Do you have Android SDK installed in your computer (Y/n)?: "
+    echo -n "Do you have an Android SDK installed on your computer (y/N)?: "
     read answer
-    if echo "$answer" | grep -iq "^n" ;then
-        getAndroidSDK
-    else
+    if echo "$answer" | grep -iq "^y" ;then
         setSDKPath
+    else
+        getAndroidSDK
     fi
 fi
 export ANDROID_TRYIT_SDK_HOME=$(<sdklocation)
