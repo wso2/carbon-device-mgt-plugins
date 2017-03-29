@@ -378,7 +378,7 @@ $(document).ready(function () {
             // on error
             function () {
                 var content = "<li class='message message-danger'><h4><i class='icon fw fw-error'></i>Warning</h4>" +
-                    "<p>Unexpected error occurred while loading notification. Please refresh the page and" +
+                    "<p>Unexpected error occurred while loading notification. Please refresh the pa{{#if isCloud}}ge and" +
                     " try again</p></li>";
                 $(messageSideBar).html(content);
             }
