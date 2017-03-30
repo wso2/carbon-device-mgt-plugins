@@ -5,7 +5,7 @@
 <div class="row">
     <div class="col-lg-12">
         {{#if isVirtual}}
-            <h1 class="grey ">DOWNLOAD ANDROID TRY-IT EMULATOR</h1>
+            <h1 class="grey ">DOWNLOAD THE VIRTUAL ANDROID DEVICE</h1>
         {{else}}
             <h1 class="grey ">DOWNLOAD THE ANDROID AGENT</h1>
         {{/if}}
@@ -19,11 +19,11 @@
     </div>-->
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 add-padding-top-2x add-padding-bottom-2x">
         {{#if isVirtual}}
-            <h3 class="text-center add-padding-bottom-4x">Experience Android Device Management Agent with our Try-it Emulator</h3>
+            <h3 class="text-center add-padding-bottom-4x">Download our Android-try-it emulator, enroll it with WSO2 Device Cloud and try it out!</h3>
             <div class="text-center"><a
                     href="{{@unit.publicUri}}/assets/android-tryit.ZIP"
                     class="btn-operations remove-margin download_agent">
-                <i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download Try-it Emulator</a></div>
+                <i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i>Download the android-try-it Emulator</a></div>
         {{else}}
             <h3 class="text-center">Scan to get the Android Agent.</h3>
             <div class="enrollment-qr-container text-center"></div>
@@ -52,8 +52,13 @@
                                      target="_blank">link</a>.</p>-->
         {{#if isCloud}}
             <p class="doc-link text-center">Need help? Read <a
-                    href="https://docs.wso2.com/display/DeviceCloud/Enrolling+an+Android+Device" target="_blank">WSO2 Device
-                Cloud documentation.</a></p>
+                {{#if isVirtual}}
+                    href="https://docs.wso2.com/display/DeviceCloud/Quick+Start+Guide"
+                {{else}}
+                    href="https://docs.wso2.com/display/DeviceCloud/Enrolling+an+Android+Device"
+                {{/if}}
+                target="_blank">WSO2 Device Cloud documentation.</a>
+            </p>
         {{else}}
             <p class="doc-link text-center">Need help? Read <a
                     href="https://docs.wso2.com/display/IoTS310/Android" target="_blank">WSO2
@@ -64,7 +69,7 @@
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12 add-padding-top-2x ">
         {{#if isVirtual}}
-            <h3 class="uppercase">TRY ANDROID AGENT WITH TRY-IT EMULATOR</h3>
+            <h3 class="uppercase">TRY OUT THE VIRTUAL ANDROID DEVICE</h3>
         {{else}}
             <h3 class="uppercase">START ENROLLING YOUR DEVICE</h3>
         {{/if}}
@@ -74,38 +79,45 @@
 
 {{#if isCloud}}
     <div class="row grey-bg">
+    {{#if isVirtual}}
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-4 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
+            <h5><strong>Step 1</strong></h5>
+            <div class="add-min-height">
+                <ol>
+                    <li>Unzip the 'android-tryit.zip file and run the 'start' script on your terminal.</li>
+                    <li>Download and install the Android SDK.
+                        <ul>
+                            <li>If you already have an Android SDK on your computer, please provide the location of
+                                the SDK.
+                            </li>
+                            <li>Else, this tool will download and install the minimum SDK components required to run
+                                the emulator.
+                                This is a one-time process.
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Next, you will be asked to create an AVD:
+                        <ul>
+                            <li>If you don't have one, the WSO2_AVD will be created for you.</li>
+                            <li>Else, you can use an existing AVD to try out IoT Android agent.</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+            <img src="{{@unit.publicUri}}/images/android-tryit.png" class="img-responsive">
+        </div>
+    {{else}}
         <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
             <h5><strong>Step 1</strong></h5>
-            {{#if isVirtual}}
-                <div class="add-min-height">
-                    <ol>
-                        <li>Unzip the 'android-tryit.zip file and run the 'start' script on your terminal.</li>
-                        <li>Download and install the Android SDK.
-                            <ul>
-                                <li>If you already have an Android SDK on your computer, please provide the location of the SDK.</li>
-                                <li>Else, this tool will download and install the minimum SDK components required to run the emulator.
-                                    This is a one-time process.</li>
-                            </ul>
-                        </li>
-                        <li>Next, you will be asked to create an AVD:
-                            <ul>
-                                <li>If you don't have one, the WSO2_AVD will be created for you.</li>
-                                <li>Else, you can use an existing AVD to try out IoT Android agent.</li>
-                            </ul>
-                        </li>
-                    </ol>
-                </div>
-                <img src="{{@unit.publicUri}}/images/android-tryit.png" class="img-responsive">
-            {{else}}
-                <div class="add-min-height">
-                    <p>Let's start by opening the Android agent on your device.
-                        <br/>Tap on <b>WSO2 Device Management Agent</b>.
-                    </p>
-                </div>
-                <img src="{{@unit.publicUri}}/images/launch_agent.png" class="img-responsive">
-            {{/if}}
+            <div class="add-min-height">
+                <p>Let's start by opening the Android agent on your device.
+                    <br/>Tap on <b>WSO2 Device Management Agent</b>.
+                </p>
+            </div>
+            <img src="{{@unit.publicUri}}/images/launch_agent.png" class="img-responsive">
         </div>
-        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
+    {{/if}}
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
             <h5><strong>Step 2</strong></h5>
             <div class="add-min-height">
                 <p>Enter your:
@@ -113,17 +125,20 @@
                 <ul>
                     <li>Organization: <b>{{@user.domain}}</b></li>
                     <li>Username: <b>{{@user.username}}</b></li>
-                    <li>Password: <i>The WSO2 Cloud password.</i></li>
+                    <li>Password: <i>Your Cloud password.</i></li>
                 </ul>
             </div>
             <img src="{{@unit.publicUri}}/images/register.png" class="img-responsive">
         </div>
-        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
             <h5><strong>Step 3</strong></h5>
             <div class="add-min-height">
-                <p>When prompt, allow necessary permissions and activate device admin.</p>
+                <p>To successfully register the virtual device,</p>
+                <ul>
+                    <li>Tap <b>ALLOW</b> to provide the necessary permissions.</li>
+                    <li>Tap <b>ACTIVATE</b> to enable the device administrator.</li>
+                </ul>
             </div>
-            <img src="{{@unit.publicUri}}/images/activate_deviceadmin.png" class="img-responsive">
         </div>
 {{else}}
     <div class="row grey-bg">
@@ -171,7 +186,7 @@
             <ul>
                 <li>Organization: <b>{{@user.domain}}</b></li>
                 <li>Username: <b>{{@user.username}}</b></li>
-                <li>Password: <i>The WSO2 Cloud password.</i></li>
+                <li>Password: <i>Your password.</i></li>
             </ul>
             <img src="{{@unit.publicUri}}/images/register.png" class="img-responsive">
         </div>
