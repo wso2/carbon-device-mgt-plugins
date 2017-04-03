@@ -18,10 +18,7 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.impl;
 
-import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.DeviceManager;
-import org.wso2.carbon.device.mgt.common.OperationMonitoringTaskConfig;
-import org.wso2.carbon.device.mgt.common.ProvisioningConfig;
+import org.wso2.carbon.device.mgt.common.*;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
 import org.wso2.carbon.device.mgt.common.policy.mgt.PolicyMonitoringManager;
 import org.wso2.carbon.device.mgt.common.push.notification.PushNotificationConfig;
@@ -76,6 +73,11 @@ public class WindowsDeviceManagementService implements DeviceManagementService {
     @Override
     public PolicyMonitoringManager getPolicyMonitoringManager() {
         return policyMonitoringManager;
+    }
+
+    @Override
+    public InitialOperationConfig getInitialOperationConfig() {
+        return null;
     }
 
 }
