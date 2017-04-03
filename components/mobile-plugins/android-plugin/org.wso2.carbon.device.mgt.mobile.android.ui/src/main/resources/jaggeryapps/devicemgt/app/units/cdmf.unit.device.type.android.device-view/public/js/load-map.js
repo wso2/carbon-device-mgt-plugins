@@ -17,8 +17,10 @@
  */
 
 var map;
+var isAnalitics = false;
+var marker;
 
-function loadLeafletMap() {
+function loadLeafletMap(refresh) {
 
     var deviceLocationID = "#device-location",
         locations = $(deviceLocationID).data("locations"),
@@ -28,8 +30,42 @@ function loadLeafletMap() {
         zoomLevel = 13,
         tileSet = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         attribution = "&copy; <a href='https://openstreetmap.org/copyright'>OpenStreetMap</a> contributors";
-    if (locations && locations.locations.length > 0) {
 
+    if (refresh && !isAnalitics) {
+        var applicationsList = $("#applications-list");
+        var deviceId = applicationsList.data("device-id");
+        var deviceType = applicationsList.data("device-type");
+        invokerUtil.get(
+            "/api/device-mgt/v1.0/devices/" + deviceType + "/" + deviceId + "/location",
+            // success-callback
+            function (data, textStatus, jqXHR) {
+                if (jqXHR.status == 200 && data) {
+                    data = JSON.parse(data);
+                    if (data.latitude && data.longitude) {
+                        map.removeLayer(marker);
+                        marker = L.marker([6.912853, 79.855635], {"opacity": opacVal}).addTo(map).bindPopup("Your device is here");
+                        // marker = L.marker([data.latitude, data.longitude], {"opacity": opacVal}).addTo(map).bindPopup("Your device is here");
+                        marker.on('mouseover', function (e) {
+                            this.openPopup();
+                        });
+                        marker.on('mouseout', function (e) {
+                            this.closePopup();
+                        });
+                    }
+                } else {
+
+                    $("#device-location").hide();
+                    $("#map-error").show();
+                }
+            },
+            // error-callback
+            function () {
+                $("#device-location").hide();
+                $("#map-error").show();
+            });
+
+    } else if (locations && locations.locations.length > 0) {
+        isAnalitics = true;
         var locationSets = locations.locations;
         map = L.map(container).setView([locationSets[0].lat, locationSets[0].lng], zoomLevel);
         L.tileLayer(tileSet, {attribution: attribution}).addTo(map);
@@ -48,23 +84,26 @@ function loadLeafletMap() {
         }
         $("#map-error").hide();
         $("#device-location").show();
-        setTimeout(function(){ map.invalidateSize()}, 400);
+        setTimeout(function () {
+            map.invalidateSize()
+        }, 400);
 
     } else if (location_long && location_lat) {
-
         map = L.map(container).setView([location_lat, location_long], zoomLevel);
         L.tileLayer(tileSet, {attribution: attribution}).addTo(map);
 
-        var m = L.marker([location_lat, location_long], {"opacity": opacVal}).addTo(map).bindPopup("Your device is here");
-        m.on('mouseover', function (e) {
+        marker = L.marker([location_lat, location_long], {"opacity": opacVal}).addTo(map).bindPopup("Your device is here");
+        marker.on('mouseover', function (e) {
             this.openPopup();
         });
-        m.on('mouseout', function (e) {
+        marker.on('mouseout', function (e) {
             this.closePopup();
         });
         $("#map-error").hide();
         $("#device-location").show();
-        setTimeout(function(){ map.invalidateSize()}, 400);
+        setTimeout(function () {
+            map.invalidateSize()
+        }, 400);
     } else {
         $("#device-location").hide();
         $("#map-error").show();
@@ -73,6 +112,10 @@ function loadLeafletMap() {
 
 $(document).ready(function () {
     $(".location_tab").on("click", function () {
-        loadLeafletMap();
+        loadLeafletMap(false);
+    });
+
+    $("#refresh-location").on("click", function () {
+        loadLeafletMap(true);
     });
 });
