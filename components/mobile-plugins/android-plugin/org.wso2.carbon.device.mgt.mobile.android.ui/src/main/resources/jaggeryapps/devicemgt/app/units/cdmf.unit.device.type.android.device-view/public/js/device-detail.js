@@ -35,7 +35,6 @@ var InitiateViewOption = null;
         serviceUrl = "/api/device-mgt/android/v1.0/admin/devices/info";
         serviceUrlLocal = "/api/device-mgt/android/v1.0/admin/devices/location";
     }
-
     if (serviceUrl) {
         invokerUtil.post(
             serviceUrl,
@@ -51,8 +50,6 @@ var InitiateViewOption = null;
                 $(".panel-body").append(defaultInnerHTML);
             }
         );
-
-
         invokerUtil.post(
             serviceUrlLocal,
             payload,
@@ -69,7 +66,6 @@ var InitiateViewOption = null;
         );
 
     }
-
 
     $(".media.tab-responsive [data-toggle=tab]").on("shown.bs.tab", function (e) {
         var activeTabPane = $(e.target).attr("href");

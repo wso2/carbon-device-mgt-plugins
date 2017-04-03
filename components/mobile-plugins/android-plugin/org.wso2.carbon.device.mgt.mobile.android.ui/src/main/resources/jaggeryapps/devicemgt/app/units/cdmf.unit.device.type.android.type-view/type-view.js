@@ -16,26 +16,32 @@
  * under the License.
  */
 
-function onRequest(context){
+function onRequest(context) {
     var viewModel = {};
     var devicemgtProps = require("/app/modules/conf-reader/main.js")["conf"];
-	//uncomment this to enable analytics artifact deployment
-	//var serviceInvokers = require("/app/modules/oauth/token-protected-service-invokers.js")["invokers"];
-	//var url = devicemgtProps["httpsURL"] + "/api/device-mgt/v1.0/admin/devicetype/deploy/android/status";
-	//serviceInvokers.XMLHttp.get(
-	//	url, function (responsePayload) {
-	//		var responseContent = responsePayload.status;
-	//		new Log().error(responseContent);
-	//		if ("204" == responsePayload.status) {
-	//			viewModel["displayStatus"] = "Display";
-	//		}
-	//	},
-	//	function (responsePayload) {
-	//		//do nothing.
-	//	}
-	//);
-    viewModel["isCloud"] = devicemgtProps["isCloud"];
+    //uncomment this to enable analytics artifact deployment
+    //var serviceInvokers = require("/app/modules/oauth/token-protected-service-invokers.js")["invokers"];
+    //var url = devicemgtProps["httpsURL"] + "/api/device-mgt/v1.0/admin/devicetype/deploy/android/status";
+    //serviceInvokers.XMLHttp.get(
+    //	url, function (responsePayload) {
+    //		var responseContent = responsePayload.status;
+    //		new Log().error(responseContent);
+    //		if ("204" == responsePayload.status) {
+    //			viewModel["displayStatus"] = "Display";
+    //		}
+    //	},
+    //	function (responsePayload) {
+    //		//do nothing.
+    //	}
+    //);
+    var isCloud = devicemgtProps["isCloud"];
+    viewModel["isVirtual"] = request.getParameter("type") == 'virtual';
+    viewModel["isCloud"] = isCloud;
     viewModel["hostName"] = devicemgtProps["httpsURL"];
-    viewModel["enrollmentURL"] = devicemgtProps["generalConfig"]["host"] + devicemgtProps["androidEnrollmentDir"];
+    if (isCloud) {
+        viewModel["enrollmentURL"] = "https://play.google.com/store/apps/details?id=org.wso2.iot.agent";
+    } else {
+        viewModel["enrollmentURL"] = devicemgtProps["generalConfig"]["host"] + devicemgtProps["androidEnrollmentDir"];
+    }
     return viewModel;
 }

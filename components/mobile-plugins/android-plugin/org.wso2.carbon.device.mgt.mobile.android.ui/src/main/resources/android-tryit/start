@@ -1,0 +1,244 @@
+#!/bin/bash
+
+#Make sure we have got everything we need
+command -v curl >/dev/null || { echo "curl is not installed. Aborting." >&2; exit 1; }
+command -v unzip >/dev/null || { echo "unzip is not installed. Aborting." >&2; exit 1; }
+
+SCRIPT_HOME=$PWD
+
+OS_SUFFIX="linux"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    OS_SUFFIX="macosx"
+fi
+
+downloadArtifacts() {
+    curl -D headers -O $1
+    httpStatus=$(head -1 headers | awk '{print $2}')
+    [ "$httpStatus" != "200" ] && { echo "Download failed. Aborting." ; exit 1 ;}
+    rm headers
+    echo
+}
+
+setSDKPath () {
+    echo -n "Please provide Android SDK location (ex: /mnt/tools/android-sdk):"
+    read answer
+    emulator="$answer/tools/emulator"
+    if [ -f "$emulator" ]; then
+        echo "$answer" > sdklocation
+    else
+        echo "Invalid SDK location"
+        setSDKPath
+    fi
+}
+
+getAndroidSDK() {
+    echo
+    echo "Downloading Android SDK tools..."
+    mkdir android-sdk
+    cd android-sdk
+
+    downloadArtifacts "https://dl.google.com/android/repository/tools_r25.2.5-$OS_SUFFIX.zip"
+    echo -n "Configuring Android SDK tools..."
+    unzip -q tools_r25.2.5-$OS_SUFFIX.zip
+    rm tools_r25.2.5-$OS_SUFFIX.zip
+    echo "   Done!"
+
+    echo
+    echo "Downloading Android platform tools..."
+    downloadArtifacts "http://dl.google.com/android/repository/platform-tools_r25.0.3-$OS_SUFFIX.zip"
+
+    echo -n "Configuring Android platform tools..."
+    unzip -q platform-tools_r25.0.3-$OS_SUFFIX.zip
+    rm platform-tools_r25.0.3-$OS_SUFFIX.zip
+    cd ..
+    echo "$PWD/android-sdk" > sdklocation
+    echo "   Done!"
+}
+
+createAVD() {
+    if [ ! -d "$ANDROID_TRYIT_SDK_HOME/platforms/android-23" ]; then
+        echo
+        echo "Downloading Android platform..."
+        cd $ANDROID_TRYIT_SDK_HOME
+        downloadArtifacts "https://dl.google.com/android/repository/platform-23_r03.zip"
+        echo -n "Configuring Android platform..."
+        unzip -q platform-23_r03.zip
+        mkdir -p platforms/android-23
+        mv android-6.0/* platforms/android-23/
+        rm -r android-6.0
+        rm platform-23_r03.zip
+        cd ..
+        echo "   Done!"
+    fi
+    if [ ! -d "$ANDROID_TRYIT_SDK_HOME/system-images/android-23/default" ]; then
+        echo "Downloading Android system image..."
+        cd $ANDROID_TRYIT_SDK_HOME
+        downloadArtifacts "https://dl.google.com/android/repository/sys-img/android/x86-23_r09.zip"
+        echo -n "Configuring Android system image..."
+        unzip -q x86-23_r09.zip
+        mkdir -p system-images/android-23/default
+        mv x86 system-images/android-23/default
+        rm x86-23_r09.zip
+        cd ..
+        echo "   Done!"
+    fi
+    echo "Creating a new AVD device"
+    if [ -f "$ANDROID_TRYIT_SDK_HOME/tools/bin/avdmanager" ]; then
+        $ANDROID_TRYIT_SDK_HOME/tools/bin/avdmanager create avd -k 'system-images;android-23;default;x86' -n WSO2_AVD
+    else
+        $ANDROID_TRYIT_SDK_HOME/tools/android create avd -n WSO2_AVD -t android-23
+    fi
+    rm $HOME/.android/avd/WSO2_AVD.avd/config.ini
+    cp $SCRIPT_HOME/resources/config.ini $HOME/.android/avd/WSO2_AVD.avd/
+    startAVD
+}
+
+startAVD() {
+    if [ ! -d "$HOME/.android/avd/WSO2_AVD.avd" ]; then
+        echo -n "Looks you don't have the WSO2_AVD. Do you want to create WSO2_AVD with default configs (Y/n)?: "
+        read answer
+        if ! echo "$answer" | grep -iq "^n" ;then
+            createAVD
+            return
+        fi
+    fi
+    echo
+    echo "------------------------------"
+    echo "Available AVDs in the system:"
+    echo "------------------------------"
+    devices=()
+    count=0
+    if [ ! -f "mypipe" ]; then
+        mkfifo mypipe
+    fi
+    $ANDROID_TRYIT_SDK_HOME/tools/emulator -list-avds > mypipe &
+    while IFS= read -r line 
+    do
+        let count++
+        echo "$count) $line"
+        devices+=($line)
+    done < mypipe
+    rm mypipe
+    echo "------------------------------"
+    echo
+    if [ $count = 0 ]; then
+        echo -n "No AVDs found on your system. Do you want to create new AVD (Y/n)?: "
+        read answer
+        if echo "$answer" | grep -iq "^n" ;then
+            exit;
+        else
+            createAVD
+        fi
+    elif  [ $count = 1 ]; then
+        runEmulator ${devices[0]}
+    else
+        echo -n "Enter AVD number to start (eg: 1): "
+        read answer
+        let answer--
+        runEmulator ${devices[$answer]}
+    fi
+}
+
+runEmulator(){
+    if [ $OS_SUFFIX = "macosx" -a ! -d $ANDROID_TRYIT_SDK_HOME/extras/intel/Hardware_Accelerated_Execution_Manager ]; then
+        cd $ANDROID_TRYIT_SDK_HOME
+        echo "Downloading intel HAXM..."
+        mkdir -p extras/intel/Hardware_Accelerated_Execution_Manager
+        cd extras/intel/Hardware_Accelerated_Execution_Manager
+        downloadArtifacts "https://dl.google.com/android/repository/extras/intel/haxm-macosx_r6_0_5.zip"
+        echo -n "Configuring HAXM..."
+        unzip -q haxm-macosx_r6_0_5.zip
+        rm haxm-macosx_r6_0_5.zip
+        ./"HAXM installation" -m 2048 -log $SCRIPT_HOME/haxm_silent_run.log
+        echo "    Done!"
+        echo "Please restart your computer and run this script again."
+        exit
+    fi
+    cd $SCRIPT_HOME
+    $ANDROID_TRYIT_SDK_HOME/platform-tools/adb kill-server
+    echo "Starting AVD $1"
+    $ANDROID_TRYIT_SDK_HOME/tools/emulator -avd $1 > emulator.log &
+    while [ ! -f "$HOME/.android/avd/$1.avd/cache.img" ]
+    do
+        sleep 1
+        echo -n "."
+    done
+    count=0
+    while [ $count -lt 5 ]
+    do
+        sleep 1
+        echo -n "."
+        let count++
+    done
+    echo
+}
+
+echo "+----------------------------------------------------------------+"
+echo "|                        WSO2 Android Tryit                      |"
+echo "+----------------------------------------------------------------+"
+echo "Detected OS: " $OSTYPE
+if [ ! -f "sdklocation" ]; then
+    echo -n "Do you have an Android SDK installed on your computer (y/N)?: "
+    read answer
+    if echo "$answer" | grep -iq "^y" ;then
+        setSDKPath
+    else
+        getAndroidSDK
+    fi
+fi
+export ANDROID_TRYIT_SDK_HOME=$(<sdklocation)
+
+if [ ! -d "$ANDROID_TRYIT_SDK_HOME/build-tools/25.0.2" ]; then
+    echo
+    echo "Downloading Android build tools..."
+    cd $ANDROID_TRYIT_SDK_HOME
+    downloadArtifacts "https://dl.google.com/android/repository/build-tools_r25.0.2-$OS_SUFFIX.zip"
+    echo -n "Configuring Android build tools..."
+    unzip -q build-tools_r25.0.2-$OS_SUFFIX.zip
+    mkdir -p build-tools/25.0.2
+    mv android-7.1.1/* build-tools/25.0.2/
+    rm -r android-7.1.1
+    rm build-tools_r25.0.2-$OS_SUFFIX.zip
+    echo "   Done!"
+fi
+
+startAVD
+
+while [ "`$ANDROID_TRYIT_SDK_HOME/platform-tools/adb shell getprop sys.boot_completed | tr -d '\r' `" != "1" ] ; do sleep 1; done
+echo "AVD Started!"
+
+sleep 1
+if [ ! -f "mypipe" ]; then
+    mkfifo mypipe
+fi
+
+app=$SCRIPT_HOME/resources/android-agent.apk
+pkg=$($ANDROID_TRYIT_SDK_HOME/build-tools/25.0.2/aapt dump badging $app|awk -F" " '/package/ {print $2}'|awk -F"'" '/name=/ {print $2}')
+act=$($ANDROID_TRYIT_SDK_HOME/build-tools/25.0.2/aapt dump badging $app|awk -F" " '/launchable-activity/ {print $2}'|awk -F"'" '/name=/ {print $2}')
+
+hasAgent=false
+
+$ANDROID_TRYIT_SDK_HOME/platform-tools/adb shell pm list packages > mypipe &
+while IFS= read -r line 
+do
+    if [ $line = "package:$pkg" ]; then
+        let hasAgent=true
+    fi
+done < mypipe
+rm mypipe
+
+if [ $hasAgent = false ]; then
+    echo
+    echo "Installing agent..."
+    cd $SCRIPT_HOME/resources
+    $ANDROID_TRYIT_SDK_HOME/platform-tools/adb install android-agent.apk
+fi
+
+echo
+echo "Staring agent..."
+$ANDROID_TRYIT_SDK_HOME/platform-tools/adb shell am start -n $pkg/$act
+echo
+echo "Connected to device shell"
+$ANDROID_TRYIT_SDK_HOME/platform-tools/adb shell
+echo
+echo "Good bye!"

@@ -1,7 +1,8 @@
 {
     "deviceType": {
         "label": "Android",
-        "category": "mobile",
+        "virtualLabel": "virtual Android",
+        "category": "hybrid",
         "analyticsEnabled": "false",
         "groupingEnabled": "false",
         "scopes" : [

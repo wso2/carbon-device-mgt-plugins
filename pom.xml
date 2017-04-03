@@ -1072,6 +1072,11 @@
                 <artifactId>feign-gson</artifactId>
                 <version>${io.github.openfeign.version}</version>
             </dependency>
+			<dependency>
+				<groupId>io.github.openfeign</groupId>
+				<artifactId>feign-slf4j</artifactId>
+				<version>${io.github.openfeign.version}</version>
+			</dependency>
 
             <!-- dependencies for siddhi extension -->
             <dependency>

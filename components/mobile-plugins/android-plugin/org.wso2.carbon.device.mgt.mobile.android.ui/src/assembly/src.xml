@@ -43,4 +43,13 @@
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
     </fileSets>
+    <files>
+        <file>
+            <source>
+                ${basedir}/target/android-tryit.ZIP
+            </source>
+            <outputDirectory>/devicemgt/app/units/cdmf.unit.device.type.android.type-view/public/assets/</outputDirectory>
+            <fileMode>755</fileMode>
+        </file>
+    </files>
 </assembly>

@@ -92,6 +92,10 @@
 			<groupId>javax.ws.rs</groupId>
 			<artifactId>jsr311-api</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>io.github.openfeign</groupId>
+			<artifactId>feign-slf4j</artifactId>
+		</dependency>
     </dependencies>
 
     <build>
@@ -161,7 +165,8 @@
 							org.wso2.carbon.identity.oauth2.*,
 							org.wso2.carbon.utils,
 							org.wso2.carbon.utils.multitenancy,
-							javax.net.ssl
+							javax.net.ssl,
+							feign.slf4j
                         </Import-Package>
 						<Embed-Dependency>
 							jsr311-api,
