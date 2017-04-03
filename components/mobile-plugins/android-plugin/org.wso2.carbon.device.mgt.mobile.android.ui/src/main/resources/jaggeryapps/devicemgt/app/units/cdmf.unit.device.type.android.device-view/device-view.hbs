@@ -119,7 +119,7 @@
                 </div>
                 <div class="add-margin-top-4x">
                     {{unit "cdmf.unit.device.type.android.operation-bar" device=device
-                    backendApiUri=backendApiUri autoCompleteParams=autoCompleteParams}}
+                           backendApiUri=backendApiUri autoCompleteParams=autoCompleteParams}}
                 </div>
             {{/if}}
         {{/zone}}
@@ -328,7 +328,14 @@
                         </a>
                     </h4>
                 </div>
-                <div class="panel-heading display-none-xs">Device Location</div>
+                <div class="panel-heading display-none-xs">
+                    Device Location
+                    <span>
+                        <a href="javascript:void(0);" id="refresh-location">
+                            <i class="fw fw-refresh"></i>
+                        </a>
+                    </span>
+                </div>
                 <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel"
                      aria-labelledby="device_location">
                     <div class="panel-body">
