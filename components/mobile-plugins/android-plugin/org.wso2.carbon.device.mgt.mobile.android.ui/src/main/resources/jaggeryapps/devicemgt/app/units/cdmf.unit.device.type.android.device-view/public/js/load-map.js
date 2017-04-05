@@ -32,6 +32,8 @@ function loadLeafletMap(refresh) {
         attribution = "&copy; <a href='https://openstreetmap.org/copyright'>OpenStreetMap</a> contributors";
 
     if (refresh && !isAnalitics) {
+        console.log("holaaaa");
+        $("#map-spinner").removeClass("hidden");
         var applicationsList = $("#applications-list");
         var deviceId = applicationsList.data("device-id");
         var deviceType = applicationsList.data("device-type");
@@ -43,8 +45,10 @@ function loadLeafletMap(refresh) {
                     data = JSON.parse(data);
                     if (data.latitude && data.longitude) {
                         map.removeLayer(marker);
-                        marker = L.marker([6.912853, 79.855635], {"opacity": opacVal}).addTo(map).bindPopup("Your device is here");
-                        // marker = L.marker([data.latitude, data.longitude], {"opacity": opacVal}).addTo(map).bindPopup("Your device is here");
+                        // marker = L.marker([6.912853, 79.855635], {"opacity": opacVal}).addTo(map).bindPopup("Your device is here");
+                        marker = L.marker([data.latitude, data.longitude], {"opacity": opacVal}).addTo(map).bindPopup("Your device is here");
+                        map.panTo(new L.LatLng(data.latitude, data.longitude));
+                        // map.panTo(new L.LatLng(40.737, -73.923));
                         marker.on('mouseover', function (e) {
                             this.openPopup();
                         });
@@ -52,14 +56,16 @@ function loadLeafletMap(refresh) {
                             this.closePopup();
                         });
                     }
+                    $("#map-spinner").addClass("hidden");
                 } else {
-
+                    $("#map-spinner").adddClass("hidden");
                     $("#device-location").hide();
                     $("#map-error").show();
                 }
             },
             // error-callback
             function () {
+                $("#map-spinner").addClass("hidden");
                 $("#device-location").hide();
                 $("#map-error").show();
             });
