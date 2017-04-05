@@ -32,7 +32,7 @@ function loadLeafletMap(refresh) {
         attribution = "&copy; <a href='https://openstreetmap.org/copyright'>OpenStreetMap</a> contributors";
 
     if (refresh && !isAnalitics) {
-        console.log("holaaaa");
+
         $("#map-spinner").removeClass("hidden");
         var applicationsList = $("#applications-list");
         var deviceId = applicationsList.data("device-id");
