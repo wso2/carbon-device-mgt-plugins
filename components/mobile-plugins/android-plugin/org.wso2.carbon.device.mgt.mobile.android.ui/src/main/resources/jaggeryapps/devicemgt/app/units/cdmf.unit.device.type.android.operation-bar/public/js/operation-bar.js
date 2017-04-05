@@ -28,10 +28,8 @@ function operationSelect(selection) {
 }
 
 function submitForm(formId) {
-    $("#operation-form").addClass("hidden");
-    $('[data-toggle="loading"]').removeClass("hidden");
-    $('[data-toggle="loading"]').loading('show');
-
+    $("#btnSend").addClass("hidden");
+    $("#lbl-execution").removeClass("hidden");
     var form = $("#" + formId);
     var uri = form.attr("action");
     var deviceId = form.data("device-id");
@@ -75,8 +73,8 @@ function submitForm(formId) {
     description.html("");
 
     var resetLoader = function () {
-        $("#operation-form").removeClass("hidden");
-        $('[data-toggle="loading"]').addClass("hidden");
+        $("#btnSend").removeClass("hidden");
+        $('#lbl-execution').addClass("hidden");
     };
 
     var successCallBack = function (response) {
