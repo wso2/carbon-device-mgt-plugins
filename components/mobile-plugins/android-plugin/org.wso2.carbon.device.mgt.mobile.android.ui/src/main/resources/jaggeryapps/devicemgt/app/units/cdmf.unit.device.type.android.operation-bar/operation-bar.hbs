@@ -65,8 +65,6 @@
                                 {{description}}
                                 <br>
                             </h4>
-                            <div style="height:200px" class="hidden" data-toggle="loading" data-loading-inverse="false"
-                                 data-loading-text="Sending to device"></div>
                             <div id="operation-form">
                                 <form action="{{params.0.uri}}" method="{{params.0.method}}"
                                       style="padding-bottom: 20px;"
@@ -106,12 +104,13 @@
                                         {{/equal}}
                                     {{/each}}
                                     <button id="btnSend" type="button" onclick="submitForm('form-{{operation}}')"
-                                            class="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;Send
-                                        to Device&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                            class="btn btn-default">Send
+                                        to Device</button>
                                     <label id="lblSending" class="wr-input-label hidden"><i
                                             class="fw fw-lifecycle fw-spin fw-2x"></i> Sending..</label>
                                     <label id="lblSent" class="wr-input-label hidden"><i
                                             class="fw fw-check fw-2x"></i> Sent</label>
+                                    <i id="lbl-execution" class="fw fw-wso2-logo fw-pulse fw-2x hidden"> Executing Operation </i>
                                 </form>
                             </div>
                         </div>
