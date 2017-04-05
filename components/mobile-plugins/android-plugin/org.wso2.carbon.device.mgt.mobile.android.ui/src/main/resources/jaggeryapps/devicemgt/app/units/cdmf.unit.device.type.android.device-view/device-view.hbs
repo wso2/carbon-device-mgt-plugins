@@ -59,6 +59,8 @@
                                         class="fw fw-remove icon-danger"></i>Blocked</span>{{/equal}}
                                 {{#equal device.status "REMOVED"}}<span><i
                                         class="fw fw-delete icon-danger"></i>Removed</span>{{/equal}}
+                                {{#equal device.status "UNREACHABLE"}}<span><i
+                                        class="fw fw-warning icon-warning"></i>Unreachable</span>{{/equal}}
                             </td>
                         </tr>
                     {{/if}}
