@@ -28,6 +28,8 @@ function operationSelect(selection) {
 }
 
 function submitForm(formId) {
+    $("#btnSend").addClass("hidden");
+    $("#lbl-execution").removeClass("hidden");
     var form = $("#" + formId);
     var uri = form.attr("action");
     var deviceId = form.data("device-id");
@@ -69,6 +71,12 @@ function submitForm(formId) {
     var statusIcon = content.find("#status-icon");
     var description = content.find("#description");
     description.html("");
+
+    var resetLoader = function () {
+        $("#btnSend").removeClass("hidden");
+        $('#lbl-execution').addClass("hidden");
+    };
+
     var successCallBack = function (response) {
         var res = response;
         try {
@@ -79,11 +87,12 @@ function submitForm(formId) {
         title.html("Operation Triggered!");
         statusIcon.attr("class", defaultStatusClasses + " fw-check");
         description.html(res);
-        console.log("success!");
+        // console.log("success!");
+        resetLoader();
         $(modalPopupContent).html(content.html());
     };
     var errorCallBack = function (response) {
-        console.log(response);
+        // console.log(response);
         title.html("An Error Occurred!");
         statusIcon.attr("class", defaultStatusClasses + " fw-error");
         var reason = (response.responseText == "null")?response.statusText:response.responseText;
@@ -93,7 +102,8 @@ function submitForm(formId) {
             //do nothing
         }
         description.html(reason);
-        console.log("Error!");
+        // console.log("Error!");
+        resetLoader();
         $(modalPopupContent).html(content.html());
     };
     //executing http request
@@ -111,12 +121,12 @@ function submitForm(formId) {
         title.html("An Error Occurred!");
         statusIcon.attr("class", defaultStatusClasses + " fw-error");
         description.html("This operation requires http method: " + httpMethod + " which is not supported yet!");
+        resetLoader();
         $(modalPopupContent).html(content.html());
     }
 }
 
 $(document).on('submit', 'form', function (e) {
-    cosole.log("darn!!");
     e.preventDefault();
     var postOperationRequest = $.ajax({
         url: $(this).attr("action") + '&' + $(this).serialize(),

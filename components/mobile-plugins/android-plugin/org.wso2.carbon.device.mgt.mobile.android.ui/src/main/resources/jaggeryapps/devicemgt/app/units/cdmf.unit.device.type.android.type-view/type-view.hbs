@@ -19,11 +19,13 @@
     </div>-->
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 add-padding-top-2x add-padding-bottom-2x">
         {{#if isVirtual}}
-            <h3 class="text-center add-padding-bottom-4x">Download our Android-try-it emulator, enroll it with WSO2 Device Cloud and try it out!</h3>
+            <h3 class="text-center add-padding-bottom-4x">Download our virtual Android device, enroll it with WSO2
+                Device Cloud and try it out!</h3>
             <div class="text-center"><a
                     href="{{@unit.publicUri}}/assets/android-tryit.ZIP"
                     class="btn-operations remove-margin download_agent">
-                <i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i>Download the android-try-it Emulator</a></div>
+                <i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i>Download the virtual Android device</a>
+            </div>
         {{else}}
             <h3 class="text-center">Scan to get the Android Agent.</h3>
             <div class="enrollment-qr-container text-center"></div>
@@ -31,7 +33,7 @@
             {{#if isCloud}}
                 <div class="text-center">
                     <a href='https://play.google.com/store/apps/details?id=org.wso2.iot.agent&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'
-                    target="_blank">
+                       target="_blank">
                         <img alt='Get it on Google Play'
                              src='{{@unit.publicUri}}/images/en_badge_web_generic_export.png'/>
                     </a>
@@ -39,7 +41,7 @@
             {{else}}
                 <div class="text-center">
                     <a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk"
-                    class="btn-operations remove-margin download_agent">
+                       class="btn-operations remove-margin download_agent">
                         <i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
                 </div>
             {{/if}}
@@ -50,20 +52,20 @@
             to save it to your computer.</p>
         <p class="doc-link">For further instructions and troubleshooting please visit the following <a href="https://docs.wso2.com/display/IoTS300/Android"
                                      target="_blank">link</a>.</p>-->
-        {{#if isCloud}}
-            <p class="doc-link text-center">Need help? Read <a
-                {{#if isVirtual}}
-                    href="https://docs.wso2.com/display/DeviceCloud/Quick+Start+Guide"
-                {{else}}
-                    href="https://docs.wso2.com/display/DeviceCloud/Enrolling+an+Android+Device"
-                {{/if}}
-                target="_blank">WSO2 Device Cloud documentation.</a>
-            </p>
-        {{else}}
-            <p class="doc-link text-center">Need help? Read <a
-                    href="https://docs.wso2.com/display/IoTS310/Android" target="_blank">WSO2
-                IoT Server documentation.</a></p>
-        {{/if}}
+    {{#if isCloud}}
+        <p class="doc-link text-center">Need help? Read <a
+            {{#if isVirtual}}
+            href="https://docs.wso2.com/display/DeviceCloud/Quick+Start+Guide"
+            {{else}}
+            href="https://docs.wso2.com/display/DeviceCloud/Enrolling+an+Android+Device"
+            {{/if}}
+            target="_blank">WSO2 Device Cloud documentation.</a>
+        </p>
+    {{else}}
+        <p class="doc-link text-center">Need help? Read <a
+                href="https://docs.wso2.com/display/IoTS310/Android" target="_blank">WSO2
+            IoT Server documentation.</a></p>
+    {{/if}}
 </div>
 
 <div class="row">
@@ -80,47 +82,47 @@
 {{#if isCloud}}
     <div class="row grey-bg">
     {{#if isVirtual}}
-        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-4 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
-            <h5><strong>Step 1</strong></h5>
-            <div class="add-min-height">
-                <ol>
-                    <li>Unzip the 'android-tryit.zip file and run the 'start' script on your terminal.</li>
-                    <li>Download and install the Android SDK.
-                        <ul>
-                            <li>If you already have an Android SDK on your computer, please provide the location of
-                                the SDK.
-                            </li>
-                            <li>Else, this tool will download and install the minimum SDK components required to run
-                                the emulator.
-                                This is a one-time process.
-                            </li>
-                        </ul>
-                    </li>
-                    <li>Next, you will be asked to create an AVD:
-                        <ul>
-                            <li>If you don't have one, the WSO2_AVD will be created for you.</li>
-                            <li>Else, you can use an existing AVD to try out IoT Android agent.</li>
-                        </ul>
-                    </li>
-                </ol>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 add-padding-top-2x add-padding-bottom-2x">
+                <h5><strong>Step 1</strong></h5>
+                <div class="add-min-height">
+                    <ol>
+                        <li>Unzip the 'android-tryit.zip file and run the 'start' script on your terminal.</li>
+                        <li>Download and install the Android SDK:
+                            <ul>
+                                <li>If you already have an Android SDK on your computer, please provide the location of
+                                    the SDK.
+                                </li>
+                                <li>Else, this tool will download and install the minimum SDK components required to run
+                                    the emulator.
+                                    This is a one-time process.
+                                </li>
+                            </ul>
+                        </li>
+                        <li>Next, you will be asked to create an AVD:
+                            <ul>
+                                <li>If you don't have one, the WSO2_AVD will be created for you.</li>
+                                <li>Else, you can use an existing AVD to try out IoT Android agent.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+                <img src="{{@unit.publicUri}}/images/android-tryit.png" class="img-responsive">
             </div>
-            <img src="{{@unit.publicUri}}/images/android-tryit.png" class="img-responsive">
-        </div>
     {{else}}
-        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
-            <h5><strong>Step 1</strong></h5>
-            <div class="add-min-height">
-                <p>Let's start by opening the Android agent on your device.
-                    <br/>Tap on <b>WSO2 Device Management Agent</b>.
-                </p>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 add-padding-top-2x add-padding-bottom-2x">
+                <h5><strong>Step 1</strong></h5>
+                <div class="add-min-height">
+                    <p>Let's start by opening the Android agent on your device.
+                        <br/>Tap on <b>WSO2 Device Management Agent</b>.
+                    </p>
+                </div>
+                <img src="{{@unit.publicUri}}/images/launch_agent.png" class="img-responsive">
             </div>
-            <img src="{{@unit.publicUri}}/images/launch_agent.png" class="img-responsive">
-        </div>
     {{/if}}
-        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
             <h5><strong>Step 2</strong></h5>
             <div class="add-min-height">
-                <p>Enter your:
+                <p>Enter your :
                 <p>
                 <ul>
                     <li>Organization: <b>{{@user.domain}}</b></li>
@@ -130,7 +132,7 @@
             </div>
             <img src="{{@unit.publicUri}}/images/register.png" class="img-responsive">
         </div>
-        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
+        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 col-md-offset-1 col-lg-offset-1 add-padding-top-2x add-padding-bottom-2x">
             <h5><strong>Step 3</strong></h5>
             <div class="add-min-height">
                 <p>To successfully register the virtual device,</p>
@@ -149,9 +151,13 @@
                     <li>Unzip the 'android-tryit.zip file and run the 'start' script on your terminal.</li>
                     <li>Download and install the Android SDK.
                         <ul>
-                            <li>If you already have an Android SDK on your computer, please provide the location of the SDK.</li>
-                            <li>Else, this tool will download and install the minimum SDK components required to run the emulator.
-                                This is a one-time process.</li>
+                            <li>If you already have an Android SDK on your computer, please provide the location of the
+                                SDK.
+                            </li>
+                            <li>Else, this tool will download and install the minimum SDK components required to run the
+                                emulator.
+                                This is a one-time process.
+                            </li>
                         </ul>
                     </li>
                     <li>Next, you will be asked to create an AVD:
@@ -193,63 +199,6 @@
 {{/if}}
 
 </div>
-
-    <!--<div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-12 padding-double ">
-        <h3 class="uppercase">What You Need</h3>
-        <hr>
-        <ul class="list-unstyled">
-            <li class="padding-top-double"><span class="badge">STEP 01</span>   Android
-                Mobile.
-            </li>
-            <li><span class="badge">STEP 02</span>   Go ahead
-                and click [Enroll Device].
-            </li>
-            <li><span class="badge">STEP 03</span>   Proceed
-                to the [Prepare] section.
-            </li>
-        </ul>
-        <br>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
-
-        <h3 class="uppercase">What it Does</h3>
-        <hr>
-        <p class="grey margin-top">Connect and manage your Android device with WSO2 IoT Server.</p>
-        <br>
-
-        <a href="javascript:toggleEnrollment()" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
-        <a href="{{host}}/android-web-agent/public/mdm.page.enrollments.android.download-agent/asset/android-agent.apk" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
-        <a href="javascript:toggleEmailInvite()" class="btn-operations"><i class="fw fw-mail fw-inverse fw-lg add-margin-1x"></i> Invite by Email</a>
-
-
-        <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS300/Android" target="_blank">here</a> for further instructions and troubleshooting.</p>
-
-    </div>
-</div>
-
-<div class="col-xs-12 col-sm-12 col-md-8 col-lg-12 padding-double grey-bg">
-    <h3 class="uppercase">Prepare</h3><hr>
-    <ul class="list-unstyled">
-        <li class="padding-top-double"><span class="badge">01</span> Download Device Agent into your Android Mobile.</li>
-        <li><span class="badge">02</span> Install Agent APK file.</li>
-        <li><span class="badge">03</span> Configure Agent App</li>
-    </ul>
-    <br>
-
-</div>-->
-
-    <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
-    <p class="grey margin-top">Click on the image to zoom</p>
-    <center>
-        <a href="{{@unit.publicUri}}/images/android_device.png" target="_blank">
-            <img src="{{@unit.publicUri}}/images/android_device.png" class="img-responsive">
-        </a>
-    </center>
-</div>-->
 
 {{#zone "topCss"}}
     {{css "css/styles.css"}}

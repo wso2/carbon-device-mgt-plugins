@@ -35,6 +35,37 @@ var InitiateViewOption = null;
         serviceUrl = "/api/device-mgt/android/v1.0/admin/devices/info";
         serviceUrlLocal = "/api/device-mgt/android/v1.0/admin/devices/location";
     }
+    if (serviceUrl) {
+        invokerUtil.post(
+            serviceUrl,
+            payload,
+            // success-callback
+            function () {
+                $(".panel-body").show();
+            },
+            // error-callback
+            function () {
+                var defaultInnerHTML =
+                    "<br><p class='fw-warning'>Device data may not have been updated. Please refresh to try again.<p>";
+                $(".panel-body").append(defaultInnerHTML);
+            }
+        );
+        invokerUtil.post(
+            serviceUrlLocal,
+            payload,
+            // success-callback
+            function () {
+                $(".panel-body").show();
+            },
+            // error-callback
+            function () {
+                var defaultInnerHTML =
+                    "<br><p class='fw-warning'>Device data may not have been updated. Please refresh to try again.<p>";
+                $(".panel-body").append(defaultInnerHTML);
+            }
+        );
+
+    }
 
     $(".media.tab-responsive [data-toggle=tab]").on("shown.bs.tab", function (e) {
         var activeTabPane = $(e.target).attr("href");
@@ -55,12 +86,12 @@ var InitiateViewOption = null;
     });
 
 
-    $('.media.tab-responsive a[data-toggle="collapse"]').on('click',function(){
+    $('.media.tab-responsive a[data-toggle="collapse"]').on('click', function () {
         var clickedPanel = $(this).attr('href');
 
-        if($(clickedPanel).hasClass('in')){
+        if ($(clickedPanel).hasClass('in')) {
             $(clickedPanel).collapse('hide');
-        }else{
+        } else {
             $(clickedPanel).collapse('show');
         }
     });
@@ -130,26 +161,26 @@ var InitiateViewOption = null;
         var parentHeight = $(arrow).parent().innerHeight();
 
 
-        if($(selectedTab).prev().length){
-            $(selectedTab).prevAll().each(function() {
+        if ($(selectedTab).prev().length) {
+            $(selectedTab).prevAll().each(function () {
                 totalHeight += $(this).innerHeight();
             });
             arrowPosition = totalHeight + (selectedTabHeight / 2);
-        }else{
+        } else {
             arrowPosition = selectedTabHeight / 2;
         }
 
-        if(arrowPosition >= parentHeight){
+        if (arrowPosition >= parentHeight) {
             parentHeight = arrowPosition + 50;
             $(arrow).siblings(".panel.active").height(parentHeight);
-        }else{
+        } else {
             $(arrow).parent().removeAttr("style");
         }
 
         $(arrow).css("top", arrowPosition - 10);
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         $(".device-detail-body").removeClass("hidden");
         $("#loading-content").remove();
         loadApplicationsList();
@@ -165,7 +196,7 @@ var InitiateViewOption = null;
             loadApplicationsList();
         });
     });
-    
+
     function loadOperationsLog(update) {
         var owner = $("#device-owner").data("owner");
         var operationsLogTable = "#operations-log-table";
@@ -178,12 +209,12 @@ var InitiateViewOption = null;
             serverSide: true,
             processing: false,
             searching: false,
-            ordering:  false,
-            pageLength : 10,
+            ordering: false,
+            pageLength: 10,
             order: [],
             ajax: {
                 url: "/devicemgt/api/operation/paginate",
-                data: {deviceId : deviceIdentifier, deviceType: deviceType, owner:owner},
+                data: {deviceId: deviceIdentifier, deviceType: deviceType, owner: owner},
                 dataSrc: function (json) {
                     $("#operations-spinner").addClass("hidden");
                     $("#operations-log-container").empty();
@@ -191,43 +222,43 @@ var InitiateViewOption = null;
                 }
             },
             columnDefs: [
-                {targets: 0, data: "code" },
-                {targets: 1, data: "status", render:
-                    function (status) {
-                        var html;
-                        switch (status) {
-                            case "COMPLETED" :
-                                html = "<span><i class='fw fw-success icon-success'></i> Completed</span>";
-                                break;
-                            case "PENDING" :
-                                html = "<span><i class='fw fw-warning icon-warning'></i> Pending</span>";
-                                break;
-                            case "ERROR" :
-                                html = "<span><i class='fw fw-error icon-danger'></i> Error</span>";
-                                break;
-                            case "IN_PROGRESS" :
-                                html = "<span><i class='fw fw-success icon-warning'></i> In Progress</span>";
-                                break;
-                            case "REPEATED" :
-                                html = "<span><i class='fw fw-success icon-warning'></i> Repeated</span>";
-                                break;
-                        }
-                        return html;
+                {targets: 0, data: "code"},
+                {
+                    targets: 1, data: "status", render: function (status) {
+                    var html;
+                    switch (status) {
+                        case "COMPLETED" :
+                            html = "<span><i class='fw fw-success icon-success'></i> Completed</span>";
+                            break;
+                        case "PENDING" :
+                            html = "<span><i class='fw fw-warning icon-warning'></i> Pending</span>";
+                            break;
+                        case "ERROR" :
+                            html = "<span><i class='fw fw-error icon-danger'></i> Error</span>";
+                            break;
+                        case "IN_PROGRESS" :
+                            html = "<span><i class='fw fw-success icon-warning'></i> In Progress</span>";
+                            break;
+                        case "REPEATED" :
+                            html = "<span><i class='fw fw-success icon-warning'></i> Repeated</span>";
+                            break;
                     }
+                    return html;
+                }
                 },
-                {targets: 2, data: "createdTimeStamp", render:
-                    function (date) {
-                        var value = String(date);
-                        return value.slice(0, 16);
-                    }
+                {
+                    targets: 2, data: "createdTimeStamp", render: function (date) {
+                    var value = String(date);
+                    return value.slice(0, 16);
+                }
                 }
             ],
-            "createdRow": function(row, data) {
+            "createdRow": function (row, data) {
                 $(row).attr("data-type", "selectable");
                 $(row).attr("data-id", data["id"]);
                 $.each($("td", row),
-                    function(colIndex) {
-                        switch(colIndex) {
+                    function (colIndex) {
+                        switch (colIndex) {
                             case 1:
                                 $(this).attr("data-grid-label", "Code");
                                 $(this).attr("data-display", data["code"]);
@@ -276,18 +307,16 @@ var InitiateViewOption = null;
                             var content = template(viewModel);
                             $("#applications-list-container").html(content);
                         } else {
-                            $("#applications-list-container").
-                                html("<div class='message message-info'><h4><i class='icon fw fw-info'></i>No applications found.</h4>" +
-                                    "<p>Please try refreshing the list in a while.</p></div>");
+                            $("#applications-list-container").html("<div class='message message-info'><h4><i class='icon fw fw-info'></i>No applications found.</h4>" +
+                                "<p>Please try refreshing the list in a while.</p></div>");
                         }
                     }
                 },
                 // error-callback
                 function () {
-                    $("#applications-list-container").
-                        html("<div class='panel-body'><br><p class='fw-warning'>&nbsp;Loading application list " +
-                            "was not successful. please try refreshing the list in a while.<p></div>");
-            });
+                    $("#applications-list-container").html("<div class='panel-body'><br><p class='fw-warning'>&nbsp;Loading application list " +
+                        "was not successful. please try refreshing the list in a while.<p></div>");
+                });
         });
     }
 
@@ -338,17 +367,15 @@ var InitiateViewOption = null;
                                                     $("#policy-compliance-table").addClass("hidden");
                                                 }
                                             } else {
-                                                $("#policy-list-container").
-                                                    html("<div class='panel-body'><br><p class='fw-warning'> This device " +
-                                                        "has no policy applied.<p></div>");
+                                                $("#policy-list-container").html("<div class='panel-body'><br><p class='fw-warning'> This device " +
+                                                    "has no policy applied.<p></div>");
                                             }
                                         }
                                     },
                                     // error-callback
                                     function () {
-                                        $("#policy-list-container").
-                                            html("<div class='panel-body'><br><p class='fw-warning'> Loading policy compliance related data " +
-                                                "was not successful. please try refreshing data in a while.<p></div>");
+                                        $("#policy-list-container").html("<div class='panel-body'><br><p class='fw-warning'> Loading policy compliance related data " +
+                                            "was not successful. please try refreshing data in a while.<p></div>");
                                     }
                                 );
                             }
@@ -356,9 +383,8 @@ var InitiateViewOption = null;
                     },
                     // error-callback
                     function () {
-                        $("#policy-list-container").
-                            html("<div class='panel-body'><br><p class='fw-warning'> Loading policy compliance related data " +
-                                "was not successful. please try refreshing data in a while.<p></div>");
+                        $("#policy-list-container").html("<div class='panel-body'><br><p class='fw-warning'> Loading policy compliance related data " +
+                            "was not successful. please try refreshing data in a while.<p></div>");
                     }
                 );
             }
