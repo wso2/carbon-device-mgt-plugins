@@ -37,15 +37,10 @@ public class MDMComponent {
 
     protected void activate(ComponentContext context) {
         BundleContext bundleContext = context.getBundleContext();
+        mdmServiceRegistration = bundleContext.registerService(ApplicationOperations.class.getName(), new
+                ApplicationOperationsImpl(), null);
         if (log.isDebugEnabled()) {
-            log.debug("WSO2MDM MDM Component activated");
-        }
-        try {
-            mdmServiceRegistration = bundleContext.registerService(ApplicationOperations.class.getName(), new
-                    ApplicationOperationsImpl(), null);
-        } catch (Throwable e) {
-            log.error("Failed to activate org.wso2.carbon.appmgt.mdm.restconnector.internal." +
-                              "MDMComponent : " + e);
+            log.debug("WSO2MDM MDM Component activated.");
         }
     }
 

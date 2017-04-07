@@ -106,7 +106,7 @@ public class AndroidAPIUtils {
 //        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
 //        GCMService gcmService = (GCMService) ctx.getOSGiService(GCMService.class, null);
 //        if (gcmService == null) {
-//            String msg = "GCM service has not initialized.";
+//            String msg = "FCM service has not initialized.";
 //            log.error(msg);
 //            throw new IllegalStateException(msg);
 //        }
@@ -143,7 +143,7 @@ public class AndroidAPIUtils {
                     DeviceManagementConstants.MobileDeviceTypes.MOBILE_DEVICE_TYPE_ANDROID, operation, deviceIdentifiers);
 //        if (activity != null) {
 //            GCMService gcmService = getGCMService();
-//            if (gcmService.isGCMEnabled()) {
+//            if (gcmService.isFCMEnabled()) {
 //                List<DeviceIdentifier> deviceIDList = deviceIDHolder.getValidDeviceIDList();
 //                List<Device> devices = new ArrayList<Device>(deviceIDList.size());
 //                for (DeviceIdentifier deviceIdentifier : deviceIDList) {
@@ -471,6 +471,8 @@ public class AndroidAPIUtils {
                             getProperty(prop.getValue(), "PASSCODE_ENABLED"));
                     deviceInfo.getDeviceDetailsMap().put("operator",
                             getProperty(prop.getValue(), "OPERATOR"));
+		    deviceInfo.getDeviceDetailsMap().put("PhoneNumber",
+                            getProperty(prop.getValue(), "PHONE_NUMBER"));
                 }
             }
         }
@@ -485,11 +487,14 @@ public class AndroidAPIUtils {
         for (JsonElement element : jsonArray) {
             //  if (((JsonObject) element).entrySet().iterator().next().getValue().getAsString().equalsIgnoreCase(needed));
             for (Map.Entry<String, JsonElement> ob : ((JsonObject) element).entrySet()) {
-                if (exist) {
-                    return ob.getValue().getAsString().replace("%", "");
-                }
-                if (ob.getValue().getAsString().equalsIgnoreCase(needed)) {
-                    exist = true;
+                JsonElement val = ob.getValue();
+                if (val != null && !val.isJsonNull()) {
+                    if (exist) {
+                        return val.getAsString().replace("%", "");
+                    }
+                    if (val.getAsString().equalsIgnoreCase(needed)) {
+                        exist = true;
+                    }
                 }
             }
         }

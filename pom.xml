@@ -23,7 +23,7 @@
     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
     <artifactId>carbon-device-mgt-plugins-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.12-SNAPSHOT</version>
+    <version>3.0.22-SNAPSHOT</version>
     <name>WSO2 Carbon - Device Management Plugins Parent</name>
     <url>http://wso2.org</url>
     <description>WSO2 Carbon - Device Management Plugins Parent</description>
@@ -377,11 +377,6 @@
             </dependency>
 
             <!--IoT Server specific dependencies-->
-            <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon.devicemgt-plugins</groupId>-->
-            <!--<artifactId>org.wso2.carbon.device.mgt.iot.url.printer</artifactId>-->
-            <!--<version>${carbon.devicemgt.plugins.version}</version>-->
-            <!--</dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.extension.siddhi.execution.json</artifactId>
@@ -798,11 +793,6 @@
                 <artifactId>commons-httpclient</artifactId>
                 <version>${orbit.version.commons-httpclient}</version>
             </dependency>
-            <!--<dependency>-->
-            <!--<groupId>commons-codec.wso2</groupId>-->
-            <!--<artifactId>commons-codec</artifactId>-->
-            <!--<version>${commons-codec.wso2.version}</version>-->
-            <!--</dependency>-->
 			<dependency>
 				<groupId>commons-codec.wso2</groupId>
 				<artifactId>commons-codec</artifactId>
@@ -1138,14 +1128,14 @@
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Device Management -->
-        <carbon.devicemgt.version>2.0.16-SNAPSHOT</carbon.devicemgt.version>
+        <carbon.devicemgt.version>2.0.42</carbon.devicemgt.version>
         <carbon.devicemgt.version.range>[2.0.0, 3.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
         <carbon.appmgt.version>1.2.15</carbon.appmgt.version>
 
         <!-- Carbon Device Management Plugins -->
-        <carbon.devicemgt.plugins.version>3.0.12-SNAPSHOT</carbon.devicemgt.plugins.version>
+        <carbon.devicemgt.plugins.version>3.0.22-SNAPSHOT</carbon.devicemgt.plugins.version>
 
         <!-- Carbon Commons -->
         <carbon.commons.version>4.4.8</carbon.commons.version>
@@ -1264,7 +1254,6 @@
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
         <siddhi.version>3.1.2</siddhi.version>
         <maven.scr.version>1.7.2</maven.scr.version>
-        <analytics.json.version>2.0.0.wso2v1</analytics.json.version>
     </properties>
 
     <scm>

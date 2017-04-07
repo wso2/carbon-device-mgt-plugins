@@ -1,5 +1,4 @@
 instructions.configure = \
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/devicetypes/);\
-org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/devicetypes/device_management/);\
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.analytics_${feature.version}/carbonapps/,target:${installFolder}/../../resources/devicetypes/device_management/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.analytics_${feature.version}/carbonapps/,target:${installFolder}/../../resources/devicetypes/,overwrite:true);\

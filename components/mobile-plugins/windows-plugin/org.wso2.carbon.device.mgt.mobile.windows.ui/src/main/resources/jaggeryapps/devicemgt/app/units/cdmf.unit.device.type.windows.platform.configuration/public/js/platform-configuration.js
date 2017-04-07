@@ -30,8 +30,8 @@ var responseCodes = {
 var configParams = {
     "NOTIFIER_TYPE": "notifierType",
     "NOTIFIER_FREQUENCY": "notifierFrequency",
-    "GCM_API_KEY": "gcmAPIKey",
-    "GCM_SENDER_ID": "gcmSenderId",
+    "FCM_API_KEY": "fcmAPIKey",
+    "FCM_SENDER_ID": "fcmSenderId",
     "ANDROID_EULA": "androidEula",
     "IOS_EULA": "iosEula",
     "CONFIG_COUNTRY": "configCountry",
