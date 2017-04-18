@@ -19,6 +19,7 @@ package org.wso2.carbon.appmgt.mdm.restconnector.authorization.client;
 
 import feign.Client;
 import feign.Feign;
+import feign.FeignException;
 import feign.Logger;
 import feign.Request;
 import feign.RequestInterceptor;
@@ -64,7 +65,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private ApiApplicationRegistrationService apiApplicationRegistrationService;
     private TokenIssuerService tokenIssuerService;
     private static Log log = LogFactory.getLog(OAuthRequestInterceptor.class);
-
+    private ApiApplicationKey apiApplicationKey;
 
     /**
      * Creates an interceptor that authenticates all requests.
@@ -91,27 +92,39 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate template) {
         if (tokenInfo == null) {
-            ApiRegistrationProfile apiRegistrationProfile = new ApiRegistrationProfile();
-            apiRegistrationProfile.setApplicationName(APPLICATION_NAME);
-            apiRegistrationProfile.setIsAllowedToAllDomains(false);
-            apiRegistrationProfile.setIsMappingAnExistingOAuthApp(false);
-            apiRegistrationProfile.setTags(DEVICE_MANAGEMENT_SERVICE_TAG);
-            ApiApplicationKey apiApplicationKey = apiApplicationRegistrationService.register(apiRegistrationProfile);
+            if (apiApplicationKey == null) {
+                ApiRegistrationProfile apiRegistrationProfile = new ApiRegistrationProfile();
+                apiRegistrationProfile.setApplicationName(APPLICATION_NAME);
+                apiRegistrationProfile.setIsAllowedToAllDomains(false);
+                apiRegistrationProfile.setIsMappingAnExistingOAuthApp(false);
+                apiRegistrationProfile.setTags(DEVICE_MANAGEMENT_SERVICE_TAG);
+                apiApplicationKey = apiApplicationRegistrationService.register(apiRegistrationProfile);
+            }
             String consumerKey = apiApplicationKey.getConsumerKey();
             String consumerSecret = apiApplicationKey.getConsumerSecret();
             String username = AuthorizationConfigurationManager.getInstance().getUserName();
             String password = AuthorizationConfigurationManager.getInstance().getPassword();
-            tokenIssuerService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger()).logLevel(Logger.Level.FULL)
-                    .requestInterceptor(new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
-                    .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
-                    .target(TokenIssuerService.class, AuthorizationConfigurationManager.getInstance().getTokenApiURL());
+            if (tokenIssuerService == null) {
+                tokenIssuerService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger()).logLevel(
+                        Logger.Level.FULL)
+                        .requestInterceptor(new BasicAuthRequestInterceptor(consumerKey, consumerSecret))
+                        .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
+                        .target(TokenIssuerService.class,
+                                AuthorizationConfigurationManager.getInstance().getTokenApiURL());
+            }
             tokenInfo = tokenIssuerService.getToken(PASSWORD_GRANT_TYPE, username, password);
             tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
-        }
-        synchronized (this) {
-            if (System.currentTimeMillis() + Long.parseLong(refreshTimeOffset) > tokenInfo.getExpires_in()) {
-                tokenInfo = tokenIssuerService.getToken(REFRESH_GRANT_TYPE, tokenInfo.getRefresh_token());
-                tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
+        } else {
+            synchronized (this) {
+                if (System.currentTimeMillis() + Long.parseLong(refreshTimeOffset) > tokenInfo.getExpires_in()) {
+                    try {
+                        tokenInfo = tokenIssuerService.getToken(REFRESH_GRANT_TYPE, tokenInfo.getRefresh_token());
+                        tokenInfo.setExpires_in(System.currentTimeMillis() + tokenInfo.getExpires_in());
+                    } catch (FeignException e) {
+                        tokenInfo = null;
+                        apply(template);
+                    }
+                }
             }
         }
         String headerValue = Constants.RestConstants.BEARER + tokenInfo.getAccess_token();
