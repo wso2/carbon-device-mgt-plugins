@@ -17,6 +17,7 @@
 */
 package org.wso2.carbon.device.mgt.input.adapter.mqtt.internal;
 
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
@@ -24,7 +25,9 @@ import org.osgi.service.http.HttpService;
 import org.wso2.carbon.device.mgt.input.adapter.extension.InputAdapterExtensionService;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.MQTTEventAdapterFactory;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterFactory;
+import org.wso2.carbon.event.input.adapter.core.InputEventAdapterService;
 import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
+import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**
  * @scr.component name="input.iot.mqtt.AdapterService.component" immediate="true"
@@ -38,6 +41,15 @@ import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerSer
  * policy="dynamic"
  * bind="setJWTClientManagerService"
  * unbind="unsetJWTClientManagerService"
+ * @scr.reference name="input.adapter.service" interface="org.wso2.carbon.event.input.adapter.core.InputEventAdapterService"
+ * cardinality="1..1"
+ * policy="dynamic"
+ * bind="setInputEventAdapterService"
+ * unbind="unsetInputEventAdapterService"
+ * @scr.reference name="config.context.service"
+ * interface="org.wso2.carbon.utils.ConfigurationContextService"
+ * cardinality="1..1" policy="dynamic" bind="setConfigurationContextService"
+ * unbind="unsetConfigurationContextService"
  */
 public class InputAdapterServiceComponent {
 
@@ -79,5 +91,22 @@ public class InputAdapterServiceComponent {
     protected void unsetJWTClientManagerService(JWTClientManagerService jwtClientManagerService) {
         InputAdapterServiceDataHolder.setJwtClientManagerService(null);
     }
+
+	protected void setInputEventAdapterService(InputEventAdapterService inputEventAdapterService) {
+		InputAdapterServiceDataHolder.setInputEventAdapterService(inputEventAdapterService);
+	}
+
+	protected void unsetInputEventAdapterService(InputEventAdapterService inputEventAdapterService) {
+		InputAdapterServiceDataHolder.setInputEventAdapterService(null);
+	}
+
+	protected void setConfigurationContextService(ConfigurationContextService contextService) {
+		ConfigurationContext serverConfigContext = contextService.getServerConfigContext();
+		InputAdapterServiceDataHolder.setMainServerConfigContext(serverConfigContext);
+	}
+
+	protected void unsetConfigurationContextService(ConfigurationContextService contextService) {
+		InputAdapterServiceDataHolder.setMainServerConfigContext(null);
+	}
 
 }
