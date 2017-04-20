@@ -40,7 +40,7 @@ public class MQTTContentValidator implements ContentValidator {
 
     @Override
     public String getType() {
-        return CDMF_MQTT_CONTENT_VALIDATOR;
+        return null;
     }
 
     @Override

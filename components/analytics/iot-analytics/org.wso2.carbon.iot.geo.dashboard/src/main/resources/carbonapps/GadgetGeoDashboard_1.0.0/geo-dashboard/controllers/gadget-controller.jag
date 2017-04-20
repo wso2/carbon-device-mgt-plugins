@@ -33,9 +33,6 @@
     } else if(action === 'getData'){
         print(providerAPI.getData(id, type, timeFrom, timeTo));
         return;
-    } else if(action === 'getAlerts'){
-        print(providerAPI.getAlerts(id));
-        return;
     }
 }());
 

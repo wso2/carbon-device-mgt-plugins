@@ -34,7 +34,6 @@ var getConfig, validate, getMode, getSchema, getData, registerCallBackforPush;
     var JS_MIN_VALUE = "-9007199254740992";
 
     var tableName = "ORG_WSO2_GEO_FUSEDSPATIALEVENT";
-    var alertTable = "ORG_WSO2_GEO_ALERTSNOTIFICATION";
 
     var typeMap = {
         "bool": "string",
@@ -131,9 +130,9 @@ var getConfig, validate, getMode, getSchema, getData, registerCallBackforPush;
                 "query": luceneQuery,
                 "start": 0,
                 "count": limit,
-                "sortBy": [{
-                    "field": "timeStamp",
-                    "sortType": "ASC"
+                "sortBy" : [{
+                    "field" : "timeStamp",
+                    "sortType" : "ASC"
                 }]
             };
             result = connector.search(loggedInUser, tableName, stringify(filter)).getMessage();
@@ -143,30 +142,6 @@ var getConfig, validate, getMode, getSchema, getData, registerCallBackforPush;
             result = connector.getRecordsByRange(loggedInUser, tableName, from, to, 0, limit, null).getMessage();
 
         }
-        result = JSON.parse(result);
-        var data = [];
-        for (var i = 0; i < result.length; i++) {
-            var values = result[i].values;
-            data.push(values);
-        }
-        return data;
-    };
-
-    getAlerts = function (deviceId) {
-        var limit = 50;
-        var result;
-        //if there's a filter present, we should perform a Lucene search instead of reading the table
-        var luceneQuery = 'id:"' + deviceId;
-        var filter = {
-            "query": luceneQuery,
-            "start": 0,
-            "count": limit,
-            "sortBy": [{
-                "field": "timeStamp",
-                "sortType": "ASC"
-            }]
-        };
-        result = connector.search(loggedInUser, tableName, stringify(filter)).getMessage();
         result = JSON.parse(result);
         var data = [];
         for (var i = 0; i < result.length; i++) {
