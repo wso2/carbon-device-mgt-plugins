@@ -17,7 +17,6 @@
 */
 package org.wso2.carbon.device.mgt.input.adapter.mqtt.util;
 
-import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,12 +33,10 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.ServerStatus;
-import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentInfo;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentTransformer;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentValidator;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.internal.InputAdapterServiceDataHolder;
-import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterListener;
 import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterRuntimeException;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
@@ -66,29 +63,26 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
 
     private MQTTBrokerConnectionConfiguration mqttBrokerConnectionConfiguration;
     private String topic;
-    private String tenantDomain;
+    private int tenantId;
     private boolean connectionSucceeded = false;
-    private ContentValidator contentValidator;
-    private ContentTransformer contentTransformer;
-    private InputEventAdapterConfiguration inputEventAdapterConfiguration;
+    ContentValidator contentValidator;
+    ContentTransformer contentTransformer;
 
     private InputEventAdapterListener eventAdapterListener = null;
 
     public MQTTAdapterListener(MQTTBrokerConnectionConfiguration mqttBrokerConnectionConfiguration,
-                               String topic, InputEventAdapterConfiguration inputEventAdapterConfiguration,
-                               InputEventAdapterListener inputEventAdapterListener, String tenantDomain) {
-        String mqttClientId = inputEventAdapterConfiguration.getProperties()
-                .get(MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID);
+                               String topic, String mqttClientId,
+                               InputEventAdapterListener inputEventAdapterListener, int tenantId) {
+
         if(mqttClientId == null || mqttClientId.trim().isEmpty()){
             mqttClientId = MqttClient.generateClientId();
         }
-        this.inputEventAdapterConfiguration = inputEventAdapterConfiguration;
         this.mqttBrokerConnectionConfiguration = mqttBrokerConnectionConfiguration;
         this.cleanSession = mqttBrokerConnectionConfiguration.isCleanSession();
         int keepAlive = mqttBrokerConnectionConfiguration.getKeepAlive();
         this.topic = PropertyUtils.replaceTenantDomainProperty(topic);
         this.eventAdapterListener = inputEventAdapterListener;
-        this.tenantDomain = tenantDomain;
+        this.tenantId = tenantId;
 
         //SORTING messages until the server fetches them
         String temp_directory = System.getProperty("java.io.tmpdir");
@@ -151,7 +145,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                     if (!mqttBrokerConnectionConfiguration.isGlobalCredentailSet()) {
                         registrationProfile.setClientName(MQTTEventAdapterConstants.APPLICATION_NAME_PREFIX
                                                                   + mqttBrokerConnectionConfiguration.getAdapterName() +
-                                                                  "_" + tenantDomain);
+                                                                  "_" + tenantId);
                         registrationProfile.setIsSaasApp(false);
                     } else {
                         registrationProfile.setClientName(MQTTEventAdapterConstants.APPLICATION_NAME_PREFIX
@@ -192,7 +186,6 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
         }
         mqttClient.connect(connectionOptions);
         mqttClient.subscribe(topic);
-
     }
 
     public void stopListener(String adapterName) {
@@ -225,12 +218,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                 log.debug(msgText);
             }
             PrivilegedCarbonContext.startTenantFlow();
-            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
-            TenantAxisUtils.getTenantConfigurationContext(tenantDomain,InputAdapterServiceDataHolder.getMainServerConfigContext());
-
-            InputEventAdapterListener inputEventAdapterListener = InputAdapterServiceDataHolder
-                        .getInputEventAdapterService().getInputAdapterRuntime(PrivilegedCarbonContext.getThreadLocalCarbonContext()
-                        .getTenantId(), inputEventAdapterConfiguration.getName());
+            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(tenantId);
 
             if (log.isDebugEnabled()) {
                 log.debug("Event received in MQTT Event Adapter - " + msgText);
@@ -243,10 +231,10 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                 msgText = (String) contentTransformer.transform(msgText, dynamicProperties);
                 contentInfo = contentValidator.validate(msgText, dynamicProperties);
                 if (contentInfo != null && contentInfo.isValidContent()) {
-                    inputEventAdapterListener.onEvent(contentInfo.getMessage());
+                    eventAdapterListener.onEvent(contentInfo.getMessage());
                 }
             } else {
-                inputEventAdapterListener.onEvent(msgText);
+                eventAdapterListener.onEvent(msgText);
             }
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
@@ -288,7 +276,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
     private String getToken(String clientId, String clientSecret)
             throws UserStoreException, JWTClientException {
         PrivilegedCarbonContext.startTenantFlow();
-        PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(tenantId, true);
         try {
             String scopes = mqttBrokerConnectionConfiguration.getBrokerScopes();
             String username = mqttBrokerConnectionConfiguration.getUsername();

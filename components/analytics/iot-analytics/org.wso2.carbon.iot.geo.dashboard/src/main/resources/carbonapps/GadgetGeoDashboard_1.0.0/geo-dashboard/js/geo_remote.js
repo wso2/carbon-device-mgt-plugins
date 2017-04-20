@@ -509,43 +509,38 @@ function removeGeoFence(geoFenceElement, id) {
 }
 
 function getAlertsHistory(objectId) {
-    $.ajax({
-        url: '/portal/store/carbon.super/fs/gadget/geo-dashboard/controllers/gadget-controller.jag?action=getAlerts&id=' + objectId,
-        method: "GET",
-        contentType: "application/json",
-        async: false,
-        success: function (data) {
-            var alertsContainer = $('#showAlertsArea').empty();
-            $.each(data, function (key, val) {
-                var alertDOMElement = document.createElement('a'); // Reason for using document.createElement (performance issue) http://stackoverflow.com/questions/268490/jquery-document-createelement-equivalent
-                switch (val.STATE) {
-                    case "NORMAL":
+    $.getJSON("/portal/store/carbon.super/fs/gadget/geo-dashboard/controllers/get_alerts_history.jag?objectId=" + objectId, function (data) {
+        var alertsContainer = $('#showAlertsArea').empty();
+        $.each(data, function (key, val) {
+            var alertDOMElement = document.createElement('a'); // Reason for using document.createElement (performance issue) http://stackoverflow.com/questions/268490/jquery-document-createelement-equivalent
+
+            switch (val.STATE) {
+                case "NORMAL":
 //                    $(alertDOMElement).addClass("list-group-item list-group-item-info");
-                        return;
-                    case "WARNING":
-                        $(alertDOMElement).addClass("list-group-item list-group-item-warning");
-                        break;
-                    case "ALERTED":
-                        $(alertDOMElement).addClass("list-group-item list-group-item-danger");
-                        break;
-                    case "OFFLINE":
-                        $(alertDOMElement).addClass("list-group-item list-group-item-success");
-                        break;
-                }
-                $(alertDOMElement).html(val.INFORMATION);
-                $(alertDOMElement).css({marginTop: "5px"});
-                $(alertDOMElement).attr('onClick', 'showAlertInMap(this)');
+                    return;
+                case "WARNING":
+                    $(alertDOMElement).addClass("list-group-item list-group-item-warning");
+                    break;
+                case "ALERTED":
+                    $(alertDOMElement).addClass("list-group-item list-group-item-danger");
+                    break;
+                case "OFFLINE":
+                    $(alertDOMElement).addClass("list-group-item list-group-item-success");
+                    break;
+            }
+            $(alertDOMElement).html(val.INFORMATION);
+            $(alertDOMElement).css({marginTop: "5px"});
+            $(alertDOMElement).attr('onClick', 'showAlertInMap(this)');
 
-                // Set HTML5 data attributes for later use
-                $(alertDOMElement).attr('data-id', val.ID);
-                $(alertDOMElement).attr('data-latitude', val.LATITUDE);
-                $(alertDOMElement).attr('data-longitude', val.LONGITUDE);
-                $(alertDOMElement).attr('data-state', val.STATE);
-                $(alertDOMElement).attr('data-information', val.INFORMATION);
+            // Set HTML5 data attributes for later use
+            $(alertDOMElement).attr('data-id', val.ID);
+            $(alertDOMElement).attr('data-latitude', val.LATITUDE);
+            $(alertDOMElement).attr('data-longitude', val.LONGITUDE);
+            $(alertDOMElement).attr('data-state', val.STATE);
+            $(alertDOMElement).attr('data-information', val.INFORMATION);
 
-                alertsContainer.append(alertDOMElement);
-            });
-        }
+            alertsContainer.append(alertDOMElement);
+        });
     });
 }
 
