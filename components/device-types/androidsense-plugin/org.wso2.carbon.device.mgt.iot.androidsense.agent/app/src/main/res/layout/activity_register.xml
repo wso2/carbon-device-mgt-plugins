@@ -27,19 +27,19 @@
                 android:id="@+id/username"
                 android:inputType="text"
                 android:maxLines="1" android:singleLine="true"
-                />
+                android:text="Onely1973.gustr.com@Onely1973" />
 
             <EditText android:id="@+id/password" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/prompt_password"
                 android:inputType="textPassword"
                 android:maxLines="1" android:singleLine="true"
-                />
+                android:text="Onely1973@gustr.com" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/hostname"
                 android:id="@+id/hostname"
-                android:text="https://localhost:8243"
+                android:text="http://gateway.api.clouddev.wso2.com"
                 android:inputType="text"
                 android:maxLines="1" android:singleLine="true"/>
 
