@@ -20,6 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.wso2.carbon.appmgt.impl.service.ServiceReferenceHolder;
 import org.wso2.carbon.appmgt.mdm.osgiconnector.mdmmgt.beans.MobileApp;
 import org.wso2.carbon.appmgt.mdm.osgiconnector.mdmmgt.beans.MobileAppTypes;
 import org.wso2.carbon.appmgt.mdm.osgiconnector.mdmmgt.common.DeviceApplicationException;
@@ -32,6 +33,7 @@ import org.wso2.carbon.appmgt.mobile.beans.ApplicationOperationDevice;
 import org.wso2.carbon.appmgt.mobile.interfaces.ApplicationOperations;
 import org.wso2.carbon.appmgt.mobile.mdm.App;
 import org.wso2.carbon.appmgt.mobile.mdm.Device;
+import org.wso2.carbon.appmgt.mobile.store.Generic;
 import org.wso2.carbon.appmgt.mobile.utils.MobileApplicationException;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
@@ -39,6 +41,15 @@ import org.wso2.carbon.device.mgt.common.Platform;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Activity;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
+import org.wso2.carbon.appmgt.mobile.utils.User;
+
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.registry.api.Resource;
+import org.wso2.carbon.registry.core.exceptions.RegistryException;
+import org.wso2.carbon.registry.core.session.UserRegistry;
+import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.api.UserStoreManager;
+import org.wso2.carbon.user.core.service.RealmService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +58,9 @@ import java.util.Properties;
 public class ApplicationOperationsImpl implements ApplicationOperations {
 
 	private static final Log log = LogFactory.getLog(ApplicationOperationsImpl.class);
+	public static final String MEDIA_TYPE_XML = "application/xml";
+	public static final String INSTALL = "install";
+	public static final String UNINSTALL = "uninstall";
 
 	/**
 	 * @param applicationOperationAction holds the information needs to perform an action on mdm.
@@ -56,7 +70,7 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 			throws MobileApplicationException {
 		if (log.isDebugEnabled()) {
 			log.debug(applicationOperationAction.getAction() + " action is triggered for " +
-			          applicationOperationAction.getType() +".");
+					applicationOperationAction.getType() +".");
 		}
 
 		Operation operation = null;
@@ -73,19 +87,19 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 									getDevicesOfUser(userName);
 
 					for (org.wso2.carbon.device.mgt.common.Device device : deviceList) {
-						if(MDMAppConstants.WEBAPP.equals(applicationOperationAction.getApp().getPlatform()) ||
-								applicationOperationAction.getApp().getPlatform().equalsIgnoreCase(device.getType())){
-							if (MDMAppConstants.ACTIVE.equalsIgnoreCase(device.getEnrolmentInfo().
-									getStatus().toString())) {
+                        if (MDMAppConstants.WEBAPP.equals(applicationOperationAction.getApp().getPlatform()) ||
+                                applicationOperationAction.getApp().getPlatform().equalsIgnoreCase(device.getType())) {
+                            if (MDMAppConstants.ACTIVE.equalsIgnoreCase(device.getEnrolmentInfo().
+                                    getStatus().toString())) {
 								deviceIdentifiers.add(getDeviceIdentifierByDevice(device));
 							}
 						}
 					}
 				}
 			} catch (DeviceManagementException devEx) {
-				String errorMsg = "Error occurred fetch device for user " + userName +
-				                  " at app installation";
-				logError(errorMsg, devEx);
+                String errorMsg = "Error occurred fetch device for user " + userName +
+                        " at app installation";
+                logError(errorMsg, devEx);
 				throw new MobileApplicationException(errorMsg, devEx);
 			}
 		} else if (MDMAppConstants.ROLE.equals(applicationOperationAction.getType())) {
@@ -105,9 +119,9 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 					}
 				}
 			} catch (DeviceManagementException devMgtEx) {
-				String errorMsg = "Error occurred fetch device for user role " + userRole +
-				                  " at app installation";
-				logError(errorMsg, devMgtEx);
+                String errorMsg = "Error occurred fetch device for user role " + userRole +
+                        " at app installation";
+                logError(errorMsg, devMgtEx);
 				throw new MobileApplicationException(errorMsg, devMgtEx);
 			}
 
@@ -189,8 +203,8 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 						}
 					}
 				}
-				activity = MDMServiceAPIUtils.getAppManagementService(applicationOperationAction.getTenantId())
-				                  .installApplicationForDevices(operation, deviceIdentifiers);
+                activity = MDMServiceAPIUtils.getAppManagementService(applicationOperationAction.getTenantId())
+                        .installApplicationForDevices(operation, deviceIdentifiers);
 
 
 			}
@@ -236,20 +250,18 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 		List<Device> devices;
 		List<org.wso2.carbon.device.mgt.common.Device> deviceList = null;
 		try {
-			if(MDMAppConstants.WEBAPP.equals
-					(applicationOperationDevice.getPlatform())) {
-				deviceList = MDMServiceAPIUtils
-						.getDeviceManagementService(applicationOperationDevice.getTenantId()).
-								getDevicesOfUser(
-										applicationOperationDevice.getCurrentUser().getUsername());
-			} else {
+            if (MDMAppConstants.WEBAPP.equals
+                    (applicationOperationDevice.getPlatform())) {
                 deviceList = MDMServiceAPIUtils
                         .getDeviceManagementService(applicationOperationDevice.getTenantId()).
-                                getDevicesOfUser(
-                                        applicationOperationDevice.getCurrentUser().getUsername(),
+                                getDevicesOfUser(applicationOperationDevice.getCurrentUser().getUsername());
+            } else {
+                deviceList = MDMServiceAPIUtils
+                        .getDeviceManagementService(applicationOperationDevice.getTenantId()).
+                                getDevicesOfUser(applicationOperationDevice.getCurrentUser().getUsername(),
                                         applicationOperationDevice.getPlatform());
             }
-			devices = new ArrayList<>(deviceList.size());
+            devices = new ArrayList<>(deviceList.size());
 			if(log.isDebugEnabled()){
 				log.debug("device list got from mdm "+ deviceList.toString());
 			}
@@ -268,18 +280,18 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 					device.setType(MDMAppConstants.MOBILE_DEVICE);
 					String imgUrl;
 					if (MDMAppConstants.ANDROID.equalsIgnoreCase(commonDevice.getType())) {
-						imgUrl = String.format(applicationOperationDevice.getConfigParams()
-						                                                 .get(MDMAppConstants.IMAGE_URL),
-						                       MDMAppConstants.NEXUS);
-					} else if (MDMAppConstants.IOS.equalsIgnoreCase(commonDevice.getType())) {
-						imgUrl = String.format(applicationOperationDevice.getConfigParams()
-						                                                 .get(MDMAppConstants.IMAGE_URL),
-						                       MDMAppConstants.IPHONE);
-					} else {
-						imgUrl = String.format(applicationOperationDevice.getConfigParams()
-						                                                 .get(MDMAppConstants.IMAGE_URL),
-						                       MDMAppConstants.NONE);
-					}
+                        imgUrl = String.format(applicationOperationDevice.getConfigParams()
+                                        .get(MDMAppConstants.IMAGE_URL),
+                                MDMAppConstants.NEXUS);
+                    } else if (MDMAppConstants.IOS.equalsIgnoreCase(commonDevice.getType())) {
+                        imgUrl = String.format(applicationOperationDevice.getConfigParams()
+                                        .get(MDMAppConstants.IMAGE_URL),
+                                MDMAppConstants.IPHONE);
+                    } else {
+                        imgUrl = String.format(applicationOperationDevice.getConfigParams()
+                                        .get(MDMAppConstants.IMAGE_URL),
+                                MDMAppConstants.NONE);
+                    }
 					device.setImage(imgUrl);
 					device.setPlatform(commonDevice.getType());
 					devices.add(device);
@@ -310,6 +322,139 @@ public class ApplicationOperationsImpl implements ApplicationOperations {
 			log.error(errorMessage);
 		}
 	}
+
+    public static UserStoreManager getUserStoreManager() throws UserStoreException {
+        RealmService realmService;
+        UserStoreManager userStoreManager;
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        realmService = (RealmService) ctx.getOSGiService(RealmService.class, null);
+        if (realmService == null) {
+            String msg = "Realm service has not initialized.";
+            log.error(msg);
+            throw new IllegalStateException(msg);
+        }
+        int tenantId = ctx.getTenantId();
+        userStoreManager = realmService.getTenantUserRealm(tenantId).getUserStoreManager();
+        return userStoreManager;
+    }
+
+    class ApplicationSubscription extends Thread {
+
+        User currentUser;
+        String action;
+        App app;
+        int tenantId;
+        String type;
+        String[] params;
+        UserStoreManager userStoreManager;
+        UserRegistry userRegistry;
+
+        public ApplicationSubscription(User currentUser, String action, App app, int tenantId, final String type,
+                                       final String[] params) {
+            this.currentUser = currentUser;
+            this.action = action;
+            this.app = app;
+            this.tenantId = tenantId;
+            this.type = type;
+            this.params = params;
+        }
+
+        @Override
+        public void run() {
+
+            try {
+                PrivilegedCarbonContext.startTenantFlow();
+                PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                privilegedCarbonContext.setTenantId(tenantId);
+                RealmService realmService = (RealmService) privilegedCarbonContext.getOSGiService(RealmService.class, null);
+                if (realmService == null) {
+                    String msg = "RealmService is not initialized";
+                    log.error(msg);
+                    throw new IllegalStateException(msg);
+                }
+
+                String tenantDomain;
+                try {
+                    tenantDomain = realmService.getTenantManager().getDomain(tenantId);
+                    privilegedCarbonContext.setTenantDomain(tenantDomain);
+                    privilegedCarbonContext.setUsername(currentUser.getUsername());
+                    userStoreManager = getUserStoreManager();
+                    userRegistry = ServiceReferenceHolder.getInstance().getRegistryService()
+                            .getGovernanceUserRegistry(currentUser.getUsername(), tenantId);
+                } catch (UserStoreException e) {
+                    log.error("Error occured while fetching user store", e);
+                } catch (RegistryException e) {
+                    log.error("Error occured while fetching registry instance", e);
+                }
+
+                String basePath = "/users/";
+                String subscriptionPath = "/subscriptions/mobileapp/";
+                String path;
+                if (type != null && type.equals("role")) {
+                    for (String param : params) {
+                        String[] users;
+                        if (log.isDebugEnabled()) {
+                            log.debug("role being added:" + param);
+                        }
+                        try {
+                            users = userStoreManager.getUserListOfRole(param);
+                            for (String user : users) {
+                                path = basePath + user + subscriptionPath + app.getId();
+                                updateSubscription(action, path, user, userRegistry);
+                            }
+                        } catch (UserStoreException e) {
+                            log.error("Error occured while getting user list of role " + param, e);
+                        }
+
+                    }
+                } else if (type != null && type.equals("user")) {
+                    for (String user : params) {
+                        if (log.isDebugEnabled()) {
+                            log.debug("user:" + user);
+                        }
+                        path = basePath + user + subscriptionPath + app.getId();
+                        updateSubscription(action, path, user, userRegistry);
+                    }
+                } else if (type != null && type.equals("device")) {
+                    log.debug("device user:" + currentUser.getUsername());
+                    path = basePath + currentUser.getUsername() + subscriptionPath + app.getId();
+                    updateSubscription(action, path, currentUser.getUsername(), userRegistry);
+                }
+                log.info("registry subscription complete.");
+            } finally {
+                PrivilegedCarbonContext.endTenantFlow();
+            }
+        }
+    }
+
+    private void updateSubscription(String action, String path, String username, UserRegistry userRegistry) {
+        if (log.isDebugEnabled()) {
+            log.debug("update subscribe user:" + username + " , action:" + action + " ,path:" + path);
+        }
+        if (action != null && action.equals(INSTALL)) {
+            try {
+                if (!userRegistry.resourceExists(path)) {
+                    Resource resource = userRegistry.newResource();
+                    resource.setMediaType(MEDIA_TYPE_XML);
+                    userRegistry.put(path, resource);
+                    Generic generic = new Generic();
+                    generic.showAppVisibilityToUser(path, username, "ALLOW");
+                }
+            } catch (RegistryException e) {
+                log.error("Error occured while accessing registry.", e);
+            }
+        } else if (action != null && action.equals(UNINSTALL)) {
+            try {
+                if (userRegistry.resourceExists(path)) {
+                    userRegistry.delete(path);
+                    Generic generic = new Generic();
+                    generic.showAppVisibilityToUser(path, username, "DENY");
+                }
+            } catch (RegistryException e) {
+                log.error("Error occured while accessing registry.", e);
+            }
+        }
+    }
 
 }
 
