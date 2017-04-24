@@ -77,10 +77,77 @@ public class MQTTManagementAdminServiceImpl implements MQTTManagementAdminServic
                         new ErrorResponse.ErrorResponseBuilder().setMessage(
                                 "Current logged in user is not authorized to perform this operation").build()).build();
             }
-            return null;
+            PrivilegedCarbonContext.startTenantFlow();
+            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain);
+            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(MQTTMgtAPIUtils.getTenantId(tenantDomain));
+
+            HttpSession session = request.getSession();
+
+            AndesMQTTAdminServiceStub andesAdminStub = getAndesMQTTAdminServiceStub(config, session, request);
+
+            Subscription[] filteredNormalTopicSubscriptionList = andesAdminStub.getFilteredSubscriptions(false, true,
+                    "MQTT", "TOPIC", "", false,
+                    "", false, "All", offset,
+                    10);
+            Map<String, Subscription[]> subscriptions = new HashMap<>();
+            subscriptions.put("subscriptions", filteredNormalTopicSubscriptionList);
+            return Response.ok().entity(subscriptions).build();
+        } catch (DeviceManagementException e) {
+            String msg = "Error occurred at server side while fetching device list.";
+            log.error(msg, e);
+            return Response.serverError().entity(
+                    new ErrorResponse.ErrorResponseBuilder().setMessage(msg).build()).build();
+        } catch (AxisFault e) {
+            String msg = "Error occurred at server side while fetching service stub.";
+            log.error(msg, e);
+            return Response.serverError().entity(
+                    new ErrorResponse.ErrorResponseBuilder().setMessage(msg).build()).build();
+        } catch (RemoteException e) {
+            String msg = "Error occurred at server side while fetching service stub.";
+            log.error(msg, e);
+            return Response.serverError().entity(
+                    new ErrorResponse.ErrorResponseBuilder().setMessage(msg).build()).build();
+        } catch (AndesMQTTAdminServiceBrokerManagerAdminException e) {
+            String msg = "Error occurred at server side while fetching service stub.";
+            log.error(msg, e);
+            return Response.serverError().entity(
+                    new ErrorResponse.ErrorResponseBuilder().setMessage(msg).build()).build();
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
         }
+    }
+
+    /**
+     * Gets the AndesAdminServices stub.
+     *
+     * @param config  the servlet configuration
+     * @param session the http session
+     * @param request the http servlet request
+     * @return an AndesAdminServiceStub
+     * @throws AxisFault
+     */
+    private static AndesMQTTAdminServiceStub getAndesMQTTAdminServiceStub(ServletConfig config,
+                                                                          HttpSession session,
+                                                                          HttpServletRequest request)
+            throws AxisFault {
+
+        String hostName = CarbonUtils.getServerConfiguration().getFirstProperty("HostName");
+        final String MQTT_ENDPOINT = "9446";
+
+        if (hostName == null) {
+            hostName = System.getProperty("carbon.local.ip");
+        }
+
+        String backendServerURL = "https://" + hostName + ":" + MQTT_ENDPOINT + "/services/AndesMQTTAdminService.AndesMQTTAdminServiceHttpsSoap11Endpoint/";
+        ConfigurationContext configContext =
+                (ConfigurationContext) config.getServletContext().getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+        AndesMQTTAdminServiceStub stub = new AndesMQTTAdminServiceStub(configContext, backendServerURL);
+        HttpTransportProperties.Authenticator basicAuthentication = new HttpTransportProperties.Authenticator();
+        basicAuthentication.setUsername("admin");
+        basicAuthentication.setPassword("admin");
+        stub._getServiceClient().getOptions().setProperty(HTTPConstants.AUTHENTICATE, basicAuthentication);
+
+        return stub;
     }
 
 }
