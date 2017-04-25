@@ -166,6 +166,14 @@
 	<PolicyMonitoring enabled="true"/>
     <InitialOperationConfig>
         <Operations>
+            <Operation>
+                <Name>DEVICE_INFO</Name>
+                <RecurrentTimes>1</RecurrentTimes>
+            </Operation>
+            <Operation>
+                <Name>DEVICE_LOCATION</Name>
+                <RecurrentTimes>1</RecurrentTimes>
+            </Operation>
         </Operations>
     </InitialOperationConfig>
 

@@ -19,6 +19,7 @@
 package org.wso2.carbon.device.mgt.mobile.windows.api.common.util;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.auth.AUTH;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.handler.RequestData;
 import org.apache.ws.security.message.token.BinarySecurity;
@@ -32,6 +33,9 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.CacheEntry;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.AuthenticationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.OAuthTokenValidationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
+import org.wso2.carbon.device.mgt.mobile.windows.exception.WindowsDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.MobileDeviceManagementDAOException;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dto.MobileCacheEntry;
 
 import java.util.HashMap;
 
@@ -94,12 +98,17 @@ public class BSTValidator implements Validator {
     private boolean authenticate(String binarySecurityToken, AuthenticationInfo authenticationInfo) throws
                                                                                                     AuthenticationException {
         WindowsAPIUtils.startTenantFlow(authenticationInfo);
-        if (DeviceUtil.getCacheEntry(binarySecurityToken) != null) {
-            CacheEntry cacheentry = (CacheEntry) DeviceUtil.getCacheEntry(binarySecurityToken);
-            String username = cacheentry.getUsername();
-            return username != null;
-        } else {
-            return false;
+        MobileCacheEntry cacheEntry;
+        try {
+            cacheEntry = DeviceUtil.getTokenEntry(binarySecurityToken);
+            if (cacheEntry != null) {
+                String username = cacheEntry.getUsername();
+                return username != null;
+            } else {
+                return false;
+            }
+        } catch (WindowsDeviceEnrolmentException e) {
+            throw new AuthenticationException("Authentication failure when fetching token entry", e);
         }
     }
 
