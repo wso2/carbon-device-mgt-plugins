@@ -65,6 +65,7 @@
             <span id="vpn-ok" class="has-success status-icon hidden"><i class="fw fw-success"></i></span>
             <span id="vpn-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
+        {{#unless iscloud}}
         <a href="javascript:void(0)" onclick="showAdvanceOperation('work-profile', this)">
              <span class="wr-hidden-operations-icon fw-stack">
                  <i class="fw fw-service fw-stack-2x"></i>
@@ -107,6 +108,7 @@
             <span id="cosu-whitelisted-applications-error" class="has-error status-icon hidden"><i
                     class="fw fw-error"></i></span>
         </a>
+        {{/unless}}
     </div>
 
     <div class="wr-hidden-operations-content col-lg-8">
@@ -302,6 +304,7 @@
                             </span>
                         </label>
                     </div>
+                    {{#unless iscloud}}
                     <div>
                         <ul class="message message-info">
                             <i class="icon fw fw-info"></i>
@@ -696,6 +699,7 @@
                         </label>
                     </div>
                     <br>
+                    {{/unless}}
                 </div>
             </div>
         </div>
