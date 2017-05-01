@@ -18,10 +18,9 @@
 package org.wso2.carbon.device.mgt.input.adapter.mqtt;
 
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.input.adapter.mqtt.internal.InputAdapterServiceDataHolder;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTAdapterListener;
-import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTEventAdapterConstants;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTBrokerConnectionConfiguration;
+import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTEventAdapterConstants;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapter;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterListener;
@@ -58,6 +57,10 @@ public class MQTTEventAdapter implements InputEventAdapter {
                     ,globalProperties);
             String topic = eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC);
             String tenantDomain = topic.split("/")[0];
+            if (tenantDomain.equals("${tenant-domain}")) {
+                tenantDomain = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+                topic = topic.replaceAll("\\$\\{tenant-domain\\}", tenantDomain);
+            }
             mqttAdapterListener = new MQTTAdapterListener(mqttBrokerConnectionConfiguration
                     ,topic
                     ,eventAdapterConfiguration
