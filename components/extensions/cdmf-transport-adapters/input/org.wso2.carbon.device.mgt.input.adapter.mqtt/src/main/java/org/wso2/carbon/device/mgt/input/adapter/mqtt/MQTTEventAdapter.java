@@ -18,10 +18,9 @@
 package org.wso2.carbon.device.mgt.input.adapter.mqtt;
 
 import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.device.mgt.input.adapter.mqtt.internal.InputAdapterServiceDataHolder;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTAdapterListener;
-import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTEventAdapterConstants;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTBrokerConnectionConfiguration;
+import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTEventAdapterConstants;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapter;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterListener;
@@ -57,11 +56,10 @@ public class MQTTEventAdapter implements InputEventAdapter {
             mqttBrokerConnectionConfiguration = new MQTTBrokerConnectionConfiguration(eventAdapterConfiguration
                     ,globalProperties);
             String topic = eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC);
-            String tenantDomain = topic.split("/")[0];
             mqttAdapterListener = new MQTTAdapterListener(mqttBrokerConnectionConfiguration
                     ,topic
                     ,eventAdapterConfiguration
-                    ,eventAdapterListener, tenantDomain);
+                    ,eventAdapterListener);
         } catch (Throwable t) {
             throw new InputEventAdapterException(t.getMessage(), t);
         }
