@@ -57,10 +57,6 @@ public class MQTTEventAdapter implements InputEventAdapter {
                     ,globalProperties);
             String topic = eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC);
             String tenantDomain = topic.split("/")[0];
-            if (tenantDomain.equals("${tenant-domain}")) {
-                tenantDomain = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
-                topic = topic.replaceAll("\\$\\{tenant-domain\\}", tenantDomain);
-            }
             mqttAdapterListener = new MQTTAdapterListener(mqttBrokerConnectionConfiguration
                     ,topic
                     ,eventAdapterConfiguration

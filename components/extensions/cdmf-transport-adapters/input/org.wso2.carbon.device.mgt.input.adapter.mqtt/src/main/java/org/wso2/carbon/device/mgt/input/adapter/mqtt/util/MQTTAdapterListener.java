@@ -88,7 +88,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
         int keepAlive = mqttBrokerConnectionConfiguration.getKeepAlive();
         this.topic = PropertyUtils.replaceTenantDomainProperty(topic);
         this.eventAdapterListener = inputEventAdapterListener;
-        this.tenantDomain = tenantDomain;
+        this.tenantDomain = PropertyUtils.replaceTenantDomainProperty(tenantDomain);
 
         //SORTING messages until the server fetches them
         String temp_directory = System.getProperty("java.io.tmpdir");
