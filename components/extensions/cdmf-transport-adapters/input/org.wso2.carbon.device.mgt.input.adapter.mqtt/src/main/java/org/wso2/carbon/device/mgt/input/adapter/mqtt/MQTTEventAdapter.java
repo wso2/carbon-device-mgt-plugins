@@ -56,11 +56,10 @@ public class MQTTEventAdapter implements InputEventAdapter {
             mqttBrokerConnectionConfiguration = new MQTTBrokerConnectionConfiguration(eventAdapterConfiguration
                     ,globalProperties);
             String topic = eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC);
-            String tenantDomain = topic.split("/")[0];
             mqttAdapterListener = new MQTTAdapterListener(mqttBrokerConnectionConfiguration
                     ,topic
                     ,eventAdapterConfiguration
-                    ,eventAdapterListener, tenantDomain);
+                    ,eventAdapterListener);
         } catch (Throwable t) {
             throw new InputEventAdapterException(t.getMessage(), t);
         }
