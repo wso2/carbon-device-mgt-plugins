@@ -82,15 +82,6 @@
       </outSequence>
    </resource>
    <handlers>
-      <handler class="org.wso2.carbon.apimgt.gateway.handlers.common.APIMgtLatencyStatsHandler"/>
-      <handler class="org.wso2.carbon.apimgt.gateway.handlers.security.CORSRequestHandler">
-         <property name="apiImplementationType" value="ENDPOINT"/>
-      </handler>
       <handler class="org.wso2.carbon.apimgt.handlers.AuthenticationHandler"/>
-      <handler class="org.wso2.carbon.apimgt.gateway.handlers.analytics.APIMgtUsageHandler"/>
-      <handler class="org.wso2.carbon.apimgt.gateway.handlers.analytics.APIMgtGoogleAnalyticsTrackingHandler">
-         <property name="configKey" value="gov:/apimgt/statistics/ga-config.xml"/>
-      </handler>
-      <handler class="org.wso2.carbon.apimgt.gateway.handlers.ext.APIManagerExtensionHandler"/>
    </handlers>
 </api>
