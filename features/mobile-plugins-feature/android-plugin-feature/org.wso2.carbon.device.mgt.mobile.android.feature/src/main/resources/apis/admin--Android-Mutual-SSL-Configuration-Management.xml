@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api xmlns="http://ws.apache.org/ns/synapse"
+     name="admin--Android-Mutual-SSL-Configuration-Management"
+     context="/api/device-mgt/android/mssl/v1.0/configuration">
+   <resource methods="GET" url-mapping="/license" faultSequence="fault">
+      <inSequence>
+         <property name="api.ut.backendRequestTime" expression="get-property('SYSTEM_TIME')"/>
+         <send>
+            <endpoint name="admin--Android Mutual SSL Configuration Management_APIproductionEndpoint_0">
+               <http uri-template="https://localhost:9443/api/device-mgt/android/v1.0/configuration"/>
+               <property name="ENDPOINT_ADDRESS"
+                         value="https://localhost:9443/api/device-mgt/android/v1.0/configuration"/>
+            </endpoint>
+         </send>
+      </inSequence>
+      <outSequence>
+         <class name="org.wso2.carbon.apimgt.gateway.handlers.analytics.APIMgtResponseHandler"/>
+         <send/>
+      </outSequence>
+   </resource>
+   <resource methods="PUT GET" url-mapping="/*" faultSequence="fault">
+      <inSequence>
+         <property name="api.ut.backendRequestTime" expression="get-property('SYSTEM_TIME')"/>
+         <send>
+            <endpoint name="admin--Android Mutual SSL Configuration Management_APIproductionEndpoint_1">
+               <http uri-template="https://localhost:9443/api/device-mgt/android/v1.0/configuration"/>
+               <property name="ENDPOINT_ADDRESS"
+                         value="https://localhost:9443/api/device-mgt/android/v1.0/configuration"/>
+            </endpoint>
+         </send>
+      </inSequence>
+      <outSequence>
+         <class name="org.wso2.carbon.apimgt.gateway.handlers.analytics.APIMgtResponseHandler"/>
+         <send/>
+      </outSequence>
+   </resource>
+   <handlers>
+      <handler class="org.wso2.carbon.apimgt.handlers.AuthenticationHandler"/>
+   </handlers>
+</api>
