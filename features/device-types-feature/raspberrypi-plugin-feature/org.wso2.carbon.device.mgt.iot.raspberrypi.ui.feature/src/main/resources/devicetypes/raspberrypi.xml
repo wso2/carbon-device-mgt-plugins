@@ -17,12 +17,12 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<DeviceTypeConfiguration name="arduino">
+<DeviceTypeConfiguration name="raspberrypi">
     <Features>
         <Feature code="bulb">
             <Name>Control Bulb</Name>
-            <Description>Control Bulb on Arduino Uno</Description>
-            <Operation context="/arduino/device/{deviceId}/bulb" method="POST">
+            <Description>Control Bulb on Raspberrypi</Description>
+            <Operation context="/raspberrypi/device/{deviceId}/bulb" method="POST">
                 <QueryParameters>
                     <Parameter>state</Parameter>
                 </QueryParameters>
@@ -33,6 +33,16 @@
     <ProvisioningConfig>
         <SharedWithAllTenants>false</SharedWithAllTenants>
     </ProvisioningConfig>
+
+    <PushNotificationProvider type="MQTT">
+        <FileBasedProperties>true</FileBasedProperties>
+        <!--if file based properties is set to false then the configuration will be picked from platform configuration-->
+        <ConfigProperties>
+            <Property Name="mqttAdapterName">raspberrypi.mqtt.adapter</Property>
+            <Property Name="qos">0</Property>
+            <Property Name="clearSession">true</Property>
+        </ConfigProperties>
+    </PushNotificationProvider>
 
     <License>
         <Language>en_US</Language>

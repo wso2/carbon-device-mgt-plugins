@@ -22,25 +22,20 @@
 
 	<parent>
 		<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-		<artifactId>arduino-plugin-feature</artifactId>
+		<artifactId>raspberrypi-plugin-feature</artifactId>
 		<version>3.0.32-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>org.wso2.carbon.device.mgt.iot.arduino.feature</artifactId>
+	<artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.ui.feature</artifactId>
 	<packaging>pom</packaging>
-	<name>WSO2 Carbon - IoT Server Arduino Feature</name>
+	<name>WSO2 Carbon - IoT Server RaspberryPi UI Feature</name>
 	<url>http://wso2.org</url>
-	<description>This feature contains the Arduino Device type specific implementations for the IoT Server
+	<description>This feature contains the RaspberryPi Device type specific UI implementations for the IoT Server
 	</description>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-			<artifactId>org.wso2.carbon.device.mgt.iot.arduino.api</artifactId>
-			<type>war</type>
-		</dependency>
 		<dependency>
 			<groupId>com.h2database.wso2</groupId>
 			<artifactId>h2-database-engine</artifactId>
@@ -86,21 +81,9 @@
                         </goals>
                         <configuration>
                             <artifactItems>
-								<artifactItem>
-									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.analytics
-									</artifactId>
-									<version>${project.version}</version>
-									<type>zip</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>
-										${project.build.directory}/maven-shared-archive-resources/carbonapps
-									</outputDirectory>
-									<includes>**/*</includes>
-								</artifactItem>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                                    <artifactId>org.wso2.carbon.device.mgt.iot.arduino.ui
+                                    <artifactId>org.wso2.carbon.device.mgt.iot.raspberrypi.ui
                                     </artifactId>
                                     <version>${project.version}</version>
                                     <type>zip</type>
@@ -113,51 +96,44 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
 					<execution>
-						<id>unpack-analytics</id>
+						<!-- Creating RaspberryPi Plugin Management schema -->
+						<id>create-raspberrypi-plugin-mgt-schema</id>
 						<phase>package</phase>
 						<goals>
-							<goal>unpack</goal>
+							<goal>run</goal>
 						</goals>
 						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.analytics</artifactId>
-									<version>${project.version}</version>
-									<type>zip</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>
-										${project.build.directory}/maven-shared-archive-resources/carbonapps
-									</outputDirectory>
-									<includes>**/*</includes>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-jaxrs-war</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.arduino.api
-									</artifactId>
-									<type>war</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>${project.build.directory}/maven-shared-archive-resources/webapps/
-                                    </outputDirectory>
-									<destFileName>arduino.war</destFileName>
-								</artifactItem>
-							</artifactItems>
+							<tasks>
+								<echo message="########### Create RaspberryPi plugin Management H2 Schema ###########" />
+								<property name="db.dir" value="target/maven-shared-archive-resources/database" />
+								<property name="userid" value="wso2carbon" />
+								<property name="password" value="wso2carbon" />
+								<property name="dbURL" value="jdbc:h2:file:${basedir}/${db.dir}/RaspberryPiDM_DB;DB_CLOSE_ON_EXIT=FALSE" />
+
+                                <mkdir dir="${basedir}/${db.dir}" />
+
+								<sql driver="org.h2.Driver" url="${dbURL}" userid="${userid}" password="${password}" autocommit="true" onerror="continue">
+									<classpath refid="maven.dependency.classpath" />
+									<classpath refid="maven.compile.classpath" />
+									<classpath refid="maven.runtime.classpath" />
+
+									<fileset file="${basedir}/src/main/resources/dbscripts/h2.sql" />
+								</sql>
+								<echo message="##################### END ####################" />
+							</tasks>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+
 			<plugin>
 				<groupId>org.wso2.maven</groupId>
 				<artifactId>carbon-p2-plugin</artifactId>
@@ -170,7 +146,7 @@
 							<goal>p2-feature-gen</goal>
 						</goals>
 						<configuration>
-							<id>org.wso2.carbon.device.mgt.iot.arduino</id>
+							<id>org.wso2.carbon.device.mgt.iot.raspberrypi.ui</id>
 							<propertiesFile>../../../features/etc/feature.properties</propertiesFile>
 							<adviceFile>
 								<properties>
@@ -184,11 +160,6 @@
 								<importFeatureDef>org.wso2.carbon.device.mgt.server:${carbon.devicemgt.version}
 								</importFeatureDef>
 							</importFeatures>
-							<includedFeatures>
-								<includedFeatureDef>
-									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.analytics.feature:${carbon.devicemgt.plugins.version}
-								</includedFeatureDef>
-							</includedFeatures>
 						</configuration>
 					</execution>
 				</executions>

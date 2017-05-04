@@ -111,7 +111,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.device.mgt.iot.arduino</id>
+                            <id>org.wso2.carbon.device.mgt.iot.arduino.ui</id>
                             <propertiesFile>../../../features/etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
