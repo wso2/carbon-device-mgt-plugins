@@ -226,7 +226,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
             }
             PrivilegedCarbonContext.startTenantFlow();
             PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
-            TenantAxisUtils.getTenantConfigurationContext(tenantDomain,InputAdapterServiceDataHolder.getMainServerConfigContext());
+            //TenantAxisUtils.getTenantConfigurationContext(tenantDomain,InputAdapterServiceDataHolder.getMainServerConfigContext());
 
             InputEventAdapterListener inputEventAdapterListener = InputAdapterServiceDataHolder
                         .getInputEventAdapterService().getInputAdapterRuntime(PrivilegedCarbonContext.getThreadLocalCarbonContext()
