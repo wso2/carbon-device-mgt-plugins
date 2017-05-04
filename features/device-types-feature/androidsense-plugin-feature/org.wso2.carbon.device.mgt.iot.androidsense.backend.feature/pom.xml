@@ -28,76 +28,81 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.ui.feature</artifactId>
+    <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.backend.feature</artifactId>
     <version>3.0.32-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - IoT Server Android Sense UI Feature</name>
+    <name>WSO2 Carbon - IoT Server Android Sense Backend Feature</name>
     <url>http://wso2.org</url>
-    <description>This feature contains the Android Sense Device type UI specific implementations for the IoT Server
+    <description>This feature contains the Android Sense Device type specific backend implementations for the IoT Server
     </description>
 
     <dependencies>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+            <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.api</artifactId>
+            <type>war</type>
+        </dependency>
         <dependency>
             <groupId>com.h2database.wso2</groupId>
             <artifactId>h2-database-engine</artifactId>
         </dependency>
     </dependencies>
 
+
     <profiles>
-        <profile>
-            <id>default-profile</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>test</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <tasks>
-                                        <copy file="src/main/resources/default.p2.inf"
-                                              tofile="src/main/resources/p2.inf"/>
-                                    </tasks>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+      <profile>
+        <id>default-profile</id>
+        <activation>
+          <activeByDefault>true</activeByDefault>
+        </activation>
+             <build>
+               <plugins>
+                 <plugin>
+                   <artifactId>maven-antrun-plugin</artifactId>
+                   <executions>
+                     <execution>
+                       <phase>test</phase>
+                       <goals>
+                         <goal>run</goal>
+                       </goals>
+                       <configuration>
+                         <tasks>
+                           <copy file="src/main/resources/default.p2.inf"
+                                 tofile="src/main/resources/p2.inf"/>
+                         </tasks>
+                       </configuration>
+                     </execution>
+                   </executions>
+                 </plugin>
+             </plugins>
+         </build>
+      </profile>
 
-        <profile>
-            <id>cloud</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>test</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <tasks>
-                                        <copy file="src/main/resources/cloud.p2.inf"
-                                              tofile="src/main/resources/p2.inf"/>
-                                    </tasks>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+      <profile>
+        <id>cloud</id>
+             <build>
+               <plugins>
+                 <plugin>
+                   <artifactId>maven-antrun-plugin</artifactId>
+                   <executions>
+                     <execution>
+                       <phase>test</phase>
+                       <goals>
+                         <goal>run</goal>
+                       </goals>
+                       <configuration>
+                         <tasks>
+                           <copy file="src/main/resources/cloud.p2.inf"
+                                 tofile="src/main/resources/p2.inf"/>
+                         </tasks>
+                       </configuration>
+                     </execution>
+                   </executions>
+                 </plugin>
+             </plugins>
+         </build>
+      </profile>
     </profiles>
-
 
     <build>
         <plugins>
@@ -131,24 +136,20 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>unpack</id>
+                        <id>copy-jaxrs-war</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>unpack</goal>
+                            <goal>copy</goal>
                         </goals>
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                                    <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.ui
-                                    </artifactId>
-                                    <version>${project.version}</version>
-                                    <type>zip</type>
+                                    <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.api</artifactId>
+                                    <type>war</type>
                                     <overWrite>true</overWrite>
-                                    <outputDirectory>
-                                        ${project.build.directory}/maven-shared-archive-resources/jaggeryapps/devicemgt
-                                    </outputDirectory>
-                                    <includes>**/*</includes>
+                                    <outputDirectory>${project.build.directory}/maven-shared-archive-resources/webapps/</outputDirectory>
+                                    <destFileName>android_sense.war</destFileName>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -203,7 +204,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.carbon.device.mgt.iot.androidsense.ui</id>
+                            <id>org.wso2.carbon.device.mgt.iot.androidsense.backend</id>
                             <propertiesFile>../../../features/etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
