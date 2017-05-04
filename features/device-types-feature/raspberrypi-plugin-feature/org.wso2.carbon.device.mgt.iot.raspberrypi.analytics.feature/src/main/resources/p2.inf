@@ -1,3 +1,3 @@
 instructions.configure = \
-org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/deployment/server/carbonapps/);\
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.raspberrypi.analytics_${feature.version}/carbonapps/,target:${installFolder}/../../../repository/resources/devicetypes/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../analytics/repository/deployment/server/carbonapps/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.raspberrypi.analytics_${feature.version}/carbonapps/,target:${installFolder}/../../analytics/repository/deployment/server/carbonapps/,overwrite:true);\
