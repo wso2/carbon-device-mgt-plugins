@@ -41,7 +41,7 @@
     <a href="#" class="download-link btn-operations"><i class="fw fw-mobile fw-inverse fw-lg add-margin-1x"></i> Enroll Device</a>
     <a href="{{hostName}}{{@unit.publicUri}}/asset/androidsense.apk" class="btn-operations"><i class="fw fw-download fw-inverse fw-lg add-margin-1x"></i> Download APK</a>
     <a href="javascript:toggleEmailInvite()" class="btn-operations"><i class="fw fw-mail fw-inverse fw-lg add-margin-1x"></i> Invite by Email</a>
-    {{#if displayStatus}}
+    {{#if permissions.IS_ADMIN}}
         <a href="javascript:artifactUpload()" class="btn-operations"><i class="fw fw-upload fw-inverse fw-lg add-margin-1x"></i> Deploy Analytics Artifacts</a>
     {{/if}}
     <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS300/Android+Sense"
