@@ -61,7 +61,7 @@
     <a href="#" class="download-link btn-operations">
         <i class="fw fw-download add-margin-1x"></i>Download Agent
     </a>
-    {{#if displayStatus}}
+    {{#if permissions.IS_ADMIN}}
         <a href="javascript:artifactUpload()" class="btn-operations"><i class="fw fw-upload fw-inverse fw-lg add-margin-1x"></i> Deploy Analytics Artifacts</a>
     {{/if}}
 

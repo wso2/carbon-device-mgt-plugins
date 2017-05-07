@@ -1,6 +1,7 @@
 instructions.configure = \
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/resources/);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/resources/devicetypes/);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/resources/devicetypes/raspberrypi);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/resources/sketches/);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/resources/sketches/raspberrypi/);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.raspberrypi.ui_${feature.version}/agent/,target:${installFolder}/../../../repository/resources/sketches/raspberrypi/,overwrite:true);\
