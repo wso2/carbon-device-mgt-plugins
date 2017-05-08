@@ -16,12 +16,11 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-
-<eventReceiver name="android_sense_receiver-carbon.super" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
+<eventReceiver name="raspberrypi_receiver" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
     <from eventAdapterType="oauth-mqtt">
-        <property name="topic">carbon.super/android_sense/+/data</property>
-        <property name="clientId">android_sense_receiver-carbon.super</property>
+        <property name="topic">${tenant-domain}/raspberrypi/+/temperature</property>
+		<property name="clientId">android_sense_receiver-${tenant-domain}</property>
     </from>
     <mapping customMapping="disable" type="json"/>
-    <to streamName="org.wso2.iot.android.sense" version="1.0.0"/>
+    <to streamName="org.wso2.iot.raspberrypi" version="1.0.0"/>
 </eventReceiver>

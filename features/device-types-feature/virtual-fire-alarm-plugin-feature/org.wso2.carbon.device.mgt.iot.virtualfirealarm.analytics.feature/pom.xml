@@ -135,11 +135,6 @@
 									<propertyDef>org.eclipse.equinox.p2.type.group:true</propertyDef>
 								</properties>
 							</adviceFile>
-							<includedFeatures>
-								<includedFeatureDef>
-									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.analytics.feature:${carbon.devicemgt.plugins.version}
-								</includedFeatureDef>
-							</includedFeatures>
 						</configuration>
 					</execution>
 				</executions>
