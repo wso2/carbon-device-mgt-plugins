@@ -33,7 +33,9 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.feature</module>
+        <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.ui.feature</module>
+        <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.backend.feature</module>
+        <module>org.wso2.carbon.device.mgt.iot.virtualfirealarm.analytics.feature</module>
     </modules>
 
 </project>

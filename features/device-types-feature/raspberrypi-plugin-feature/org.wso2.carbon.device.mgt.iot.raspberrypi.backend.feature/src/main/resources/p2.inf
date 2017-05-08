@@ -1,0 +1,24 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/resources/);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/resources/devicetypes/);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/deployment/server/webapps/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.raspberrypi.backend_${feature.version}/webapps/,target:${installFolder}/../../../repository/deployment/server/webapps/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/resources/sketches/);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/resources/sketches/raspberrypi/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.raspberrypi.backend_${feature.version}/dbscripts/,target:${installFolder}/../../../dbscripts/cdm/plugins/raspberrypi,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.raspberrypi.backend_${feature.version}/datasources/,target:${installFolder}/../../../conf/datasources/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/database/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.raspberrypi.backend_${feature.version}/database/,target:${installFolder}/../../../repository/database/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/deployment/server/devicetypes/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.raspberrypi.backend_${feature.version}/devicetypes/,target:${installFolder}/../../../repository/deployment/server/devicetypes/,overwrite:true);\
+
+
+instructions.unconfigure = \
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/deployment/server/webapps/raspberrypi.war);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/deployment/server/webapps/raspberrypi);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../dbscripts/cdm/plugins/raspberrypi);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/resources/sketches/raspberrypi);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../conf/datasources/raspberrypi-datasources.xml);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/database/RaspberryPiDM_DB.h2.db);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/resources/devicetypes/raspberrypi.car);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/deployment/server/devicetypes/raspberrypi.xml);\
