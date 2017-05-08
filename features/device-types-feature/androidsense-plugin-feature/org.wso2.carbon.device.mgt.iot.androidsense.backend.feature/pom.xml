@@ -23,13 +23,13 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>androidsense-plugin-feature</artifactId>
-        <version>3.0.32-SNAPSHOT</version>
+        <version>3.0.33-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.device.mgt.iot.androidsense.backend.feature</artifactId>
-    <version>3.0.32-SNAPSHOT</version>
+    <version>3.0.33-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - IoT Server Android Sense Backend Feature</name>
     <url>http://wso2.org</url>
@@ -67,8 +67,7 @@
                        </goals>
                        <configuration>
                          <tasks>
-                           <copy file="src/main/resources/default.p2.inf"
-                                 tofile="src/main/resources/p2.inf"/>
+                           <copy file="src/main/resources/default.p2.inf" tofile="src/main/resources/p2.inf" />
                          </tasks>
                        </configuration>
                      </execution>
@@ -92,8 +91,7 @@
                        </goals>
                        <configuration>
                          <tasks>
-                           <copy file="src/main/resources/cloud.p2.inf"
-                                 tofile="src/main/resources/p2.inf"/>
+                           <copy file="src/main/resources/cloud.p2.inf" tofile="src/main/resources/p2.inf" />
                          </tasks>
                        </configuration>
                      </execution>
