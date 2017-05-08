@@ -415,7 +415,7 @@
             <dependency>
                 <groupId>com.jayway.jsonpath</groupId>
                 <artifactId>json-path</artifactId>
-                <version>${jsonpath.version}</version>
+                <version>${json.path.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -989,17 +989,6 @@
                 <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <scope>test</scope>
-                <version>${junit.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jayway.jsonpath</groupId>
-                <artifactId>json-path</artifactId>
-                <version>${json.path.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.orbit.com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbus.orbit.version}</version>
@@ -1190,7 +1179,7 @@
         <commons-io.version>2.4</commons-io.version>
         <apache-felix.version>1.0.8</apache-felix.version>
         <googlecode.plist.version>1.8</googlecode.plist.version>
-        <jsonpath.version>0.9.1</jsonpath.version>
+        <json.path.version>0.9.1</json.path.version>
         <commons.lang.version>2.2</commons.lang.version>
 
 
@@ -1215,7 +1204,6 @@
 
         <commons-json.version>3.0.0.wso2v1</commons-json.version>
         <commons-json.version.range>(3.0.0, 4.0.0]</commons-json.version.range>
-        <json.path.version>0.9.1</json.path.version>
         <json-simple.version>1.1.wso2v1</json-simple.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-configuration.version>1.8</commons-configuration.version>
