@@ -16,7 +16,7 @@
  * under the License.
  */
 
-function onRequest(context) {
+function onRequest(context){
     var viewModel = {};
 	var userModule = require("/app/modules/business-controllers/user.js")["userModule"];
 	viewModel["permissions"] = userModule.getUIPermissions();
