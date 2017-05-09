@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>androidsense-plugin-feature</artifactId>
-        <version>3.0.33-SNAPSHOT</version>
+        <version>3.0.34-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -60,8 +60,7 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <copy file="src/main/resources/default.p2.inf"
-                                              tofile="src/main/resources/p2.inf"/>
+                                        <copy file="src/main/resources/default.p2.inf" tofile="src/main/resources/p2.inf" />
                                     </tasks>
                                 </configuration>
                             </execution>
@@ -85,8 +84,7 @@
                                 </goals>
                                 <configuration>
                                     <tasks>
-                                        <copy file="src/main/resources/cloud.p2.inf"
-                                              tofile="src/main/resources/p2.inf"/>
+                                        <copy file="src/main/resources/cloud.p2.inf" tofile="src/main/resources/p2.inf" />
                                     </tasks>
                                 </configuration>
                             </execution>
