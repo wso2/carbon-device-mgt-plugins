@@ -193,6 +193,10 @@
             <Name>Password Policy</Name>
             <Description>Set passcode policy</Description>
         </Feature>
+        <Feature code="RUNTIME_PERMISSION_POLICY">
+            <Name>Runtime Permission Policy</Name>
+            <Description>Set runtime permission</Description>
+        </Feature>
         <Feature code="VPN">
             <Name>Configure VPN</Name>
             <Description>Configure VPN settings</Description>
