@@ -16,7 +16,7 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<eventReceiver name="virtualfirealarm_receiver" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
+<eventReceiver name="virtualfirealarm_receiver-${tenant-domain}" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
     <from eventAdapterType="oauth-mqtt">
         <property name="topic">${tenant-domain}/virtual_firealarm/+/temperature</property>
 		<property name="clientId">virtualfirealarm_receiver-${tenant-domain}</property>

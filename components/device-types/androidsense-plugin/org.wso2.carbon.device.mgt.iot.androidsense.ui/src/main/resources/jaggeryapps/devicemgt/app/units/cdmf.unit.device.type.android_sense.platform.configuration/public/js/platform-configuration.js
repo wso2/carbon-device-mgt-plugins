@@ -96,7 +96,7 @@ var addConfiguration = function () {
     );
 };
 
-function artifactUpload() {
+var artifactUpload = function () {
 	var contentType = "application/json";
 	var backendEndBasePath = "/api/device-mgt/v1.0";
 	var urix = backendEndBasePath + "/admin/devicetype/deploy/android_sense";
@@ -121,4 +121,4 @@ function artifactUpload() {
 		$(modalPopupContent).html(content.html());
 		showPopup();
 	}, contentType);
-}
+};
