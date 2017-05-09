@@ -116,7 +116,7 @@ public class MQTTBrokerConnectionConfiguration {
             keepAlive = MQTTEventAdapterConstants.ADAPTER_CONF_DEFAULT_KEEP_ALIVE;
         }
         String qosVal = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_QOS);
-        if (qosVal == null || qosVal.isEmpty()) {
+        if (qosVal != null && !qosVal.isEmpty()) {
             this.qos = Integer.parseInt(qosVal);
         } else {
             qosVal = eventAdapterConfiguration.getStaticProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_QOS);
