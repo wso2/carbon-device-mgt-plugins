@@ -208,17 +208,6 @@
 									org.wso2.carbon.identity.carbon.auth.jwt:org.wso2.carbon.identity.authenticator.signedjwt:${identity.carbon.auth.jwt.version}
 								</bundleDef>
                             </bundles>
-                            <importFeatures>
-                                <importFeatureDef>
-                                    org.wso2.carbon.event.output.adapter.server:${carbon.analytics.common.version}
-                                </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.event.input.adapter.server:${carbon.analytics.common.version}
-                                </importFeatureDef>
-                                <importFeatureDef>
-                                    org.wso2.carbon.identity.jwt.client.extension:${carbon.devicemgt.version}
-                                </importFeatureDef>
-                            </importFeatures>
                         </configuration>
                     </execution>
                 </executions>

@@ -1215,6 +1215,7 @@
 
         <commons-json.version>3.0.0.wso2v1</commons-json.version>
         <commons-json.version.range>(3.0.0, 4.0.0]</commons-json.version.range>
+		<orbit.version.json.range>[2.0.0,4.0.0)</orbit.version.json.range>
         <json.path.version>0.9.1</json.path.version>
         <json-simple.version>1.1.wso2v1</json-simple.version>
         <commons-collections.version>3.2.2</commons-collections.version>
