@@ -123,6 +123,10 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
         template.header("Authorization", headerValue);
     }
 
+    public void resetApiApplicationKey() {
+        apiApplicationKey = null;
+    }
+
     private static Client getSSLClient() {
         return new Client.Default(getTrustedSSLSocketFactory(), new HostnameVerifier() {
             @Override

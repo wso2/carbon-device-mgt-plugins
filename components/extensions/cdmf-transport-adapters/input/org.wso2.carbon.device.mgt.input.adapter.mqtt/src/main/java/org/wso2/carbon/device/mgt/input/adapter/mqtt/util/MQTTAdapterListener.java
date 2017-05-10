@@ -204,7 +204,12 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
             log.warn("Broker is unreachable, Waiting.....");
             return false;
         }
-        mqttClient.subscribe(topic);
+        try {
+            mqttClient.subscribe(topic);
+        } catch (MqttException e) {
+            log.error("Failed to subscribe to topic: " + topic + ", Retrying.....");
+            return false;
+        }
         return true;
 
     }

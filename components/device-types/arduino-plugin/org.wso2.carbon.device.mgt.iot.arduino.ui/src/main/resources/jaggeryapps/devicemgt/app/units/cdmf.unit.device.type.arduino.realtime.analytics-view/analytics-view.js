@@ -31,12 +31,23 @@ function onRequest(context) {
     if (encodedClientKeys) {
         var tokenUtil = require("/app/modules/oauth/token-handler-utils.js")["utils"];
         var resp = tokenUtil.decode(encodedClientKeys).split(":");
-        var tokenPair = jwtClient.getAccessToken(resp[0], resp[1], context.user.username, "default", {});
-        if (tokenPair) {
-            token = tokenPair.accessToken;
-        }
-        websocketEndpoint = websocketEndpoint + "/secured-websocket/org.wso2.iot.devices.temperature/1.0.0?"
-            + "deviceId=" + device.deviceIdentifier + "&deviceType=" + device.type + "&websocketToken=" + token;
+
+		if (user.domain == "carbon.super") {
+			var tokenPair = jwtClient.getAccessToken(resp[0], resp[1], context.user.username , "default", {});
+			if (tokenPair) {
+				token = tokenPair.accessToken;
+			}
+			websocketEndpoint = websocketEndpoint + "/secured-websocket/org.wso2.iot.devices.temperature/1.0.0?"
+				+ "deviceId=" + device.deviceIdentifier + "&deviceType=" + device.type + "&websocketToken=" + token;
+		} else {
+			var tokenPair = jwtClient.getAccessToken(resp[0], resp[1], context.user.username + "@" + user.domain
+				, "default", {});
+			if (tokenPair) {
+				token = tokenPair.accessToken;
+			}
+			websocketEndpoint = websocketEndpoint + "/secured-websocket/t/" + user.domain + "/org.wso2.iot.devices.temperature/1.0.0?"
+				+ "deviceId=" + device.deviceIdentifier + "&deviceType=" + device.type + "&websocketToken=" + token;
+		}
     }
     return {"device": device, "websocketEndpoint": websocketEndpoint};
 }
