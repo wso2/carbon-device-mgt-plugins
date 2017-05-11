@@ -186,8 +186,8 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                 notification.setOperationId(operation.getId());
                 notification.setStatus(org.wso2.carbon.device.mgt.common.notification.mgt.Notification.
                         Status.NEW.toString());
-                notification.setDescription(operation.getCode() + " operation did fail to execute on device " +
-                        deviceName + " with identifier " + deviceId);
+                notification.setDescription(operation.getCode() + " operation failed to execute on device " +
+                        deviceName + " (ID: " + deviceId + ")");
                 AndroidAPIUtils.getNotificationManagementService().addNotification(id, notification);
             }
             if (log.isDebugEnabled()) {
