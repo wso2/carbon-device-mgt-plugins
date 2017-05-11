@@ -20,14 +20,22 @@ package org.wso2.carbon.mdm.services.android.services.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.device.mgt.common.*;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
+import org.wso2.carbon.device.mgt.common.DeviceManagementException;
+import org.wso2.carbon.device.mgt.common.InvalidDeviceException;
 import org.wso2.carbon.device.mgt.common.app.mgt.Application;
 import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManagementException;
+import org.wso2.carbon.device.mgt.common.device.details.DeviceLocation;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
+import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
+import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceDetailsMgtException;
+import org.wso2.carbon.device.mgt.core.device.details.mgt.DeviceInformationManager;
 import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
-import org.wso2.carbon.device.mgt.core.util.DeviceManagerUtil;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidApplication;
 import org.wso2.carbon.mdm.services.android.bean.wrapper.AndroidDevice;
@@ -38,7 +46,6 @@ import org.wso2.carbon.mdm.services.android.util.AndroidConstants;
 import org.wso2.carbon.mdm.services.android.util.AndroidDeviceUtils;
 import org.wso2.carbon.mdm.services.android.util.Message;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
-import org.wso2.carbon.device.mgt.common.policy.mgt.monitor.PolicyComplianceException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
 import javax.validation.Valid;
@@ -219,8 +226,30 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
 
             boolean status = AndroidAPIUtils.getDeviceManagementService().enrollDevice(device);
             if (status) {
+                DeviceIdentifier deviceIdentifier = new DeviceIdentifier(androidDevice.getDeviceIdentifier(),
+                                                                         device.getType());
+
+                //Immediately update location information from initial payload
+                DeviceLocation deviceLocation = extractLocation(deviceIdentifier, androidDevice.getProperties());
+                if (deviceLocation != null) {
+                    try {
+                        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                        DeviceInformationManager informationManager =
+                                (DeviceInformationManager) ctx.getOSGiService(DeviceInformationManager.class, null);
+
+                        informationManager.addDeviceLocation(deviceLocation);
+                    } catch (DeviceDetailsMgtException e) {
+                        String msg = "Error occurred while updating the device location upon android " +
+                                "', which carries the id '" + androidDevice.getDeviceIdentifier() + "'";
+                        log.error(msg, e);
+                        throw new UnexpectedServerErrorException(
+                                new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(msg).build());
+                    }
+                }
+
+                //Adding Tasks to get device information
                 List<DeviceIdentifier> deviceIdentifiers = new ArrayList<>();
-                deviceIdentifiers.add(new DeviceIdentifier(androidDevice.getDeviceIdentifier(), device.getType()));
+                deviceIdentifiers.add(deviceIdentifier);
 
                  List<String> taskOperaions = new ArrayList<>();
                  taskOperaions.add(AndroidConstants.OperationCodes.APPLICATION_LIST);
@@ -416,4 +445,41 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
         }
     }
 
+    /**
+     * Extracts the device location
+     *
+     * @param deviceIdentifier
+     * @param properties
+     * @return returns null when location not found
+     */
+    private DeviceLocation extractLocation(DeviceIdentifier deviceIdentifier, List<Device.Property> properties)
+            throws DeviceManagementException {
+
+        DeviceLocation location = null;
+        String latitude = "", longitude = "";
+
+        if (properties == null) return null;
+
+        for (Device.Property property : properties) {
+            String propertyName = property.getName();
+            if (propertyName == null) continue;
+            if (propertyName.equals("LATITUDE")) {
+                latitude = property.getValue();
+                if (!longitude.isEmpty()) break;
+            } else if (propertyName.equals("LONGITUDE")) {
+                longitude = property.getValue();
+                if (!latitude.isEmpty()) break;
+            }
+        }
+
+        if (!latitude.isEmpty() && !longitude.isEmpty()) {
+            location = new DeviceLocation();
+            location.setLatitude(Double.valueOf(latitude));
+            location.setLongitude(Double.valueOf(longitude));
+            location.setDeviceIdentifier(deviceIdentifier);
+            Device savedDevice = AndroidAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
+            location.setDeviceId(savedDevice.getId());
+        }
+        return location;
+    }
 }

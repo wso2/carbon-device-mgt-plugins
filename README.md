@@ -1,6 +1,8 @@
-#carbon-device-mgt-plugins
+# carbon-device-mgt-plugins
 
-<a href='https://wso2.org/jenkins/job/platform-builds/job/carbon-device-mgt-plugins/'><img src='https://wso2.org/jenkins/job/platform-builds/job/carbon-device-mgt-plugins/badge/icon'></a>
+<a href='https://opensource.org/licenses/Apache-2.0'><img src='https://img.shields.io/badge/License-Apache%202.0-blue.svg'></a><br/>
+<a href='https://wso2.org/jenkins/job/platform-builds/job/carbon-device-mgt-plugins/'><img src='https://wso2.org/jenkins/job/platform-builds/job/carbon-device-mgt-plugins/badge/icon'></a> - Java7<br/>
+<a href='https://wso2.org/jenkins/job/platform-builds/job/carbon-device-mgt-plugins__java8/'><img src='https://wso2.org/jenkins/job/platform-builds/job/carbon-device-mgt-plugins__java8/badge/icon'></a> - Java8
 
 WSO2 MOBILE DEVICE MANAGER
 

@@ -51,9 +51,13 @@
     <ProvisioningConfig>
         <SharedWithAllTenants>true</SharedWithAllTenants>
     </ProvisioningConfig>
-
+    <!--
+    isScheduled element used to enable scheduler task to send push notification.
+    Task will send push notification as batches. So this will reduce sudden request burst when many devices try to
+    access server after receiving push notification.
+    -->
     <!--Configuration for enable firebase push notifications-->
-    <!--<PushNotificationProvider type="FCM">-->
+    <!--<PushNotificationProvider type="FCM" isScheduled="false">-->
     <!--</PushNotificationProvider>-->
 
     <DataSource>

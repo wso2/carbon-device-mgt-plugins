@@ -1,8 +1,9 @@
 instructions.configure = \
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/);\
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/devicetypes/);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/devicetypes/android/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/carbonapps/,target:${installFolder}/../../resources/devicetypes/android/,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/webapps/api#device-mgt#android#v1.0.war,target:${installFolder}/../../deployment/server/webapps/api#device-mgt#android#v1.0.war,overwrite:true);\
-org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/carbonapps/,target:${installFolder}/../../resources/devicetypes/,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/jaggeryapps/devicemgt,target:${installFolder}/../../deployment/server/jaggeryapps/devicemgt,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/jaggeryapps/android-web-agent,target:${installFolder}/../../deployment/server/jaggeryapps/android-web-agent,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/datasources/,target:${installFolder}/../../conf/datasources/,overwrite:true);\
@@ -13,6 +14,9 @@ org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../featur
 org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/devicetypes/);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/devicetypes/,target:${installFolder}/../../deployment/server/devicetypes/,overwrite:true);\
 org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/email/templates,target:${installFolder}/../../../repository/resources/email-templates,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/apis/admin--Android-Mutual-SSL-Configuration-Management.xml,target:${installFolder}/../../deployment/server/synapse-configs/default/api/admin--Android-Mutual-SSL-Configuration-Management.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/apis/admin--Android-Mutual-SSL-Device-Management.xml,target:${installFolder}/../../deployment/server/synapse-configs/default/api/admin--Android-Mutual-SSL-Device-Management.xml,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.mobile.android_${feature.version}/apis/admin--Android-Mutual-SSL-Event-Receiver.xml,target:${installFolder}/../../deployment/server/synapse-configs/default/api/admin--Android-Mutual-SSL-Event-Receiver.xml,overwrite:true);\
 
 instructions.unconfigure = \
 org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/mdm-android-agent.war);\

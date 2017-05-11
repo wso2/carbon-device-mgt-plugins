@@ -17,12 +17,14 @@
 */
 package org.wso2.carbon.device.mgt.input.adapter.mqtt.util;
 
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
@@ -33,16 +35,19 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.ServerStatus;
+import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentInfo;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentTransformer;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentValidator;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.internal.InputAdapterServiceDataHolder;
+import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterListener;
 import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterRuntimeException;
 import org.wso2.carbon.identity.jwt.client.extension.dto.AccessTokenInfo;
 import org.wso2.carbon.identity.jwt.client.extension.exception.JWTClientException;
 import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
 import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -63,26 +68,29 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
 
     private MQTTBrokerConnectionConfiguration mqttBrokerConnectionConfiguration;
     private String topic;
-    private int tenantId;
+    private String tenantDomain;
     private boolean connectionSucceeded = false;
-    ContentValidator contentValidator;
-    ContentTransformer contentTransformer;
+    private ContentValidator contentValidator;
+    private ContentTransformer contentTransformer;
+    private InputEventAdapterConfiguration inputEventAdapterConfiguration;
 
     private InputEventAdapterListener eventAdapterListener = null;
 
     public MQTTAdapterListener(MQTTBrokerConnectionConfiguration mqttBrokerConnectionConfiguration,
-                               String topic, String mqttClientId,
-                               InputEventAdapterListener inputEventAdapterListener, int tenantId) {
-
-        if(mqttClientId == null || mqttClientId.trim().isEmpty()){
+                               String topic, InputEventAdapterConfiguration inputEventAdapterConfiguration,
+                               InputEventAdapterListener inputEventAdapterListener) {
+        String mqttClientId = inputEventAdapterConfiguration.getProperties()
+                .get(MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID);
+        if (mqttClientId == null || mqttClientId.trim().isEmpty()) {
             mqttClientId = MqttClient.generateClientId();
         }
+        this.inputEventAdapterConfiguration = inputEventAdapterConfiguration;
         this.mqttBrokerConnectionConfiguration = mqttBrokerConnectionConfiguration;
         this.cleanSession = mqttBrokerConnectionConfiguration.isCleanSession();
         int keepAlive = mqttBrokerConnectionConfiguration.getKeepAlive();
         this.topic = PropertyUtils.replaceTenantDomainProperty(topic);
         this.eventAdapterListener = inputEventAdapterListener;
-        this.tenantId = tenantId;
+        this.tenantDomain = this.topic.split("/")[0];
 
         //SORTING messages until the server fetches them
         String temp_directory = System.getProperty("java.io.tmpdir");
@@ -104,7 +112,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
             if (contentValidatorType == null || contentValidatorType.equals(MQTTEventAdapterConstants.DEFAULT)) {
                 contentValidator = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
                         .getDefaultContentValidator();
-            } else  {
+            } else {
                 contentValidator = InputAdapterServiceDataHolder.getInputAdapterExtensionService()
                         .getContentValidator(contentValidatorType);
             }
@@ -124,7 +132,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
         }
     }
 
-    public void startListener() throws MqttException {
+    public boolean startListener() throws MqttException {
         if (this.mqttBrokerConnectionConfiguration.getUsername() != null &&
                 this.mqttBrokerConnectionConfiguration.getDcrUrl() != null) {
             String username = this.mqttBrokerConnectionConfiguration.getUsername();
@@ -145,7 +153,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                     if (!mqttBrokerConnectionConfiguration.isGlobalCredentailSet()) {
                         registrationProfile.setClientName(MQTTEventAdapterConstants.APPLICATION_NAME_PREFIX
                                                                   + mqttBrokerConnectionConfiguration.getAdapterName() +
-                                                                  "_" + tenantId);
+                                                                  "_" + tenantDomain);
                         registrationProfile.setIsSaasApp(false);
                     } else {
                         registrationProfile.setClientName(MQTTEventAdapterConstants.APPLICATION_NAME_PREFIX
@@ -175,17 +183,35 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                             log.error(msg, e);
                         }
                     }
+                } catch (HttpHostConnectException e) {
+                    log.error("Keymanager is unreachable, Waiting....");
+                    return false;
                 } catch (MalformedURLException e) {
                     log.error("Invalid dcrUrl : " + dcrUrlString);
-                } catch (JWTClientException | UserStoreException   e) {
+                    return false;
+                } catch (JWTClientException | UserStoreException e) {
                     log.error("Failed to create an oauth token with jwt grant type.", e);
-                } catch (NoSuchAlgorithmException |KeyManagementException |KeyStoreException | IOException e) {
+                    return false;
+                } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException | IOException e) {
                     log.error("Failed to create a http connection.", e);
+                    return false;
                 }
             }
         }
-        mqttClient.connect(connectionOptions);
-        mqttClient.subscribe(topic);
+        try {
+            mqttClient.connect(connectionOptions);
+        } catch (MqttException e) {
+            log.warn("Broker is unreachable, Waiting.....");
+            return false;
+        }
+        try {
+            mqttClient.subscribe(topic);
+        } catch (MqttException e) {
+            log.error("Failed to subscribe to topic: " + topic + ", Retrying.....");
+            return false;
+        }
+        return true;
+
     }
 
     public void stopListener(String adapterName) {
@@ -197,7 +223,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                 mqttClient.disconnect(3000);
             } catch (MqttException e) {
                 log.error("Can not unsubscribe from the destination " + topic +
-                                  " with the event adapter " + adapterName, e);
+                        " with the event adapter " + adapterName, e);
             }
         }
         connectionSucceeded = true;
@@ -218,7 +244,14 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                 log.debug(msgText);
             }
             PrivilegedCarbonContext.startTenantFlow();
-            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(tenantId);
+            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
+            if (!tenantDomain.equalsIgnoreCase(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+                TenantAxisUtils.getTenantConfigurationContext(tenantDomain, InputAdapterServiceDataHolder.getMainServerConfigContext());
+            }
+
+            InputEventAdapterListener inputEventAdapterListener = InputAdapterServiceDataHolder
+                    .getInputEventAdapterService().getInputAdapterRuntime(PrivilegedCarbonContext.getThreadLocalCarbonContext()
+                            .getTenantId(), inputEventAdapterConfiguration.getName());
 
             if (log.isDebugEnabled()) {
                 log.debug("Event received in MQTT Event Adapter - " + msgText);
@@ -231,10 +264,10 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                 msgText = (String) contentTransformer.transform(msgText, dynamicProperties);
                 contentInfo = contentValidator.validate(msgText, dynamicProperties);
                 if (contentInfo != null && contentInfo.isValidContent()) {
-                    eventAdapterListener.onEvent(contentInfo.getMessage());
+                    inputEventAdapterListener.onEvent(contentInfo.getMessage());
                 }
             } else {
-                eventAdapterListener.onEvent(msgText);
+                inputEventAdapterListener.onEvent(msgText);
             }
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
@@ -252,10 +285,14 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
         while (!connectionSucceeded) {
             try {
                 connectionDuration = connectionDuration * MQTTEventAdapterConstants.RECONNECTION_PROGRESS_FACTOR;
+                if (connectionDuration > MQTTEventAdapterConstants.MAXIMUM_RECONNECTION_DURATION) {
+                    connectionDuration = MQTTEventAdapterConstants.MAXIMUM_RECONNECTION_DURATION;
+                }
                 Thread.sleep(connectionDuration);
-                startListener();
-                connectionSucceeded = true;
-                log.info("MQTT Connection successful");
+                if (startListener()) {
+                    connectionSucceeded = true;
+                    log.info("MQTT Connection successful");
+                }
             } catch (InterruptedException e) {
                 log.error("Interruption occurred while waiting for reconnection", e);
             } catch (MqttException e) {
@@ -276,7 +313,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
     private String getToken(String clientId, String clientSecret)
             throws UserStoreException, JWTClientException {
         PrivilegedCarbonContext.startTenantFlow();
-        PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(tenantId, true);
+        PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
         try {
             String scopes = mqttBrokerConnectionConfiguration.getBrokerScopes();
             String username = mqttBrokerConnectionConfiguration.getUsername();
