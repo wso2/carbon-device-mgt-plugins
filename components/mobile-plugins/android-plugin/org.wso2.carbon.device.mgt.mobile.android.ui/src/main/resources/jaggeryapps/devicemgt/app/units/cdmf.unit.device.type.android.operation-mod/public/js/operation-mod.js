@@ -75,7 +75,9 @@ var androidOperationModule = function () {
         "SET_STATUS_BAR_DISABLED": "SET_STATUS_BAR_DISABLED",
         "APPLICATION_OPERATION_CODE": "APP-RESTRICTION",
         "SYSTEM_UPDATE_POLICY_CODE": "SYSTEM_UPDATE_POLICY",
-        "KIOSK_APPS_CODE": "KIOSK_APPS"
+        "KIOSK_APPS_CODE": "KIOSK_APPS",
+        "RUNTIME_PERMISSION_POLICY_OPERATION": "runtime-permission-policy",
+        "RUNTIME_PERMISSION_POLICY_OPERATION_CODE": "RUNTIME_PERMISSION_POLICY"
     };
 
     /**
@@ -156,6 +158,10 @@ var androidOperationModule = function () {
                         "cosuSystemUpdatePolicyWindowEndTime": operationPayload["endTime"]
                     };
                 }
+                break;
+            case androidOperationConstants["RUNTIME_PERMISSION_POLICY_OPERATION_CODE"]:
+                payload ={"runtimePermissionType": operationPayload["type"]
+                };
                 break;
             case androidOperationConstants["KIOSK_APPS_CODE"]:
                 payload = {
@@ -325,6 +331,14 @@ var androidOperationModule = function () {
                     }
                 };
                 break;
+            case androidOperationConstants["RUNTIME_PERMISSION_POLICY_OPERATION_CODE"]:
+                                operationType = operationTypeConstants["PROFILE"];
+                                payload = {
+                                    "operation": {
+                                       "type": operationData["runtimePermissionPolicyPermissionType"]
+                                    }
+                                };
+                                break;
             case androidOperationConstants["SYSTEM_UPDATE_POLICY_CODE"]:
                 operationType = operationTypeConstants["PROFILE"];
                 if (operationData["cosuSystemUpdatePolicyType"] != "window") {

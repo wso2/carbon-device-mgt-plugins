@@ -32,7 +32,10 @@ var androidOperationConstants = {
     "APPLICATION_OPERATION": "app-restriction",
     "APPLICATION_OPERATION_CODE": "APP-RESTRICTION",
     "KIOSK_APPS_CODE": "KIOSK_APPS",
-    "KIOSK_APPS": "cosu-whitelisted-applications"
+    "KIOSK_APPS": "cosu-whitelisted-applications",
+    "RUNTIME_PERMISSION_POLICY_OPERATION": "runtime-permission-policy",
+    "RUNTIME_PERMISSION_POLICY_OPERATION_CODE": "RUNTIME_PERMISSION_POLICY"
+
 };
 
 /**

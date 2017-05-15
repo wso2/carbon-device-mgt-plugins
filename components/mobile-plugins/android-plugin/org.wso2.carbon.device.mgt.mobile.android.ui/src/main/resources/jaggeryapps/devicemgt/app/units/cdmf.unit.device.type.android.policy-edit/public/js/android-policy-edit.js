@@ -233,6 +233,19 @@ var validatePolicyProfile = function () {
             // updating validationStatusArray with validationStatus
             validationStatusArray.push(validationStatus);
         }
+        // Validating RUNTIME_PERMISSION
+                if ($.inArray(androidOperationConstants["RUNTIME_PERMISSION_POLICY_OPERATION_CODE"], configuredOperations) != -1) {
+                    // if ENCRYPT_STORAGE is configured
+                    operation = androidOperationConstants["RUNTIME_PERMISSION_POLICY_OPERATION"];
+                    // updating validationStatus
+                    validationStatus = {
+                        "error": false,
+                        "okFeature": operation
+                    };
+                    // updating validationStatusArray with validationStatus
+                    validationStatusArray.push(validationStatus);
+                }
+
         // Validating WIFI
         if ($.inArray(androidOperationConstants["WIFI_OPERATION_CODE"], configuredOperations) != -1) {
             // if WIFI is configured
