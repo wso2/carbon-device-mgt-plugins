@@ -77,12 +77,14 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
     private static final String CACHE_MANAGER_NAME = "mqttAuthorizationCacheManager";
     private static final String CACHE_NAME = "mqttAuthorizationCache";
     private static DeviceAccessAuthorizationAdminService deviceAccessAuthorizationAdminService;
-
+    private static OAuthRequestInterceptor oAuthRequestInterceptor;
+    private static final String GATEWAY_ERROR_CODE = "<am:code>404</am:code>";
 
     public DeviceAccessBasedMQTTAuthorizer() {
+        oAuthRequestInterceptor = new OAuthRequestInterceptor();
         this.MQTTAuthorizationConfiguration = AuthorizationConfigurationManager.getInstance();
         deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger())
-                .logLevel(Logger.Level.FULL).requestInterceptor(new OAuthRequestInterceptor())
+                .logLevel(Logger.Level.FULL).requestInterceptor(oAuthRequestInterceptor)
                 .contract(new JAXRSContract()).encoder(new GsonEncoder()).decoder(new GsonDecoder())
                 .target(DeviceAccessAuthorizationAdminService.class,
                         MQTTAuthorizationConfiguration.getDeviceMgtServerUrl() + CDMF_SERVER_BASE_CONTEXT);
@@ -121,7 +123,12 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     }
                     return false;
                 } catch (FeignException e) {
-                    log.error(e.getMessage(), e);
+                    oAuthRequestInterceptor.resetApiApplicationKey();
+                    if (e.getMessage().contains(GATEWAY_ERROR_CODE)) {
+                        log.error("Failed to connect to the device authorization service.");
+                    } else {
+                        log.error(e.getMessage(), e);
+                    }
                     return false;
                 }
             }
@@ -164,6 +171,12 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     }
                 }
             } catch (FeignException e) {
+                oAuthRequestInterceptor.resetApiApplicationKey();
+                if (e.getMessage().contains(GATEWAY_ERROR_CODE)) {
+                    log.error("Failed to connect to the device authorization service.");
+                } else {
+                    log.error(e.getMessage(), e);
+                }
                 log.error(e.getMessage(), e);
             }
         } finally {

@@ -23,7 +23,7 @@
     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
     <artifactId>carbon-device-mgt-plugins-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.25-SNAPSHOT</version>
+    <version>3.0.35-SNAPSHOT</version>
     <name>WSO2 Carbon - Device Management Plugins Parent</name>
     <url>http://wso2.org</url>
     <description>WSO2 Carbon - Device Management Plugins Parent</description>
@@ -1128,14 +1128,14 @@
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Device Management -->
-        <carbon.devicemgt.version>2.0.42</carbon.devicemgt.version>
+        <carbon.devicemgt.version>2.0.58</carbon.devicemgt.version>
         <carbon.devicemgt.version.range>[2.0.0, 3.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
         <carbon.appmgt.version>1.2.15</carbon.appmgt.version>
 
         <!-- Carbon Device Management Plugins -->
-        <carbon.devicemgt.plugins.version>3.0.25-SNAPSHOT</carbon.devicemgt.plugins.version>
+        <carbon.devicemgt.plugins.version>3.0.35-SNAPSHOT</carbon.devicemgt.plugins.version>
 
         <!-- Carbon Commons -->
         <carbon.commons.version>4.4.8</carbon.commons.version>
@@ -1173,7 +1173,7 @@
         <swagger.version>1.5.8</swagger.version>
 
         <!-- Carbon Analytics -->
-        <carbon.analytics.common.version>5.1.3</carbon.analytics.common.version>
+        <carbon.analytics.common.version>5.1.17</carbon.analytics.common.version>
         <carbon.analytics.common.version.range>[5.1.3,6.0.0)</carbon.analytics.common.version.range>
         <carbon.analytics.version>1.3.3</carbon.analytics.version>
         <carbon.analytics.version.range>[1.3.0,2.0.0)</carbon.analytics.version.range>
@@ -1215,6 +1215,7 @@
 
         <commons-json.version>3.0.0.wso2v1</commons-json.version>
         <commons-json.version.range>(3.0.0, 4.0.0]</commons-json.version.range>
+		<orbit.version.json.range>[2.0.0,4.0.0)</orbit.version.json.range>
         <json.path.version>0.9.1</json.path.version>
         <json-simple.version>1.1.wso2v1</json-simple.version>
         <commons-collections.version>3.2.2</commons-collections.version>
@@ -1337,7 +1338,7 @@
                         </instructions>-->
                     </configuration>
                 </plugin>
-                <plugin>
+                <!--plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>2.1.2</version>
@@ -1350,7 +1351,7 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin>
+                </plugin-->
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>2.2-beta-2</version>

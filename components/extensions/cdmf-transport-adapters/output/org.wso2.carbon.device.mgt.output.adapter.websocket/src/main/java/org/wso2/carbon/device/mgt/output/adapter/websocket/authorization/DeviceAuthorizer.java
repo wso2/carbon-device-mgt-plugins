@@ -63,23 +63,14 @@ public class DeviceAuthorizer implements Authorizer {
     private static DeviceAccessAuthorizationAdminService deviceAccessAuthorizationAdminService;
     private static final String CDMF_SERVER_BASE_CONTEXT = "/api/device-mgt/v1.0";
     private static final String DEVICE_MGT_SERVER_URL = "deviceMgtServerUrl";
-    private static final String STAT_PERMISSION = "statsPermission";
     private static final String DEVICE_ID = "deviceId";
     private static final String DEVICE_TYPE = "deviceType";
     private static Log log = LogFactory.getLog(DeviceAuthorizer.class);
-    private static List<String> statPermissions;
-
     public DeviceAuthorizer() {
     }
 
     @Override
     public void init(Map<String, String> globalProperties) {
-        statPermissions = getPermissions(globalProperties);
-        if (statPermissions != null && !statPermissions.isEmpty()) {
-            for (String permission : statPermissions) {
-                PermissionUtil.putPermission(permission);
-            }
-        }
         try {
             deviceAccessAuthorizationAdminService = Feign.builder().client(getSSLClient()).logger(new Slf4jLogger())
                     .logLevel(Logger.Level.FULL).requestInterceptor(new OAuthRequestInterceptor(globalProperties))
@@ -102,9 +93,6 @@ public class DeviceAuthorizer implements Authorizer {
 
             AuthorizationRequest authorizationRequest = new AuthorizationRequest();
             authorizationRequest.setTenantDomain(authenticationInfo.getTenantDomain());
-            if (statPermissions != null && !statPermissions.isEmpty()) {
-                authorizationRequest.setPermissions(statPermissions);
-            }
             authorizationRequest.setUsername(authenticationInfo.getUsername());
             DeviceIdentifier deviceIdentifier = new DeviceIdentifier();
             deviceIdentifier.setId(deviceId);
@@ -135,14 +123,6 @@ public class DeviceAuthorizer implements Authorizer {
             log.error("deviceMgtServerUrl can't be empty ");
         }
         return deviceMgtServerUrl;
-    }
-
-    private List<String> getPermissions(Map<String, String> properties) {
-        String stats =  properties.get(STAT_PERMISSION);
-        if (stats != null && !stats.isEmpty()) {
-            return Arrays.asList(stats.replace("\n", "").split(" "));
-        }
-        return null;
     }
 
     private static Client getSSLClient() {

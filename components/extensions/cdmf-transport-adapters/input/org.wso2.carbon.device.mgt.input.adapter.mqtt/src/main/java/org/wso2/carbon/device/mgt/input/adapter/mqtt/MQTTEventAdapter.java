@@ -19,13 +19,14 @@ package org.wso2.carbon.device.mgt.input.adapter.mqtt;
 
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTAdapterListener;
-import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTEventAdapterConstants;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTBrokerConnectionConfiguration;
+import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTEventAdapterConstants;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapter;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterConfiguration;
 import org.wso2.carbon.event.input.adapter.core.InputEventAdapterListener;
 import org.wso2.carbon.event.input.adapter.core.exception.InputEventAdapterException;
 import org.wso2.carbon.event.input.adapter.core.exception.TestConnectionNotSupportedException;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.Map;
 import java.util.UUID;
@@ -54,10 +55,11 @@ public class MQTTEventAdapter implements InputEventAdapter {
         try {
             mqttBrokerConnectionConfiguration = new MQTTBrokerConnectionConfiguration(eventAdapterConfiguration
                     ,globalProperties);
+            String topic = eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC);
             mqttAdapterListener = new MQTTAdapterListener(mqttBrokerConnectionConfiguration
-                    ,eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_TOPIC)
-                    ,eventAdapterConfiguration.getProperties().get(MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID)
-                    ,eventAdapterListener, PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantId());
+                    ,topic
+                    ,eventAdapterConfiguration
+                    ,eventAdapterListener);
         } catch (Throwable t) {
             throw new InputEventAdapterException(t.getMessage(), t);
         }
@@ -77,6 +79,10 @@ public class MQTTEventAdapter implements InputEventAdapter {
 
     @Override
     public void connect() {
+        if (!PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain()
+                .equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return;
+        }
         if (!mqttAdapterListener.isConnectionInitialized()) {
             mqttAdapterListener.createConnection();
         }
@@ -87,6 +93,10 @@ public class MQTTEventAdapter implements InputEventAdapter {
     public void disconnect() {
         //when mqtt and this feature  both together then this method becomes a blocking method, Therefore
         // have used a thread to skip it.
+        if (!PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain()
+                .equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return;
+        }
         try {
             Thread thread = new Thread(new Runnable() {
                 public void run() {

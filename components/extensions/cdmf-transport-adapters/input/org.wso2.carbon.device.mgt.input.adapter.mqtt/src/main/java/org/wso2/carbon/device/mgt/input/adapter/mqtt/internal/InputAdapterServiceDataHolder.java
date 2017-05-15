@@ -14,9 +14,11 @@
  */
 package org.wso2.carbon.device.mgt.input.adapter.mqtt.internal;
 
+import org.apache.axis2.context.ConfigurationContext;
 import org.osgi.service.http.HttpService;
 import org.wso2.carbon.device.mgt.input.adapter.extension.InputAdapterExtensionService;
 import org.wso2.carbon.identity.jwt.client.extension.service.JWTClientManagerService;
+import org.wso2.carbon.event.input.adapter.core.InputEventAdapterService;
 
 /**
  * common place to hold some OSGI service references.
@@ -26,6 +28,8 @@ public final class InputAdapterServiceDataHolder {
 	private static HttpService httpService;
     private static InputAdapterExtensionService inputAdapterExtensionService;
     private static JWTClientManagerService jwtClientManagerService;
+    private static InputEventAdapterService inputEventAdapterService;
+    private static ConfigurationContext mainServerConfigContext;
 
 	private InputAdapterServiceDataHolder() {
 	}
@@ -54,5 +58,21 @@ public final class InputAdapterServiceDataHolder {
     public static void setJwtClientManagerService(
             JWTClientManagerService jwtClientManagerService) {
         InputAdapterServiceDataHolder.jwtClientManagerService = jwtClientManagerService;
+    }
+
+    public static InputEventAdapterService getInputEventAdapterService() {
+        return inputEventAdapterService;
+    }
+
+    public static void setInputEventAdapterService(InputEventAdapterService inputEventAdapterService) {
+        InputAdapterServiceDataHolder.inputEventAdapterService = inputEventAdapterService;
+    }
+
+    public static ConfigurationContext getMainServerConfigContext() {
+        return mainServerConfigContext;
+    }
+
+    public static void setMainServerConfigContext(ConfigurationContext mainServerConfigContext) {
+        InputAdapterServiceDataHolder.mainServerConfigContext = mainServerConfigContext;
     }
 }

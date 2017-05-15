@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>cdmf-transport-adapters</artifactId>
-        <version>3.0.25-SNAPSHOT</version>
+        <version>3.0.35-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -32,10 +32,10 @@
     <url>http://wso2.org</url>
 
     <dependencies>
-		<dependency>
-			<groupId>commons-codec.wso2</groupId>
-			<artifactId>commons-codec</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>commons-codec.wso2</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon.analytics-common</groupId>
             <artifactId>org.wso2.carbon.event.input.adapter.core</artifactId>
@@ -76,10 +76,10 @@
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
             <artifactId>org.wso2.carbon.device.mgt.input.adapter.extension</artifactId>
         </dependency>
-		<dependency>
-			<groupId>org.wso2.carbon.devicemgt</groupId>
-			<artifactId>org.wso2.carbon.identity.jwt.client.extension</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.devicemgt</groupId>
+            <artifactId>org.wso2.carbon.identity.jwt.client.extension</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -133,18 +133,22 @@
                             org.apache.http.impl.client;version="${httpclient.version.range}",
                             org.json.simple.*,
                             com.jayway.jsonpath.*,
-							org.wso2.carbon.identity.jwt.client.extension.*,
-							javax.net.ssl,
-							org.apache.commons.codec.binary,
-							org.apache.commons.logging,
-							org.apache.http.entity,
-							org.osgi.framework,
-							org.osgi.service.component,
-							org.osgi.service.http,
-							org.wso2.carbon.context,
-							org.wso2.carbon.core,
-							org.wso2.carbon.device.mgt.input.adapter.extension,
-							org.wso2.carbon.user.api
+                            org.wso2.carbon.identity.jwt.client.extension.*,
+                            javax.net.ssl,
+                            org.apache.commons.codec.binary,
+                            org.apache.commons.logging,
+                            org.apache.http.entity,
+                            org.osgi.framework,
+                            org.osgi.service.component,
+                            org.osgi.service.http,
+                            org.wso2.carbon.context,
+                            org.wso2.carbon.core,
+                            org.wso2.carbon.device.mgt.input.adapter.extension,
+                            org.wso2.carbon.user.api,
+                            org.wso2.carbon.utils.multitenancy,
+                            org.apache.axis2.context,
+                            org.wso2.carbon.core.multitenancy.utils,
+                            org.wso2.carbon.utils
                         </Import-Package>
                     </instructions>
                 </configuration>

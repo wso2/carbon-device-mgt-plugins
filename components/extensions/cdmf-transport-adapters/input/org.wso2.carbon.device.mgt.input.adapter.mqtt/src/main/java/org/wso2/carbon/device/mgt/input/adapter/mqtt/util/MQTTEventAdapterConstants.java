@@ -50,6 +50,7 @@ public class MQTTEventAdapterConstants {
 
     public static final int INITIAL_RECONNECTION_DURATION = 4000;
     public static final int RECONNECTION_PROGRESS_FACTOR = 2;
+    public static final int MAXIMUM_RECONNECTION_DURATION = 60000;
 
     public static final String EMPTY_STRING = "";
     public static final String GRANT_TYPE_PARAM_NAME = "grant_type";

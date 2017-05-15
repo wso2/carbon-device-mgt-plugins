@@ -105,10 +105,18 @@ public class MQTTBrokerConnectionConfiguration {
         this.brokerUrl = PropertyUtils.replaceMqttProperty(url);
         this.dcrUrl = PropertyUtils
                 .replaceMqttProperty(globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL));
-        this.contentValidatorType = eventAdapterConfiguration.getProperties()
-                .get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE);
-        this.cleanSession = Boolean.parseBoolean(eventAdapterConfiguration.getProperties()
-                                                         .get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION));
+        this.contentValidatorType = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE);
+        if (contentValidatorType == null || contentValidatorType.isEmpty()) {
+            this.contentValidatorType = eventAdapterConfiguration.getProperties()
+                    .get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE);
+        }
+        String cleanSession = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION);
+        if (cleanSession == null || cleanSession.isEmpty()) {
+            this.cleanSession = Boolean.parseBoolean(eventAdapterConfiguration.getProperties()
+                                                             .get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION));
+        } else {
+            this.cleanSession = Boolean.parseBoolean(cleanSession);
+        }
         //If global properties are available those will be assigned else constant values will be assigned
         if (globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_KEEP_ALIVE) != null) {
             keepAlive = Integer.parseInt((globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_KEEP_ALIVE)));
