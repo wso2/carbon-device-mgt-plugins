@@ -93,6 +93,10 @@ public class MQTTEventAdapter implements InputEventAdapter {
     public void disconnect() {
         //when mqtt and this feature  both together then this method becomes a blocking method, Therefore
         // have used a thread to skip it.
+        if (!PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain()
+                .equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return;
+        }
         try {
             Thread thread = new Thread(new Runnable() {
                 public void run() {
