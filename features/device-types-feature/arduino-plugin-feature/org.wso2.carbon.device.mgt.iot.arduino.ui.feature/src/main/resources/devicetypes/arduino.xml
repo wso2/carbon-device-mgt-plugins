@@ -31,7 +31,7 @@
     </Features>
 
     <ProvisioningConfig>
-        <SharedWithAllTenants>false</SharedWithAllTenants>
+        <SharedWithAllTenants>true</SharedWithAllTenants>
     </ProvisioningConfig>
 
     <License>
