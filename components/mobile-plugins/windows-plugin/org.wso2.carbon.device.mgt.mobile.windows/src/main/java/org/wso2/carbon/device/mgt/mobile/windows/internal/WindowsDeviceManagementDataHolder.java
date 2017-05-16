@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.internal;
 
+import org.wso2.carbon.device.mgt.mobile.windows.impl.WindowsTokenService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 /**
@@ -26,6 +27,7 @@ import org.wso2.carbon.registry.core.service.RegistryService;
 public class WindowsDeviceManagementDataHolder {
 
 	private RegistryService registryService;
+	private WindowsTokenService tokenService;
 
 	private static WindowsDeviceManagementDataHolder thisInstance = new WindowsDeviceManagementDataHolder();
 
@@ -44,4 +46,19 @@ public class WindowsDeviceManagementDataHolder {
 		this.registryService = registryService;
 	}
 
+	public WindowsTokenService getTokenService() {
+		return tokenService;
+	}
+
+	public void setTokenService(WindowsTokenService tokenService) {
+		this.tokenService = tokenService;
+	}
+
+	public static WindowsDeviceManagementDataHolder getThisInstance() {
+		return thisInstance;
+	}
+
+	public static void setThisInstance(WindowsDeviceManagementDataHolder thisInstance) {
+		WindowsDeviceManagementDataHolder.thisInstance = thisInstance;
+	}
 }

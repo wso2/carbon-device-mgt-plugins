@@ -43,6 +43,7 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.operations.*;
 import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.*;
 import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.DeviceInfo;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.DeviceManagementService;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dto.MobileCacheEntry;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
@@ -80,14 +81,18 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                 DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(syncmlHeader.getSource().
                         getLocURI());
                 msgId = syncmlHeader.getMsgID();
+
                 if ((PluginConstants.SyncML.SYNCML_FIRST_MESSAGE_ID == msgId) &&
                         (PluginConstants.SyncML.SYNCML_FIRST_SESSION_ID == sessionId)) {
                     token = syncmlHeader.getCredential().getData();
-                    CacheEntry cacheToken = (CacheEntry) DeviceUtil.getCacheEntry(token);
+                    MobileCacheEntry cacheToken = DeviceUtil.getTokenEntry(token);
+                    DeviceUtil.persistChallengeToken(token, deviceIdentifier.getId(), user);
+                    PrivilegedCarbonContext carbonCtx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                    carbonCtx.setTenantId(cacheToken.getTenanatID(), true);
 
                     if ((cacheToken.getUsername() != null) && (cacheToken.getUsername().equals(user))) {
 
-                        if (modifyEnrollWithMoreDetail(request)) {
+                        if (modifyEnrollWithMoreDetail(request, cacheToken.getTenantDomain(), cacheToken.getTenanatID())) {
                             pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
                             response = operationReply.generateReply(syncmlDocument, pendingOperations);
                             return Response.status(Response.Status.OK).entity(response).build();
@@ -102,6 +107,9 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                         return Response.status(Response.Status.UNAUTHORIZED).entity(msg).build();
                     }
                 } else {
+                    MobileCacheEntry cacheToken = DeviceUtil.getTokenEntryFromDeviceId(deviceIdentifier.getId());
+                    PrivilegedCarbonContext carbonCtx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+                    carbonCtx.setTenantId(cacheToken.getTenanatID());
                     if ((syncmlDocument.getBody().getAlert() != null)) {
                         if (!syncmlDocument.getBody().getAlert().getData().equals(Constants.DISENROLL_ALERT_DATA)) {
                             pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
@@ -152,7 +160,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
      * @throws WindowsDeviceEnrolmentException
      * @throws WindowsOperationException
      */
-    private boolean modifyEnrollWithMoreDetail(Document request) throws WindowsDeviceEnrolmentException,
+    private boolean modifyEnrollWithMoreDetail(Document request, String tenantDomain, int tenantId) throws WindowsDeviceEnrolmentException,
             WindowsOperationException {
 
         String devMan = null;
@@ -177,6 +185,8 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             user = syncmlDocument.getHeader().getSource().getLocName();
             AuthenticationInfo authenticationInfo = new AuthenticationInfo();
             authenticationInfo.setUsername(user);
+            authenticationInfo.setTenantId(tenantId);
+            authenticationInfo.setTenantDomain(tenantDomain);
             WindowsAPIUtils.startTenantFlow(authenticationInfo);
             DeviceIdentifier deviceIdentifier = convertToDeviceIdentifierObject(syncmlDocument.
                     getHeader().getSource().getLocURI());

@@ -23,6 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.WindowsTokenService;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.WindowsTokenServiceImpl;
 import org.wso2.carbon.ndatasource.core.DataSourceService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
@@ -65,6 +67,8 @@ public class WindowsDeviceManagementServiceComponent {
 
 //            bundleContext.registerService(PolicyMonitoringManager.class,
 //                    new WindowsPolicyMonitoringManager(), null);
+            //Enrollment token service
+            bundleContext.registerService(WindowsTokenService.class, new WindowsTokenServiceImpl(), null);
 
             if (log.isDebugEnabled()) {
                 log.debug("Android Mobile Device Management Service Component has been successfully activated");
@@ -112,6 +116,20 @@ public class WindowsDeviceManagementServiceComponent {
 
     protected void unsetRegistryService(RegistryService registryService) {
         WindowsDeviceManagementDataHolder.getInstance().setRegistryService(null);
+    }
+
+    protected void setEnrollmentTokenService(WindowsTokenService service) {
+        if (log.isDebugEnabled()) {
+            log.debug("Setting windows enrollment token service provider");
+        }
+        WindowsDeviceManagementDataHolder.getInstance().setTokenService(service);
+    }
+
+    protected void unsetEnrollmentTokenService() {
+        if (log.isDebugEnabled()) {
+            log.debug("Removing windows enrollment token service provider");
+        }
+        WindowsDeviceManagementDataHolder.getInstance().setTokenService(null);
     }
 
 }
