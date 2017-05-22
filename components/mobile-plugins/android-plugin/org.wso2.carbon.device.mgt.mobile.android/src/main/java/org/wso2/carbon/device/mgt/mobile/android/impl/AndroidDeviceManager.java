@@ -296,6 +296,11 @@ public class AndroidDeviceManager implements DeviceManager {
     }
 
     @Override
+    public PlatformConfiguration getDefaultConfiguration() throws DeviceManagementException {
+        return null;
+    }
+
+    @Override
     public boolean updateDeviceInfo(DeviceIdentifier deviceIdentifier, Device device)
             throws DeviceManagementException {
         boolean status;
