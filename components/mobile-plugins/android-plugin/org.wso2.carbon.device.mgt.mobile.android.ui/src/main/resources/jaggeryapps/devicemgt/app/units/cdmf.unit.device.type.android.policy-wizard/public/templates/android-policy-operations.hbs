@@ -1255,7 +1255,7 @@
                     <hr/>
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="runtime-permission-policy-window-start-time">
-                            Set runtime permission
+                            Set default runtime permission
                             <span class="helper" title="When an app requests a runtime permission, this enforces whether the user needs to prompted or the permission either automatically granted or denied.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
@@ -1274,6 +1274,90 @@
                                     Already granted or denied permissions are not affected by this.
                                 </a>
                             </ul>
+                        </div>
+
+                        <div class="wr-input-control">
+                            <label class="wr-input-label" for="runtime-permission-applications">
+                                <br><br>Set permissions app-wise.
+                                <span class="helper" title="Add an application and set permission policy for a permission it needs.">
+                                <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                            </span>
+                            </label>
+                            <br/>
+                            <a href="#runtime-permission-applications-grid" class="btn btn-secondary grid-input-add "
+                               data-click-event="add-form">
+                                <span class="icon fw-stack">
+                                    <i class="fw fw-add fw-stack-1x"></i>
+                                    <i class="fw fw-circle-outline fw-stack-2x"></i>
+                                </span>
+                                Add Application
+                            </a>
+                            <div id="runtime-permission-applications"
+                                 class="operationDataKeys grouped-array-input multi-column-key-value-pair-array"
+                                 data-key="runtimePermissionApplications" data-column-count="2">
+                                <table class="table table-responsive table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>No:</th>
+                                        <th>Application</th>
+                                        <th>Package Name</th>
+                                        <th>Permission Name</th>
+                                        <th>Permission Type</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody data-add-form-container="#runtime-permission-applications-grid">
+                                    <tr data-help-text="add-form">
+                                        <td colspan="5">
+                                            No entries added yet .
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <table class="template hidden">
+                                    <tbody data-add-form="#runtime-permission-applications-grid">
+                                    <tr data-add-form-element="clone">
+                                        <td data-title="No:">
+                                            <span class="index"></span>
+                                        </td>
+                                        <td data-title="App Name">
+                                            <input type="text" class="form-control grid-input-text" data-child-key="appName"
+                                                   maxlength="50" data-default="" placeholder="[ Gmail ]"/>
+                                        </td>
+                                        <td data-title="Package Name">
+                                            <input type="text" class="form-control grid-input-text"
+                                                   data-child-key="packageName" maxlength="100" data-default=""
+                                                   placeholder="[ com.google.android.gm ]"/>
+                                        </td>
+                                        <td data-title="Permission Name">
+                                            <input type="text" class="form-control grid-input-text"
+                                                   data-child-key="permissionName" maxlength="100" data-default=""
+                                                   placeholder="[ android.permission.READ_CALENDAR ]"/>
+                                        </td>
+                                        <td data-title="Runtime Permission">
+                                            <select id="runtime-permission-policy-permission-type"
+                                                    class="form-control operationDataKeys"
+                                                    data-key="permissionType" data-default="0">
+                                                <option value="1" selected="selected">PROMPT USER</option>
+                                                <option value="2">AUTO GRANT</option>
+                                                <option value="3">AUTO DENY</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <span class="list-group-item-actions">
+                                                <a href="#runtime-permission-applications-grid" class="grid-input-remove"
+                                                   data-click-event="remove-form">
+                                                    <span class="fw-stack helper" title="Remove Entry">
+                                                        <i class="fw fw-circle-outline fw-stack-2x"></i>
+                                                        <i class="fw fw-delete fw-stack-1x"></i>
+                                                    </span>
+                                                </a>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

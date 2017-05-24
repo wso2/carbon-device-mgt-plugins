@@ -1218,6 +1218,57 @@
                 </div>
             </div>
         </div>
+
+        <!-- runtime permission policy -->
+        <div class="wr-hidden-operation" data-operation="runtime-permission-policy">
+            <div class="panel panel-default operation-data" data-operation="runtime-permission-policy-body"
+                 data-operation-code="RUNTIME_PERMISSION_POLICY">
+                <div id="runtime-permission-policy-heading" class="panel-heading" role="tab">
+                    <h2 class="sub-title panel-title">
+                        Runtime Permission Policy (COSU)
+                        <label id="runtime-permission-policy-lbl" class="wr-input-control switch" data-toggle="collapse"
+                               data-target="#runtime-permission-policy-body">
+                            <input type="checkbox"/>
+                            <span class="helper"></span>
+                            <span class="text"></span>
+                        </label>
+                    </h2>
+                    <div class="panel-title-description">
+                        This configuration can be used to set a runtime permission policy to an Android Device.
+                    </div>
+                </div>
+                <div id="runtime-permission-policy-body" class="panel-collapse panel-body collapse"
+                     role="tabpanel"
+                     aria-labelledby="runtime-permission-policy-body">
+                    <hr/>
+                    <div class="wr-input-control">
+                        <label class="wr-input-label" for="runtime-permission-policy-window-start-time">
+                            Set runtime permission
+                            <span class="helper" title="When an app requests a runtime permission, this enforces whether the user needs to prompted or the permission either automatically granted or denied.">
+                                    <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                                </span>
+                        </label>
+                        <select id="runtime-permission-policy-permission-type"
+                                class="form-control operationDataKeys"
+                                data-key="runtimePermissionPolicyPermissionType" data-default="0">
+                            <option value="1" selected="selected">PROMPT USER</option>
+                            <option value="2">AUTO GRANT</option>
+                            <option value="3">AUTO DENY</option>
+                        </select>
+                        <div>
+                            <ul class="message message-info">
+                                <i class="icon fw fw-info"></i>
+                                <a>
+                                    Already granted or denied permissions are not affected by this.
+                                </a>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         <!-- cosu-system-update-policy -->
         <div class="wr-hidden-operation" data-operation="cosu-system-update-policy">
             <div class="panel panel-default operation-data" data-operation="cosu-system-update-policy-body"
