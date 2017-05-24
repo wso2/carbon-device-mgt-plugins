@@ -44,6 +44,7 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.SyncmlCrede
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.enrollment.EnrollmentService;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.enrollment.beans.*;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.syncml.beans.WindowsDevice;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.dto.MobileCacheEntry;
 import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 import org.xml.sax.SAXException;
@@ -296,7 +297,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             //CacheEntry cacheEntry = (CacheEntry) DeviceUtil.getCacheEntry(headerBst);
             // String userName = cacheEntry.getUsername();
             authNameNode.setTextContent(userName);
-            DeviceUtil.removeToken(headerBst);
+            DeviceUtil.removeTokenEntry(headerBst);
             String password = DeviceUtil.generateRandomToken();
             Node passwordAuthPosition = wapParm.item(PluginConstants.CertificateEnrolment.APPAUTH_PASSWORD_POSITION);
             NamedNodeMap appSrvPasswordAttribute = passwordAuthPosition.getAttributes();
@@ -351,7 +352,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
      * @return User for given token.
      */
     private String getRequestedUser(String bst) {
-        CacheEntry cacheEntry = (CacheEntry) DeviceUtil.getCacheEntry(bst);
+        MobileCacheEntry cacheEntry = null;
+        try {
+            cacheEntry = DeviceUtil.getTokenEntry(bst);
+        } catch (WindowsDeviceEnrolmentException e) {
+
+        }
         return cacheEntry.getUsername();
     }
 

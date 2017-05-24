@@ -22,7 +22,7 @@
     <parent>
         <artifactId>windows-plugin</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>3.0.35-SNAPSHOT</version>
+        <version>3.0.37-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -64,6 +64,7 @@
                             org.wso2.carbon.context,
                             org.wso2.carbon.utils.*,
                             org.wso2.carbon.device.mgt.common.*,
+                            org.wso2.carbon.device.mgt.core.dao.*,
                             org.wso2.carbon.ndatasource.core,
                             org.wso2.carbon.policy.mgt.common.*,
                             org.wso2.carbon.registry.core,

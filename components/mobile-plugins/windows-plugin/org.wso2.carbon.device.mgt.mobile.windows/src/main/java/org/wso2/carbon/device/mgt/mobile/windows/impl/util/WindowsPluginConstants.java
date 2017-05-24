@@ -52,5 +52,10 @@ public class WindowsPluginConstants {
     public static final String LANGUAGE_CODE_ENGLISH_US = "en_US";
     public static final String LANGUAGE_CODE_ENGLISH_UK = "en_UK";
 
+    //properties related to WINDOWS_ENROLLMENT_TOKEN table
+    public static final String TENANT_DOMAIN = "TENANT_DOMAIN";
+    public static final String TENANT_ID = "TENANT_ID";
+    public static final String USER_NAME = "USERNAME";
+    public static final String OWNERSHIP = "OWNERSHIP";
 
 }

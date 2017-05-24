@@ -29,6 +29,7 @@ import org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.transport.
 
 import java.io.*;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -67,15 +68,14 @@ public class AgentUtilOperations {
         try {
             ClassLoader loader = AgentUtilOperations.class.getClassLoader();
             URL path = loader.getResource(propertiesFileName);
-            System.out.println(path);
-            String root = path.getPath().replace(
-                    "wso2-firealarm-virtual-agent-advanced.jar!/deviceConfig.properties",
-                    "").replace("jar:", "").replace("file:", "");
+            log.info(AgentConstants.LOG_APPENDER + path);
+            String rootPath = path.getPath().replace("wso2-firealarm-virtual-agent-advanced.jar!/deviceConfig"
+                    + ".properties", "").replace("jar:", "").replace("file:", "");
 
-            agentManager.setRootPath(root);
-
-            propertiesInputStream = new FileInputStream(
-                    root + AgentConstants.AGENT_PROPERTIES_FILE_NAME);
+            rootPath = URLDecoder.decode(rootPath, StandardCharsets.UTF_8.toString());
+            agentManager.setRootPath(rootPath);
+            String deviceConfigFilePath = rootPath + AgentConstants.AGENT_PROPERTIES_FILE_NAME;
+            propertiesInputStream = new FileInputStream(deviceConfigFilePath);
 
             //load a properties file from class path, inside static method
             properties.load(propertiesInputStream);
