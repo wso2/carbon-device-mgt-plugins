@@ -1,0 +1,17 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/devicetypes/);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../resources/devicetypes/android_sense/);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/webapps/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.androidsense.backend_${feature.version}/webapps/,target:${installFolder}/../../deployment/server/webapps/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../deployment/server/devicetypes/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.androidsense.backend_${feature.version}/devicetypes/,target:${installFolder}/../../deployment/server/devicetypes/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.androidsense.backend_${feature.version}/receiver/,target:${installFolder}/../../resources/devicetypes/android_sense/receiver/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.androidsense.backend_${feature.version}/streams/,target:${installFolder}/../../resources/devicetypes/android_sense/streams/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.androidsense.backend_${feature.version}/carbonapps/,target:${installFolder}/../../resources/devicetypes/android_sense/,overwrite:true);\
+
+instructions.unconfigure = \
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/android_sense.war);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/webapps/android_sense);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../deployment/server/devicetypes/android_sense.xml);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../resources/devicetypes/android_sense);\

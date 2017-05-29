@@ -48,6 +48,7 @@
             <span id="wifi-ok" class="has-success status-icon hidden"><i class="fw fw-success"></i></span>
             <span id="wifi-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
         </a>
+        {{#unless iscloud}}
         <a href="javascript:void(0)" onclick="showAdvanceOperation('work-profile', this)">
              <span class="wr-hidden-operations-icon fw-stack">
                  <i class="fw fw-service fw-stack-2x"></i>
@@ -90,6 +91,7 @@
             <span id="cosu-whitelisted-applications-error" class="has-error status-icon hidden"><i
                     class="fw fw-error"></i></span>
         </a>
+        {{/unless}}
     </div>
     <div class="wr-hidden-operations-content col-lg-8">
         <!-- passcode-policy -->
@@ -287,6 +289,7 @@
                             </span>
                         </label>
                     </div>
+            {{#unless iscloud}}
                     <br><b>
                     Bellow restrictions will be applied on devices with Android version 5.0 Lollipop onwards only
                 </b>
@@ -701,6 +704,7 @@
                         </label>
                     </div>
                     <br>
+            {{/unless}}
                 </div>
             </div>
         </div>

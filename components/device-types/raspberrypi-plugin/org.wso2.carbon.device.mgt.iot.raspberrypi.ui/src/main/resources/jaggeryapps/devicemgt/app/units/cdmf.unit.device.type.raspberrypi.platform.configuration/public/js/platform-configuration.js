@@ -113,3 +113,30 @@ var addConfiguration = function () {
         }
     );
 };
+
+var artifactUpload = function () {
+	var contentType = "application/json";
+	var backendEndBasePath = "/api/device-mgt/v1.0";
+	var urix = backendEndBasePath + "/admin/devicetype/deploy/raspberrypi";
+	var defaultStatusClasses = "fw fw-stack-1x";
+	var content = $("#raspberrypi-statistic-response-template").find(".content");
+	var title = content.find("#title");
+	var statusIcon = content.find("#status-icon");
+	var data = {}
+	invokerUtil.post(urix, data, function (data) {
+		title.html("Deploying statistic artifacts. Please wait...");
+		statusIcon.attr("class", defaultStatusClasses + " fw-check");
+		$(modalPopupContent).html(content.html());
+		showPopup();
+		setTimeout(function () {
+			hidePopup();
+			location.reload(true);
+		}, 5000);
+
+	}, function (jqXHR) {
+		title.html("Failed to deploy artifacts, Please contact administrator.");
+		statusIcon.attr("class", defaultStatusClasses + " fw-error");
+		$(modalPopupContent).html(content.html());
+		showPopup();
+	}, contentType);
+};

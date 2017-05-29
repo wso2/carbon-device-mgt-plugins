@@ -1,0 +1,17 @@
+instructions.configure = \
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/deployment/server/jaggeryapps/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.virtualfirealarm.ui_${feature.version}/jaggeryapps/,target:${installFolder}/../../../repository/deployment/server/jaggeryapps/,overwrite:true);\
+org.eclipse.equinox.p2.touchpoint.natives.mkdir(path:${installFolder}/../../../repository/deployment/server/devicetypes/);\
+org.eclipse.equinox.p2.touchpoint.natives.copy(source:${installFolder}/../features/org.wso2.carbon.device.mgt.iot.virtualfirealarm.ui_${feature.version}/devicetypes/,target:${installFolder}/../../../repository/deployment/server/devicetypes/,overwrite:true);\
+
+
+instructions.unconfigure = \
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.virtual_firealarm.device-view);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.virtual_firealarm.type-view);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.virtual_firealarm.policy-edit);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.virtual_firealarm.policy-view);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.virtual_firealarm.analytics-view);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.virtual_firealarm.platform.configuration);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.virtual_firealarm.realtime.analytics-view);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/deployment/server/jaggeryapps/devicemgt/app/units/cdmf.unit.device.type.virtual_firealarm.policy-wizard);\
+org.eclipse.equinox.p2.touchpoint.natives.remove(path:${installFolder}/../../../repository/deployment/server/devicetypes/virtual_firealarm.xml);\
