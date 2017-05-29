@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.device.mgt.mobile.windows.impl.util;
 
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.device.mgt.mobile.windows.exception.WindowsDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.WindowsTokenService;
+
 import java.util.Map;
 
 /**
@@ -31,5 +35,18 @@ public class WindowsUtils {
             return null;
         }
         return deviceProperty;
+    }
+
+    public static WindowsTokenService getEnrollmentTokenService() throws WindowsDeviceMgtPluginException {
+
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        WindowsTokenService tokenService = (WindowsTokenService)
+                ctx.getOSGiService(WindowsTokenService.class, null);
+
+        if(tokenService == null) {
+            String msg = "WindowsTokenService is not initialized";
+            throw new WindowsDeviceMgtPluginException(msg);
+        }
+        return tokenService;
     }
 }

@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
 		<artifactId>virtual-fire-alarm-plugin-feature</artifactId>
-		<version>3.0.34-SNAPSHOT</version>
+		<version>3.0.37-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -135,11 +135,6 @@
 									<propertyDef>org.eclipse.equinox.p2.type.group:true</propertyDef>
 								</properties>
 							</adviceFile>
-							<includedFeatures>
-								<includedFeatureDef>
-									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.iot.analytics.feature:${carbon.devicemgt.plugins.version}
-								</includedFeatureDef>
-							</includedFeatures>
 						</configuration>
 					</execution>
 				</executions>

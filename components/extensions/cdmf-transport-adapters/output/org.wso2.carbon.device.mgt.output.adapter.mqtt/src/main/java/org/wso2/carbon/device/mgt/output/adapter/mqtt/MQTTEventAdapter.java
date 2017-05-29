@@ -44,10 +44,10 @@ public class MQTTEventAdapter implements OutputEventAdapter {
     private Map<String, String> globalProperties;
     private MQTTAdapterPublisher mqttAdapterPublisher;
     private int connectionKeepAliveInterval;
-    private String qos;
     private static ThreadPoolExecutor threadPoolExecutor;
     private static final Log log = LogFactory.getLog(MQTTEventAdapter.class);
     private int tenantId;
+    private MQTTBrokerConnectionConfiguration mqttBrokerConnectionConfiguration;
 
     public MQTTEventAdapter(OutputEventAdapterConfiguration eventAdapterConfiguration,
                             Map<String, String> globalProperties) {
@@ -117,11 +117,11 @@ public class MQTTEventAdapter implements OutputEventAdapter {
 
     @Override
     public void connect() {
-        MQTTBrokerConnectionConfiguration mqttBrokerConnectionConfiguration =
+        mqttBrokerConnectionConfiguration =
                 new MQTTBrokerConnectionConfiguration(eventAdapterConfiguration, globalProperties);
         String clientId = eventAdapterConfiguration.getStaticProperties().get(
                 MQTTEventAdapterConstants.ADAPTER_CONF_CLIENTID);
-        qos = eventAdapterConfiguration.getStaticProperties().get(MQTTEventAdapterConstants.ADAPTER_MESSAGE_QOS);
+
         mqttAdapterPublisher = new MQTTAdapterPublisher(mqttBrokerConnectionConfiguration, clientId, tenantId);
     }
 
@@ -179,11 +179,7 @@ public class MQTTEventAdapter implements OutputEventAdapter {
                         }
                     }
                 }
-                if (qos == null || qos.trim().isEmpty()) {
-                    mqttAdapterPublisher.publish(message.toString(), topic);
-                } else {
-                    mqttAdapterPublisher.publish(Integer.parseInt(qos), message.toString(), topic);
-                }
+                mqttAdapterPublisher.publish(mqttBrokerConnectionConfiguration.getQos(), message.toString(), topic);
             } catch (Throwable t) {
                 EventAdapterUtil.logAndDrop(eventAdapterConfiguration.getName(), message, null, t, log, tenantId);
             }
