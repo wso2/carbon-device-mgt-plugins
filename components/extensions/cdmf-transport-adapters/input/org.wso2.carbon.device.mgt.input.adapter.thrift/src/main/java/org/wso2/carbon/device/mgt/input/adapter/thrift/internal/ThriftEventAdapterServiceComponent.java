@@ -137,7 +137,7 @@ public class ThriftEventAdapterServiceComponent {
         String tenantDomain = credentials.getDomainName();
         if (objects != null && objects.length > 0) {
             if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-                String[] splitValues = ((String) objects[0]).split("@@");
+                String[] splitValues = ((String) objects[0]).split("@");
                 if (splitValues.length > 1) {
                     tenantDomain = splitValues[0];
                 }
