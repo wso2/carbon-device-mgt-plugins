@@ -119,7 +119,8 @@
 							org.wso2.carbon.event.input.adapter.wso2event,
 							org.apache.axis2.context,
 							org.wso2.carbon.core.multitenancy.utils,
-							org.wso2.carbon.utils
+							org.wso2.carbon.utils,
+							org.wso2.carbon.utils.multitenancy
                         </Import-Package>
                     </instructions>
                 </configuration>
