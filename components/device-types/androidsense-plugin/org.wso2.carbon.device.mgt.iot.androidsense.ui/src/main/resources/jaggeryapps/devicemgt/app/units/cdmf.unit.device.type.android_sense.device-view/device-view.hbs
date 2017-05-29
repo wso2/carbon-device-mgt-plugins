@@ -39,7 +39,7 @@
     <li><a class="list-group-item" href="#event_log" role="tab" data-toggle="tab"
            aria-controls="event_log">Operations Log</a></li>
     <li><a class="list-group-item location_tab" href="#geo_dashboard" role="tab" data-toggle="tab"
-           aria-controls="geo_dashboard">Device Location</a></li>
+           aria-controls="geo_dashboard" onclick="initializeGeoFencing()">Device Location</a></li>
 {{/zone}}
 
 {{#zone "device-view-tab-contents"}}
@@ -73,6 +73,8 @@
     <div class="panel panel-default tab-pane"
          id="geo_dashboard" role="tabpanel" aria-labelledby="geo_dashboard">
         <div class="panel-heading">Device Location</div>
+        <br/>
+        {{unit "cdmf.unit.geo-dashboard" device=device}}
         {{#if locationHistory}}
             <div id="device-location"
                  data-locations = "{{locationHistory}}">

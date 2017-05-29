@@ -1,4 +1,4 @@
-{{unit "cdmf.unit.device.type.android.leaflet"}}
+{{!unit "cdmf.unit.device.type.android.leaflet"}}
 {{unit "cdmf.unit.lib.qrcode"}}
 {{unit "cdmf.unit.device.type.qr-modal"}}
 
@@ -137,7 +137,8 @@
                 <a href="#device_location_tab" role="tab" data-toggle="tab"
                    data-lat="{{device.location.latitude}}"
                    data-long="{{device.location.longitude}}"
-                   aria-controls="device_location_tab">
+                   aria-controls="device_location_tab"
+                   onclick="initializeGeoFencing()">
                     <i class="icon fw fw-map-location"></i><span
                         class="hidden-sm">Device Location</span>
                 </a>
@@ -345,21 +346,7 @@
                      aria-labelledby="device_location">
                     <div class="panel-body">
                         {{#if device.location}}
-                            <div id="device-location"
-                                 data-lat="{{device.location.latitude}}"
-                                 data-long="{{device.location.longitude}}"
-                                 data-locations="{{device.locationHistory}}">
-                            </div>
-                            <br/>
-                            {{#unless isCloud}}
-                                <a class="padding-left" target="_blank"
-                                   href="{{portalUrl}}/portal/dashboards/geo-dashboard/?GLOBAL-STATE={{anchor}}">
-                                <span class="fw-stack">
-                                    <i class="fw fw-circle-outline fw-stack-2x"></i>
-                                    <i class="fw fw-map-location fw-stack-1x"></i>
-                                </span> Add Geo Fencing
-                                </a>
-                            {{/unless}}
+                            {{unit "cdmf.unit.geo-dashboard" device=device}}
                         {{else}}
                             <div id="map-error" class="message message-warning">
                                 <h4 class="remove-margin">
