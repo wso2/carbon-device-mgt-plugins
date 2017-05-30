@@ -160,7 +160,7 @@ var androidOperationModule = function () {
                 }
                 break;
             case androidOperationConstants["RUNTIME_PERMISSION_POLICY_OPERATION_CODE"]:
-                payload ={"runtimePermissionType": operationPayload["type"]
+                payload ={"defaultRuntimePermissionType": operationPayload["defaultType"]
                 };
                 break;
             case androidOperationConstants["KIOSK_APPS_CODE"]:

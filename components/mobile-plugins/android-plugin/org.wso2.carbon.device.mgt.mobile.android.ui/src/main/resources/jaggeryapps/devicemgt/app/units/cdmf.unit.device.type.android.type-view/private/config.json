@@ -68,10 +68,12 @@
             },
             "DEVICE_REBOOT": {
                 "icon": "fw-refresh",
+                "isDisabled" : true,
                 "permission": "/device-mgt/devices/owning-device/operations/android/reboot"
             },
             "UPGRADE_FIRMWARE": {
                 "icon": "fw-hardware",
+                "isDisabled" : true,
                 "formParams": [
                     {
                         "type": "checkbox",

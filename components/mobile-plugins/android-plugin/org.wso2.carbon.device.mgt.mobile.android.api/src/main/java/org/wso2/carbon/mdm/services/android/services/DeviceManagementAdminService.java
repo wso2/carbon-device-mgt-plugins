@@ -1646,67 +1646,7 @@ public interface DeviceManagementAdminService {
                             "If a passcode policy has been set in EMM, the lock code should comply to the passcode policy.\t",
                     required = true)
             LockCodeBeanWrapper lockCodeBeanWrapper);
-/*
-    @POST
-    @Path("/set-runtime-permission-policy")
-    @ApiOperation(
-            consumes = MediaType.APPLICATION_JSON,
-            httpMethod = "POST",
-            value = "Setting a Runtime Permission Policy on Android Devices",
-            notes = "Set a runtime permission policy on Android devices.",
-            response = Activity.class,
-            tags = "Android Device Management Administrative Service",
-            extensions = {
-                    @Extension(properties = {
-                            @ExtensionProperty(name = AndroidConstants.SCOPE, value = "perm:android:set-runtime-permission-policy")
-                    })
-            }
-    )
-    @ApiResponses(value = {
-            @ApiResponse(
-                    code = 201,
-                    message = "Created. \n Successfully scheduled the set runtime permission policy operation.",
-                    response = Activity.class,
-                    responseHeaders = {
-                            @ResponseHeader(
-                                    name = "Content-Location",
-                                    description = "URL of the activity instance that refers to the scheduled operation."),
-                            @ResponseHeader(
-                                    name = "Content-Type",
-                                    description = "Content type of the body"),
-                            @ResponseHeader(
-                                    name = "ETag",
-                                    description = "Entity Tag of the response resource.\n" +
-                                            "Used by caches, or in conditional requests."),
-                            @ResponseHeader(
-                                    name = "Last-Modified",
-                                    description = "Date and time the resource was last modified.\n" +
-                                            "Used by caches, or in conditional requests.")}),
-            @ApiResponse(
-                    code = 303,
-                    message = "See Other. \n The source can be retrieved from the URL specified in the location header.",
-                    responseHeaders = {
-                            @ResponseHeader(
-                                    name = "Content-Location",
-                                    description = "The Source URL of the document.")}),
-            @ApiResponse(
-                    code = 400,
-                    message = "Bad Request. \n Invalid request or validation error."),
-            @ApiResponse(
-                    code = 415,
-                    message = "Unsupported media type. \n The entity of the request was in a not supported format."),
-            @ApiResponse(
-                    code = 500,
-                    message = "Internal Server Error. \n " +
-                            "Server error occurred while adding a new set runtime permission policy operation.")
-    })
-    Response setRuntimePermissionPolicy(
-            @ApiParam(
-                    name = "runtimePermissionPolicy",
-                    value = "The properties required to set a runtime permission policy.",
-                    required = true)
-                    RuntimePermissionPolicyBeanWrapper runtimePermissionPolicyBeanWrapper);
-*/
+
     @POST
     @Path("/set-password-policy")
     @ApiOperation(

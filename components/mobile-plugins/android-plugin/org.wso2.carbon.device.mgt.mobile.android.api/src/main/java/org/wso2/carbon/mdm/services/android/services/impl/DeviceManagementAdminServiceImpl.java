@@ -817,49 +817,6 @@ public class DeviceManagementAdminServiceImpl implements DeviceManagementAdminSe
         }
     }
 
-    /*
-    @POST
-    @Path("/set-runtime-permission-policy")
-    @Override
-    public Response setRuntimePermissionPolicy(RuntimePermissionPolicyBeanWrapper runtimePermissionPolicyBeanWrapper){
-        if (log.isDebugEnabled()) {
-            log.debug("Invoking 'runtime permission policy' operation");
-        }
-
-        try {
-            if (runtimePermissionPolicyBeanWrapper == null || runtimePermissionPolicyBeanWrapper.getOperation() == null) {
-                String errorMessage = "The payload of the change runtime permission policy operation is incorrect";
-                log.error(errorMessage);
-                throw new BadRequestException(
-                        new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
-            }
-            RuntimePermissionPolicy runtimePermissionPolicy = runtimePermissionPolicyBeanWrapper.getOperation();
-            ProfileOperation operation = new ProfileOperation();
-            operation.setCode(AndroidConstants.OperationCodes.RUNTIME_PERMISSION_POLICY);
-            operation.setType(Operation.Type.PROFILE);
-            operation.setPayLoad(runtimePermissionPolicy.toJSON());
-
-            return AndroidAPIUtils.getOperationResponse(runtimePermissionPolicyBeanWrapper.getDeviceIDs(),
-                    operation);
-        } catch (InvalidDeviceException e) {
-            String errorMessage = "Invalid Device Identifiers found.";
-            log.error(errorMessage, e);
-            throw new BadRequestException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(400l).setMessage(errorMessage).build());
-        } catch (OperationManagementException e) {
-            String errorMessage = "Issue in retrieving operation management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        } catch (DeviceManagementException e) {
-            String errorMessage = "Issue in retrieving device management service instance";
-            log.error(errorMessage, e);
-            throw new UnexpectedServerErrorException(
-                    new ErrorResponse.ErrorResponseBuilder().setCode(500l).setMessage(errorMessage).build());
-        }
-    }
-*/
-
     @POST
     @Path("/configure-wifi")
     @Override
