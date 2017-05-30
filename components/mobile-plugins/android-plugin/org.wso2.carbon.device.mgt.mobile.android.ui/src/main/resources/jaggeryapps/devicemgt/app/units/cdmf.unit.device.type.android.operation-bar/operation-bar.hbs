@@ -36,7 +36,7 @@
             }
         </style>
         {{#each controlOperations}}
-            <a href="javascript:operationSelect('{{operation}}')">
+            <a {{#unless isDisabled}} href="javascript:operationSelect('{{operation}}')" {{else}} href="javascript:void(0)" class="op-disabled"{{/unless}}>
                 {{#if iconFont}}
                     <i class="fw {{iconFont}}"></i>
                 {{else}}
