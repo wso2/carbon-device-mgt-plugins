@@ -1129,14 +1129,13 @@
 
         <!-- Carbon Device Management -->
         <carbon.devicemgt.version>2.0.68</carbon.devicemgt.version>
-
         <carbon.devicemgt.version.range>[2.0.0, 3.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
         <carbon.appmgt.version>1.2.25</carbon.appmgt.version>
 
         <!-- Carbon Device Management Plugins -->
-        <carbon.devicemgt.plugins.version>3.0.37-SNAPSHOT</carbon.devicemgt.plugins.version>
+        <carbon.devicemgt.plugins.version>3.0.38-SNAPSHOT</carbon.devicemgt.plugins.version>
 
         <!-- Carbon Commons -->
         <carbon.commons.version>4.4.8</carbon.commons.version>
