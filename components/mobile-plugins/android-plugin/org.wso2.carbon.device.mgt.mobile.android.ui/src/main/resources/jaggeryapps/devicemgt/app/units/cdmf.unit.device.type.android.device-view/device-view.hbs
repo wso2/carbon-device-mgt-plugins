@@ -1,4 +1,3 @@
-{{!unit "cdmf.unit.device.type.android.leaflet"}}
 {{unit "cdmf.unit.lib.qrcode"}}
 {{unit "cdmf.unit.device.type.qr-modal"}}
 
@@ -138,9 +137,9 @@
                    data-lat="{{device.location.latitude}}"
                    data-long="{{device.location.longitude}}"
                    aria-controls="device_location_tab"
-                   onclick="initializeGeoFencing()">
-                    <i class="icon fw fw-map-location"></i><span
-                        class="hidden-sm">Device Location</span>
+                   class="initGeoLocationLink">
+                    <i class="icon fw fw-map-location"></i>
+                    <span class="hidden-sm">Device Location</span>
                 </a>
             </li>
             <li role="presentation" class="list-group-item">
@@ -346,7 +345,7 @@
                      aria-labelledby="device_location">
                     <div class="panel-body">
                         {{#if device.location}}
-                            {{unit "cdmf.unit.geo-dashboard" device=device}}
+                            {{unit "cdmf.unit.geo-dashboard" device=device noGeoFencing=false hideSearch=true}}
                         {{else}}
                             <div id="map-error" class="message message-warning">
                                 <h4 class="remove-margin">
@@ -439,6 +438,5 @@
                 type="text/x-handlebars-template"></script>
         <!--suppress HtmlUnknownTarget -->
         {{js "js/device-detail.js"}}
-        {{js "js/load-map.js"}}
     {{/if}}
 {{/zone}}
