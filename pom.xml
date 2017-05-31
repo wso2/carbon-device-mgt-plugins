@@ -355,6 +355,11 @@
                 <artifactId>org.wso2.carbon.event.output.adapter.core</artifactId>
                 <version>${carbon.analytics.common.version}</version>
             </dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.analytics-common</groupId>
+				<artifactId>org.wso2.carbon.event.input.adapter.wso2event</artifactId>
+				<version>${carbon.analytics.common.version}</version>
+			</dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.event.input.adapter.core</artifactId>
@@ -365,6 +370,21 @@
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
                 <version>${carbon.analytics.common.version}</version>
             </dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.analytics-common</groupId>
+				<artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>
+				<version>${carbon.analytics.common.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.analytics-common</groupId>
+				<artifactId>org.wso2.carbon.databridge.commons.binary</artifactId>
+				<version>${carbon.analytics.common.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.analytics-common</groupId>
+				<artifactId>org.wso2.carbon.databridge.core</artifactId>
+				<version>${carbon.analytics.common.version}</version>
+			</dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics</groupId>
                 <artifactId>org.wso2.carbon.analytics.api</artifactId>
@@ -387,6 +407,11 @@
                 <artifactId>org.wso2.carbon.device.mgt.output.adapter.mqtt</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+				<artifactId>org.wso2.carbon.device.mgt.input.adapter.thrift</artifactId>
+				<version>${carbon.devicemgt.plugins.version}</version>
+			</dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.output.adapter.xmpp</artifactId>

@@ -18,7 +18,7 @@
   -->
 
 <eventReceiver name="Android-Agent-Event-Receiver" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
-    <from eventAdapterType="wso2event">
+    <from eventAdapterType="iot-event">
         <property name="events.duplicated.in.cluster">false</property>
     </from>
     <mapping customMapping="disable" type="wso2event"/>
