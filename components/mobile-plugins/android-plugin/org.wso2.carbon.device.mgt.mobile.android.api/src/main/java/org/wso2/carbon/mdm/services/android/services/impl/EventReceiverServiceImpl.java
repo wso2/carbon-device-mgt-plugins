@@ -21,6 +21,7 @@ package org.wso2.carbon.mdm.services.android.services.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.analytics.datasource.commons.exception.AnalyticsException;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.analytics.data.publisher.exception.DataPublisherConfigurationException;
 import org.wso2.carbon.mdm.services.android.bean.DeviceState;
 import org.wso2.carbon.mdm.services.android.bean.ErrorResponse;
@@ -31,6 +32,7 @@ import org.wso2.carbon.mdm.services.android.exception.UnexpectedServerErrorExcep
 import org.wso2.carbon.mdm.services.android.services.EventReceiverService;
 import org.wso2.carbon.mdm.services.android.util.AndroidAPIUtils;
 import org.wso2.carbon.mdm.services.android.util.Message;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
@@ -51,9 +53,8 @@ public class EventReceiverServiceImpl implements EventReceiverService {
             log.debug("Invoking Android device even logging.");
         }
         Message message = new Message();
-
-        Object payload[] = {eventBeanWrapper.getDeviceIdentifier(), eventBeanWrapper.getPayload(),
-                eventBeanWrapper.getType()};
+        Object payload[] = {eventBeanWrapper.getDeviceIdentifier(),
+                eventBeanWrapper.getPayload(), eventBeanWrapper.getType()};
         try {
             if (AndroidAPIUtils.getEventPublisherService().publishEvent(
                     EVENT_STREAM_DEFINITION, "1.0.0", new Object[0], new Object[0], payload)) {

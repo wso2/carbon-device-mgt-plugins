@@ -9,12 +9,12 @@
 @Plan:trace('false')
 
 @Import('org.wso2.android.agent.Stream:1.0.0')
-define stream dataIn (deviceId string, payload string, type string);
+define stream dataIn (meta_deviceId string, payload string, type string);
 
 @Export('org.wso2.geo.LocationStream:1.0.0')
 define stream dataOut (id string, timeStamp long, latitude double, longitude double, type string, speed float, heading float );
 
 from dataIn[type == 'location']
-select deviceId as id, convert(json:getProperty(payload, 'timeStamp'), 'long') as timeStamp, convert(json:getProperty(payload,
+select meta_deviceId as id, convert(json:getProperty(payload, 'timeStamp'), 'long') as timeStamp, convert(json:getProperty(payload,
 'latitude'), 'double') as latitude, convert(json:getProperty(payload, 'longitude'), 'double') as longitude,
 'android' as type, 0.0f as speed, 0.0f as heading insert into dataOut
