@@ -91,6 +91,10 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
         this.topic = PropertyUtils.replaceTenantDomainProperty(topic);
         this.eventAdapterListener = inputEventAdapterListener;
         this.tenantDomain = this.topic.split("/")[0];
+        //this is to allow server listener from IoT Core to connect.
+        if (this.tenantDomain.equals("+")) {
+            this.tenantDomain = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+        }
 
         //SORTING messages until the server fetches them
         String temp_directory = System.getProperty("java.io.tmpdir");
@@ -126,8 +130,8 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                         .getContentTransformer(contentTransformerType);
             }
         } catch (MqttException e) {
-            log.error("Exception occurred while subscribing to MQTT broker at "
-                    + mqttBrokerConnectionConfiguration.getBrokerUrl());
+            log.error("Exception occurred while creating an mqtt client to "
+                    + mqttBrokerConnectionConfiguration.getBrokerUrl() + " reason code:" + e.getReasonCode());
             throw new InputEventAdapterRuntimeException(e);
         }
     }

@@ -53,12 +53,11 @@ public class EventReceiverServiceImpl implements EventReceiverService {
             log.debug("Invoking Android device even logging.");
         }
         Message message = new Message();
-        Object metaData[] = {eventBeanWrapper.getDeviceIdentifier()};
-
-        Object payload[] = {eventBeanWrapper.getPayload(), eventBeanWrapper.getType()};
+        Object payload[] = {eventBeanWrapper.getDeviceIdentifier(),
+                eventBeanWrapper.getPayload(), eventBeanWrapper.getType()};
         try {
             if (AndroidAPIUtils.getEventPublisherService().publishEvent(
-                    EVENT_STREAM_DEFINITION, "1.0.0", metaData, new Object[0], payload)) {
+                    EVENT_STREAM_DEFINITION, "1.0.0", new Object[0], new Object[0], payload)) {
                 message.setResponseCode("Event is published successfully.");
                 return Response.status(Response.Status.CREATED).entity(message).build();
             } else {
