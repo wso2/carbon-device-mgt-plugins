@@ -19,11 +19,9 @@
 package org.wso2.carbon.device.mgt.mqtt.notification.listener;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
-import org.wso2.carbon.device.mgt.common.pull.notification.NotificationContext;
-import org.wso2.carbon.device.mgt.common.pull.notification.NotificationPayload;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.input.adapter.extension.ContentTransformer;
 
 import java.util.Map;
@@ -50,10 +48,8 @@ public class PullNotificationMqttContentTransformer implements ContentTransforme
         String deviceId = topicParams[2];
         Gson gson = new Gson();
         try {
-            NotificationPayload notificationPayload = gson.fromJson((String) message, NotificationPayload.class);
-            NotificationContext notificationContext =  new NotificationContext
-                    (new DeviceIdentifier(deviceId, deviceType), notificationPayload);
-            return new NotificationMessage(tenantDomain, notificationContext);
+            Operation operation = gson.fromJson((String) message, Operation.class);
+            return new NotificationMessage(tenantDomain, new DeviceIdentifier(deviceId, deviceType),operation);
         } catch (Exception e) {
             //Avoid notification listener to fail.
             return new Object();

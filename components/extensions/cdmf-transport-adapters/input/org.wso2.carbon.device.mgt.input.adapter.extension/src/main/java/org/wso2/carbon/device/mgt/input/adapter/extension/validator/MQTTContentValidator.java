@@ -33,10 +33,10 @@ public class MQTTContentValidator implements ContentValidator {
     private static final String JSON_ARRAY_START_CHAR = "[";
     private static final Log log = LogFactory.getLog(MQTTContentValidator.class);
     private static final String CDMF_MQTT_CONTENT_VALIDATOR = "iot-mqtt";
-    public static final String DEVICE_ID_JSON_PATH = "event.metaData.deviceId";
-    public static final String DEVICE_TYPE_JSON_PATH = "event.metaData.deviceId";
-    public static final String TOPIC = "topic";
-    public static final int DEVICE_ID_TOPIC_HIERARCHY_INDEX = 2;
+    private static final String DEVICE_ID_JSON_PATH = "event.metaData.deviceId";
+    private static final String DEVICE_TYPE_JSON_PATH = "event.metaData.deviceId";
+    private static final String TOPIC = "topic";
+    private static final int DEVICE_ID_TOPIC_HIERARCHY_INDEX = 2;
 
     @Override
     public String getType() {
@@ -47,15 +47,14 @@ public class MQTTContentValidator implements ContentValidator {
     public ContentInfo validate(Object msgPayload, Map<String, Object> dynamicParams) {
         String topic = (String) dynamicParams.get(TOPIC);
         String topics[] = topic.split("/");
-        String deviceIdJsonPath = DEVICE_ID_JSON_PATH;
         int deviceIdInTopicHierarchyLevelIndex = DEVICE_ID_TOPIC_HIERARCHY_INDEX;
         String deviceIdFromTopic = topics[deviceIdInTopicHierarchyLevelIndex];
         boolean status;
         String message = (String) msgPayload;
         if (message.startsWith(JSON_ARRAY_START_CHAR)) {
-            status = processMultipleEvents(message, deviceIdFromTopic, deviceIdJsonPath);
+            status = processMultipleEvents(message, deviceIdFromTopic, DEVICE_ID_JSON_PATH);
         } else {
-            status = processSingleEvent(message, deviceIdFromTopic, deviceIdJsonPath);
+            status = processSingleEvent(message, deviceIdFromTopic, DEVICE_ID_JSON_PATH);
         }
         return new ContentInfo(status, msgPayload);
     }

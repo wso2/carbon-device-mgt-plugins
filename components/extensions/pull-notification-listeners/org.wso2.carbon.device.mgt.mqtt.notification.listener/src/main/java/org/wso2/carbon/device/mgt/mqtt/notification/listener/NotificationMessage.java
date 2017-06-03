@@ -18,16 +18,19 @@
  */
 package org.wso2.carbon.device.mgt.mqtt.notification.listener;
 
-import org.wso2.carbon.device.mgt.common.pull.notification.NotificationContext;
+import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
+import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 
 public class NotificationMessage {
 
     private String tenantDomain;
-    private NotificationContext notificationContext;
+    private DeviceIdentifier deviceIdentifier;
+    private Operation operation;
 
-    public NotificationMessage(String tenantDomain, NotificationContext notificationContext) {
+    public NotificationMessage(String tenantDomain, DeviceIdentifier deviceIdentifier,Operation operation) {
         this.tenantDomain = tenantDomain;
-        this.notificationContext = notificationContext;
+        this.operation = operation;
+        this.deviceIdentifier = deviceIdentifier;
     }
 
     public String getTenantDomain() {
@@ -38,12 +41,20 @@ public class NotificationMessage {
         this.tenantDomain = tenantDomain;
     }
 
-    public NotificationContext getNotificationContext() {
-        return notificationContext;
+    public Operation getOperation() {
+        return operation;
     }
 
     public void setNotificationContext(
-            NotificationContext notificationContext) {
-        this.notificationContext = notificationContext;
+            Operation operation) {
+        this.operation = operation;
+    }
+
+    public DeviceIdentifier getDeviceIdentifier() {
+        return deviceIdentifier;
+    }
+
+    public void setDeviceIdentifier(DeviceIdentifier deviceIdentifier) {
+        this.deviceIdentifier = deviceIdentifier;
     }
 }
