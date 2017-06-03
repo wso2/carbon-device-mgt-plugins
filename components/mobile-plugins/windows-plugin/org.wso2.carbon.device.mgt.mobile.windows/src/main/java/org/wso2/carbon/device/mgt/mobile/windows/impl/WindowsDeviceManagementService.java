@@ -86,4 +86,9 @@ public class WindowsDeviceManagementService implements DeviceManagementService {
         return null;
     }
 
+    @Override
+    public DeviceStatusTaskPluginConfig getDeviceStatusTaskPluginConfig() {
+        return null;
+    }
+
 }

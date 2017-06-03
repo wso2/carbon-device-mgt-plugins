@@ -18,6 +18,7 @@
 package org.wso2.carbon.device.mgt.input.adapter.mqtt;
 
 import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.core.ServerStatus;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTAdapterListener;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTBrokerConnectionConfiguration;
 import org.wso2.carbon.device.mgt.input.adapter.mqtt.util.MQTTEventAdapterConstants;
@@ -98,15 +99,22 @@ public class MQTTEventAdapter implements InputEventAdapter {
             return;
         }
         try {
-            Thread thread = new Thread(new Runnable() {
-                public void run() {
-                    if (mqttAdapterListener != null) {
-                        mqttAdapterListener.stopListener(eventAdapterConfiguration.getName());
+            if (ServerStatus.getCurrentStatus().equals(ServerStatus.STATUS_SHUTTING_DOWN)) {
+                Thread thread = new Thread(new Runnable() {
+                    public void run() {
+                        if (mqttAdapterListener != null) {
+                            mqttAdapterListener.stopListener(eventAdapterConfiguration.getName());
+                        }
                     }
+                });
+                thread.start();
+                thread.join(2000);
+            } else {
+                if (mqttAdapterListener != null) {
+                    mqttAdapterListener.stopListener(eventAdapterConfiguration.getName());
                 }
-            });
-            thread.start();
-            thread.join(2000);
+            }
+
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
