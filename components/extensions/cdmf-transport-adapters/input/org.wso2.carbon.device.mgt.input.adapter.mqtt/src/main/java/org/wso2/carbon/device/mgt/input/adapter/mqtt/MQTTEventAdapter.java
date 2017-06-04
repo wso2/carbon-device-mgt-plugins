@@ -84,8 +84,10 @@ public class MQTTEventAdapter implements InputEventAdapter {
                 .equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return;
         }
-        if (!mqttAdapterListener.isConnectionInitialized()) {
-            mqttAdapterListener.createConnection();
+        synchronized (this.mqttAdapterListener) {
+            if (!mqttAdapterListener.isConnectionInitialized()) {
+                mqttAdapterListener.createConnection();
+            }
         }
 
     }
@@ -102,8 +104,10 @@ public class MQTTEventAdapter implements InputEventAdapter {
             if (ServerStatus.getCurrentStatus().equals(ServerStatus.STATUS_SHUTTING_DOWN)) {
                 Thread thread = new Thread(new Runnable() {
                     public void run() {
-                        if (mqttAdapterListener != null) {
-                            mqttAdapterListener.stopListener(eventAdapterConfiguration.getName());
+                        synchronized (mqttAdapterListener) {
+                            if (mqttAdapterListener != null) {
+                                mqttAdapterListener.stopListener(eventAdapterConfiguration.getName());
+                            }
                         }
                     }
                 });

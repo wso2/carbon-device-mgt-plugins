@@ -99,7 +99,8 @@
 							org.wso2.carbon.user.api,
 							org.wso2.carbon.core,
 							org.wso2.carbon.device.mgt.core.config,
-							org.wso2.carbon.device.mgt.core.config.pull.notification
+							org.wso2.carbon.device.mgt.core.config.pull.notification,
+							org.wso2.carbon.utils.multitenancy
                         </Import-Package>
                     </instructions>
                 </configuration>
