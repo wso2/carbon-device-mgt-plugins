@@ -60,7 +60,7 @@ public class PullNotificationListenerServiceComponent {
             BundleContext bundleContext = componentContext.getBundleContext();
             bundleContext.registerService(ServerStartupObserver.class.getName(), new PullNotificationStartupListener(),
                                           null);
-            bundleContext.registerService(ContentTransformer.class.getName(), new PullNotificationMqttContentTransformer(), null);
+            bundleContext.registerService(ContentTransformer.class, new PullNotificationMqttContentTransformer(), null);
         } catch (Throwable e) {
             log.error("Error occurred while initializing pull notification provider implementation bundle", e);
         }

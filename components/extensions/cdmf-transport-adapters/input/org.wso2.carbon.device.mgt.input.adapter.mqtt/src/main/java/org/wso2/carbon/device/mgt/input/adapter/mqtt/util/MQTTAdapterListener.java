@@ -271,8 +271,8 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                 ContentInfo contentInfo;
                 Map<String, Object> dynamicProperties = new HashMap<>();
                 dynamicProperties.put(MQTTEventAdapterConstants.TOPIC, topic);
-                msgText = (String) contentTransformer.transform(msgText, dynamicProperties);
-                contentInfo = contentValidator.validate(msgText, dynamicProperties);
+                Object transformedMessage = contentTransformer.transform(msgText, dynamicProperties);
+                contentInfo = contentValidator.validate(transformedMessage, dynamicProperties);
                 if (contentInfo != null && contentInfo.isValidContent()) {
                     inputEventAdapterListener.onEvent(contentInfo.getMessage());
                 }

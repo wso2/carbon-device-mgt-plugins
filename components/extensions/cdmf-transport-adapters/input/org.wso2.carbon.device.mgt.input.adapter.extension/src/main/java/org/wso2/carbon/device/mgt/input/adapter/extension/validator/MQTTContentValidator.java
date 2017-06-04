@@ -32,7 +32,7 @@ import java.util.Map;
 public class MQTTContentValidator implements ContentValidator {
     private static final String JSON_ARRAY_START_CHAR = "[";
     private static final Log log = LogFactory.getLog(MQTTContentValidator.class);
-    private static final String CDMF_MQTT_CONTENT_VALIDATOR = "iot-mqtt";
+    private static final String CDMF_MQTT_CONTENT_VALIDATOR = "deviceid-topic-content-validator";
     private static final String DEVICE_ID_JSON_PATH = "event.metaData.deviceId";
     private static final String DEVICE_TYPE_JSON_PATH = "event.metaData.deviceId";
     private static final String TOPIC = "topic";

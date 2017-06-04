@@ -33,7 +33,7 @@ import java.util.Map;
  * This holds the default implementation of ContentTransformer
  */
 public class MQTTContentTransformer implements ContentTransformer {
-    private static final String MQTT_CONTENT_TRANSFORMER = "iot-mqtt";
+    private static final String MQTT_CONTENT_TRANSFORMER = "device-meta-transformer";
     private static final String TOPIC = "topic";
     private static String JSON_ARRAY_START_CHAR = "[";
 

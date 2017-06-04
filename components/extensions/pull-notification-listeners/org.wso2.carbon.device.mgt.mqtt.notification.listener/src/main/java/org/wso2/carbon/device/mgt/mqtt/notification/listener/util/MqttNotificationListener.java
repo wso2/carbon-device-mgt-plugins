@@ -43,6 +43,8 @@ public class MqttNotificationListener {
     private static final String JSON = "json";
     private static final String NAME = "iot_core_server_adapter";
     private static final String CONTENT_TRANSFORMER_TYPE = "contentTransformer";
+    private static final String MQTT_CONTENT_VALIDATOR_TYPE = "contentValidator";
+    private static final String MQTT_CONTENT_VALIDATOR = "default";
 
 
     public static void setupMqttInputAdapter() {
@@ -54,6 +56,7 @@ public class MqttNotificationListener {
         mqttAdapterProperties.put(TOPIC, SUBSCRIBED_TOPIC);
         mqttAdapterProperties.put(CONTENT_TRANSFORMER_TYPE,
                                   PullNotificationMqttContentTransformer.MQTT_NOTIFICATION_MESSAGE_TRANSFORMER);
+        mqttAdapterProperties.put(MQTT_CONTENT_VALIDATOR_TYPE, MQTT_CONTENT_VALIDATOR);
         inputEventAdapterConfiguration.setProperties(mqttAdapterProperties);
         try {
             PrivilegedCarbonContext.startTenantFlow();

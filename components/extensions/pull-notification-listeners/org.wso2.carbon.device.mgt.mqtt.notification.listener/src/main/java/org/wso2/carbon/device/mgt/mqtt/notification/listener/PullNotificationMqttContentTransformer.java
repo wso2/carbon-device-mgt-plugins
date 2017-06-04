@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class PullNotificationMqttContentTransformer implements ContentTransformer {
 
-    public static final String MQTT_NOTIFICATION_MESSAGE_TRANSFORMER = "mqtt-notification-transformer";
+    public static final String MQTT_NOTIFICATION_MESSAGE_TRANSFORMER = "mqtt-operation-transformer";
 
     @Override
     public String getType() {
@@ -53,8 +53,6 @@ public class PullNotificationMqttContentTransformer implements ContentTransforme
         } catch (Exception e) {
             //Avoid notification listener to fail.
             return new Object();
-        } finally {
-            PrivilegedCarbonContext.endTenantFlow();
         }
     }
 
