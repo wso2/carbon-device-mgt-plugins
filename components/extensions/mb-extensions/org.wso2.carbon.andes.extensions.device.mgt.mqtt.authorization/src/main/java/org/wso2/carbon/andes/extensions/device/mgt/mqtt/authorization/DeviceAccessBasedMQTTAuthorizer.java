@@ -72,7 +72,7 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
 
     private static final String UI_EXECUTE = "ui.execute";
     private static Log log = LogFactory.getLog(DeviceAccessBasedMQTTAuthorizer.class);
-    AuthorizationConfigurationManager MQTTAuthorizationConfiguration;
+    private AuthorizationConfigurationManager MQTTAuthorizationConfiguration;
     private static final String CDMF_SERVER_BASE_CONTEXT = "/api/device-mgt/v1.0";
     private static final String CACHE_MANAGER_NAME = "mqttAuthorizationCacheManager";
     private static final String CACHE_NAME = "mqttAuthorizationCache";
@@ -173,17 +173,15 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
             } catch (FeignException e) {
                 oAuthRequestInterceptor.resetApiApplicationKey();
                 if (e.getMessage().contains(GATEWAY_ERROR_CODE)) {
-                    log.error("Failed to connect to the device authorization service.");
+                    log.error("Failed to connect to the device authorization service.", e);
                 } else {
                     log.error(e.getMessage(), e);
                 }
-                log.error(e.getMessage(), e);
             }
+            return false;
         } finally {
             PrivilegedCarbonContext.endTenantFlow();
         }
-
-        return false;
     }
 
     /**

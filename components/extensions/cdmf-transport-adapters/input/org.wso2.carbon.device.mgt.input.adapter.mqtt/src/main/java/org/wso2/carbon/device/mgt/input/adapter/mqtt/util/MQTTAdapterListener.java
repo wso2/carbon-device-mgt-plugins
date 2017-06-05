@@ -206,8 +206,14 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
         }
         try {
             mqttClient.subscribe(topic);
+            log.info("mqtt receiver subscribed to topic: " + topic);
         } catch (MqttException e) {
             log.error("Failed to subscribe to topic: " + topic + ", Retrying.....");
+            try {
+                mqttClient.disconnect();
+            } catch (MqttException ex) {
+                // do nothing.
+            }
             return false;
         }
         return true;

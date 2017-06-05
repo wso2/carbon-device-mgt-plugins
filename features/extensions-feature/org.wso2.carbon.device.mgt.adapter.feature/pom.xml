@@ -64,6 +64,14 @@
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
             <artifactId>org.wso2.carbon.device.mgt.input.adapter.xmpp</artifactId>
         </dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+			<artifactId>org.wso2.carbon.device.mgt.input.adapter.thrift</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.wso2.carbon.analytics-common</groupId>
+			<artifactId>org.wso2.carbon.event.input.adapter.wso2event</artifactId>
+		</dependency>
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path</artifactId>
@@ -174,12 +182,19 @@
                                 <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.mqtt:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
+								<bundleDef>
+									org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.thrift:${carbon.devicemgt.plugins.version}
+								</bundleDef>
+								<bundleDef>
+									org.wso2.carbon.analytics-common:org.wso2.carbon.event.input.adapter.wso2event:${carbon.analytics.common.version}
+								</bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.xmpp:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.output.adapter.websocket:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
+
                                 <bundleDef>
                                     org.eclipse.paho:org.eclipse.paho.client.mqttv3:${eclipse.paho.version}
                                 </bundleDef>

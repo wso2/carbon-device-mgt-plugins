@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.wso2.gpl.siddhi.extensions</groupId>
+        <artifactId>siddhi-extension-gpl-geo-parent</artifactId>
+        <version>3.1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>bundle</packaging>
+    <url>http://wso2.org</url>
+
+    <artifactId>org.wso2.gpl.siddhi.extension.geo.plugin</artifactId>
+    <name>Siddhi Extension - Geo Component</name>
+
+    <description>
+        FunctionExecutors
+        1.  GeoWithinFunctionExecutor
+        Input : (longitude double, latitude double, geoJSONGeometryFence string)
+        OR (geoJSONGeometry string, geoJSONGeometryFence string)
+        Output : true if (longitude, latitude) or geoJSONGeometry is within the geoJSONGeometryFence
+
+        2.  GeoIntersectsFunctionExecutor
+        Input : (longitude double, latitude double, geoJSONGeometryFence string)
+        OR (geoJSONGeometry string, geoJSONGeometryFence string)
+        Output : true if (longitude, latitude) or geoJSONGeometry intersects the geoJSONGeometryFence
+
+        3.  GeoWithinDistanceFunctionExecutor
+        Input : (longitude double, latitude double, geoJSONGeometryFence string, distance double)
+        OR (geoJSONGeometry string, geoJSONGeometryFence string, distance double)
+        Output : true if (longitude, latitude) or geoJSONGeometry is within distance of the geoJSONGeometryFence
+
+        StreamProcessors
+        1. GeoCrossesStreamProcessor
+        Input : (id string, longitude double, latitude double, geoJSONGeometryFence string)
+        OR (id string, geoJSONGeometry string, geoJSONGeometryFence string)
+        Output : an event with `crosses` additional attribute set to true when the object ((longitude, latitude) or geoJSONGeometry)
+        crosses into geoJSONGeometryFence and an event with `crosses` additional attribute set to false
+        when the object crosses out of the geoJSONGeometryFence
+
+        2. GeoStationaryStreamProcessor
+        Input : (id string, longitude double, latitude double, geoJSONGeometryFence string, radius double)
+        OR (id string, geoJSONGeometry string, geoJSONGeometryFence string, radius double)
+        Output : when the object ((longitude, latitude) or geoJSONGeometry) starts being stationary within the radius
+        an event with `stationary` additional attribute set to true. When the object starts to move out of the radius
+        an event with `stationary` additional attribute set to false.
+
+        3. GeoProximityStreamProcessor
+        Input : (id string, longitude double, latitude double, geoJSONGeometryFence string, radius double)
+        OR (id string, geoJSONGeometry string, geoJSONGeometryFence string, radius double)
+        Output : when two objects ((longitude, latitude) or geoJSONGeometry) starts being in close proximity within the radius
+        an event with `inCloseProximity` additional attribute set to true. When the object starts to move out of the radius
+        an event with `inCloseProximity` additional. attribute set to false. On each event, additional attributes
+        `proximityWith` gives the id of the object that this object is in close proximity and `proximityId` is an id unique to
+        the pair of objects
+
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.siddhi</groupId>
+            <artifactId>siddhi-query-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.siddhi</groupId>
+            <artifactId>siddhi-query-compiler</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.siddhi</groupId>
+            <artifactId>siddhi-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.geotools</groupId>
+            <artifactId>gt-geojson</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.3.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Bundle-Version>${project.version}</Bundle-Version>
+                        <Bundle-Description>Siddhi Extension for Geo Fencing</Bundle-Description>
+                        <Export-Package>
+                            org.wso2.gpl.siddhi.extensions.geo.*
+                        </Export-Package>
+                        <Private-Package>
+                            org.wso2.gpl.siddhi.extensions.geo.internal.*
+                        </Private-Package>
+                        <Import-Package>
+                            *;resolution:=optional
+                        </Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
