@@ -368,4 +368,10 @@
             <Operation>DEVICE_LOCATION</Operation>
         </Operations>
     </InitialOperationConfig>
+    <DeviceStatusTaskConfig>
+        <RequireStatusMonitoring>true</RequireStatusMonitoring>
+        <Frequency>300</Frequency>
+        <IdleTimeToMarkInactive>600</IdleTimeToMarkInactive>
+        <IdleTimeToMarkUnreachable>300</IdleTimeToMarkUnreachable>
+    </DeviceStatusTaskConfig>
 </DeviceTypeConfiguration>
