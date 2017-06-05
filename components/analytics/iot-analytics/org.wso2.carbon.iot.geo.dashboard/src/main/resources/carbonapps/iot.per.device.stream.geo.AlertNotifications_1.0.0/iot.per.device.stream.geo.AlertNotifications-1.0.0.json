@@ -1,5 +1,5 @@
 {
-  "name": "org.wso2.geo.AlertsNotifications",
+  "name": "iot.per.device.stream.geo.AlertNotifications",
   "version": "1.0.0",
   "nickName": "",
   "description": "Alerts which need to be notified to the user, output only when the alert information is changed.",

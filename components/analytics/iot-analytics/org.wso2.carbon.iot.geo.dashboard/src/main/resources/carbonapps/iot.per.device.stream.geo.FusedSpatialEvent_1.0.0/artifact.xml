@@ -16,6 +16,6 @@
   ~ under the License.
   -->
 
-<artifact name="Geo-ExecutionPlan-InputStandardizer" version="1.0.0" type="event/execution-plan" serverRole="GeoDashboard">
-    <file>Geo-ExecutionPlan-InputStandardizer-1.0.0.siddhiql</file>
+<artifact name="iot.per.device.stream.geo.FusedSpatialEvent" version="1.0.0" type="event/stream" serverRole="GeoDashboard">
+    <file>iot.per.device.stream.geo.FusedSpatialEvent-1.0.0.json</file>
 </artifact>

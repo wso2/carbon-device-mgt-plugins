@@ -1,5 +1,5 @@
 {
-  "name": "org.wso2.geo.FusedSpatialEvent",
+  "name": "iot.per.device.stream.geo.FusedSpatialEvent",
   "version": "1.0.0",
   "nickName": "",
   "description": "",

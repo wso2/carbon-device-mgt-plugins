@@ -26,18 +26,17 @@
         <!-- Theme -->
         <dependency artifact="ThemeGeoDashboard" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <!-- CEP Artifacts -->
-        <dependency artifact="Geo-Dashboard-Http-Receiver" version="1.0.0" include="true" serverRole="GeoDashboard"/>
-        <dependency artifact="Geo-Dashboard-WSO2Event-Receiver" version="1.0.0" include="true" serverRole="GeoDashboard"/>
-        <dependency artifact="Geo-EventSink-FusedStream" version="1.0.0" include="true" serverRole="GeoDashboard"/>
+        <dependency artifact="WSO2IoT-Geo-Event-Receiver" version="1.0.0" include="true" serverRole="GeoDashboard"/>
+        <dependency artifact="WSO2IoT-EventSink-FusedStream" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="Geo-ExecutionPlan-EventsFusionGenerateNotifications" version="1.0.0" include="true" serverRole="GeoDashboard"/>
-        <dependency artifact="Geo-ExecutionPlan-InputStandardizer" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="Geo-ExecutionPlan-Pass_through" version="1.0.0" include="true" serverRole="GeoDashboard"/>
-        <dependency artifact="Geo-Publisher-RDBMS-GeoAlertNotifications" version="1.0.0" include="true" serverRole="GeoDashboard"/>
+        <dependency artifact="WSO2IoT-Geo-ExecutionPlan" version="1.0.0" include="true" serverRole="GeoDashboard"/>
+        <dependency artifact="WSO2IoT-Geo-AlertNotifications" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="Geo-Publisher-WebSocketLocal-FusedSpacialEvent" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="Geo-Publisher-WebSocketLocal-GeoAlertNotifications" version="1.0.0" include="true" serverRole="GeoDashboard"/>
-        <dependency artifact="org.wso2.geo.AlertsNotifications" version="1.0.0" include="true" serverRole="GeoDashboard"/>
-        <dependency artifact="org.wso2.geo.FusedSpatialEvent" version="1.0.0" include="true" serverRole="GeoDashboard"/>
-        <dependency artifact="org.wso2.geo.LocationStream" version="1.0.0" include="true" serverRole="GeoDashboard"/>
+        <dependency artifact="iot.per.device.stream.geo.AlertNotifications" version="1.0.0" include="true" serverRole="GeoDashboard"/>
+        <dependency artifact="iot.per.device.stream.geo.FusedSpatialEvent" version="1.0.0" include="true" serverRole="GeoDashboard"/>
+        <dependency artifact="org.wso2.iot.LocationStream" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="org.wso2.geo.ProcessedSpatialEvents" version="1.0.0" include="true" serverRole="GeoDashboard"/>
         <dependency artifact="org.wso2.geo.StandardSpatialEvents" version="1.0.0" include="true" serverRole="GeoDashboard"/>
     </artifact>

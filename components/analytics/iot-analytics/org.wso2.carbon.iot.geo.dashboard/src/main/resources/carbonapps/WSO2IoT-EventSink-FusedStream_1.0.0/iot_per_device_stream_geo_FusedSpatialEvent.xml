@@ -83,7 +83,7 @@
         </ColumnDefinition>
     </TableSchema>
     <Source>
-        <StreamId>org.wso2.geo.FusedSpatialEvent:1.0.0</StreamId>
+        <StreamId>iot.per.device.stream.geo.FusedSpatialEvent:1.0.0</StreamId>
     </Source>
     <MergeSchema>false</MergeSchema>
     <RecordStoreName>EVENT_STORE</RecordStoreName>
