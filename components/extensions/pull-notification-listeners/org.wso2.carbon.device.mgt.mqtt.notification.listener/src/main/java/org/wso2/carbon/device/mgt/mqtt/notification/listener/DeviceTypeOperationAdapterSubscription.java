@@ -49,8 +49,8 @@ public class DeviceTypeOperationAdapterSubscription implements InputEventAdapter
                     getThreadLocalCarbonContext().getUserRealm().getRealmConfiguration().getAdminUserName());
             deviceType = notificationMessage.getDeviceIdentifier().getType();
             MqttNotificationDataHolder.getInstance().getDeviceManagementProviderService().
-                    updatePullNotificationOperation(notificationMessage.getDeviceIdentifier(),
-                                                    notificationMessage.getOperation());
+                    notifyPullNotificationSubscriber(notificationMessage.getDeviceIdentifier(),
+                                                     notificationMessage.getOperation());
         } catch (UserStoreException e) {
             log.error("Failed to retrieve tenant username", e);
         } catch (PullNotificationExecutionFailedException e) {
