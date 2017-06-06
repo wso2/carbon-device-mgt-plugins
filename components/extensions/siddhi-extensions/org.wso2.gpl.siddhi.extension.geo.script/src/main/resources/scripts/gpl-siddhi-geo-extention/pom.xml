@@ -262,8 +262,8 @@
     </build>
 
     <properties>
-        <siddhi-extension-gpl-geo.version>3.1.0</siddhi-extension-gpl-geo.version>
-
+        <org.wso2.gpl.siddhi.extensions.version>3.1.0-SNAPSHOT</org.wso2.gpl.siddhi.extensions.version>
+        <gt-geojson.version>13.6.0.wso2v1</gt-geojson.version>
         <siddhi.version>3.1.1</siddhi.version>
         <junit.version>4.10</junit.version>
         <log4j.version>1.2.14</log4j.version>

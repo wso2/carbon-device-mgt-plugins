@@ -36,7 +36,7 @@
         <dependency>
             <groupId>org.wso2.gpl.siddhi.extensions</groupId>
             <artifactId>org.wso2.gpl.siddhi.extension.geo.plugin</artifactId>
-            <version>${siddhi-extension-gpl-geo.version}</version>
+            <version>${org.wso2.gpl.siddhi.extensions.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.orbit.org.geotools</groupId>
@@ -67,9 +67,9 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.gpl.siddhi.extensions:org.wso2.gpl.siddhi.extension.geo.plugin</bundleDef>
+                                <bundleDef>org.wso2.gpl.siddhi.extensions:org.wso2.gpl.siddhi.extension.geo.plugin:${org.wso2.gpl.siddhi.extensions.version}</bundleDef>
                                 <!--<bundleDef>com.google.code.gson:gson</bundleDef>-->
-                                <bundleDef>org.wso2.orbit.org.geotools:gt-geojson</bundleDef>
+                                <bundleDef>org.wso2.orbit.org.geotools:gt-geojson:${gt-geojson.version}</bundleDef>
                             </bundles>
                         </configuration>
                     </execution>

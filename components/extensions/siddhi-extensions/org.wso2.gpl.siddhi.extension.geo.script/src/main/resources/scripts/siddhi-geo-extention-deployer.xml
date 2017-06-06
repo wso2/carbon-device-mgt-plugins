@@ -184,7 +184,6 @@
         </repository>
     </repositories>
     <properties>
-        <carbon.device.mgt.plugin.version>3.0.37-SNAPSHOT</carbon.device.mgt.plugin.version>
         <org.wso2.gpl.siddhi.extensions.version>3.1.0-SNAPSHOT</org.wso2.gpl.siddhi.extensions.version>
     </properties>
 </project>
