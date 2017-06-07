@@ -74,9 +74,11 @@ $(window).load(function () {
     connect(websocketUrl)
 });
 
-$(window).unload(function () {
+// close websocket when page is about to be unloaded
+// fixes broken pipe issue
+window.onbeforeunload = function() {
     disconnect();
-});
+};
 
 //websocket connection
 function connect(target) {
