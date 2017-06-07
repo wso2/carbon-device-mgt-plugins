@@ -3,7 +3,7 @@
     <parent>
         <artifactId>androidsense-plugin</artifactId>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-        <version>3.0.40</version>
+        <version>3.0.41-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
