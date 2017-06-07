@@ -4,6 +4,7 @@
     "category": "iot",
     "scopes" : [
       "perm:android-sense:enroll"
-    ]
+    ],
+    "analyticsView" : "DAS"
   }
 }
