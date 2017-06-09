@@ -75,6 +75,7 @@ public class AgentConstants {
 	public static final String DEVICE_CONTROLLER_CONTEXT_PROPERTY = "controller-context";
 	public static final String DEVICE_SCEP_CONTEXT_PROPERTY = "scep-context";
 	public static final String SERVER_HTTPS_EP_PROPERTY = "https-ep";
+	public static final String SERVER_HTTPS_EP_DEVICE_PROPERTY = "https-ep-device";
 	public static final String SERVER_HTTP_EP_PROPERTY = "http-ep";
 	public static final String APIM_GATEWAY_EP_PROPERTY = "apim-ep";
 	public static final String MQTT_BROKER_EP_PROPERTY = "mqtt-ep";

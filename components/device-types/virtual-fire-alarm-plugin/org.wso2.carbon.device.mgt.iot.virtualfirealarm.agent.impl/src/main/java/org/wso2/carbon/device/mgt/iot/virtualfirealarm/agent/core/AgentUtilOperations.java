@@ -114,6 +114,8 @@ public class AgentUtilOperations {
                         AgentConstants.DEVICE_SCEP_CONTEXT_PROPERTY));
                 iotServerConfigs.setHTTPS_ServerEndpoint(properties.getProperty(
                         AgentConstants.SERVER_HTTPS_EP_PROPERTY));
+                iotServerConfigs.setHTTPS_Server_DeviceEndpoint(properties.getProperty(
+                        AgentConstants.SERVER_HTTPS_EP_DEVICE_PROPERTY));
                 iotServerConfigs.setHTTP_ServerEndpoint(properties.getProperty(
                         AgentConstants.SERVER_HTTP_EP_PROPERTY));
                 iotServerConfigs.setApimGatewayEndpoint(properties.getProperty(
@@ -146,6 +148,8 @@ public class AgentUtilOperations {
                                  iotServerConfigs.getControllerContext());
                 log.info(AgentConstants.LOG_APPENDER + "IoT Server HTTPS EndPoint: " +
                                  iotServerConfigs.getHTTPS_ServerEndpoint());
+                log.info(AgentConstants.LOG_APPENDER + "IoT Server HTTPS Device EndPoint: " +
+                        iotServerConfigs.getHTTPS_Server_DeviceEndpoint());
                 log.info(AgentConstants.LOG_APPENDER + "IoT Server HTTP EndPoint: " +
                                  iotServerConfigs.getHTTP_ServerEndpoint());
                 log.info(AgentConstants.LOG_APPENDER + "API-Manager Gateway EndPoint: " +

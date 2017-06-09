@@ -59,6 +59,7 @@ public class ZipUtil {
 
     private static final String LOCALHOST = "localhost";
     private static final String HTTPS_PROTOCOL_URL = "https://${iot.gateway.host}:${iot.gateway.https.port}";
+    private static final String HTTPS_DEVICE_PROTOCOL_URL = "https://${iot.gateway.host}:${iot.core.https.port}";
     private static final String HTTP_PROTOCOL_URL = "http://${iot.gateway.host}:${iot.gateway.http.port}";
     private static final String CONFIG_TYPE = "general";
     private static final String DEFAULT_MQTT_ENDPOINT = "tcp://${mqtt.broker.host}:${mqtt.broker.port}";
@@ -73,6 +74,7 @@ public class ZipUtil {
 
         try {
             iotServerIP = getServerUrl();
+            String httpsDeviceServerEP = Utils.replaceSystemProperty(HTTPS_DEVICE_PROTOCOL_URL);
             String httpsServerEP = Utils.replaceSystemProperty(HTTPS_PROTOCOL_URL);
             String httpServerEP = Utils.replaceSystemProperty(HTTP_PROTOCOL_URL);
             String mqttEndpoint = Utils.replaceSystemProperty(DEFAULT_MQTT_ENDPOINT);
@@ -80,6 +82,7 @@ public class ZipUtil {
                 mqttEndpoint = mqttEndpoint.replace(LOCALHOST, iotServerIP);
                 httpsServerEP = httpsServerEP.replace(LOCALHOST, iotServerIP);
                 httpServerEP = httpServerEP.replace(LOCALHOST, iotServerIP);
+                httpsDeviceServerEP = httpsDeviceServerEP.replace(LOCALHOST, iotServerIP);
             }
 
             String xmppEndpoint = "";
@@ -98,6 +101,9 @@ public class ZipUtil {
                     switch (configurationEntry.getName()) {
                         case VirtualFireAlarmUtilConstants.VIRTUAL_FIREALARM_HTTPS_EP:
                             httpsServerEP = (String)configurationEntry.getValue();
+                            break;
+                        case VirtualFireAlarmUtilConstants.VIRTUAL_FIREALARM_HTTPS_EP_DEVICE:
+                            httpsDeviceServerEP = (String)configurationEntry.getValue();
                             break;
                         case VirtualFireAlarmUtilConstants.VIRTUAL_FIREALARM_HTTP_EP:
                             httpServerEP = (String)configurationEntry.getValue();
@@ -119,6 +125,7 @@ public class ZipUtil {
             contextParams.put(VirtualFireAlarmUtilConstants.DEVICE_ID, deviceId);
             contextParams.put(VirtualFireAlarmUtilConstants.DEVICE_NAME, deviceName);
             contextParams.put(VirtualFireAlarmUtilConstants.HTTPS_EP, httpsServerEP);
+            contextParams.put(VirtualFireAlarmUtilConstants.HTTPS_EP_DEVICE, httpsDeviceServerEP);
             contextParams.put(VirtualFireAlarmUtilConstants.HTTP_EP, httpServerEP);
             contextParams.put(VirtualFireAlarmUtilConstants.APIM_EP, httpServerEP);
             contextParams.put(VirtualFireAlarmUtilConstants.MQTT_EP, mqttEndpoint);

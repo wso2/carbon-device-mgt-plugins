@@ -31,6 +31,7 @@ public class AgentConfiguration {
 	private String controllerContext;
 	private String scepContext;
 	private String HTTPS_ServerEndpoint;
+	private String HTTPS_Server_DeviceEndpoint;
 	private String HTTP_ServerEndpoint;
 	private String apimGatewayEndpoint;
 	private String mqttBrokerEndpoint;
@@ -176,6 +177,14 @@ public class AgentConfiguration {
 
 	public void setXmppServerName(String xmppServerName) {
 		this.xmppServerName = xmppServerName;
+	}
+
+	public String getHTTPS_Server_DeviceEndpoint() {
+		return HTTPS_Server_DeviceEndpoint;
+	}
+
+	public void setHTTPS_Server_DeviceEndpoint(String HTTPS_Server_DeviceEndpoint) {
+		this.HTTPS_Server_DeviceEndpoint = HTTPS_Server_DeviceEndpoint;
 	}
 }
 

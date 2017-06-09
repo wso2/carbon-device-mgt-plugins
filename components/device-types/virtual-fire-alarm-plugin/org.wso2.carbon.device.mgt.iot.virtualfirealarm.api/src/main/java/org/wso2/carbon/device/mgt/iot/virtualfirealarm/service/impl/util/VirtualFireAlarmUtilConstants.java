@@ -8,11 +8,13 @@ public class VirtualFireAlarmUtilConstants {
     public static final String DEVICE_ID = "DEVICE_ID";
     public static final String DEVICE_NAME = "DEVICE_NAME";
     public static final String HTTPS_EP = "HTTPS_EP";
+    public static final String HTTPS_EP_DEVICE = "HTTPS_EP_DEVICE";
     public static final String HTTP_EP = "HTTP_EP";
     public static final String APIM_EP = "APIM_EP";
     public static final String MQTT_EP = "MQTT_EP";
     public static final String XMPP_EP = "XMPP_EP";
     public static final String VIRTUAL_FIREALARM_HTTPS_EP = "VIRTUAL_FIREALARM_HTTPS_EP";
+    public static final String VIRTUAL_FIREALARM_HTTPS_EP_DEVICE = "VIRTUAL_FIREALARM_HTTPS_EP_DEVICE";
     public static final String VIRTUAL_FIREALARM_HTTP_EP = "VIRTUAL_FIREALARM_HTTP_EP";
     public static final String VIRTUAL_FIREALARM_APIM_EP = "VIRTUAL_FIREALARM_APIM_EP";
     public static final String VIRTUAL_FIREALARM_MQTT_EP = "VIRTUAL_FIREALARM_MQTT_EP";
