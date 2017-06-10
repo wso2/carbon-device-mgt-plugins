@@ -108,14 +108,8 @@ public class AgentUtilOperations {
                         AgentConstants.SERVER_JID_PROPERTY));
                 iotServerConfigs.setDeviceName(properties.getProperty(
                         AgentConstants.DEVICE_NAME_PROPERTY));
-                iotServerConfigs.setControllerContext(properties.getProperty(
-                        AgentConstants.DEVICE_CONTROLLER_CONTEXT_PROPERTY));
-                iotServerConfigs.setScepContext(properties.getProperty(
-                        AgentConstants.DEVICE_SCEP_CONTEXT_PROPERTY));
                 iotServerConfigs.setHTTPS_ServerEndpoint(properties.getProperty(
                         AgentConstants.SERVER_HTTPS_EP_PROPERTY));
-                iotServerConfigs.setHTTPS_Server_DeviceEndpoint(properties.getProperty(
-                        AgentConstants.SERVER_HTTPS_EP_DEVICE_PROPERTY));
                 iotServerConfigs.setHTTP_ServerEndpoint(properties.getProperty(
                         AgentConstants.SERVER_HTTP_EP_PROPERTY));
                 iotServerConfigs.setApimGatewayEndpoint(properties.getProperty(
@@ -128,8 +122,6 @@ public class AgentUtilOperations {
                         AgentConstants.XMPP_SERVER_NAME_PROPERTY));
                 iotServerConfigs.setApiApplicationKey(properties.getProperty(
                         AgentConstants.API_APPLICATION_KEY));
-                iotServerConfigs.setAuthMethod(properties.getProperty(
-                        AgentConstants.AUTH_METHOD_PROPERTY));
                 iotServerConfigs.setAuthToken(properties.getProperty(
                         AgentConstants.AUTH_TOKEN_PROPERTY));
                 iotServerConfigs.setRefreshToken(properties.getProperty(
@@ -141,15 +133,12 @@ public class AgentUtilOperations {
                                  iotServerConfigs.getTenantDomain());
                 log.info(AgentConstants.LOG_APPENDER + "Device Owner: " +
                                  iotServerConfigs.getDeviceOwner());
-                log.info(AgentConstants.LOG_APPENDER + "Device ID: " + iotServerConfigs.getDeviceId());
+                log.info(AgentConstants.LOG_APPENDER + "Device ID: " +
+                                 iotServerConfigs.getDeviceId());
                 log.info(AgentConstants.LOG_APPENDER + "Device Name: " +
                                  iotServerConfigs.getDeviceName());
-                log.info(AgentConstants.LOG_APPENDER + "Device Controller Context: " +
-                                 iotServerConfigs.getControllerContext());
                 log.info(AgentConstants.LOG_APPENDER + "IoT Server HTTPS EndPoint: " +
                                  iotServerConfigs.getHTTPS_ServerEndpoint());
-                log.info(AgentConstants.LOG_APPENDER + "IoT Server HTTPS Device EndPoint: " +
-                        iotServerConfigs.getHTTPS_Server_DeviceEndpoint());
                 log.info(AgentConstants.LOG_APPENDER + "IoT Server HTTP EndPoint: " +
                                  iotServerConfigs.getHTTP_ServerEndpoint());
                 log.info(AgentConstants.LOG_APPENDER + "API-Manager Gateway EndPoint: " +
@@ -158,8 +147,6 @@ public class AgentUtilOperations {
                                  iotServerConfigs.getMqttBrokerEndpoint());
                 log.info(AgentConstants.LOG_APPENDER + "XMPP Server EndPoint: " +
                                  iotServerConfigs.getXmppServerEndpoint());
-                log.info(AgentConstants.LOG_APPENDER + "Authentication Method: " +
-                                 iotServerConfigs.getAuthMethod());
                 log.info(AgentConstants.LOG_APPENDER + "Base64Encoded API Application Key: " +
                                  iotServerConfigs.getApiApplicationKey());
                 log.info(AgentConstants.LOG_APPENDER + "Authentication Token: " +
@@ -206,8 +193,8 @@ public class AgentUtilOperations {
         AgentManager agentManager = AgentManager.getInstance();
         String serverSecureEndpoint = agentManager.getAgentConfigs().getHTTPS_ServerEndpoint();
         String serverUnSecureEndpoint = agentManager.getAgentConfigs().getHTTP_ServerEndpoint();
-        String backEndContext = agentManager.getAgentConfigs().getControllerContext();
-        String scepBackEndContext = agentManager.getAgentConfigs().getScepContext();
+        String backEndContext = "/virtual_firealarm/device";
+        String scepBackEndContext = "/virtual_firealarm_scep";
 
         String deviceControllerAPIEndpoint = serverSecureEndpoint + backEndContext;
 
@@ -316,7 +303,7 @@ public class AgentUtilOperations {
     }
 
     public static String getAuthenticationMethod() {
-        String authMethod = AgentManager.getInstance().getAgentConfigs().getAuthMethod();
+        String authMethod = "token";
         switch (authMethod) {
             case AgentConstants.TOKEN_AUTHENTICATION_METHOD:
                 return AgentConstants.TOKEN_AUTHENTICATION_METHOD;

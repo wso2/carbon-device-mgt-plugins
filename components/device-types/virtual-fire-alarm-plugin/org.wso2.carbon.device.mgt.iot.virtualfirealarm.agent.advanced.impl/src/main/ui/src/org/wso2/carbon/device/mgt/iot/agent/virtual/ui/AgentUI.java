@@ -47,8 +47,6 @@ public class AgentUI extends javax.swing.JFrame {
         chkbxTemperatureSmooth = new javax.swing.JCheckBox();
         jPanel6 = new javax.swing.JPanel();
         jLabel20 = new javax.swing.JLabel();
-        btnView = new javax.swing.JButton();
-        btnControl = new javax.swing.JButton();
         lblStatus = new javax.swing.JLabel();
         jPanel8 = new javax.swing.JPanel();
         jLabel23 = new javax.swing.JLabel();
@@ -274,20 +272,6 @@ public class AgentUI extends javax.swing.JFrame {
         jLabel20.setText("Connection Status:");
         jLabel20.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
 
-        btnView.setText("View Device Data");
-        btnView.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnViewMouseClicked(evt);
-            }
-        });
-
-        btnControl.setText("Control Device");
-        btnControl.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnControlMouseClicked(evt);
-            }
-        });
-
         lblStatus.setFont(new java.awt.Font("Cantarell", 1, 15)); // NOI18N
         lblStatus.setText("Not Connected");
 
@@ -300,22 +284,15 @@ public class AgentUI extends javax.swing.JFrame {
                 .addComponent(jLabel20)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnControl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnView)
-                .addContainerGap())
+                .addGap(273, 273, 273))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnControl)
-                        .addComponent(lblStatus)))
+                    .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                    .addComponent(lblStatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -465,7 +442,7 @@ public class AgentUI extends javax.swing.JFrame {
 
         jLabel7.setText("Data Push Interval:");
 
-        spinnerInterval.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(5), Integer.valueOf(1), null, Integer.valueOf(1)));
+        spinnerInterval.setModel(new javax.swing.SpinnerNumberModel(5, 1, null, 1));
         spinnerInterval.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spinnerIntervalStateChanged(evt);
@@ -627,14 +604,6 @@ public class AgentUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnControlMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnControlMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnControlMouseClicked
-
-    private void btnViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnViewMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnViewMouseClicked
-
     private void chkbxTemperatureRandomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkbxTemperatureRandomActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_chkbxTemperatureRandomActionPerformed
@@ -704,8 +673,6 @@ public class AgentUI extends javax.swing.JFrame {
     }//GEN-LAST:event_chkbxEmulateActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnControl;
-    private javax.swing.JButton btnView;
     private javax.swing.JCheckBox chkbxEmulate;
     private javax.swing.JCheckBox chkbxHumidityRandom;
     private javax.swing.JCheckBox chkbxHumiditySmooth;

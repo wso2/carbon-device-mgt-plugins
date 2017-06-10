@@ -72,7 +72,6 @@ public class AgentConstants {
 	public static final String DEVICE_ID_PROPERTY = "deviceId";
 	public static final String SERVER_JID_PROPERTY = "server-jid";
 	public static final String DEVICE_NAME_PROPERTY = "device-name";
-	public static final String DEVICE_CONTROLLER_CONTEXT_PROPERTY = "controller-context";
 	public static final String DEVICE_SCEP_CONTEXT_PROPERTY = "scep-context";
 	public static final String SERVER_HTTPS_EP_PROPERTY = "https-ep";
 	public static final String SERVER_HTTPS_EP_DEVICE_PROPERTY = "https-ep-device";
@@ -80,7 +79,6 @@ public class AgentConstants {
 	public static final String APIM_GATEWAY_EP_PROPERTY = "apim-ep";
 	public static final String MQTT_BROKER_EP_PROPERTY = "mqtt-ep";
 	public static final String XMPP_SERVER_EP_PROPERTY = "xmpp-ep";
-	public static final String AUTH_METHOD_PROPERTY = "auth-method";
 	public static final String AUTH_TOKEN_PROPERTY = "auth-token";
 	public static final String REFRESH_TOKEN_PROPERTY = "refresh-token";
 	public static final String NETWORK_INTERFACE_PROPERTY = "network-interface";
@@ -98,7 +96,6 @@ public class AgentConstants {
 	public static final String DEFAULT_APIM_GATEWAY_EP = "http://127.0.0.1:8281";
 	public static final String DEFAULT_MQTT_BROKER_EP = "tcp://127.0.0.1:1883";
 	public static final String DEFAULT_XMPP_SERVER_EP = "http://127.0.0.1:9061";
-	public static final String DEFAULT_AUTH_METHOD = "token";
 	public static final String DEFAULT_AUTH_TOKEN = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0987654321";
 	public static final String DEFAULT_REFRESH_TOKEN = "1234567890ZYXWVUTSRQPONMKLJIHGFEDCBA";
 	public static final String DEFAULT_NETWORK_INTERFACE = "en0";
