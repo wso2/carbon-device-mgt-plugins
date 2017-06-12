@@ -261,7 +261,6 @@
     </build>
 
     <properties>
-        <org.wso2.gpl.siddhi.extensions.version>3.2.0</org.wso2.gpl.siddhi.extensions.version>
         <gt-geojson.version>13.6.0.wso2v1</gt-geojson.version>
         <siddhi.version>3.1.1</siddhi.version>
         <junit.version>4.10</junit.version>
@@ -291,6 +290,26 @@
     </mailingLists>
 
     <repositories>
+        <repository>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+        <repository>
+            <id>wso2.releases</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
         <repository>
             <id>osgeo</id>
             <name>Open Source Geospatial Foundation Repository</name>

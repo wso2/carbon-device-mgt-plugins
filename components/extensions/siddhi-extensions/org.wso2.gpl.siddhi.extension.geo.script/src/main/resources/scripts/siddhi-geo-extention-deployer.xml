@@ -56,7 +56,10 @@
                             <publishArtifactRepository>true</publishArtifactRepository>
                             <featureArtifacts>
                                 <featureArtifactDef>
-                                    org.wso2.gpl.siddhi.extensions:org.wso2.gpl.siddhi.extension.geo.feature:${org.wso2.gpl.siddhi.extensions.version}
+                                    org.wso2.extension.siddhi.gpl.execution.geo:siddhi-gpl-execution-geo-feature:${siddhi-gpl-execution-geo-feature.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.gpl.siddhi.extensions:org.wso2.gpl.siddhi.extension.geo.feature:${org.wso2.iot.devicemgt-plugins.gpl.siddhi.extensions.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
@@ -75,8 +78,12 @@
                             <deleteOldProfileFiles>false</deleteOldProfileFiles>
                             <features>
                                 <feature>
+                                    <id>siddhi-gpl-execution-geo.feature.group</id>
+                                    <version>${siddhi-gpl-execution-geo-feature.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.gpl.siddhi.extension.geo.feature.group</id>
-                                    <version>${org.wso2.gpl.siddhi.extensions.version}</version>
+                                    <version>${org.wso2.iot.devicemgt-plugins.gpl.siddhi.extensions.version}</version>
                                 </feature>
                             </features>
                         </configuration>
@@ -184,6 +191,7 @@
         </repository>
     </repositories>
     <properties>
-        <org.wso2.gpl.siddhi.extensions.version>3.1.0-SNAPSHOT</org.wso2.gpl.siddhi.extensions.version>
+        <org.wso2.iot.devicemgt-plugins.gpl.siddhi.extensions.version>3.1.0-SNAPSHOT</org.wso2.iot.devicemgt-plugins.gpl.siddhi.extensions.version>
+        <siddhi-gpl-execution-geo-feature.version>3.2.0</siddhi-gpl-execution-geo-feature.version>
     </properties>
 </project>
