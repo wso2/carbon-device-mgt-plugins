@@ -202,8 +202,8 @@ public class AgentUtilOperations {
         AgentManager agentManager = AgentManager.getInstance();
         String serverSecureEndpoint = agentManager.getAgentConfigs().getHTTPS_ServerEndpoint();
         String serverUnSecureEndpoint = agentManager.getAgentConfigs().getHTTP_ServerEndpoint();
-        String backEndContext = "/virtual_firealarm/device";
-        String scepBackEndContext = "/virtual_firealarm_scep";
+        String backEndContext =AgentConstants.DEVICE_CONTROLLER_API_EP;
+        String scepBackEndContext = AgentConstants.DEVICE_SCEP_API_EP;S
         String deviceControllerAPIEndpoint = serverSecureEndpoint + backEndContext;
 
         String deviceEnrollmentEndpoint =
