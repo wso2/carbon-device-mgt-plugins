@@ -48,7 +48,6 @@ public class AgentManager {
     private boolean isAlarmOn = false;
     private String initialPolicy;
 
-    private String deviceMgtControlUrl, deviceMgtAnalyticUrl;
     private String deviceName, agentStatus;
 
     private int pushInterval;               // seconds
@@ -250,14 +249,6 @@ public class AgentManager {
 
     public String getInitialPolicy() {
         return initialPolicy;
-    }
-
-    public String getDeviceMgtControlUrl() {
-        return deviceMgtControlUrl;
-    }
-
-    public String getDeviceMgtAnalyticUrl() {
-        return deviceMgtAnalyticUrl;
     }
 
     public AgentConfiguration getAgentConfigs() {

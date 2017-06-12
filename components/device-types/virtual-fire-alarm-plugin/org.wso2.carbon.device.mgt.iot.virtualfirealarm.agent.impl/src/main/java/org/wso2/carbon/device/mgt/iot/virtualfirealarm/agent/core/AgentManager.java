@@ -44,7 +44,6 @@ public class AgentManager {
     private boolean deviceReady = false;
     private boolean isAlarmOn = false;
 
-    private String deviceMgtControlUrl, deviceMgtAnalyticUrl;
     private String deviceName, agentStatus;
 
     private int pushInterval;               // seconds
@@ -229,14 +228,6 @@ public class AgentManager {
 
     public void setDeviceReady(boolean deviceReady) {
         this.deviceReady = deviceReady;
-    }
-
-    public String getDeviceMgtControlUrl() {
-        return deviceMgtControlUrl;
-    }
-
-    public String getDeviceMgtAnalyticUrl() {
-        return deviceMgtAnalyticUrl;
     }
 
     public AgentConfiguration getAgentConfigs() {

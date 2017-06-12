@@ -159,7 +159,6 @@ public class AgentConfiguration {
     public void setXmppServerName(String xmppServerName) {
         this.xmppServerName = xmppServerName;
     }
-
 }
 
 
