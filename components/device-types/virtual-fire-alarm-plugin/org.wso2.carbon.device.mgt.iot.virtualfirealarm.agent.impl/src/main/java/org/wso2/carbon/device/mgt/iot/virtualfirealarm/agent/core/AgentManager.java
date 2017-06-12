@@ -44,7 +44,6 @@ public class AgentManager {
     private boolean deviceReady = false;
     private boolean isAlarmOn = false;
 
-    private String deviceMgtControlUrl, deviceMgtAnalyticUrl;
     private String deviceName, agentStatus;
 
     private int pushInterval;               // seconds
@@ -95,9 +94,6 @@ public class AgentManager {
         String controlPageContext = String.format(AgentConstants.DEVICE_DETAILS_PAGE_EP,
                                                   AgentConstants.DEVICE_TYPE,
                                                   agentConfigs.getDeviceId());
-
-        this.deviceMgtAnalyticUrl = agentConfigs.getHTTPS_ServerEndpoint() + analyticsPageContext;
-        this.deviceMgtControlUrl = agentConfigs.getHTTPS_ServerEndpoint() + controlPageContext;
 
         this.agentStatus = AgentConstants.NOT_REGISTERED;
         this.deviceName = this.agentConfigs.getDeviceName();
@@ -232,14 +228,6 @@ public class AgentManager {
 
     public void setDeviceReady(boolean deviceReady) {
         this.deviceReady = deviceReady;
-    }
-
-    public String getDeviceMgtControlUrl() {
-        return deviceMgtControlUrl;
-    }
-
-    public String getDeviceMgtAnalyticUrl() {
-        return deviceMgtAnalyticUrl;
     }
 
     public AgentConfiguration getAgentConfigs() {
