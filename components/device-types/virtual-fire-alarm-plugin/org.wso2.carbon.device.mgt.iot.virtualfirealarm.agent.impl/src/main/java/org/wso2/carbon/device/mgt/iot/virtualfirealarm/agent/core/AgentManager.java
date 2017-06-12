@@ -96,9 +96,6 @@ public class AgentManager {
                                                   AgentConstants.DEVICE_TYPE,
                                                   agentConfigs.getDeviceId());
 
-        this.deviceMgtAnalyticUrl = agentConfigs.getHTTPS_ServerEndpoint() + analyticsPageContext;
-        this.deviceMgtControlUrl = agentConfigs.getHTTPS_ServerEndpoint() + controlPageContext;
-
         this.agentStatus = AgentConstants.NOT_REGISTERED;
         this.deviceName = this.agentConfigs.getDeviceName();
 

@@ -28,14 +28,11 @@ public class AgentConfiguration {
 	private String deviceOwner;
 	private String deviceId;
 	private String deviceName;
-	private String controllerContext;
-	private String scepContext;
 	private String HTTPS_ServerEndpoint;
 	private String HTTP_ServerEndpoint;
 	private String apimGatewayEndpoint;
 	private String mqttBrokerEndpoint;
 	private String xmppServerEndpoint;
-	private String authMethod;
 	private String authToken;
 	private String refreshToken;
 	private int dataPushInterval;
@@ -82,14 +79,6 @@ public class AgentConfiguration {
 		this.deviceName = deviceName;
 	}
 
-	public String getControllerContext() {
-		return controllerContext;
-	}
-
-	public void setControllerContext(String controllerContext) {
-		this.controllerContext = controllerContext;
-	}
-
 	public String getHTTPS_ServerEndpoint() {
 		return HTTPS_ServerEndpoint;
 	}
@@ -130,14 +119,6 @@ public class AgentConfiguration {
 		this.xmppServerEndpoint = xmppServerEndpoint;
 	}
 
-	public String getAuthMethod() {
-		return authMethod;
-	}
-
-	public void setAuthMethod(String authMethod) {
-		this.authMethod = authMethod;
-	}
-
 	public String getAuthToken() {
 		return authToken;
 	}
@@ -162,14 +143,6 @@ public class AgentConfiguration {
 		this.dataPushInterval = dataPushInterval;
 	}
 
-	public String getScepContext() {
-		return scepContext;
-	}
-
-	public void setScepContext(String scepContext) {
-		this.scepContext = scepContext;
-	}
-
 	public String getXmppServerName() {
 		return xmppServerName;
 	}
@@ -177,6 +150,7 @@ public class AgentConfiguration {
 	public void setXmppServerName(String xmppServerName) {
 		this.xmppServerName = xmppServerName;
 	}
+
 }
 
 

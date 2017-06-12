@@ -73,8 +73,6 @@ public class AgentConstants {
     public static final String DEVICE_ID_PROPERTY = "deviceId";
     public static final String SERVER_JID_PROPERTY = "server-jid";
     public static final String DEVICE_NAME_PROPERTY = "device-name";
-    public static final String DEVICE_CONTROLLER_CONTEXT_PROPERTY = "controller-context";
-    public static final String DEVICE_SCEP_CONTEXT_PROPERTY = "scep-context";
     public static final String SERVER_HTTPS_EP_PROPERTY = "https-ep";
     public static final String SERVER_HTTP_EP_PROPERTY = "http-ep";
     public static final String APIM_GATEWAY_EP_PROPERTY = "apim-ep";
@@ -82,7 +80,6 @@ public class AgentConstants {
     public static final String XMPP_SERVER_EP_PROPERTY = "xmpp-ep";
     public static final String XMPP_SERVER_NAME_PROPERTY = "xmpp-server-name";
     public static final String API_APPLICATION_KEY = "application-key";
-    public static final String AUTH_METHOD_PROPERTY = "auth-method";
     public static final String AUTH_TOKEN_PROPERTY = "auth-token";
     public static final String REFRESH_TOKEN_PROPERTY = "refresh-token";
     public static final String NETWORK_INTERFACE_PROPERTY = "network-interface";
