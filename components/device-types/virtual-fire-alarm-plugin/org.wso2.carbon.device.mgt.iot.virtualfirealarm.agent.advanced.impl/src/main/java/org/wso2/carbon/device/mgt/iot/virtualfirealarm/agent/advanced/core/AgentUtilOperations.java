@@ -203,7 +203,7 @@ public class AgentUtilOperations {
         String serverSecureEndpoint = agentManager.getAgentConfigs().getHTTPS_ServerEndpoint();
         String serverUnSecureEndpoint = agentManager.getAgentConfigs().getHTTP_ServerEndpoint();
         String backEndContext =AgentConstants.DEVICE_CONTROLLER_API_EP;
-        String scepBackEndContext = AgentConstants.DEVICE_SCEP_API_EP;S
+        String scepBackEndContext = AgentConstants.DEVICE_SCEP_API_EP;
         String deviceControllerAPIEndpoint = serverSecureEndpoint + backEndContext;
 
         String deviceEnrollmentEndpoint =
