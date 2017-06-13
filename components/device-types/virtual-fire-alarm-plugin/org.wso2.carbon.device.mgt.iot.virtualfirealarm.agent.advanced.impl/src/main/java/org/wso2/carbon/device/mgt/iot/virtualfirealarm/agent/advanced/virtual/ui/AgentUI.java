@@ -43,8 +43,6 @@ public class AgentUI extends JFrame {
     private volatile java.util.List<String> policyLogs = new ArrayList<>();
 
     // Variables declaration - do not modify
-    private JButton btnControl;
-    private JButton btnView;
     private JCheckBox chkbxEmulate;
     private JCheckBox chkbxHumidityRandom;
     private JCheckBox chkbxHumiditySmooth;
@@ -173,8 +171,6 @@ public class AgentUI extends JFrame {
         chkbxTemperatureSmooth = new JCheckBox();
         jPanel6 = new JPanel();
         jLabel20 = new JLabel();
-        btnView = new JButton();
-        btnControl = new JButton();
         lblStatus = new JLabel();
         jPanel8 = new JPanel();
         jLabel23 = new JLabel();
@@ -427,20 +423,6 @@ public class AgentUI extends JFrame {
         jLabel20.setText("Connection Status:");
         jLabel20.setVerticalTextPosition(SwingConstants.TOP);
 
-        btnView.setText("View Device Data");
-        btnView.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnViewMouseClicked(evt);
-            }
-        });
-
-        btnControl.setText("Control Device");
-        btnControl.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnControlMouseClicked(evt);
-            }
-        });
-
         lblStatus.setFont(new Font("Cantarell", 1, 15)); // NOI18N
         lblStatus.setText("Not Connected");
 
@@ -455,10 +437,6 @@ public class AgentUI extends JFrame {
                                                                    .ComponentPlacement.RELATED)
                                           .addComponent(lblStatus, GroupLayout
                                                   .DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                          .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                          .addComponent(btnControl)
-                                          .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                          .addComponent(btnView)
                                           .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -474,11 +452,6 @@ public class AgentUI extends JFrame {
                                                                 Short.MAX_VALUE)
                                                   .addGroup(jPanel6Layout.createParallelGroup(
                                                           GroupLayout.Alignment.BASELINE)
-                                                                    .addComponent(btnView,
-                                                                                  GroupLayout.DEFAULT_SIZE,
-                                                                                  GroupLayout.DEFAULT_SIZE,
-                                                                                  Short.MAX_VALUE)
-                                                                    .addComponent(btnControl)
                                                                     .addComponent(lblStatus)))
                                 .addContainerGap())
         );
@@ -874,30 +847,6 @@ public class AgentUI extends JFrame {
         new Thread(uiUpdater).start();
 
 	    AgentManager.getInstance().setDeviceReady(true);
-    }
-
-    private void btnControlMouseClicked(java.awt.event.MouseEvent evt) {
-        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-            try {
-                URI uri = new URI(AgentManager.getInstance().getDeviceMgtControlUrl());
-                desktop.browse(uri);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void btnViewMouseClicked(java.awt.event.MouseEvent evt) {
-        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-            try {
-                URI uri = new URI(AgentManager.getInstance().getDeviceMgtAnalyticUrl());
-                desktop.browse(uri);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void chkbxTemperatureRandomActionPerformed(java.awt.event.ActionEvent evt) {
