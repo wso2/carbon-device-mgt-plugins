@@ -125,6 +125,12 @@ public interface MQTTManagementAdminService {
     })
     Response getFilteredSubscriptions(
 
+            @QueryParam("topic_name") String topic_name,
+            @QueryParam("remaining_messages") int remaining_messages,
+            @QueryParam("active") String active,
+            @QueryParam("durable") String durable,
+            @QueryParam("subscriber_name") String subscriber_name,
+            @QueryParam("identifier") String identifier,
             @ApiParam(
                     name = "tenant-domain",
                     value = "The name of the tenant.\n" +
@@ -132,6 +138,7 @@ public interface MQTTManagementAdminService {
                     required = true,
                     defaultValue = "carbon.super")
             @QueryParam("tenant-domain") String tenantDomain,
+            @QueryParam("since") String since,
             @ApiParam(
                     name = "If-Modified-Since",
                     value = "Checks if the requested variant was modified, since the specified date-time. \n" +
