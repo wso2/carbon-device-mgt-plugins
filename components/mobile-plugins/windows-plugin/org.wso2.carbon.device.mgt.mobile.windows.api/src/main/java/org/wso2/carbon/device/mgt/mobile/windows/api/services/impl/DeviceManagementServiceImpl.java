@@ -26,12 +26,10 @@ import org.wso2.carbon.device.mgt.common.Device;
 import org.wso2.carbon.device.mgt.common.DeviceIdentifier;
 import org.wso2.carbon.device.mgt.common.DeviceManagementConstants;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
-import org.wso2.carbon.device.mgt.common.device.details.*;
 import org.wso2.carbon.device.mgt.common.notification.mgt.NotificationManagementException;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
-import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.CacheEntry;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.SyncmlMessageFormatException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.SyncmlOperationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsConfigurationException;
@@ -39,13 +37,18 @@ import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDe
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.AuthenticationInfo;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.DeviceUtil;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.util.WindowsAPIUtils;
-import org.wso2.carbon.device.mgt.mobile.windows.api.operations.*;
-import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.*;
-import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.DeviceInfo;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.ItemTag;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.ReplaceTag;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.SyncmlDocument;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.SyncmlHeader;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.WindowsOperationException;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.Constants;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.OperationCode;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.OperationHandler;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.OperationReply;
+import org.wso2.carbon.device.mgt.mobile.windows.api.operations.util.SyncmlParser;
 import org.wso2.carbon.device.mgt.mobile.windows.api.services.DeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.dto.MobileCacheEntry;
-import org.wso2.carbon.policy.mgt.common.PolicyManagementException;
-import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
 
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
@@ -116,7 +119,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                             return Response.ok().entity(operationReply.generateReply(
                                     syncmlDocument, pendingOperations)).build();
                         } else {
-                            if (WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier) != null) {
+                            if (WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier, false) != null) {
                                 WindowsAPIUtils.getDeviceManagementService().disenrollDevice(deviceIdentifier);
                                 return Response.ok().entity(operationReply.generateReply(syncmlDocument, null)).build();
                             } else {
