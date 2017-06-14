@@ -189,7 +189,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
                 DeviceIdentifier id = new DeviceIdentifier();
                 id.setId(deviceId);
                 id.setType(AndroidConstants.DEVICE_TYPE_ANDROID);
-                String deviceName = AndroidAPIUtils.getDeviceManagementService().getDevice(id).getName();
+                String deviceName = AndroidAPIUtils.getDeviceManagementService().getDevice(id, false).getName();
                 notification.setOperationId(operation.getId());
                 notification.setStatus(org.wso2.carbon.device.mgt.common.notification.mgt.Notification.
                         Status.NEW.toString());
@@ -477,7 +477,7 @@ public class DeviceManagementServiceImpl implements DeviceManagementService {
             location.setLatitude(Double.valueOf(latitude));
             location.setLongitude(Double.valueOf(longitude));
             location.setDeviceIdentifier(deviceIdentifier);
-            Device savedDevice = AndroidAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier);
+            Device savedDevice = AndroidAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier, false);
             location.setDeviceId(savedDevice.getId());
         }
         return location;

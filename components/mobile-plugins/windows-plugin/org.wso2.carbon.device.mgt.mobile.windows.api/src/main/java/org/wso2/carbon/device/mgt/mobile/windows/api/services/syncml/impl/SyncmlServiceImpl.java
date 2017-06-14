@@ -190,7 +190,7 @@ public class SyncmlServiceImpl implements SyncmlService {
                             pendingOperations = operationHandler.getPendingOperations(syncmlDocument);
                             return Response.ok().entity(generateReply(syncmlDocument, pendingOperations)).build();
                         } else {
-                            if (WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier) != null) {
+                            if (WindowsAPIUtils.getDeviceManagementService().getDevice(deviceIdentifier, false) != null) {
                                 WindowsAPIUtils.getDeviceManagementService().disenrollDevice(deviceIdentifier);
                                 return Response.ok().entity(generateReply(syncmlDocument, null)).build();
                             } else {
