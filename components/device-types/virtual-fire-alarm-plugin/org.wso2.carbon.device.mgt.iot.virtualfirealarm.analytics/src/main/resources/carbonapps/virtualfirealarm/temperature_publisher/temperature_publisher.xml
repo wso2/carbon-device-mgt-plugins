@@ -17,10 +17,9 @@
   ~ under the License.
   -->
 
-<eventReceiver name="temperature_receiver" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
-    <from eventAdapterType="wso2event">
-        <property name="events.duplicated.in.cluster">false</property>
-    </from>
+<eventPublisher name="temperature_publisher" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventpublisher">
+    <from streamName="iot.per.device.stream.virtualfirealarm.temperature" version="1.0.0"/>
     <mapping customMapping="disable" type="wso2event"/>
-    <to streamName="org.wso2.iot.devices.temperature" version="1.0.0"/>
-</eventReceiver>
+    <to eventAdapterType="secured-websocket"/>
+</eventPublisher>
+

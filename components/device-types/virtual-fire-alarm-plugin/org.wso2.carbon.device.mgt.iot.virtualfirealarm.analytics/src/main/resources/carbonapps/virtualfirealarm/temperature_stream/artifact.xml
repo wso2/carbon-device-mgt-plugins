@@ -17,6 +17,6 @@
   ~ under the License.
   -->
 
-<artifact name="temperature_script" version="1.0.0" type="analytics/spark" serverRole="DataAnalyticsServer">
-    <file>temperature_script.xml</file>
+<artifact name="temperature_stream" version="1.0.0" type="event/stream" serverRole="DataAnalyticsServer">
+	<file>iot.per.device.stream.virtualfirealarm.temperature_1.0.0.json</file>
 </artifact>

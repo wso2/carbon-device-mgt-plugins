@@ -33,7 +33,6 @@
     <property name="Proximity_dir" value="proximity_sensor"/>
     <property name="Pressure_dir" value="pressure_sensor"/>
     <property name="Rotation_dir" value="rotation_sensor"/>
-    <property name="Temperature_dir" value="temperature_sensor"/>
     <property name="Speed_dir" value="speed_sensor"/>
     <property name="Turn_dir" value="turn_sensor"/>
 
@@ -72,9 +71,6 @@
         </zip>
         <zip destfile="${target-dir}/${Proximity_dir}.car">
             <zipfileset dir="${src-dir}/${Proximity_dir}"/>
-        </zip>
-        <zip destfile="${target-dir}/${Temperature_dir}.car">
-            <zipfileset dir="${src-dir}/${Temperature_dir}"/>
         </zip>
         <zip destfile="${target-dir}/${Speed_dir}.car">
             <zipfileset dir="${src-dir}/${Speed_dir}"/>

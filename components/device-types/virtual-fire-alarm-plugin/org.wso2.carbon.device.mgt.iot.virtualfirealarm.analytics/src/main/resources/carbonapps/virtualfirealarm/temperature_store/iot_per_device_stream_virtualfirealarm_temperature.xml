@@ -19,7 +19,7 @@
 
 <EventStoreConfiguration>
     <Source>
-        <StreamId>org.wso2.iot.devices.temperature:1.0.0</StreamId>
+        <StreamId>iot.per.device.stream.virtualfirealarm.temperature:1.0.0</StreamId>
     </Source>
     <RecordStoreName>EVENT_STORE</RecordStoreName>
     <TableSchema>

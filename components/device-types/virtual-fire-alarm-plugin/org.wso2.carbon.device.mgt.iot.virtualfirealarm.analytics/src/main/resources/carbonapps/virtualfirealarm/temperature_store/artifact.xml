@@ -18,5 +18,5 @@
   -->
 
 <artifact name="temperature_store" version="1.0.0" type="analytics/eventstore" serverRole="DataAnalyticsServer">
-    <file>org_wso2_iot_devices_temperature.xml</file>
+    <file>iot_per_device_stream_virtualfirealarm_temperature.xml</file>
 </artifact>
