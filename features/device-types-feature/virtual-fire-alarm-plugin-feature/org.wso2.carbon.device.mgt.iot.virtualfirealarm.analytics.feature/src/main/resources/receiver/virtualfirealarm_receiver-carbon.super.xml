@@ -22,5 +22,5 @@
 		<property name="clientId">virtualfirealarm_receiver-carbon.super</property>
     </from>
     <mapping customMapping="disable" type="json"/>
-    <to streamName="org.wso2.iot.virtualfirealarm" version="1.0.0"/>
+    <to streamName="iot.per.device.stream.virtualfirealarm" version="1.0.0"/>
 </eventReceiver>
