@@ -1157,8 +1157,8 @@
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Device Management -->
-        <carbon.devicemgt.version>2.0.75-SNAPSHOT</carbon.devicemgt.version>
-        <carbon.devicemgt.version.range>[2.0.0, 3.0.0)</carbon.devicemgt.version.range>
+        <carbon.devicemgt.version>3.0.0-SNAPSHOT</carbon.devicemgt.version>
+        <carbon.devicemgt.version.range>[3.0.0, 4.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
         <carbon.appmgt.version>1.2.25</carbon.appmgt.version>
@@ -1284,6 +1284,7 @@
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
         <siddhi.version>3.1.2</siddhi.version>
         <maven.scr.version>1.7.2</maven.scr.version>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
 
     <scm>

@@ -69,7 +69,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
     private MQTTBrokerConnectionConfiguration mqttBrokerConnectionConfiguration;
     private String topic;
     private String tenantDomain;
-    private boolean connectionSucceeded = false;
+    private volatile boolean connectionSucceeded = false;
     private ContentValidator contentValidator;
     private ContentTransformer contentTransformer;
     private InputEventAdapterConfiguration inputEventAdapterConfiguration;
