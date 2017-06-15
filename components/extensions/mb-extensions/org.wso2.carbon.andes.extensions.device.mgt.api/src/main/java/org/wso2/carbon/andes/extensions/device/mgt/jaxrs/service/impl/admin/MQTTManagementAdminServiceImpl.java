@@ -146,7 +146,7 @@ public class MQTTManagementAdminServiceImpl implements MQTTManagementAdminServic
     @Override
     @GET
     public Response getFilteredSubscriptions(
-            @QueryParam("topic_name") String topic_name,
+            @QueryParam("name") String topic_name,
             @QueryParam("remaining_messages") int remaining_messages,
             @QueryParam("active") String active,
             @QueryParam("durable") String durable,
@@ -208,7 +208,7 @@ public class MQTTManagementAdminServiceImpl implements MQTTManagementAdminServic
 //                    10,currentTenantId,tenantDomain);
 
             Subscription[] filteredNormalTopicSubscriptionList = andesAdminStub.getFilteredSubscriptions(false, true,
-                    "MQTT", "TOPIC", "", false,
+                    "MQTT", "TOPIC", topic_name, false,
                     "", false, "All", offset,
                     10);
             Map<String, Subscription[]> subscriptions = new HashMap<>();
@@ -261,8 +261,8 @@ public class MQTTManagementAdminServiceImpl implements MQTTManagementAdminServic
             topics.setCount(result.getRecordsTotal());
 
 
-
-            return Response.ok().entity(subscriptions).build();
+            return Response.status(Response.Status.OK).entity(subscriptions).build();
+//            return Response.ok().entity(subscriptions).build();
         } catch (DeviceManagementException e) {
             String msg = "Error occurred at server side while fetching device list.";
             log.error(msg, e);
@@ -328,21 +328,19 @@ public class MQTTManagementAdminServiceImpl implements MQTTManagementAdminServic
 
 
     private PaginationResult getPaginatedTopics(TopicPaginationRequest request,Map<String, Subscription[]> subscriptions) throws DeviceManagementException {
-        List<Subscription> devicesForRoles = null;
         PaginationResult paginationResult = new PaginationResult();
         List<Subscription> allSubscriptions =  new ArrayList<>();
-        List<Subscription> sub =  new ArrayList<>();
         Map<String,Subscription[]> ss = subscriptions;
         int count = 0;
         int tenantId = this.getTenantId();
         request = TopicManagerUtil.validateTopicListPageSize(request);
 
-        List<Subscription[]> subscriptionList = new ArrayList<Subscription[]>(subscriptions.values());
+        List<Subscription[]> subscriptionList = new ArrayList<>(subscriptions.values());
 
-        allSubscriptions = Arrays.asList(subscriptionList.get(0));
-        count = allSubscriptions.size();
+//        allSubscriptions = Arrays.asList(subscriptionList.size());
+        count = subscriptionList.size();
 
-        paginationResult.setData(allSubscriptions);
+//        paginationResult.setData(allSubscriptions);
         paginationResult.setRecordsFiltered(count);
         paginationResult.setRecordsTotal(count);
         return paginationResult;
