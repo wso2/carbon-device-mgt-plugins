@@ -83,7 +83,7 @@ public class AndroidDeviceUtils {
 
     public static boolean isValidDeviceIdentifier(DeviceIdentifier deviceIdentifier) throws DeviceManagementException {
         Device device = AndroidAPIUtils.getDeviceManagementService().
-                getDevice(deviceIdentifier);
+                getDevice(deviceIdentifier, false);
         if (device == null || device.getDeviceIdentifier() == null ||
                 device.getDeviceIdentifier().isEmpty() || device.getEnrolmentInfo() == null) {
             return false;

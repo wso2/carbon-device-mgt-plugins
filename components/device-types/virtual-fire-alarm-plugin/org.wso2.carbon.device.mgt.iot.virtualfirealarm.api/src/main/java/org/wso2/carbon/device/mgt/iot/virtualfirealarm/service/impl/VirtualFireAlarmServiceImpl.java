@@ -136,10 +136,10 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
     @Produces("application/json")
     public Response getVirtualFirealarmStats(@PathParam("deviceId") String deviceId, @QueryParam("from") long from,
                                              @QueryParam("to") long to) {
-        String fromDate = String.valueOf(from);
-        String toDate = String.valueOf(to);
-        String query = "deviceId:" + deviceId + " AND deviceType:" +
-                VirtualFireAlarmConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+        String fromDate = String.valueOf(from*1000); // converting time to ms
+        String toDate = String.valueOf(to*1000); // converting time to ms
+        String query = "meta_deviceId:" + deviceId + " AND meta_deviceType:" +
+                VirtualFireAlarmConstants.DEVICE_TYPE + " AND meta_time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = VirtualFireAlarmConstants.TEMPERATURE_EVENT_TABLE;
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(
@@ -148,7 +148,7 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             List<SortByField> sortByFields = new ArrayList<>();
-            SortByField sortByField = new SortByField("time", SortType.ASC);
+            SortByField sortByField = new SortByField("meta_time", SortType.ASC);
             sortByFields.add(sortByField);
             List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
             return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();

@@ -1,0 +1,20 @@
+{
+  "name": "iot.per.device.stream.virtualfirealarm.temperature",
+  "version": "1.0.0",
+  "nickName": "Temperature Data",
+  "description": "Temperature data received from Virtual Fire Alarm",
+  "metaData": [
+    {"name":"owner","type":"STRING"},     
+    {"name":"deviceType","type":"STRING"},
+    {"name":"deviceId","type":"STRING"},  
+    {"name":"time","type":"LONG"}
+  ],
+  "payloadData": [
+    {
+      "name": "temperature","type": "FLOAT"
+    }
+  ]
+}
+	
+
+				                                    		
