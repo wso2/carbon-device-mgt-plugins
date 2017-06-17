@@ -133,7 +133,7 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     return false;
                 } catch (FeignException e) {
                     oAuthRequestInterceptor.resetApiApplicationKey();
-                    if (e.getMessage().contains(GATEWAY_ERROR_CODE)) {
+                    if (e.getMessage().contains(GATEWAY_ERROR_CODE) || e.status() == 404) {
                         log.error("Failed to connect to the device authorization service.");
                     } else {
                         log.error(e.getMessage(), e);
