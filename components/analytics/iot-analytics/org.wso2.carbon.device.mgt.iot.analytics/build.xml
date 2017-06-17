@@ -75,7 +75,7 @@
         </zip>
         <zip destfile="${target-dir}/${Temperature_dir}.car">
             <zipfileset dir="${src-dir}/${Temperature_dir}"/>
-        </zip>
+            </zip>
         <zip destfile="${target-dir}/${Speed_dir}.car">
             <zipfileset dir="${src-dir}/${Speed_dir}"/>
         </zip>
