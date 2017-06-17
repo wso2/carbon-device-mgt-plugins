@@ -142,6 +142,7 @@ function onRequest(context) {
                     viewModel["location"] = {};
                     viewModel["location"]["latitude"] = filteredDeviceData["latestDeviceInfo"]["location"]["latitude"];
                     viewModel["location"]["longitude"] = filteredDeviceData["latestDeviceInfo"]["location"]["longitude"];
+                    viewModel["location"]["updatedTime"] = filteredDeviceData["latestDeviceInfo"]["location"]["updatedTime"];
                 }
                 if (filteredDeviceData["latestDeviceInfo"]["vendor"] && filteredDeviceData["latestDeviceInfo"]["deviceModel"]) {
                     viewModel["vendor"] = filteredDeviceData["latestDeviceInfo"]["vendor"];
