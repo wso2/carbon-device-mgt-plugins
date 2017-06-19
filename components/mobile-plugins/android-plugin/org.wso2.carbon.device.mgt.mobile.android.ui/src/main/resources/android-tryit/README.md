@@ -1,12 +1,12 @@
 Prerequisites
 ===============
-1. You should have curl in your computer.
-2. Java 7 or higher.
+1.  Java 8.
 
 Instructions
 =================
 
-1. Run 'start' script in your terminal.
+1. Run 'startEmulator' script in your terminal.
+   For windows run startEmulator.bat
 2. If you already have android sdk in your computer, please provide location of the sdk. 
    Otherwise this tool will download and install minimum SDK components which needs to run the emulator. 
    This is a one time process.
