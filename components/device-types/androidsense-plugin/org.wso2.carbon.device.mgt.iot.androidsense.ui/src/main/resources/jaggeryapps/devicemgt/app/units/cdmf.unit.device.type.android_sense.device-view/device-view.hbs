@@ -15,7 +15,6 @@
   specific language governing permissions and limitations
   under the License.
 }}
-{{unit "cdmf.unit.device.type.android_sense.leaflet"}}
 {{#zone "topCss"}}
     <style>
         .thumbnail.icon:before {
@@ -38,7 +37,7 @@
     </li>
     <li><a class="list-group-item" href="#event_log" role="tab" data-toggle="tab"
            aria-controls="event_log">Operations Log</a></li>
-    <li><a class="list-group-item location_tab" href="#geo_dashboard" role="tab" data-toggle="tab"
+    <li><a class="list-group-item location_tab initGeoLocationLink" href="#geo_dashboard" role="tab" data-toggle="tab"
            aria-controls="geo_dashboard">Device Location</a></li>
 {{/zone}}
 
@@ -73,6 +72,8 @@
     <div class="panel panel-default tab-pane"
          id="geo_dashboard" role="tabpanel" aria-labelledby="geo_dashboard">
         <div class="panel-heading">Device Location</div>
+        <br/>
+        {{unit "cdmf.unit.geo-dashboard" device=device}}
         {{#if locationHistory}}
             <div id="device-location"
                  data-locations = "{{locationHistory}}">
@@ -99,7 +100,4 @@
         <div id="chartWrapper">
         </div>
     </div>
-{{/zone}}
-{{#zone "bottomJs"}}
-    {{js "js/load-map.js"}}
 {{/zone}}
