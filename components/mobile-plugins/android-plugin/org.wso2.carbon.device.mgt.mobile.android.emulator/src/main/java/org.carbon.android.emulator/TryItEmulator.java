@@ -46,13 +46,16 @@ public class TryItEmulator implements Runnable {
         ProcessBuilder processBuilder = new ProcessBuilder(emulatorLocation, "-avd", deviceId);
         try {
             Process process = processBuilder.start();
-            reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
-            writer = new OutputStreamWriter(new FileOutputStream(new File("emulator.log")), StandardCharsets.UTF_8);
+            reader = new BufferedReader(new InputStreamReader(process.getInputStream(),
+                    StandardCharsets.UTF_8));
+            writer = new OutputStreamWriter(new FileOutputStream(new File("emulator.log")),
+                    StandardCharsets.UTF_8);
             while ((readLine = reader.readLine()) != null) {
                 writer.append(readLine);
                 writer.append(readLine);
             }
         } catch (IOException e) {
+            System.out.println("Error in starting " + deviceId);
             e.printStackTrace();
         } finally {
             if (reader != null) {

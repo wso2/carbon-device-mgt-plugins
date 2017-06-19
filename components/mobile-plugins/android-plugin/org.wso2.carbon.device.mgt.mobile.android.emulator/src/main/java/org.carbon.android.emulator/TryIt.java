@@ -308,8 +308,8 @@ public class TryIt {
         ArrayList<String> devices = new ArrayList<>();
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new InputStreamReader(listAVDsProcess.getInputStream()
-                    , StandardCharsets.UTF_8));
+            reader = new BufferedReader(new InputStreamReader(listAVDsProcess.getInputStream(),
+                    StandardCharsets.UTF_8));
             String readLine;
             while ((readLine = reader.readLine()) != null) {
                 devices.add(readLine);
@@ -403,7 +403,6 @@ public class TryIt {
      * @throws IOException process start throws  if an I/O error occurs.
      */
     private void runEmulator(String deviceId) throws IOException {
-
         // mac os and windows needs hardware_Accelerated_execution_Manager
         if (osSuffix.equals(Constants.MAC_OS) || osSuffix.equals(Constants.WINDOWS_OS)) {
             installHAXM();
@@ -552,8 +551,6 @@ public class TryIt {
         try {
             reader = new BufferedReader(new InputStreamReader(badgingApkFileProcess.getInputStream(),
                     StandardCharsets.UTF_8));
-
-
             while ((readLine = reader.readLine()) != null) {
                 if (readLine.contains("package")) {
                     pkg = readLine.substring(readLine.indexOf(Constants.NAME) + 6).substring(0,
@@ -613,7 +610,6 @@ public class TryIt {
         ProcessBuilder installAgentProcessBuilder = new ProcessBuilder(adbLocation, "install",
                 androidAgentLocation);
         Process installAgentProcess = installAgentProcessBuilder.start();
-
         try {
             installAgentProcess.waitFor();
         } catch (InterruptedException e) {
@@ -715,14 +711,14 @@ public class TryIt {
             try {
                 process = processBuilder.start();
             } catch (IOException e) {
-                handleException("HAXM installation failed", e);
+                System.out.println("HAXM installation failed, install HAXM and try again");
             }
             try {
                 if (process != null) {
                     process.waitFor();
                 }
             } catch (InterruptedException e) {
-                handleException("HAXM installation failed", e);
+                System.out.println("HAXM installation failed, install HAXM and try again");
             }
             System.out.println("Please restart your machine and run again.");
             System.exit(0);
