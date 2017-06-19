@@ -43,7 +43,6 @@
             <useDefaultExcludes>true</useDefaultExcludes>
         </fileSet>
     </fileSets>
-
     <files>
         <file>
             <source>
