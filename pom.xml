@@ -23,7 +23,7 @@
     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
     <artifactId>carbon-device-mgt-plugins-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.40-SNAPSHOT</version>
+    <version>4.0.2-SNAPSHOT</version>
     <name>WSO2 Carbon - Device Management Plugins Parent</name>
     <url>http://wso2.org</url>
     <description>WSO2 Carbon - Device Management Plugins Parent</description>
@@ -355,6 +355,11 @@
                 <artifactId>org.wso2.carbon.event.output.adapter.core</artifactId>
                 <version>${carbon.analytics.common.version}</version>
             </dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.analytics-common</groupId>
+				<artifactId>org.wso2.carbon.event.input.adapter.wso2event</artifactId>
+				<version>${carbon.analytics.common.version}</version>
+			</dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.event.input.adapter.core</artifactId>
@@ -365,6 +370,21 @@
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
                 <version>${carbon.analytics.common.version}</version>
             </dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.analytics-common</groupId>
+				<artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>
+				<version>${carbon.analytics.common.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.analytics-common</groupId>
+				<artifactId>org.wso2.carbon.databridge.commons.binary</artifactId>
+				<version>${carbon.analytics.common.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.analytics-common</groupId>
+				<artifactId>org.wso2.carbon.databridge.core</artifactId>
+				<version>${carbon.analytics.common.version}</version>
+			</dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics</groupId>
                 <artifactId>org.wso2.carbon.analytics.api</artifactId>
@@ -387,6 +407,11 @@
                 <artifactId>org.wso2.carbon.device.mgt.output.adapter.mqtt</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
+			<dependency>
+				<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+				<artifactId>org.wso2.carbon.device.mgt.input.adapter.thrift</artifactId>
+				<version>${carbon.devicemgt.plugins.version}</version>
+			</dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.output.adapter.xmpp</artifactId>
@@ -411,11 +436,6 @@
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.input.adapter.xmpp</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.jayway.jsonpath</groupId>
-                <artifactId>json-path</artifactId>
-                <version>${jsonpath.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -989,12 +1009,6 @@
                 <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <scope>test</scope>
-                <version>${junit.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.jayway.jsonpath</groupId>
                 <artifactId>json-path</artifactId>
                 <version>${json.path.version}</version>
@@ -1128,14 +1142,14 @@
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Device Management -->
-        <carbon.devicemgt.version>2.0.72-SNAPSHOT</carbon.devicemgt.version>
-        <carbon.devicemgt.version.range>[2.0.0, 3.0.0)</carbon.devicemgt.version.range>
+        <carbon.devicemgt.version>3.0.3-SNAPSHOT</carbon.devicemgt.version>
+        <carbon.devicemgt.version.range>[3.0.0, 4.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
         <carbon.appmgt.version>1.2.25</carbon.appmgt.version>
 
         <!-- Carbon Device Management Plugins -->
-        <carbon.devicemgt.plugins.version>3.0.40-SNAPSHOT</carbon.devicemgt.plugins.version>
+        <carbon.devicemgt.plugins.version>4.0.2-SNAPSHOT</carbon.devicemgt.plugins.version>
 
         <!-- Carbon Commons -->
         <carbon.commons.version>4.4.8</carbon.commons.version>
@@ -1190,7 +1204,6 @@
         <commons-io.version>2.4</commons-io.version>
         <apache-felix.version>1.0.8</apache-felix.version>
         <googlecode.plist.version>1.8</googlecode.plist.version>
-        <jsonpath.version>0.9.1</jsonpath.version>
         <commons.lang.version>2.2</commons.lang.version>
 
 
@@ -1255,6 +1268,7 @@
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
         <siddhi.version>3.1.2</siddhi.version>
         <maven.scr.version>1.7.2</maven.scr.version>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
 
     <scm>

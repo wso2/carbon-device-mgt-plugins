@@ -20,5 +20,8 @@
 <artifacts>
     <artifact name="virtualfirealarm" version="1.0.0" type="carbon/application">
         <dependency artifact="virtualfirealarm_execution" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="temperature_publisher" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="temperature_store" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="temperature_stream" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
     </artifact>
 </artifacts>

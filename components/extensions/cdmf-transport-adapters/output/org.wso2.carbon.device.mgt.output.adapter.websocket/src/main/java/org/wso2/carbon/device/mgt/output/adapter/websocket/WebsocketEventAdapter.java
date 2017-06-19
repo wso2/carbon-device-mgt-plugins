@@ -425,23 +425,36 @@ public class WebsocketEventAdapter implements OutputEventAdapter {
             // fetch the different attribute values received as part of the current event.
             Set<String> queryParams = queryParamValuePairs.keySet();
             for (String aQueryParam : queryParams) {
-                if (!aQueryParam.equalsIgnoreCase(WebsocketConstants.TOKEN_PARAM)) {
-                    try {
-                        String queryValue = queryParamValuePairs.get(aQueryParam);
-                        if (queryValue != null && !queryValue.trim().isEmpty()) {
-                            JSONObject jsonObject = new JSONObject(jsonMessage);
-                            String eventValue = jsonObject.getString(aQueryParam);
-                            if (eventValue == null || !eventValue.equalsIgnoreCase(queryValue)) {
-                                return false;
+                try {
+
+                    String queryValue = queryParamValuePairs.get(aQueryParam);
+                    if (queryValue != null && !queryValue.trim().isEmpty()) {
+                        JSONObject jsonObject = new JSONObject(jsonMessage);
+                        JSONObject event = jsonObject.getJSONObject(WebsocketConstants.EVENT);
+                        JSONObject data;
+                        if (!event.isNull(WebsocketConstants.META_DATA)) {
+                            data = event.getJSONObject(WebsocketConstants.META_DATA);
+                            if (!data.isNull(aQueryParam)) {
+                                String eventValue = data.get(aQueryParam).toString();
+                                if (eventValue == null || !eventValue.equalsIgnoreCase(queryValue)) {
+                                    return false;
+                                }
+                            }
+
+                        }
+
+                        if (!event.isNull(WebsocketConstants.PAYLOAD_DATA)) {
+                            data = event.getJSONObject(WebsocketConstants.PAYLOAD_DATA);
+                            if (!data.isNull(aQueryParam)) {
+                                String eventValue = data.get(aQueryParam).toString();
+                                if (eventValue == null || !eventValue.equalsIgnoreCase(queryValue)) {
+                                    return false;
+                                }
                             }
                         }
-                    } catch (JSONException e) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("Unable validate the stream filter properties for event : " + jsonMessage
-                                    + " ", e);
-                        }
-                        return false;
                     }
+                } catch (JSONException e) {
+                    //do nothing - This exception is thrown when the event does not have query parameter.
                 }
             }
         }
