@@ -1,6 +1,6 @@
 Prerequisites
 ===============
-1.  Java 7 or higher.
+1.  Java 8.
 
 Instructions
 =================
