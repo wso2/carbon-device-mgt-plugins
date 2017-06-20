@@ -52,7 +52,6 @@ public class TryItEmulator implements Runnable {
                     StandardCharsets.UTF_8);
             while ((readLine = reader.readLine()) != null) {
                 writer.append(readLine);
-                writer.append(readLine);
             }
         } catch (IOException e) {
             System.out.println("Error in starting " + deviceId);

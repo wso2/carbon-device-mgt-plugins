@@ -220,10 +220,8 @@ public class TryIt {
     private void startAVD() {
         String wso2AvdLocation = userHome + File.separator + ".android" + File.separator + "avd" + File.separator
                 + Constants.WSO2_AVD_NAME + ".avd";
-
         checkForPlatform();
         checkForSystemImages();
-
         if (!new File(wso2AvdLocation).isDirectory()) {
             Scanner read = new Scanner(System.in, "UTF-8");
             System.out.print("Do you want to create WSO2_AVD with default configs (Y/n)?: ");
@@ -232,7 +230,6 @@ public class TryIt {
                 return;
             }
         }
-
         System.out.println("+----------------------------------------------------------------+");
         System.out.println("|                        WSO2 Android TryIt                      |");
         System.out.println("+----------------------------------------------------------------+");
@@ -242,7 +239,6 @@ public class TryIt {
             emulatorLocation += Constants.WINDOWS_EXTENSION_EXE;
         }
         setExecutePermission(emulatorLocation);
-
         listAVDs();
     }
 
@@ -250,7 +246,6 @@ public class TryIt {
      * This method gets the available AVDs' name from the system.
      */
     private void listAVDs() {
-
         ArrayList<String> devices = new ArrayList<>();
         BufferedReader reader = null;
         try {
@@ -264,7 +259,7 @@ public class TryIt {
             }
             selectAVD(devices);
         } catch (IOException e) {
-            //TODO
+            handleException("Unable to list the available AVDs",e);
         } finally {
             try {
                 if (reader != null) {
@@ -308,13 +303,11 @@ public class TryIt {
         String avdManagerPath = androidSdkHome + File.separator + "tools" + File.separator + "bin"
                 + File.separator + "avdmanager";
         String androidPath = androidSdkHome + File.separator + "tools" + File.separator + "android";
-
         if (osSuffix.equals(Constants.WINDOWS_OS)) {
             avdManagerPath += Constants.WINDOWS_EXTENSION_BAT;
             androidPath += Constants.WINDOWS_EXTENSION_BAT;
         }
         setExecutePermission(androidPath);
-
         System.out.println("Creating a new AVD device");
         try {
             if (new File(avdManagerPath).exists()) {
@@ -377,18 +370,27 @@ public class TryIt {
     private void checkBuildTools() {
         File buildTools = new File(androidSdkHome + File.separator + "build-tools"
                 + File.separator + System.getProperty(Constants.BUILD_TOOLS_VERSION));
-
         if (!buildTools.exists()) {
             getTools(System.getProperty(Constants.BUILD_TOOL_URL), "_Android-build-tool.zip");
-
-            File buildTool = new File(androidSdkHome + File.separator + System.getProperty(Constants.DOWNLOADED_BUILD_TOOL_NAME));
-
-            //noinspection ResultOfMethodCallIgnored
-            new File(androidSdkHome + File.separator + "build-tools").mkdir();
-            //noinspection ResultOfMethodCallIgnored
+            File buildTool = new File(androidSdkHome + File.separator
+                    + System.getProperty(Constants.DOWNLOADED_BUILD_TOOL_NAME));
+            if(!new File(androidSdkHome + File.separator + "build-tools").exists()
+                    && !new File(androidSdkHome + File.separator + "build-tools").mkdir()){
+                    makeDirectoryError("build-tools",androidSdkHome );
+                }
             buildTool.renameTo(new File(androidSdkHome + File.separator + "build-tools"
                     + File.separator + System.getProperty(Constants.BUILD_TOOLS_VERSION)));
         }
+    }
+
+    /**
+     * This method make sure whether the directory can be created.
+     * @param name - name of the folder to be made
+     * @param location - location to make folder
+     */
+    private void makeDirectoryError(String name,String location){
+        System.out.println("Unable to make folder named " + name + " in " + location);
+        System.exit(0);
     }
 
     /**
@@ -399,7 +401,6 @@ public class TryIt {
         BufferedReader reader = null;
         String readLine;
         Boolean sysBootComplete = false;
-
         do {
             ProcessBuilder systemBoot = new ProcessBuilder(adbLocation, "shell", "getprop",
                     "sys.boot_completed");
@@ -437,7 +438,6 @@ public class TryIt {
      */
     private void setAndroidSDK() {
         sdkConfigFile = new File("sdkLocation");
-
         if (!(sdkConfigFile.exists() && !sdkConfigFile.isDirectory())) {
             Scanner read = new Scanner(System.in, "UTF-8");
             System.out.print("Do you have an Android SDK installed on your computer (y/N) ? : ");
@@ -460,7 +460,6 @@ public class TryIt {
                 }
             }
         }
-
         adbLocation = androidSdkHome + File.separator + "platform-tools" + File.separator + "adb";
         if (osSuffix.equals(Constants.WINDOWS_OS)) {
             adbLocation += Constants.WINDOWS_EXTENSION_EXE;
@@ -491,8 +490,8 @@ public class TryIt {
         String readLine;
         BufferedReader reader = null;
         String apkFileLocation = workingDirectory + Constants.APK_LOCATION;
-        String aaptLocation = androidSdkHome + File.separator + "build-tools" + File.separator + System.getProperty(Constants.BUILD_TOOLS_VERSION)
-                + File.separator + "aapt";
+        String aaptLocation = androidSdkHome + File.separator + "build-tools" + File.separator
+                + System.getProperty(Constants.BUILD_TOOLS_VERSION) + File.separator + "aapt";
         if (osSuffix.equals(Constants.WINDOWS_OS)) {
             aaptLocation += Constants.WINDOWS_EXTENSION_EXE;
         }
@@ -547,7 +546,6 @@ public class TryIt {
         BufferedReader reader = null;
         Boolean hasAgent = false;
         ProcessBuilder listPackages = new ProcessBuilder(adbLocation, "shell", "pm", "list", "packages");
-
         try {
             Process listPackagesProcess = listPackages.start();
             listPackagesProcess.waitFor();
@@ -559,14 +557,14 @@ public class TryIt {
                 }
             }
         } catch (IOException | InterruptedException ignored) {
-            //TODO
+            //
         } finally {
             try {
                 if (reader != null) {
                     reader.close();
                 }
             } catch (IOException ignored) {
-                //TODO
+                //
             }
         }
         return hasAgent;
@@ -577,9 +575,7 @@ public class TryIt {
      */
     private void installAgent() {
         String androidAgentLocation = workingDirectory + Constants.APK_LOCATION;
-
         System.out.println("Installing agent ...");
-
         ProcessBuilder installAgentProcessBuilder = new ProcessBuilder(adbLocation, "install",
                 androidAgentLocation);
         try {
@@ -603,14 +599,13 @@ public class TryIt {
     private void startPackage(String[] agents) {
         String pkg = agents[0];
         String activity = agents[1];
-
         ProcessBuilder pkgStartProcessBuilder = new ProcessBuilder(adbLocation, "shell", "am", "start",
                 "-n", pkg + "/" + activity);
         try {
             Process pkgStartProcess = pkgStartProcessBuilder.start();
             pkgStartProcess.waitFor();
         } catch (InterruptedException ignored) {
-            // TODO
+            //
         } catch (IOException e) {
             handleException("Unable to start WSO2 package", e);
         }
@@ -622,11 +617,12 @@ public class TryIt {
     private void checkForPlatform() {
         File platform = new File(androidSdkHome + File.separator + "platforms" + File.separator
                 + System.getProperty(Constants.TARGET_VERSION));
-
         if (!platform.isDirectory()) {
             getTools(System.getProperty(Constants.PLATFORM_URL), "_Android-platforms.zip");
-            //noinspection ResultOfMethodCallIgnored
-            new File(androidSdkHome + File.separator + "platforms").mkdir();
+            if(!new File(androidSdkHome + File.separator + "platforms").exists()
+                    && !new File(androidSdkHome + File.separator + "platforms").mkdir()){
+                makeDirectoryError("platforms",androidSdkHome);
+            }
             //noinspection ResultOfMethodCallIgnored
             new File(androidSdkHome + File.separator + System.getProperty(Constants.DOWNLOADED_PLATFORM_NAME)).
                     renameTo(new File(androidSdkHome + File.separator + "platforms"
@@ -647,32 +643,29 @@ public class TryIt {
             new File(androidSdkHome + File.separator + "system-images" + File.separator
                     + System.getProperty(Constants.TARGET_VERSION) + File.separator + "default").mkdirs();
             //noinspection ResultOfMethodCallIgnored
-            new File(androidSdkHome + File.separator + System.getProperty(Constants.OS_TARGET)).renameTo(new File(androidSdkHome
-                    + File.separator + "system-images" + File.separator + System.getProperty(Constants.TARGET_VERSION) + File.separator
-                    + "default" + File.separator + System.getProperty(Constants.OS_TARGET)));
+            new File(androidSdkHome + File.separator + System.getProperty(Constants.OS_TARGET))
+                    .renameTo(new File(androidSdkHome + File.separator + "system-images" + File.separator
+                            + System.getProperty(Constants.TARGET_VERSION) + File.separator + "default"
+                            + File.separator + System.getProperty(Constants.OS_TARGET)));
         }
     }
 
     /**
      * This method install Hardware_Accelerated Execution_Manager in mac and windows os.
      */
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void installHAXM() {
         String haxmLocation = androidSdkHome + File.separator + "extras" + File.separator + "intel"
                 + File.separator + "Hardware_Accelerated_Execution_Manager";
 
         if (!new File(haxmLocation).isDirectory()) {
             //System.out.println("Downloading intel HAXM...");
-            new File(haxmLocation).mkdirs();
+            if(!new File(haxmLocation).mkdirs()){
+                makeDirectoryError(haxmLocation,androidSdkHome);
+            }
             String folderName = "_haxm.zip";
             getTools(Constants.HAXM_URL, haxmLocation + File.separator
                     + folderName);
-//            downloadArtifacts(System.getProperty(Constants.HAXM_URL), haxmLocation + File.separator
-//                    + folderName);
-//            System.out.println("Configuring HAXM...");
-//            extractFolder(haxmLocation + File.separator + folderName);
             String haxmInstaller = haxmLocation + File.separator + "silent_install";
-
             if (osSuffix.equals(Constants.WINDOWS_OS)) {
                 haxmInstaller += Constants.WINDOWS_EXTENSION_BAT;
             } else {
@@ -749,7 +742,6 @@ public class TryIt {
     private void checkCacheImg(String deviceId) {
         File cacheImg = new File(userHome + File.separator + ".android"
                 + File.separator + "avd" + File.separator + deviceId + ".avd" + File.separator + "cache.img");
-
         while (!cacheImg.exists()) {
             System.out.print(".");
             try {
@@ -788,19 +780,14 @@ public class TryIt {
         try {
             zip = new ZipFile(file);
             String newPath = zipFile.substring(0, zipFile.lastIndexOf(File.separator));
-
-            //noinspection ResultOfMethodCallIgnored
             new File(newPath).mkdirs();
-
             Enumeration zipFileEntries = zip.entries();
-
             while (zipFileEntries.hasMoreElements()) {
                 // grab a zip file entry
                 ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
                 String currentEntry = entry.getName();
                 File destFile = new File(newPath, currentEntry);
                 File destinationParent = destFile.getParentFile();
-
                 if (destinationParent == null) {
                     destFile.mkdirs();
                     continue;
@@ -808,7 +795,6 @@ public class TryIt {
                     //noinspection ResultOfMethodCallIgnored
                     destinationParent.mkdirs();
                 }
-
                 if (!entry.isDirectory()) {
                     BufferedInputStream is;
                     try {
@@ -816,12 +802,10 @@ public class TryIt {
                         int currentByte;
                         // establish buffer for writing file
                         byte data[] = new byte[BUFFER];
-
                         // write the current file to disk
                         FileOutputStream fos = new FileOutputStream(destFile);
                         BufferedOutputStream dest = new BufferedOutputStream(fos,
                                 BUFFER);
-
                         // read and write until last byte is encountered
                         while ((currentByte = is.read(data, 0, BUFFER)) != -1) {
                             dest.write(data, 0, currentByte);
