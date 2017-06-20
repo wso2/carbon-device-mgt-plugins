@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>extensions</artifactId>
-        <version>4.0.2-SNAPSHOT</version>
+        <version>4.0.3-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -37,6 +37,7 @@
         <module>input/org.wso2.carbon.device.mgt.input.adapter.http</module>
         <module>input/org.wso2.carbon.device.mgt.input.adapter.mqtt</module>
         <module>input/org.wso2.carbon.device.mgt.input.adapter.xmpp</module>
+		<module>input/org.wso2.carbon.device.mgt.input.adapter.thrift</module>
         <module>output/org.wso2.carbon.device.mgt.output.adapter.mqtt</module>
         <module>output/org.wso2.carbon.device.mgt.output.adapter.xmpp</module>
         <module>output/org.wso2.carbon.device.mgt.output.adapter.websocket</module>
