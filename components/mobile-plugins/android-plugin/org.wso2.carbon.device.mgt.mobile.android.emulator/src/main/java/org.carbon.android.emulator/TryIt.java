@@ -761,12 +761,14 @@ public class TryIt {
         try {
             processKillServer = processBuilderKillServer.start();
         } catch (IOException ignored) {
-            // process works if restarted
+            System.out.println("If the device doesn't start properly, stop running the script and restart again");
         }
         try {
-            processKillServer.waitFor();
+            if (processKillServer != null) {
+                processKillServer.waitFor();
+            }
         } catch (InterruptedException ignored) {
-            // can be continued
+            System.out.println("If the device doesn't start properly, stop running the script and restart again");
         }
     }
 
