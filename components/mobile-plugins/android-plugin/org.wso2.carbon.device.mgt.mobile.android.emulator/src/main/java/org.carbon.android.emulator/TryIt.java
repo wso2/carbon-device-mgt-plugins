@@ -329,7 +329,7 @@ public class TryIt {
             System.out.println("\nAvailable AVDs in the system\n");
             int count = 1;
             for (String device : devices) {
-                System.out.println(count + " - - " + device);
+                System.out.println(count + ") " + device);
                 count++;
             }
             System.out.print("\nEnter AVD number to start (eg: 1) :");
