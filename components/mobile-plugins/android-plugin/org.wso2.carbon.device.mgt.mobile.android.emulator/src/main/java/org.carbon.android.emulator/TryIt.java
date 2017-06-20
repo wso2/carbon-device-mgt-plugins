@@ -744,9 +744,30 @@ public class TryIt {
             default:
                 qemuSystemFileLocation += osSuffix + "-x86_64" + File.separator + "qemu-system-i386";
         }
+        killServer();
+
         setExecutePermission(qemuSystemFileLocation);
         ExecutorService service = Executors.newSingleThreadExecutor();
         service.execute(new TryItEmulator(deviceId, emulatorLocation));
+    }
+
+    /**
+     * This method ensures device properly starts.
+     */
+    private void killServer() {
+        ProcessBuilder processBuilderKillServer = new ProcessBuilder(adbLocation, "kill-server");
+        Process processKillServer = null;
+
+        try {
+            processKillServer = processBuilderKillServer.start();
+        } catch (IOException ignored) {
+            // process works if restarted
+        }
+        try {
+            processKillServer.waitFor();
+        } catch (InterruptedException ignored) {
+            // can be continued
+        }
     }
 
     /**
