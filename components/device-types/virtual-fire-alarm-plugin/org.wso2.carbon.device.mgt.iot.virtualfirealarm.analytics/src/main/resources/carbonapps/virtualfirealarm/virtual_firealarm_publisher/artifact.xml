@@ -17,6 +17,6 @@
   ~ under the License.
   -->
 
-<artifact name="temperature_publisher" version="1.0.0" type="event/publisher" serverRole="DataAnalyticsServer">
-    <file>temperature_publisher.xml</file>
+<artifact name="virtual_firealarm_publisher" version="1.0.0" type="event/publisher" serverRole="DataAnalyticsServer">
+    <file>virtual_firealarm_publisher.xml</file>
 </artifact>

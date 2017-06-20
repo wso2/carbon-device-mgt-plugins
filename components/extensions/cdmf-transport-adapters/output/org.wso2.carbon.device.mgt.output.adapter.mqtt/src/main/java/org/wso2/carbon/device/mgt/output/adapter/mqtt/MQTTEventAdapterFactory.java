@@ -84,7 +84,7 @@ public class MQTTEventAdapterFactory extends OutputEventAdapterFactory {
         clearSession.setDisplayName(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION));
         clearSession.setRequired(false);
         clearSession.setOptions(new String[]{"true", "false"});
-        clearSession.setDefaultValue("false");
+        clearSession.setDefaultValue("true");
         clearSession.setHint(resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION_HINT));
 
         // set Quality of Service
