@@ -44,7 +44,7 @@ class Constants {
     static final String DOWNLOADED_BUILD_TOOL_NAME = "downloaded.build.tool.name";
     static final String BUILD_TOOLS_VERSION = "build.tool.version";
     static final String DOWNLOADED_PLATFORM_NAME = "downloaded.platform.name";
-    static final String TARGET_VERSION =  "target.version";
+    static final String TARGET_VERSION = "target.version";
     static final String OS_TARGET = "os.target";
     // WSO2 AVD specific variables
     static final String WSO2_AVD_NAME = "WSO2_AVD";

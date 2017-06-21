@@ -57,15 +57,15 @@ public class TryItEmulator implements Runnable {
             System.out.println("Error in starting " + deviceId);
             e.printStackTrace();
         } finally {
-                try {
-                    if (reader != null){
-                        reader.close();
-                    }
-                    if (writer != null) {
-                        writer.close();
-                    }
-                } catch (IOException ignored) {
-                    //
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException ignored) {
+                //
             }
         }
         System.exit(0);
