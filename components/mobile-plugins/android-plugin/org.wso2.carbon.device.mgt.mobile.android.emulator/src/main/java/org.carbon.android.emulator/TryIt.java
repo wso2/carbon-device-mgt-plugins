@@ -66,7 +66,6 @@ public class TryIt {
         osSuffix = System.getProperty(Constants.OS_NAME_PROPERTY).toLowerCase();
         userHome = System.getProperty(Constants.USER_HOME_PROPERTY);
         workingDirectory = System.getProperty(Constants.USER_DIRECTORY_PROPERTY);
-
         if (osSuffix.contains(Constants.WINDOWS_OS)) {
             osSuffix = Constants.WINDOWS_OS;
         }
@@ -318,7 +317,6 @@ public class TryIt {
                 createAvdProcessBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
                 Process createAvdProcess = createAvdProcessBuilder.start();
                 createAvdProcess.waitFor();
-
             } else {
                 ProcessBuilder createAvd = new ProcessBuilder(androidPath, "create", "avd", "-n",
                         Constants.WSO2_AVD_NAME, "-t", "android-23");

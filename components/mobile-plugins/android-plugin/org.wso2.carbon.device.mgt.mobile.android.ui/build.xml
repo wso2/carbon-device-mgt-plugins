@@ -29,7 +29,7 @@
     <target name="zip" depends="clean">
         <zip destfile="${target-dir}/android-tryit.ZIP" update="true">
             <zipfileset dir="src/main/resources/jaggeryapps/android-web-agent/app/pages/mdm.page.enrollments.android.download-agent/public/asset/" includes="android-agent.apk" fullpath="resources/android-agent.apk"/>
-            <zipfileset dir="${src-dir}" />
+            <zipfileset dir="${src-dir}"/>
             <zipfileset dir="${src-dir}/" includes="startEmulator.bat" filemode="755" />
             <zipfileset dir="${src-dir}/" includes="startEmulator.sh" filemode="755"/>
         </zip>
