@@ -307,6 +307,8 @@ var InitiateViewOption = null;
                             viewModel["appContext"] = context;
                             var content = template(viewModel);
                             $("#applications-list-container").html(content);
+                            var iconSource = $("#applications-list-container").data("public-uri") + "/img/android_app_icon.png";
+                            $("#applications-list-container img").attr("src",iconSource);
                         } else {
                             $("#applications-list-container").html("<div class='message message-info'><h4><i class='icon fw fw-info'></i>No applications found.</h4>" +
                                 "<p>Please try refreshing the list in a while.</p></div>");
