@@ -36,6 +36,31 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>EmulatorJava.jar</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                                    <artifactId>org.wso2.carbon.device.mgt.mobile.android.emulator</artifactId>
+                                    <version>4.0.2-SNAPSHOT</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.basedir}/src/main/resources/android-tryit/</outputDirectory>
+                                    <destFileName>JavaApp.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>${maven-antrun-plugin.version}</version>
                 <executions>
