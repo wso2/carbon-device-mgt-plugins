@@ -48,7 +48,6 @@
                             <mainClass>org.carbon.android.emulator.TryIt</mainClass>
                         </manifest>
                     </archive>
-                        <outputDirectory>../org.wso2.carbon.device.mgt.mobile.android.ui/src/main/resources/android-tryit</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
