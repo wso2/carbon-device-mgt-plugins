@@ -39,11 +39,16 @@ sudo apt-get update
 sudo apt-get install python-pip
 sudo pip install paho-mqtt
 
-#installing ada
+# installing ada
+echo ===Installing ADA libraries
 sudo apt-get install build-essential python-dev
 unzip Adafruit_Python_DHT
-sudo python Adafruit_Python_DHT/setup.py install
+cd Adafruit_Python_DHT
+sudo python setup.py install
+cd ..
 
+# moving files to start the agent as Daemon
+echo ===Moving files to start agent as Daemon
 sudo cp $currentDir/deviceConfig.properties $currentDir/src
 sudo cp -r $currentDir/src $destination
 sudo chmod 755 $destination/src/RaspberryAgent.py
