@@ -23,6 +23,7 @@ var InitiateViewOption = null;
     var deviceIdentifier = deviceId.data("deviceid");
     var deviceType = deviceId.data("type");
     var ownership = deviceId.data("ownership");
+    var devStatus = deviceId.data("status");
     var payload = [deviceIdentifier];
     var operationTable;
     var serviceUrl;
@@ -34,7 +35,7 @@ var InitiateViewOption = null;
         serviceUrl = "/api/device-mgt/android/v1.0/admin/devices/info";
     }
 
-    if (serviceUrl) {
+    if (serviceUrl && ("REMOVED" !== devStatus)) {
         invokerUtil.post(
             serviceUrl,
             payload,
