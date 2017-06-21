@@ -58,8 +58,12 @@ public class TryItEmulator implements Runnable {
             e.printStackTrace();
         } finally {
                 try {
-                    if (reader != null) reader.close();
-                    if (writer != null) writer.close();
+                    if (reader != null){
+                        reader.close();
+                    }
+                    if (writer != null) {
+                        writer.close();
+                    }
                 } catch (IOException ignored) {
                     //
             }

@@ -64,8 +64,17 @@ public class TryIt {
      */
     private TryIt() {
         osSuffix = System.getProperty(Constants.OS_NAME_PROPERTY).toLowerCase();
+        if (osSuffix == null) {
+            sysPropertyError("OS NAME");
+        }
         userHome = System.getProperty(Constants.USER_HOME_PROPERTY);
+        if (userHome == null) {
+            sysPropertyError("Home Directory");
+        }
         workingDirectory = System.getProperty(Constants.USER_DIRECTORY_PROPERTY);
+        if (workingDirectory == null) {
+            sysPropertyError("Current Working Directory");
+        }
         if (osSuffix.contains(Constants.WINDOWS_OS)) {
             osSuffix = Constants.WINDOWS_OS;
         }
@@ -100,6 +109,15 @@ public class TryIt {
             // script can continue without this process
         }
         System.out.println("\nGood Bye!");
+    }
+
+    /**
+     * This method is called when then is an error in getting system properties
+     * @param error - system property name
+     */
+    private void sysPropertyError(String error) {
+        System.out.println("Unable to get the " + error + " of your system");
+        System.exit(1);
     }
 
     /**
@@ -144,7 +162,7 @@ public class TryIt {
      */
     private void setSDKPath() {
         System.out.println("Please provide android SDK location : ");
-        String response = new Scanner(System.in, "UTF-8").next();
+        String response = new Scanner(System.in, StandardCharsets.UTF_8.toString()).next();
         String emulatorLocationPath = response + File.separator + "tools" + File.separator + "emulator";
         if (osSuffix.equals(Constants.WINDOWS_OS)) {
             emulatorLocationPath += Constants.WINDOWS_EXTENSION_BAT;
@@ -222,7 +240,7 @@ public class TryIt {
         checkForPlatform();
         checkForSystemImages();
         if (!new File(wso2AvdLocation).isDirectory()) {
-            Scanner read = new Scanner(System.in, "UTF-8");
+            Scanner read = new Scanner(System.in, StandardCharsets.UTF_8.toString());
             System.out.print("Do you want to create WSO2_AVD with default configs (Y/n)?: ");
             if (read.next().toLowerCase().matches("y")) {
                 createAVD();
@@ -251,14 +269,14 @@ public class TryIt {
             ProcessBuilder listAVDsProcessBuilder = new ProcessBuilder(emulatorLocation, "-list-avds");
             Process listAVDsProcess = listAVDsProcessBuilder.start();
             reader = new BufferedReader(new InputStreamReader(listAVDsProcess.getInputStream(),
-                    StandardCharsets.UTF_8));
+                    StandardCharsets.UTF_8.toString()));
             String readLine;
             while ((readLine = reader.readLine()) != null) {
                 devices.add(readLine);
             }
             selectAVD(devices);
         } catch (IOException e) {
-            handleException("Unable to list the available AVDs",e);
+            handleException("Unable to list the available AVDs", e);
         } finally {
             try {
                 if (reader != null) {
@@ -267,6 +285,19 @@ public class TryIt {
             } catch (IOException ignored) {
                 // exception in finally block
             }
+        }
+    }
+
+    /**
+     * This method makes the thread wait.
+     *
+     * @param milliSec -time to wait for
+     */
+    private void delay(long milliSec) {
+        try {
+            Thread.sleep(milliSec);
+        } catch (InterruptedException ignored) {
+            // interruption in main thread
         }
     }
 
@@ -289,7 +320,7 @@ public class TryIt {
                 count++;
             }
             System.out.print("\nEnter AVD number to start (eg: 1) :");
-            Scanner read = new Scanner(System.in, "UTF-8");
+            Scanner read = new Scanner(System.in, StandardCharsets.UTF_8.toString());
             int avdNo = read.nextInt();
             runEmulator(devices.get(--avdNo));
         }
@@ -344,7 +375,7 @@ public class TryIt {
         try {
             Files.copy(Paths.get(configFileLocation), Paths.get(wso2ConfigFile), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ignored) {
-            System.out.println("Failed to have WSO2 default AVD configurations");
+            System.out.println("WARN : Failed to have WSO2 default AVD configurations");
         }
     }
 
@@ -372,10 +403,10 @@ public class TryIt {
             getTools(System.getProperty(Constants.BUILD_TOOL_URL), "_Android-build-tool.zip");
             File buildTool = new File(androidSdkHome + File.separator
                     + System.getProperty(Constants.DOWNLOADED_BUILD_TOOL_NAME));
-            if(!new File(androidSdkHome + File.separator + "build-tools").exists()
-                    && !new File(androidSdkHome + File.separator + "build-tools").mkdir()){
-                    makeDirectoryError("build-tools",androidSdkHome );
-                }
+            if (!new File(androidSdkHome + File.separator + "build-tools").exists()
+                    && !new File(androidSdkHome + File.separator + "build-tools").mkdir()) {
+                makeDirectoryError("build-tools", androidSdkHome);
+            }
             buildTool.renameTo(new File(androidSdkHome + File.separator + "build-tools"
                     + File.separator + System.getProperty(Constants.BUILD_TOOLS_VERSION)));
         }
@@ -383,10 +414,11 @@ public class TryIt {
 
     /**
      * This method make sure whether the directory can be created.
-     * @param name - name of the folder to be made
+     *
+     * @param name     - name of the folder to be made
      * @param location - location to make folder
      */
-    private void makeDirectoryError(String name,String location){
+    private void makeDirectoryError(String name, String location) {
         System.out.println("Unable to make folder named " + name + " in " + location);
         System.exit(0);
     }
@@ -414,9 +446,9 @@ public class TryIt {
                     }
                 }
                 System.out.print(".");
-                Thread.sleep(1000);
+                delay(1000);
             } catch (IOException e) {
-                System.out.println("Unable to check boot process");
+                System.out.println("WARN : Unable to check boot process");
             } catch (InterruptedException ignored) {
                 //interruption in main thread
             } finally {
@@ -435,9 +467,10 @@ public class TryIt {
      * This method gets the Android SDK location if available and sets the SDK path else downloads the SDK.
      */
     private void setAndroidSDK() {
-        sdkConfigFile = new File("sdkLocation");
+        sdkConfigFile = new File("sdkConfigLocation");
         if (!(sdkConfigFile.exists() && !sdkConfigFile.isDirectory())) {
-            Scanner read = new Scanner(System.in, "UTF-8");
+            //TODO
+            Scanner read = new Scanner(System.in, StandardCharsets.UTF_8.toString());
             System.out.print("Do you have an Android SDK installed on your computer (y/N) ? : ");
             String response = read.next().toLowerCase();
             if (response.matches("y")) {
@@ -448,10 +481,10 @@ public class TryIt {
         } else {
             Scanner scanner = null;
             try {
-                scanner = new Scanner(sdkConfigFile, "UTF-8");
+                scanner = new Scanner(sdkConfigFile, StandardCharsets.UTF_8.toString());
                 androidSdkHome = scanner.useDelimiter("\\Z").next();
             } catch (FileNotFoundException ignored) {
-                // already checked
+                //
             } finally {
                 if (scanner != null) {
                     scanner.close();
@@ -517,7 +550,7 @@ public class TryIt {
                 }
             }
         } catch (IOException ignored) {
-            //
+            System.out.println("WARN : Failed to get the available packages");
         } finally {
             if (reader != null) {
                 try {
@@ -555,7 +588,7 @@ public class TryIt {
                 }
             }
         } catch (IOException | InterruptedException ignored) {
-            //
+            System.out.println("WARN : Failed to check the available packages, agent will be installed");
         } finally {
             try {
                 if (reader != null) {
@@ -581,7 +614,8 @@ public class TryIt {
             installAgentProcess.waitFor();
         } catch (Exception e) {
             System.out.println("WSO2 Agent installation failed");
-            Scanner read = new Scanner(System.in, "UTF-8");
+            //TODO
+            Scanner read = new Scanner(System.in, StandardCharsets.UTF_8.toString());
             System.out.println("Do you want to install agent again (Y/N) ? ");
             if (read.next().toLowerCase().matches("y")) {
                 installAgent();
@@ -617,9 +651,9 @@ public class TryIt {
                 + System.getProperty(Constants.TARGET_VERSION));
         if (!platform.isDirectory()) {
             getTools(System.getProperty(Constants.PLATFORM_URL), "_Android-platforms.zip");
-            if(!new File(androidSdkHome + File.separator + "platforms").exists()
-                    && !new File(androidSdkHome + File.separator + "platforms").mkdir()){
-                makeDirectoryError("platforms",androidSdkHome);
+            if (!new File(androidSdkHome + File.separator + "platforms").exists()
+                    && !new File(androidSdkHome + File.separator + "platforms").mkdir()) {
+                makeDirectoryError("platforms", androidSdkHome);
             }
             //noinspection ResultOfMethodCallIgnored
             new File(androidSdkHome + File.separator + System.getProperty(Constants.DOWNLOADED_PLATFORM_NAME)).
@@ -657,8 +691,8 @@ public class TryIt {
 
         if (!new File(haxmLocation).isDirectory()) {
             //System.out.println("Downloading intel HAXM...");
-            if(!new File(haxmLocation).mkdirs()){
-                makeDirectoryError(haxmLocation,androidSdkHome);
+            if (!new File(haxmLocation).mkdirs()) {
+                makeDirectoryError(haxmLocation, androidSdkHome);
             }
             String folderName = "_haxm.zip";
             getTools(System.getProperty(Constants.HAXM_URL), haxmLocation + File.separator
@@ -742,11 +776,7 @@ public class TryIt {
                 + File.separator + "avd" + File.separator + deviceId + ".avd" + File.separator + "cache.img");
         while (!cacheImg.exists()) {
             System.out.print(".");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ignored) {
-                //
-            }
+            delay(1000);
         }
         System.out.println();
     }
