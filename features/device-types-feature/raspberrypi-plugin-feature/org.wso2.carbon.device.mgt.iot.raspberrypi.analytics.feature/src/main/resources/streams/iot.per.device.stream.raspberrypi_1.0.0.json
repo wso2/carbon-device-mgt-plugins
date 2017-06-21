@@ -1,5 +1,5 @@
 {
-  "name": "org.wso2.iot.raspberrypi",
+  "name": "iot.per.device.stream.raspberrypi",
   "version": "1.0.0",
   "nickName": "raspberrypi",
   "description": "Temperature data received from the raspberrypi",
