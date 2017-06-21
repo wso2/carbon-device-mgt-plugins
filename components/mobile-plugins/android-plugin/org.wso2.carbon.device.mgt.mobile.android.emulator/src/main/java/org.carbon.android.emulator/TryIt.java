@@ -105,8 +105,10 @@ public class TryIt {
             Process startShell = startShellProcessBuilder.start();
             System.out.println("Connected to device shell");
             startShell.waitFor();
-        } catch (IOException | InterruptedException ignored) {
-            // script can continue without this process
+        } catch (IOException e) {
+            tryIt.handleException("Unable to start the shell", e);
+        } catch (InterruptedException ignored) {
+            //
         }
         System.out.println("\nGood Bye!");
     }
