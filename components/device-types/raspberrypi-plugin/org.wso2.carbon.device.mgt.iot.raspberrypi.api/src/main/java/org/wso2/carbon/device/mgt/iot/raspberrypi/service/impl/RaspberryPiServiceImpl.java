@@ -112,8 +112,8 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
                                                    @QueryParam("from") long from, @QueryParam("to") long to) {
         String fromDate = String.valueOf(from);
         String toDate = String.valueOf(to);
-        String query = "deviceId:" + deviceId + " AND deviceType:" +
-                RaspberrypiConstants.DEVICE_TYPE + " AND time : [" + fromDate + " TO " + toDate + "]";
+        String query = "meta_deviceId:" + deviceId + " AND meta_deviceType:" +
+                RaspberrypiConstants.DEVICE_TYPE + " AND meta_time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = RaspberrypiConstants.TEMPERATURE_EVENT_TABLE;
         try {
             if (!APIUtil.getDeviceAccessAuthorizationService().isUserAuthorized(new DeviceIdentifier(deviceId,

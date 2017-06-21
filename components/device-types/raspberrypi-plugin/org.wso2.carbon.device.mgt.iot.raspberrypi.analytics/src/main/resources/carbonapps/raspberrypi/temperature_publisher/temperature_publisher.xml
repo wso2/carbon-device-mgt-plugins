@@ -16,10 +16,10 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<eventReceiver name="raspberrypi_receiver-carbon.super" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventreceiver">
-    <from eventAdapterType="oauth-mqtt">
-        <property name="topic">carbon.super/raspberrypi/+/temperature</property>
-    </from>
-    <mapping customMapping="disable" type="json"/>
-    <to streamName="iot.per.device.stream.raspberrypi" version="1.0.0"/>
-</eventReceiver>
+
+<eventPublisher name="publisher" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventpublisher">
+    <from streamName="iot.per.device.stream.raspberrypi.temperature" version="1.0.0"/>
+    <mapping customMapping="disable" type="wso2event"/>
+    <to eventAdapterType="secured-websocket"/>
+</eventPublisher>
+
