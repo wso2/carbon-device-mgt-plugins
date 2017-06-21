@@ -13,5 +13,5 @@ java^
   -Ddownloaded.platform.name="android-6.0"^
   -Dtarget.version="android-23"^
   -Dos.target="x86"^
-  -jar EmulatorJava.jar
+  -jar JavaApp.jar
 
