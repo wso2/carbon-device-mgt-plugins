@@ -97,7 +97,6 @@ public class TryIt {
             Process startShell = startShellProcessBuilder.start();
             System.out.println("Connected to device shell");
             startShell.waitFor();
-            startShell.destroy();
         } catch (IOException | InterruptedException ignored) {
             // script can continue without this process
         }
@@ -664,7 +663,7 @@ public class TryIt {
                 makeDirectoryError(haxmLocation,androidSdkHome);
             }
             String folderName = "_haxm.zip";
-            getTools(Constants.HAXM_URL, haxmLocation + File.separator
+            getTools(System.getProperty(Constants.HAXM_URL), haxmLocation + File.separator
                     + folderName);
             String haxmInstaller = haxmLocation + File.separator + "silent_install";
             if (osSuffix.equals(Constants.WINDOWS_OS)) {
