@@ -64,5 +64,6 @@ public class TryItEmulator implements Runnable {
                     //
             }
         }
+        System.exit(0);
     }
 }

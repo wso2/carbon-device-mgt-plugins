@@ -34,7 +34,6 @@ class Constants {
     static final String WINDOWS_EXTENSION_BAT = ".bat";
     static final String MAC_HAXM_EXTENSION = ".sh";
     static final String MAC_DARWIN = "darwin";
-
     // System properties
     static final String SDK_TOOLS_URL = "sdk.tools.url";
     static final String PLATFORM_TOOLS_URL = "platform.tools.url";
@@ -47,7 +46,6 @@ class Constants {
     static final String DOWNLOADED_PLATFORM_NAME = "downloaded.platform.name";
     static final String TARGET_VERSION =  "target.version";
     static final String OS_TARGET = "os.target";
-
     // WSO2 AVD specific variables
     static final String WSO2_AVD_NAME = "WSO2_AVD";
     static final String APK_LOCATION = File.separator + "resources" + File.separator + "android-agent.apk";

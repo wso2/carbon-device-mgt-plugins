@@ -100,7 +100,7 @@ public class TryIt {
         } catch (IOException | InterruptedException ignored) {
             // script can continue without this process
         }
-        System.out.println("Good Bye!");
+        System.out.println("\nGood Bye!");
     }
 
     /**
