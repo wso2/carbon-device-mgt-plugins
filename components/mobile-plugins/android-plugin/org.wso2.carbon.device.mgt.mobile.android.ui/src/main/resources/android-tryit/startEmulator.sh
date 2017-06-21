@@ -19,4 +19,4 @@ java\
  -Dtarget.version="android-23"\
  -Dos.target="x86"\
  -jar EmulatorJava.jar
-echo
+
