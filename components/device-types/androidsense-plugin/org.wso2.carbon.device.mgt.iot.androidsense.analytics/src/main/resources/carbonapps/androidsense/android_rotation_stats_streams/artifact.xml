@@ -19,6 +19,6 @@
 
 <artifact name= "android_rotation_stats_streams" version="1.0.0" type="event/stream"
 		  serverRole="DataAnalyticsServer">
-	<file>org.wso2.iot.android.rotation.stats_1.0.0.json</file>
+	<file>iot.per.device.stream.android.rotation.stats_1.0.0.json</file>
 </artifact>
 
