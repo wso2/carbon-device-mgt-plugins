@@ -178,7 +178,7 @@ public class TryIt {
      * @param hint     - property name
      */
     private void sysPropertyError(String property, String hint) {
-        System.out.println("Unable to get the" + property + "property of your system (" + hint + ")");
+        System.out.println("Unable to get the " + property + " property of your system (" + hint + ")");
         System.exit(1);
     }
 
