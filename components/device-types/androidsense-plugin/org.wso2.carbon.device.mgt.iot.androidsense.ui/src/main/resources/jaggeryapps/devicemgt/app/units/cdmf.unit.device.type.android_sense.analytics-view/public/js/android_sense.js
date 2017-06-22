@@ -228,7 +228,6 @@ function drawGraph_android_sense(from, to) {
             }
 
             var chartData = [];
-            console.log(data.length);
             for (var i = 0; i < data.length; i++) {
                 chartData.push(
                         {
@@ -301,10 +300,8 @@ function drawGraph_android_sense(from, to) {
                 graphConfig.series[deviceIndex].data = chartData;
             } else {
                 var chartDataX = [], chartDataY = [], chartDataZ = [];
-                console.log(data.length);
                 for (var i = 0; i < data.length; i++) {
                     if (data[i].values.axis==="X"){
-                        console.log(new Date(parseInt(data[i].values.meta_timestamp)- tzOffset));
                         chartDataX.push(
                             {
                                 x: parseInt(((data[i].values.meta_timestamp) - tzOffset)/1000),
