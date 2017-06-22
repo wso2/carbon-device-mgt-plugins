@@ -3,13 +3,13 @@
 @Plan:description('Find the battery status of the android device.')
 
 
-@Import('org.wso2.iot.android.battery:1.0.0')
-define stream BatteryStream (meta_owner string, meta_deviceId string, meta_timestamp long, level int, state string, status string, temperature int);
+@Import('iot.per.device.stream.android.battery:1.0.0')
+define stream BatteryStream (meta_owner string, meta_deviceId string, meta_timestamp long, level int, state string, status int, temperature int);
 
 
-@Export('org.wso2.iot.android.battery.stats:1.0.0')
+@Export('iot.per.device.stream.android.battery.stats:1.0.0')
 define stream BatteryStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, level int, state
-string, status string, temperature int, year int, month int, day int, hour int, minute int);
+string, status int, temperature int, year int, month int, day int, hour int, minute int);
 
 partition with (meta_deviceId of BatteryStream)
 begin
