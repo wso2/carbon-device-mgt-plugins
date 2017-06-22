@@ -24,7 +24,6 @@
     <property name="src-dir" value="src/main/resources/carbonapps"/>
 
     <property name="Android_Sense_dir" value="androidsense"/>
-    <property name="Wordcounter_dir" value="word_count"/>
 
     <target name="clean">
         <delete dir="${target-dir}" />
@@ -34,9 +33,6 @@
         <mkdir dir="${target-dir}"/>
         <zip destfile="${target-dir}/${Android_Sense_dir}.car">
             <zipfileset dir="${src-dir}/${Android_Sense_dir}"/>
-        </zip>
-        <zip destfile="${target-dir}/${Wordcounter_dir}.car">
-            <zipfileset dir="${src-dir}/${Wordcounter_dir}"/>
         </zip>
     </target>
 </project>
