@@ -106,13 +106,13 @@
                 "formParams": [
                     {
                         "type": "text",
-                        "id": "messageText",
+                        "id": "messageTitle",
                         "optional": false,
                         "label": "Title Here..."
                     },
                     {
                         "type": "text",
-                        "id": "messageTitle",
+                        "id": "messageText",
                         "optional": false,
                         "label": "Message Here..."
                     }
