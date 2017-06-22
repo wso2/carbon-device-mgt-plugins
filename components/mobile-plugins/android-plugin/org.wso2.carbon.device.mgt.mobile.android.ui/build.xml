@@ -20,7 +20,7 @@
 <project name="create-geo-fence-capps" default="zip" basedir=".">
 
     <property name="project-name" value="${ant.project.name}"/>
-    <property name="target-dir" value="target/"/>
+    <property name="target-dir" value="target/ant"/>
     <property name="src-dir" value="src/main/resources/android-tryit"/>
 
     <target name="clean">
@@ -31,7 +31,9 @@
             <zipfileset
                     dir="src/main/resources/jaggeryapps/android-web-agent/app/pages/mdm.page.enrollments.android.download-agent/public/asset/"
                     includes="android-agent.apk" fullpath="resources/android-agent.apk"/>
-            <zipfileset dir="${src-dir}/" includes="startEmulator.bat" filemode="755"/>
+            <zipfileset
+                    dir="target/"
+                    includes="JavaApp.jar" fullpath="JavaApp.jar"/>
             <zipfileset dir="${src-dir}/" includes="startEmulator.sh" filemode="755"/>
             <zipfileset dir="${src-dir}"/>
         </zip>
