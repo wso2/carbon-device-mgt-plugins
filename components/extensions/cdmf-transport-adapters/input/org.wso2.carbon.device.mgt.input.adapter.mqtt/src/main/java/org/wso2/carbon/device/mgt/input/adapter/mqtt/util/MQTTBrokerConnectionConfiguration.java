@@ -106,9 +106,17 @@ public class MQTTBrokerConnectionConfiguration {
         this.dcrUrl = PropertyUtils
                 .replaceMqttProperty(globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_DCR_URL));
         this.contentValidatorType = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE);
+        String contentValidatorTypeLocal = eventAdapterConfiguration.getProperties()
+                .get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE);
         if (contentValidatorType == null || contentValidatorType.isEmpty()) {
             this.contentValidatorType = eventAdapterConfiguration.getProperties()
                     .get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE);
+        } else if (contentValidatorTypeLocal != null && !contentValidatorTypeLocal.equals(MQTTEventAdapterConstants.EMPTY)) {
+            this.contentValidatorType = eventAdapterConfiguration.getProperties()
+                    .get(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_VALIDATOR_TYPE);
+        }
+        if (this.contentValidatorType.equals(MQTTEventAdapterConstants.EMPTY)) {
+            this.contentValidatorType = MQTTEventAdapterConstants.DEFAULT;
         }
         String cleanSession = globalProperties.get(MQTTEventAdapterConstants.ADAPTER_CONF_CLEAN_SESSION);
         if (cleanSession == null || cleanSession.isEmpty()) {

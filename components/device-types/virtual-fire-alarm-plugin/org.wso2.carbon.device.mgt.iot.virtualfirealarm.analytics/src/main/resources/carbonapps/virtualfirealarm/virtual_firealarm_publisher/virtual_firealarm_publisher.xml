@@ -17,7 +17,7 @@
   ~ under the License.
   -->
 
-<eventPublisher name="temperature_publisher" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventpublisher">
+<eventPublisher name="virtual_firealarm_publisher" statistics="disable" trace="disable" xmlns="http://wso2.org/carbon/eventpublisher">
     <from streamName="iot.per.device.stream.virtualfirealarm.temperature" version="1.0.0"/>
     <mapping customMapping="disable" type="wso2event"/>
     <to eventAdapterType="secured-websocket"/>

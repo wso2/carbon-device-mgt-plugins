@@ -61,6 +61,7 @@ public class MQTTEventAdapterConstants {
     public static final String CLIENT_SECRET = "clientSecret";
     public static final String CLIENT_NAME = "client_name";
     public static final String DEFAULT = "default";
+    public static final String EMPTY = "";
     public static final String MQTT_CONTENT_VALIDATION_DEFAULT_PARAMETERS = "";
     public static final String TOPIC = "topic";
     public static final String PAYLOAD = "payload";

@@ -30,6 +30,7 @@ import org.wso2.carbon.device.mgt.common.app.mgt.ApplicationManager;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.PlatformConfiguration;
 import org.wso2.carbon.device.mgt.common.policy.mgt.PolicyMonitoringManager;
+import org.wso2.carbon.device.mgt.common.pull.notification.PullNotificationSubscriber;
 import org.wso2.carbon.device.mgt.common.push.notification.PushNotificationConfig;
 import org.wso2.carbon.device.mgt.common.spi.DeviceManagementService;
 import org.wso2.carbon.device.mgt.mobile.android.impl.util.AndroidPluginConstants;
@@ -121,6 +122,12 @@ public class AndroidDeviceManagementService implements DeviceManagementService {
         return null;
     }
 
+    @Override
+    public PullNotificationSubscriber getPullNotificationSubscriber() {
+        return null;
+    }
+
+    @Override
     public DeviceStatusTaskPluginConfig getDeviceStatusTaskPluginConfig() {
         return null;
     }

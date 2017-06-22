@@ -39,6 +39,7 @@
         <module>org.wso2.carbon.device.mgt.adapter.feature</module>
         <module>org.wso2.carbon.andes.extensions.device.mgt.mqtt.authorization.feature</module>
         <module>org.wso2.extension.siddhi.execution.json.feature</module>
+		<module>org.wso2.carbon.device.mgt.notification.listener.feature</module>
         <module>org.wso2.gpl.siddhi.extension.geo.script.feature</module>
     </modules>
 
