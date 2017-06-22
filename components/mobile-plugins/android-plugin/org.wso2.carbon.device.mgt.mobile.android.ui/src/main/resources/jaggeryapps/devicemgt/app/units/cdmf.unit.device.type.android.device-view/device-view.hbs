@@ -13,7 +13,8 @@
             data-deviceid="{{device.deviceIdentifier}}"
             data-type="{{device.type}}"
             data-ownership="{{device.ownership}}"
-            data-owner="{{device.owner}}">
+            data-owner="{{device.owner}}"
+            data-status="{{device.status}}">
             {{device.owner}}'s {{device.name}}
               <a id="device-info-tooltip" href="#" data-toggle="tooltip" title="Device Identifier: {{device.deviceIdentifier}}
               Firmware Build Date: {{device.osBuildDate}}
@@ -78,8 +79,19 @@
 
         {{#zone "device-view-tab-injected-conents"}}
             <div id="location" class="tab-pane fade">
-                <iframe width="100%" height="100%" frameborder="0" style="border:0"
-                    src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJk_gsqyVZ4joR4UxR7brwMnA&key=AIzaSyChgf100i4rBz6neCNRyK1D05g9VLY8jvo" allowfullscreen></iframe>
+              {{#if device.location}}
+                  {{unit "cdmf.unit.geo-dashboard" device=device noGeoFencing=false hideSearch=true}}
+              {{else}}
+                  <div id="map-error" class="message message-warning">
+                      <h4 class="remove-margin">
+                          <i class="icon fw fw-warning"></i>
+                          Device location information is not available.
+                      </h4>
+                  </div>
+                  <p class="add-padding-5x"></p>
+                  <p class="add-padding-5x"></p>
+                  <p class="add-padding-5x"></p>
+              {{/if}}
             </div>
             <div id="app" class="tab-pane fade">
               <div id="applications-list-container" data-public-uri="{{@unit.publicUri}}">
