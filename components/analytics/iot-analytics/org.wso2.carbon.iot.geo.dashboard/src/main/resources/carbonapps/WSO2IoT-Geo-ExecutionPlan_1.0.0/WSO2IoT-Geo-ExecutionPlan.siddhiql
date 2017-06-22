@@ -1,0 +1,19 @@
+/* Enter a unique ExecutionPlan */
+@Plan:name('WSO2IoT-Geo-ExecutionPlan')
+
+/* Enter a unique description for ExecutionPlan */
+@Plan:description('To convert the WSO2 IoT event incoming stream to relavant streams')
+
+/* define streams/tables and write queries here ... */
+
+@Plan:trace('false')
+
+@Import('org.wso2.iot.LocationStream:1.0.0')
+define stream dataIn (meta_deviceId string, meta_deviceType string, timeStamp long, latitude double, longitude double);
+
+@Export('org.wso2.geo.StandardSpatialEvents:1.0.0')
+define stream dataOut ( id string, latitude double, longitude double, timeStamp long, type string, speed float, heading float, eventId string );
+
+from dataIn
+select meta_deviceId as id, latitude, longitude, timeStamp,
+meta_deviceType as type, 0.0f as speed, 0.0f as heading, UUID() as eventId insert into dataOut

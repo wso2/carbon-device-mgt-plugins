@@ -26,7 +26,7 @@ public class RaspberrypiConstants {
 
     public static final String BULB_CONTEXT = "BULB";
     //sensor events summerized table name
-    public static final String TEMPERATURE_EVENT_TABLE = "DEVICE_TEMPERATURE_SUMMARY";
+    public static final String TEMPERATURE_EVENT_TABLE = "IOT_PER_DEVICE_STREAM_RASPBERRYPI_TEMPERATURE";
 
     //mqtt tranport related constants
     public static final String MQTT_ADAPTER_TOPIC_PROPERTY_NAME = "mqtt.adapter.topic";
