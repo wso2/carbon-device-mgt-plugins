@@ -31,8 +31,6 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -65,17 +63,19 @@ public class TryIt {
      * This method gets the system specific variables.
      */
     private TryIt() {
-        osSuffix = System.getProperty(Constants.OS_NAME_PROPERTY).toLowerCase();
+        osSuffix = System.getProperty(Constants.OS_NAME_PROPERTY);
         if (osSuffix == null) {
-            sysPropertyError("OS NAME");
+            sysPropertyError(Constants.OS_NAME_PROPERTY, "OS Name");
+        } else {
+            osSuffix = osSuffix.toLowerCase();
         }
         userHome = System.getProperty(Constants.USER_HOME_PROPERTY);
         if (userHome == null) {
-            sysPropertyError("Home Directory");
+            sysPropertyError(Constants.USER_HOME_PROPERTY, "Home Directory");
         }
         workingDirectory = System.getProperty(Constants.USER_DIRECTORY_PROPERTY);
         if (workingDirectory == null) {
-            sysPropertyError("Current Working Directory");
+            sysPropertyError(Constants.USER_DIRECTORY_PROPERTY, "Current Working Directory");
         }
         if (osSuffix.contains(Constants.WINDOWS_OS)) {
             osSuffix = Constants.WINDOWS_OS;
@@ -174,10 +174,11 @@ public class TryIt {
     /**
      * This method is called when then is an error in getting system properties
      *
-     * @param error - system property name
+     * @param property -property type
+     * @param hint     - property name
      */
-    private void sysPropertyError(String error) {
-        System.out.println("Unable to get the " + error + " of your system");
+    private void sysPropertyError(String property, String hint) {
+        System.out.println("Unable to get the" + property + "property of your system (" + hint + ")");
         System.exit(1);
     }
 
@@ -445,7 +446,7 @@ public class TryIt {
      */
     private void makeDirectoryError(String name, String location) {
         System.out.println("Unable to make folder named " + name + " in " + location);
-        System.exit(0);
+        System.exit(1);
     }
 
     /**
@@ -815,8 +816,10 @@ public class TryIt {
     private void setExecutePermission(String fileName) {
         if (!new File(fileName).canExecute()) {
             if (!new File(fileName).setExecutable(true)) {
-                System.out.println("Set the Execute permission of : " + fileName + " to continue");
-                System.exit(0);      // if can't execute, unable to proceed
+                System.out.println("Unable to set the execute permission of : " + fileName);
+                System.out.println("Please set the executable permission for file "
+                        + new File(fileName).getAbsolutePath() + " to continue");
+                System.exit(1);      // if can't execute, unable to proceed
             }
         }
     }
