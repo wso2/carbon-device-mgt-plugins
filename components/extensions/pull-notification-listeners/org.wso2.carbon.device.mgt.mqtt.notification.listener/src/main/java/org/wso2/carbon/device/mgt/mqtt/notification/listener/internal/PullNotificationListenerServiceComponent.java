@@ -54,7 +54,7 @@ public class PullNotificationListenerServiceComponent {
         try {
             //Do nothing
             if (log.isDebugEnabled()) {
-                log.debug("pull notification provider implementation bundle has been successfully " +
+                log.debug("Pull notification provider implementation bundle has been successfully " +
                         "initialized");
             }
             BundleContext bundleContext = componentContext.getBundleContext();
