@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -16,34 +16,40 @@
  * under the License.
  */
 
-var palette = new Rickshaw.Color.Palette({scheme: "classic9"});
+var palette = new Rickshaw.Color.Palette({scheme: "munin"});
 var graphMap = {};
 
 function drawGraph_android_sense(from, to) {
+
+    from = new Date();
+    from.setDate(from.getDate()-1);
+    from.setHours(0,0,0,0);
+    from = parseInt(from.getTime());
+    to = parseInt(new Date().getTime());
+
     var devices = $("#android_sense-details").data("devices");
     var tzOffset = new Date().getTimezoneOffset() * 60;
 
     var streamIndex = 0;
-    var streams = ["battery", "light", "pressure", "proximity", "accelerometer", "magnetic", "rotation", "gyroscope", "gravity"];
+    var streams = ["battery", "light", "pressure", "proximity", "magnetic", "rotation", "gyroscope", "gravity", "accelerometer"];
 
+    var graphType = $(".y-axis-label").text();
     populateGraph();
 
     function populateGraph() {
-        if (streamIndex < 4) {
-            retrieveDataAndDrawLineGraph(streams[streamIndex], from, to);
-        } else if (streamIndex < 9) {
-            retrieveDataAndDrawMultiLineGraph(streams[streamIndex], from, to);
+        if (streams.indexOf(graphType) < 4) {
+            retrieveDataAndDrawGraph(graphType, from, to);
+        } else if (streams.indexOf(graphType) < 9) {
+            retrieveDataAndDrawMultiLineGraph(graphType, from, to);
         }
-        streamIndex++;
     }
 
     function clearContent(type) {
-        $("#y_axis-" + type).html("");
+        $("#y-axis-" + type).html("");
         $("#smoother-" + type).html("");
         $("#legend-" + type).html("");
         $("#chart-" + type).html("");
         $("#x_axis-" + type).html("");
-        $("#slider-" + type).html("");
     }
 
     function initGraph(type, isMultilined) {
@@ -52,17 +58,14 @@ function drawGraph_android_sense(from, to) {
         }
 
         var chartWrapperElmId = "#android_sense-div-chart";
-        var graphWidth = $(chartWrapperElmId).width() - 50;
+        var graphWidth = $(chartWrapperElmId).width() - 100;
 
         var graphConfig = {
             element: document.getElementById("chart-" + type),
             width: graphWidth,
             height: 400,
             strokeWidth: 2,
-            renderer: 'line',
             interpolation: "linear",
-            unstack: true,
-            stack: false,
             xScale: d3.time.scale(),
             padding: {top: 0.2, left: 0.02, right: 0.02, bottom: 0.2},
             series: []
@@ -89,7 +92,7 @@ function drawGraph_android_sense(from, to) {
                                 x: parseInt(new Date().getTime() / 1000),
                                 y: 0
                             }],
-                            'name': "x"
+                            'name': "x " + type
                         },
                         {
                             'color': palette.color(),
@@ -97,7 +100,7 @@ function drawGraph_android_sense(from, to) {
                                 x: parseInt(new Date().getTime() / 1000),
                                 y: 0
                             }],
-                            'name': "y"
+                            'name': "y "  + type
                         },
                         {
                             'color': palette.color(),
@@ -105,7 +108,7 @@ function drawGraph_android_sense(from, to) {
                                 x: parseInt(new Date().getTime() / 1000),
                                 y: 0
                             }],
-                            'name': "z"
+                            'name': "z "  + type
                         }
                 );
             } else {
@@ -116,13 +119,12 @@ function drawGraph_android_sense(from, to) {
                                 x: parseInt(new Date().getTime() / 1000),
                                 y: 0
                             }],
-                            'name': $("#android_sense-details").data("devicename")
+                            'name': type
                         });
             }
         }
 
         var graph = new Rickshaw.Graph(graphConfig);
-        graph.render();
 
         var xAxis = new Rickshaw.Graph.Axis.Time({
             graph: graph
@@ -132,16 +134,14 @@ function drawGraph_android_sense(from, to) {
         var yAxis = new Rickshaw.Graph.Axis.Y({
             graph: graph,
             orientation: 'left',
-            element: document.getElementById("y_axis-" + type),
             width: 40,
-            height: 410
-        });
-        yAxis.render();
+            height: 410,
+            tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+            element: document.getElementById("y-axis-" + type)
 
-        var slider = new Rickshaw.Graph.RangeSlider.Preview({
-            graph: graph,
-            element: document.getElementById("slider-" + type)
         });
+
+        yAxis.render();
 
         var legend = new Rickshaw.Graph.Legend({
             graph: graph,
@@ -159,20 +159,22 @@ function drawGraph_android_sense(from, to) {
             }
         });
 
-        var shelving = new Rickshaw.Graph.Behavior.Series.Toggle({
+        new Rickshaw.Graph.Behavior.Series.Toggle({
             graph: graph,
             legend: legend
         });
 
-        var order = new Rickshaw.Graph.Behavior.Series.Order({
+        new Rickshaw.Graph.Behavior.Series.Order({
             graph: graph,
             legend: legend
         });
 
-        var highlighter = new Rickshaw.Graph.Behavior.Series.Highlight({
+        new Rickshaw.Graph.Behavior.Series.Highlight({
             graph: graph,
             legend: legend
         });
+
+        graph.render();
 
         graphMap[type] = {};
         graphMap[type].graph = graph;
@@ -180,13 +182,12 @@ function drawGraph_android_sense(from, to) {
         return graphMap[type];
     }
 
-    function retrieveDataAndDrawLineGraph(type, from, to) {
+    function retrieveDataAndDrawGraph(type, from, to) {
         clearContent(type);
 
         var graphObj = initGraph(type, false);
         var graph = graphObj.graph;
         var graphConfig = graphObj.config;
-
         var deviceIndex = 0;
 
         if (devices) {
@@ -195,12 +196,10 @@ function drawGraph_android_sense(from, to) {
             var backendApiUrl = $("#android_sense-div-chart").data("backend-api-url") + type + "?from=" + from + "&to=" + to;
             var successCallback = function (data) {
                 if (data) {
-                    drawLineGraph(JSON.parse(data));
+                    drawGraph(JSON.parse(data));
                 }
-                populateGraph();
             };
             invokerUtil.get(backendApiUrl, successCallback, function (message) {
-                populateGraph();
             });
         }
 
@@ -212,7 +211,7 @@ function drawGraph_android_sense(from, to) {
                                 + "/sensors/" + type + "?from=" + from + "&to=" + to;
             var successCallback = function (data) {
                 if (data) {
-                    drawLineGraph(JSON.parse(data));
+                    drawGraph(JSON.parse(data));
                 }
                 deviceIndex++;
                 getData();
@@ -223,21 +222,21 @@ function drawGraph_android_sense(from, to) {
             });
         }
 
-        function drawLineGraph(data) {
+        function drawGraph(data) {
             if (data.length === 0 || data.length === undefined) {
                 return;
             }
 
             var chartData = [];
+            console.log(data.length);
             for (var i = 0; i < data.length; i++) {
                 chartData.push(
                         {
-                            x: parseInt(data[i].values.time) - tzOffset,
+                            x: parseInt((data[i].values.meta_timestamp - tzOffset)/1000),
                             y: parseInt(getFieldData(data[i], type))
                         }
                 );
             }
-
             graphConfig.series[deviceIndex].data = chartData;
             graph.update();
         }
@@ -258,12 +257,10 @@ function drawGraph_android_sense(from, to) {
             var backendApiUrl = $("#android_sense-div-chart").data("backend-api-url") + type + "?from=" + from + "&to=" + to;
             var successCallback = function (data) {
                 if (data) {
-                    drawLineGraph(JSON.parse(data));
+                    drawGraph(JSON.parse(data));
                 }
-                populateGraph();
             };
             invokerUtil.get(backendApiUrl, successCallback, function (message) {
-                populateGraph();
             });
         }
 
@@ -276,7 +273,7 @@ function drawGraph_android_sense(from, to) {
                                 + "/sensors/" + type + "?from=" + from + "&to=" + to;
             var successCallback = function (data) {
                 if (data) {
-                    drawLineGraph(JSON.parse(data));
+                    drawGraph(JSON.parse(data));
                 }
                 deviceIndex++;
                 getData();
@@ -287,7 +284,7 @@ function drawGraph_android_sense(from, to) {
             });
         }
 
-        function drawLineGraph(data) {
+        function drawGraph(data) {
             if (data.length === 0 || data.length === undefined) {
                 return;
             }
@@ -297,31 +294,52 @@ function drawGraph_android_sense(from, to) {
                 for (var i = 0; i < data.length; i++) {
                     chartData.push(
                             {
-                                x: parseInt(data[i].values.time) - tzOffset,
-                                y: sqrt(pow(parseInt(data[i].values.y), 2) + pow(parseInt(data[i].values.x), 2) + pow(parseInt(data[i].values.z), 2))
+                                x: parseInt(data[i].values.meta_timestamp) - tzOffset,
+                                y: sqrt(pow(parseInt(data[i].values.Y), 2) + pow(parseInt(data[i].values.X), 2) + pow(parseInt(data[i].values.z), 2))
                             });
                 }
                 graphConfig.series[deviceIndex].data = chartData;
             } else {
                 var chartDataX = [], chartDataY = [], chartDataZ = [];
+                console.log(data.length);
                 for (var i = 0; i < data.length; i++) {
-                    chartDataX.push(
+                    if (data[i].values.axis==="X"){
+                        console.log(new Date(parseInt(data[i].values.meta_timestamp)- tzOffset));
+                        chartDataX.push(
                             {
-                                x: parseInt(data[i].values.time) - tzOffset,
-                                y: parseInt(data[i].values.y)
+                                x: parseInt(((data[i].values.meta_timestamp) - tzOffset)/1000),
+                                y: parseInt(data[i].values.value)
                             });
-
-                    chartDataY.push(
+                    }else if(data[i].values.axis==="Y"){
+                        chartDataY.push(
                             {
-                                x: parseInt(data[i].values.time) - tzOffset,
+                                x: parseInt(((data[i].values.meta_timestamp) - tzOffset)/1000),
+                                y: parseInt(data[i].values.value)
+                            });
+                    }else if(data[i].values.axis==="Z"){
+                        chartDataZ.push(
+                            {
+                                x: parseInt(((data[i].values.meta_timestamp) - tzOffset)/1000),
+                                y: parseInt(data[i].values.value)
+                            });
+                    }else if(data[i].values.hasOwnProperty("x") && data[i].values.hasOwnProperty("y") && data[i].values.hasOwnProperty("z")){
+                        chartDataX.push(
+                            {
+                                x: parseInt(((data[i].values.meta_timestamp) - tzOffset)/1000),
                                 y: parseInt(data[i].values.x)
                             });
-
-                    chartDataZ.push(
+                        chartDataY.push(
                             {
-                                x: parseInt(data[i].values.time) - tzOffset,
+                                x: parseInt(((data[i].values.meta_timestamp) - tzOffset)/1000),
+                                y: parseInt(data[i].values.y)
+                            });
+                        chartDataZ.push(
+                            {
+                                x: parseInt(((data[i].values.meta_timestamp) - tzOffset)/1000),
                                 y: parseInt(data[i].values.z)
                             });
+                    }
+
                 }
                 graphConfig.series[0].data = chartDataX;
                 graphConfig.series[1].data = chartDataY;
@@ -352,5 +370,21 @@ function drawGraph_android_sense(from, to) {
 
         return columnData;
     }
-
 }
+
+$(document).ready(function() {
+    $("input:radio").click(function(e) {
+        var offsetMode = e.target.value;
+        var graphType = e.target.className;
+
+        if (offsetMode == 'lines') {
+            graphMap[graphType].graph.setRenderer('line');
+            graphMap[graphType].graph.offset = 'zero';
+        } else {
+            graphMap[graphType].graph.setRenderer('stack');
+            graphMap[graphType].graph.offset = offsetMode;
+        }
+        graphMap[graphType].graph.update();
+    });
+
+});
