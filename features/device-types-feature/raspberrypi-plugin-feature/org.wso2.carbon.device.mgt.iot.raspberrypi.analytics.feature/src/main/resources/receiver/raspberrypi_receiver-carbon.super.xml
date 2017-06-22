@@ -21,5 +21,5 @@
         <property name="topic">carbon.super/raspberrypi/+/temperature</property>
     </from>
     <mapping customMapping="disable" type="json"/>
-    <to streamName="org.wso2.iot.raspberrypi" version="1.0.0"/>
+    <to streamName="iot.per.device.stream.raspberrypi" version="1.0.0"/>
 </eventReceiver>

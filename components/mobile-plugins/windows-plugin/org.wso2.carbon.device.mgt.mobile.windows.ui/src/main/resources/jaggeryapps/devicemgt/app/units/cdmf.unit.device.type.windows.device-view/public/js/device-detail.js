@@ -23,6 +23,7 @@ var InitiateViewOption = null;
     var deviceIdentifier = deviceId.data("deviceid");
     var deviceType = deviceId.data("type");
     var ownership = deviceId.data("ownership");
+    var devStatus = deviceId.data("status");
     var payload = [deviceIdentifier];
     var operationTable;
     var serviceUrl;
@@ -34,7 +35,7 @@ var InitiateViewOption = null;
         serviceUrl = "/api/device-mgt/android/v1.0/admin/devices/info";
     }
 
-    if (serviceUrl) {
+    if (serviceUrl && ("REMOVED" !== devStatus)) {
         invokerUtil.post(
             serviceUrl,
             payload,
@@ -290,6 +291,8 @@ var InitiateViewOption = null;
                             viewModel["appContext"] = context;
                             var content = template(viewModel);
                             $("#applications-list-container").html(content);
+                            var iconSource = $("#applications-list-container").data("public-uri") + "/img/device_icons/windows_app_icon.png";
+                            $("#applications-list-container img").attr("src",iconSource);
                         } else {
                             $("#applications-list-container").
                                 html("<div class='message message-info'><h4><i class='icon fw fw-info'></i>No applications found.</h4>" +

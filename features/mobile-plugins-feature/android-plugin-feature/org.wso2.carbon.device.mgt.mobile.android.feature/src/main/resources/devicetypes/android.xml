@@ -373,15 +373,15 @@
         <Frequency> - The time interval (in seconds) in which the task should run for this device-type
         <IdleTimeToMarkInactive> - The time duration (in seconds) in which the device can be moved to inactive status
                                    which means the device will be moved to inactive status if that device does not
-                                   contact the server within that time period.
+                                   contact the server within that time period. Better to have a multiplier of Frequency.
         <IdleTimeToMarkUnreachable> - The time duration (in seconds) in which the device can be moved to unreachable status
                                       which means the device will be moved to unreachable status if that device does not
-                                      contact the server within that time period.
+                                      contact the server within that time period. Better to have a multiplier of Frequency.
     -->
     <DeviceStatusTaskConfig>
         <RequireStatusMonitoring>true</RequireStatusMonitoring>
         <Frequency>300</Frequency>
-        <IdleTimeToMarkInactive>600</IdleTimeToMarkInactive>
-        <IdleTimeToMarkUnreachable>300</IdleTimeToMarkUnreachable>
+        <IdleTimeToMarkInactive>900</IdleTimeToMarkInactive>
+        <IdleTimeToMarkUnreachable>600</IdleTimeToMarkUnreachable>
     </DeviceStatusTaskConfig>
 </DeviceTypeConfiguration>

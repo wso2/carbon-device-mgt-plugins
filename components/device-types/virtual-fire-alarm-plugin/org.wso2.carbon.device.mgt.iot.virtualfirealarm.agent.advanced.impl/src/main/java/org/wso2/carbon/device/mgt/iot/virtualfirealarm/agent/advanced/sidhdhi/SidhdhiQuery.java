@@ -70,7 +70,7 @@ public class SidhdhiQuery implements Runnable {
         File f = new File(sidhdhiQueryPath);
 
         if (!f.exists()) {
-            AgentUtilOperations.writeToFile(AgentConstants.CEP_QUERY, sidhdhiQueryPath);
+            AgentUtilOperations.writeToFile("", sidhdhiQueryPath);
         }
 
         StartExecutionPlan startExecutionPlan = new StartExecutionPlan().invoke();
