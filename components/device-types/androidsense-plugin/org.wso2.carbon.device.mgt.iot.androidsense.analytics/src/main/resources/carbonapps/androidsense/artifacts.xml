@@ -19,13 +19,9 @@
 
 <artifacts>
     <artifact name="androidsense" version="1.0.0" type="carbon/application">
-        <dependency artifact="android_active_stack_chart_gadget" version="1.0.0" include="true"
+
+        <dependency artifact="android_activity_script" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_active_time_chart_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_activity_chart_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_activity_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_activity_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_activity_stats_streams" version="1.0.0" include="true"
@@ -52,128 +48,83 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_android_sms_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_audio_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_audio_streams" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_battery_history_chart_gadget" version="1.0.0" include="true"
+        <dependency artifact="android_audio_script" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_battery_percentage_chart_gadget" version="1.0.0" include="true"
+        <dependency artifact="android_audio_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <!--<dependency artifact="android_battery_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>-->
+
+        <!--<dependency artifact="android_battery_script" version="1.0.0" include="true"
+        serverRole="DataAnalyticsServer"/>-->
         <dependency artifact="android_battery_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_battery_stats_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_battery_stats_ui_event_publisher" version="1.0.0" include="true"
+        <dependency artifact="android_battery_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_battery_ui_event_publisher" version="1.0.0" include="true"
+        <dependency artifact="android_call_script" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_battery_streams" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_call_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_call_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_call_stats_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_call_stats_ui_event_publisher" version="1.0.0" include="true"
+        <dependency artifact="android_call_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_call_streams" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_call_time_chart_gadget" version="1.0.0" include="true"
+        <dependency artifact="android_data_script" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_call_ui_event_publisher" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_commons_gadget" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_data_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_data_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_data_stats_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_data_streams" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_data_ui_event_publisher" version="1.0.0" include="true"
+        <dependency artifact="android_data_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_data_usage_chart_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_date_picker_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_date_picker_widget_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_date_range_picker_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_details_gadget" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+
         <dependency artifact="android_device_details_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_device_details_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_device_grouping_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_device_searchbox_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_filtered_audio_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_filtered_audio_ui_event_publisher" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_filtered_by_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_frequent_contacts_list_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
+
         <dependency artifact="android_frequentcontacts_script" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_headset_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_headset_stats_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_headset_usage_chart_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_location_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_location_map_gadget" version="1.0.0" include="true"
+
+        <dependency artifact="android_location_script" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_location_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_location_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_location_stats_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_location_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_location_ui_event_publisher" version="1.0.0" include="true"
+
+        <dependency artifact="android_screen_script" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_non_compliant_features_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_realtime_audio_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_realtime_battery_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_realtime_call_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_realtime_data_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_realtime_screen_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_realtime_sms_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_screen_on_chart_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_screen_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_screen_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_screen_stats_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_screen_streams" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_screen_ui_event_publisher" version="1.0.0" include="true"
+        <dependency artifact="android_screen_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_sense_dashboard" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_headset_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_sms_chart_gadget" version="1.0.0" include="true"
+
+        <dependency artifact="android_headset_script" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_sms_script" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="android_sms_script" version="1.0.0" include="true"
+                    serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_sms_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_sms_stats_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_sms_streams" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_sms_ui_event_publisher" version="1.0.0" include="true"
+        <dependency artifact="android_sms_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_un_secured_devices_gadget" version="1.0.0" include="true"
+
+        <dependency artifact="android_sense_publisher" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_sense_publisher" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
 
         <dependency artifact="android_accelerometer_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
@@ -182,10 +133,6 @@
         <dependency artifact="android_accelerometer_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_accelerometer_executionplan" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_accelerometer_ui_event_publisher" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_accelerometer_gadget" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
 
         <dependency artifact="android_gyroscope_streams" version="1.0.0" include="true"
@@ -196,10 +143,6 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_gyroscope_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_gyroscope_ui_event_publisher" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_gyroscope_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
 
         <dependency artifact="android_gravity_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
@@ -208,10 +151,6 @@
         <dependency artifact="android_gravity_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_gravity_executionplan" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_gravity_ui_event_publisher" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_gravity_gadget" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
 
         <dependency artifact="android_magnetic_streams" version="1.0.0" include="true"
@@ -222,10 +161,6 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_magnetic_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_magnetic_ui_event_publisher" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_magnetic_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
 
         <dependency artifact="android_rotation_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
@@ -234,10 +169,6 @@
         <dependency artifact="android_rotation_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_rotation_executionplan" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_rotation_ui_event_publisher" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_rotation_gadget" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
 
         <dependency artifact="android_light_streams" version="1.0.0" include="true"
@@ -248,8 +179,6 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_light_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_light_ui_event_publisher" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
 
         <dependency artifact="android_pressure_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
@@ -259,10 +188,6 @@
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_pressure_executionplan" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_pressure_ui_event_publisher" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_pressure_gadget" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
 
         <dependency artifact="android_proximity_streams" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
@@ -271,10 +196,6 @@
         <dependency artifact="android_proximity_stats_event_sink" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
         <dependency artifact="android_proximity_executionplan" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_proximity_ui_event_publisher" version="1.0.0" include="true"
-                    serverRole="DataAnalyticsServer"/>
-        <dependency artifact="android_proximity_gadget" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
     </artifact>
 </artifacts>
