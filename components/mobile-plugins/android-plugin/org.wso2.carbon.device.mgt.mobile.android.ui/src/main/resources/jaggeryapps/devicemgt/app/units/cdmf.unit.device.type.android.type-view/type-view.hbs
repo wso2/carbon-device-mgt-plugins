@@ -20,7 +20,11 @@
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 add-padding-top-2x add-padding-bottom-2x">
         {{#if isVirtual}}
             <h3 class="text-center add-padding-bottom-4x">Download our virtual Android device, enroll it with WSO2
-                                                          Device Cloud and try it out!</h3>
+                {{#if isCloud}}
+                    Device Cloud
+                {{else}}
+                    IoT Server
+                {{/if}}and try it out!</h3>
             <div class="text-center"><a
                     href="{{@unit.publicUri}}/assets/android-tryit.ZIP"
                     class="btn-operations remove-margin download_agent">
@@ -63,8 +67,12 @@
         </p>
     {{else}}
         <p class="doc-link text-center">Need help? Read <a
-                href="https://docs.wso2.com/display/IoTS310/Android" target="_blank">WSO2
-                                                                                     IoT Server documentation.</a></p>
+            {{#if isVirtual}}
+                href="https://docs.wso2.com/display/IoTS310/Android+Virtual+Device"
+            {{else}}
+                href="https://docs.wso2.com/display/IoTS310/Android"
+            {{/if}}
+             target="_blank">WSO2 IoT Server documentation.</a></p>
     {{/if}}
 </div>
 
