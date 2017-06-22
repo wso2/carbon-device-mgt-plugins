@@ -449,7 +449,11 @@
                 <artifactId>org.wso2.carbon.device.mgt.output.adapter.websocket</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
-
+			<dependency>
+				<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+				<artifactId>org.wso2.carbon.device.mgt.mqtt.notification.listener</artifactId>
+				<version>${carbon.devicemgt.plugins.version}</version>
+			</dependency>
             <!--Android sense DeviceType Impl, API and Agent-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -1143,14 +1147,14 @@
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Device Management -->
-        <carbon.devicemgt.version>3.0.7</carbon.devicemgt.version>
+        <carbon.devicemgt.version>3.0.8</carbon.devicemgt.version>
         <carbon.devicemgt.version.range>[3.0.0, 4.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
         <carbon.appmgt.version>1.2.25</carbon.appmgt.version>
 
         <!-- Carbon Device Management Plugins -->
-        <carbon.devicemgt.plugins.version>4.0.4</carbon.devicemgt.plugins.version>
+        <carbon.devicemgt.plugins.version>4.0.5-SNAPSHOT</carbon.devicemgt.plugins.version>
 
         <!-- Carbon Commons -->
         <carbon.commons.version>4.4.8</carbon.commons.version>

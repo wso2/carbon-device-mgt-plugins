@@ -74,11 +74,13 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
     private static Log log = LogFactory.getLog(DeviceAccessBasedMQTTAuthorizer.class);
     private AuthorizationConfigurationManager MQTTAuthorizationConfiguration;
     private static final String CDMF_SERVER_BASE_CONTEXT = "/api/device-mgt/v1.0";
+    private static final String DEFAULT_ADMIN_PERMISSION = "permission/admin/device-mgt";
     private static final String CACHE_MANAGER_NAME = "mqttAuthorizationCacheManager";
     private static final String CACHE_NAME = "mqttAuthorizationCache";
     private static DeviceAccessAuthorizationAdminService deviceAccessAuthorizationAdminService;
     private static OAuthRequestInterceptor oAuthRequestInterceptor;
     private static final String GATEWAY_ERROR_CODE = "<am:code>404</am:code>";
+    private static final String ALL_TENANT_DOMAIN = "+";
 
     public DeviceAccessBasedMQTTAuthorizer() {
         oAuthRequestInterceptor = new OAuthRequestInterceptor();
@@ -102,6 +104,13 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
         try {
             String topics[] = topic.split("/");
             String tenantDomainFromTopic = topics[0];
+            if ("+".equals(tenantDomainFromTopic)) {
+                if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(authorizationSubject.getTenantDomain())
+                        && isUserAuthorized(authorizationSubject, DEFAULT_ADMIN_PERMISSION, UI_EXECUTE)) {
+                    return true;
+                }
+                return false;
+            }
             if (!tenantDomainFromTopic.equals(authorizationSubject.getTenantDomain())) {
                 return false;
             }
@@ -124,7 +133,7 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     return false;
                 } catch (FeignException e) {
                     oAuthRequestInterceptor.resetApiApplicationKey();
-                    if (e.getMessage().contains(GATEWAY_ERROR_CODE)) {
+                    if (e.getMessage().contains(GATEWAY_ERROR_CODE) || e.status() == 404) {
                         log.error("Failed to connect to the device authorization service.");
                     } else {
                         log.error(e.getMessage(), e);

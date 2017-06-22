@@ -114,7 +114,7 @@ public class MQTTEventAdapterFactory extends InputEventAdapterFactory {
         contentTransformer.setRequired(false);
         contentTransformer.setHint(
                 resourceBundle.getString(MQTTEventAdapterConstants.ADAPTER_CONF_CONTENT_TRANSFORMER_TYPE_HINT));
-        contentTransformer.setDefaultValue(MQTTEventAdapterConstants.DEFAULT);
+        contentTransformer.setDefaultValue(MQTTEventAdapterConstants.EMPTY);
         propertyList.add(contentTransformer);
 
         // set clientId

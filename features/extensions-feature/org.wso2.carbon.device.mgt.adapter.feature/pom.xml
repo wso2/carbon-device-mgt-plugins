@@ -54,10 +54,6 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-            <artifactId>org.wso2.carbon.device.mgt.input.adapter.http</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
             <artifactId>org.wso2.carbon.device.mgt.input.adapter.mqtt</artifactId>
         </dependency>
         <dependency>
@@ -175,9 +171,6 @@
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.extension:${carbon.devicemgt.plugins.version}
-                                </bundleDef>
-                                <bundleDef>
-                                    org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.http:${carbon.devicemgt.plugins.version}
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon.devicemgt-plugins:org.wso2.carbon.device.mgt.input.adapter.mqtt:${carbon.devicemgt.plugins.version}
