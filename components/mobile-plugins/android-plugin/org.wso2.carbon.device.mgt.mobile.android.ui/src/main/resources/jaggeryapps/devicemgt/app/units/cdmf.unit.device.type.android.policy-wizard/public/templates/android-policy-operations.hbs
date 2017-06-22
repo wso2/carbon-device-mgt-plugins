@@ -76,6 +76,17 @@
                 <span id="work-profile-ok" class="has-success status-icon hidden"><i class="fw fw-success"></i></span>
                 <span id="work-profile-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
             </a>
+            <a href="javascript:void(0)" onclick="showAdvanceOperation('cosu-profile-configuration', this)">
+            <span class="fw-stack fw-lg">
+                <i class="fw fw-worker fw-stack-2x"></i>
+            </span>
+                COSU Profile Configurations
+                <span id="cosu-profile-configuration-configured" class="has-configured status-icon hidden"><i
+                        class="fw fw-success"></i></span>
+                <span id="cosu-profile-configuration-ok" class="has-success status-icon hidden"><i
+                        class="fw fw-success"></i></span>
+                <span id="cosu-profile-configuration-error" class="has-error status-icon hidden"><i class="fw fw-error"></i></span>
+            </a>
             <a href="javascript:void(0)" onclick="showAdvanceOperation('app-restriction', this)">
             <span class="fw-stack fw-lg">
                 <i class="fw fw-application fw-stack-1x"></i>
@@ -91,9 +102,9 @@
             <a href="javascript:void(0)" onclick="showAdvanceOperation('runtime-permission-policy', this)">
             <span class="fw-stack fw-lg">
                 <i class="fw fw-application fw-stack-1x"></i>
-                <i class="fw fw-block fw-stack-2x"></i>
+                <i class="fw fw-rules fw-stack-2x"></i>
             </span>
-                Runtime Permission Policy (COSU)
+                Runtime Permission Policy
                 <span id="runtime-permission-policy-configured" class="has-configured status-icon hidden"><i
                         class="fw fw-success"></i></span>
                 <span id="runtime-permission-policy-ok" class="has-success status-icon hidden"><i
@@ -1055,6 +1066,178 @@
         </div>
         <!--/app-restriction-->
 
+        <!--COSU profile configuration-->
+        <div class="wr-hidden-operation" data-operation="cosu-profile-configuration">
+            <div class="panel panel-default operation-data" data-operation="cosu-profile-configuration"
+                 data-operation-code="COSU_PROFILE">
+                <div id="cosu-profile-configuration-heading" class="panel-heading" role="tab">
+                    <h2 class="sub-title panel-title">
+                        COSU Profile Configuration
+                        <label class="wr-input-control switch" data-toggle="collapse"
+                               data-target="#cosu-profile-configuration-body">
+                            <input type="checkbox"/>
+                            <span class="helper"></span>
+                            <span class="text"></span>
+                        </label>
+                    </h2>
+                    <div class="panel-title-description">
+                        This policy can be used to configure the profile of COSU Devices.
+                    </div>
+                </div>
+                <div id="cosu-profile-configuration-body" class="panel-collapse panel-body collapse" role="tabpanel"
+                     aria-labelledby="cosu-profile-configuration-body">
+                    <hr/>
+                    <div id="cosu-profile-configuration-feature-error-msg" class="alert alert-danger hidden" role="alert">
+                        <i class="icon fw fw-error"></i><span></span>
+                    </div>
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-12 form-inline">
+                                <label class="control-label">Restrict device operation time</label>
+                                <label class="switch">
+                                    <input type="checkbox" id="gridGuideToggle" data-toggle="collapse"
+                                           data-target="#cosu-profile-restrict-operation-time" >
+                                    <span class="helper"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="cosu-profile-restrict-operation-time" class="panel-collapse panel-body collapse"
+                             role="tabpanel">
+                            <div class="wr-input-control">
+                                <label class="wr-input-label">
+                                    Start Time
+                                    <span class="helper" title="Start time for the device">
+                                        <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                                    </span>
+                                </label>
+                                <select id="cosu-profile-configuration-start-time"
+                                        class="form-control operationDataKeys"
+                                        data-key="cosuProfileOperationRestrictionStartTime" data-default="0">
+                                    <option value="1440">12:00 Midnight</option>
+                                    <option value="30">12:30 AM</option>
+                                    <option value="60">1:00 AM</option>
+                                    <option value="90">1:30 AM</option>
+                                    <option value="120">2:00 AM</option>
+                                    <option value="150">2:30 AM</option>
+                                    <option value="180">3:00 AM</option>
+                                    <option value="210">3:30 AM</option>
+                                    <option value="240">4:00 AM</option>
+                                    <option value="270">4:30 AM</option>
+                                    <option value="300">5:00 AM</option>
+                                    <option value="330">5:30 AM</option>
+                                    <option value="360">6:00 AM</option>
+                                    <option value="390">6:30 AM</option>
+                                    <option value="420">7:00 AM</option>
+                                    <option value="450">7:30 AM</option>
+                                    <option value="480" selected="selected">8:00 AM</option>
+                                    <option value="510">8:30 AM</option>
+                                    <option value="540">9:00 AM</option>
+                                    <option value="570">9:30 AM</option>
+                                    <option value="600">10:00 AM</option>
+                                    <option value="630">10:30 AM</option>
+                                    <option value="660">11:00 AM</option>
+                                    <option value="690">11:30 AM</option>
+                                    <option value="720">12:00 noon</option>
+                                    <option value="750">12:30 PM</option>
+                                    <option value="780">1:00 PM</option>
+                                    <option value="810">1:30 PM</option>
+                                    <option value="840">2:00 PM</option>
+                                    <option value="870">2:30 PM</option>
+                                    <option value="900">3:00 PM</option>
+                                    <option value="930">3:30 PM</option>
+                                    <option value="960">4:00 PM</option>
+                                    <option value="990">4:30 PM</option>
+                                    <option value="1020">5:00 PM</option>
+                                    <option value="1050">5:30 PM</option>
+                                    <option value="1080">6:00 PM</option>
+                                    <option value="1110">6:30 PM</option>
+                                    <option value="1140">7:00 PM</option>
+                                    <option value="1170">7:30 PM</option>
+                                    <option value="1200">8:00 PM</option>
+                                    <option value="1230">8:30 PM</option>
+                                    <option value="1260">9:00 PM</option>
+                                    <option value="1290">9:30 PM</option>
+                                    <option value="1320">10:00 PM</option>
+                                    <option value="1350">10:30 PM</option>
+                                    <option value="1380">11:00 PM</option>
+                                    <option value="1410">11:30 PM</option>
+                                </select>
+                            </div>
+                            <div class="wr-input-control">
+                                <label class="wr-input-label">
+                                    End Time
+                                    <span class="helper" title="Lock-down time for the device">
+                                        <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
+                                    </span>
+                                </label>
+                                <select id="cosu-profile-configuration-end-time"
+                                        class="form-control operationDataKeys"
+                                        data-key="cosuProfileOperationRestrictionEndTime" data-default="0">
+                                    <option value="1440">12:00 Midnight</option>
+                                    <option value="30">12:30 AM</option>
+                                    <option value="60">1:00 AM</option>
+                                    <option value="90">1:30 AM</option>
+                                    <option value="120">2:00 AM</option>
+                                    <option value="150">2:30 AM</option>
+                                    <option value="180">3:00 AM</option>
+                                    <option value="210">3:30 AM</option>
+                                    <option value="240">4:00 AM</option>
+                                    <option value="270">4:30 AM</option>
+                                    <option value="300">5:00 AM</option>
+                                    <option value="330">5:30 AM</option>
+                                    <option value="360">6:00 AM</option>
+                                    <option value="390">6:30 AM</option>
+                                    <option value="420">7:00 AM</option>
+                                    <option value="450">7:30 AM</option>
+                                    <option value="480">8:00 AM</option>
+                                    <option value="510">8:30 AM</option>
+                                    <option value="540">9:00 AM</option>
+                                    <option value="570">9:30 AM</option>
+                                    <option value="600">10:00 AM</option>
+                                    <option value="630">10:30 AM</option>
+                                    <option value="660">11:00 AM</option>
+                                    <option value="690">11:30 AM</option>
+                                    <option value="720">12:00 noon</option>
+                                    <option value="750">12:30 PM</option>
+                                    <option value="780">1:00 PM</option>
+                                    <option value="810">1:30 PM</option>
+                                    <option value="840">2:00 PM</option>
+                                    <option value="870">2:30 PM</option>
+                                    <option value="900">3:00 PM</option>
+                                    <option value="930">3:30 PM</option>
+                                    <option value="960">4:00 PM</option>
+                                    <option value="990">4:30 PM</option>
+                                    <option value="1020" selected="selected">5:00 PM</option>
+                                    <option value="1050">5:30 PM</option>
+                                    <option value="1080">6:00 PM</option>
+                                    <option value="1110">6:30 PM</option>
+                                    <option value="1140">7:00 PM</option>
+                                    <option value="1170">7:30 PM</option>
+                                    <option value="1200">8:00 PM</option>
+                                    <option value="1230">8:30 PM</option>
+                                    <option value="1260">9:00 PM</option>
+                                    <option value="1290">9:30 PM</option>
+                                    <option value="1320">10:00 PM</option>
+                                    <option value="1350">10:30 PM</option>
+                                    <option value="1380">11:00 PM</option>
+                                    <option value="1410">11:30 PM</option>
+                                </select>
+                            </div>
+                            <div>
+                                <ul class="message message-info">
+                                    <i class="icon fw fw-info"></i>
+                                    <a id="cosu-profile-configuration-select-msg">
+                                        Device will be operable only during the above period.
+                                    </a>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--COSU profile configuration-->
+
         <!-- VPN -->
         <div class="wr-hidden-operation" data-operation="vpn">
             <div class="panel panel-default operation-data" data-operation="vpn" data-operation-code="VPN">
@@ -1231,13 +1414,14 @@
                 </div>
             </div>
         </div>
+
         <!-- runtime permission policy -->
         <div class="wr-hidden-operation" data-operation="runtime-permission-policy">
             <div class="panel panel-default operation-data" data-operation="runtime-permission-policy-body"
                  data-operation-code="RUNTIME_PERMISSION_POLICY">
                 <div id="runtime-permission-policy-heading" class="panel-heading" role="tab">
                     <h2 class="sub-title panel-title">
-                        Runtime Permission Policy (COSU)
+                        Runtime Permission Policy (COSU / Work Profile)
                         <label id="runtime-permission-policy-lbl" class="wr-input-control switch" data-toggle="collapse"
                                data-target="#runtime-permission-policy-body">
                             <input type="checkbox"/>
@@ -1256,30 +1440,25 @@
                     <div class="wr-input-control">
                         <label class="wr-input-label" for="runtime-permission-policy-window-start-time">
                             Set default runtime permission
-                            <span class="helper" title="When an app requests a runtime permission, this enforces whether the user needs to prompted or the permission either automatically granted or denied.">
+                            <span class="helper" title="When an app requests a runtime permission,
+                            this enforces whether the user needs to prompted or the permission either
+                             automatically granted or denied.">
                                     <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                                 </span>
                         </label>
                         <select id="runtime-permission-policy-permission-type"
                                 class="form-control operationDataKeys"
-                                data-key="runtimePermissionPolicyPermissionType" data-default="0">
+                                data-key="defaultPermissionType" data-default="0">
                             <option value="1" selected="selected">PROMPT USER</option>
                             <option value="2">AUTO GRANT</option>
                             <option value="3">AUTO DENY</option>
                         </select>
-                        <div>
-                            <ul class="message message-info">
-                                <i class="icon fw fw-info"></i>
-                                <a>
-                                    Already granted or denied permissions are not affected by this.
-                                </a>
-                            </ul>
-                        </div>
 
                         <div class="wr-input-control">
                             <label class="wr-input-label" for="runtime-permission-applications">
-                                <br><br>Set permissions app-wise.
-                                <span class="helper" title="Add an application and set permission policy for a permission it needs.">
+                                <br><br>Set app-specific runtime permissions.
+                                <span class="helper" title="Add an application and set permission policy
+                                 for a specific permission it needs.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             </label>
@@ -1294,7 +1473,7 @@
                             </a>
                             <div id="runtime-permission-applications"
                                  class="operationDataKeys grouped-array-input multi-column-key-value-pair-array"
-                                 data-key="runtimePermissionApplications" data-column-count="2">
+                                 data-key="permittedApplications" data-column-count="4">
                                 <table class="table table-responsive table-striped">
                                     <thead>
                                     <tr>
@@ -1322,24 +1501,24 @@
                                         </td>
                                         <td data-title="App Name">
                                             <input type="text" class="form-control grid-input-text" data-child-key="appName"
-                                                   maxlength="50" data-default="" placeholder="[ Gmail ]"/>
+                                                   maxlength="50" data-default="" placeholder="[ Android Pay ]"/>
                                         </td>
                                         <td data-title="Package Name">
                                             <input type="text" class="form-control grid-input-text"
                                                    data-child-key="packageName" maxlength="100" data-default=""
-                                                   placeholder="[ com.google.android.gm ]"/>
+                                                   placeholder="[ com.google.android.pay ]"/>
                                         </td>
                                         <td data-title="Permission Name">
                                             <input type="text" class="form-control grid-input-text"
                                                    data-child-key="permissionName" maxlength="100" data-default=""
-                                                   placeholder="[ android.permission.READ_CALENDAR ]"/>
+                                                   placeholder="[ android.permission.NFC ]"/>
                                         </td>
                                         <td data-title="Runtime Permission">
                                             <select id="runtime-permission-policy-permission-type"
                                                     class="form-control operationDataKeys"
-                                                    data-key="defaultPermissionType" data-default="0">
-                                                <option value="1" selected="selected">PROMPT USER</option>
-                                                <option value="2">AUTO GRANT</option>
+                                                    data-child-key="permissionType" data-default="0">
+                                                <option value="1">PROMPT USER</option>
+                                                <option value="2" selected="selected">AUTO GRANT</option>
                                                 <option value="3">AUTO DENY</option>
                                             </select>
                                         </td>
@@ -1360,8 +1539,17 @@
                             </div>
                         </div>
                     </div>
+                    <div>
+                        <br>
+                        <ul class="message message-info">
+                            <i class="icon fw fw-info"></i>
+                            Already granted or denied permissions are not affected by this policy.
+                            <br>
+                            <i class="icon fw fw-info"></i>
+                            Permissions can be granted or revoked only for applications built with a Target SDK Version of Android Marshmallow or later.
+                        </ul>
+                    </div>
                 </div>
-
             </div>
         </div>
 

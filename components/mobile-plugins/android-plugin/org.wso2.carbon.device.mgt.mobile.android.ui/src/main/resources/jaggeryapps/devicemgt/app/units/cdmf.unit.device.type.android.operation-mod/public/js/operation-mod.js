@@ -77,7 +77,9 @@ var androidOperationModule = function () {
         "SYSTEM_UPDATE_POLICY_CODE": "SYSTEM_UPDATE_POLICY",
         "KIOSK_APPS_CODE": "KIOSK_APPS",
         "RUNTIME_PERMISSION_POLICY_OPERATION": "runtime-permission-policy",
-        "RUNTIME_PERMISSION_POLICY_OPERATION_CODE": "RUNTIME_PERMISSION_POLICY"
+        "RUNTIME_PERMISSION_POLICY_OPERATION_CODE": "RUNTIME_PERMISSION_POLICY",
+        "COSU_PROFILE_CONFIGURATION_OPERATION": "cosu-profile-configuration",
+        "COSU_PROFILE_CONFIGURATION_OPERATION_CODE": "COSU_PROFILE"
     };
 
     /**
@@ -160,9 +162,16 @@ var androidOperationModule = function () {
                 }
                 break;
             case androidOperationConstants["RUNTIME_PERMISSION_POLICY_OPERATION_CODE"]:
-                payload ={"defaultRuntimePermissionType": operationPayload["defaultType"]
-                };
-                break;
+                 payload = {
+                        "defaultType": operationPayload["defaultPermissionType"],
+                        "permittedApplications": operationPayload["permittedApplications"]
+                 };
+                 break;
+            case androidOperationConstants["COSU_PROFILE_CONFIGURATION_OPERATION_CODE"]:
+                payload = {
+                    "cosuProfileRestrictionStartTime": operationPayload["cosuProfileOperationRestrictionEndTime"],
+                    "cosuProfileRestrictionEndTime": operationPayload["cosuProfileOperationRestrictionEndTime"]
+                }
             case androidOperationConstants["KIOSK_APPS_CODE"]:
                 payload = {
                     "cosuWhitelistedApplications": operationPayload["whitelistedApplications"]
@@ -332,13 +341,23 @@ var androidOperationModule = function () {
                 };
                 break;
             case androidOperationConstants["RUNTIME_PERMISSION_POLICY_OPERATION_CODE"]:
-                                operationType = operationTypeConstants["PROFILE"];
-                                payload = {
-                                    "operation": {
-                                       "type": operationData["runtimePermissionPolicyPermissionType"]
-                                    }
-                                };
-                                break;
+                operationType = operationTypeConstants["PROFILE"];
+                payload = {
+                    "operation": {
+                        "defaultType": operationData["defaultPermissionType"],
+                        "permittedApplications": operationData["permittedApplications"]
+                    }
+                };
+                break;
+            case androidOperationConstants["COSU_PROFILE_CONFIGURATION_OPERATION_CODE"]:
+                 operationType = operationTypeConstants["PROFILE"];
+                 payload = {
+                      "operation": {
+                         "cosuProfileRestrictionStartTime": operationData["cosuProfileOperationRestrictionStartTime"],
+                         "cosuProfileRestrictionEndTime": operationData["cosuProfileOperationRestrictionEndTime"]
+                      }
+                 };
+               break;
             case androidOperationConstants["SYSTEM_UPDATE_POLICY_CODE"]:
                 operationType = operationTypeConstants["PROFILE"];
                 if (operationData["cosuSystemUpdatePolicyType"] != "window") {
