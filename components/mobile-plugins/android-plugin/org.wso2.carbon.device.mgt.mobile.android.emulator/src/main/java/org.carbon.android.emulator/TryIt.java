@@ -30,12 +30,14 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Scanner;
@@ -113,6 +115,62 @@ public class TryIt {
         System.out.println("\nGood Bye!");
     }
 
+
+    /**
+     * This method downloads the artifacts from remote url.
+     *
+     * @param remotePath - remote url
+     * @param localPath  - local path to download
+     */
+    private void downloadArtifacts(String remotePath, String localPath) {
+        BufferedInputStream in = null;
+        FileOutputStream out = null;
+        long startingTime = System.currentTimeMillis();
+
+        try {
+            URL url = new URL(remotePath);
+            URLConnection conn = url.openConnection();
+            int size = conn.getContentLength();
+            in = new BufferedInputStream(url.openStream());
+            out = new FileOutputStream(localPath);
+            byte data[] = new byte[1024];
+            int count;
+            double sumCount = 0.0;
+
+            while ((count = in.read(data, 0, 1024)) != -1) {
+                out.write(data, 0, count);
+                sumCount += count;
+                if ((size > 0 && (System.currentTimeMillis() - startingTime > 5000))
+                        || (sumCount / size * 100.0) == 100) {
+                    System.out.println("Downloading: "
+                            + new DecimalFormat("#.##").format((sumCount / size * 100.0)) + " %");
+                    startingTime = System.currentTimeMillis();
+                }
+            }
+        } catch (MalformedURLException e) {
+            System.out.println("Error in download URL of " + localPath);
+            System.out.println("URL provided " + remotePath);
+        } catch (IOException e) {
+            if (!new File(localPath).delete()) {
+                System.out.println("Delete " + localPath + " and try again");
+            }
+            handleException("Downloading " + localPath + " failed.", e);
+        } finally {
+            if (in != null)
+                try {
+                    in.close();
+                } catch (IOException ignored) {
+                    //
+                }
+            if (out != null)
+                try {
+                    out.close();
+                } catch (IOException ignored) {
+                    //
+                }
+        }
+    }
+
     /**
      * This method is called when then is an error in getting system properties
      *
@@ -121,42 +179,6 @@ public class TryIt {
     private void sysPropertyError(String error) {
         System.out.println("Unable to get the " + error + " of your system");
         System.exit(1);
-    }
-
-    /**
-     * This method downloads the files.
-     *
-     * @param path       - the URL to download from.
-     * @param folderName - the folder location to download the files to.
-     */
-    private void downloadArtifacts(String path, String folderName) {
-        ReadableByteChannel readableByteChannel = null;
-        FileOutputStream fileOutputStream = null;
-        try {
-            URL url = new URL(path);
-            readableByteChannel = Channels.newChannel(url.openStream());
-            fileOutputStream = new FileOutputStream(folderName);
-            fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-        } catch (MalformedURLException e) {
-            System.out.println("Error in download URL of " + folderName);
-            System.out.println("URL provided " + path);
-        } catch (IOException e) {
-            if (!new File(folderName).delete()) {
-                System.out.println("Delete " + folderName + " and try again");
-            }
-            handleException("Downloading " + folderName + " failed.", e);
-        } finally {
-            try {
-                if (fileOutputStream != null) {
-                    fileOutputStream.close();
-                }
-                if (readableByteChannel != null) {
-                    readableByteChannel.close();
-                }
-            } catch (IOException ignored) {
-                // Exception in finally block
-            }
-        }
     }
 
     /**
