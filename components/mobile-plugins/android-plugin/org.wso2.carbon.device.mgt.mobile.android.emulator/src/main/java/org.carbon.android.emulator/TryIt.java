@@ -814,13 +814,17 @@ public class TryIt {
      * @param fileName name of the file to set execution permission.
      */
     private void setExecutePermission(String fileName) {
-        if (!new File(fileName).canExecute()) {
-            if (!new File(fileName).setExecutable(true)) {
-                System.out.println("Unable to set the execute permission of : " + fileName);
-                System.out.println("Please set the executable permission for file "
-                        + new File(fileName).getAbsolutePath() + " to continue");
-                System.exit(1);      // if can't execute, unable to proceed
+        if (new File((fileName)).exists()) {
+            if (!new File(fileName).canExecute()) {
+                if (!new File(fileName).setExecutable(true)) {
+                    System.out.println("Unable to set the execute permission of : " + fileName);
+                    System.out.println("Please set the executable permission for file "
+                            + new File(fileName).getAbsolutePath() + " to continue");
+                    System.exit(1);      // if can't execute, unable to proceed
+                }
             }
+        } else {
+            System.out.println("WARN : " + fileName + " does not exists");
         }
     }
 
