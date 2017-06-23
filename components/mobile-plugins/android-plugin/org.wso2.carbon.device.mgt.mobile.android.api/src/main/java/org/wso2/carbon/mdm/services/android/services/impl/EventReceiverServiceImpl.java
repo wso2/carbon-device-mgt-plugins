@@ -79,7 +79,7 @@ public class EventReceiverServiceImpl implements EventReceiverService {
         };
         try {
             if (AndroidAPIUtils.getEventPublisherService().publishEvent(
-                    EVENT_STREAM_DEFINITION, "1.0.0", metaData, new Object[0], payload)) {
+                    EVENT_STREAM_DEFINITION, "1.0.0", new Object[0], new Object[0], payload)) {
                 message.setResponseCode("Event is published successfully.");
                 return Response.status(Response.Status.CREATED).entity(message).build();
             } else {

@@ -34,12 +34,12 @@
         <SharedWithAllTenants>true</SharedWithAllTenants>
     </ProvisioningConfig>
 
-    <PushNotificationProvider type="MQTT">
+    <PushNotificationProviderConfig type="MQTT">
         <FileBasedProperties>true</FileBasedProperties>
         <!--if file based properties is set to false then the configuration will be picked from platform configuration-->
-    </PushNotificationProvider>
+    </PushNotificationProviderConfig>
 
-    <!--<PushNotificationProvider type="XMPP">-->
+    <!--<PushNotificationProviderConfig type="XMPP">-->
         <!--<FileBasedProperties>true</FileBasedProperties>-->
         <!--&lt;!&ndash;if file based properties is set to false then the configuration will be picked from platform configuration&ndash;&gt;-->
         <!--<ConfigProperties>-->
@@ -51,7 +51,7 @@
             <!--<Property Name="jid">admin@localhost</Property>-->
             <!--<Property Name="server.name">localhost</Property>-->
         <!--</ConfigProperties>-->
-    <!--</PushNotificationProvider>-->
+    <!--</PushNotificationProviderConfig>-->
 
     <License>
         <Language>en_US</Language>

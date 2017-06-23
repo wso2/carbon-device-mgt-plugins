@@ -125,6 +125,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
 
     public void resetApiApplicationKey() {
         apiApplicationKey = null;
+        tokenIssuerService = null;
     }
 
     private static Client getSSLClient() {

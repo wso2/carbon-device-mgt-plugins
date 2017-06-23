@@ -50,25 +50,27 @@
         {{/zone}}
 
         {{#zone "device-details"}}
-          {{#if device.deviceInfoAvailable}}
-            {{#if device.BatteryLevel}}
-              <p><i class="icon fw fw-battery fw-2x"></i> <span>{{device.BatteryLevel.value}}%</span></p>
+          <div class="vital-strip">
+            {{#if device.deviceInfoAvailable}}
+              {{#if device.BatteryLevel}}
+                <p><i class="icon fw fw-battery fw-2x"></i> <span>{{device.BatteryLevel.value}}%</span></p>
+              {{/if}}
+              {{#if device.ramUsage}}
+                <p><i class="icon fw fw-hardware fw-2x fw-rotate-90"></i> <span>{{device.ramUsage.value}}%</span></p>
+              {{/if}}
+              {{#if device.internalMemory}}
+                <p><i class="icon fw fw-hdd fw-2x fw-rotate-90"></i> <span>{{device.internalMemory.usage}}</span>
+                  <span class="memory-amt">GB/{{device.internalMemory.total}}GB</span></p>
+              {{/if}}
+              {{#if device.externalMemory}}
+                <p><i class="icon fw fw-usb-drive fw-2x"></i> <span>{{device.externalMemory.usage}}</span>
+                  <span class="memory-amt">GB/{{device.externalMemory.total}}GB</span></p>
+              {{/if}}
+            {{else}}
+              <p>Battery, RAM and Storage related information are not
+              available yet.</p>
             {{/if}}
-            {{#if device.ramUsage}}
-              <p><i class="icon fw fw-hardware fw-2x fw-rotate-90"></i> <span>{{device.ramUsage.value}}%</span></p>
-            {{/if}}
-            {{#if device.internalMemory}}
-              <p><i class="icon fw fw-hdd fw-2x fw-rotate-90"></i> <span>{{device.internalMemory.usage}}</span>
-                <span class="memory-amt">GB/{{device.internalMemory.total}}GB</span></p>
-            {{/if}}
-            {{#if device.externalMemory}}
-              <p><i class="icon fw fw-usb-drive fw-2x"></i> <span>{{device.externalMemory.usage}}</span>
-                <span class="memory-amt">GB/{{device.externalMemory.total}}GB</span></p>
-            {{/if}}
-          {{else}}
-            <p>Battery, RAM and Storage related information are not
-            available yet.</p>
-          {{/if}}
+          </div>
         {{/zone}}
 
         {{#zone "device-details-tab-injected"}}

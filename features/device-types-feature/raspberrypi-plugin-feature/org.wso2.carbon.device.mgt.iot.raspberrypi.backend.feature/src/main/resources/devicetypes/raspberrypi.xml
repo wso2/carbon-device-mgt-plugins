@@ -34,9 +34,9 @@
         <SharedWithAllTenants>true</SharedWithAllTenants>
     </ProvisioningConfig>
 
-    <PushNotificationProvider type="MQTT">
+    <PushNotificationProviderConfig type="MQTT">
         <FileBasedProperties>true</FileBasedProperties>
-    </PushNotificationProvider>
+    </PushNotificationProviderConfig>
 
     <License>
         <Language>en_US</Language>

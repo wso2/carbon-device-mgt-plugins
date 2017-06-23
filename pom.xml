@@ -23,7 +23,7 @@
     <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
     <artifactId>carbon-device-mgt-plugins-parent</artifactId>
     <packaging>pom</packaging>
-    <version>4.0.5-SNAPSHOT</version>
+    <version>4.0.6-SNAPSHOT</version>
     <name>WSO2 Carbon - Device Management Plugins Parent</name>
     <url>http://wso2.org</url>
     <description>WSO2 Carbon - Device Management Plugins Parent</description>
@@ -355,11 +355,11 @@
                 <artifactId>org.wso2.carbon.event.output.adapter.core</artifactId>
                 <version>${carbon.analytics.common.version}</version>
             </dependency>
-			<dependency>
-				<groupId>org.wso2.carbon.analytics-common</groupId>
-				<artifactId>org.wso2.carbon.event.input.adapter.wso2event</artifactId>
-				<version>${carbon.analytics.common.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.event.input.adapter.wso2event</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.event.input.adapter.core</artifactId>
@@ -370,21 +370,21 @@
                 <artifactId>org.wso2.carbon.databridge.commons</artifactId>
                 <version>${carbon.analytics.common.version}</version>
             </dependency>
-			<dependency>
-				<groupId>org.wso2.carbon.analytics-common</groupId>
-				<artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>
-				<version>${carbon.analytics.common.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.wso2.carbon.analytics-common</groupId>
-				<artifactId>org.wso2.carbon.databridge.commons.binary</artifactId>
-				<version>${carbon.analytics.common.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.wso2.carbon.analytics-common</groupId>
-				<artifactId>org.wso2.carbon.databridge.core</artifactId>
-				<version>${carbon.analytics.common.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.commons.thrift</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.commons.binary</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.core</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics</groupId>
                 <artifactId>org.wso2.carbon.analytics.api</artifactId>
@@ -407,11 +407,11 @@
                 <artifactId>org.wso2.carbon.device.mgt.output.adapter.mqtt</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
-			<dependency>
-				<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-				<artifactId>org.wso2.carbon.device.mgt.input.adapter.thrift</artifactId>
-				<version>${carbon.devicemgt.plugins.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+                <artifactId>org.wso2.carbon.device.mgt.input.adapter.thrift</artifactId>
+                <version>${carbon.devicemgt.plugins.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
                 <artifactId>org.wso2.carbon.device.mgt.output.adapter.xmpp</artifactId>
@@ -448,7 +448,11 @@
                 <artifactId>org.wso2.carbon.device.mgt.output.adapter.websocket</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
-
+			<dependency>
+				<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
+				<artifactId>org.wso2.carbon.device.mgt.mqtt.notification.listener</artifactId>
+				<version>${carbon.devicemgt.plugins.version}</version>
+			</dependency>
             <!--Android sense DeviceType Impl, API and Agent-->
             <dependency>
                 <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
@@ -543,16 +547,16 @@
                 <groupId>org.wso2.carbon.appmgt</groupId>
                 <artifactId>org.wso2.carbon.appmgt.mobile</artifactId>
                 <version>${carbon.appmgt.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.apache.ws.commons.axiom</groupId>
-						<artifactId>axiom-api</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.apache.ws.commons.axiom</groupId>
-						<artifactId>axiom-impl</artifactId>
-					</exclusion>
-				</exclusions>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.ws.commons.axiom</groupId>
+                        <artifactId>axiom-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.ws.commons.axiom</groupId>
+                        <artifactId>axiom-impl</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!--Osgi dependencies-->
@@ -813,11 +817,11 @@
                 <artifactId>commons-httpclient</artifactId>
                 <version>${orbit.version.commons-httpclient}</version>
             </dependency>
-			<dependency>
-				<groupId>commons-codec.wso2</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>${commons-codec.version.wso2}</version>
-			</dependency>
+            <dependency>
+                <groupId>commons-codec.wso2</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version.wso2}</version>
+            </dependency>
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
@@ -978,11 +982,11 @@
                 <version>${identity.inbound.auth.oauth.version}</version>
                 <scope>provided</scope>
             </dependency>
-			<dependency>
-				<groupId>org.wso2.carbon.identity.carbon.auth.jwt</groupId>
-				<artifactId>org.wso2.carbon.identity.authenticator.signedjwt</artifactId>
-				<version>${identity.carbon.auth.jwt.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.carbon.auth.jwt</groupId>
+                <artifactId>org.wso2.carbon.identity.authenticator.signedjwt</artifactId>
+                <version>${identity.carbon.auth.jwt.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents.wso2</groupId>
                 <artifactId>httpcore</artifactId>
@@ -1076,11 +1080,11 @@
                 <artifactId>feign-gson</artifactId>
                 <version>${io.github.openfeign.version}</version>
             </dependency>
-			<dependency>
-				<groupId>io.github.openfeign</groupId>
-				<artifactId>feign-slf4j</artifactId>
-				<version>${io.github.openfeign.version}</version>
-			</dependency>
+            <dependency>
+                <groupId>io.github.openfeign</groupId>
+                <artifactId>feign-slf4j</artifactId>
+                <version>${io.github.openfeign.version}</version>
+            </dependency>
 
             <!-- dependencies for siddhi extension -->
             <dependency>
@@ -1142,14 +1146,14 @@
         <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
 
         <!-- Carbon Device Management -->
-        <carbon.devicemgt.version>3.0.7</carbon.devicemgt.version>
+        <carbon.devicemgt.version>3.0.8</carbon.devicemgt.version>
         <carbon.devicemgt.version.range>[3.0.0, 4.0.0)</carbon.devicemgt.version.range>
 
         <!-- Carbon App Management -->
         <carbon.appmgt.version>1.2.25</carbon.appmgt.version>
 
         <!-- Carbon Device Management Plugins -->
-        <carbon.devicemgt.plugins.version>4.0.4</carbon.devicemgt.plugins.version>
+        <carbon.devicemgt.plugins.version>4.0.6-SNAPSHOT</carbon.devicemgt.plugins.version>
 
         <!-- Carbon Commons -->
         <carbon.commons.version>4.4.8</carbon.commons.version>
@@ -1161,7 +1165,7 @@
         <carbon.identity.framework.version>5.6.89</carbon.identity.framework.version>
         <identity.inbound.auth.oauth.version>5.3.1</identity.inbound.auth.oauth.version>
         <carbon.identity.version.range>[5.2.0, 6.0.0)</carbon.identity.version.range>
-		<identity.carbon.auth.jwt.version>5.1.2</identity.carbon.auth.jwt.version>
+        <identity.carbon.auth.jwt.version>5.1.2</identity.carbon.auth.jwt.version>
 
         <!-- Carbon Multi-tenancy -->
         <carbon.multitenancy.version>4.6.1</carbon.multitenancy.version>
@@ -1228,7 +1232,7 @@
 
         <commons-json.version>3.0.0.wso2v1</commons-json.version>
         <commons-json.version.range>(3.0.0, 4.0.0]</commons-json.version.range>
-		<orbit.version.json.range>[2.0.0,4.0.0)</orbit.version.json.range>
+        <orbit.version.json.range>[2.0.0,4.0.0)</orbit.version.json.range>
         <json.path.version>0.9.1</json.path.version>
         <json-simple.version>1.1.wso2v1</json-simple.version>
         <commons-collections.version>3.2.2</commons-collections.version>
@@ -1384,6 +1388,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
                     <version>2.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>3.0.2</version>
                 </plugin>
             </plugins>
         </pluginManagement>
