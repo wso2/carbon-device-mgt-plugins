@@ -17,17 +17,44 @@
 }}
 {{unit "cdmf.unit.lib.rickshaw-graph"}}
 
-<div id="chartWrapper">
+{{#zone "topCss"}}
+    {{css "css/custom.css"}}
+{{/zone}}
+
+<div id="stat-section" class="light-mode" data-websocketurl="{{websocketEndpoint}}">
+
+    {{#each graphData}}
+        <div id="chart-{{@key}}" class="row">
+            {{#each this}}
+                <div class="col-md-6 graph">
+                    <div class="sensor_graph">
+                        <i class="fw fw-expand pull-right fw-background fw-inverse default-view"></i>
+                        <h3>{{this}}</h3>
+                        <div id="div-chart-{{this}}">
+                            <div class="chartWrapper" id="chartWrapper-{{this}}">
+                                <div id="y-axis-{{this}}" class="custom_y_axis">{{this}}</div>
+                                <div class="legend_container">
+                                    <div id="legend-{{this}}"></div>
+                                </div>
+                                <div id="chart-{{this}}" class="custom_rickshaw_graph"></div>
+                                <div class="custom_x_axis">Time</div>
+                            </div>
+                            <a class="details-view-toggle-button" data-toggle="tooltip" title="Stored Data"
+                               href="{{@app.context}}/device/{{../../device.type}}/analytics?deviceId={{../../device.deviceIdentifier}}&deviceName={{../../device.name}}&graphType={{@key}}&sensor={{this}}">
+                            <span class="fw-stack">
+                            <i class="fw fw-circle-outline fw-stack-2x "></i>
+                            <i class="fw fw-statistics fw-stack-1x "></i>
+                        </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    {{/each}}
+
 </div>
 
-<a class="padding-left"
-   href="{{@app.context}}/device/{{device.type}}/analytics?deviceId={{device.deviceIdentifier}}&deviceName={{device.name}}">
-    <span class="fw-stack">
-        <i class="fw fw-circle-outline fw-stack-2x"></i>
-        <i class="fw fw-statistics fw-stack-1x"></i>
-    </span> View Device Analytics
-</a>
-<!-- /statistics -->
 {{#zone "bottomJs"}}
     {{js "js/moment.min.js"}}
     {{js "js/socket.io.min.js"}}

@@ -4,10 +4,10 @@
 @Plan:description('Find the audio listening through head set')
 
 
-@Import('org.wso2.iot.android.audio:1.0.0')
+@Import('iot.per.device.stream.android.audio:1.0.0')
 define stream AudioStream (meta_owner string, meta_deviceId string, meta_timestamp long, audio_playing bool, headset_on bool, music_volume int);
 
-@Export('org.wso2.iot.android.headset.stats:1.0.0')
+@Export('iot.per.device.stream.android.headset.stats:1.0.0')
 define stream HeadsetStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, duration long, year int, month int, day int, hour int, minute int);
 
 partition with (meta_deviceId of AudioStream)

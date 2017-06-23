@@ -1,9 +1,0 @@
-{
-    "id": "Android_Battery_History_Chart",
-    "title": "Battery History",
-    "type": "gadget",
-    "thumbnail": "gadget/Android_Battery_History_Chart/thumbnail.png",
-    "data": {
-        "url": "gadget/Android_Battery_History_Chart/gadget.xml"
-    }
-}

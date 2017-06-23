@@ -19,7 +19,6 @@
 package org.wso2.carbon.device.mgt.mobile.windows.api.common.util;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.auth.AUTH;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.handler.RequestData;
 import org.apache.ws.security.message.token.BinarySecurity;
@@ -29,12 +28,9 @@ import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.authenticator.OAuthValidatorFactory;
-import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.CacheEntry;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.AuthenticationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.OAuthTokenValidationException;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
-import org.wso2.carbon.device.mgt.mobile.windows.exception.WindowsDeviceMgtPluginException;
-import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.dto.MobileCacheEntry;
 
 import java.util.HashMap;
