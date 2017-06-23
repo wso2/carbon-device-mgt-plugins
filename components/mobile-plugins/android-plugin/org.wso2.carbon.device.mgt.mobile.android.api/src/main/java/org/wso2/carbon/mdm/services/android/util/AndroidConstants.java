@@ -104,12 +104,6 @@ public final class AndroidConstants {
         public static final String APP_RESTRICTION = "APP-RESTRICTION";
         public static final String WORK_PROFILE = "WORK_PROFILE";
     }
-
-    public final class RuntimePermissionType {
-        public static final String PERMISSION_POLICY_PROMPT = "PERMISSION_POLICY_PROMPT";
-        public static final String PERMISSION_POLICY_AUTO_GRANT = "PERMISSION_POLICY_AUTO_GRANT";
-        public static final String PERMISSION_POLICY_AUTO_DENY = "PERMISSION_POLICY_AUTO_DENY";
-    }
     public final class StatusCodes {
         private StatusCodes() {
             throw new AssertionError();
