@@ -103,7 +103,7 @@ public final class AndroidConstants {
         public static final String APP_RESTRICTION = "APP-RESTRICTION";
         public static final String WORK_PROFILE = "WORK_PROFILE";
     }
-    
+
     public final class StatusCodes {
         private StatusCodes() {
             throw new AssertionError();
