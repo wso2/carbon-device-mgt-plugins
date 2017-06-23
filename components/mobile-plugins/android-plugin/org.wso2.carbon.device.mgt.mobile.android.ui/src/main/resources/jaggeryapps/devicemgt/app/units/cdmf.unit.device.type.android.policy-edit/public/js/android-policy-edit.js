@@ -33,7 +33,11 @@ var androidOperationConstants = {
     "APPLICATION_OPERATION": "app-restriction",
     "APPLICATION_OPERATION_CODE": "APP-RESTRICTION",
     "KIOSK_APPS_CODE": "KIOSK_APPS",
-    "KIOSK_APPS": "cosu-whitelisted-applications"
+    "KIOSK_APPS": "cosu-whitelisted-applications",
+    "RUNTIME_PERMISSION_POLICY_OPERATION_CODE": "RUNTIME_PERMISSION_POLICY",
+    "RUNTIME_PERMISSION_POLICY_OPERATION": "runtime-permission-policy",
+    "COSU_PROFILE_CONFIGURATION_OPERATION": "cosu-profile-configuration",
+    "COSU_PROFILE_CONFIGURATION_OPERATION_CODE": "COSU_PROFILE"
 };
 
 /**
@@ -221,6 +225,15 @@ var validatePolicyProfile = function () {
             // updating validationStatusArray with validationStatus
             validationStatusArray.push(validationStatus);
         }
+        // Validating COSU PROFILE CONFIGURATION
+        if ($.inArray(androidOperationConstants["COSU_PROFILE_CONFIGURATION_OPERATION_CODE"], configuredOperations) != -1) {
+           operation = androidOperationConstants["COSU_PROFILE_CONFIGURATION_OPERATION"];
+           validationStatus = {
+                "error": false,
+                "okFeature": operation
+           };
+           validationStatusArray.push(validationStatus);
+        }
         // Validating ENCRYPT_STORAGE
         if ($.inArray(androidOperationConstants["ENCRYPT_STORAGE_OPERATION_CODE"], configuredOperations) != -1) {
             // if ENCRYPT_STORAGE is configured
@@ -229,6 +242,18 @@ var validatePolicyProfile = function () {
             validationStatus = {
                 "error": false,
                 "okFeature": operation
+            };
+            // updating validationStatusArray with validationStatus
+            validationStatusArray.push(validationStatus);
+        }
+        // Validating RUNTIME_PERMISSION
+       if ($.inArray(androidOperationConstants["RUNTIME_PERMISSION_POLICY_OPERATION_CODE"], configuredOperations) != -1) {
+            // if policy is configured
+            operation = androidOperationConstants["RUNTIME_PERMISSION_POLICY_OPERATION"];
+            // updating validationStatus
+            validationStatus = {
+                 "error": false,
+                 "okFeature": operation
             };
             // updating validationStatusArray with validationStatus
             validationStatusArray.push(validationStatus);
