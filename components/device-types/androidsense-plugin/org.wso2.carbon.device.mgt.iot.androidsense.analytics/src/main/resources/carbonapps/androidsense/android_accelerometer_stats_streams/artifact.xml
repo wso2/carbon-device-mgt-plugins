@@ -18,6 +18,6 @@
   -->
 
 <artifact name= "android_accelerometer_stats_streams" version="1.0.0" type="event/stream" serverRole="DataAnalyticsServer">
-	<file>org.wso2.iot.android.accelerometer.stats_1.0.0.json</file>
+	<file>iot.per.device.stream.android.accelerometer.stats_1.0.0.json</file>
 </artifact>
 

@@ -2,10 +2,10 @@
 
 @Plan:description('Process proximity changes.')
 
-@Import('org.wso2.iot.android.proximity:1.0.0')
+@Import('iot.per.device.stream.android.proximity:1.0.0')
 define stream ProximityStream (meta_owner string, meta_deviceId string, meta_timestamp long, proximity float);
 
-@Export('org.wso2.iot.android.proximity.stats:1.0.0')
+@Export('iot.per.device.stream.android.proximity.stats:1.0.0')
 define stream ProximityStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, proximity float, year int,
 month int, day int, hour int, minute int);
 

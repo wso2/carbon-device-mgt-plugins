@@ -1,0 +1,26 @@
+{
+  "name": "iot.per.device.stream.android.pressure",
+  "version": "1.0.0",
+  "nickName": "",
+  "description": "",
+  "metaData": [
+    {
+      "name": "owner",
+      "type": "STRING"
+    },
+    {
+      "name": "deviceId",
+      "type": "STRING"
+    },
+    {
+      "name": "timestamp",
+      "type": "LONG"
+    }
+  ],
+  "payloadData": [
+    {
+      "name": "pressure",
+      "type": "FLOAT"
+    }
+  ]
+}
