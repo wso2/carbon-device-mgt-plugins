@@ -766,6 +766,22 @@ public class TryIt {
             default:
                 qemuSystemFileLocation += osSuffix + "-x86_64" + File.separator + "qemu-system-i386";
         }
+        setExecutePermission(qemuSystemFileLocation);
+
+        qemuSystemFileLocation = androidSdkHome + File.separator + "emulator" + File.separator
+                + "qemu" + File.separator;
+
+        switch (osSuffix) {
+            case Constants.MAC_OS:
+                qemuSystemFileLocation += Constants.MAC_DARWIN + "-x86_64" + File.separator + "qemu-system-i386";
+                break;
+            case Constants.WINDOWS_OS:
+                qemuSystemFileLocation += osSuffix + "-x86_64" + File.separator + "qemu-system-i386.exe";
+                break;
+            default:
+                qemuSystemFileLocation += osSuffix + "-x86_64" + File.separator + "qemu-system-i386";
+        }
+
         killServer();
         setExecutePermission(qemuSystemFileLocation);
         ExecutorService service = Executors.newSingleThreadExecutor();
@@ -814,12 +830,14 @@ public class TryIt {
      * @param fileName name of the file to set execution permission.
      */
     private void setExecutePermission(String fileName) {
-        if (!new File(fileName).canExecute()) {
-            if (!new File(fileName).setExecutable(true)) {
-                System.out.println("Unable to set the execute permission of : " + fileName);
-                System.out.println("Please set the executable permission for file "
-                        + new File(fileName).getAbsolutePath() + " to continue");
-                System.exit(1);      // if can't execute, unable to proceed
+        if (new File((fileName)).exists()) {
+            if (!new File(fileName).canExecute()) {
+                if (!new File(fileName).setExecutable(true)) {
+                    System.out.println("Unable to set the execute permission of : " + fileName);
+                    System.out.println("Please set the executable permission for file "
+                            + new File(fileName).getAbsolutePath() + " to continue");
+                    System.exit(1);      // if can't execute, unable to proceed
+                }
             }
         }
     }
