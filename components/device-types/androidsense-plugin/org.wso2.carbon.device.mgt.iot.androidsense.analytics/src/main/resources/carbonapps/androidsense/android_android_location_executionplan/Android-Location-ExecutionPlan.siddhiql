@@ -2,10 +2,10 @@
 
 @Plan:description('Find the street name of the location and add to a new stream')
 
-@Import('org.wso2.iot.android.location:1.0.0')
+@Import('iot.per.device.stream.android.location:1.0.0')
 define stream LocationStream (meta_owner string, meta_deviceId string, meta_timestamp long, latitude double, longitude double);
 
-@Export('org.wso2.iot.android.location.stats:1.0.0')
+@Export('iot.per.device.stream.android.location.stats:1.0.0')
 define stream LocationStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, latitude double, longitude double, streetName string, year int, month int, day int, hour int, minute int);
 
 partition with (meta_deviceId of LocationStream)

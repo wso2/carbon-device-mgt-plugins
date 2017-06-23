@@ -35,6 +35,7 @@ import java.util.Map;
 public class APIUtil {
 
 	private static Log log = LogFactory.getLog(APIUtil.class);
+	private static int maxEventCount = 100;
 
 	public static String getAuthenticatedUser() {
 		PrivilegedCarbonContext threadLocalCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
@@ -82,6 +83,8 @@ public class APIUtil {
 		int eventCount = analyticsDataAPI.searchCount(tenantId, tableName, query);
 		if (eventCount == 0) {
 			return null;
+		}else if(eventCount>maxEventCount){
+			eventCount=maxEventCount;
 		}
 		List<SearchResultEntry> resultEntries = analyticsDataAPI.search(tenantId, tableName, query, 0, eventCount,
 																		sortByFields);

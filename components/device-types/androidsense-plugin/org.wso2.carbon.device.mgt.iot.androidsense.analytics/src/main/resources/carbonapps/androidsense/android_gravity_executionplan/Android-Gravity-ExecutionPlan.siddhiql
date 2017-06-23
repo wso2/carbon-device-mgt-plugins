@@ -2,10 +2,10 @@
 
 @Plan:description('Process gravity changes.')
 
-@Import('org.wso2.iot.android.gravity:1.0.0')
+@Import('iot.per.device.stream.android.gravity:1.0.0')
 define stream GravityStream (meta_owner string, meta_deviceId string, meta_timestamp long, x float, y float, z float);
 
-@Export('org.wso2.iot.android.gravity.stats:1.0.0')
+@Export('iot.per.device.stream.android.gravity.stats:1.0.0')
 define stream GravityStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, x
 float, y float, z float, year int, month int, day int, hour int, minute int);
 

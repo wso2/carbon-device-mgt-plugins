@@ -25,19 +25,20 @@ import org.wso2.carbon.device.mgt.input.adapter.extension.ContentValidator;
 import org.wso2.carbon.device.mgt.input.adapter.extension.InputAdapterExtensionService;
 import org.wso2.carbon.device.mgt.input.adapter.extension.InputAdapterExtensionServiceImpl;
 import org.wso2.carbon.device.mgt.input.adapter.extension.transformer.DefaultContentTransformer;
+import org.wso2.carbon.device.mgt.input.adapter.extension.transformer.MQTTContentTransformer;
 import org.wso2.carbon.device.mgt.input.adapter.extension.validator.DefaultContentValidator;
 import org.wso2.carbon.device.mgt.input.adapter.extension.validator.HTTPContentValidator;
 import org.wso2.carbon.device.mgt.input.adapter.extension.validator.MQTTContentValidator;
 
 /**
  * @scr.component name="input.adapter.extension.adapterService.component" immediate="true"
- * @scr.reference name="InputAdapterServiceComponent.service"
+ * @scr.reference name="InputAdapterServiceComponent.content.validator.service"
  * interface="org.wso2.carbon.device.mgt.input.adapter.extension.ContentValidator"
  * cardinality="0..n"
  * policy="dynamic"
  * bind="setContentValidator"
  * unbind="unsetContentValidator"
- * * @scr.reference name="InputAdapterServiceComponent.service"
+ * @scr.reference name="InputAdapterServiceComponent.transformer.service"
  * interface="org.wso2.carbon.device.mgt.input.adapter.extension.ContentTransformer"
  * cardinality="0..n"
  * policy="dynamic"
@@ -56,6 +57,7 @@ public class InputAdapterServiceComponent {
 			}
 
             InputAdapterServiceDataHolder.getInstance().addContentTransformer(new DefaultContentTransformer());
+            InputAdapterServiceDataHolder.getInstance().addContentTransformer(new MQTTContentTransformer());
             InputAdapterServiceDataHolder.getInstance().addContentValidator(new DefaultContentValidator());
             InputAdapterServiceDataHolder.getInstance().addContentValidator(new HTTPContentValidator());
             InputAdapterServiceDataHolder.getInstance().addContentValidator(new MQTTContentValidator());
@@ -87,7 +89,7 @@ public class InputAdapterServiceComponent {
         InputAdapterServiceDataHolder.getInstance().addContentTransformer(contentTransformer);
     }
 
-    protected void unsetContentValidator(ContentTransformer contentTransformer) {
+    protected void unsetContentTransformer(ContentTransformer contentTransformer) {
         if (log.isDebugEnabled()) {
             log.debug("Un-setting ContentTransformer Service");
         }
