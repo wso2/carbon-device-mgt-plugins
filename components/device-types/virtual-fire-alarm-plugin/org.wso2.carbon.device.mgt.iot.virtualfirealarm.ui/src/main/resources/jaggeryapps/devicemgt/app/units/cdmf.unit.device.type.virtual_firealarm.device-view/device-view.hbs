@@ -1,4 +1,4 @@
-{{!
+  {{!
   Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
   WSO2 Inc. licenses this file to you under the Apache License,
@@ -70,6 +70,8 @@
     </li>
     <li><a class="list-group-item" href="#event_log" role="tab" data-toggle="tab"
            aria-controls="event_log">Operations Log</a></li>
+    <li><a class="list-group-item" href="#geo_dashboard" role="tab" data-toggle="tab"
+           aria-controls="geo_dashboard">Location</a></li>
 {{/zone}}
 
 {{#zone "device-view-tab-contents"}}
@@ -129,6 +131,12 @@
                 <br class="c-both"/>
             </div>
         </div>
+    </div>
+
+    <div class="panel panel-default tab-pane"
+         id="geo_dashboard" role="tabpanel" aria-labelledby="geo_dashboard">
+        <div class="panel-heading">Device Location</div>
+        {{unit "cdmf.unit.geo-dashboard"}}
     </div>
 {{/zone}}
 
