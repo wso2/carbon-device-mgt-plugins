@@ -40,6 +40,8 @@ import org.wso2.carbon.device.mgt.core.service.DeviceManagementProviderService;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.PluginConstants;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.beans.ErrorResponse;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.BadRequestException;
+import org.wso2.carbon.device.mgt.mobile.windows.exception.WindowsDeviceMgtPluginException;
+import org.wso2.carbon.device.mgt.mobile.windows.impl.WindowsTokenService;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth2.OAuth2TokenValidationService;
 import org.wso2.carbon.policy.mgt.core.PolicyManagerService;
@@ -88,6 +90,18 @@ public class WindowsAPIUtils {
             throw new IllegalStateException("Notification Management service not initialized.");
         }
         return notificationManagementService;
+    }
+
+    public static WindowsTokenService getEnrollmentTokenService()  {
+        WindowsTokenService tokenService;
+        PrivilegedCarbonContext ctx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        tokenService = (WindowsTokenService)
+                ctx.getOSGiService(WindowsTokenService.class, null);
+
+        if(tokenService == null) {
+            throw new IllegalStateException("WindowsTokenService is not initialized");
+        }
+        return tokenService;
     }
 
     public static MediaType getResponseMediaType(String acceptHeader) {
