@@ -74,7 +74,12 @@
         {{/zone}}
 
         {{#zone "device-details-tab-injected"}}
-            <li><a data-toggle="tab" href="#location">Location</a></li>
+            <li>
+                <a data-toggle="tab" href="#location"
+                   data-lat="{{device.location.latitude}}"
+                   data-long="{{device.location.longitude}}"
+                   class="initGeoLocationLink">Location</a>
+            </li>
             <li><a data-toggle="tab" href="#app">Applications</a></li>
             <li><a data-toggle="tab" href="#policy">Policy Compliance</a></li>
         {{/zone}}
@@ -82,6 +87,11 @@
         {{#zone "device-view-tab-injected-conents"}}
             <div id="location" class="tab-pane fade">
               {{#if device.location}}
+                  <div class="tab-actions">
+                      <div class="action-btn-container" id="location-action-bar">
+                      </div>
+                  </div>
+                  <br/>
                   {{unit "cdmf.unit.geo-dashboard" device=device noGeoFencing=false hideSearch=true}}
               {{else}}
                   <div id="map-error" class="message message-warning">
