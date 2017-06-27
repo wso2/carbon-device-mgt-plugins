@@ -6,15 +6,11 @@
     "adminService":"%https.ip%",
     "oauthProvider": {
         "appRegistration": {
-            "appType": "webapp",
-            "clientName": "windows-web-agent",
-            "owner": "admin@carbon.super",
-            "dynamicClientAppRegistrationServiceURL": "%https.ip%/dynamic-client-web/register",
-            "apiManagerClientAppRegistrationServiceURL": "%https.ip%/api-application-registration/register/tenants",
-            "grantType": "password refresh_token urn:ietf:params:oauth:grant-type:saml2-bearer",
-            "tokenScope": "admin",
-            "callbackUrl": "%https.ip%/api/device-mgt/v1.0",
-            "samlGrantTypeName": "urn:ietf:params:oauth:grant-type:saml2-bearer"
+            "apiManagerClientAppRegistrationServiceURL": "%https.ip%/api-application-registration/register",
+            "applicationName":"windows-web-agent",
+            "tags":["windows"],
+            "isAllowedToAllDomains":false,
+            "isMappingAnExistingOAuthApp":false
         },
         "tokenServiceURL": "%https.ip%/oauth2/token"
     },
