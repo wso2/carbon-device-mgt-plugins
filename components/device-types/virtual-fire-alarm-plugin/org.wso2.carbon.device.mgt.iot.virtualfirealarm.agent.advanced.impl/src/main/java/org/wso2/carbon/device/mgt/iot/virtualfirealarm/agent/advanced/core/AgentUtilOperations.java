@@ -288,7 +288,6 @@ public class AgentUtilOperations {
             }
             return actualMessage;
         } else {
-            //System.out.println("\n . Not enrolled .\n");
             return message;
         }
     }
