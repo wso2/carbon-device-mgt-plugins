@@ -108,7 +108,6 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
     public void processIncomingMessage(MqttMessage message, String... messageParams) {
         final AgentManager agentManager = AgentManager.getInstance();
         String tenantDomain = agentManager.getAgentConfigs().getTenantDomain();
-        String deviceOwner = agentManager.getAgentConfigs().getDeviceOwner();
         String deviceID = agentManager.getAgentConfigs().getDeviceId();
         String receivedMessage;
         String replyMessage;
@@ -219,7 +218,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
 
                 } catch (TransportHandlerException e) {
                     log.warn(AgentConstants.LOG_APPENDER + "Data Publish attempt to topic - [" +
-                                     AgentConstants.MQTT_PUBLISH_TOPIC + "] failed for payload [" + message + "]");
+                            AgentConstants.MQTT_PUBLISH_TOPIC + "] failed for payload [" + message + "]");
                 } catch (AgentCoreOperationException e) {
                     log.warn(AgentConstants.LOG_APPENDER + "Preparing Secure payload failed", e);
                 }
@@ -255,7 +254,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
                             Thread.sleep(timeoutInterval);
                         } catch (InterruptedException e1) {
                             log.error(AgentConstants.LOG_APPENDER +
-                                              "MQTT-Terminator: Thread Sleep Interrupt Exception");
+                                    "MQTT-Terminator: Thread Sleep Interrupt Exception");
                         }
                     }
                 }
