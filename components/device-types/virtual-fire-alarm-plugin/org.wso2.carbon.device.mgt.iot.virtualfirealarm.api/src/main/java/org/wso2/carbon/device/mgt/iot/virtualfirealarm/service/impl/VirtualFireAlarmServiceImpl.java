@@ -103,7 +103,6 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             commandOp.setPayLoad(actualMessage);
 
             Properties props = new Properties();
-            props.setProperty(VirtualFireAlarmConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
             props.setProperty(VirtualFireAlarmConstants.CLIENT_JID_PROPERTY_KEY, deviceId + "@" + XmppConfig
                     .getInstance().getServerName());
             props.setProperty(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "CONTROL-REQUEST");
