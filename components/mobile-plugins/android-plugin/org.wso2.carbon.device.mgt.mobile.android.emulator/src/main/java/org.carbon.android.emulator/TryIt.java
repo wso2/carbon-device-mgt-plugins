@@ -140,13 +140,15 @@ public class TryIt {
             while ((count = in.read(data, 0, 1024)) != -1) {
                 out.write(data, 0, count);
                 sumCount += count;
-                if ((size > 0 && (System.currentTimeMillis() - startingTime > 5000))
+                if ((size > 0 && (System.currentTimeMillis() - startingTime > 100))
                         || (sumCount / size * 100.0) == 100) {
-                    System.out.println("Downloading: "
-                            + new DecimalFormat("#.##").format((sumCount / size * 100.0)) + " %");
+                    System.out.print("\r\r\r\r\r\r\r\r\r\r");
+                    System.out.print("Downloading: "
+                            + new DecimalFormat("#0.00").format((sumCount / size * 100.00)) + " %");
                     startingTime = System.currentTimeMillis();
                 }
             }
+            System.out.println();
         } catch (MalformedURLException e) {
             System.out.println("Error in download URL of " + localPath);
             System.out.println("URL provided " + remotePath);
