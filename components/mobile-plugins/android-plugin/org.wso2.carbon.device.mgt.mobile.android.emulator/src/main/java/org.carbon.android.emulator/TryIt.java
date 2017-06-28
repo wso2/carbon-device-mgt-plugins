@@ -899,6 +899,7 @@ public class TryIt {
         } catch (IOException e) {
             handleException("Extraction of " + zipFile + " failed", e);
         }
+        System.out.println("Done ...");
         if (!new File(zipFile).delete()) {
             System.out.println("Downloaded zip : " + zipFile + " - not deleted");
         }
