@@ -176,6 +176,7 @@ public class FireAlarmMQTTCommunicator extends MQTTTransportHandler {
             } else {
                 JSONObject jsonMessage = new JSONObject(receivedMessage);
                 updateCEPPolicy(jsonMessage.getString("policyDefinition"));
+
             }
             log.info(AgentConstants.LOG_APPENDER + "Message [" + receivedMessage + "] was received");
         } catch (AgentCoreOperationException e) {
