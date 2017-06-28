@@ -64,7 +64,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     private ApiApplicationRegistrationService apiApplicationRegistrationService;
     private TokenIssuerService tokenIssuerService;
     private static Log log = LogFactory.getLog(OAuthRequestInterceptor.class);
-    private ApiApplicationKey apiApplicationKey;
+    private volatile ApiApplicationKey apiApplicationKey;
 
     /**
      * Creates an interceptor that authenticates all requests.
@@ -124,6 +124,7 @@ public class OAuthRequestInterceptor implements RequestInterceptor {
     }
 
     public void resetApiApplicationKey() {
+        tokenInfo = null;
         apiApplicationKey = null;
         tokenIssuerService = null;
     }
