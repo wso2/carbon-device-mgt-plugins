@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -77,6 +77,8 @@ var rotation_zData = [];
 var graphMap = {};
 
 var palette = new Rickshaw.Color.Palette({scheme: "munin"});
+
+var elemTop;
 
 $(window).load(function () {
 
@@ -321,7 +323,7 @@ function maximizeGraph(graph, width,height){
         height: height*2
 
     });
-    graph.render();
+    graph.update();
 }
 
 function minimizeGraph(graph){
@@ -329,7 +331,7 @@ function minimizeGraph(graph){
         width: 366,
         height: 300
     });
-    graph.render();
+    graph.update();
 }
 
 //maximize minimize functionality
@@ -339,17 +341,30 @@ $(".fw-expand").click(function(e) {
     var height = $(".chartWrapper").height();
 
     if($(this).hasClass("default-view")){
+    	elemTop = $('#'+innerGraph.element.id).parents('.graph')[0].offsetTop;
         $(this).removeClass("default-view");
+        $(this).removeClass("fw-expand");
+        $(this).addClass("fw-contract");
         maximizeGraph(innerGraph,width,height);
         $(this).parent().parent().addClass("max");
         $(this).closest(".graph").siblings().addClass("max_hide");
         $(this).closest(".graph").parent().siblings().addClass("max_hide");
     }else{
-
         $(this).addClass("default-view");
+        $(this).addClass("fw-expand");
+        $(this).removeClass("fw-contract");
         minimizeGraph(innerGraph);
         $(this).parent().parent().removeClass("max");
         $(this).closest(".graph").siblings().removeClass("max_hide");
         $(this).closest(".graph").parent().siblings().removeClass("max_hide");
+    	focusToArea()
     }
 });
+
+//graph focusing function
+function focusToArea(){
+	var container = $("body");
+    container.animate({
+		scrollTop: elemTop
+    });
+}
