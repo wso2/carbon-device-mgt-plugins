@@ -5,6 +5,7 @@
     "scopes" : [
       "perm:android-sense:enroll"
     ],
-    "analyticsView" : "DAS"
+    "analyticsView" : "DAS",
+    "analyticsEnabled": false
   }
 }
