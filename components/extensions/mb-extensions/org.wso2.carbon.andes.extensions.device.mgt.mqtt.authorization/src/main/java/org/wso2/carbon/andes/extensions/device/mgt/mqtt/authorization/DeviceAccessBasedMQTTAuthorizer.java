@@ -104,7 +104,7 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
         try {
             String topics[] = topic.split("/");
             String tenantDomainFromTopic = topics[0];
-            if ("+".equals(tenantDomainFromTopic)) {
+            if (ALL_TENANT_DOMAIN.equals(tenantDomainFromTopic)) {
                 if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(authorizationSubject.getTenantDomain())
                         && isUserAuthorized(authorizationSubject, DEFAULT_ADMIN_PERMISSION, UI_EXECUTE)) {
                     return true;
@@ -133,8 +133,8 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                     return false;
                 } catch (FeignException e) {
                     oAuthRequestInterceptor.resetApiApplicationKey();
-                    if (e.getMessage().contains(GATEWAY_ERROR_CODE) || e.status() == 404) {
-                        log.error("Failed to connect to the device authorization service.");
+                    if (e.getMessage().contains(GATEWAY_ERROR_CODE) || e.status() == 404 || e.status() == 403) {
+                        log.error("Failed to connect to the device authorization service, Retrying....");
                     } else {
                         log.error(e.getMessage(), e);
                     }
@@ -181,8 +181,9 @@ public class DeviceAccessBasedMQTTAuthorizer implements IAuthorizer {
                 }
             } catch (FeignException e) {
                 oAuthRequestInterceptor.resetApiApplicationKey();
-                if (e.getMessage().contains(GATEWAY_ERROR_CODE)) {
-                    log.error("Failed to connect to the device authorization service.", e);
+                //This is to avoid failure where it tries to call authorization service before the api is published
+                if (e.getMessage().contains(GATEWAY_ERROR_CODE) || e.status() == 404 || e.status() == 403) {
+                    log.error("Failed to connect to the device authorization service, Retrying....");
                 } else {
                     log.error(e.getMessage(), e);
                 }
