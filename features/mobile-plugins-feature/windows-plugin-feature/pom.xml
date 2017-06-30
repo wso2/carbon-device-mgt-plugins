@@ -22,13 +22,13 @@
     <parent>
         <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
         <artifactId>mobile-plugins-feature</artifactId>
-        <version>4.0.14</version>
+        <version>4.0.15-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>windows-plugin-feature</artifactId>
-    <version>4.0.14</version>
+    <version>4.0.15-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>WSO2 Carbon - Device Management Windows Plugin Feature</name>
     <url>http://wso2.org</url>
