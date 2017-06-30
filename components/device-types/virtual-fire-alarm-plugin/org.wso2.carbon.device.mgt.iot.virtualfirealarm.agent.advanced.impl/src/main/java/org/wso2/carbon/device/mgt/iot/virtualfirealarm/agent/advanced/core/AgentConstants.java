@@ -57,7 +57,8 @@ public class AgentConstants {
  		---------------------------------------------------------------------------------------	*/
 	public static final int DEFAULT_MQTT_RECONNECTION_INTERVAL = 2;        // time in seconds
 	public static final int DEFAULT_MQTT_QUALITY_OF_SERVICE = 0;
-	public static final String MQTT_SUBSCRIBE_TOPIC = "%s/" + DEVICE_TYPE + "/%s/#";
+	//public static final String MQTT_SUBSCRIBE_TOPIC = "%s/" + DEVICE_TYPE + "/%s/#";
+	public static final String MQTT_SUBSCRIBE_TOPIC = "%s/" + DEVICE_TYPE + "/%s/operation/#";
 	public static final String MQTT_PUBLISH_TOPIC = "%s/" + DEVICE_TYPE + "/%s/temperature";
 	/*	---------------------------------------------------------------------------------------
 								XMPP Connection specific information
@@ -104,7 +105,7 @@ public class AgentConstants {
 	 	---------------------------------------------------------------------------------------	*/
 	public static final String BULB_CONTROL = "BULB";
 	public static final String TEMPERATURE_CONTROL = "TEMPERATURE";
-	public static final String POLICY_SIGNAL = "POLICY";
+	public static final String POLICY_REVOKE = "POLICY_REVOKE";
 	public static final String HUMIDITY_CONTROL = "HUMIDITY";
 	public static final String CONTROL_ON = "ON";
 	public static final String CONTROL_OFF = "OFF";
@@ -120,17 +121,6 @@ public class AgentConstants {
 	public static final String XMPP_PROTOCOL = "XMPP";
 
 	public static final String CEP_FILE_NAME = "cep_query.txt";
-	public static final String CEP_QUERY = "define stream fireAlarmEventStream (deviceID string, temp int);\n" +
-											"from fireAlarmEventStream#window.time(30 sec)\n" +
-											"select deviceID, max(temp) as maxValue\n" +
-											"group by deviceID\n" +
-											"insert into analyzeStream for expired-events;\n" +
-											"from analyzeStream[maxValue > 50]\n" +
-											"select maxValue\n" +
-											"insert into bulbOnStream;\n" +
-											"from fireAlarmEventStream[temp < 50]\n" +
-											"select deviceID, temp\n" +
-											"insert into bulbOffStream;";
 
 
 	public static final String XMPP_SERVER_NAME_PROPERTY = "xmpp-server-name";

@@ -1,5 +1,5 @@
 define stream fireAlarmEventStream (deviceID string, temp int);
-from fireAlarmEventStream#window.time(7886776 sec)
+from fireAlarmEventStream#window.time(10 sec)
 select deviceID, max(temp) as maxValue
 group by deviceID
 insert into analyzeStream for expired-events;

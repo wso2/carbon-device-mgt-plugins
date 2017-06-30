@@ -179,7 +179,7 @@
     <DeviceStatusTaskConfig>
         <RequireStatusMonitoring>true</RequireStatusMonitoring>
         <Frequency>300</Frequency>
-        <IdleTimeToMarkInactive>600</IdleTimeToMarkInactive>
-        <IdleTimeToMarkUnreachable>300</IdleTimeToMarkUnreachable>
+        <IdleTimeToMarkInactive>900</IdleTimeToMarkInactive>
+        <IdleTimeToMarkUnreachable>600</IdleTimeToMarkUnreachable>
     </DeviceStatusTaskConfig>
 </DeviceTypeConfiguration>

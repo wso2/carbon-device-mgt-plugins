@@ -18,9 +18,9 @@
   -->
 <eventReceiver name="arduino_receiver" statistics="disable" trace="disable"
                xmlns="http://wso2.org/carbon/eventreceiver">
-    <from eventAdapterType="oauth-http">
-        <property name="contentValidator">iot-http</property>
-    </from>
-    <mapping customMapping="disable" type="json"/>
-    <to streamName="org.wso2.iot.arduino" version="1.0.0"/>
+	<from eventAdapterType="iot-event">
+		<property name="events.duplicated.in.cluster">false</property>
+	</from>
+	<mapping customMapping="disable" type="wso2event"/>
+	<to streamName="org.wso2.iot.arduino" version="1.0.0"/>
 </eventReceiver>

@@ -4,10 +4,10 @@
 @Plan:description('Identify screen on duration')
 
 
-@Import('org.wso2.iot.android.screen:1.0.0')
+@Import('iot.per.device.stream.android.screen:1.0.0')
 define stream ScreenStream (meta_owner string, meta_deviceId string, meta_timestamp long, state string);
 
-@Export('org.wso2.iot.android.screen.stats:1.0.0')
+@Export('iot.per.device.stream.android.screen.stats:1.0.0')
 define stream ScreenStatsStream (meta_owner string, meta_deviceId string, meta_timestamp long, duration long, year int, month int, day int, hour int, minute int);
 
 partition with (meta_deviceId of ScreenStream)

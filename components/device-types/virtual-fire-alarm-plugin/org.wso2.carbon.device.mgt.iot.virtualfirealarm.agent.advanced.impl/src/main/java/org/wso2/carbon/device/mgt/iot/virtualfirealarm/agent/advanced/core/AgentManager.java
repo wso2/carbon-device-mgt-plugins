@@ -125,8 +125,8 @@ public class AgentManager {
             agentCommunicator.put(AgentConstants.XMPP_PROTOCOL, xmppCommunicator);
 
         } catch (TransportHandlerException e) {
-            log.error("XMPP Endpoint String - " + agentConfigs.getXmppServerEndpoint() +
-                              ", provided in the configuration file is invalid.");
+            log.info("XMPP Endpoint String - " + agentConfigs.getXmppServerEndpoint() +
+                              ", provided in the configuration file is invalid. XMPP is not configured.");
         }
         String mqttTopic = String.format(AgentConstants.MQTT_SUBSCRIBE_TOPIC, agentConfigs.getTenantDomain(),
                                          agentConfigs.getDeviceId());

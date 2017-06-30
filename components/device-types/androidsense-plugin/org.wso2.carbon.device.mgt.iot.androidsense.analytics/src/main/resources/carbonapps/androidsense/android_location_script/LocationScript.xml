@@ -2,7 +2,7 @@
 <Analytics>
     <Editable>true</Editable>
     <Name>LocationScript</Name>
-    <Script>        CREATE TEMPORARY TABLE AndroidLocationData USING CarbonAnalytics OPTIONS(tableName "ORG_WSO2_IOT_ANDROID_LOCATION_STATS", incrementalParams "ORG_WSO2_IOT_ANDROID_LOCATION_STATS, DAY");
+    <Script>        CREATE TEMPORARY TABLE AndroidLocationData USING CarbonAnalytics OPTIONS(tableName "IOT_PER_DEVICE_STREAM_ANDROID_LOCATION_STATS", incrementalParams "IOT_PER_DEVICE_STREAM_ANDROID_LOCATION_STATS, DAY");
 
         CREATE TEMPORARY TABLE Android_Location_Stats_Per_Day USING CarbonAnalytics
         OPTIONS (tableName "Android_Location_Stats_Per_Day",
@@ -27,7 +27,7 @@
         FROM AndroidLocationData
         GROUP BY year, month, day, meta_deviceId, streetName, meta_owner, latitude, longitude;
         
-        INCREMENTAL_TABLE_COMMIT ORG_WSO2_IOT_ANDROID_LOCATION_STATS;
+        INCREMENTAL_TABLE_COMMIT IOT_PER_DEVICE_STREAM_ANDROID_LOCATION_STATS;
 
         INSERT INTO TABLE Android_Location_Stats_Per_Month
         SELECT owner, deviceId, latitude, longitude, streetName, sum(noOfVisits) as noOfVisits, year, month, getMonthStartingTime(year, month) as _timestamp

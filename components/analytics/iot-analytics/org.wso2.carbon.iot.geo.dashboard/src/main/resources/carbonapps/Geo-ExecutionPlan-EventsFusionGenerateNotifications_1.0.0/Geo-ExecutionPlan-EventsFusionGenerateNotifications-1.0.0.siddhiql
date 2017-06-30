@@ -11,10 +11,10 @@
 @Import('org.wso2.geo.ProcessedSpatialEvents:1.0.0')
 define stream dataIn (id string, latitude double, longitude double, timeStamp long, type string, speed float, heading float, eventId string, state string, information string );
 
-@Export('org.wso2.geo.AlertsNotifications:1.0.0')
+@Export('iot.per.device.stream.geo.AlertNotifications:1.0.0')
 define stream alertsOut ( id string, state string, information string, timeStamp long, latitude double, longitude double, type string);
 
-@Export('org.wso2.geo.FusedSpatialEvent:1.0.0')
+@Export('iot.per.device.stream.geo.FusedSpatialEvent:1.0.0')
 define stream dataOut ( id string, latitude double, longitude double, timeStamp long, type string, speed float, heading float, state string, information string, notify bool );
 
 from dataIn#window.geodashboard:eventsFusion(eventId, state, information)

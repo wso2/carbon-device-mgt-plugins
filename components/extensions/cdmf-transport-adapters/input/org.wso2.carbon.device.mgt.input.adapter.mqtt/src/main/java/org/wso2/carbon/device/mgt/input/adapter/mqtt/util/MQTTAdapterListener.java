@@ -69,7 +69,7 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
     private MQTTBrokerConnectionConfiguration mqttBrokerConnectionConfiguration;
     private String topic;
     private String tenantDomain;
-    private boolean connectionSucceeded = false;
+    private volatile boolean connectionSucceeded = false;
     private ContentValidator contentValidator;
     private ContentTransformer contentTransformer;
     private InputEventAdapterConfiguration inputEventAdapterConfiguration;
@@ -91,6 +91,10 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
         this.topic = PropertyUtils.replaceTenantDomainProperty(topic);
         this.eventAdapterListener = inputEventAdapterListener;
         this.tenantDomain = this.topic.split("/")[0];
+        //this is to allow server listener from IoT Core to connect.
+        if (this.tenantDomain.equals("+")) {
+            this.tenantDomain = PrivilegedCarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+        }
 
         //SORTING messages until the server fetches them
         String temp_directory = System.getProperty("java.io.tmpdir");
@@ -126,8 +130,8 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                         .getContentTransformer(contentTransformerType);
             }
         } catch (MqttException e) {
-            log.error("Exception occurred while subscribing to MQTT broker at "
-                    + mqttBrokerConnectionConfiguration.getBrokerUrl());
+            log.error("Exception occurred while creating an mqtt client to "
+                    + mqttBrokerConnectionConfiguration.getBrokerUrl() + " reason code:" + e.getReasonCode());
             throw new InputEventAdapterRuntimeException(e);
         }
     }
@@ -206,8 +210,14 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
         }
         try {
             mqttClient.subscribe(topic);
+            log.info("mqtt receiver subscribed to topic: " + topic);
         } catch (MqttException e) {
             log.error("Failed to subscribe to topic: " + topic + ", Retrying.....");
+            try {
+                mqttClient.disconnect();
+            } catch (MqttException ex) {
+                // do nothing.
+            }
             return false;
         }
         return true;
@@ -261,8 +271,8 @@ public class MQTTAdapterListener implements MqttCallback, Runnable {
                 ContentInfo contentInfo;
                 Map<String, Object> dynamicProperties = new HashMap<>();
                 dynamicProperties.put(MQTTEventAdapterConstants.TOPIC, topic);
-                msgText = (String) contentTransformer.transform(msgText, dynamicProperties);
-                contentInfo = contentValidator.validate(msgText, dynamicProperties);
+                Object transformedMessage = contentTransformer.transform(msgText, dynamicProperties);
+                contentInfo = contentValidator.validate(transformedMessage, dynamicProperties);
                 if (contentInfo != null && contentInfo.isValidContent()) {
                     inputEventAdapterListener.onEvent(contentInfo.getMessage());
                 }

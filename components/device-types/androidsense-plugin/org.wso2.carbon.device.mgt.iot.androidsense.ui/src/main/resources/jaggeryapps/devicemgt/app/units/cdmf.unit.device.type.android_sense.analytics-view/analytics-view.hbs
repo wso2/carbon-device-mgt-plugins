@@ -1,5 +1,5 @@
 {{!
-  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
   WSO2 Inc. licenses this file to you under the Apache License,
   Version 2.0 (the "License"); you may not use this file except
@@ -15,118 +15,39 @@
   specific language governing permissions and limitations
   under the License.
 }}
-<span id="android_sense-details" data-devices="{{devices}}" data-devicename="{{device.name}}"
-      data-deviceid="{{device.deviceIdentifier}}"
+
+{{#zone "topCss"}}
+    {{css "css/custom.css"}}
+{{/zone}}
+
+<span id="android_sense-details"  data-devicename="{{device.name}}" data-deviceid="{{device.deviceIdentifier}}"
       data-appcontext="{{@app.context}}"></span>
-<div id="android_sense-div-chart" data-backend-api-url= {{backendApiUrl}}>
-    <div class="chartWrapper" id="chartWrapper-battery">
-        <span id="span-title">Battery</span>
-        <div id="y_axis-battery" class="custom_y_axis"></div>
-        <div class="legend_container">
-            <div id="smoother-battery" title="Smoothing"></div>
-            <div id="legend-battery"></div>
-        </div>
-        <div id="chart-battery" class="custom_rickshaw_graph" ></div>
-        <div id="x_axis-battery" class="custom_x_axis"></div>
-        <div id="slider-battery" class="custom_slider"></div>
-    </div>
-
-    <div class="chartWrapper" id="chartWrapper-light">
-        <span id="span-title">Light</span>
-        <div id="y_axis-light" class="custom_y_axis"></div>
-        <div class="legend_container">
-            <div id="smoother-light" title="Smoothing"></div>
-            <div id="legend-light"></div>
-        </div>
-        <div id="chart-light" class="custom_rickshaw_graph" ></div>
-        <div id="x_axis-light" class="custom_x_axis"></div>
-        <div id="slider-light" class="custom_slider"></div>
-    </div>
-
-    <div class="chartWrapper" id="chartWrapper-pressure">
-        <span id="span-title">Pressure</span>
-        <div id="y_axis-pressure" class="custom_y_axis"></div>
-        <div class="legend_container">
-            <div id="smoother-pressure" title="Smoothing"></div>
-            <div id="legend-pressure"></div>
-        </div>
-        <div id="chart-pressure" class="custom_rickshaw_graph" ></div>
-        <div id="x_axis-pressure" class="custom_x_axis"></div>
-        <div id="slider-pressure" class="custom_slider"></div>
-    </div>
-
-    <div class="chartWrapper" id="chartWrapper-proximity">
-        <span id="span-title">Proximity</span>
-        <div id="y_axis-proximity" class="custom_y_axis"></div>
-        <div class="legend_container">
-            <div id="smoother-proximity" title="Smoothing"></div>
-            <div id="legend-proximity"></div>
-        </div>
-        <div id="chart-proximity" class="custom_rickshaw_graph" ></div>
-        <div id="x_axis-proximity" class="custom_x_axis"></div>
-        <div id="slider-proximity" class="custom_slider"></div>
-    </div>
-
-    <div class="chartWrapper" id="chartWrapper-accelerometer">
-        <span id="span-title">Acceleromter</span>
-        <div id="y_axis-accelerometer" class="custom_y_axis"></div>
-        <div class="legend_container">
-            <div id="smoother-accelerometer" title="Smoothing"></div>
-            <div id="legend-accelerometer"></div>
-        </div>
-        <div id="chart-accelerometer" class="custom_rickshaw_graph" ></div>
-        <div id="x_axis-accelerometer" class="custom_x_axis"></div>
-        <div id="slider-accelerometer" class="custom_slider"></div>
-    </div>
-
-    <div class="chartWrapper" id="chartWrapper-magnetic">
-        <span id="span-title">Magnetic</span>
-        <div id="y_axis-magnetic" class="custom_y_axis"></div>
-        <div class="legend_container">
-            <div id="smoother-magnetic" title="Smoothing"></div>
-            <div id="legend-magnetic"></div>
-        </div>
-        <div id="chart-magnetic" class="custom_rickshaw_graph" ></div>
-        <div id="x_axis-magnetic" class="custom_x_axis"></div>
-        <div id="slider-magnetic" class="custom_slider"></div>
-    </div>
-
-    <div class="chartWrapper" id="chartWrapper-rotation">
-        <span id="span-title">Rotation</span>
-        <div id="y_axis-rotation" class="custom_y_axis"></div>
-        <div class="legend_container">
-            <div id="smoother-rotation" title="Smoothing"></div>
-            <div id="legend-rotation"></div>
-        </div>
-        <div id="chart-rotation" class="custom_rickshaw_graph" ></div>
-        <div id="x_axis-rotation" class="custom_x_axis"></div>
-        <div id="slider-rotation" class="custom_slider"></div>
-    </div>
-
-    <div class="chartWrapper" id="chartWrapper-gyroscope">
-        <span id="span-title">Gyroscope</span>
-        <div id="y_axis-gyroscope" class="custom_y_axis"></div>
-        <div class="legend_container">
-            <div id="smoother-gyroscope" title="Smoothing"></div>
-            <div id="legend-gyroscope"></div>
-        </div>
-        <div id="chart-gyroscope" class="custom_rickshaw_graph" ></div>
-        <div id="x_axis-gyroscope" class="custom_x_axis"></div>
-        <div id="slider-gyroscope" class="custom_slider"></div>
-    </div>
-
-    <div class="chartWrapper" id="chartWrapper-gravity">
-        <span id="span-title">Gravity</span>
-        <div id="y_axis-gravity" class="custom_y_axis"></div>
-        <div class="legend_container">
-            <div id="smoother-gravity" title="Smoothing"></div>
-            <div id="legend-gravity"></div>
-        </div>
-        <div id="chart-gravity" class="custom_rickshaw_graph" ></div>
-        <div id="x_axis-gravity" class="custom_x_axis"></div>
-        <div id="slider-gravity" class="custom_slider"></div>
-    </div>
-
+<div id="android_sense-div-chart" data-backend-api-url= "{{backendApiUrl}}">
+    {{#each graphData}}
+            {{#each this}}
+                <div class="chartWrapper " id="chartWrapper-{{this}}">
+                    <div class="custom_y_axis">
+                        <div class="y-axis-label">{{this}}</div>
+                        <div id="y-axis-{{this}}"></div>
+                    </div>
+                    <div class="legend_container">
+                        <div id="smoother-{{this}}" title="Smoothing"></div>
+                        <div id="legend-{{this}}"></div>
+                        <div class="chart-type-toggle">
+                            <input type="radio" name="offset"  value="lines" class="{{this}}" >
+                            <label class="lines" for="lines">lines</label><br>
+                            <input type="radio" name="offset" value="zero" class="{{this}}" checked>
+                            <label class="stack" for="stack">stack</label>
+                        </div>
+                    </div>
+                    <div id="chart-{{this}}" class="custom_rickshaw_graph"></div>
+                    <div class="custom_x_axis">
+                        <div class="x-axis-label">Time</div>
+                        <div id="x_axis-{{this}}"></div>
+                    </div>
+                </div>
+            {{/each}}
+    {{/each}}
 </div>
 
 {{#zone "bottomJs"}}

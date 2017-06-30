@@ -41,25 +41,24 @@ var utils = function () {
         return String(Base64.decodeBase64(String(payload).getBytes()));
     };
 
-    publicMethods["getDynamicClientAppCredentials"] = function () {
+    publicMethods["getDynamicClientAppCredentials"] = function (username, password) {
         // setting up dynamic client application properties
         var dcAppProperties = {
-            "applicationType": deviceMgtProps["oauthProvider"]["appRegistration"]["appType"],
-            "clientName": deviceMgtProps["oauthProvider"]["appRegistration"]["clientName"],
-            "owner": deviceMgtProps["oauthProvider"]["appRegistration"]["owner"],
-            "tokenScope": deviceMgtProps["oauthProvider"]["appRegistration"]["tokenScope"],
-            "grantType": deviceMgtProps["oauthProvider"]["appRegistration"]["grantType"],
-            "callbackUrl": deviceMgtProps["oauthProvider"]["appRegistration"]["callbackUrl"],
-            "saasApp" : true
+            "applicationName": deviceMgtProps["oauthProvider"]["appRegistration"]["applicationName"],
+            "tags": deviceMgtProps["oauthProvider"]["appRegistration"]["tags"],
+            "isAllowedToAllDomains": deviceMgtProps["oauthProvider"]["appRegistration"]["isAllowedToAllDomains"],
+            "isMappingAnExistingOAuthApp": deviceMgtProps["oauthProvider"]["appRegistration"]["isMappingAnExistingOAuthApp"]
         };
         // calling dynamic client app registration service endpoint
         var requestURL = deviceMgtProps["oauthProvider"]["appRegistration"]
             ["dynamicClientAppRegistrationServiceURL"];
         var requestPayload = dcAppProperties;
+        var encodedBasicOauth = publicMethods.encode(username + ":" + password);
 
         var xhr = new XMLHttpRequest();
         xhr.open("POST", requestURL, false);
         xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Authorization","Basic "+ encodedBasicOauth);
         xhr.send(stringify(requestPayload));
 
         var dynamicClientAppCredentials = {};

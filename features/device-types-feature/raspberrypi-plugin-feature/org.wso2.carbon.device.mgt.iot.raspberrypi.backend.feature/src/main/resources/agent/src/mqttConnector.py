@@ -101,7 +101,7 @@ def main():
     print ("MQTT_LISTENER: MQTT_TOPIC is " + TOPIC_TO_SUBSCRIBE)
 
     global mqttClient
-    mqttClient = mqtt.Client()
+    mqttClient = mqtt.Client(client_id="RaspberryPi Agent")
     mqttClient.on_connect = on_connect
     mqttClient.on_message = on_message
     mqttClient.on_publish = on_publish

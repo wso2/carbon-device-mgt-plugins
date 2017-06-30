@@ -34,6 +34,7 @@ import org.wso2.carbon.device.mgt.common.group.mgt.DeviceGroupConstants;
 import org.wso2.carbon.device.mgt.common.operation.mgt.Operation;
 import org.wso2.carbon.device.mgt.common.operation.mgt.OperationManagementException;
 import org.wso2.carbon.device.mgt.core.operation.mgt.CommandOperation;
+import org.wso2.carbon.device.mgt.core.operation.mgt.ConfigOperation;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.constants.VirtualFireAlarmConstants;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.dto.SensorRecord;
 import org.wso2.carbon.device.mgt.iot.virtualfirealarm.service.impl.util.APIUtil;
@@ -96,14 +97,12 @@ public class VirtualFireAlarmServiceImpl implements VirtualFireAlarmService {
             String publishTopic = APIUtil.getTenantDomainOftheUser() + "/"
                     + VirtualFireAlarmConstants.DEVICE_TYPE + "/" + deviceId;
 
-            Operation commandOp = new CommandOperation();
+            ConfigOperation commandOp = new ConfigOperation();
             commandOp.setCode("buzz");
-            commandOp.setType(Operation.Type.COMMAND);
             commandOp.setEnabled(true);
             commandOp.setPayLoad(actualMessage);
 
             Properties props = new Properties();
-            props.setProperty(VirtualFireAlarmConstants.MQTT_ADAPTER_TOPIC_PROPERTY_NAME, publishTopic);
             props.setProperty(VirtualFireAlarmConstants.CLIENT_JID_PROPERTY_KEY, deviceId + "@" + XmppConfig
                     .getInstance().getServerName());
             props.setProperty(VirtualFireAlarmConstants.SUBJECT_PROPERTY_KEY, "CONTROL-REQUEST");

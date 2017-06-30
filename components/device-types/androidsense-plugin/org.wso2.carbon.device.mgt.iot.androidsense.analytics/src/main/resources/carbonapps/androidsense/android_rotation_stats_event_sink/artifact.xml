@@ -18,6 +18,6 @@
   -->
 
 <artifact name= "android_rotation_stats_event_sink" version="1.0.0" type="analytics/eventstore" serverRole="DataAnalyticsServer">
-	<file>org_wso2_iot_android_rotation_stats.xml</file>
+	<file>iot_per_device_stream_android_rotation_stats.xml</file>
 </artifact>
 

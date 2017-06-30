@@ -1,9 +1,0 @@
-{
-    "id": "GRAVITY",
-    "title": "GRAVITY",
-    "type": "gadget",
-    "thumbnail": "gadget/GRAVITY/thumbnail.png",
-    "data": {
-        "url": "gadget/GRAVITY/gadget.xml"
-    }
-}

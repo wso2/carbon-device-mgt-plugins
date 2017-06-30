@@ -6,398 +6,84 @@
 {{#if deviceFound}}
     {{#if isAuthorized}}
 
+        {{#zone "device-thumbnail"}}
+          <i class="fw fw-windows device-type fw-1x"></i>
+        {{/zone}}
+
         {{#zone "device-details-header"}}
-            <h1 class="page-sub-title device-id device-select"
-                data-deviceid="{{device.deviceIdentifier}}" data-type="{{device.type}}"
-                data-ownership="{{device.ownership}}"
-                data-owner="{{device.owner}}">
-                Device {{device.name}}
-                {{#if device.model}}
-                    <span class="lbl-device">
-                    ( {{device.vendor}} {{device.model}} )
-                </span>
-                {{/if}}
+            <h1 class="device-id"
+            data-deviceid="{{device.deviceIdentifier}}"
+            data-type="{{device.type}}"
+            data-ownership="{{device.ownership}}"
+            data-owner="{{device.owner}}"
+            data-status="{{device.status}}">
+            {{device.owner}}'s {{device.name}}
+              <a id="device-info-tooltip" href="#" data-toggle="tooltip" title="Device Identifier: {{device.deviceIdentifier}}
+              Firmware Build Date: {{device.osBuildDate}}
+              UDID: {{device.udid}}">
+                <i class="fw fw-info"></i>
+              </a>
             </h1>
+            {{#if device.model}}
+              <h4>{{device.vendor}} {{device.model}}</h4>
+            {{/if}}
+            <h4>Ownership - <strong>{{device.ownership}}</strong></h4>
+            <h4>Device is
+              <strong>
+                {{#equal device.status "ACTIVE"}}Active{{/equal}}
+                {{#equal device.status "INACTIVE"}}Inactive{{/equal}}
+                {{#equal device.status "BLOCKED"}}Blocked{{/equal}}
+                {{#equal device.status "REMOVED"}}Removed{{/equal}}
+                {{#equal device.status "UNREACHABLE"}}Unreachable{{/equal}}
+              </strong>
+            </h4>
         {{/zone}}
-
-        {{#zone "overview-section"}}
-            <div class="media-body asset-desc add-padding-left-5x">
-                <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">Device
-                    Overview
-                </div>
-                <table class="table table-responsive table-striped" id="members">
-                    <tbody>
-                    {{#if device.deviceIdentifier}}
-                        <tr role="row" class="odd">
-                            <td class="sorting_1" style="padding:10px 15px; width: 15%;">Device ID</td>
-                            <td style="padding:10px 15px;">{{device.deviceIdentifier}}</td>
-                        </tr>
-                    {{/if}}
-                    {{#if device.name}}
-                        <tr role="row" class="even">
-                            <td class="sorting_1" style="padding:10px 15px; width: 15%;">Name</td>
-                            <td style="padding:10px 15px;">{{device.name}}</td>
-                        </tr>
-                    {{/if}}
-                    {{#if device.vendor}}
-                        {{#if device.model}}
-                            <tr role="row" class="odd">
-                                <td class="sorting_1" style="padding:10px 15px; width: 15%;">Model</td>
-                                <td style="padding:10px 15px;">{{device.vendor}}
-                                    {{device.model}}</td>
-                            </tr>
-                        {{/if}}
-                    {{/if}}
-                    {{#if device.status}}
-                        <tr role="row" class="even">
-                            <td class="sorting_1" style="padding:10px 15px; width: 15%;">Status</td>
-                            <td style="padding:10px 15px;">
-                                {{#if permissions.CHANGE_DEVICE_STATUS}}
-                                    {{#equal device.status "ACTIVE"}}<span><i id="statusIcon"
-                                                                              class="fw fw-success icon-success"></i>
-                                    <a href="#" id="status" data-type="select" data-pk="1"
-                                       data-title="Select status"
-                                       selectedValue="Active"></a>
-                                    </span>{{/equal}}
-                                    {{#equal device.status "INACTIVE"}}<span><i id="statusIcon"
-                                                                                class="fw fw-warning icon-warning"></i>
-                                    <a href="#" id="status" data-type="select" data-pk="1"
-                                       data-title="Select status"
-                                       selectedValue="Inactive"></a>
-                                    </span>{{/equal}}
-                                    {{#equal device.status "BLOCKED"}}<span><i id="statusIcon"
-                                                                               class="fw fw-remove icon-danger"></i>
-                                    <a href="#" id="status" data-type="select" data-pk="1"
-                                       data-title="Select status"
-                                       selectedValue="Blocked"></a>
-                                    </span>{{/equal}}
-                                    {{#equal device.status "REMOVED"}}<span><i id="statusIcon"
-                                                                               class="fw fw-delete icon-danger"></i>
-                                    <a href="#" id="status" data-type="select" data-pk="1"
-                                       data-title="Select status"
-                                       selectedValue="Removed"></a>
-                                    </span>{{/equal}}
-                                {{else}}
-                                    {{#equal device.status "ACTIVE"}}<span><i
-                                            class="fw fw-success icon-success"></i> Active</span>{{/equal}}
-                                    {{#equal device.status "INACTIVE"}}<span><i
-                                            class="fw fw-warning icon-warning"></i> Inactive</span>{{/equal}}
-                                    {{#equal device.status "BLOCKED"}}<span><i
-                                            class="fw fw-remove icon-danger"></i> Blocked</span>{{/equal}}
-                                    {{#equal device.status "REMOVED"}}<span><i
-                                            class="fw fw-delete icon-danger"></i> Removed</span>{{/equal}}
-                                {{/if}}
-                            </td>
-                        </tr>
-                    {{/if}}
-                    {{#if device.owner}}
-                        <tr role="row" class="odd">
-                            <td class="sorting_1" style="padding:10px 15px; width: 15%;">Owner</td>
-                            <td style="padding:10px 15px;">{{device.owner}}</td>
-                        </tr>
-                    {{/if}}
-                    {{#if device.ownership}}
-                        <tr role="row" class="even">
-                            <td class="sorting_1" style="padding:10px 15px; width: 15%;">Ownership</td>
-                            <td style="padding:10px 15px;">{{device.ownership}}</td>
-                        </tr>
-                    {{/if}}
-                    {{#if device.imei}}
-                        <tr role="row" class="even">
-                            <td class="sorting_1" style="padding:10px 15px; width: 15%;">IMEI</td>
-                            <td style="padding:10px 15px;">{{device.imei}}</td>
-                        </tr>
-                    {{/if}}
-                    {{#if device.udid}}
-                        <tr role="row" class="odd">
-                            <td class="sorting_1" style="padding:10px 15px; width: 15%;">UDID</td>
-                            <td style="padding:10px 15px;">{{device.udid}}</td>
-                        </tr>
-                    {{/if}}
-                    {{#if device.osBuildDate}}
-                        <tr role="row" class="even">
-                            <td class="sorting_1" style="padding:10px 15px; width: 15%;">Firmware Build
-                                Date
-                            </td>
-                            <td style="padding:10px 15px;">{{device.osBuildDate}}</td>
-                        </tr>
-                    {{/if}}
-                    {{#if device.phoneNumber}}
-                        <tr role="row" class="odd">
-                            <td class="sorting_1" style="padding:10px 15px; width: 15%;">Phone Number</td>
-                            <td style="padding:10px 15px;">{{device.phoneNumber}}</td>
-                        </tr>
-                    {{/if}}
-                    {{#if device.lastUpdatedTime}}
-                        <tr role="row" class="even">
-                            <td class="sorting_1" style="padding:10px 15px; width: 15%;">Last Update</td>
-                            <td style="padding:10px 15px;">{{device.lastUpdatedTime}}</td>
-                        </tr>
-                    {{/if}}
-                    </tbody>
-                </table>
-            </div>
-        {{/zone}}
-
 
         {{#zone "device-opetations"}}
             {{#if device.isNotRemoved}}
-                <div style="background: #11375B; color: #fff; padding: 10px; margin-bottom: 5px">
-                    Operations
-                </div>
-                <div class="add-margin-top-4x">
-                    {{unit "cdmf.unit.device.type.windows.new.operation-bar" device=device
-                    backendApiUri=backendApiUri autoCompleteParams=autoCompleteParams}}
+                <div class="operation-container">
+                  <div class="operation-title">
+                      <h4>Device Operations</h4>
+                  </div>
+                  {{unit "cdmf.unit.device.type.windows.new.operation-bar" device=device
+                  backendApiUri=backendApiUri autoCompleteParams=autoCompleteParams}}
                 </div>
             {{/if}}
         {{/zone}}
 
-        {{#zone "device-details-tab-injected"}}
-            <li role="presentation" class="list-group-item">
-                <a href="#policy_compliance_tab" role="tab" data-toggle="tab"
-                   aria-controls="policy_compliance_tab">
-                    <i class="icon fw fw-policy"></i><span class="hidden-sm">Policy Compliance</span>
-                </a>
-            </li>
-            <li role="presentation" class="list-group-item">
-                <a href="#device_location_tab" role="tab" data-toggle="tab"
-                   data-lat="{{device.location.latitude}}"
-                   data-long="{{device.location.longitude}}"
-                   aria-controls="device_location_tab">
-                    <i class="icon fw fw-map-location"></i><span
-                        class="hidden-sm">Device Location</span>
-                </a>
-            </li>
-            <!--li role="presentation" class="list-group-item">
-                <a href="#installed_applications_tab" role="tab" data-toggle="tab"
-                   aria-controls="installed_applications_tab">
-                    <i class="icon fw fw-application"></i><span class="hidden-sm">Installed Applications</span>
-                </a>
-            </li-->
+        {{#zone "device-details"}}
+          <div class="vital-strip">
+            {{#if device.deviceInfoAvailable}}
+              {{#if device.BatteryLevel}}
+                <p><i class="icon fw fw-battery fw-2x"></i> <span>{{device.BatteryLevel.value}}%</span></p>
+              {{/if}}
+              {{#if device.ramUsage}}
+                <p><i class="icon fw fw-hardware fw-2x fw-rotate-90"></i> <span>{{device.ramUsage.value}} MB</span></p>
+              {{/if}}
+              {{#if device.internalMemory}}
+                <p><i class="icon fw fw-hdd fw-2x fw-rotate-90"></i> <span>{{device.internalMemory.value}} GB</span>
+                </p>
+              {{/if}}
+            {{else}}
+              <p>Battery, RAM and Storage related information are not
+              available yet.</p>
+            {{/if}}
+        </div>
         {{/zone}}
 
-        {{#zone "device-details-tab-contents"}}
-            <div class="panel panel-default" role="tabpanel" id="device_details_tab">
-                <div class="panel-heading visible-xs collapsed" id="device_details">
-                    <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent="#tabs"
-                           href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            <i class="fw fw-mobile fw-2x"></i>
-                            Device Details
-                            <i class="caret-updown fw fw-down"></i>
-                        </a>
-                    </h4>
-                </div>
-                <div class="panel-heading display-none-xs">Device Details</div>
-                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
-                     aria-labelledby="device_details">
-                    <div class="panel-body ">
-                        <div class="device-detail-body">
-                            <!-- device summary -->
-                            {{#if device.deviceInfoAvailable}}
-                                <!--{{#if device.BatteryLevel}}-->
-                                    <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">-->
-                                        <!--<div class="col-md-12">-->
-                                            <!--<div class="wr-stats-board-tile">-->
-                                                <!--<div class="tile-name">Remaining BATTERY</div>-->
-                                                <!--<div>-->
-                                                    <!--<div class="tile-icon"><i-->
-                                                            <!--class="fw fw-battery"></i></div>-->
-                                                    <!--<div class="tile-stats">-->
-                                                        <!--{{device.BatteryLevel.value}}-->
-                                                    <!--</div>-->
-                                                <!--</div>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>-->
-                                <!--{{/if}}-->
-                                    <!--{{#if device.cpuUsage}}-->
-                                <!--<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">-->
-                                <!--<div class="col-md-12">-->
-                                <!--<div class="wr-stats-board-tile">-->
-                                <!--<div class="tile-name">CPU Usage</div>-->
-                                <!--<div>-->
-                                <!--<div class="tile-icon"><i class="fw fw-dashboard"></i></div>-->
-                                <!--<div class="tile-stats">-->
-                                <!--{{device.cpuUsage.value}} %-->
-                                <!--</div>-->
-                                <!--</div>-->
-                                <!--</div>-->
-                                <!--</div>-->
-                                <!--</div>-->
-                                    <!--{{/if}}-->
-                                {{#if device.ramUsage}}
-                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                        <div class="col-md-12">
-                                            <div class="wr-stats-board-tile">
-                                                <div class="tile-name">Available RAM</div>
-                                                <div>
-                                                    <div class="tile-icon"><i
-                                                            class="fw fw-hardware"></i></div>
-                                                    <div class="tile-stats">
-                                                        {{device.ramUsage
-                                                        .value}} MB
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{/if}}
-                                {{#if device.internalMemory}}
-                                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                        <div class="col-md-12">
-                                            <div class="wr-stats-board-tile">
-                                                <div class="tile-name">Available Local Storage</div>
-                                                <div>
-                                                    <div class="tile-icon"><i
-                                                            class="fw fw-hdd"></i>
-                                                    </div>
-                                                    <div class="tile-stats">
-                                                        {{device.internalMemory
-                                                        .value}} GB
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {{/if}}
-                            {{else}}
-                                <div class="message message-info">
-                                    <h4 class="remove-margin">
-                                        <i class="icon fw fw-info"></i>
-                                        Battery, RAM and Storage related information are not
-                                        available yet.
-                                    </h4>
-                                </div>
-                            {{/if}}
-                        </div>
-                    </div>
-                </div>
-            </div>
+        {{#zone "device-details-tab-injected"}}
+            <li><a data-toggle="tab" href="#location">Location</a></li>
+            <li><a data-toggle="tab" href="#policy">Policy Compliance</a></li>
         {{/zone}}
 
         {{#zone "device-view-tab-injected-conents"}}
-            <div class="panel panel-default visible-xs-block" role="tabpanel"
-                 id="policy_compliance_tab">
-                <div class="panel-heading visible-xs collapsed" id="policy_compliance">
-                    <h4 class="panel-title">
-                        <a role="button"
-                           data-toggle="collapse" data-parent="#tabs" href="#collapseTwo"
-                           aria-expanded="true" aria-controls="collapseTwo">
-                            <i class="fw fw-policy fw-2x"></i>
-                            Policy Compliance
-                            <i class="caret-updown fw fw-down"></i>
-                        </a>
-                    </h4>
-                </div>
-                <div class="panel-heading display-none-xs">
-                    Policy Compliance
-
-                                        <span>
-                            <a href="javascript:void(0);" id="refresh-policy">
-                                <i class="fw fw-refresh"></i>
-                            </a>
-                        </span>
-                </div>
-                <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel"
-                     aria-labelledby="policy_compliance">
-                    <div class="panel-body ">
-                            <span class="visible-xs add-padding-2x text-right">
-                                <a href="javascript:void(0);" id="refresh-policy">
-                                    <i class="fw fw-refresh"></i>
-                                </a>
-                            </span>
-                        <div id="policy-spinner"
-                             class="wr-advance-operations-init add-padding-bottom-2x add-padding-bottom-4x hidden">
-                            <i class="fw fw-settings fw-spin fw-2x"></i>Loading Policy
-                            Compliance...
-                        </div>
-                        <div id="policy-list-container">
-                        </div>
-                    </div>
-                </div>
+            <div id="location" class="tab-pane fade ">
+                <iframe width="100%" height="100%" frameborder="0" style="border:0"
+                    src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJk_gsqyVZ4joR4UxR7brwMnA&key=AIzaSyChgf100i4rBz6neCNRyK1D05g9VLY8jvo" allowfullscreen></iframe>
             </div>
-
-            <div class="panel panel-default visible-xs-block" role="tabpanel"
-                 id="device_location_tab">
-                <div class="panel-heading visible-xs collapsed" id="device_location">
-                    <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent="#tabs"
-                           href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
-                            <i class="fw fw-map-location fw-2x"></i>
-                            Device Location
-                            <i class="caret-updown fw fw-down"></i>
-                        </a>
-                    </h4>
-                </div>
-                <div class="panel-heading display-none-xs">Device Location</div>
-                <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel"
-                     aria-labelledby="device_location">
-                    <div class="panel-body">
-                        {{#if device.location}}
-                            <div id="device-location"
-                                 data-lat="{{device.location.latitude}}"
-                                 data-long="{{device.location.longitude}}">
-                            </div>
-                        {{else}}
-                            <div id="map-error" class="message message-warning">
-                                <h4 class="remove-margin">
-                                    <i class="icon fw fw-warning"></i>
-                                    Device location information is not available.
-                                </h4>
-                            </div>
-                            <p class="add-padding-5x"></p>
-                            <p class="add-padding-5x"></p>
-                            <p class="add-padding-5x"></p>
-                        {{/if}}
-                    </div>
-                </div>
-            </div>
-
-            <div class="panel panel-default visible-xs-block" role="tabpanel"
-                 id="installed_applications_tab">
-                <div class="panel-heading visible-xs collapsed" id="installed_applications">
-                    <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent="#tabs"
-                           href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
-                            <i class="fw fw-application fw-2x"></i>
-                            Installed Applications
-                            <i class="caret-updown fw fw-down"></i>
-                        </a>
-                    </h4>
-                </div>
-                <div class="panel-heading display-none-xs">
-                    Installed Applications
-
-                                        <span>
-                            <a href="javascript:void(0);" id="refresh-apps">
-                                <i class="fw fw-refresh"></i>
-                            </a>
-                        </span>
-                </div>
-                <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel"
-                     aria-labelledby="installed_applications">
-                    <div class="panel-body">
-                            <span class="visible-xs add-padding-2x text-right">
-                                <a href="javascript:void(0);" id="refresh-apps">
-                                    <i class="fw fw-refresh"></i>
-                                </a>
-                            </span>
-                        <div id="apps-spinner" class="wr-advance-operations-init hidden">
-                            <i class="fw fw-settings fw-spin fw-2x"></i> Loading Applications
-                            List...
-                        </div>
-                        <div id="applications-list-container">
-                            <div class="message message-info">
-                                <h4>
-                                    <i class="icon fw fw-info"></i>
-                                    No applications found.
-                                </h4>
-                                <p>Please try refreshing in a while.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div id="policy" class="tab-pane fade">
+              <div id="policy-list-container">
+              </div>
             </div>
 
         {{/zone}}
@@ -425,11 +111,6 @@
         <script id="policy-view" src="{{@unit.publicUri}}/templates/policy-compliance.hbs"
                 data-device-id="{{device.deviceIdentifier}}" data-device-type="{{device.type}}"
                 type="text/x-handlebars-template"></script>
-        <!--suppress HtmlUnknownTarget -->
-        <script id="applications-list" src="{{@unit.publicUri}}/templates/applications-list.hbs"
-                data-device-id="{{device.deviceIdentifier}}" data-device-type="{{device.type}}"
-                type="text/x-handlebars-template"></script>
-        <!--suppress HtmlUnknownTarget -->
         {{js "js/device-detail.js"}}
         <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
         {{js "js/load-map.js"}}

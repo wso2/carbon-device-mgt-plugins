@@ -6,10 +6,10 @@
 
 /* define streams/tables and write queries here ... */
 
-@Import('org.wso2.iot.android.audio:1.0.0')
+@Import('iot.per.device.stream.android.audio:1.0.0')
 define stream AudioStream (meta_owner string, meta_deviceId string, meta_timestamp long, audio_playing bool, headset_on bool, music_volume int);
 
-@Export('org.wso2.iot.android.filtered.audio:1.0.0')
+@Export('iot.per.device.stream.android.filtered.audio:1.0.0')
 define stream FilteredAudioStream (meta_owner string, meta_deviceId string, meta_timestamp long, audio string, headset string, music_volume int);
 
 from AudioStream select meta_owner, meta_deviceId, meta_timestamp, ifThenElse(audio_playing, 'ON', 'OFF') as audio,

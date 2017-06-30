@@ -22,11 +22,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.device.mgt.mobile.windows.api.common.exceptions.WindowsDeviceEnrolmentException;
-import org.wso2.carbon.device.mgt.mobile.windows.exception.WindowsDeviceMgtPluginException;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.WindowsTokenService;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.dao.MobileDeviceManagementDAOException;
 import org.wso2.carbon.device.mgt.mobile.windows.impl.dto.MobileCacheEntry;
-import org.wso2.carbon.device.mgt.mobile.windows.impl.util.WindowsUtils;
 
 import java.util.UUID;
 
@@ -35,20 +33,12 @@ import java.util.UUID;
  */
 public class DeviceUtil {
 
-    private static final String TOKEN_CACHE_MANAGER = "TOKEN_CACHE_MANAGER";
-    private static final String TOKEN_CACHE = "TOKEN_CACHE";
-    private static final long CACHE_DURATION = 15l;
-    private static boolean isContextCacheInitialized = false;
     private static WindowsTokenService tokenService;
 
     private static final Log log = LogFactory.getLog(DeviceUtil.class);
 
     static {
-        try {
-            tokenService = WindowsUtils.getEnrollmentTokenService();
-        } catch (WindowsDeviceMgtPluginException e) {
-            log.error("WindowsTokenService cannot be initialized.", e);
-        }
+          tokenService = WindowsAPIUtils.getEnrollmentTokenService();
     }
 
     public static String generateRandomToken() {
@@ -59,7 +49,7 @@ public class DeviceUtil {
             throws  WindowsDeviceEnrolmentException {
         try {
             if(tokenService == null) {
-                tokenService = WindowsUtils.getEnrollmentTokenService();
+                tokenService = WindowsAPIUtils.getEnrollmentTokenService();
             }
             MobileCacheEntry existingCacheEntry = tokenService.getCacheToken(token);
             PrivilegedCarbonContext carbonCtx = PrivilegedCarbonContext.getThreadLocalCarbonContext();
@@ -77,12 +67,7 @@ public class DeviceUtil {
                 tokenService.updateCacheToken(existingCacheEntry);
             }
         } catch (MobileDeviceManagementDAOException e) {
-            String msg = "Error occured when saving cache token for device: " + deviceID;
-            log.error(msg);
-            throw new WindowsDeviceEnrolmentException(msg, e);
-        } catch (WindowsDeviceMgtPluginException e) {
-            String msg = "Error occured when retrieving enrollment token service";
-            log.error(msg);
+            String msg = "Error occurred when saving cache token for device: " + deviceID;
             throw new WindowsDeviceEnrolmentException(msg, e);
         }
     }
@@ -92,16 +77,11 @@ public class DeviceUtil {
         MobileCacheEntry tokenEntry;
         try {
             if (tokenService == null) {
-                    tokenService = WindowsUtils.getEnrollmentTokenService();
+                tokenService = WindowsAPIUtils.getEnrollmentTokenService();
             }
             tokenEntry = tokenService.getCacheToken(token);
-        } catch (WindowsDeviceMgtPluginException e) {
-            String msg = "Error occured when retrieving enrollment token service.";
-            log.error(msg);
-            throw new WindowsDeviceEnrolmentException(msg, e);
         } catch (MobileDeviceManagementDAOException e) {
-            String msg = "Error occured when retrieving enrollment token.";
-            log.error(msg);
+            String msg = "Error occurred when retrieving enrollment token.";
             throw new WindowsDeviceEnrolmentException(msg, e);
         }
         return tokenEntry;
@@ -112,16 +92,12 @@ public class DeviceUtil {
         MobileCacheEntry tokenEntry;
         try {
             if (tokenService == null) {
-                tokenService = WindowsUtils.getEnrollmentTokenService();
+                tokenService = WindowsAPIUtils.getEnrollmentTokenService();
             }
             tokenEntry = tokenService.getCacheTokenFromDeviceId(deviceId);
-        } catch (WindowsDeviceMgtPluginException e) {
-            String msg = "Error occured when retrieving enrollment token service.";
-            log.error(msg);
-            throw new WindowsDeviceEnrolmentException(msg, e);
+
         } catch (MobileDeviceManagementDAOException e) {
-            String msg = "Error occured when retrieving enrollment token.";
-            log.error(msg);
+            String msg = "Error occurred when retrieving enrollment token.";
             throw new WindowsDeviceEnrolmentException(msg, e);
         }
         return tokenEntry;
@@ -130,14 +106,11 @@ public class DeviceUtil {
     public static void removeTokenEntry(String token) {
         try {
             if (tokenService == null) {
-                tokenService = WindowsUtils.getEnrollmentTokenService();
+                tokenService = WindowsAPIUtils.getEnrollmentTokenService();
             }
             tokenService.removeCacheToken(token);
-        } catch (WindowsDeviceMgtPluginException e) {
-            String msg = "Error occured when retrieving enrollment token service.";
-            log.error(msg);
         } catch (MobileDeviceManagementDAOException e) {
-            String msg = "Error occured when removing enrollment token.";
+            String msg = "Error occurred when removing enrollment token.";
             log.error(msg);
         }
     }
