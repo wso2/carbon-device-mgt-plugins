@@ -38,7 +38,7 @@ var handlers = function () {
                 "password grant type. Either username of logged in user, password or both are missing " +
                     "as input - setupTokenPairByPasswordGrantType(x, y)");
         } else {
-            privateMethods.setUpEncodedTenantBasedClientAppCredentials(username);
+            privateMethods.setUpEncodedTenantBasedClientAppCredentials(username, password);
             var encodedClientAppCredentials = session.get(constants["ENCODED_TENANT_BASED_CLIENT_APP_CREDENTIALS"]);
             if (!encodedClientAppCredentials) {
                 throw new Error("{/app/modules/oauth/token-handlers.js} Could not set up access token pair by " +
@@ -130,13 +130,13 @@ var handlers = function () {
         }
     };
 
-    privateMethods["setUpEncodedTenantBasedClientAppCredentials"] = function (username) {
+    privateMethods["setUpEncodedTenantBasedClientAppCredentials"] = function (username, password) {
         if (!username) {
             throw new Error("{/app/modules/oauth/token-handlers.js} Could not set up encoded tenant based " +
             "client credentials to session context. No username of logged in user is found as " +
             "input - setUpEncodedTenantBasedClientAppCredentials(x)");
         } else {
-            var dynamicClientAppCredentials = tokenUtil.getDynamicClientAppCredentials();
+            var dynamicClientAppCredentials = tokenUtil.getDynamicClientAppCredentials(username, password);
             if (!dynamicClientAppCredentials) {
                 throw new Error("{/app/modules/oauth/token-handlers.js} Could not set up encoded tenant based " +
                 "client credentials to session context as the server is unable to obtain " +
