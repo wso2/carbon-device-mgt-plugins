@@ -113,32 +113,21 @@ public interface MQTTManagementAdminService {
                     response = ErrorResponse.class),
             @ApiResponse(
                     code = 404,
-                    message = "Not Found.\n The specified device does not exist",
+                    message = "Not Found.\n The specified topic does not exist",
                     response = ErrorResponse.class),
             @ApiResponse(
                     code = 406,
                     message = "Not Acceptable.\n The requested media type is not supported"),
             @ApiResponse(
                     code = 500,
-                    message = "Internal Server Error. \n Server error occurred while fetching the device list.",
+                    message = "Internal Server Error. \n Server error occurred while fetching the topic list.",
                     response = ErrorResponse.class)
     })
     Response getFilteredSubscriptions(
 
             @QueryParam("topic_name") String topic_name,
-            @QueryParam("remaining_messages") int remaining_messages,
             @QueryParam("active") String active,
             @QueryParam("durable") String durable,
-            @QueryParam("subscriber_name") String subscriber_name,
-            @QueryParam("identifier") String identifier,
-            @ApiParam(
-                    name = "tenant-domain",
-                    value = "The name of the tenant.\n" +
-                            "The default tenant domain of WSO2 EMM is carbon.super",
-                    required = true,
-                    defaultValue = "carbon.super")
-            @QueryParam("tenant-domain") String tenantDomain,
-            @QueryParam("since") String since,
             @ApiParam(
                     name = "If-Modified-Since",
                     value = "Checks if the requested variant was modified, since the specified date-time. \n" +

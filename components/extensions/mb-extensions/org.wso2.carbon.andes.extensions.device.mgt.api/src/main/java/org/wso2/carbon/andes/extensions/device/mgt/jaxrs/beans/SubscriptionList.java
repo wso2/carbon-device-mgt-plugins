@@ -20,17 +20,17 @@ package org.wso2.carbon.andes.extensions.device.mgt.jaxrs.beans;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-import org.wso2.carbon.andes.admin.mqtt.internal.xsd.Subscription;
-import org.wso2.carbon.device.mgt.common.Device;
+import org.wso2.carbon.andes.core.types.xsd.MQTTSubscription;
+import org.wso2.carbon.andes.core.types.xsd.Subscription;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TopicList extends BasePaginatedResult {
+public class SubscriptionList extends BasePaginatedResult {
 
     private List<Subscription> subscriptions = new ArrayList<>();
 
-    @ApiModelProperty(value = "List of devices returned")
+    @ApiModelProperty(value = "List of subscriptions returned")
     @JsonProperty("subscriptions")
     public List<Subscription> getList() {
         return subscriptions;
