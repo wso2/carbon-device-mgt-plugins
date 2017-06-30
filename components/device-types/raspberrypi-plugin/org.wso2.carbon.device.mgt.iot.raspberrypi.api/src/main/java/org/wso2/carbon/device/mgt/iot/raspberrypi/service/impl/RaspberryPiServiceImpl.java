@@ -110,8 +110,8 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
     @Produces("application/json")
     public Response getRaspberryPiTemperatureStats(@PathParam("deviceId") String deviceId,
                                                    @QueryParam("from") long from, @QueryParam("to") long to) {
-        String fromDate = String.valueOf(from);
-        String toDate = String.valueOf(to);
+        String fromDate = String.valueOf(from*1000);
+        String toDate = String.valueOf(to*1000);
         String query = "meta_deviceId:" + deviceId + " AND meta_deviceType:" +
                 RaspberrypiConstants.DEVICE_TYPE + " AND meta_time : [" + fromDate + " TO " + toDate + "]";
         String sensorTableName = RaspberrypiConstants.TEMPERATURE_EVENT_TABLE;
@@ -121,7 +121,7 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
                 return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
             }
             List<SortByField> sortByFields = new ArrayList<>();
-            SortByField sortByField = new SortByField("time", SortType.ASC);
+            SortByField sortByField = new SortByField("meta_time", SortType.ASC);
             sortByFields.add(sortByField);
             List<SensorRecord> sensorRecords = APIUtil.getAllEventsForDevice(sensorTableName, query, sortByFields);
             return Response.status(Response.Status.OK.getStatusCode()).entity(sensorRecords).build();
@@ -221,7 +221,7 @@ public class RaspberryPiServiceImpl implements RaspberryPiService {
         String refreshToken = accessTokenInfo.getRefreshToken();
         ZipUtil ziputil = new ZipUtil();
         return ziputil.createZipFile(owner, APIUtil.getTenantDomainOftheUser(), sketchType,
-                                                   deviceId, deviceName, accessToken, refreshToken);
+                                                   deviceId, deviceName, accessToken, refreshToken, apiApplicationKey.toString());
     }
 
     private static String shortUUID() {

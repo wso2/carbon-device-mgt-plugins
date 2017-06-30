@@ -181,10 +181,7 @@ def connectAndPushData():
     currentTime = calendar.timegm(time.gmtime())
     rPiTemperature = iotUtils.LAST_TEMP  # Push the last read temperature value
     PUSH_DATA = iotUtils.DEVICE_INFO.format(currentTime, rPiTemperature)
-    
-    print '~~~~~~~~~~~~~~~~~~~~~~~~ Publishing Device-Data ~~~~~~~~~~~~~~~~~~~~~~~~~'
-    print ('PUBLISHED DATA: ' + PUSH_DATA)
-    print ('PUBLISHED TOPIC: ' + mqttConnector.TOPIC_TO_PUBLISH)
+
     mqttConnector.publish(PUSH_DATA)
 #    print '~~~~~~~~~~~~~~~~~~~~~~~~ End Of Publishing ~~~~~~~~~~~~~~~~~~~~~~~~~'
 

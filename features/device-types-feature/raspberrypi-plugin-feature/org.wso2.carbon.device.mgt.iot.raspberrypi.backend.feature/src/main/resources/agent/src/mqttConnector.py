@@ -23,16 +23,29 @@
 import time
 import iotUtils
 import paho.mqtt.client as mqtt
+from token_updater import RefreshToken
 
+agent_connected = False
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
-    print("MQTT_LISTENER: Connected with result code " + str(rc))
+    if rc == 0:
+        global agent_connected
+        agent_connected = True
+        # Subscribing in on_connect() means that if we lose the connection and
+        # reconnect then subscriptions will be renewed.
+        print ("MQTT_LISTENER: Subscribing with topic " + TOPIC_TO_SUBSCRIBE)
+        client.subscribe(TOPIC_TO_SUBSCRIBE)
+    elif rc == 4:
+        token = RefreshToken()
+        response = token.updateTokens()
+        newAccessToken = response['access_token']
+        client.username_pw_set(newAccessToken, password="")
+    else:
+        global agent_connected
+        agent_connected = False
 
-    # Subscribing in on_connect() means that if we lose the connection and
-    # reconnect then subscriptions will be renewed.
-    print ("MQTT_LISTENER: Subscribing with topic " + TOPIC_TO_SUBSCRIBE)
-    client.subscribe(TOPIC_TO_SUBSCRIBE)
+    print("MQTT_LISTENER: Connected with result code " + str(rc))
 
 
 
@@ -72,11 +85,20 @@ def on_publish(client, userdata, mid):
 #       The callback for when a PUBLISH message to the server when door is open or close
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def publish(msg):
-    global mqttClient
-    mqttClient.publish(TOPIC_TO_PUBLISH, msg)
+    if agent_connected:
+        print '~~~~~~~~~~~~~~~~~~~~~~~~ Publishing Device-Data ~~~~~~~~~~~~~~~~~~~~~~~~~'
+        print ('PUBLISHED DATA: ' + msg)
+        print ('PUBLISHED TOPIC: ' + TOPIC_TO_PUBLISH)
+        global mqttClient
+        mqttClient.publish(TOPIC_TO_PUBLISH, msg)
 
 def on_subscribe(client, userdata, mid, granted_qos):
     print "Successfully subscribed to " + TOPIC_TO_SUBSCRIBE
+
+def on_disconnect(client, userdata, rc):
+    global agent_connected
+    agent_connected = False
+    print ("Agent disconnected from broker")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       The Main method of the server script
@@ -106,6 +128,7 @@ def main():
     mqttClient.on_message = on_message
     mqttClient.on_publish = on_publish
     mqttClient.on_subscribe = on_subscribe
+    mqttClient.on_disconnect = on_disconnect
     mqttClient.username_pw_set(iotUtils.AUTH_TOKEN, password = "")
 
     while True:
@@ -132,4 +155,3 @@ def main():
 if __name__ == '__main__':
     iotUtils.setUpGPIOPins()
     main()
-
