@@ -123,7 +123,8 @@ public class AndroidSenseServiceImpl implements AndroidSenseService {
         deviceIdentifier.setId(deviceId);
         deviceIdentifier.setType(AndroidSenseConstants.DEVICE_TYPE);
         try {
-            if (APIUtil.getDeviceManagementService().isEnrolled(deviceIdentifier)) {
+            Device enrolledDevice = APIUtil.getDeviceManagementService().getDevice(deviceIdentifier);
+            if (enrolledDevice != null && !enrolledDevice.getEnrolmentInfo().getStatus().equals(EnrolmentInfo.Status.REMOVED)) {
                 AndroidConfiguration androidConfiguration = new AndroidConfiguration();
                 androidConfiguration.setTenantDomain(APIUtil.getAuthenticatedUserTenantDomain());
                 androidConfiguration.setMqttEndpoint(APIUtil.getMqttEndpoint());
