@@ -94,14 +94,18 @@
                             <br /><br />
                             <input type="hidden" class="deviceType" name="deviceType"
                                    value="{{@uriParams.deviceType}}" />
-                            <input type="radio" name="sketchType" value="virtual_firealarm"
+                            <input type="hidden" name="sketchType" value="virtual_firealarm"
                                    id="virtual_firealarm"
                                    checked>
-                            <label for="simple_agent">Simple Agent</label>
-                            <input type="radio" name="sketchType"
-                                   value="virtual_firealarm_advanced"
-                                   id="virtual_firealarm_advanced">
-                            <label for="advanced_agent">Advanced Agent</label>
+                            <!--Removing advance agent and having simple only-->
+                            <!--<input type="radio" name="sketchType" value="virtual_firealarm"-->
+                                   <!--id="virtual_firealarm"-->
+                                   <!--checked>-->
+                            <!--<label for="simple_agent">Simple Agent</label>-->
+                            <!--<input type="radio" name="sketchType"-->
+                                   <!--value="virtual_firealarm_advanced"-->
+                                   <!--id="virtual_firealarm_advanced">-->
+                            <!--<label for="advanced_agent">Advanced Agent</label>-->
                         </div>
                     </div>
                 </form>
