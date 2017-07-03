@@ -100,6 +100,13 @@ def on_disconnect(client, userdata, rc):
     agent_connected = False
     print ("Agent disconnected from broker")
 
+    print("Obtaining new access token")
+    token = RefreshToken()
+    response = token.updateTokens()
+    newAccessToken = response['access_token']
+    client.username_pw_set(newAccessToken, password="")
+
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #       The Main method of the server script
 #           This method is invoked from RaspberryStats.py on a new thread

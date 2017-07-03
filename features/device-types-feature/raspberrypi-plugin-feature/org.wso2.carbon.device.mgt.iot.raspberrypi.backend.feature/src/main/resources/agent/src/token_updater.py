@@ -1,7 +1,8 @@
-import httplib
 import json
 import urllib
 import iotUtils
+import requests
+
 
 applicationKey = None
 refreshToken = None
@@ -10,11 +11,11 @@ filename = "deviceConfig.properties"
 
 class RefreshToken():
 
-    def post(self, base, port, url, payload, appKey):
-        conn = httplib.HTTPConnection(base, port, timeout=60)
-        conn.request('POST', url, payload, { 'Authorization' : 'Basic '+appKey, 'Content-Type' : 'application/x-www-form-urlencoded' })
-        r = conn.getresponse()
-        return r.read()
+    def post(self, url, payload, appKey):
+        headers = { 'Authorization' : 'Basic ' + appKey, 'Content-Type' : 'application/x-www-form-urlencoded' }
+        baseUrl = iotUtils.HTTP_EP + url
+        response = requests.post(baseUrl, params=payload, headers=headers);
+        return response
 
     def read_server_conf(self):
         with open(filename, 'r') as outfile:
@@ -46,7 +47,7 @@ class RefreshToken():
 
         params = urllib.urlencode({"grant_type": "refresh_token", "refresh_token": refreshToken,
                                    "scope": "Enroll device"})
-        data = self.post("localhost", 8280, "/token", params,applicationKey)
+        data = self.post("/token", params, applicationKey)
         response = json.loads(data)
         self.updateFile(response)
         return response
