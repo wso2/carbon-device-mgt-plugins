@@ -495,11 +495,6 @@
                 <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.impl</artifactId>
                 <version>${carbon.devicemgt.plugins.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-                <artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.impl</artifactId>
-                <version>${carbon.devicemgt.plugins.version}</version>
-            </dependency>
 
             <!--MDM dependencies-->
             <dependency>

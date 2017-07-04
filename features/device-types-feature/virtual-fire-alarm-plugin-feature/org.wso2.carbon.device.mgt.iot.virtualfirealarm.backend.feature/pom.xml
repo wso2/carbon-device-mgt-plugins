@@ -115,14 +115,6 @@
 									<outputDirectory>${project.build.directory}/maven-shared-archive-resources/agent/</outputDirectory>
 									<destFileName>wso2-firealarm-virtual-agent.jar</destFileName>
 								</artifactItem>
-								<artifactItem>
-									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.impl
-									</artifactId>
-									<overWrite>true</overWrite>
-									<outputDirectory>${project.build.directory}/maven-shared-archive-resources/advanced_agent/</outputDirectory>
-									<destFileName>wso2-firealarm-virtual-agent-advanced.jar</destFileName>
-								</artifactItem>
 							</artifactItems>
 						</configuration>
 					</execution>
