@@ -23,7 +23,7 @@
 	<parent>
 		<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
 		<artifactId>virtual-fire-alarm-plugin-feature</artifactId>
-		<version>4.0.17-SNAPSHOT</version>
+		<version>4.0.18-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -114,14 +114,6 @@
 									<overWrite>true</overWrite>
 									<outputDirectory>${project.build.directory}/maven-shared-archive-resources/agent/</outputDirectory>
 									<destFileName>wso2-firealarm-virtual-agent.jar</destFileName>
-								</artifactItem>
-								<artifactItem>
-									<groupId>org.wso2.carbon.devicemgt-plugins</groupId>
-									<artifactId>org.wso2.carbon.device.mgt.iot.virtualfirealarm.agent.advanced.impl
-									</artifactId>
-									<overWrite>true</overWrite>
-									<outputDirectory>${project.build.directory}/maven-shared-archive-resources/advanced_agent/</outputDirectory>
-									<destFileName>wso2-firealarm-virtual-agent-advanced.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
