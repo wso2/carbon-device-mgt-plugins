@@ -56,11 +56,10 @@ SERVER_NAME = configParser.get('Device-Configurations', 'server-name')
 DEVICE_OWNER = configParser.get('Device-Configurations', 'owner')
 DEVICE_ID = configParser.get('Device-Configurations', 'deviceId')
 MQTT_EP = configParser.get('Device-Configurations', 'mqtt-ep')
-XMPP_EP = configParser.get('Device-Configurations', 'xmpp-ep')
 AUTH_TOKEN = configParser.get('Device-Configurations', 'auth-token')
+REFRESH_TOKEN = configParser.get('Device-Configurations', 'refresh-token')
+APPLICATION_KEY = configParser.get('Device-Configurations', 'application-key')
 CONTROLLER_CONTEXT = configParser.get('Device-Configurations', 'controller-context')
-MQTT_SUB_TOPIC = configParser.get('Device-Configurations', 'mqtt-sub-topic').format(owner = DEVICE_OWNER, deviceId = DEVICE_ID)
-MQTT_PUB_TOPIC = configParser.get('Device-Configurations', 'mqtt-pub-topic').format(owner = DEVICE_OWNER, deviceId = DEVICE_ID)
 DEVICE_INFO = '{{"event":{{"metaData":{{"owner":"' + DEVICE_OWNER + '","type":"raspberrypi","deviceId":"' + DEVICE_ID + '","time":{}}},"payloadData":{{"temperature":{:.2f}}}}}}}'
 
 # '{"owner":"' + DEVICE_OWNER + '","deviceId":"' + DEVICE_ID + '","temperature":'
