@@ -24,7 +24,7 @@ function onRequest(context) {
     var device = context.unit.params.device;
     var autoCompleteParams = context.unit.params.autoCompleteParams;
     var encodedFeaturePayloads = context.unit.params.encodedFeaturePayloads;
-    var allControlOps = operationModule.getControlOperations(device.type);
+    var allControlOps = operationModule.getControlOperations(device);
     var filteredControlOps = [];
     var queryParams = [];
     var formParams = [];
