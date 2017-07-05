@@ -92,10 +92,8 @@ function onRequest(context) {
                             viewModel["internalMemory"]["total"] = Math.
                                 round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] * 100) / 100;
                             if (filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] != 0) {
-                                viewModel["internalMemory"]["usage"] = Math.
-                                    round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] -
-                                        filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_AVAILABLE_MEMORY"])
-                                        / filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] * 10000) / 100;
+                                viewModel["internalMemory"]["usage"] = filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] -
+                                            filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_AVAILABLE_MEMORY"];
                             } else {
                                 viewModel["internalMemory"]["usage"] = 0;
                             }
@@ -172,10 +170,8 @@ function onRequest(context) {
                 viewModel["internalMemory"]["total"] = Math.
                     round(filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] * 100) / 100;
                 if (filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] != 0) {
-                    viewModel["internalMemory"]["usage"] = Math.
-                        round((filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] -
-                            filteredDeviceData["latestDeviceInfo"]["internalAvailableMemory"])
-                            / filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] * 10000) / 100;
+                    viewModel["internalMemory"]["usage"] = filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] -
+                                filteredDeviceData["latestDeviceInfo"]["internalAvailableMemory"];
                 } else {
                     viewModel["internalMemory"]["usage"] = 0;
                 }
