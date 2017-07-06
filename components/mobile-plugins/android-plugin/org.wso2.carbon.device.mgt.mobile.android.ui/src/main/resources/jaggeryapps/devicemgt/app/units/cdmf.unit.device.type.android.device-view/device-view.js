@@ -92,8 +92,10 @@ function onRequest(context) {
                             viewModel["internalMemory"]["total"] = Math.
                                 round(filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] * 100) / 100;
                             if (filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] != 0) {
-                                viewModel["internalMemory"]["usage"] = filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] -
-                                            filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_AVAILABLE_MEMORY"];
+                                viewModel["internalMemory"]["usage"] = Math.round((filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_TOTAL_MEMORY"] -
+                                    filteredDeviceData["initialDeviceInfo"]["DEVICE_INFO"]["INTERNAL_AVAILABLE_MEMORY"]) * 100) / 100;
+                                if(isNaN(viewModel["internalMemory"]["usage"]))
+                                  viewModel["internalMemory"]["usage"] = "N/A";
                             } else {
                                 viewModel["internalMemory"]["usage"] = 0;
                             }
@@ -162,6 +164,8 @@ function onRequest(context) {
                         round((filteredDeviceData["latestDeviceInfo"]["totalRAMMemory"] -
                             filteredDeviceData["latestDeviceInfo"]["availableRAMMemory"])
                             / filteredDeviceData["latestDeviceInfo"]["totalRAMMemory"] * 10000) / 100;
+                        if(isNaN(viewModel["ramUsage"]["value"]))
+                          viewModel["ramUsage"]["value"] = "N/A";
                 } else {
                     viewModel["ramUsage"]["value"] = 0;
                 }
@@ -170,8 +174,10 @@ function onRequest(context) {
                 viewModel["internalMemory"]["total"] = Math.
                     round(filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] * 100) / 100;
                 if (filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] != 0) {
-                    viewModel["internalMemory"]["usage"] = filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] -
-                                filteredDeviceData["latestDeviceInfo"]["internalAvailableMemory"];
+                    viewModel["internalMemory"]["usage"] = Math.round((filteredDeviceData["latestDeviceInfo"]["internalTotalMemory"] -
+                        filteredDeviceData["latestDeviceInfo"]["internalAvailableMemory"]) * 100) / 100;
+                    if(isNaN(viewModel["internalMemory"]["usage"]))
+                      viewModel["internalMemory"]["usage"] = "N/A";
                 } else {
                     viewModel["internalMemory"]["usage"] = 0;
                 }
