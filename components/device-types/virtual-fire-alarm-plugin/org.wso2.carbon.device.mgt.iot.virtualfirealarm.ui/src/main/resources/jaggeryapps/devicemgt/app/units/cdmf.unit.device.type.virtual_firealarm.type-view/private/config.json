@@ -14,13 +14,15 @@
             "type": "radio",
             "id": "buz_on",
             "label": "Buzzer On",
-            "name": "state"
+            "name": "state",
+            "value":"ON"
           },
           {
             "type": "radio",
             "id": "buz_off",
             "label": "Buzzer Off",
-            "name": "state"
+            "name": "state",
+            "value":"OFF"
           }
         ]
       }
