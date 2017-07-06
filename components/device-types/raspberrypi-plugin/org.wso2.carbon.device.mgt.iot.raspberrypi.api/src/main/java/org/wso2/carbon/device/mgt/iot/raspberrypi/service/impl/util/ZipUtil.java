@@ -18,9 +18,12 @@
 
 package org.wso2.carbon.device.mgt.iot.raspberrypi.service.impl.util;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
+import org.wso2.carbon.apimgt.application.extension.constants.ApiApplicationConstants;
 import org.wso2.carbon.core.util.Utils;
 import org.wso2.carbon.device.mgt.common.DeviceManagementException;
 import org.wso2.carbon.device.mgt.common.configuration.mgt.ConfigurationEntry;
@@ -61,7 +64,7 @@ public class ZipUtil {
 
     public ZipArchive createZipFile(String owner, String tenantDomain, String deviceType,
                                     String deviceId, String deviceName, String token,
-                                    String refreshToken) throws DeviceManagementException {
+                                    String refreshToken, String apiApplicationKey) throws DeviceManagementException {
 
         String sketchFolder = "repository" + File.separator + "resources" + File.separator + "sketches";
         String templateSketchPath = sketchFolder + File.separator + deviceType;
@@ -96,6 +99,7 @@ public class ZipUtil {
                     }
                 }
             }
+            String base64EncodedApplicationKey = getBase64EncodedAPIAppKey(apiApplicationKey);
 
             Map<String, String> contextParams = new HashMap<>();
             contextParams.put("SERVER_NAME", APIUtil.getTenantDomainOftheUser());
@@ -106,6 +110,7 @@ public class ZipUtil {
             contextParams.put("HTTP_EP", httpServerEP);
             contextParams.put("APIM_EP", httpsServerEP);
             contextParams.put("MQTT_EP", mqttEndpoint);
+            contextParams.put("API_APPLICATION_KEY", base64EncodedApplicationKey);
             contextParams.put("DEVICE_TOKEN", token);
             contextParams.put("DEVICE_REFRESH_TOKEN", refreshToken);
 
@@ -117,6 +122,15 @@ public class ZipUtil {
         } catch (ConfigurationManagementException e) {
             throw new DeviceManagementException("Failed to retrieve configuration", e);
         }
+    }
+
+    private String getBase64EncodedAPIAppKey(String apiAppCredentialsAsJSONString) {
+
+        JSONObject jsonObject = new JSONObject(apiAppCredentialsAsJSONString);
+        String consumerKey = jsonObject.get(ApiApplicationConstants.OAUTH_CLIENT_ID).toString();
+        String consumerSecret = jsonObject.get(ApiApplicationConstants.OAUTH_CLIENT_SECRET).toString();
+        String stringToEncode = consumerKey + ":" + consumerSecret;
+        return Base64.encodeBase64String(stringToEncode.getBytes());
     }
 
     private static String getServerUrl() {
