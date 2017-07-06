@@ -8,7 +8,21 @@
     ],
     "features": {
       "buzz": {
-        "icon" : "fw-dial-up"
+        "icon" : "fw-dial-up",
+        "formParams": [
+          {
+            "type": "radio",
+            "id": "buz_on",
+            "label": "Buzzer On",
+            "name": "state"
+          },
+          {
+            "type": "radio",
+            "id": "buz_off",
+            "label": "Buzzer Off",
+            "name": "state"
+          }
+        ]
       }
     }
   }
