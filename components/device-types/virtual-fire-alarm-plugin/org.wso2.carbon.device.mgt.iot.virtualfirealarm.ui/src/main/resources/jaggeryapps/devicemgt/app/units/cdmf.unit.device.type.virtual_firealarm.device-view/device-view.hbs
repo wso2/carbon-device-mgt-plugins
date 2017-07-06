@@ -34,9 +34,6 @@
     data-ownership="{{device.ownership}}"
     data-owner="{{device.owner}}">
     {{device.enrolmentInfo.owner}}'s {{device.name}}
-      <a id="device-info-tooltip" href="#" data-toggle="tooltip" title="Device Identifier: {{device.deviceIdentifier}}">
-        <i class="fw fw-info"></i>
-      </a>
     </h1>
     <h4>Ownership - <strong>{{device.enrolmentInfo.ownership}}</strong></h4>
     <h4>Device is
@@ -65,11 +62,6 @@
                           data-toggle="tab" aria-controls="device_statistics">Device
                                                                               Statistics</a>
     </li>
-    <li><a class="list-group-item" href="#policies" role="tab"
-           data-toggle="tab" aria-controls="policies">Policies</a>
-    </li>
-    <li><a class="list-group-item" href="#event_log" role="tab" data-toggle="tab"
-           aria-controls="event_log">Operations Log</a></li>
 {{/zone}}
 
 {{#zone "device-view-tab-contents"}}
