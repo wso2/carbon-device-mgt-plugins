@@ -74,6 +74,7 @@ function onRequest(context) {
                     viewModel["location"] = {};
                     viewModel["location"]["latitude"] = filteredDeviceData["latestDeviceInfo"]["location"]["latitude"];
                     viewModel["location"]["longitude"] = filteredDeviceData["latestDeviceInfo"]["location"]["longitude"];
+                    viewModel["location"]["updatedTime"] = filteredDeviceData["latestDeviceInfo"]["location"]["updatedTime"];
                 }
                 if (filteredDeviceData["latestDeviceInfo"]["vendor"] && filteredDeviceData["latestDeviceInfo"]["deviceModel"]) {
                     viewModel["vendor"] = filteredDeviceData["latestDeviceInfo"]["vendor"];
@@ -96,7 +97,7 @@ function onRequest(context) {
             if (!filteredDeviceData["initialDeviceInfo"] && !filteredDeviceData["latestDeviceInfo"]) {
                 viewModel["deviceInfoAvailable"] = false;
             }
-
+            viewModel.locationHistory = stringify(filteredDeviceData["locationHistory"]);
             deviceViewData["device"] = viewModel;
         } else if (response["status"] == "unauthorized") {
             deviceViewData["deviceFound"] = true;
