@@ -91,7 +91,7 @@ function onRequest(context) {
                 viewModel["ramUsage"]["value"] = (filteredDeviceData["latestDeviceInfo"]["availableRAMMemory"]);
 
                 viewModel["internalMemory"] = {};
-                viewModel["internalMemory"]["value"] = Math.round((filteredDeviceData["latestDeviceInfo"]["internalAvailableMemory"]) / 1024);
+                viewModel["internalMemory"]["value"] = replaceNaNVal(Math.round((filteredDeviceData["latestDeviceInfo"]["internalAvailableMemory"]) / 1024));
 
             }
             if (!filteredDeviceData["initialDeviceInfo"] && !filteredDeviceData["latestDeviceInfo"]) {
@@ -118,4 +118,11 @@ function onRequest(context) {
     deviceViewData["autoCompleteParams"] = autoCompleteParams;
     deviceViewData["permissions"] = permissions;
     return deviceViewData;
+
+    function replaceNaNVal(val) {
+        if (isNaN(val)) {
+            return "N/A";
+        }
+        return val;
+    }
 }
