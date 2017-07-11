@@ -75,6 +75,7 @@ var rotation_yData = [];
 var rotation_zData = [];
 
 var graphMap = {};
+var graphSettingsMap = {};
 
 var palette = new Rickshaw.Color.Palette({scheme: "munin"});
 
@@ -83,21 +84,21 @@ var elemTop;
 $(window).load(function () {
 
 	graphMap["battery"]=lineGraph("battery", batteryData);
-    graphMap["light"]=lineGraph("light", lightData);
-    graphMap["pressure"]=lineGraph("pressure", pressureData);
-    graphMap["proximity"]=lineGraph("proximity", proximityData);
-    graphMap["accelerometer"]=threeDlineGraph("accelerometer", accelerometer_xData, accelerometer_yData, accelerometer_zData);
-    graphMap["magnetic"]=threeDlineGraph("magnetic", magnetic_xData, magnetic_yData, magnetic_zData);
-    graphMap["gyroscope"]=threeDlineGraph("gyroscope", gyroscope_xData, gyroscope_yData, gyroscope_zData);
-    graphMap["gravity"]=threeDlineGraph("gravity", gravity_xData, gravity_yData, gravity_zData);
-    graphMap["rotation"]=threeDlineGraph("rotation", rotation_xData, rotation_yData, rotation_zData);
+	graphMap["light"]=lineGraph("light", lightData);
+	graphMap["pressure"]=lineGraph("pressure", pressureData);
+	graphMap["proximity"]=lineGraph("proximity", proximityData);
+	graphMap["accelerometer"]=threeDlineGraph("accelerometer", accelerometer_xData, accelerometer_yData, accelerometer_zData);
+	graphMap["magnetic"]=threeDlineGraph("magnetic", magnetic_xData, magnetic_yData, magnetic_zData);
+	graphMap["gyroscope"]=threeDlineGraph("gyroscope", gyroscope_xData, gyroscope_yData, gyroscope_zData);
+	graphMap["gravity"]=threeDlineGraph("gravity", gravity_xData, gravity_yData, gravity_zData);
+	graphMap["rotation"]=threeDlineGraph("rotation", rotation_xData, rotation_yData, rotation_zData);
 
-    var websocketUrl = $("#stat-section").data("websocketurl");
+	var websocketUrl = $("#stat-section").data("websocketurl");
 	connect(websocketUrl)
 });
 
 window.onbeforeunload = function() {
-    disconnect();
+	disconnect();
 };
 
 function threeDlineGraph(type, xChartData, yChartData, zChartData) {
@@ -121,10 +122,10 @@ function threeDlineGraph(type, xChartData, yChartData, zChartData) {
 
 	var graph = new Rickshaw.Graph({
 		element: $elem[0],
-        width: $elem.width() - 100,
+		width: $elem.width() - 100,
 		height: 300,
 		renderer: "line",
-        interpolation: "linear",
+		interpolation: "linear",
 		padding: {top: 0.2, left: 0.0, right: 0.0, bottom: 0.2},
 		xScale: d3.time.scale(),
 		series: [
@@ -140,26 +141,26 @@ function threeDlineGraph(type, xChartData, yChartData, zChartData) {
 
 	xAxis.render();
 
-    new Rickshaw.Graph.Axis.Y({
-        graph: graph,
-        orientation: 'left',
-        height: 300,
-        tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
-        element: document.getElementById("y-axis-"+type)
-    });
+	new Rickshaw.Graph.Axis.Y({
+		graph: graph,
+		orientation: 'left',
+		height: 300,
+		tickFormat: Rickshaw.Fixtures.Number.formatKMBT,
+		element: document.getElementById("y-axis-"+type)
+	});
 
 	new Rickshaw.Graph.Legend({
 		graph: graph,
 		element: document.getElementById('legend-' + type)
-    });
+	});
 
 	var detail = new Rickshaw.Graph.HoverDetail({
 		graph: graph
 	});
 
-    graph.render();
+	graph.render();
 
-    return graph;
+	return graph;
 }
 
 function lineGraph(type, chartData) {
@@ -171,15 +172,15 @@ function lineGraph(type, chartData) {
 		});
 	}
 
-    var $elem = $("#chart-" + type);
+	var $elem = $("#chart-" + type);
 
-    var graph = new Rickshaw.Graph({
-        element: $elem[0],
-        width: $elem.width() - 100,
+	var graph = new Rickshaw.Graph({
+		element: $elem[0],
+		width: $elem.width() - 100,
 		height: 300,
 		renderer: "line",
-        interpolation: "linear",
-        padding: {top: 0.2, left: 0.0, right: 0.0, bottom: 0.2},
+		interpolation: "linear",
+		padding: {top: 0.2, left: 0.0, right: 0.0, bottom: 0.2},
 		xScale: d3.time.scale(),
 		series: [{
 			'color': palette.color(),
@@ -205,7 +206,7 @@ function lineGraph(type, chartData) {
 	new Rickshaw.Graph.Legend({
 		graph: graph,
 		element: document.getElementById('legend-' + type)
-    });
+	});
 
 	new Rickshaw.Graph.HoverDetail({
 		graph: graph,
@@ -216,9 +217,9 @@ function lineGraph(type, chartData) {
 		}
 	});
 
-    graph.render();
+	graph.render();
 
-    return graph;
+	return graph;
 }
 
 //websocket connection
@@ -231,7 +232,7 @@ function connect(target) {
 		console.log('WebSocket is not supported by this browser.');
 	}
 	if (ws) {
-        ws.onmessage = function (event) {
+		ws.onmessage = function (event) {
 			var dataPoint = JSON.parse(event.data);
 
 			if (dataPoint) {
@@ -242,50 +243,50 @@ function connect(target) {
 						break;
 
 					case "light":
-                        graphUpdate(lightData, time, dataPoint[lightId], graphMap["light"]);
+						graphUpdate(lightData, time, dataPoint[lightId], graphMap["light"]);
 						break;
 
 					case "pressure":
-                        graphUpdate(pressureData, time, dataPoint[pressureId], graphMap["pressure"]);
+						graphUpdate(pressureData, time, dataPoint[pressureId], graphMap["pressure"]);
 						break;
 
 					case "proximity":
-                        graphUpdate(proximityData, time, dataPoint[proximityId], graphMap["proximity"]);
+						graphUpdate(proximityData, time, dataPoint[proximityId], graphMap["proximity"]);
 						break;
 
 					case "accelerometer":
-                        dataUpdate(accelerometer_xData, time, dataPoint[accelerometer_xId]);
+						dataUpdate(accelerometer_xData, time, dataPoint[accelerometer_xId]);
 						dataUpdate(accelerometer_yData, time, dataPoint[accelerometer_yId]);
 						dataUpdate(accelerometer_zData, time, dataPoint[accelerometer_zId]);
-                        graphMap["accelerometer"].update();
+						graphMap["accelerometer"].update();
 						break;
 
 					case "magnetic":
-                        dataUpdate(magnetic_xData, time, dataPoint[magnetic_xId]);
+						dataUpdate(magnetic_xData, time, dataPoint[magnetic_xId]);
 						dataUpdate(magnetic_yData, time, dataPoint[magnetic_yId]);
 						dataUpdate(magnetic_zData, time, dataPoint[magnetic_zId]);
-                        graphMap["magnetic"].update();
-                        break;
+						graphMap["magnetic"].update();
+						break;
 
 					case "gyroscope":
-                        dataUpdate(gyroscope_xData, time, dataPoint[gyroscope_xId]);
+						dataUpdate(gyroscope_xData, time, dataPoint[gyroscope_xId]);
 						dataUpdate(gyroscope_yData, time, dataPoint[gyroscope_yId]);
 						dataUpdate(gyroscope_zData, time, dataPoint[gyroscope_zId]);
-                        graphMap["gyroscope"].update();
+						graphMap["gyroscope"].update();
 						break;
 
 					case "rotation":
-                        dataUpdate(magnetic_xData, time, dataPoint[rotation_xId]);
+						dataUpdate(magnetic_xData, time, dataPoint[rotation_xId]);
 						dataUpdate(magnetic_yData, time, dataPoint[rotation_yId]);
 						dataUpdate(magnetic_zData, time, dataPoint[rotation_zId]);
-                        graphMap["rotation"].update();
+						graphMap["rotation"].update();
 						break;
 
 					case "gravity":
-                        dataUpdate(gravity_xData, time, dataPoint[gravity_xId]);
+						dataUpdate(gravity_xData, time, dataPoint[gravity_xId]);
 						dataUpdate(gravity_yData, time, dataPoint[gravity_yId]);
 						dataUpdate(gravity_zData, time, dataPoint[gravity_zId]);
-                        graphMap["gravity"].update();
+						graphMap["gravity"].update();
 						break;
 				}
 			}
@@ -318,53 +319,55 @@ function disconnect() {
 }
 
 function maximizeGraph(graph, width,height){
-    graph.configure({
-        width: width*2,
-        height: height*2
+	graphSettingsMap[graph.element.id] = {'width': graph.width, 'height': graph.height};
+	graph.configure({
+		width: width*2,
+		height: height*2
 
-    });
-    graph.update();
+	});
+	graph.update();
 }
 
 function minimizeGraph(graph){
-    graph.configure({
-        width: 366,
-        height: 300
-    });
-    graph.update();
+	var graphSettings = graphSettingsMap[graph.element.id];
+	graph.configure({
+		width: graphSettings.width,
+		height: graphSettings.height
+	});
+	graph.update();
 }
 
 //maximize minimize functionality
 $(".fw-expand").click(function(e) {
-    var innerGraph= graphMap[e.target.nextElementSibling.innerHTML];
-    var width = $(".chartWrapper").width();
-    var height = $(".chartWrapper").height();
+	var innerGraph= graphMap[e.target.nextElementSibling.innerHTML];
+	var width = $(".chartWrapper").width();
+	var height = $(".chartWrapper").height();
 
-    if($(this).hasClass("default-view")){
-    	elemTop = $('#'+innerGraph.element.id).parents('.graph')[0].offsetTop;
-        $(this).removeClass("default-view");
-        $(this).removeClass("fw-expand");
-        $(this).addClass("fw-contract");
-        maximizeGraph(innerGraph,width,height);
-        $(this).parent().parent().addClass("max");
-        $(this).closest(".graph").siblings().addClass("max_hide");
-        $(this).closest(".graph").parent().siblings().addClass("max_hide");
-    }else{
-        $(this).addClass("default-view");
-        $(this).addClass("fw-expand");
-        $(this).removeClass("fw-contract");
-        minimizeGraph(innerGraph);
-        $(this).parent().parent().removeClass("max");
-        $(this).closest(".graph").siblings().removeClass("max_hide");
-        $(this).closest(".graph").parent().siblings().removeClass("max_hide");
-    	focusToArea()
-    }
+	if($(this).hasClass("default-view")){
+		elemTop = $('#'+innerGraph.element.id).parents('.graph')[0].offsetTop;
+		$(this).removeClass("default-view");
+		$(this).removeClass("fw-expand");
+		$(this).addClass("fw-contract");
+		maximizeGraph(innerGraph,width,height);
+		$(this).parent().parent().addClass("max");
+		$(this).closest(".graph").siblings().addClass("max_hide");
+		$(this).closest(".graph").parent().siblings().addClass("max_hide");
+	}else{
+		$(this).addClass("default-view");
+		$(this).addClass("fw-expand");
+		$(this).removeClass("fw-contract");
+		minimizeGraph(innerGraph);
+		$(this).parent().parent().removeClass("max");
+		$(this).closest(".graph").siblings().removeClass("max_hide");
+		$(this).closest(".graph").parent().siblings().removeClass("max_hide");
+		focusToArea()
+	}
 });
 
 //graph focusing function
 function focusToArea(){
 	var container = $("body");
-    container.animate({
+	container.animate({
 		scrollTop: elemTop
-    });
+	});
 }
