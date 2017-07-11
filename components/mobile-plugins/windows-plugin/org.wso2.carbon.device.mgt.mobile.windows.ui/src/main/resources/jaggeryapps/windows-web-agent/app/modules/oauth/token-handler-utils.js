@@ -51,7 +51,7 @@ var utils = function () {
         };
         // calling dynamic client app registration service endpoint
         var requestURL = deviceMgtProps["oauthProvider"]["appRegistration"]
-            ["dynamicClientAppRegistrationServiceURL"];
+            ["apiManagerClientAppRegistrationServiceURL"];
         var requestPayload = dcAppProperties;
         var encodedBasicOauth = publicMethods.encode(username + ":" + password);
 
