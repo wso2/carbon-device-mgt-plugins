@@ -67,6 +67,7 @@
                             feign.gson,
 							org.json.simple.*,
 							org.wso2.carbon.appmgt.mobile.beans,
+                            org.wso2.carbon.base,
 							org.wso2.carbon.context,
 							javax.net.ssl,
 							feign.slf4j
