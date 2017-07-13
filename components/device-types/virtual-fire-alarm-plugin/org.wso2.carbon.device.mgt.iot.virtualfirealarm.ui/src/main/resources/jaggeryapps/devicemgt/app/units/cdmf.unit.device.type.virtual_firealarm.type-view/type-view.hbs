@@ -26,25 +26,24 @@
     <h3 class="uppercase">What it Does</h3>
     <hr>
     <p class="grey margin-top">A Virtual Device that mimics the functionality of a real Firealarm.
-        Once run, the Virtual Firealarm will connect to WSO2 IoTServer and
-        push Temperature readings.</p>
+                               Once run, the Virtual Firealarm connects to WSO2 IoT Server and pushes the Temperature readings.</p>
     <p>The device supports MQTT and XMPP Communications. It is configured to use MQTT by
-        default.</p>
+       default.</p>
     <br>
     <h3 class="uppercase">What You Need</h3>
     <hr>
     <ul class="list-unstyled">
         <li class="padding-top-double">
             <span class="badge">STEP 01</span>
-            Go ahead and [Download] the Device.
+               Go ahead and click Download Agent to download the agent.
         </li>
         <li>
             <span class="badge">STEP 02</span>
-            Proceed to [Prepare] section.
+               Follow the steps under <a href="#prepare">[Prepare]</a>
         </li>
         <li>
             <span class="badge">STEP 03</span>
-            Read [Try Out] section to further experiment with the device.
+               Read the [Try Out] section to experiment with the device.
         </li>
     </ul>
     <br>
@@ -54,10 +53,13 @@
     </a>
     <a href="#" class="download-link btn-operations">
         <i class="fw fw-download"></i>Download Agent</a>
+    {{#if displayStatus}}
+        <a href="javascript:artifactUpload()" class="btn-operations"><i class="fw fw-upload fw-inverse fw-lg add-margin-1x"></i> Deploy Analytics Artifacts</a>
+    {{/if}}
 
-    <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS300/Virtual+Firealarm"
-                                 target="_blank">[ here ]</a> for latest instructions and
-        troubleshooting.</p>
+    <p class="doc-link">Click <a href="https://docs.wso2.com/display/IoTS310/Enterprise+IoT+solution"
+                                  target="_blank">[ here ]</a> for the latest instructions and troubleshooting tips.
+We need to link the 310 pack to the 310 docs.</p>
     <div id="download-device-modal-content" class="hide">
         <div class="modal-header">
             <h4 class="pull-left modal-title">
@@ -69,7 +71,7 @@
                       <i class="fw fw-add fw-stack-1x fw-inverse"></i>
                    </span>
                 </span>
-                Add your new firealarm device to {{@app.conf.appName}}
+                  Add your new firealarm device to {{@app.conf.appName}}
             </h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="fw fw-cancel"></i>
             </button>
@@ -78,7 +80,7 @@
         <div class="modal-body add-margin-top-2x add-margin-bottom-2x">
             <div class="panel-body col-centered text-center">
                 <h3>Name your device and download the agent from following link.</h3>
-                <br/>
+                <br />
                 <form id="downloadForm" method="GET"
                       action="{{@app.context}}/api/devices/sketch/download">
                     <div id="invalid-username-error-msg" class="alert alert-danger hidden"
@@ -91,11 +93,17 @@
                                    type="text"
                                    placeholder="Ex. Lobby_Firealarm"
                                    name="deviceName" size="60" required>
-                            <br/><br/>
+                            <br /><br />
                             <input type="hidden" class="deviceType" name="deviceType"
-                                   value="{{@uriParams.deviceType}}"/>
-                            <input type="hidden" name="sketchType" value="virtual_firealarm"
-                                   id="virtual_firealarm">
+                                   value="{{@uriParams.deviceType}}" />
+                            <input type="radio" name="sketchType" value="virtual_firealarm"
+                                   id="virtual_firealarm"
+                                   checked>
+                            <label for="simple_agent">Simple Agent</label>
+                            <input type="radio" name="sketchType"
+                                   value="virtual_firealarm_advanced"
+                                   id="virtual_firealarm_advanced">
+                            <label for="advanced_agent">Advanced Agent</label>
                         </div>
                     </div>
                 </form>
@@ -135,7 +143,7 @@
         <div class="modal-content">
             <div class="row">
                 <div class="col-md-7 col-centered center-container">
-                    <h3>You have to log in first.</h3><br/>
+                    <h3>You have to log in first.</h3><br />
 
                     <div class="buttons">
                         <a href="#" id="device-401-link" class="blue-button">
@@ -153,7 +161,7 @@
         <div class="modal-content">
             <div class="row">
                 <div class="col-md-7 col-centered center-container">
-                    <h3>Action not permitted.</h3><br/>
+                    <h3>Action not permitted.</h3><br />
                     <div class="buttons">
                         <a href="#" id="device-403-link" class="btn-operations">
                             OK
@@ -167,7 +175,7 @@
         <div class="modal-content">
             <div class="row">
                 <div class="col-md-7 col-centered center-container">
-                    <h3>Device Sketch does not exist.</h3><br/>
+                    <h3>Device Sketch does not exist.</h3><br />
 
                     <div class="buttons">
                         <a href="#" id="device-409-link" class="btn-operations">
@@ -182,7 +190,7 @@
         <div class="modal-content">
             <div class="row">
                 <div class="col-md-7 col-centered center-container">
-                    <h3>Unexpected error.</h3><br/>
+                    <h3>Unexpected error.</h3><br />
 
                     <div class="buttons">
                         <a href="#" id="device-unexpected-error-link" class="btn-operations">
@@ -193,7 +201,7 @@
             </div>
         </div>
     </div>
-    <br/><br/>
+    <br /><br />
 </div>
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 padding-double grey-bg">
     <h3 class="uppercase">Prepare</h3>
@@ -201,16 +209,15 @@
     <ul class="list-unstyled">
         <li class="padding-top-double">
             <span class="badge">01</span>
-            Unzip the downloaded Agent.
+               Unzip the downloaded Agent.
         </li>
         <li class="padding-top-double">
             <span class="badge">02</span>
-            Move into the unzipped Agent folder in the terminal.
+               Navigate to the unzipped agent directory via the terminal.
         </li>
         <li class="padding-top-double">
             <span class="badge">03</span>
-            Unzip the downloaded Agent and start terminal to run this command: [sh
-            start-device.sh]
+               Start the agent using the <span style="font-family: monospace;">sh start-device.sh</span> command.
         </li>
     </ul>
     <br>
@@ -218,13 +225,13 @@
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
     <h3 class="uppercase">The Virtual-Fire-Alarm Device</h3>
     <hr>
-    <p class="grey margin-top">Click on the image to zoom</p>
+    <p class="grey margin-top">Click on the image to zoom.</p>
     <center>
         <a href="{{@unit.publicUri}}/images/schematicsGuide.png" target="_blank">
             <img src="{{@unit.publicUri}}/images/schematicsGuide.png" class="img-responsive">
         </a>
     </center>
-    <br/>
+    <br />
 </div>
 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 padding-double">
     <h3 class="uppercase">Try Out</h3>
@@ -232,22 +239,20 @@
     <ul class="list-unstyled">
         <li class="padding-top-double">
             <span class="badge">01</span>
-            You can view all your connected devices at
+               View all the connected devices in the
             <a href="{{@app.context}}/devices">[Device Management]</a> page.
         </li>
         <li class="padding-top-double">
             <span class="badge">02</span>
-            Select one of connected devices and check for available control
-            operations and monitor Real-Time data.
+               Try out the operations on your devices and monitor real-time data.
         </li>
         <li class="padding-top-double">
             <span class="badge">03</span>
-            You can also view analytics of the data published to IoT-Server by
-            navigating to Device Analytics page.
+               Navigate to the device's analytics data page and view the data published by the device.
         </li>
     </ul>
-    <br/>
-    <p class="grey margin-top">Click on the image to zoom</p>
+    <br />
+    <p class="grey margin-top">Click on the image to zoom.</p>
     <center>
         <a href="{{@unit.publicUri}}/images/myDevices_analytics.png" target="_blank">
             <img src="{{@unit.publicUri}}/images/myDevices_analytics.png" class="img-responsive">

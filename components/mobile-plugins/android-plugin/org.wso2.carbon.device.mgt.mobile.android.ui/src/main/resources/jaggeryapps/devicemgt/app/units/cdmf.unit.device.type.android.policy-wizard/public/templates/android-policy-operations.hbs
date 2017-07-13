@@ -176,7 +176,7 @@
                                    class="form-control operationDataKeys" data-key="passcodePolicyAllowSimple"
                                    checked="checked"/>
                             <span class="helper"
-                                  title="Permit the use of repeating, ascending and descending character sequences">
+                                  title="Permits repeating, ascending and descending character sequences">
                                 Allow simple value
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
@@ -188,7 +188,7 @@
                             <input id="passcode-policy-require-alphanumeric" type="checkbox"
                                    class="form-control operationDataKeys" data-key="passcodePolicyRequireAlphanumeric"
                                    checked="checked"/>
-                            <span class="helper" title="Require passcode to contain both letters and numbers">
+                            <span class="helper" title="Mandates to contain both letters and numbers">
                                 Require alphanumeric value
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
@@ -250,7 +250,7 @@
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            ( Should be in between 1-to-730 days or none )
+                            ( Should be in between 1-to-730 days or 0 for none )
                         </label>
                         <input id="passcode-policy-max-passcode-age-in-days" type="text"
                                class="form-control operationDataKeys" data-key="passcodePolicyMaxPasscodeAgeInDays"
@@ -264,7 +264,7 @@
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                             <br>
-                            ( Should be in between 1-to-50 passcodes or none )
+                            ( Should be in between 1-to-50 passcodes or 0 for none )
                         </label>
                         <input id="passcode-policy-passcode-history" type="text" class="form-control operationDataKeys"
                                data-key="passcodePolicyPasscodeHistory" maxlength="2">
@@ -274,7 +274,7 @@
                         <label class="wr-input-label" for="passcodePolicyMaxFailedAttempts">
                             Maximum number of failed attempts
                             <span class="helper"
-                                  title="The maximum number of failed password entry attempts. If the correct password is not entered within the defined number of attempts, the data on the device will be erased">
+                                  title="The maximum number of incorrect password entries allowed. If the correct password is not entered within the allowed number of attempts, the data on the device will be erased.">
                                 <span class="wr-help-tip glyphicon glyphicon-question-sign"></span>
                             </span>
                         </label>
